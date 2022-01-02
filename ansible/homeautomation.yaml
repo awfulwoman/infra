@@ -1,0 +1,36 @@
+---
+# homeautomation Kubernetes Playbook
+# Assumes a bare metal install of Raspbian or Ubuntu
+# - name: Home Automation Cluster - Bootstrap users
+#   hosts: homeautomation
+#   roles:
+#     - standard_users
+
+- name: Home Automation Cluster - Apply standard OS config
+  hosts: homeautomation
+  roles:
+    - role: standard_os
+    - role: weareinteractive.environment
+      no_log: true
+    - role: upgrade
+  handlers:
+    - name: Reboot host
+      reboot:
+  become: true
+
+- name: Home Automation Cluster - Apply Raspberry Pi hardware config
+  hosts: homeautomation_raspberrypis
+  handlers:
+    - name: Reboot system
+      reboot:
+  roles:
+    - raspberry_pi
+  become: true
+
+- name: Home Automation Cluster - Activate Kubernetes
+  hosts: homeautomation
+  vars:
+    k3s_become_for_all: yes
+  roles:
+    - role: xanmanning.k3s
+      k3s_state: installed

@@ -1,0 +1,6 @@
+controller:
+  # https://github.com/kubernetes/ingress-nginx/blob/main/charts/ingress-nginx/templates/controller-ingressclass.yaml
+  ingressClassResource:
+    default: true
+  service:
+    loadBalancerIP: 192.168.1.200

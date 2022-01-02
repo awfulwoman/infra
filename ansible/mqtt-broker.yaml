@@ -1,0 +1,18 @@
+---
+# MQTT Broker (Mosquitto) Playbook
+# Assumes a bare metal install of Raspbian or Ubuntu
+
+- name: MQTT Broker - Apply standard users
+  hosts: ha_mosquitto
+  roles:
+    - role: standard_users
+
+- name: MQTT Broker - Apply standard OS config
+  hosts: ha_mosquitto
+  roles:
+    - role: standard_os
+    - role: raspberry_pi
+    - role: weareinteractive.environment
+    - role: mosquitto
+    - role: upgrade
+  become: true

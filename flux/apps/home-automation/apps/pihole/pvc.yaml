@@ -1,0 +1,14 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pihole
+  namespace: flux-system
+spec:
+  # targetNamespace: default
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: nfs
+  # persistentVolumeReclaimPolicy: retain
+  resources:
+    requests:
+      storage: 6Gi

@@ -1,0 +1,80 @@
+  # Provisions a generic Debian/Ubuntu/Raspbian machine
+
+- name: Set ansible_user's authorized keys (from url)
+  become: true
+  ansible.posix.authorized_key:
+    user: "{{ ansible_user }}"
+    key: https://github.com/whalecoiner.keys
+    exclusive: true
+
+- name: Add Berlin timezone
+  become: true
+  community.general.timezone: 
+    name: Europe/Berlin
+
+- name: Ensure localisation files for '{{ config_system_locale }}' are available
+  become: true
+  locale_gen:
+    name: "{{ config_system_locale }}"
+    state: present
+
+- name: Ensure localisation files for '{{ config_system_language }}' are available
+  become: true
+  locale_gen:
+    name: "{{ config_system_language }}"
+    state: present
+
+- name: Get current locale and language configuration
+  become: true
+  command: localectl status
+  register: locale_status
+  changed_when: false
+
+- name: Parse 'LANG' from current locale and language configuration
+  become: true
+  set_fact:
+    locale_lang: "{{ locale_status.stdout | regex_search('LANG=([^\n]+)', '\\1') | first }}"
+
+- name: Parse 'LANGUAGE' from current locale and language configuration
+  become: true
+  set_fact:
+    locale_language: "{{ locale_status.stdout | regex_search('LANGUAGE=([^\n]+)', '\\1') | default([locale_lang], true) | first }}"
+
+- name: Configure locale to '{{ config_system_locale }}' and language to '{{ config_system_language }}'
+  become: true
+  command: localectl set-locale LANG={{ config_system_locale }} LANGUAGE={{ config_system_language }}
+  changed_when: locale_lang != config_system_locale or locale_language != config_system_language
+
+- name: Change hostname
+  become: true
+  ansible.builtin.hostname:
+    name: "{{ inventory_hostname }}"
+    use: debian
+
+- name: Replace 127.0.1.1 on Debian systems
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/hosts
+    regexp: '^127\.0\.1\.1'
+    line: "127.0.1.1 {{ inventory_hostname }}"
+
+- name: Install apt packages
+  become: true
+  ansible.builtin.apt:
+    name: 
+      - vim
+      - curl 
+      - wget 
+      - git
+      - zsh
+      - iptables
+      - restic
+      - python3.9
+      - python3-pip
+      - python3-docker
+    state: present
+    update_cache: true
+
+# - name: Self Update Restic package
+#   become: true
+#   ansible.builtin.command: restic self-update

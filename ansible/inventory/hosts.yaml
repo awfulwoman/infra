@@ -1,0 +1,124 @@
+---
+all:
+  hosts:
+    truthandreconciliation:
+      # Raspberry Pi 4 | aarch64 | CPU Cortex-A72 | mem 4GB | disk 28.4G
+      ansible_user: pi
+      ansible_host: 192.168.1.100
+      ansible_python_interpreter: /usr/bin/python3
+    attitudeadjuster:
+      # Raspberry Pi 4 | aarch64 | CPU Cortex-A72 | mem 8GB | disk 28.4G
+      ansible_user: pi
+      ansible_host: 192.168.1.101
+      ansible_python_interpreter: /usr/bin/python3
+    aprilashley:
+      # Raspberry Pi 4 | aarch64 | CPU Cortex-A72 | mem 8GB | disk 28.4G
+      ansible_user: pi
+      ansible_host: 192.168.1.102
+      ansible_python_interpreter: /usr/bin/python3
+    bonerseizure:
+      # Raspberry Pi 4 | aarch64 | CPU Cortex-A72 | mem 2GB | disk 64G
+      ansible_user: pi
+      ansible_host: 192.168.1.110
+      ansible_python_interpreter: /usr/bin/python3
+    sleeperservice:
+      # Raspberry Pi 3 | aarch64 | CPU Cortex-A53 | mem 1GB | disk 28.4G
+      ansible_user: pi
+      ansible_host: 192.168.1.103
+      ansible_python_interpreter: /usr/bin/python3
+    bigsexybeast:
+      # generic PC | x86_64 | CPU Intel(R) Core(TM) i5-3470T CPU @ 2.90GHz | mem 8GB | disk 117.8G
+      ansible_user: ubuntu
+      ansible_host: 192.168.1.104
+    universallover:
+      # generic PC | x86_64 | CPU Intel(R) Core(TM) i5-2500S CPU @ 2.70GHz | mem 8GB | disk 58.6G
+      ansible_user: ubuntu
+      ansible_host: 192.168.1.105
+    bondagequeen:
+      # Intel NUC | x86_64 | CPU Intel(R) Atom(TM) CPU  E3815  @ 1.46GHz | mem 7.5G | disk 110.3G
+      ansible_user: ubuntu
+      ansible_host: 192.168.1.106
+    weaponisedgender:
+      # Raspberry Pi 1
+      ansible_user: pi
+      ansible_host: 192.168.1.107
+    twistymotherfucker:
+      # Raspberry Pi Zero
+      ansible_user: pi
+      ansible_host: 192.168.1.108
+    grabthetension:
+      # Raspberry Pi Zero W
+      ansible_user: pi
+      ansible_host: 192.168.1.109
+    honestmistake:
+      # Raspberry Pi Zero WH
+      ansible_user: pi
+      ansible_host: 192.168.1.35
+
+
+# Here come all the groups! Look at them! Aren't they pretty?
+  children:
+    # Raspberry Pi hardware
+    raspberrypis:
+      hosts:
+        weaponisedgender:
+        truthandreconciliation:
+        attitudeadjuster:
+        aprilashley:
+        sleeperservice:
+        grabthetension:
+        twistymotherfucker:
+        honestmistake:
+        bonerseizure:
+
+    # Docker-compose/ansible - Home Automation
+    ha:
+      children:
+        ha_mosquitto:
+        ha_zigbee2mqtt:
+        ha_homeassistant:
+
+    # Docker-compose/ansible - Home Automation - Mosquitto MQTT Broker
+    ha_mosquitto:
+      hosts:
+        twistymotherfucker:
+    
+    # Docker-compose/ansible - Home Automation - Zigbee2MQTT
+    ha_zigbee2mqtt:
+      hosts:
+        grabthetension:
+
+    # Docker-compose/ansible - Home Automation - Home Assistant
+    ha_homeassistant:
+      hosts:
+        bondagequeen:
+
+    # Kubernetes Home Automation - Agent Nodes
+    homeautomation_agents:
+      hosts:
+        # sleeperservice:
+        attitudeadjuster:
+        truthandreconciliation:
+        # bonerseizure:
+
+    # Kubernetes Home Automation -  Server Nodes
+    homeautomation_servers:
+      hosts:
+        aprilashley:
+
+    # Kubernetes Home Automation - Raspberry Pi nodes
+    homeautomation_raspberrypis:
+      hosts:
+        truthandreconciliation:
+        attitudeadjuster:
+        sleeperservice:
+        aprilashley:
+        # bonerseizure:
+
+    # Kubernetes Home Automation - All servers
+    homeautomation:
+      children:
+        homeautomation_servers:
+        homeautomation_agents:
+      vars:
+        nfs_mount: '/mnt/ssd'

@@ -1,0 +1,22 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: cert-manager
+  namespace: flux-system
+spec:
+  dependsOn:
+      - name: ingress-nginx
+      - name: metallb
+  releaseName: cert-manager
+  targetNamespace: home-infrastructure
+  chart:
+    spec:
+      chart: cert-manager
+      version: "1.6.1"
+      sourceRef:
+        kind: HelmRepository
+        name: cert-manager-helmrepo
+      valuesFiles:
+        - values.yaml
+  interval: 30m
+  

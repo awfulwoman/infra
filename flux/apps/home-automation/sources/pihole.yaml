@@ -1,0 +1,8 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: pihole-helmrepo
+  namespace: flux-system
+spec:
+  interval: 10m
+  url: https://mojo2600.github.io/pihole-kubernetes/

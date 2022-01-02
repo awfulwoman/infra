@@ -1,0 +1,8 @@
+# ---
+# - name: Upgrade system
+#   hosts: all
+#   tasks:
+#     - name: apt update
+#       command: "sudo apt update"
+#     - name: apt upgrade
+#       command: "sudo apt upgrade -y"

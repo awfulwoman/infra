@@ -1,0 +1,10 @@
+- name: Display all variables/facts known for a host
+  ansible.builtin.debug:
+    var: hostvars[inventory_hostname]
+    # verbosity: 4
+
+# - name: save all facts to host specific file
+#   ansible.builtin.copy:
+#     content: "{{ ansible_delegated_vars[inventory_hostname].vars | to_nice_json }}"
+#     dest: "{{ ansible_fqdn }}.json"
+#   delegate_to: localhost

@@ -1,0 +1,23 @@
+# Replicates the values passed to the Helm chart.
+apiVersion: v1
+kind: Service
+metadata:
+  name: basic-ingress
+  namespace: nginx-system
+spec:
+  selector:
+    name: nginx-ingress
+  type: LoadBalancer
+  # loadBalancerIP is optional. MetalLB will automatically allocate an IP 
+  # from its pool if not specified. You can also specify one manually.
+  # loadBalancerIP: x.y.z.a
+  loadBalancerIP: 192.168.1.200
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
+    - name: https
+      protocol: TCP
+      port: 443
+      targetPort: 443

@@ -1,0 +1,21 @@
+- name: Add an Apt signing key for vscodium
+  become: true
+  ansible.builtin.apt_key:
+    url: http://repo.mosquitto.org/debian/mosquitto-repo.gpg.key
+    state: present
+
+- name: Add the Mosquitto repo (deb-src)
+  become: true
+  ansible.builtin.apt_repository:
+    repo: deb-src http://repo.mosquitto.org/debian bullseye main
+    state: present
+    update_cache: no
+
+- name: Install supporting apt packages 
+  become: true
+  ansible.builtin.apt:
+    name: 
+      - mosquitto
+      - mosquitto-clients
+    state: present
+    update_cache: true

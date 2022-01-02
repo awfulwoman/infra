@@ -1,0 +1,93 @@
+# Adds additional provisions for a Raspberry pi that will run K8s
+
+- name: Use legacy firewall - ipv4
+  ansible.builtin.command: update-alternatives --set iptables /usr/sbin/iptables-legacy
+  args: 
+    creates: /usr/sbin/iptables-legacy
+  when: raspberry_pi_legacy_firewall
+
+- name: Use legacy firewall - ipv6
+  ansible.builtin.command: update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy
+  args: 
+    creates: /usr/sbin/ip6tables-legacy
+  when: raspberry_pi_legacy_firewall
+
+# Wifi hardware status
+- name: Disable wifi hardware
+  lineinfile: 
+    dest: /boot/config.txt
+    line: 'dtoverlay=disable-wifi'
+    state: present
+  when: raspberry_pi_disable_wifi is true
+
+- name: Enable wifi hardware
+  lineinfile: 
+    dest: /boot/config.txt
+    line: 'dtoverlay=disable-wifi'
+    state: absent
+  when: raspberry_pi_disable_wifi is false
+
+# Bluetooth hardware status
+- name: Disable Bluetooth hardware
+  lineinfile: 
+    dest: /boot/config.txt
+    line: 'dtoverlay=disable-bt'
+    state: present
+  when: raspberry_pi_disable_bluetooth is true
+
+- name: Enable Bluetooth hardware
+  lineinfile: 
+    dest: /boot/config.txt
+    line: 'dtoverlay=disable-bt'
+    state: absent
+  when: raspberry_pi_disable_bluetooth is false
+
+# Ensure cgroups options for k8s are in place
+# ONLY FOR RASPBERRY PI
+- name: configure cmdline.txt options
+  block:
+    - name: read cmdline.txt content
+      command:
+        cmd: "cat {{ raspberry_pi_cmdline_txt }}"
+      register: _cmdline_file
+      changed_when: false
+
+    - name: convert cmdline.txt options to dict object
+      set_fact:
+        _cmdline_dict: |
+          {% set d={} -%}
+          {% for item in _cmdline_file.stdout.split(' ') -%}
+          {% set k = item.split('=', 1)[0] -%}
+          {% set v = "".join(item.split('=', 1)[1:]) -%}
+          {% set _ = d.update({k: v}) -%}
+          {% endfor -%}
+          {{ d }}
+    - name: combine cmdline.txt options with cmdline_options
+      set_fact:
+        _cmdline_comb: "{{ _cmdline_dict | combine(raspberry_pi_cmdline_options) }}"
+
+    - name: create new cmdline.txt options string
+      set_fact:
+        _cmdline: |
+          {% for k, v in _cmdline_comb.items() %}
+          {% if v | string | length > 0 %}
+           {{ k }}={{ v }}
+          {%- else %}
+           {{ k }}
+          {%- endif %}
+          {% endfor %}
+
+    - name: update cmdline.txt options
+      copy:
+        content: "{{ _cmdline | trim }}"
+        dest: "{{ raspberry_pi_cmdline_txt }}"
+        owner: root
+        group: root
+        mode: 0755
+      notify: Reboot system
+  when: raspberry_pi_cmdline_txt is defined
+
+# - name: If designated NFS node, add NFS server
+#   command: 'XYZ'
+# - name: if not designated NFS node, add NFS client
+

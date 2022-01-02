@@ -1,0 +1,6 @@
+# - name: Add PPA + update
+
+# - name: Install certbot
+
+# - name: Install digitalocean-dns plugin
+#   python3-certbot-dns-digitalocean

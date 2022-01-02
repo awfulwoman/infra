@@ -1,0 +1,23 @@
+# https://www.phillipsj.net/posts/k3s-enable-nfs-storage/
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: longhorn-storageclass
+  namespace: flux-system
+spec:
+  releaseName: longhorn-storageclass
+  # targetNamespace: home-infrastructure
+  chart:
+    spec:
+      chart: longhorn
+      sourceRef:
+        kind: HelmRepository
+        name: longhorn-helmrepo
+  interval: 30m
+  timeout: 5m
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3

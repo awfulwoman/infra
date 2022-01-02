@@ -1,0 +1,11 @@
+k3s_control_node: true
+# k3s_etcd_datastore: true
+k3s_server:
+  disable:
+    - traefik
+    - servicelb
+    - local-storage
+  # node-taint:
+  # - "k3s-controlplane=true:NoExecute"
+  # kube-apiserver-arg:
+  # - "enable-admission-plugins=NodeRestriction,PodSecurityPolicy,ServiceAccount"

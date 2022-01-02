@@ -1,0 +1,70 @@
+# deCONZ: https://github.com/deconz-community/deconz-docker
+
+- name: Create Home Assistant config dir
+  ansible.builtin.file:
+    path: "/home/{{ ansible_user }}/hass-config"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0755"
+
+# - name: Create deCONZ config dir
+#   ansible.builtin.file:
+#     path: "/home/{{ ansible_user }}/deCONZ"
+#     state: directory
+#     owner: "{{ ansible_user }}"
+#     group: "{{ ansible_user }}"
+#     mode: "0755"
+
+- name: Adding ansible_user to dialout group
+  become: true
+  ansible.builtin.user:
+    user: "{{ ansible_user }}"
+    groups: dialout
+    append: true
+
+# https://github.com/tribut/homeassistant-docker-venv
+- name: Git checkout
+  ansible.builtin.git:
+    repo: "https://github.com/tribut/homeassistant-docker-venv"
+    dest: "/home/{{ ansible_user }}/hass-config/docker"
+
+- name: Create a Home Assistant container
+  become: true
+  community.docker.docker_container:
+    name: homeassistant
+    image: ghcr.io/home-assistant/home-assistant:latest
+    state: started
+    network_mode: host
+    privileged: true
+    restart_policy: unless-stopped
+    # user: "{{ ansible_user }}:{{ ansible_user }}"
+    env: 
+      PUID: "1000"
+      PGID: "1000"
+      UMASK: "007"
+      TZ: Berlin/Europe
+    volumes:
+      - "/home/{{ ansible_user }}/hass-config:/config"
+      - "/home/{{ ansible_user }}/hass-config/docker/run:/etc/services.d/home-assistant/run"
+      - /etc/localtime:/etc/localtime:ro
+
+# - name: Create a deCONZ container
+#   become: true
+#   community.docker.docker_container:
+#     name: deconz
+#     image: deconzcommunity/deconz:latest
+#     state: started
+#     # network_mode: host
+#     # privileged: true
+#     restart_policy: always
+#     env: 
+#       TZ: Berlin/Europe
+#     ports:
+#       - 8080:80
+#       - 4433:443
+#     volumes:
+#       - "/etc/localtime:/etc/localtime:ro"
+#       - "/opt/deconz:/home/{{ ansible_user }}/deCONZ"
+#     devices:
+#       - /dev/ttyACM0
