@@ -4,3 +4,4 @@ resources:
   - home-infrastructure.yaml
   - home-automation.yaml
   - home-monitoring.yaml
+  - longhorn-system.yaml
