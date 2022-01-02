@@ -25,12 +25,21 @@ spec:
     ingress:
       main:
         enabled: true
-        ingressClassName:  "nginx"
+        ingressClassName: "nginx"
         hosts:
-          - host: home.affordablepotatoes.com
+          -  # -- Host address. Helm template can be passed.
+            host: home.affordablepotatoes.com
+            ## Configure the paths for the host
             paths:
-              - path: /
-                pathType: ImplementationSpecific
+              -  # -- Path.  Helm template can be passed.
+                path: /
+                # -- Ignored if not kubeVersion >= 1.14-0
+                pathType: Prefix
+                service:
+                  # -- Overrides the service name reference for this path
+                  name:
+                  # -- Overrides the service port reference for this path
+                  port:
   install:
     remediation:
       retries: 30
