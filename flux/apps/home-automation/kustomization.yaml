@@ -4,4 +4,4 @@ namespace: flux-system
 resources:
   # - namespaces
   - sources
-  - apps
+  - workloads
