@@ -8,7 +8,7 @@ My home GitOps setup.
 ---
 
 <details>
-  <summary>HUMAN EMOTION SECTION</summary>
+  <summary>:rotating_light: HUMAN EMOTION SECTION :rotating_light:</summary>
   
 ## HUMAN EMOTION: PLEASE LEAVE IF YOU ARE TOO TECHY
 
