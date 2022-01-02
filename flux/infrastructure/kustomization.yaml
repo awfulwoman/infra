@@ -3,7 +3,7 @@ kind: Kustomization
 resources:
   - namespaces
   # - certs
-  # - storageclasses
+  - storageclasses
   # - persistentvolumes
   - sources
   - loadbalancers

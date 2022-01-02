@@ -7,4 +7,4 @@ resources:
   - metallb.yaml
   - podinfo.yaml
   - prometheus.yaml
-  # - longhorn.yaml
+  - longhorn.yaml
