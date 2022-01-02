@@ -1,0 +1,7 @@
+- name: iSCSI
+  become: true
+  ansible.builtin.apt:
+    name:
+      - open-iscsi
+    state: present
+    update_cache: true

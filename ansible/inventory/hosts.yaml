@@ -65,7 +65,7 @@ all:
         truthandreconciliation:
         attitudeadjuster:
         aprilashley:
-        sleeperservice:
+        # sleeperservice:
         grabthetension:
         twistymotherfucker:
         honestmistake:
@@ -99,7 +99,7 @@ all:
         # sleeperservice:
         attitudeadjuster:
         truthandreconciliation:
-        # bonerseizure:
+        bonerseizure:
 
     # Kubernetes Home Automation -  Server Nodes
     homeautomation_servers:
@@ -113,7 +113,7 @@ all:
         attitudeadjuster:
         sleeperservice:
         aprilashley:
-        # bonerseizure:
+        bonerseizure:
 
     # Kubernetes Home Automation - All servers
     homeautomation:

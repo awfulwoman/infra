@@ -32,5 +32,6 @@
   vars:
     k3s_become_for_all: yes
   roles:
+    - role: kubernetes_support
     - role: xanmanning.k3s
       k3s_state: installed
