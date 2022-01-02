@@ -16,21 +16,20 @@ spec:
   interval: 30m
   timeout: 5m
   ingress:
-    main:
-      enabled: true
-      ingressClassName: "nginx"
-      hosts:
-        -  # -- Host address. Helm template can be passed.
-          host: longhorn.affordablepotatoes.com
-          ## Configure the paths for the host
-          paths:
-            -  # -- Path.  Helm template can be passed.
-              path: /
-              # -- Ignored if not kubeVersion >= 1.14-0
-              pathType: Prefix
-              service:
-                # -- Overrides the service port reference for this path
-                port: 80
+    enabled: true
+    ingressClassName: "nginx"
+    hosts:
+      -  # -- Host address. Helm template can be passed.
+        host: longhorn.affordablepotatoes.com
+        ## Configure the paths for the host
+        paths:
+          -  # -- Path.  Helm template can be passed.
+            path: /
+            # -- Ignored if not kubeVersion >= 1.14-0
+            pathType: Prefix
+            service:
+              # -- Overrides the service port reference for this path
+              port: 80
   # install:
   #   remediation:
   #     retries: 3
