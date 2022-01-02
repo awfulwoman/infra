@@ -13,15 +13,15 @@ spec:
   path: ./flux/apps/home-automation
   prune: true
   validation: client
-  # healthChecks:
+  healthChecks:
   #   - apiVersion: helm.toolkit.fluxcd.io/v1beta1
   #     kind: HelmRelease
   #     name: podinfo
   #     namespace: home-automation
-  #   - apiVersion: helm.toolkit.fluxcd.io/v1beta1
-  #     kind: HelmRelease
-  #     name: home-assistant
-  #     namespace: home-automation
+    - apiVersion: helm.toolkit.fluxcd.io/v1beta1
+      kind: HelmRelease
+      name: home-assistant
+      namespace: home-automation
   #   - apiVersion: helm.toolkit.fluxcd.io/v1beta1
   #     kind: HelmRelease
   #     name: pihole
