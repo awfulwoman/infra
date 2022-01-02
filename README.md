@@ -1,6 +1,6 @@
 # At Home With The GitOps
 
-** Wotcha. This is the repo for my home system: hardware provisioning via Ansible, a Kubernetes cluster, automation via Home Assistant and Node Red, and lots of jazzy words like MQTT broker, Zigbee2MQTT proxy, DDNS, VPN, Gitops, etc. **
+ *** Wotcha. This is the repo for my home system: hardware provisioning via Ansible, a Kubernetes cluster, automation via Home Assistant and Node Red, and lots of jazzy words like MQTT broker, Zigbee2MQTT proxy, DDNS, VPN, Gitops, etc. ***
 
 Baremetal inventory management is handled by Ansible, and pretty much everything else via Flux.
 
