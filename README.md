@@ -5,6 +5,8 @@ My home GitOps setup.
 * Hardware inventory management: handled by Ansible 
 * Pretty much everything else: handled by Flux and Kubernetes.
 
+I started out writing this as a series of notes but it's growing into a mini-opera.
+
 ---
 
 <details>
@@ -28,18 +30,14 @@ BUT ENOUGH CHAT. MORE CODE.
 
 ## 0 - Basic shit: The Control Node
 
-Your Control Node ("what?") depnds on having some CLI tools available.
+Your Control Node (or "laptop") needs some CLI tools to be available
 
 - `ansible`
 - `kubectl`
 - `helm`
 - `flux`
 
-Sorry, yes. "Control Node". It's a flowery way of saying "Laptop".
-
-Isn't tech fun?
-
-Installing Ansible dependencies:
+You'll need to install the dependecies used by Ansible:
 
 ```bash
 ansible-galaxy install -r meta/requirements.yaml  
