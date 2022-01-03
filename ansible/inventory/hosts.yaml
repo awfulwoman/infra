@@ -1,60 +1,43 @@
 ---
 all:
   hosts:
-    truthandreconciliation:
-      # Raspberry Pi 4 | aarch64 | CPU Cortex-A72 | mem 4GB | disk 28.4G
-      ansible_user: pi
-      ansible_host: 192.168.1.100
-      ansible_python_interpreter: /usr/bin/python3
-    attitudeadjuster:
-      # Raspberry Pi 4 | aarch64 | CPU Cortex-A72 | mem 8GB | disk 28.4G
-      ansible_user: pi
-      ansible_host: 192.168.1.101
-      ansible_python_interpreter: /usr/bin/python3
-    aprilashley:
-      # Raspberry Pi 4 | aarch64 | CPU Cortex-A72 | mem 8GB | disk 28.4G
+    aprilashley: # Raspberry Pi 4 | aarch64 | CPU Cortex-A72 | mem 8GB | bootdisk 28.4G
       ansible_user: pi
       ansible_host: 192.168.1.102
-      ansible_python_interpreter: /usr/bin/python3
-    bonerseizure:
-      # Raspberry Pi 4 | aarch64 | CPU Cortex-A72 | mem 2GB | disk 64G
+    attitudeadjuster: # Raspberry Pi 4 | aarch64 | CPU Cortex-A72 | mem 8GB | bootdisk 28.4G
       ansible_user: pi
-      ansible_host: 192.168.1.110
-      ansible_python_interpreter: /usr/bin/python3
-    sleeperservice:
-      # Raspberry Pi 3 | aarch64 | CPU Cortex-A53 | mem 1GB | disk 28.4G
-      ansible_user: pi
-      ansible_host: 192.168.1.103
-      ansible_python_interpreter: /usr/bin/python3
-    bigsexybeast:
-      # generic PC | x86_64 | CPU Intel(R) Core(TM) i5-3470T CPU @ 2.90GHz | mem 8GB | disk 117.8G
+      ansible_host: 192.168.1.101
+    bigsexybeast: # Generic PC | x86_64 | CPU Intel(R) Core(TM) i5-3470T CPU @ 2.90GHz | mem 8GB | bootdisk 117.8G
       ansible_user: ubuntu
       ansible_host: 192.168.1.104
-    universallover:
-      # generic PC | x86_64 | CPU Intel(R) Core(TM) i5-2500S CPU @ 2.70GHz | mem 8GB | disk 58.6G
-      ansible_user: ubuntu
-      ansible_host: 192.168.1.105
-    bondagequeen:
-      # Intel NUC | x86_64 | CPU Intel(R) Atom(TM) CPU  E3815  @ 1.46GHz | mem 7.5G | disk 110.3G
+    bondagequeen: # Intel NUC | x86_64 | CPU Intel(R) Atom(TM) CPU  E3815  @ 1.46GHz | mem 8GB | bootdisk 110.3G
       ansible_user: ubuntu
       ansible_host: 192.168.1.106
-    weaponisedgender:
-      # Raspberry Pi 1
+    bonerseizure: # Raspberry Pi 4 | aarch64 | CPU Cortex-A72 | mem 2GB | bootdisk 28.4G
       ansible_user: pi
-      ansible_host: 192.168.1.107
-    twistymotherfucker:
-      # Raspberry Pi Zero
-      ansible_user: pi
-      ansible_host: 192.168.1.108
-    grabthetension:
-      # Raspberry Pi Zero W
+      ansible_host: 192.168.1.110
+    grabthetension: # Raspberry Pi Zero W
       ansible_user: pi
       ansible_host: 192.168.1.109
-    honestmistake:
-      # Raspberry Pi Zero WH
+    honestmistake: # Raspberry Pi Zero WH
       ansible_user: pi
       ansible_host: 192.168.1.35
-
+    # 🛌 🛌 🛌 🛌 🛌
+    # sleeperservice: # Raspberry Pi 3 | aarch64 | CPU Cortex-A53 | mem 1GB 
+    #   ansible_user: pi
+    #   ansible_host: 192.168.1.103
+    truthandreconciliation: # Raspberry Pi 4 | aarch64 | CPU Cortex-A72 | mem 4GB | bootdisk 28.4G
+      ansible_user: pi
+      ansible_host: 192.168.1.100
+    twistymotherfucker: # Raspberry Pi Zero
+      ansible_user: pi
+      ansible_host: 192.168.1.108
+    universallover: # Generic PC | x86_64 | CPU Intel(R) Core(TM) i5-2500S CPU @ 2.70GHz | mem 8GB | bootdisk 58.6G
+      ansible_user: ubuntu
+      ansible_host: 192.168.1.105
+    weaponisedgender: # Raspberry Pi 1 (DO YOU WANT A CUP OF TEA, GRANDMA?)
+      ansible_user: pi
+      ansible_host: 192.168.1.107
 
 # Here come all the groups! Look at them! Aren't they pretty?
   children:
@@ -71,24 +54,24 @@ all:
         honestmistake:
         bonerseizure:
 
-    # Docker-compose/ansible - Home Automation
+    # Docker-based (sunset) - Home Automation
     ha:
       children:
         ha_mosquitto:
         ha_zigbee2mqtt:
         ha_homeassistant:
 
-    # Docker-compose/ansible - Home Automation - Mosquitto MQTT Broker
+    # Docker-based (sunset) - Home Automation - Mosquitto MQTT Broker
     ha_mosquitto:
       hosts:
         twistymotherfucker:
     
-    # Docker-compose/ansible - Home Automation - Zigbee2MQTT
+    # Docker-based (sunset) - Home Automation - Zigbee2MQTT
     ha_zigbee2mqtt:
       hosts:
         grabthetension:
 
-    # Docker-compose/ansible - Home Automation - Home Assistant
+    # Docker-based (sunset) - Home Automation - Home Assistant
     ha_homeassistant:
       hosts:
         bondagequeen:
@@ -111,7 +94,7 @@ all:
       hosts:
         truthandreconciliation:
         attitudeadjuster:
-        sleeperservice:
+        # sleeperservice:
         aprilashley:
         bonerseizure:
 
@@ -120,5 +103,3 @@ all:
       children:
         homeautomation_servers:
         homeautomation_agents:
-      vars:
-        nfs_mount: '/mnt/ssd'
