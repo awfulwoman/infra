@@ -1,2 +1,9 @@
+# name: Truth and Reconciliation
+# type: 
+# arch: 
+# cpu: 
+# mem: 
+# bootdisk: 
+# Raspberry Pi 4 | aarch64 | CPU Cortex-A72 | mem 4GB | bootdisk 28.4G
 # storage_uuid: 
 ansible_python_interpreter: /usr/bin/python3

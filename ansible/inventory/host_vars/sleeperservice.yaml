@@ -1,2 +1,9 @@
+# name: Sleeper Service
+# type: 
+# arch: 
+# cpu: 
+# mem: 
+# bootdisk: 
+# Raspberry Pi 3 | aarch64 | CPU Cortex-A53 | mem 1GB 
 # storage_uuid: 
 ansible_python_interpreter: /usr/bin/python3

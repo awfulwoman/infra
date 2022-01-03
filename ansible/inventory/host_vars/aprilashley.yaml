@@ -1,3 +1,9 @@
+# name: April Ashley (RIP babe)
+# type: Raspberry Pi 4
+# arch: aarch64 
+# cpu: Cortex-A72
+# mem: 8GB
+# bootdisk: 28.4G
 # storage_uuid: 
 # storage_mount: /storage
 ansible_python_interpreter: /usr/bin/python3
