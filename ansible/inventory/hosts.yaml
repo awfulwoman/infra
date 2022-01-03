@@ -1,19 +1,19 @@
 ---
 all:
   hosts:
-    aprilashley: # Raspberry Pi 4 | aarch64 | CPU Cortex-A72 | mem 8GB | bootdisk 28.4G
+    aprilashley: # Raspberry Pi 4 8GB
       ansible_user: pi
       ansible_host: 192.168.1.102
-    attitudeadjuster: # Raspberry Pi 4 | aarch64 | CPU Cortex-A72 | mem 8GB | bootdisk 28.4G
+    attitudeadjuster: # Raspberry Pi 4 8GB 
       ansible_user: pi
       ansible_host: 192.168.1.101
-    bigsexybeast: # Generic PC | x86_64 | CPU Intel(R) Core(TM) i5-3470T CPU @ 2.90GHz | mem 8GB | bootdisk 117.8G
+    bigsexybeast: # x86_64 i5 2.90GHz 8GB
       ansible_user: ubuntu
       ansible_host: 192.168.1.104
-    bondagequeen: # Intel NUC | x86_64 | CPU Intel(R) Atom(TM) CPU  E3815  @ 1.46GHz | mem 8GB | bootdisk 110.3G
+    bondagequeen: # x86_64 (NUC) Atom 1.46GHz 8GB
       ansible_user: ubuntu
       ansible_host: 192.168.1.106
-    bonerseizure: # Raspberry Pi 4 | aarch64 | CPU Cortex-A72 | mem 2GB | bootdisk 28.4G
+    bonerseizure: # Raspberry Pi 4 2GB
       ansible_user: pi
       ansible_host: 192.168.1.110
     grabthetension: # Raspberry Pi Zero W
@@ -23,16 +23,16 @@ all:
       ansible_user: pi
       ansible_host: 192.168.1.35
     # 🛌 🛌 🛌 🛌 🛌
-    # sleeperservice: # Raspberry Pi 3 | aarch64 | CPU Cortex-A53 | mem 1GB 
+    # sleeperservice: # Raspberry Pi 3  1GB 
     #   ansible_user: pi
     #   ansible_host: 192.168.1.103
-    truthandreconciliation: # Raspberry Pi 4 | aarch64 | CPU Cortex-A72 | mem 4GB | bootdisk 28.4G
+    truthandreconciliation: # Raspberry Pi 4 4GB
       ansible_user: pi
       ansible_host: 192.168.1.100
     twistymotherfucker: # Raspberry Pi Zero
       ansible_user: pi
       ansible_host: 192.168.1.108
-    universallover: # Generic PC | x86_64 | CPU Intel(R) Core(TM) i5-2500S CPU @ 2.70GHz | mem 8GB | bootdisk 58.6G
+    universallover: # x86_64 i5 2.70GHz 8GB
       ansible_user: ubuntu
       ansible_host: 192.168.1.105
     weaponisedgender: # Raspberry Pi 1 (DO YOU WANT A CUP OF TEA, GRANDMA?)
