@@ -15,7 +15,10 @@ all:
       ansible_host: 192.168.1.106
     bonerseizure: # Raspberry Pi 4 2GB
       ansible_user: pi
-      ansible_host: 192.168.1.110
+      ansible_host: 192.168.1.111
+    fonduesexparty: # Raspberry Pi 4 2GB
+      ansible_user: pi
+      ansible_host: 192.168.1.112
     grabthetension: # Raspberry Pi Zero W
       ansible_user: pi
       ansible_host: 192.168.1.109
@@ -53,6 +56,7 @@ all:
         twistymotherfucker:
         honestmistake:
         bonerseizure:
+        fonduesexparty:
 
     # Docker-based (sunset) - Home Automation
     ha:
@@ -83,6 +87,7 @@ all:
         attitudeadjuster:
         truthandreconciliation:
         bonerseizure:
+        fonduesexparty:
 
     # Kubernetes Home Automation -  Server Nodes
     homeautomation_servers:
@@ -97,6 +102,7 @@ all:
         # sleeperservice:
         aprilashley:
         bonerseizure:
+        fonduesexparty:
 
     # Kubernetes Home Automation - All servers
     homeautomation:
