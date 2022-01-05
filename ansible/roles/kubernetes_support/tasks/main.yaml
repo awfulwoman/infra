@@ -5,3 +5,11 @@
       - open-iscsi
     state: present
     update_cache: true
+
+- name: Mount up storage device by UUID
+  become: true
+  ansible.posix.mount:
+    path: "{{ storage_mount }}"
+    src: "UUID={{ storage_uuid }}"
+    fstype: ext4
+    state: present
