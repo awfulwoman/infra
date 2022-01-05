@@ -1,4 +1,6 @@
 ingress:
   enabled: true
-  ingressClassName: "nginx"
   host: longhorn.affordablepotatoes.com
+service:
+  ui:
+    type: LoadBalancer
