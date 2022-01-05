@@ -5,6 +5,6 @@
 # mem: 
 # bootdisk: 
 # Raspberry Pi 4 | aarch64 | CPU Cortex-A72 | mem 8GB | bootdisk 28.4G
-
-# storage_uuid: 
+storage_uuid: 4ad3fab1-708a-4051-a3f7-c8c3db158f7b
+storage_mount: /storage
 ansible_python_interpreter: /usr/bin/python3

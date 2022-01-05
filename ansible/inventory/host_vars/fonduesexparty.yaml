@@ -1,0 +1,10 @@
+# name: Fondue Sex Party
+# type: 
+# arch: 
+# cpu: 
+# mem: 
+# bootdisk: 
+# Raspberry Pi 4 | aarch64 | CPU Cortex-A72 | mem 2GB | bootdisk 64G
+storage_uuid: 51b3454d-e956-4199-83f0-af4c929a9d76
+storage_mount: /storage
+ansible_python_interpreter: /usr/bin/python3
