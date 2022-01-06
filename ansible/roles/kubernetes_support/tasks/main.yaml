@@ -13,3 +13,7 @@
     src: "UUID={{ storage_uuid }}"
     fstype: ext4
     state: present
+    
+- name: Install PSMQTT
+  ansible.builtin.pip:
+    name: git+http://github.com/eschava/psmqtt
