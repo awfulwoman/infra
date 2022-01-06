@@ -25,10 +25,9 @@ all:
     honestmistake: # Raspberry Pi Zero WH
       ansible_user: pi
       ansible_host: 192.168.1.35
-    # 🛌 🛌 🛌 🛌 🛌
-    # sleeperservice: # Raspberry Pi 3  1GB 
-    #   ansible_user: pi
-    #   ansible_host: 192.168.1.103
+    sleeperservice: # Raspberry Pi 3 1GB 
+      ansible_user: pi
+      ansible_host: 192.168.1.103
     truthandreconciliation: # Raspberry Pi 4 4GB
       ansible_user: pi
       ansible_host: 192.168.1.100
@@ -51,7 +50,7 @@ all:
         truthandreconciliation:
         attitudeadjuster:
         aprilashley:
-        # sleeperservice:
+        sleeperservice:
         grabthetension:
         twistymotherfucker:
         honestmistake:
@@ -99,7 +98,6 @@ all:
       hosts:
         truthandreconciliation:
         attitudeadjuster:
-        # sleeperservice:
         aprilashley:
         bonerseizure:
         fonduesexparty:
