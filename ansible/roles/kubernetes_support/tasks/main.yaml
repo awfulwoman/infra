@@ -16,4 +16,4 @@
     
 - name: Install PSMQTT
   ansible.builtin.pip:
-    name: git+http://github.com/eschava/psmqtt
+    name: git+https://github.com/whalecoiner/psmqtt.git
