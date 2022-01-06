@@ -16,13 +16,13 @@ metadata:
   #   nginx.ingress.kubernetes.io/proxy-body-size: 10000m
 spec:
   rules:
-  - http:
-      host: longhorn.affordablepotatoes.com
+  - host: "longhorn.affordablepotatoes.com"
+    http:
       paths:
       - pathType: Prefix
         path: "/"
         backend:
           service:
-            name: longhorn-frontend
+            name: longhorn
             port:
               number: 80
