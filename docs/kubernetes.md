@@ -9,7 +9,7 @@ flux bootstrap github \
   --branch=main \
   --personal=true \
   --private=false \
-  --path=flux/clusters/homeautomation \
+  --path=flux/clusters/home-automation \
   --reconcile=true
 ```
 
