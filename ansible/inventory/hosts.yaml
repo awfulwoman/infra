@@ -25,10 +25,9 @@ all:
     honestmistake: # Raspberry Pi Zero WH
       ansible_user: pi
       ansible_host: 192.168.1.35
-    # 🛌 🛌 🛌 🛌 🛌
-    # sleeperservice: # Raspberry Pi 3  1GB 
-    #   ansible_user: pi
-    #   ansible_host: 192.168.1.103
+    sleeperservice: # Raspberry Pi 3 1GB 
+      ansible_user: pi
+      ansible_host: 192.168.1.103
     truthandreconciliation: # Raspberry Pi 4 4GB
       ansible_user: pi
       ansible_host: 192.168.1.100
@@ -41,29 +40,32 @@ all:
     weaponisedgender: # Raspberry Pi 1 (DO YOU WANT A CUP OF TEA, GRANDMA?)
       ansible_user: pi
       ansible_host: 192.168.1.107
+#     xxxxxxxxxxxx_new_pi_wh:
+#       ansible_user: pi
+#       ansible_host: 192.168.1.xxx
 
 # Here come all the groups! Look at them! Aren't they pretty?
   children:
     # Raspberry Pi hardware
     raspberrypis:
       hosts:
-        weaponisedgender:
-        truthandreconciliation:
-        attitudeadjuster:
         aprilashley:
-        # sleeperservice:
-        grabthetension:
-        twistymotherfucker:
-        honestmistake:
+        attitudeadjuster:
         bonerseizure:
         fonduesexparty:
+        grabthetension:
+        honestmistake:
+        sleeperservice:
+        truthandreconciliation:
+        twistymotherfucker:
+        weaponisedgender:
 
     # Docker-based (sunset) - Home Automation
     ha:
       children:
+        ha_homeassistant:
         ha_mosquitto:
         ha_zigbee2mqtt:
-        ha_homeassistant:
 
     # Docker-based (sunset) - Home Automation - Mosquitto MQTT Broker
     ha_mosquitto:
@@ -83,11 +85,10 @@ all:
     # Kubernetes Home Automation - Agent Nodes
     homeautomation_agents:
       hosts:
-        # sleeperservice:
         attitudeadjuster:
-        truthandreconciliation:
         bonerseizure:
         fonduesexparty:
+        truthandreconciliation:
 
     # Kubernetes Home Automation -  Server Nodes
     homeautomation_servers:
@@ -97,15 +98,14 @@ all:
     # Kubernetes Home Automation - Raspberry Pi nodes
     homeautomation_raspberrypis:
       hosts:
-        truthandreconciliation:
-        attitudeadjuster:
-        # sleeperservice:
         aprilashley:
+        attitudeadjuster:
         bonerseizure:
         fonduesexparty:
+        truthandreconciliation:
 
     # Kubernetes Home Automation - All servers
     homeautomation:
       children:
-        homeautomation_servers:
         homeautomation_agents:
+        homeautomation_servers:

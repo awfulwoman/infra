@@ -2,61 +2,30 @@
 
 My home GitOps setup. Configuration as Code FTW.
 
-* Hardware inventory management: handled by Ansible 
-* Pretty much everything else: handled by Flux and Kubernetes.
+* Hardware inventory management: handled by [Ansible](ansible).
+* Pretty much everything else: handled by [Flux](flux) and Kubernetes.
 
-I started out writing this as a series of notes but it's growing into a mini-opera with weird sentence structures and constantly switching audiences.
+I started out writing this as a series of notes but it's growing into a mini-opera composed of weird sentence structures and addressing a constantly switching audience. I shall one day address this issue.
 
 ---
 
 <details>
-  <summary>:rotating_light: HUMAN EMOTION SECTION :rotating_light:</summary>
+  <summary>:rotating_light: HUMAN EMOTION SECTION - DO NOT CLICK IF YOU DISLIKE FEELINGS :rotating_light:</summary>
   
-## HUMAN EMOTION: PLEASE LEAVE IF YOU ARE TOO TECHY
+## HUMAN EMOTION: PLEASE LEAVE IF YOU CAN'T COPE
 
-![](https://media.giphy.com/media/13f5iwTRuiEjjW/giphy.gif)
+This is all part of a huge learning and emotional experience for me. I spent a lot of 2020 and 2021 in hospital, dealing with a lot of medical shit. 
+  
+When I got out I decided that some changes were needed to my life. One of those changes was to make a gigantic (and frankly ill-planned) career change from Frontend Development - where I was mostly a manager and therefore spent my majority of time piloting spreadsheets -  right over to infrastructure & Platform Engineering as *an actual engineer and not a manager*.
 
-This is all part of a huge learning and emotional experience for me. I spent a lot of 2020 and 2021 in hospital, dealing with a lot of medical shit. When I got out my brain decided that I needed to make some changes to my life. So one of those things was to make a gigantic and ill-planned career change from Frontend Development (and tbh mostly being a manager and therefore mostly a spreadsheet pilot) to infrastructure & Platform Engineering as *an actual engineer and not a maanger*.
+Part of skilling up in this new role has been doing lots of learning on the side. 
+  
+This repo is one of those learnings. 
+  
+(Also I am coming to accept that I'm a massive nerd and that I'm allowed to play with tech shit as a hobby and that I probably have lots of internalised misogyny about a womans relationship to tech).
 
-Part of skilling up in this new role has been doing some stuff on the side. This is one of those things. Also I am coming to accept that I'm a massive nerd and that I'm allowed to play with this shit.
+So if you see mistakes in this repo... well, it's because I'm new at all this. But on the bright side I think I'm coming into this strong and that things will only, as they say, get better. My enormous levels of ADHD (yes really ADHD and no not just being scatty) and me being a junior-grade space cadet means that my brain works well at fitting unrelated concepts and systems together. "Shit at the detail, fantastic at the big picture" is my elevator pitch. 
 
-So if you see mistakes in this repo it's because I'm new at all this. But on the brifht side I think I'm coming into this strong: I'm massively ADHD and a junior-grade space cadet my brain tens to work well at fitting things together and thinking in terms of systems, so I think I'm pretty suited for this kind thing.
-
-BUT ENOUGH CHAT. MORE CODE.
+Anyway, enough of that. I'm sure you're hungry for code by now.
 
 </details>
-
----
-
-## 0 - Basic shit: The Control Node
-
-Your Control Node (or "laptop" if you're a human) needs some CLI tools before you can do anything else:
-
-- `ansible`
-- `kubectl`
-- `helm`
-- `flux`
-
-You'll need to install the dependecies used by Ansible:
-
-```bash
-ansible-galaxy install -r meta/requirements.yaml  
-```
-
-## 1 - Physical shit: The Bare Metal
-
-See: [Hardware](docs/hardware.md)
-
-## 2 - Talky talk shit: The Network
-
-> Make the machines talk to each other!
-
-Details at: [Network](docs/network.md)
-
-## 3 - Brainy shit: The Operating System
-
-Details at: [Operating System](docs/operating-system.md).
-
-## 4 - Naval analogy shit: Kubernetes
-
-Details at: [Installing K3s](docs/kubernetes.md).

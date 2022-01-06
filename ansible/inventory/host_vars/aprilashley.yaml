@@ -3,6 +3,7 @@
 # arch: aarch64 
 # cpu: Cortex-A72
 # mem: 8GB
+# default_interface_mac: 
 # bootdisk: 28.4G
 storage_uuid: 6cf1053f-2948-4808-8e50-d83c63baba77
 storage_mount: /storage

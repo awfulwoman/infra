@@ -1,10 +1,9 @@
 ---
-# homeautomation Kubernetes Playbook
-# Assumes a bare metal install of Raspbian or Ubuntu
-# - name: Home Automation Cluster - Bootstrap users
-#   hosts: homeautomation
-#   roles:
-#     - standard_users
+# Playbook - Home Auomation Cluster
+# ---------------------------------
+# This will take the machines in the homeautomation group, install various OS updates, 
+# install k3s on each, and intialise a k8s cluster if one doesn't otherwise exist. If one 
+# exists then updates to the OS will be applied and the k8s state checked.
 
 - name: Home Automation Cluster - Apply standard OS config
   hosts: homeautomation

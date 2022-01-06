@@ -1,8 +1,8 @@
 # Ansible
 
-Ansible playbooks to manage clusters and related servers.
+A bunch of Ansible playbooks that I use to manage my home hardware.
 
-## Installation 
+## Installation 
 
 ```
 ansible-galaxy install -f  -r meta/requirements.yaml
@@ -11,5 +11,5 @@ ansible-galaxy install -f  -r meta/requirements.yaml
 ## Using playbooks
 
 ```
-ansible-playbook kubernetes.yaml
+ansible-playbook playbooks/homeautomation.yaml
 ```
