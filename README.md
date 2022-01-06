@@ -25,38 +25,3 @@ So if you see mistakes in this repo it's because I'm new at all this. But on the
 BUT ENOUGH CHAT. MORE CODE.
 
 </details>
-
----
-
-## 0 - Basic shit: The Control Node
-
-Your Control Node (or "laptop" if you're a human) needs some CLI tools before you can do anything else:
-
-- `ansible`
-- `kubectl`
-- `helm`
-- `flux`
-
-You'll need to install the dependecies used by Ansible:
-
-```bash
-ansible-galaxy install -r meta/requirements.yaml  
-```
-
-## 1 - Physical shit: The Bare Metal
-
-See: [Hardware](docs/hardware.md)
-
-## 2 - Talky talk shit: The Network
-
-> Make the machines talk to each other!
-
-Details at: [Network](docs/network.md)
-
-## 3 - Brainy shit: The Operating System
-
-Details at: [Operating System](docs/operating-system.md).
-
-## 4 - Naval analogy shit: Kubernetes
-
-Details at: [Installing K3s](docs/kubernetes.md).
