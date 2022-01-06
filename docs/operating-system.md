@@ -1,24 +1,27 @@
 # OS configuration
 
+Every machine on the cluster runs Raspberry Pi OS. I could have used any other distro, but it doesn't really matter, as all each machine will be doing is acting as a k3s node. Raspberry Pi OS at least has capabilites for handling the Pi hardware via the CLI.
+
 ## Requirements
 
-- Ansible
+- Ansible on the control host.
   - Ansible is fucking wonderful, isn't it?
-- A public SSH key for the machine you're using as an Ansible control host.
-  - Which is probably just your laptop.
-- `ssh-copy-id <USER>@<IPADDRESS>`
+- A public SSH key for the Ansible control host.
+  - The control host is just a machine with this repo downloaded to it.
+
 
 ## Installation 
 
-Ensure Ansible can log into each inventory item by copying your machine's public key over.
+Each k3s machine needs to have passwordless SSH enabled. After changing the `pi` username (yes even on my internal network) I can copy over my machine's public key.
+  - `ssh-copy-id <USER>@<IPADDRESS>`
 
-- `ssh-copy-id {pi,ubuntu}@IPADDRESS`
-
-Install Ansible requirements.
+I then install the requirements needed by Ansible. These are generally third-party roles that mean I barely have to write anything custom.
 
 - `cd ansible`
 - `ansible-galaxy install -r meta/requirements.yaml`
 
-Bootstrap the servers.
+Finally I can bootstrap the machines.
 
 - `ansible-playbook homeautomation.yaml`
+
+Most configuration comes from [the Ansible inventory](../ansible/inventory), where I define which machines do what, and what is installed on them.
