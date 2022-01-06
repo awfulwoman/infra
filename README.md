@@ -18,7 +18,7 @@ I started out writing this as a series of notes but it's growing into a mini-ope
 
 This is all part of a huge learning and emotional experience for me. I spent a lot of 2020 and 2021 in hospital, dealing with a lot of medical shit. 
   
-When I got out I decided that some changes were needed to my life. One of those changes was to make a gigantic (and frankly ill-planned) career change from Frontend Development - where I was mostly a manager and therefore spent my majority of time piloting spreadsheets - to infrastructure & Platform Engineering as *an actual engineer and not a manager*.
+When I got out I decided that some changes were needed to my life. One of those changes was to make a gigantic (and frankly ill-planned) career change from Frontend Development - where I was mostly a manager and therefore spent my majority of time piloting spreadsheets -  right over to infrastructure & Platform Engineering as *an actual engineer and not a manager*.
 
 Part of skilling up in this new role has been doing lots of learning on the side. 
   
