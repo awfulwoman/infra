@@ -10,11 +10,9 @@ I started out writing this as a series of notes but it's growing into a mini-ope
 ---
 
 <details>
-  <summary>:rotating_light: HUMAN EMOTION SECTION - DO NOT CLICK IF YOU GET BORED BY "FEELINGS" :rotating_light:</summary>
+  <summary>:rotating_light: HUMAN EMOTION SECTION - DO NOT CLICK IF YOU DISLIKE FEELINGS CHATS :rotating_light:</summary>
   
-## HUMAN EMOTION: PLEASE LEAVE IF YOU ARE TOO TECHY
-
-![](https://media.giphy.com/media/13f5iwTRuiEjjW/giphy.gif)
+## HUMAN EMOTION: PLEASE LEAVE IF YOU CAN'T COPE
 
 This is all part of a huge learning and emotional experience for me. I spent a lot of 2020 and 2021 in hospital, dealing with a lot of medical shit. 
   
