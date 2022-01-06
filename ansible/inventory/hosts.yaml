@@ -40,6 +40,9 @@ all:
     weaponisedgender: # Raspberry Pi 1 (DO YOU WANT A CUP OF TEA, GRANDMA?)
       ansible_user: pi
       ansible_host: 192.168.1.107
+#     xxxxxxxxxxxx_new_pi_wh:
+#       ansible_user: pi
+#       ansible_host: 192.168.1.xxx
 
 # Here come all the groups! Look at them! Aren't they pretty?
   children:
@@ -82,7 +85,6 @@ all:
     # Kubernetes Home Automation - Agent Nodes
     homeautomation_agents:
       hosts:
-        # sleeperservice:
         attitudeadjuster:
         truthandreconciliation:
         bonerseizure:
