@@ -10,7 +10,7 @@ I started out writing this as a series of notes but it's growing into a mini-ope
 ---
 
 <details>
-  <summary>:rotating_light: HUMAN EMOTION SECTION :rotating_light:</summary>
+  <summary>:rotating_light: HUMAN EMOTION SECTION - DO NOT CLICK IF YOU GET BORED BY "FEELINGS" :rotating_light:</summary>
   
 ## HUMAN EMOTION: PLEASE LEAVE IF YOU ARE TOO TECHY
 
