@@ -16,18 +16,18 @@ ansible-galaxy install -r meta/requirements.yaml
 
 ## Hardware
 
-See: [Hardware](docs/hardware.md)
+See: [Hardware](hardware.md)
 
 ## Network
 
 > Make the machines talk to each other!
 
-Details at: [Network](docs/network.md)
+Details at: [Network](network.md)
 
 ## The Operating System
 
-Details at: [Operating System](docs/operating-system.md).
+Details at: [Operating System](operating-system.md).
 
 ## Kubernetes
 
-Details at: [Installing K3s](docs/kubernetes.md).
+Details at: [Installing K3s](kubernetes.md).
