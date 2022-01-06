@@ -10,7 +10,7 @@ I started out writing this as a series of notes but it's growing into a mini-ope
 ---
 
 <details>
-  <summary>:rotating_light: HUMAN EMOTION SECTION - DO NOT CLICK IF YOU DISLIKE FEELINGS CHATS :rotating_light:</summary>
+  <summary>:rotating_light: HUMAN EMOTION SECTION - DO NOT CLICK IF YOU DISLIKE FEELINGS :rotating_light:</summary>
   
 ## HUMAN EMOTION: PLEASE LEAVE IF YOU CAN'T COPE
 
