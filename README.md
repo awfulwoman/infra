@@ -2,8 +2,8 @@
 
 My home GitOps setup. Configuration as Code FTW.
 
-* Hardware inventory management: handled by Ansible 
-* Pretty much everything else: handled by Flux and Kubernetes.
+* Hardware inventory management: handled by [Ansible](ansible).
+* Pretty much everything else: handled by [Flux](flux) and Kubernetes.
 
 I started out writing this as a series of notes but it's growing into a mini-opera with weird sentence structures and constantly switching audiences.
 
