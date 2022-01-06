@@ -49,23 +49,23 @@ all:
     # Raspberry Pi hardware
     raspberrypis:
       hosts:
-        weaponisedgender:
-        truthandreconciliation:
-        attitudeadjuster:
         aprilashley:
-        sleeperservice:
-        grabthetension:
-        twistymotherfucker:
-        honestmistake:
+        attitudeadjuster:
         bonerseizure:
         fonduesexparty:
+        grabthetension:
+        honestmistake:
+        sleeperservice:
+        truthandreconciliation:
+        twistymotherfucker:
+        weaponisedgender:
 
     # Docker-based (sunset) - Home Automation
     ha:
       children:
+        ha_homeassistant:
         ha_mosquitto:
         ha_zigbee2mqtt:
-        ha_homeassistant:
 
     # Docker-based (sunset) - Home Automation - Mosquitto MQTT Broker
     ha_mosquitto:
@@ -86,9 +86,9 @@ all:
     homeautomation_agents:
       hosts:
         attitudeadjuster:
-        truthandreconciliation:
         bonerseizure:
         fonduesexparty:
+        truthandreconciliation:
 
     # Kubernetes Home Automation -  Server Nodes
     homeautomation_servers:
@@ -98,14 +98,14 @@ all:
     # Kubernetes Home Automation - Raspberry Pi nodes
     homeautomation_raspberrypis:
       hosts:
-        truthandreconciliation:
-        attitudeadjuster:
         aprilashley:
+        attitudeadjuster:
         bonerseizure:
         fonduesexparty:
+        truthandreconciliation:
 
     # Kubernetes Home Automation - All servers
     homeautomation:
       children:
-        homeautomation_servers:
         homeautomation_agents:
+        homeautomation_servers:
