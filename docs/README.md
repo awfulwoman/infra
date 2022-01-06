@@ -1,13 +1,14 @@
 ## Dependencies
 
-Your Control Node (or "laptop" if you're a human) needs some CLI tools before you can do anything else:
+The Control Node (or "laptop" if you're a human) needs some CLI tools before anything else can happen. 
 
+`brew install` ...
 - `ansible`
 - `kubectl`
 - `helm`
 - `flux`
 
-You'll need to install the dependecies used by Ansible:
+The dependencies for Ansible need to be pulled in:
 
 ```bash
 ansible-galaxy install -r meta/requirements.yaml  
