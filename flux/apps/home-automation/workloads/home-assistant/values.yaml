@@ -11,3 +11,5 @@ ingress:
   # @default -- See values.yaml
   main:
     enabled: true
+    annotations: 
+      - kubernetes.io/ingress.class: nginx
