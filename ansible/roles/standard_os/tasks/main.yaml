@@ -81,6 +81,12 @@
       - python3-docker
     state: present
     update_cache: true
+    
+# - name: Pushover notification on @reboot
+#   ansible.builtin.cron:
+#     name: "Pushover - system rebooted"
+#     special_time: reboot
+#     job: "curl -s --form-string 'token=APP_TOKEN' --form-string 'user=USER_KEY' --form-string 'message={{ansible_host}} rebooted at {{ ansible_date_time.iso8601 }}' https://api.pushover.net/1/messages.json"
 
 # - name: Self Update Restic package
 #   become: true
