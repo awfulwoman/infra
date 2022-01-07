@@ -40,9 +40,13 @@ all:
     weaponisedgender: # Raspberry Pi 1 (DO YOU WANT A CUP OF TEA, GRANDMA?)
       ansible_user: pi
       ansible_host: 192.168.1.107
-#     xxxxxxxxxxxx_new_pi_wh:
-#       ansible_user: pi
-#       ansible_host: 192.168.1.xxx
+    # new_pi_wh: # Raspberry Pi Zero WH
+    #   ansible_user: pi
+    #   ansible_host: 192.168.1.xxx
+    # old_terra_desktop: # x86_64 Intel Core i3-4170 @ 3.7GHZ 4GB
+    #   ansible_user: ubuntu
+    #   ansible_host: 192.168.1.xxx
+
 
 # Here come all the groups! Look at them! Aren't they pretty?
   children:
