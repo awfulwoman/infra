@@ -86,7 +86,7 @@
   ansible.builtin.cron:
     name: "Pushover - system rebooted"
     special_time: reboot
-    job: "curl -s --form-string 'token={{vault_pushover_home_automation_key}}' --form-string 'user={{vault_pushover_user_key}}' --form-string 'message={{ansible_host}} rebooted at {{ ansible_date_time.iso8601 }}' https://api.pushover.net/1/messages.json"
+    job: "curl -s --form-string 'token={{vault_pushover_home_automation_key}}' --form-string 'user={{vault_pushover_user_key}}' --form-string 'message=Server {{inventory_hostname}} rebooted at {{ ansible_date_time.iso8601 }}' https://api.pushover.net/1/messages.json"
 
 # - name: Self Update Restic package
 #   become: true
