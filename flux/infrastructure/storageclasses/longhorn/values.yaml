@@ -1,7 +1,7 @@
 defaultSettings:
   # backupTarget: s3://backupbucket@us-east-1/backupstore
   # backupTargetCredentialSecret: minio-secret
-  # createDefaultDiskLabeledNodes: true
+  createDefaultDiskLabeledNodes: true
   defaultDataPath: /storage
   # replicaSoftAntiAffinity: false
   # storageOverProvisioningPercentage: 600
