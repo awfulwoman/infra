@@ -2,9 +2,9 @@
 - name: Shutdown all Home Automation servers and agents 
   hosts: homeautomation
   gather_facts: no
+  become: true
   tasks:
     - name: shutdown
       community.general.shutdown:
-      sudo: true
     - name: wait go down
       local_action: wait_for host={{ ansible_ssh_host }} port=22 state=stopped
