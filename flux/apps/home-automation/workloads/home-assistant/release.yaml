@@ -4,7 +4,7 @@ metadata:
   name: home-assistant
   namespace: flux-system
 spec:
-  releaseName: homeassistant
+  releaseName: home-assistant
   targetNamespace: home-automation
   chart:
     spec:
