@@ -1,0 +1,13 @@
+image:
+  repository: "homeassistant/home-assistant"
+  tag: 2021.12.7
+env:
+  TZ: "Europe/Berlin"
+service:
+  main:
+    type: LoadBalancer
+ingress:
+  # -- Enable and configure ingress settings for the chart under this key.
+  # @default -- See values.yaml
+  main:
+    enabled: true
