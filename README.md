@@ -29,3 +29,31 @@ So if you see mistakes in this repo... well, it's because I'm new at all this. B
 Anyway, enough of that. I'm sure you're hungry for code by now.
 
 </details>
+
+
+
+## Current Hardware Setup
+
+What I've currently got.
+
+- 5x Raspberry Pis running Kubernetes (K3s controlled by Flux, currently in development)
+- 1x Intel NUC running Docker (Home Assistant, DDNS)
+- 1x Raspberry Pi Zero running Mosquitto MQTT Broker
+- 1x Raspberry Pi Zero running Zigbee2MQTT proxy
+- 1x NAS (TrueNAS) baremetal, 8GB RAM, ZFS
+
+## Desired Harware Setup
+
+What I'm working towards.
+
+Physical servers:
+- Pi or NUC: VPN (Wireguard) baremetal
+- Pi or NUC: DNS (Pihole) baremetal
+- x86_64 board: NAS (TrueNAS) baremetal (maybe sitting on Hypervisor) ZFS
+- x86_64 board: Hypervisor (Proxmox), 64GB RAM ZFS filesystem
+- All those Raspberry Pis put to good use. I'm thinking interactive touchscreens for Home Assistant.
+
+Virtual servers:
+- k3s x 5 worker nodes
+- k3s x 3 storage nodes (Longhorn)
+- Docker-compose running various ad-hoc workload

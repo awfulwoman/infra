@@ -8,7 +8,7 @@ all:
       ansible_user: pi
       ansible_host: 192.168.1.101
     bigsexybeast: # x86_64 i5 2.90GHz 8GB
-      ansible_user: ubuntu
+      ansible_user: root
       ansible_host: 192.168.1.104
     bondagequeen: # x86_64 (NUC) Atom 1.46GHz 8GB
       ansible_user: ubuntu
@@ -63,6 +63,10 @@ all:
         truthandreconciliation:
         twistymotherfucker:
         weaponisedgender:
+
+    proxmox:
+      hosts:
+        bigsexybeast:
 
     # Docker-based (sunset) - Home Automation
     ha:
