@@ -42,7 +42,7 @@ What I've currently got.
 - 1x Raspberry Pi Zero running Zigbee2MQTT proxy
 - 1x NAS (TrueNAS) baremetal, 8GB RAM, ZFS
 
-## Desired Harware Setup
+## Desired Hardware Setup
 
 What I'm working towards.
 
