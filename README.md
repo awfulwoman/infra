@@ -40,7 +40,7 @@ What I've currently got.
 - 1x Intel NUC running Docker (Home Assistant, DDNS)
 - 1x Raspberry Pi Zero running Mosquitto MQTT Broker
 - 1x Raspberry Pi Zero running Zigbee2MQTT proxy
-- 1x NAS (TrueNAS) baremetal, 8GB RAM, MergerFS, multi-terrabyte storage
+- 1x NAS (Proxmox), 8GB RAM, MergerFS, multi-terrabyte storage
 
 ## Desired Hardware Setup
 
@@ -58,3 +58,8 @@ Virtual servers (administered via Terraform + Proxmox plugin):
 - k3s x 5 worker nodes.
 - k3s x 3 storage nodes (Longhorn).
 - Docker-compose running various ad-hoc workload.
+
+
+## Resources
+- https://perfectmediaserver.com
+- https://github.com/ironicbadger/infra
