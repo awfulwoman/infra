@@ -40,20 +40,20 @@ What I've currently got.
 - 1x Intel NUC running Docker (Home Assistant, DDNS)
 - 1x Raspberry Pi Zero running Mosquitto MQTT Broker
 - 1x Raspberry Pi Zero running Zigbee2MQTT proxy
-- 1x NAS (TrueNAS) baremetal, 8GB RAM, ZFS
+- 1x NAS (TrueNAS) baremetal, 8GB RAM, MergerFS, multi-terrabyte storage
 
 ## Desired Hardware Setup
 
 What I'm working towards.
 
-Physical servers:
-- Pi or NUC: VPN (Wireguard) baremetal
-- Pi or NUC: DNS (Pihole) baremetal
-- x86_64 board: NAS (TrueNAS) baremetal (maybe sitting on Hypervisor) ZFS
-- x86_64 board: Hypervisor (Proxmox), 64GB RAM ZFS filesystem
+Physical servers (administered via Ansible):
+- Pi or NUC: VPN (Wireguard) baremetal - dedicated VPN machine
+- Pi or NUC: DNS (Pihole) baremetal - dedicated DNS machine
+- x86_64 board: NAS (TrueNAS) baremetal (maybe sitting on Hypervisor), 16GB RAM, ZFS filesystem, multi-terrabyte storage - used for critical data.
+- x86_64 board: Hypervisor (Proxmox), 64GB RAM, ZFS filesystem, multi-terrabyte storage - used for workloads.
 - All those Raspberry Pis put to good use. I'm thinking interactive touchscreens for Home Assistant.
 
-Virtual servers:
+Virtual servers (administered via Terraform + Proxmox plugin):
 - k3s x 5 worker nodes
 - k3s x 3 storage nodes (Longhorn)
 - Docker-compose running various ad-hoc workload
