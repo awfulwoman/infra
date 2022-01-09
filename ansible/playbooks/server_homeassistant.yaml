@@ -4,9 +4,11 @@
 
 - name: Home Assistant stuff
   hosts: ha_homeassistant
+  become: true
   roles:
     - role: standard_os
-    - role: geerlingguy.docker_arm
+    - role: geerlingguy.docker
+      become: true
     - role: homeassistant
     - role: ddns
     - role: upgrade
