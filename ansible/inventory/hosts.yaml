@@ -117,3 +117,7 @@ all:
       children:
         homeautomation_agents:
         homeautomation_servers:
+
+    wireguard:
+      hosts:
+        sleeperservice:
