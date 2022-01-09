@@ -63,3 +63,4 @@ Virtual servers (administered via Terraform + Proxmox plugin):
 ## Resources
 - https://perfectmediaserver.com
 - https://github.com/ironicbadger/infra
+- https://www.tauceti.blog/posts/kubernetes-the-not-so-hard-way-with-ansible-the-basics/
