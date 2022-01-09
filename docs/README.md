@@ -1,6 +1,6 @@
 ## Dependencies
 
-The Control Node (or "laptop" if you're a human) needs some CLI tools before anything else can happen. 
+The Ansible Control Node needs some CLI tools before anything else can happen. 
 
 `brew install` ...
 - `ansible`
@@ -14,20 +14,8 @@ The dependencies for Ansible need to be pulled in:
 ansible-galaxy install -r meta/requirements.yaml  
 ```
 
-## Hardware
-
-See: [Hardware](hardware.md)
-
-## Network
-
-> Make the machines talk to each other!
-
-Details at: [Network](network.md)
-
-## The Operating System
-
-Details at: [Operating System](operating-system.md).
-
-## Kubernetes
-
-Details at: [Installing K3s](kubernetes.md).
+- [Hardware](hardware.md)
+- [Network](network.md)
+- [Operating System](operating-system.md).
+- [Installing K3s](kubernetes.md).
+- [Naming IoT devices](naming_iot_devices.md).
