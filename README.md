@@ -68,3 +68,4 @@ Virtual servers (administered via Terraform + Proxmox plugin):
 - https://unraid-guides.com/2020/12/07/dont-ever-use-cheap-pci-e-sata-expansion-cards-with-unraid/
 - https://github.com/onedr0p/home-ops
 - https://github.com/lisenet/kubernetes-homelab
+- https://www.servethehome.com/buyers-guides/top-hardware-components-freenas-nas-servers/top-picks-freenas-hbas/
