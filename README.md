@@ -69,3 +69,4 @@ Virtual servers (administered via Terraform + Proxmox plugin):
 - https://github.com/onedr0p/home-ops
 - https://github.com/lisenet/kubernetes-homelab
 - https://www.servethehome.com/buyers-guides/top-hardware-components-freenas-nas-servers/top-picks-freenas-hbas/
+- https://www.wireguard.com
