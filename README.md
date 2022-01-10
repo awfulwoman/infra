@@ -65,3 +65,4 @@ Virtual servers (administered via Terraform + Proxmox plugin):
 - https://perfectmediaserver.com
 - https://github.com/ironicbadger/infra
 - https://www.tauceti.blog/posts/kubernetes-the-not-so-hard-way-with-ansible-the-basics/
+- https://unraid-guides.com/2020/12/07/dont-ever-use-cheap-pci-e-sata-expansion-cards-with-unraid/
