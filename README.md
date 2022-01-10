@@ -71,3 +71,4 @@ Virtual servers (administered via Terraform + Proxmox plugin):
 - https://www.servethehome.com/buyers-guides/top-hardware-components-freenas-nas-servers/top-picks-freenas-hbas/
 - https://www.wireguard.com
 - https://github.com/kelseyhightower/kubernetes-the-hard-way
+- https://github.com/kubernetes/git-sync
