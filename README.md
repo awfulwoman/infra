@@ -1,10 +1,12 @@
 # At Home With The GitOps
 
 <img align="right" width="100" height="100" src="http://www.fillmurray.com/100/100">
-My home GitOps setup. Configuration as Code FTW.
 
-* Hardware inventory management: handled by [Ansible](ansible).
-* Pretty much everything else: handled by [Flux](flux) and Kubernetes.
+Let me and Bill Murray show you our home GitOps setup. 
+
+- Configuration as Code FTW.
+- Hardware inventory management: handled by [Ansible](ansible).
+- Pretty much everything else: handled by [Flux](flux) and Kubernetes.
 
 I started out writing this as a series of notes but it's growing into a mini-opera composed of weird sentence structures and addressing a constantly switching audience. I shall one day address this issue.
 
