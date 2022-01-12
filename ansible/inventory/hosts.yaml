@@ -25,6 +25,9 @@ all:
     honestmistake: # Raspberry Pi Zero WH
       ansible_user: pi
       ansible_host: 192.168.1.35
+    impartialbroadcaster: # Intel NUC
+      ansible_user: ubuntu
+      ansible_host: 192.168.1.113
     sleeperservice: # Raspberry Pi 3 1GB 
       ansible_user: pi
       ansible_host: 192.168.1.103
