@@ -1,0 +1,12 @@
+---
+# Misc docker services
+# Assumes a bare metal install of Raspbian or Ubuntu
+
+- name: MQTT Broker - Apply standard OS config
+  hosts: impartialbroadcaster
+  roles:
+    - role: standard_os
+    - role: weareinteractive.environment
+    - role: geerlingguy.docker
+    - role: upgrade
+  become: true

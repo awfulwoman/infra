@@ -8,7 +8,6 @@
   roles:
     - role: standard_os
     - role: geerlingguy.docker
-      become: true
     - role: homeassistant
     - role: ddns
     - role: upgrade

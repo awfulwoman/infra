@@ -1,0 +1,42 @@
+- name: Creating a file with content
+  ansible.builtin.copy:
+    dest: "/home/{{ ansible_user }}/psmqtt.conf"
+    content: |
+      import socket
+
+      mqtt_broker = 'twistymotherfucker'       # default: 'localhost'
+      mqtt_port = 1883                # default: 1883
+      mqtt_clientid = 'psmqtt-1'
+      mqtt_username = ''
+      mqtt_password = ''
+      mqtt_clean_session = False
+      mqtt_qos = 0
+      mqtt_retain = False
+      #mqtt_topic_prefix = 'apartment/'
+      mqtt_topic_prefix = 'apartment/' + socket.gethostname() + '/'
+      mqtt_request_topic = 'request'
+
+      schedule = {
+          "every 1 minute" :    [
+              "cpu_percent",
+              "virtual_memory/percent",
+          ],
+          "every 60 minutes"  :     "disk_usage/percent/|",  # slash replaced with vertical slash
+          "every 3 hours" : {
+              "boot_time/{{x|uptime}}": "uptime",
+          }
+      }
+
+- name: Create a PSMQTT container
+  become: true
+  community.docker.docker_container:
+    name: psmqtt
+    image: soulassassin85/psmqtt:latest
+    state: started
+    privileged: true
+    restart_policy: unless-stopped
+    env: 
+      TZ: Berlin/Europe
+    volumes:
+      - "/home/{{ ansible_user }}/psmqtt.conf:/opt/psmqtt/conf/psmqtt.conf"
+      - /etc/localtime:/etc/localtime:ro
