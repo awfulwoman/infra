@@ -7,6 +7,8 @@
   roles:
     - role: standard_os
     - role: weareinteractive.environment
+      no_log: true
     - role: geerlingguy.docker
+    - role: psmqtt
     - role: upgrade
   become: true
