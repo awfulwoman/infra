@@ -1,3 +1,5 @@
 # Neofetch
 
 I feel like one of the cool kids by using [Neofetch](https://github.com/dylanaraps/neofetch).
+
+![](screenshot.png)
