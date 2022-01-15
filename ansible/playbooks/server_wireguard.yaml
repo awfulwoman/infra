@@ -1,5 +1,5 @@
 ---
-# Home Automation playbook
+# Wireguard Server - entrypoint for LAN
 # Assumes a bare install of Raspbian or Ubuntu
 
 - name: Wireguard server
@@ -10,7 +10,7 @@
     - role: standard_os
     # - role: githubixx.harden-linux
     - role: githubixx.ansible_role_wireguard
-      no_log: false
+    - role: wireguard
   handlers:
     - name: Reboot host
       become: true

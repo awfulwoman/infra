@@ -1,9 +1,9 @@
 # name: Sleeper Service
 # type: 
 # arch: 
-# cpu: 
-# mem: 
-# bootdisk: 
-# Raspberry Pi 3 | aarch64 | CPU Cortex-A53 | mem 1GB 
-# storage_uuid: 
+# Raspberry Pi 3
+# cpu: CPU Cortex-A53
+# mem: 1GB
+# arch: aarch64
+mac_address: "b8:27:eb:6e:31:5a"
 ansible_python_interpreter: /usr/bin/python3
