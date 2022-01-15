@@ -3,11 +3,9 @@
 # Assumes a bare install of Raspbian or Ubuntu
 
 - name: Wireguard server
-  hosts: wireguard
+  hosts: servers
   become: true
   roles:
-    - role: raspberry_pi
-    - role: standard_os
     # - role: githubixx.harden-linux
     - role: githubixx.ansible_role_wireguard
     - role: wireguard

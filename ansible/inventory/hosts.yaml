@@ -1,37 +1,42 @@
 ---
 all:
   hosts:
-    # SERVERS
-    # -------
-    # Defined: as "machines with a user-configurable Operating System that 
-    # can be easily administered with Ansible"
     aprilashley: # Raspberry Pi 4 8GB
       ansible_user: pi
       ansible_host: 192.168.1.102
+      wireguard_address: "10.8.0.115/24"
     attitudeadjuster: # Raspberry Pi 4 8GB 
       ansible_user: pi
       ansible_host: 192.168.1.101
+      wireguard_address: "10.8.0.114/24"
     bigsexybeast: # x86_64 i5 2.90GHz 8GB
       ansible_user: root
       ansible_host: 192.168.1.104
+      wireguard_address: "10.8.0.113/24"
     bondagequeen: # x86_64 (NUC) Atom 1.46GHz 8GB
       ansible_user: ubuntu
       ansible_host: 192.168.1.106
+      wireguard_address: "10.8.0.112/24"
     bonerseizure: # Raspberry Pi 4 2GB
       ansible_user: pi
       ansible_host: 192.168.1.111
+      wireguard_address: "10.8.0.111/24"
     fonduesexparty: # Raspberry Pi 4 2GB
       ansible_user: pi
       ansible_host: 192.168.1.112
+      wireguard_address: "10.8.0.110/24"
     grabthetension: # Raspberry Pi Zero W
       ansible_user: pi
       ansible_host: 192.168.1.109
+      wireguard_address: "10.8.0.109/24"
     honestmistake: # Raspberry Pi Zero WH
       ansible_user: pi
       ansible_host: 192.168.1.35
+      wireguard_address: "10.8.0.108/24"
     impartialbroadcaster: # Intel NUC
       ansible_user: ubuntu
       ansible_host: 192.168.1.113
+      wireguard_address: "10.8.0.103/24"
     sleeperservice: # Raspberry Pi 3 1GB 
       ansible_user: pi
       ansible_host: 192.168.1.103
@@ -39,15 +44,19 @@ all:
     truthandreconciliation: # Raspberry Pi 4 4GB
       ansible_user: pi
       ansible_host: 192.168.1.100
+      wireguard_address: "10.8.0.104/24"
     twistymotherfucker: # Raspberry Pi Zero
       ansible_user: pi
       ansible_host: 192.168.1.108
+      wireguard_address: "10.8.0.105/24"
     universallover: # x86_64 i5 2.70GHz 8GB
       ansible_user: ubuntu
       ansible_host: 192.168.1.105
+      wireguard_address: "10.8.0.106/24"
     weaponisedgender: # Raspberry Pi 1 (DO YOU WANT A CUP OF TEA, GRANDMA?)
       ansible_user: pi
       ansible_host: 192.168.1.107
+      wireguard_address: "10.8.0.107/24"
     # new_pi_wh: # Raspberry Pi Zero WH
     #   ansible_user: pi
     #   ansible_host: 192.168.1.xxx
@@ -55,21 +64,49 @@ all:
     #   ansible_user: ubuntu
     #   ansible_host: 192.168.1.xxx
 
-    # DEVICES
-    # -------
-    # Defined as: "Consumer hardware on the network that has no user-configurable 
-    # Operating System and that cannot be easily configured via Ansible"
-
     # Chromecasts
     # Homepods
     # Hifi
     # Netgear NAS (belonging to my partner)
 
+  
+    mba2011: # MacBook Air 2011 (yes, it's over a decade old)
+      ansible_user: charlie
+      ansible_host: 192.168.1.5
 
   # GROUPS
   # ------
   # Groupings of servers that allow them to be administered collectively.
   children:
+
+    # Group: Laptops
+    laptops:
+      hosts:
+        mba2011:
+    # Group: Servers
+    servers: 
+      hosts:
+        aprilashley:
+        attitudeadjuster: 
+        bigsexybeast: 
+        bondagequeen: 
+        bonerseizure: 
+        fonduesexparty:
+        grabthetension: 
+        honestmistake: 
+        impartialbroadcaster: 
+        sleeperservice: 
+        truthandreconciliation:
+        twistymotherfucker:
+        universallover: 
+        weaponisedgender: 
+        # new_pi_wh: # Raspberry Pi Zero WH
+        #   ansible_user: pi
+        #   ansible_host: 192.168.1.xxx
+        # old_terra_desktop: # x86_64 Intel Core i3-4170 @ 3.7GHZ 4GB
+        #   ansible_user: ubuntu
+        #   ansible_host: 192.168.1.xxx
+
     # Group: Raspberry Pi hardware
     # Because they are Single Board Computers these devices often have 
     # unique setup requirements.
