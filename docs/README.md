@@ -14,8 +14,11 @@ The dependencies for Ansible need to be pulled in:
 ansible-galaxy install -r meta/requirements.yaml  
 ```
 
+## Stuff
+
+- [Learnings](learnings)
 - [Hardware](hardware.md)
 - [Network](network.md)
-- [Operating System](operating-system.md).
-- [Installing K3s](kubernetes.md).
-- [Naming IoT devices](naming_iot_devices.md).
+- [Operating System](operating-system.md)
+- [Installing K3s](kubernetes.md)
+- [Naming IoT devices](naming_iot_devices.md)
