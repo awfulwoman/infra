@@ -1,6 +1,10 @@
 ---
 all:
   hosts:
+    # SERVERS
+    # -------
+    # Defined: as "machines with a user-configurable Operating System that 
+    # can be easily administered with Ansible"
     aprilashley: # Raspberry Pi 4 8GB
       ansible_user: pi
       ansible_host: 192.168.1.102
@@ -49,6 +53,16 @@ all:
     # old_terra_desktop: # x86_64 Intel Core i3-4170 @ 3.7GHZ 4GB
     #   ansible_user: ubuntu
     #   ansible_host: 192.168.1.xxx
+
+    # DEVICES
+    # -------
+    # Defined as: "Consumer hardware on the network that has no user-configurable 
+    # Operating System and that cannot be easily configured via Ansible"
+
+    # Chromecasts
+    # Homepods
+    # Hifi
+    # Netgear NAS (belonging to my partner)
 
 
 # Here come all the groups! Look at them! Aren't they pretty?
