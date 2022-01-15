@@ -65,9 +65,13 @@ all:
     # Netgear NAS (belonging to my partner)
 
 
-# Here come all the groups! Look at them! Aren't they pretty?
+  # GROUPS
+  # ------
+  # Groupings of servers that allow them to be administered collectively.
   children:
-    # Raspberry Pi hardware
+    # Group: Raspberry Pi hardware
+    # Because they are Single Board Computers these devices often have 
+    # unique setup requirements.
     raspberrypis:
       hosts:
         aprilashley:
@@ -81,33 +85,37 @@ all:
         twistymotherfucker:
         weaponisedgender:
 
+    # Group: Proxmox 
+    # A virtualisation platform that acts as a Hypervisor.
     proxmox:
       hosts:
         bigsexybeast:
 
-    # Docker-based (sunset) - Home Automation
+    # Group: Home Automation
+    # A collection of Docker-based apps that allow home automation
+    # Currently undergoing big changes.
     ha:
       children:
         ha_homeassistant:
         ha_mosquitto:
         ha_zigbee2mqtt:
 
-    # Docker-based (sunset) - Home Automation - Mosquitto MQTT Broker
+    # Group: Home Automation - Mosquitto MQTT Broker
     ha_mosquitto:
       hosts:
         twistymotherfucker:
     
-    # Docker-based (sunset) - Home Automation - Zigbee2MQTT
+    # Group: Home Automation - Zigbee2MQTT
     ha_zigbee2mqtt:
       hosts:
         grabthetension:
 
-    # Docker-based (sunset) - Home Automation - Home Assistant
+    # Group: Home Automation - Home Assistant
     ha_homeassistant:
       hosts:
         bondagequeen:
 
-    # Kubernetes Home Automation - Agent Nodes
+    # Group: Kubernetes Home Automation - Agent Nodes
     homeautomation_agents:
       hosts:
         attitudeadjuster:
@@ -115,12 +123,12 @@ all:
         fonduesexparty:
         truthandreconciliation:
 
-    # Kubernetes Home Automation -  Server Nodes
+    # Group: Kubernetes Home Automation -  Server Nodes
     homeautomation_servers:
       hosts:
         aprilashley:
 
-    # Kubernetes Home Automation - Raspberry Pi nodes
+    # Group: Kubernetes Home Automation - Raspberry Pi nodes
     homeautomation_raspberrypis:
       hosts:
         aprilashley:
@@ -129,12 +137,14 @@ all:
         fonduesexparty:
         truthandreconciliation:
 
-    # Kubernetes Home Automation - All servers
+    # Group: Kubernetes Home Automation - All servers
     homeautomation:
       children:
         homeautomation_agents:
         homeautomation_servers:
 
+    # Group: Wireguard
+    # Wireguard is a VPN that allows me to access my LAN remotely
     wireguard:
       hosts:
         sleeperservice:
