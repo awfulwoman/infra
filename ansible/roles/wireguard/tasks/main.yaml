@@ -5,3 +5,35 @@
       state: present
       sysctl_set: yes
       reload: yes
+  - name: Install QRencode
+    ansible.builtin.apt:
+      name: qrencode
+      state: present
+    when: wireguard_wan_entrypoint is defined and wireguard_wan_entrypoint|bool == true
+  
+
+  # https://serversideup.net/generating-wireguard-qr-codes-for-fast-mobile-deployments/
+
+  # - name: Generate private key
+  # Generate mobile device private key (if mobiledevice.key not present)
+    # - add generated private key to PRIVATE_KEY variable
+
+  # - name: Generate public key
+  # Generate mobile device public key from private (if mobiledevice.key.pub not present)
+  
+  # - name: Generate mobiledevice.conf file
+  # ---------------------------------
+  # mobiledevice.conf Jinja2 template
+  # ---------------------------------
+  # [Interface]
+  # PrivateKey = {{PRIVATE_KEY}}
+  # Address = {{MOBILE_DEVICE_VPN_IP_ADDRESS}}
+  # DNS = 1.1.1.1, 1.0.0.1
+  #
+  # [Peer]
+  # PublicKey = {{VPN_SERVER_PUBLIC_KEY}}
+  # AllowedIPs = 0.0.0.0/0
+  # Endpoint = {{VPN_SERVER_ADDRESS}}:{{VPN_SERVER_PORT|51820}}
+
+  # - name: Generate QR code with mobile conf
+  # qrencode -t ansiutf8 < /etc/wireguard/clients/mobile.conf

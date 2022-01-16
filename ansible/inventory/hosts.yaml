@@ -69,10 +69,10 @@ all:
     # Hifi
     # Netgear NAS (belonging to my partner)
 
-  
     mba2011: # MacBook Air 2011 (yes, it's over a decade old)
       ansible_user: charlie
       ansible_host: 192.168.1.5
+      wireguard_address: "10.8.0.116/24"
 
   # GROUPS
   # ------
@@ -184,5 +184,6 @@ all:
     # Group: Wireguard
     # Wireguard is a VPN that allows me to access my LAN remotely
     wireguard:
-      hosts:
-        sleeperservice:
+      children:
+        servers:
+        laptops:

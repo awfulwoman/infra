@@ -1,13 +1,13 @@
 ---
-# Wireguard Server - entrypoint for LAN
+# Wireguard Mesh Network
 # Assumes a bare install of Raspbian or Ubuntu
 
 - name: Wireguard server
-  hosts: servers
+  hosts: wireguard
   become: true
   roles:
     # - role: githubixx.harden-linux
-    - role: githubixx.ansible_role_wireguard
+    # - role: githubixx.ansible_role_wireguard
     - role: wireguard
   handlers:
     - name: Reboot host

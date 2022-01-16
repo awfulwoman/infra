@@ -7,3 +7,4 @@
 # arch: aarch64
 mac_address: "b8:27:eb:6e:31:5a"
 ansible_python_interpreter: /usr/bin/python3
+wireguard_wan_entrypoint: true
