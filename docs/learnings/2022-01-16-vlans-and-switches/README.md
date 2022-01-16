@@ -1,4 +1,4 @@
-# Vlans and Switches
+# VLANs and Switches
 
 If I implement VLANs (Virtual Local Area Networks) do I have to get managed switches for my wired network? 😱 
 
