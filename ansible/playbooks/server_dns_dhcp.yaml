@@ -1,0 +1,14 @@
+---
+# DNS + DHCP server
+# Assumes a bare metal install of Raspbian or Ubuntu
+
+- name: DNS + DHCP server
+  hosts: dns_dhcp
+  roles:
+    - role: standard_os
+    - role: weareinteractive.environment
+      no_log: true
+    - role: geerlingguy.docker_arm
+    - role: dns_dhcp
+    - role: upgrade
+  become: true

@@ -1,0 +1,56 @@
+- name: Install apt packages
+  become: true
+  ansible.builtin.apt:
+    name: 
+      - network-manager
+    state: present
+    update_cache: true
+
+- name: Add an Ethernet connection with static IP configuration
+  become: true
+  community.general.nmcli:
+    conn_name: default
+    ifname: eth0
+    type: ethernet
+    ip4: "{{dns_dhcp_static_ip}}/{{dns_dhcp_netmask}}"
+    gw4: "{{dns_dhcp_gateway}}"
+    state: present
+
+- name: Create pihole etc-pihole dir
+  ansible.builtin.file:
+    path: "/home/{{ ansible_user }}/etc-pihole"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0755"
+
+- name: Create pihole etc-dnsmasq.d dir
+  ansible.builtin.file:
+    path: "/home/{{ ansible_user }}/etc-dnsmasq.d"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0755"
+
+- name: Create a pihole container
+  become: true
+  community.docker.docker_container:
+    name: pihole
+    image: pihole/pihole:latest
+    network_mode: host
+    env:
+      TZ: "Europe/Berlin"
+      WEBPASSWORD: "{{ pihole_password }}"
+      DHCP_ACTIVE: "true"
+      DHCP_START: "192.168.1.150"
+      DHCP_END: "192.168.1.199"
+      DHCP_ROUTER: "192.168.1.1"
+      PIHOLE_DOMAIN: "i.affordablepotatoes.com"
+      WEBTHEME: "lcars"
+    state: started
+    restart_policy: unless-stopped
+    volumes:
+      - "/home/{{ ansible_user }}/etc-pihole/:/etc/pihole/"
+      - "/home/{{ ansible_user }}/etc-dnsmasq.d/:/etc/dnsmasq.d/"
+    capabilities:
+      - NET_ADMIN

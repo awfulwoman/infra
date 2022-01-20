@@ -1,0 +1,5 @@
+wireguard_unmanaged_peers:
+  iphone.device.affordablepotatoes.com:
+    public_key: FeRDX4+WwoMJwbzH2RVcyJKzIN4MGRDo95OlnjfVolg=
+  mba2011.device.affordablepotatoes.com:
+    public_key: WcDA42UOlx8n9Ykun9MhZ3aPnH2Y1bLuz8VneiJc7D0=

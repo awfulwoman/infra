@@ -11,6 +11,8 @@ roles:
     version: v1.0.0
   - name: geerlingguy.docker
     version: 4.1.1
+  - name: geerlingguy.docker_arm
+    version: 5.0.0
   - name: githubixx.ansible_role_wireguard
     version: 8.4.0
   - name: githubixx.harden-linux

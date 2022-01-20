@@ -7,4 +7,7 @@
 # arch: aarch64
 mac_address: "b8:27:eb:6e:31:5a"
 ansible_python_interpreter: /usr/bin/python3
-wireguard_wan_entrypoint: true
+raspberry_pi_disable_wifi: true
+raspberry_pi_disable_bluetooth: true
+# wireguard_public_key:
+# wireguard_private_key:

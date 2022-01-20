@@ -37,9 +37,9 @@ all:
       ansible_user: ubuntu
       ansible_host: 192.168.1.113
       wireguard_address: "10.8.0.103/24"
-    sleeperservice: # Raspberry Pi 3 1GB 
+    sleeperservice: # Raspberry Pi 3 1GB. DNS + DHCP server!
       ansible_user: pi
-      ansible_host: 192.168.1.103
+      ansible_host: 192.168.1.2
       wireguard_address: "10.8.0.101/24"
     truthandreconciliation: # Raspberry Pi 4 4GB
       ansible_user: pi
@@ -69,15 +69,21 @@ all:
     # Hifi
     # Netgear NAS (belonging to my partner)
 
-    mba2011: # MacBook Air 2011 (yes, it's over a decade old)
+    mba2011.device.affordablepotatoes.com: # MacBook Air 2011 (yes, it's over a decade old)
       ansible_user: charlie
       ansible_host: 192.168.1.5
       wireguard_address: "10.8.0.116/24"
+
+    iphone.device.affordablepotatoes.com: # iPhone (just to record the wireguard ip address)
+      wireguard_address: "10.8.0.117/24"
 
   # GROUPS
   # ------
   # Groupings of servers that allow them to be administered collectively.
   children:
+    dns_dhcp:
+      hosts:
+        sleeperservice:
 
     # Group: Laptops
     laptops:
