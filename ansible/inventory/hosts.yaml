@@ -82,7 +82,7 @@ all:
   # ------
   # Groupings of servers that allow them to be administered collectively.
   children:
-    dns_dhcp:
+    pihole:
       hosts:
         sleeperservice:
 

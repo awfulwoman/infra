@@ -3,12 +3,12 @@
 # Assumes a bare metal install of Raspbian or Ubuntu
 
 - name: DNS + DHCP server
-  hosts: dns_dhcp
+  hosts: pihole
   roles:
     - role: standard_os
     - role: weareinteractive.environment
       no_log: true
     - role: geerlingguy.docker_arm
-    - role: dns_dhcp
+    - role: pihole
     - role: upgrade
   become: true

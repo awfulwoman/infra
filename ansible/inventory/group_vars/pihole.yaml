@@ -1,6 +1,6 @@
-dns_dhcp_static_ip: 192.168.1.2
-dns_dhcp_netmask: 24
-dns_dhcp_gateway: 192.168.1.1
+pihole_static_ip: 192.168.1.2
+pihole_netmask: 24
+pihole_gateway: 192.168.1.1
 pihole_password: !vault |
           $ANSIBLE_VAULT;1.2;AES256;beanpod
           38656631333564306634353432383439326339656564663563333234653461366364353966396535
