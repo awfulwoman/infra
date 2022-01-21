@@ -49,6 +49,7 @@
       DHCP_ROUTER: "192.168.1.1"
       PIHOLE_DOMAIN: "i.affordablepotatoes.com"
       WEBTHEME: "lcars"
+      ADMIN_EMAIL: pihole@affordablepotatoes.com
     state: started
     restart_policy: unless-stopped
     volumes:
