@@ -5,12 +5,12 @@
 # cpu: CPU Cortex-A53
 # mem: 1GB
 # arch: aarch64
-mac_address: "b8:27:eb:6e:31:5a"
-ansible_python_interpreter: /usr/bin/python3
-raspberry_pi_disable_wifi: true
-raspberry_pi_disable_bluetooth: true
-# wireguard_public_key:
 # wireguard_private_key:
-ansible_user: pi
+# wireguard_public_key:
 ansible_host: 192.168.1.2
+ansible_python_interpreter: /usr/bin/python3
+ansible_user: pi
+mac_address: "b8:27:eb:6e:31:5a"
+raspberry_pi_disable_bluetooth: true
+raspberry_pi_disable_wifi: true
 wireguard_address: "10.8.0.101/24"

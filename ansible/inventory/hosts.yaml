@@ -1,7 +1,7 @@
 ---
 all:
   hosts:
-    applewatch:              # It's an apple watch and lives on my wrist
+    applewatch:               # It's an apple watch and lives on my wrist
     aprilashley:              # Raspberry Pi 4 8GB
     attitudeadjuster:         # Raspberry Pi 4 8GB 
     belkinsoundform:          # why did I buy this?
@@ -19,8 +19,8 @@ all:
     fonduesexparty:           # Raspberry Pi 4 2GB
     grabthetension:           # Raspberry Pi Zero W
     hifi:                     # It's a Hifi. It has an ethernet connection. It plays music.
-    homepod_bedroom:          # Homepod Bedroom
-    homepod_livingroom:       # Homepod Livingroom
+    homepod-bedroom:          # Homepod Bedroom
+    homepod-livingroom:       # Homepod Livingroom
     honestmistake:            # Raspberry Pi Zero WH
     impartialbroadcaster:     # Intel NUC
     ipad-green:               # An ancient ipad that lives in a nice green case

@@ -4,9 +4,10 @@
 # cpu: CPU Cortex-A72
 # mem: 8GB
 # bootdisk_size: 28.4G
-storage_uuid: 4ad3fab1-708a-4051-a3f7-c8c3db158f7b
-storage_mount: /storage
+ansible_host: 192.168.1.101
 ansible_python_interpreter: /usr/bin/python3
 ansible_user: pi
-ansible_host: 192.168.1.101
+# mac_address: ""
+storage_mount: /storage
+storage_uuid: 4ad3fab1-708a-4051-a3f7-c8c3db158f7b
 wireguard_address: "10.8.0.114/24"

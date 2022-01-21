@@ -5,9 +5,8 @@
 # mem: 
 # bootdisk: 
 # Intel NUC | x86_64 | CPU Intel(R) Atom(TM) CPU  E3815  @ 1.46GHz | mem 8GB | bootdisk 110.3G
-
 # storage_uuid: 
-mac_address: "c0:3f:d5:67:db:ab"
-ansible_user: ubuntu
 ansible_host: 192.168.1.106
+ansible_user: ubuntu
+mac_address: "c0:3f:d5:67:db:ab"
 wireguard_address: "10.8.0.112/24"
