@@ -1,82 +1,48 @@
 ---
 all:
   hosts:
-    aprilashley: # Raspberry Pi 4 8GB
-      ansible_user: pi
-      ansible_host: 192.168.1.102
-      wireguard_address: "10.8.0.115/24"
-    attitudeadjuster: # Raspberry Pi 4 8GB 
-      ansible_user: pi
-      ansible_host: 192.168.1.101
-      wireguard_address: "10.8.0.114/24"
-    bigsexybeast: # x86_64 i5 2.90GHz 8GB
-      ansible_user: root
-      ansible_host: 192.168.1.104
-      wireguard_address: "10.8.0.113/24"
-    bondagequeen: # x86_64 (NUC) Atom 1.46GHz 8GB
-      ansible_user: ubuntu
-      ansible_host: 192.168.1.106
-      wireguard_address: "10.8.0.112/24"
-    bonerseizure: # Raspberry Pi 4 2GB
-      ansible_user: pi
-      ansible_host: 192.168.1.111
-      wireguard_address: "10.8.0.111/24"
-    fonduesexparty: # Raspberry Pi 4 2GB
-      ansible_user: pi
-      ansible_host: 192.168.1.112
-      wireguard_address: "10.8.0.110/24"
-    grabthetension: # Raspberry Pi Zero W
-      ansible_user: pi
-      ansible_host: 192.168.1.109
-      wireguard_address: "10.8.0.109/24"
-    honestmistake: # Raspberry Pi Zero WH
-      ansible_user: pi
-      ansible_host: 192.168.1.35
-      wireguard_address: "10.8.0.108/24"
-    impartialbroadcaster: # Intel NUC
-      ansible_user: ubuntu
-      ansible_host: 192.168.1.113
-      wireguard_address: "10.8.0.103/24"
-    sleeperservice: # Raspberry Pi 3 1GB. DNS + DHCP server!
-      ansible_user: pi
-      ansible_host: 192.168.1.2
-      wireguard_address: "10.8.0.101/24"
-    truthandreconciliation: # Raspberry Pi 4 4GB
-      ansible_user: pi
-      ansible_host: 192.168.1.100
-      wireguard_address: "10.8.0.104/24"
-    twistymotherfucker: # Raspberry Pi Zero
-      ansible_user: pi
-      ansible_host: 192.168.1.108
-      wireguard_address: "10.8.0.105/24"
-    universallover: # x86_64 i5 2.70GHz 8GB
-      ansible_user: ubuntu
-      ansible_host: 192.168.1.105
-      wireguard_address: "10.8.0.106/24"
-    weaponisedgender: # Raspberry Pi 1 (DO YOU WANT A CUP OF TEA, GRANDMA?)
-      ansible_user: pi
-      ansible_host: 192.168.1.107
-      wireguard_address: "10.8.0.107/24"
-    # new_pi_wh: # Raspberry Pi Zero WH
-    #   ansible_user: pi
-    #   ansible_host: 192.168.1.xxx
-    # old_terra_desktop: # x86_64 Intel Core i3-4170 @ 3.7GHZ 4GB
-    #   ansible_user: ubuntu
-    #   ansible_host: 192.168.1.xxx
-
-    # Chromecasts
-    # Homepods
-    # Hifi
-    # Netgear NAS (belonging to my partner)
-
-    mba2011: # MacBook Air 2011 (yes, it's over a decade old)
-      ansible_user: charlie
-      ansible_host: 192.168.1.5
-      wireguard_address: "10.8.0.116/24"
-
-    iphone: # iPhone (just to record the wireguard ip address)
-      ansible_host: 192.168.1.11
-      wireguard_address: "10.8.0.117/24"
+    applewatch:              # It's an apple watch and lives on my wrist
+    aprilashley:              # Raspberry Pi 4 8GB
+    attitudeadjuster:         # Raspberry Pi 4 8GB 
+    belkinsoundform:          # why did I buy this?
+    bigsexybeast:             # x86_64 i5 2.90GHz 8GB
+    bondagequeen:             # x86_64 (NUC) Atom 1.46GHz 8GB
+    bonerseizure:             # Raspberry Pi 4 2GB
+    broadlink-rm3:            # A little IR blaster for automating IR devices
+    bunny:                    # Netgear NAS (it belongs to my partner and is about a million years old)
+    chromecast-audio-1:       # Chromecast Audio 1
+    chromecast-audio-2:       # Chromecast Audio 2
+    chromecast-audio-3:       # Chromecast Audio 3
+    chromecast:               # Chromecast
+    cleaning-robot-derek:     # Derek cleans the downstairs and is shiny
+    cleaning-robot-trevor:    # Trevor cleans the upstairs and has gone senile
+    fonduesexparty:           # Raspberry Pi 4 2GB
+    grabthetension:           # Raspberry Pi Zero W
+    hifi:                     # It's a Hifi. It has an ethernet connection. It plays music.
+    homepod_bedroom:          # Homepod Bedroom
+    homepod_livingroom:       # Homepod Livingroom
+    honestmistake:            # Raspberry Pi Zero WH
+    impartialbroadcaster:     # Intel NUC
+    ipad-green:               # An ancient ipad that lives in a nice green case
+    ipad-wall:                # An ancient ipad mini that lives on the wall
+    ipad-work:                # My partners work ipad
+    iphone:                   # My iPhone
+    kindle-pw-gen05:          # It displays ebooks, very slowly
+    kindle-pw-gen10:          # It displays ebooks
+    kobo:                     # It displays ebooks that are not from Amazon. I won this at a live Ubuntu Podcast recording I think.
+    ladyrona:                 # x86_64 Intel Core i3 - Proxmox NAS
+    mba2011:                  # MacBook Air 2011 (yes, it's over a decade old. I still use it as my personal machine!)
+    mbp2020:                  # My fancy Apple Pro M1 work laptop
+    oneplus-6:                # My partners phone
+    remarkable:               # My remarkable eink tablet
+    sleeperservice:           # Raspberry Pi 3 1GB - PiHole DNS + DHCP server
+    thinkpad:                 # My partner's work laptop
+    truthandreconciliation:   # Raspberry Pi 4 4GB
+    twistymotherfucker:       # Raspberry Pi Zero
+    universallover:           # x86_64 i5 2.70GHz 8GB
+    unused-asus-board:        # x86_64 Intel Core i3-4170 @ 3.7GHZ 4GB
+    unused-pi-zero-wh:        # Raspberry Pi Zero WH
+    weaponisedgender:         # Raspberry Pi 1 (DO YOU WANT A CUP OF TEA, GRANDMA?)
 
   # GROUPS
   # ------
@@ -91,6 +57,7 @@ all:
       hosts:
         mba2011:
     # Group: Servers
+    # Machines that act as servers in some capacity or another
     servers: 
       hosts:
         aprilashley:
@@ -107,16 +74,10 @@ all:
         twistymotherfucker:
         universallover: 
         weaponisedgender: 
-        # new_pi_wh: # Raspberry Pi Zero WH
-        #   ansible_user: pi
-        #   ansible_host: 192.168.1.xxx
-        # old_terra_desktop: # x86_64 Intel Core i3-4170 @ 3.7GHZ 4GB
-        #   ansible_user: ubuntu
-        #   ansible_host: 192.168.1.xxx
 
     # Group: Raspberry Pi hardware
-    # Because they are Single Board Computers these devices often have 
-    # unique setup requirements.
+    # Because they are Single Board Computers these devices 
+    # often have unique setup requirements.
     raspberrypis:
       hosts:
         aprilashley:
@@ -131,13 +92,14 @@ all:
         weaponisedgender:
 
     # Group: Proxmox 
-    # A virtualisation platform that acts as a Hypervisor.
-    proxmox:
+    # A virtualisation platform that acts as a Hypervisor for VMs.
+    # Can have multiple nodes.
+    proxmox_nodes:
       hosts:
         bigsexybeast:
 
     # Group: Home Automation
-    # A collection of Docker-based apps that allow home automation
+    # A collection of Docker-based apps that allow home automation.
     # Currently undergoing big changes.
     ha:
       children:

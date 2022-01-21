@@ -11,3 +11,6 @@ raspberry_pi_disable_wifi: true
 raspberry_pi_disable_bluetooth: true
 # wireguard_public_key:
 # wireguard_private_key:
+ansible_user: pi
+ansible_host: 192.168.1.2
+wireguard_address: "10.8.0.101/24"

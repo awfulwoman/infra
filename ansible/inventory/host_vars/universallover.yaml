@@ -6,3 +6,6 @@
 # bootdisk: 
 # Generic PC | x86_64 | CPU Intel(R) Core(TM) i5-2500S CPU @ 2.70GHz | mem 8GB | bootdisk 58.6G
 # storage_uuid: 
+ansible_user: ubuntu
+ansible_host: 192.168.1.105
+wireguard_address: "10.8.0.106/24"

@@ -1,3 +1,6 @@
 # Macbook Air 2011
 mac_address: "b8:e8:56:16:b6:8a"
 ansible_python_interpreter: /usr/bin/python3.9
+ansible_user: charlie
+ansible_host: 192.168.1.5
+wireguard_address: "10.8.0.116/24"

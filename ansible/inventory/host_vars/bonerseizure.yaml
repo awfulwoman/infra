@@ -8,3 +8,6 @@
 storage_uuid: 58112fa4-b24c-4fc1-b9cf-7e86d8601cdd
 storage_mount: /storage
 ansible_python_interpreter: /usr/bin/python3
+ansible_user: pi
+ansible_host: 192.168.1.111
+wireguard_address: "10.8.0.111/24"

@@ -5,3 +5,6 @@
 # mem: 
 # bootdisk: 
 # storage_uuid: 
+ansible_user: pi
+ansible_host: 192.168.1.107
+wireguard_address: "10.8.0.107/24"
