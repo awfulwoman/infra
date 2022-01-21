@@ -1,0 +1,1 @@
+static_dhcp_group: "{{ groups['all'] }}"

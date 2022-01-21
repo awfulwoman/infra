@@ -69,12 +69,13 @@ all:
     # Hifi
     # Netgear NAS (belonging to my partner)
 
-    mba2011.device.affordablepotatoes.com: # MacBook Air 2011 (yes, it's over a decade old)
+    mba2011: # MacBook Air 2011 (yes, it's over a decade old)
       ansible_user: charlie
       ansible_host: 192.168.1.5
       wireguard_address: "10.8.0.116/24"
 
-    iphone.device.affordablepotatoes.com: # iPhone (just to record the wireguard ip address)
+    iphone: # iPhone (just to record the wireguard ip address)
+      ansible_host: 192.168.1.11
       wireguard_address: "10.8.0.117/24"
 
   # GROUPS

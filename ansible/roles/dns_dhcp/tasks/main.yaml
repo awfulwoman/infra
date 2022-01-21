@@ -16,21 +16,23 @@
     gw4: "{{dns_dhcp_gateway}}"
     state: present
 
-- name: Create pihole etc-pihole dir
+- name: Create pihole /etc-pihole dir
+  become: true 
   ansible.builtin.file:
     path: "/home/{{ ansible_user }}/etc-pihole"
     state: directory
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    mode: "0755"
 
-- name: Create pihole etc-dnsmasq.d dir
+- name: Create pihole /etc-dnsmasq.d dir
+  become: true
   ansible.builtin.file:
     path: "/home/{{ ansible_user }}/etc-dnsmasq.d"
     state: directory
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    mode: "0755"
+
+- name: Create pihole /etc-dnsmasq.d/lan-static.conf
+  become: true
+  ansible.builtin.template:
+    src: static.conf.j2
+    dest: "/home/{{ ansible_user }}/etc-dnsmasq.d/04-pihole-static-dhcp.conf"
 
 - name: Create a pihole container
   become: true
@@ -38,6 +40,7 @@
     name: pihole
     image: pihole/pihole:latest
     network_mode: host
+    pull: "yes"
     env:
       TZ: "Europe/Berlin"
       WEBPASSWORD: "{{ pihole_password }}"

@@ -5,5 +5,5 @@
 # mem: 
 # bootdisk: 
 # Generic PC | x86_64 | CPU Intel(R) Core(TM) i5-3470T CPU @ 2.90GHz | mem 8GB | bootdisk 117.8G
-
+mac_address: "00:19:99:f7:80:38"
 # storage_uuid: 
