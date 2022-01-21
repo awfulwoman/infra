@@ -33,6 +33,15 @@
     src: static.conf.j2
     dest: "/home/{{ ansible_user }}/etc-dnsmasq.d/04-pihole-static-dhcp.conf"
 
+# Solves corporate computers trying to claim a domain 
+# and generating very annoying errors in pihole
+# https://www.reddit.com/r/pihole/comments/rvattc/dnsmasq_warning_ignoring_domain/
+- name: Create pihole /etc-dnsmasq.d/07-work.conf
+  become: true
+  ansible.builtin.template:
+    src: domain.conf.j2
+    dest: "/home/{{ ansible_user }}/etc-dnsmasq.d/07-work.conf"
+
 - name: Create a pihole container
   become: true
   community.docker.docker_container:
