@@ -5,7 +5,6 @@ all:
     aprilashley:              # Raspberry Pi 4 8GB
     attitudeadjuster:         # Raspberry Pi 4 8GB 
     belkinsoundform:          # why did I buy this?
-    bigsexybeast:             # x86_64 i5 2.90GHz 8GB
     bondagequeen:             # x86_64 (NUC) Atom 1.46GHz 8GB
     bonerseizure:             # Raspberry Pi 4 2GB
     broadlink-rm3:            # A little IR blaster for automating IR devices
@@ -22,6 +21,8 @@ all:
     homepod-bedroom:          # Homepod Bedroom
     homepod-livingroom:       # Homepod Livingroom
     honestmistake:            # Raspberry Pi Zero WH
+    host-bigsexybeast:        # x86_64 i5 2.90GHz 8GB
+    host-universallover:      # x86_64 i5 2.70GHz 8GB
     impartialbroadcaster:     # Intel NUC
     ipad-green:               # An ancient ipad that lives in a nice green case
     ipad-wall:                # An ancient ipad mini that lives on the wall
@@ -30,7 +31,7 @@ all:
     kindle-pw-gen05:          # It displays ebooks, very slowly
     kindle-pw-gen10:          # It displays ebooks
     kobo:                     # It displays ebooks that are not from Amazon. I won this at a live Ubuntu Podcast recording I think.
-    ladyrona:                 # x86_64 Intel Core i3 - Proxmox NAS
+    host-ladyrona:                 # x86_64 Intel Core i3 - Proxmox NAS
     mba2011:                  # MacBook Air 2011 (yes, it's over a decade old. I still use it as my personal machine!)
     mbp2012:                  # Ancient MacBook Pro 2012. It still has Magsafe 1 and an optical drive! :3
     mbp2020:                  # My fancy Apple Pro M1 work laptop
@@ -40,7 +41,6 @@ all:
     thinkpad:                 # My partner's work laptop
     truthandreconciliation:   # Raspberry Pi 4 4GB
     twistymotherfucker:       # Raspberry Pi Zero
-    universallover:           # x86_64 i5 2.70GHz 8GB
     unused-asus-board:        # x86_64 Intel Core i3-4170 @ 3.7GHZ 4GB
     unused-pi-zero-wh:        # Raspberry Pi Zero WH
     weaponisedgender:         # Raspberry Pi 1 (DO YOU WANT A CUP OF TEA, GRANDMA?)
@@ -63,17 +63,17 @@ all:
       hosts:
         aprilashley:
         attitudeadjuster: 
-        bigsexybeast: 
         bondagequeen: 
         bonerseizure: 
         fonduesexparty:
         grabthetension: 
         honestmistake: 
+        host-bigsexybeast: 
+        host-universallover: 
         impartialbroadcaster: 
         sleeperservice: 
         truthandreconciliation:
         twistymotherfucker:
-        universallover: 
         weaponisedgender: 
 
     # Group: Raspberry Pi hardware
@@ -97,7 +97,8 @@ all:
     # Can have multiple nodes.
     proxmox_nodes:
       hosts:
-        bigsexybeast:
+        host-bigsexybeast:
+        host-universallover:
 
     # Group: Home Automation
     # A collection of Docker-based apps that allow home automation.
