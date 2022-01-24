@@ -8,9 +8,11 @@ His replacement - Derek (a deliberately misnamed [Dreame L10 Pro](https://www.am
 
 I don't know about you fine folk, but I don't want something that travels freely around my home and that has cameras on board having unmonitored access to the internet.
 
-In fact a hacker gave a presentation at Defcon 29 and found that one of the developers on the roboto had installed a backdoor that allowed access to any Dreame machine.
+In fact a hacker gave a presentation at Defcon 29 and found that one of the developers on the Dreame robots had installed a backdoor that allowed access to any Dreame machine.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/EWqFxQpRbv8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<img alt="" src="https://user-images.githubusercontent.com/74922321/150783256-447a5d4c-d194-4c4c-a85e-dd4af4df9f4b.png">
+
+[Watch the video where he shows all this dark magic](https://www.youtube.com/watch?v=EWqFxQpRbv8&t=1525s).
 
 But what if you could sever that awful cloud connectivity link? I mean, Derek would be an amazing machine even if I had to trigger him manually. But thankfully I don't have to do that, as the same hacker developer who discovered the privacy breaches found a way to patch the onboard version of Linux (yes, my vaccumn cleaner runs Linux) and to stop it phoning out to the internet. And in fact he's enabled the machine to work _completely locally_, allowing it to be controlled via a UI, a Swagger interface, or MQTT, all from you local network.
 
