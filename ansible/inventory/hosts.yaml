@@ -32,6 +32,7 @@ all:
     kobo:                     # It displays ebooks that are not from Amazon. I won this at a live Ubuntu Podcast recording I think.
     ladyrona:                 # x86_64 Intel Core i3 - Proxmox NAS
     mba2011:                  # MacBook Air 2011 (yes, it's over a decade old. I still use it as my personal machine!)
+    mbp2012:                  # Ancient MacBook Pro 2012. It still has Magsafe 1 and an optical drive! :3
     mbp2020:                  # My fancy Apple Pro M1 work laptop
     oneplus-6:                # My partners phone
     remarkable:               # My remarkable eink tablet
