@@ -1,9 +1,4 @@
 ---
-- name: zigbee2mqtt - Bootstrap users
-  hosts: ha_zigbee2mqtt
-  roles:
-    - role: standard_users
-
 - name: zigbee2mqtt - Bootstrap standard OS config
   hosts: ha_zigbee2mqtt
   become: true
@@ -12,10 +7,6 @@
     - role: raspberry_pi
     - role: weareinteractive.environment
       no_log: true
-
-- name: zigbee2mqtt - Zigbee2MQTT
-  hosts: ha_zigbee2mqtt
-  roles:
     - role: geerlingguy.docker_arm
     - role: zigbee2mqtt
       vars:
@@ -29,9 +20,9 @@
           # MQTT settings
           mqtt:
             # MQTT base topic for zigbee2mqtt MQTT messages
-            base_topic: zigbee2mqtt
+            base_topic: apartment
             # MQTT server URL
-            server: 'mqtt://twistymotherfucker'
+            server: 'mqtt://twistymotherfucker.i.affordablepotatoes.com'
             # MQTT server authentication, uncomment if required:
             # user: my_user
             # password: my_password
@@ -43,8 +34,4 @@
           frontend:
             # Optional, default 8080
             port: 9091
-
-# - name: zigbee2mqtt - Upgrade apt packages
-#   hosts: ha_zigbee2mqtt
-#   roles:
-#     - role: upgrade
+    - role: upgrade
