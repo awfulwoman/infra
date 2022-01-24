@@ -13,6 +13,7 @@
     - role: standard_os
     - role: raspberry_pi
     - role: weareinteractive.environment
+      no_log: true
     - role: mosquitto
     - role: upgrade
   become: true
