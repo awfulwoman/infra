@@ -55,15 +55,14 @@
 - name: Change hostname
   become: true
   ansible.builtin.hostname:
-    name: "{{ inventory_hostname }}"
-    use: debian
+    name: "{{ ansible_hostname }}"
 
 - name: Replace 127.0.1.1 on Debian systems
   become: true
   ansible.builtin.lineinfile:
     path: /etc/hosts
     regexp: '^127\.0\.1\.1'
-    line: "127.0.1.1 {{ inventory_hostname }}"
+    line: "127.0.1.1 {{ ansible_hostname }}"
 
 - name: Install apt packages
   become: true
