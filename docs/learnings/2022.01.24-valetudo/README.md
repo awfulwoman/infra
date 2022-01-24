@@ -1,4 +1,4 @@
-# Rooting a Dreame Z10 Pro robot vacuumn cleaner and installing Valetudo
+# Rooting a Dreame L10 Pro robot vacuumn cleaner and installing Valetudo
 
 So, we needed a new robot vacuumn cleaner after Trevor (a constantly mispronouned [Tesvor X500](https://www.tesvor.com/de/tesvor-x500-saugroboter.html)) developed silicon brainrot and started freaking out whenever he saw shadows on the floor. 
 
