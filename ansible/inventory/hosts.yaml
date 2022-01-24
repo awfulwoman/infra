@@ -23,9 +23,9 @@ all:
     ipad-wall:                    # An ancient ipad mini that lives on the wall
     ipad-work:                    # My partners work ipad
     iphone:                       # My iPhone
-    ereader-kindle-pw-gen05:              # It displays ebooks, very slowly
-    ereader-kindle-pw-gen10:              # It displays ebooks
-    ereader-kobo:                         # It displays ebooks that are not from Amazon. I won this at a live Ubuntu Podcast recording I think.
+    ereader-kindle-pw-gen05:      # It displays ebooks, very slowly
+    ereader-kindle-pw-gen10:      # It displays ebooks
+    ereader-kobo:                 # It displays ebooks that are not from Amazon. I won this at a live Ubuntu Podcast recording I think.
     mba2011:                      # MacBook Air 2011 (yes, it's over a decade old. I still use it as my personal machine!)
     mbp2012:                      # Ancient MacBook Pro 2012. It still has Magsafe 1 and an optical drive! :3
     mbp2020:                      # My fancy Apple Pro M1 work laptop
