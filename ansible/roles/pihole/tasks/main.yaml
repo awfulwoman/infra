@@ -50,11 +50,12 @@
   ansible.builtin.file:
     path: "/etc/pihole/"
     state: directory
-- name: Create /etc/pihole/custom.list
+
+- name: Create ~/etc-dnsmasq.d/cnames.list
   become: true
   ansible.builtin.template:
-    src: customhosts.conf.j2
-    dest: "/etc/pihole/custom.list"
+    src: cnames.conf.j2
+    dest: "/home/{{ ansible_user }}/etc-dnsmasq.d/cnames.list"
 
 - name: Create a pihole container
   become: true

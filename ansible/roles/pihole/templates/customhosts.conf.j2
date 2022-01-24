@@ -1,5 +1,0 @@
-{% for item in static_dhcp_group %}
-{% if (hostvars[item].domain_name is defined) and (hostvars[item].ansible_host is defined) %}
-{{hostvars[item].ansible_host}} {{hostvars[item].domain_name}}
-{% endif %}
-{% endfor %}

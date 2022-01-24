@@ -1,0 +1,5 @@
+{% for item in static_dhcp_group %}
+{% if (hostvars[item].cname is defined) and (hostvars[item].inventory_hostname is defined) %}
+cname={{hostvars[item].cname}},{{hostvars[item].inventory_hostname}}
+{% endif %}
+{% endfor %}
