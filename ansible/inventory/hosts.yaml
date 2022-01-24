@@ -1,49 +1,49 @@
 ---
 all:
   hosts:
-    applewatch:               # It's an apple watch and lives on my wrist
-    aprilashley:              # Raspberry Pi 4 8GB
-    attitudeadjuster:         # Raspberry Pi 4 8GB 
-    belkinsoundform:          # why did I buy this?
-    bondagequeen:             # x86_64 (NUC) Atom 1.46GHz 8GB
-    bonerseizure:             # Raspberry Pi 4 2GB
-    broadlink-rm3:            # A little IR blaster for automating IR devices
-    bunny:                    # Netgear NAS (it belongs to my partner and is about a million years old)
-    chromecast-audio-1:       # Chromecast Audio 1
-    chromecast-audio-2:       # Chromecast Audio 2
-    chromecast-audio-3:       # Chromecast Audio 3
-    chromecast:               # Chromecast
-    cleaning-robot-derek:     # Derek cleans the downstairs and is shiny
-    cleaning-robot-trevor:    # Trevor cleans the upstairs and has gone senile
-    fonduesexparty:           # Raspberry Pi 4 2GB
-    grabthetension:           # Raspberry Pi Zero W
-    hifi:                     # It's a Hifi. It has an ethernet connection. It plays music.
-    homepod-bedroom:          # Homepod Bedroom
-    homepod-livingroom:       # Homepod Livingroom
-    honestmistake:            # Raspberry Pi Zero WH
-    host-bigsexybeast:        # x86_64 i5 2.90GHz 8GB
-    host-universallover:      # x86_64 i5 2.70GHz 8GB
-    impartialbroadcaster:     # Intel NUC
-    ipad-green:               # An ancient ipad that lives in a nice green case
-    ipad-wall:                # An ancient ipad mini that lives on the wall
-    ipad-work:                # My partners work ipad
-    iphone:                   # My iPhone
-    kindle-pw-gen05:          # It displays ebooks, very slowly
-    kindle-pw-gen10:          # It displays ebooks
-    kobo:                     # It displays ebooks that are not from Amazon. I won this at a live Ubuntu Podcast recording I think.
-    host-ladyrona:                 # x86_64 Intel Core i3 - Proxmox NAS
-    mba2011:                  # MacBook Air 2011 (yes, it's over a decade old. I still use it as my personal machine!)
-    mbp2012:                  # Ancient MacBook Pro 2012. It still has Magsafe 1 and an optical drive! :3
-    mbp2020:                  # My fancy Apple Pro M1 work laptop
-    oneplus-6:                # My partners phone
-    remarkable:               # My remarkable eink tablet
-    sleeperservice:           # Raspberry Pi 3 1GB - PiHole DNS + DHCP server
-    thinkpad:                 # My partner's work laptop
-    truthandreconciliation:   # Raspberry Pi 4 4GB
-    twistymotherfucker:       # Raspberry Pi Zero
-    unused-asus-board:        # x86_64 Intel Core i3-4170 @ 3.7GHZ 4GB
-    unused-pi-zero-wh:        # Raspberry Pi Zero WH
-    weaponisedgender:         # Raspberry Pi 1 (DO YOU WANT A CUP OF TEA, GRANDMA?)
+    applewatch:                   # It's an apple watch and lives on my wrist
+    belkinsoundform:              # why did I buy this?
+    bondagequeen:                 # x86_64 (NUC) Atom 1.46GHz 8GB
+    broadlink-rm3:                # A little IR blaster for automating IR devices
+    bunny:                        # Netgear NAS (it belongs to my partner and is about a million years old)
+    chromecast-audio-1:           # Chromecast Audio 1
+    chromecast-audio-2:           # Chromecast Audio 2
+    chromecast-audio-3:           # Chromecast Audio 3
+    chromecast:                   # Chromecast
+    cleaning-robot-derek:         # Derek cleans the downstairs and is shiny
+    cleaning-robot-trevor:        # Trevor cleans the upstairs and has gone senile
+    hifi:                         # It's a Hifi. It has an ethernet connection. It plays music.
+    homepod-bedroom:              # Homepod Bedroom
+    homepod-livingroom:           # Homepod Livingroom
+    host-bigsexybeast:            # x86_64 i5 2.90GHz 8GB
+    host-ladyrona:                # x86_64 Intel Core i3 - Proxmox NAS
+    host-universallover:          # x86_64 i5 2.70GHz 8GB
+    impartialbroadcaster:         # Intel NUC
+    ipad-green:                   # An ancient ipad that lives in a nice green case
+    ipad-wall:                    # An ancient ipad mini that lives on the wall
+    ipad-work:                    # My partners work ipad
+    iphone:                       # My iPhone
+    ereader-kindle-pw-gen05:              # It displays ebooks, very slowly
+    ereader-kindle-pw-gen10:              # It displays ebooks
+    ereader-kobo:                         # It displays ebooks that are not from Amazon. I won this at a live Ubuntu Podcast recording I think.
+    mba2011:                      # MacBook Air 2011 (yes, it's over a decade old. I still use it as my personal machine!)
+    mbp2012:                      # Ancient MacBook Pro 2012. It still has Magsafe 1 and an optical drive! :3
+    mbp2020:                      # My fancy Apple Pro M1 work laptop
+    oneplus-6:                    # My partners phone
+    pi-aprilashley:               # Raspberry Pi 4 8GB
+    pi-attitudeadjuster:          # Raspberry Pi 4 8GB 
+    pi-bonerseizure:              # Raspberry Pi 4 2GB
+    pi-fonduesexparty:            # Raspberry Pi 4 2GB
+    pi-grabthetension:            # Raspberry Pi Zero W
+    pi-honestmistake:             # Raspberry Pi Zero WH
+    pi-sleeperservice:            # Raspberry Pi 3 1GB - PiHole DNS + DHCP server
+    pi-truthandreconciliation:    # Raspberry Pi 4 4GB
+    pi-twistymotherfucker:        # Raspberry Pi Zero
+    pi-weaponisedgender:          # Raspberry Pi 1 (DO YOU WANT A CUP OF TEA, GRANDMA?)
+    remarkable:                   # My remarkable eink tablet
+    thinkpad:                     # My partner's work laptop
+    unused-asus-board:            # x86_64 Intel Core i3-4170 @ 3.7GHZ 4GB
+    unused-pi-zero-wh:            # Raspberry Pi Zero WH
 
   # GROUPS
   # ------
@@ -51,46 +51,47 @@ all:
   children:
     pihole:
       hosts:
-        sleeperservice:
+        pi-sleeperservice:
 
     # Group: Laptops
     laptops:
       hosts:
         mba2011:
+
     # Group: Servers
     # Machines that act as servers in some capacity or another
     servers: 
       hosts:
-        aprilashley:
-        attitudeadjuster: 
         bondagequeen: 
-        bonerseizure: 
-        fonduesexparty:
-        grabthetension: 
-        honestmistake: 
         host-bigsexybeast: 
         host-universallover: 
         impartialbroadcaster: 
-        sleeperservice: 
-        truthandreconciliation:
-        twistymotherfucker:
-        weaponisedgender: 
+        pi-aprilashley:
+        pi-attitudeadjuster: 
+        pi-bonerseizure: 
+        pi-fonduesexparty:
+        pi-grabthetension: 
+        pi-honestmistake: 
+        pi-sleeperservice: 
+        pi-truthandreconciliation:
+        pi-twistymotherfucker:
+        pi-weaponisedgender: 
 
     # Group: Raspberry Pi hardware
     # Because they are Single Board Computers these devices 
     # often have unique setup requirements.
     raspberrypis:
       hosts:
-        aprilashley:
-        attitudeadjuster:
-        bonerseizure:
-        fonduesexparty:
-        grabthetension:
-        honestmistake:
-        sleeperservice:
-        truthandreconciliation:
-        twistymotherfucker:
-        weaponisedgender:
+        pi-aprilashley:
+        pi-attitudeadjuster:
+        pi-bonerseizure:
+        pi-fonduesexparty:
+        pi-grabthetension:
+        pi-honestmistake:
+        pi-sleeperservice:
+        pi-truthandreconciliation:
+        pi-twistymotherfucker:
+        pi-weaponisedgender:
 
     # Group: Proxmox 
     # A virtualisation platform that acts as a Hypervisor for VMs.
@@ -112,12 +113,12 @@ all:
     # Group: Home Automation - Mosquitto MQTT Broker
     ha_mosquitto:
       hosts:
-        twistymotherfucker:
+        pi-twistymotherfucker:
     
     # Group: Home Automation - Zigbee2MQTT
     ha_zigbee2mqtt:
       hosts:
-        grabthetension:
+        pi-grabthetension:
 
     # Group: Home Automation - Home Assistant
     ha_homeassistant:
@@ -127,24 +128,24 @@ all:
     # Group: Kubernetes Home Automation - Agent Nodes
     homeautomation_agents:
       hosts:
-        attitudeadjuster:
-        bonerseizure:
-        fonduesexparty:
-        truthandreconciliation:
+        pi-attitudeadjuster:
+        pi-bonerseizure:
+        pi-fonduesexparty:
+        pi-truthandreconciliation:
 
     # Group: Kubernetes Home Automation -  Server Nodes
     homeautomation_servers:
       hosts:
-        aprilashley:
+        pi-aprilashley:
 
     # Group: Kubernetes Home Automation - Raspberry Pi nodes
     homeautomation_raspberrypis:
       hosts:
-        aprilashley:
-        attitudeadjuster:
-        bonerseizure:
-        fonduesexparty:
-        truthandreconciliation:
+        pi-aprilashley:
+        pi-attitudeadjuster:
+        pi-bonerseizure:
+        pi-fonduesexparty:
+        pi-truthandreconciliation:
 
     # Group: Kubernetes Home Automation - All servers
     homeautomation:
