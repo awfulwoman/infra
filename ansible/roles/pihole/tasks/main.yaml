@@ -15,32 +15,46 @@
     gw4: "{{pihole_gateway}}"
     state: present
 
-- name: Create pihole /etc-pihole dir
+- name: Create pihole ~/etc-pihole/
   become: true 
   ansible.builtin.file:
     path: "/home/{{ ansible_user }}/etc-pihole"
     state: directory
 
-- name: Create pihole /etc-dnsmasq.d dir
+- name: Create pihole ~/etc-dnsmasq.d/
   become: true
   ansible.builtin.file:
     path: "/home/{{ ansible_user }}/etc-dnsmasq.d"
     state: directory
 
-- name: Create pihole /etc-dnsmasq.d/lan-static.conf
+# Add static DHCP leases
+- name: Create pihole ~/etc-dnsmasq.d/lan-static.conf
   become: true
   ansible.builtin.template:
     src: static.conf.j2
     dest: "/home/{{ ansible_user }}/etc-dnsmasq.d/04-pihole-static-dhcp.conf"
 
+# Add a custom domain for certain hosts.
 # Solves corporate computers trying to claim a domain 
 # and generating very annoying errors in pihole
 # https://www.reddit.com/r/pihole/comments/rvattc/dnsmasq_warning_ignoring_domain/
-- name: Create pihole /etc-dnsmasq.d/07-work.conf
+- name: Create pihole ~/etc-dnsmasq.d/07-work.conf
   become: true
   ansible.builtin.template:
     src: domain.conf.j2
     dest: "/home/{{ ansible_user }}/etc-dnsmasq.d/07-work.conf"
+
+# Add direct FQDN to IP mappings in Pihole's /etc/hosts file
+- name: Create /etc/pihole/
+  become: true 
+  ansible.builtin.file:
+    path: "/etc/pihole/"
+    state: directory
+- name: Create /etc/pihole/custom.list
+  become: true
+  ansible.builtin.template:
+    src: customhosts.conf.j2
+    dest: "/etc/pihole/custom.list"
 
 - name: Create a pihole container
   become: true
@@ -59,8 +73,11 @@
       PIHOLE_DOMAIN: "i.affordablepotatoes.com"
       WEBTHEME: "lcars"
       ADMIN_EMAIL: pihole@affordablepotatoes.com
+      DNS_FQDN_REQUIRED: "true"
     state: started
     restart_policy: unless-stopped
+    dns_servers:
+      - 127.0.0.1
     volumes:
       - "/home/{{ ansible_user }}/etc-pihole/:/etc/pihole/"
       - "/home/{{ ansible_user }}/etc-dnsmasq.d/:/etc/dnsmasq.d/"
