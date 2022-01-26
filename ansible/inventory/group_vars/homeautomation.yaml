@@ -1,0 +1,7 @@
+unattended_mail_only_on_error: true
+unattended_mail: unattended@whalecoiner.com
+unattended_automatic_reboot: true
+unattended_automatic_reboot_time: 03:00
+cloudflare_api_key: "{{vault_cloudflare_token}}"
+cloudflare_zone: affordablepotatoes.com
+cloudflare_subdomain: home

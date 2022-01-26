@@ -17,6 +17,8 @@ roles:
     version: 8.4.0
   - name: githubixx.harden-linux
     version: v6.0.0
+  - name: jnv.unattended-upgrades
+    version: v1.12.1
 
 collections: 
   - name: community.docker
