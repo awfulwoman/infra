@@ -18,10 +18,10 @@ Each k3s machine needs to have passwordless SSH enabled. After changing the `pi`
 I then install the requirements needed by Ansible. These are generally third-party roles that mean I barely have to write anything custom.
 
 - `cd ansible`
-- `ansible-galaxy install -r meta/requirements.yaml`
+- `ansible-galaxy install -r ansible/meta/requirements.yaml`
 
 Finally I can bootstrap the machines.
 
-- `ansible-playbook homeautomation.yaml`
+- `ansible-playbook ansible/playbooks/k8s.yaml`
 
 Most configuration comes from [the Ansible inventory](../ansible/inventory), where I define which machines do what, and what is installed on them.

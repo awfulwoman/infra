@@ -1,9 +1,0 @@
----
-# DNS + DHCP server
-# Assumes a bare metal install of Raspbian or Ubuntu
-
-- name: Update the Pihole config quickly 
-  hosts: pihole
-  roles:
-    - role: pihole
-  become: true

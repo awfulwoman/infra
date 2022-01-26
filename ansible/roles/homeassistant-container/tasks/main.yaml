@@ -1,0 +1,46 @@
+- name: Set config path
+  set_fact:
+    user_config_path: "{{ ansible_env.HOME }}"
+
+- name: Create config dir
+  ansible.builtin.file:
+    path: "{{ user_config_path }}/hass-config"
+    state: directory
+
+- name: Add ansible_user to dialout group
+  become: true
+  ansible.builtin.user:
+    user: "{{ ansible_user }}"
+    groups: dialout
+    append: true
+
+- name: Checkout tribut/homeassistant-docker-venv
+  ansible.builtin.git:
+    repo: "https://github.com/tribut/homeassistant-docker-venv"
+    dest: "{{ user_config_path }}/hass-config/docker"
+
+- name: Add ansible_user to docker group
+  become: true
+  ansible.builtin.user:
+    user: "{{ ansible_user }}"
+    groups: docker
+    append: true
+
+- name: Create container
+  # become: true
+  community.docker.docker_container:
+    name: homeassistant
+    image: ghcr.io/home-assistant/home-assistant:latest
+    state: started
+    privileged: true
+    restart_policy: unless-stopped
+    network_mode: host
+    env: 
+      PUID: "1000"
+      PGID: "1000"
+      UMASK: "007"
+      TZ: Berlin/Europe
+    volumes:
+      - "{{ user_config_path }}/hass-config:/config"
+      - "{{ user_config_path }}/hass-config/docker/run:/etc/services.d/home-assistant/run"
+      - /etc/localtime:/etc/localtime:ro

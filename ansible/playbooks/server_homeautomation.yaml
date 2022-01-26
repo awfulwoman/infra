@@ -1,0 +1,27 @@
+---
+- name: The mighty Home Automation playbook
+  hosts: homeautomation
+
+  roles:
+    - role: standard_os
+    - role: weareinteractive.environment
+      no_log: true
+      become: true
+    - role: geerlingguy.docker
+      become: true
+    - role: ddns-container
+      vars:
+        cloudflare_api_key: "{{vault_cloudflare_token}}"
+        cloudflare_zone: affordablepotatoes.com
+        cloudflare_subdomain: home
+    - role: homeassistant-container
+    - role: mosquitto-container
+    - role: zigbee2mqtt-container
+    - role: upgrade
+    # - role: gatherfacts
+  handlers:
+    - name: Reboot host
+      become: true
+      reboot:
+
+        

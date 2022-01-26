@@ -1,8 +1,12 @@
+- name: User-based Config path
+  set_fact:
+    user_config_path: "{{ ansible_env.HOME }}"
+
 - name: Install apt packages
   become: true
   ansible.builtin.apt:
     name: 
-      - network-manager
+      - network-manager # So that we can set a static IP using nmcli
     state: present
 
 - name: Add an Ethernet connection with static IP configuration
@@ -16,33 +20,29 @@
     state: present
 
 - name: Create pihole ~/etc-pihole/
-  become: true 
   ansible.builtin.file:
-    path: "/home/{{ ansible_user }}/etc-pihole"
+    path: "{{ user_config_path }}/etc-pihole"
     state: directory
 
 - name: Create pihole ~/etc-dnsmasq.d/
-  become: true
   ansible.builtin.file:
-    path: "/home/{{ ansible_user }}/etc-dnsmasq.d"
+    path: "{{ user_config_path }}/etc-dnsmasq.d"
     state: directory
 
 # Add static DHCP leases
 - name: Create pihole ~/etc-dnsmasq.d/lan-static.conf
-  become: true
   ansible.builtin.template:
     src: static.conf.j2
-    dest: "/home/{{ ansible_user }}/etc-dnsmasq.d/04-pihole-static-dhcp.conf"
+    dest: "{{ user_config_path }}/etc-dnsmasq.d/04-pihole-static-dhcp.conf"
 
 # Add a custom domain for certain hosts.
 # Solves corporate computers trying to claim a domain 
 # and generating very annoying errors in pihole
 # https://www.reddit.com/r/pihole/comments/rvattc/dnsmasq_warning_ignoring_domain/
 - name: Create pihole ~/etc-dnsmasq.d/07-work.conf
-  become: true
   ansible.builtin.template:
     src: domain.conf.j2
-    dest: "/home/{{ ansible_user }}/etc-dnsmasq.d/07-work.conf"
+    dest: "{{ user_config_path }}/etc-dnsmasq.d/07-work.conf"
 
 # Add direct FQDN to IP mappings in Pihole's /etc/hosts file
 - name: Create /etc/pihole/
@@ -52,10 +52,9 @@
     state: directory
 
 - name: Create ~/etc-dnsmasq.d/cnames.list
-  become: true
   ansible.builtin.template:
     src: cnames.conf.j2
-    dest: "/home/{{ ansible_user }}/etc-dnsmasq.d/cnames.list"
+    dest: "{{ user_config_path }}/etc-dnsmasq.d/cnames.list"
 
 - name: Create a pihole container
   become: true
@@ -63,7 +62,6 @@
     name: pihole
     image: pihole/pihole:latest
     network_mode: host
-    pull: "yes"
     env:
       TZ: "Europe/Berlin"
       WEBPASSWORD: "{{ pihole_password }}"
@@ -80,7 +78,7 @@
     dns_servers:
       - 127.0.0.1
     volumes:
-      - "/home/{{ ansible_user }}/etc-pihole/:/etc/pihole/"
-      - "/home/{{ ansible_user }}/etc-dnsmasq.d/:/etc/dnsmasq.d/"
+      - "{{ user_config_path }}/etc-pihole/:/etc/pihole/"
+      - "{{ user_config_path }}/etc-dnsmasq.d/:/etc/dnsmasq.d/"
     capabilities:
       - NET_ADMIN

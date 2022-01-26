@@ -63,7 +63,7 @@
   ansible.builtin.shell:  'sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" --unattended'
   args:
     executable: /usr/bin/sh
-    creates: "/home/{{ ansible_user }}/.oh-my-zsh"
+    creates: "{{ ansible_env.HOME }}/.oh-my-zsh"
 
 - name: Reset connection so shell is picked up.
   become: true

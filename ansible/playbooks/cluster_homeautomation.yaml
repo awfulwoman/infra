@@ -1,12 +1,12 @@
 ---
-# Playbook - Home Auomation Cluster
+# Playbook - K8s Cluster
 # ---------------------------------
-# This will take the machines in the homeautomation group, install various OS updates, 
+# This will take the machines in the k8s group, install various OS updates, 
 # install k3s on each, and intialise a k8s cluster if one doesn't otherwise exist. If one 
 # exists then updates to the OS will be applied and the k8s state checked.
 
-- name: Home Automation Cluster - Apply standard OS config
-  hosts: homeautomation
+- name: k8s Cluster - Apply standard OS config
+  hosts: k8s
   roles:
     - role: standard_os
     - role: weareinteractive.environment
@@ -15,19 +15,17 @@
   handlers:
     - name: Reboot host
       reboot:
-  become: true
 
-- name: Home Automation Cluster - Apply Raspberry Pi hardware config
-  hosts: homeautomation_raspberrypis
+- name: k8s Cluster - Apply Raspberry Pi hardware config
+  hosts: k8s_raspberrypis
   handlers:
     - name: Reboot system
       reboot:
   roles:
     - raspberry_pi
-  become: true
 
-- name: Home Automation Cluster - Activate Kubernetes
-  hosts: homeautomation
+- name: k8s Cluster - Activate Kubernetes
+  hosts: k8s
   vars:
     k3s_become_for_all: yes
   roles:

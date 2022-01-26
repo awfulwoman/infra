@@ -4,10 +4,10 @@
 
 - name: Wireguard server
   hosts: wireguard
-  become: true
   roles:
     # - role: githubixx.harden-linux
     - role: githubixx.ansible_role_wireguard
+      become: true
     - role: wireguard
   handlers:
     - name: Reboot host

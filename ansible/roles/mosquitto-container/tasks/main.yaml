@@ -1,0 +1,49 @@
+- name: Set config path
+  set_fact:
+    user_config_path: "{{ ansible_env.HOME }}"
+
+- name: Create config dir
+  ansible.builtin.file:
+    path: "{{ user_config_path }}/mosquitto/config"
+    state: directory
+
+- name: Create logs dir
+  ansible.builtin.file:
+    path: "{{ user_config_path }}/mosquitto/log"
+    state: directory
+
+- name: Create data dir
+  ansible.builtin.file:
+    path: "{{ user_config_path }}/mosquitto/data"
+    state: directory
+
+- name: Create config file 
+  ansible.builtin.copy:
+    src: mosquitto.conf
+    dest: "{{ user_config_path }}/mosquitto/config/mosquitto.conf"
+
+- name: Add ansible_user to docker group
+  become: true
+  ansible.builtin.user:
+    user: "{{ ansible_user }}"
+    groups: docker
+    append: true
+
+- name: Create container
+  # become: true
+  community.docker.docker_container:
+    name: mosquitto
+    image: eclipse-mosquitto@sha256:8986f945cf2a49b0aaa6c8ce53ce97894d67e6083c6c2b2df0a8e61e8dc9d660
+    state: started
+    # network_mode: host
+    privileged: true
+    restart_policy: unless-stopped
+    ports:
+      - "1883:1883"
+    env: 
+      TZ: Berlin/Europe
+    volumes:
+      - "{{ user_config_path }}/mosquitto/config:/mosquitto/config"
+      - "{{ user_config_path }}/mosquitto/data:/mosquitto/data"
+      - "{{ user_config_path }}/mosquitto/log/:/mosquitto/log"
+      - /etc/localtime:/etc/localtime:ro

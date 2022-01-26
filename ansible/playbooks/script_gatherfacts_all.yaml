@@ -1,5 +1,0 @@
-- name: gather facts
-  hosts: all
-  roles:
-    - gatherfacts
-  become: true

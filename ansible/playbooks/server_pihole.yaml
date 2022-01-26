@@ -9,6 +9,6 @@
     - role: weareinteractive.environment
       no_log: true
     - role: geerlingguy.docker_arm
-    - role: pihole
+    - role: pihole-container
     - role: upgrade
   become: true

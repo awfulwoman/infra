@@ -3,7 +3,7 @@ all:
   hosts:
     applewatch:                   # It's an apple watch and lives on my wrist
     belkinsoundform:              # why did I buy this?
-    bondagequeen:                 # x86_64 (NUC) Atom 1.46GHz 8GB
+    host-bondagequeen:                 # x86_64 (NUC) Atom 1.46GHz 8GB
     broadlink-rm3:                # A little IR blaster for automating IR devices
     bunny:                        # Netgear NAS (it belongs to my partner and is about a million years old)
     chromecast-audio-1:           # Chromecast Audio 1
@@ -18,7 +18,7 @@ all:
     host-bigsexybeast:            # x86_64 i5 2.90GHz 8GB
     host-ladyrona:                # x86_64 Intel Core i3 - Proxmox NAS
     host-universallover:          # x86_64 i5 2.70GHz 8GB
-    impartialbroadcaster:         # Intel NUC
+    host-impartialbroadcaster:         # Intel NUC
     ipad-green:                   # An ancient ipad that lives in a nice green case
     ipad-wall:                    # An ancient ipad mini that lives on the wall
     ipad-work:                    # My partners work ipad
@@ -57,15 +57,17 @@ all:
     laptops:
       hosts:
         mba2011:
+        mbp2012:
+        mbp2020:
 
     # Group: Servers
     # Machines that act as servers in some capacity or another
     servers: 
       hosts:
-        bondagequeen: 
+        host-bondagequeen: 
         host-bigsexybeast: 
         host-universallover: 
-        impartialbroadcaster: 
+        host-impartialbroadcaster: 
         pi-aprilashley:
         pi-attitudeadjuster: 
         pi-bonerseizure: 
@@ -78,8 +80,7 @@ all:
         pi-weaponisedgender: 
 
     # Group: Raspberry Pi hardware
-    # Because they are Single Board Computers these devices 
-    # often have unique setup requirements.
+    # Because they are Single Board Computers these devices they can have unique setup requirements
     raspberrypis:
       hosts:
         pi-aprilashley:
@@ -102,56 +103,39 @@ all:
         host-universallover:
 
     # Group: Home Automation
-    # A collection of Docker-based apps that allow home automation.
-    # Currently undergoing big changes.
-    ha:
-      children:
-        ha_homeassistant:
-        ha_mosquitto:
-        ha_zigbee2mqtt:
-
-    # Group: Home Automation - Mosquitto MQTT Broker
-    ha_mosquitto:
-      hosts:
-        pi-twistymotherfucker:
-    
-    # Group: Home Automation - Zigbee2MQTT
-    ha_zigbee2mqtt:
-      hosts:
-        pi-grabthetension:
-
-    # Group: Home Automation - Home Assistant
-    ha_homeassistant:
-      hosts:
-        bondagequeen:
-
-    # Group: Kubernetes Home Automation - Agent Nodes
-    homeautomation_agents:
-      hosts:
-        pi-attitudeadjuster:
-        pi-bonerseizure:
-        pi-fonduesexparty:
-        pi-truthandreconciliation:
-
-    # Group: Kubernetes Home Automation -  Server Nodes
-    homeautomation_servers:
-      hosts:
-        pi-aprilashley:
-
-    # Group: Kubernetes Home Automation - Raspberry Pi nodes
-    homeautomation_raspberrypis:
-      hosts:
-        pi-aprilashley:
-        pi-attitudeadjuster:
-        pi-bonerseizure:
-        pi-fonduesexparty:
-        pi-truthandreconciliation:
-
-    # Group: Kubernetes Home Automation - All servers
+    # Very very stable and boring setup running home automation tasks
+    # I Have Learned My Lesson
     homeautomation:
+      hosts:
+        host-bondagequeen:
+
+    # Group: Kubernetes - Agent Nodes
+    k8s_agents:
+      hosts:
+        pi-attitudeadjuster:
+        pi-bonerseizure:
+        pi-fonduesexparty:
+        pi-truthandreconciliation:
+
+    # Group: Kubernetes - Server Nodes
+    k8s_servers:
+      hosts:
+        pi-aprilashley:
+
+    # Group: Kubernetes - Raspberry Pi nodes
+    k8s_raspberrypis:
+      hosts:
+        pi-aprilashley:
+        pi-attitudeadjuster:
+        pi-bonerseizure:
+        pi-fonduesexparty:
+        pi-truthandreconciliation:
+
+    # Group: Kubernetes - All servers
+    k8s:
       children:
-        homeautomation_agents:
-        homeautomation_servers:
+        k8s_agents:
+        k8s_servers:
 
     # Group: Wireguard
     # Wireguard is a VPN that allows me to access my LAN remotely

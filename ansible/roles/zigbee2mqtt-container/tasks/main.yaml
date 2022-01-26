@@ -1,0 +1,49 @@
+- name: Set config path
+  set_fact:
+    user_config_path: "{{ ansible_env.HOME }}"
+
+- name: Create config dir
+  ansible.builtin.file:
+    path: "{{ user_config_path }}/zigbee2mqtt"
+    state: directory
+
+- name: Copy params to config file
+  ansible.builtin.copy:
+    src: config.yaml
+    dest: "{{ user_config_path }}/zigbee2mqtt/configuration.yaml"
+    force: no
+  # notify: restart docker
+
+- name: Add ansible_user to dialout group
+  become: true
+  ansible.builtin.user:
+    user: "{{ ansible_user }}"
+    groups: dialout
+    append: true
+
+- name: Add ansible_user to docker group
+  become: true
+  ansible.builtin.user:
+    user: "{{ ansible_user }}"
+    groups: docker
+    append: true
+
+- name: Create container
+  # become: true
+  community.docker.docker_container:
+    name: zigbee2mqtt
+    image: koenkk/zigbee2mqtt:latest
+    state: started
+    privileged: true
+    # network_mode: host
+    restart_policy: unless-stopped
+    ports:
+      - "9091:9091"
+    env: 
+      TZ: Berlin/Europe
+    devices:
+      - /dev/ttyACM0
+    volumes:
+      - "{{ user_config_path }}/zigbee2mqtt:/app/data"
+      - "/run/udev:/run/udev:ro"
+      - /etc/localtime:/etc/localtime:ro
