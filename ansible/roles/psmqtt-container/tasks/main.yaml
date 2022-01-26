@@ -1,9 +1,13 @@
-- name: Creating a file with content
+- name: Set config path
+  set_fact:
+    user_config_path: "{{ ansible_env.HOME }}"
+
+- name: Create config file
   ansible.builtin.copy:
     src: psmqtt.conf
-    dest: "{{ ansible_env.HOME }}/psmqtt.conf"
+    dest: "{{ user_config_path }}/pstmqtt/psmqtt.conf"
     
-- name: Create a PSMQTT container
+- name: Create container
   become: true
   community.docker.docker_container:
     name: psmqtt
@@ -13,5 +17,5 @@
     env: 
       TZ: Berlin/Europe
     volumes:
-      - "{{ ansible_env.HOME }}/psmqtt.conf:/opt/psmqtt/conf/psmqtt.conf"
+      - "{{ user_config_path }}/psmqtt/psmqtt.conf:/opt/psmqtt/conf/psmqtt.conf"
       - /etc/localtime:/etc/localtime:ro
