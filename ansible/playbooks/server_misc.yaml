@@ -10,5 +10,5 @@
       no_log: true
     - role: geerlingguy.docker
     - role: psmqtt
-    - role: upgrade
+    - role: apt-upgrade
   become: true

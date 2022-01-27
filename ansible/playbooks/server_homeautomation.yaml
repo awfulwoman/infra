@@ -14,7 +14,7 @@
     - role: homeassistant-container
     - role: mosquitto-container
     - role: zigbee2mqtt-container
-    - role: upgrade
+    - role: apt-upgrade
   handlers:
     - name: Reboot host
       become: true

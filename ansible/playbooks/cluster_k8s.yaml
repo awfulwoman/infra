@@ -11,7 +11,7 @@
     - role: standard_os
     - role: weareinteractive.environment
       no_log: true
-    - role: upgrade
+    - role: apt-upgrade
   handlers:
     - name: Reboot host
       reboot:

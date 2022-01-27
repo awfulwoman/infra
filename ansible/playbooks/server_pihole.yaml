@@ -10,5 +10,5 @@
       no_log: true
     - role: geerlingguy.docker_arm
     - role: pihole-container
-    - role: upgrade
+    - role: apt-upgrade
   become: true
