@@ -3,7 +3,6 @@ all:
   hosts:
     applewatch:                   # It's an apple watch and lives on my wrist
     belkinsoundform:              # why did I buy this?
-    host-bondagequeen:                 # x86_64 (NUC) Atom 1.46GHz 8GB
     broadlink-rm3:                # A little IR blaster for automating IR devices
     bunny:                        # Netgear NAS (it belongs to my partner and is about a million years old)
     chromecast-audio-1:           # Chromecast Audio 1
@@ -12,20 +11,22 @@ all:
     chromecast:                   # Chromecast
     cleaning-robot-derek:         # Derek cleans the downstairs and is shiny
     cleaning-robot-trevor:        # Trevor cleans the upstairs and has gone senile
+    echo-flex:                    # For testing TTS via Home Assistant. Microphone OFF.
+    ereader-kindle-pw-gen05:      # It displays ebooks, very slowly
+    ereader-kindle-pw-gen10:      # It displays ebooks
+    ereader-kobo:                 # It displays ebooks that are not from Amazon. I won this at a live Ubuntu Podcast recording I think.
     hifi:                         # It's a Hifi. It has an ethernet connection. It plays music.
     homepod-bedroom:              # Homepod Bedroom
     homepod-livingroom:           # Homepod Livingroom
     host-bigsexybeast:            # x86_64 i5 2.90GHz 8GB
+    host-bondagequeen:            # Intel NUC Atom 1.46GHz 8GB - Runs most of the home automation stuff
+    host-impartialbroadcaster:    # Intel NUC
     host-ladyrona:                # x86_64 Intel Core i3 - Proxmox NAS
     host-universallover:          # x86_64 i5 2.70GHz 8GB
-    host-impartialbroadcaster:         # Intel NUC
     ipad-green:                   # An ancient ipad that lives in a nice green case
     ipad-wall:                    # An ancient ipad mini that lives on the wall
     ipad-work:                    # My partners work ipad
     iphone:                       # My iPhone
-    ereader-kindle-pw-gen05:      # It displays ebooks, very slowly
-    ereader-kindle-pw-gen10:      # It displays ebooks
-    ereader-kobo:                 # It displays ebooks that are not from Amazon. I won this at a live Ubuntu Podcast recording I think.
     mba2011:                      # MacBook Air 2011 (yes, it's over a decade old. I still use it as my personal machine!)
     mbp2012:                      # Ancient MacBook Pro 2012. It still has Magsafe 1 and an optical drive! :3
     mbp2020:                      # My fancy Apple Pro M1 work laptop
