@@ -19,45 +19,44 @@
     gw4: "{{pihole_gateway}}"
     state: present
 
-- name: Create pihole ~/etc-pihole/
-  ansible.builtin.file:
-    path: "{{ user_config_path }}/etc-pihole"
+- name: Create directories
+  file:
+    path: "{{ item }}"
     state: directory
-
-- name: Create pihole ~/etc-dnsmasq.d/
-  ansible.builtin.file:
-    path: "{{ user_config_path }}/etc-dnsmasq.d"
-    state: directory
+  loop:
+    - "{{ user_config_path }}/etc-dnsmasq.d"
+    - "{{ user_config_path }}/etc-pihole"
+    - "/etc/pihole/"
 
 # Add static DHCP leases
-- name: Create pihole ~/etc-dnsmasq.d/lan-static.conf
+- name: Create static DHCP leases 
   ansible.builtin.template:
-    src: static.conf.j2
-    dest: "{{ user_config_path }}/etc-dnsmasq.d/04-pihole-static-dhcp.conf"
+    src: static-dhcp.conf.j2
+    dest: "{{ user_config_path }}/etc-dnsmasq.d/04-static-dhcp.conf"
 
 # Add a custom domain for certain hosts.
 # Solves corporate computers trying to claim a domain 
 # and generating very annoying errors in pihole
 # https://www.reddit.com/r/pihole/comments/rvattc/dnsmasq_warning_ignoring_domain/
-- name: Create pihole ~/etc-dnsmasq.d/07-work.conf
+- name: Create domain
   ansible.builtin.template:
-    src: domain.conf.j2
-    dest: "{{ user_config_path }}/etc-dnsmasq.d/07-work.conf"
+    src: domains.conf.j2
+    dest: "{{ user_config_path }}/etc-dnsmasq.d/07-domains.conf"
 
-# Add direct FQDN to IP mappings in Pihole's /etc/hosts file
-- name: Create /etc/pihole/
-  become: true 
-  ansible.builtin.file:
-    path: "/etc/pihole/"
-    state: directory
-
-- name: Create ~/etc-dnsmasq.d/cnames.list
+- name: Create cnames
   ansible.builtin.template:
     src: cnames.conf.j2
-    dest: "{{ user_config_path }}/etc-dnsmasq.d/cnames.list"
+    dest: "{{ user_config_path }}/etc-dnsmasq.d/05-cnames.list"
 
-- name: Create a pihole container
+- name: Add ansible_user to docker group
   become: true
+  ansible.builtin.user:
+    user: "{{ ansible_user }}"
+    groups: docker
+    append: true
+
+- name: Create container
+  # become: true
   community.docker.docker_container:
     name: pihole
     image: pihole/pihole:latest

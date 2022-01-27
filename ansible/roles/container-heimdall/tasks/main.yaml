@@ -1,0 +1,35 @@
+- name: Set config path
+  set_fact:
+    user_config_path: "{{ ansible_env.HOME }}"
+
+- name: Create config dir
+  ansible.builtin.file:
+    path: "{{ user_config_path }}/heimdall"
+    state: directory
+
+- name: Add ansible_user to docker group
+  become: true
+  ansible.builtin.user:
+    user: "{{ ansible_user }}"
+    groups: docker
+    append: true
+
+- name: Create container
+  # become: true
+  community.docker.docker_container:
+    name: heimdall
+    image: lscr.io/linuxserver/heimdall:latest
+    state: started
+    privileged: true
+    restart_policy: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    env: 
+      PUID: "1000"
+      PGID: "1000"
+      UMASK: "007"
+      TZ: Berlin/Europe
+    volumes:
+      - "{{ user_config_path }}/heimdall:/config"
+      - /etc/localtime:/etc/localtime:ro

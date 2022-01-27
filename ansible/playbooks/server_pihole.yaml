@@ -8,7 +8,8 @@
     - role: standard_os
     - role: weareinteractive.environment
       no_log: true
+      become: true
     - role: geerlingguy.docker_arm
-    - role: pihole-container
+      become: true
+    - role: container-pihole
     - role: apt-upgrade
-  become: true

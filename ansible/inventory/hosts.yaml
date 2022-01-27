@@ -110,6 +110,10 @@ all:
       hosts:
         host-bondagequeen:
 
+    workloads:
+      hosts:
+        host-impartialbroadcaster:
+
     # Group: Kubernetes - Agent Nodes
     k8s_agents:
       hosts:

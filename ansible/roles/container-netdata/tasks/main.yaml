@@ -1,0 +1,37 @@
+- name: Set config path
+  set_fact:
+    user_config_path: "{{ ansible_env.HOME }}"
+
+- name: Add ansible_user to docker group
+  become: true
+  ansible.builtin.user:
+    user: "{{ ansible_user }}"
+    groups: docker
+    append: true
+
+- name: Create container
+  # become: true
+  community.docker.docker_container:
+    name: netdata
+    image: netdata/netdata:stable
+    state: started
+    hostname: "{{ansible_hostname}}"
+    capabilities:
+      - "SYS_PTRACE"
+    security_opts:
+      - "apparmor:unconfined"
+    privileged: true
+    restart_policy: unless-stopped
+    ports:
+      - "19999:19999"
+    env: 
+      TZ: Berlin/Europe
+    volumes:
+      - netdataconfig:/etc/netdata
+      - netdatalib:/var/lib/netdata
+      - netdatacache:/var/cache/netdata
+      - /etc/passwd:/host/etc/passwd:ro
+      - /etc/group:/host/etc/group:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /etc/os-release:/host/etc/os-release:ro

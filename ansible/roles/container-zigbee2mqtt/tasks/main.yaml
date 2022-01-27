@@ -12,7 +12,6 @@
     src: config.yaml
     dest: "{{ user_config_path }}/zigbee2mqtt/configuration.yaml"
     force: no
-  # notify: restart docker
 
 - name: Add ansible_user to dialout group
   become: true
