@@ -15,6 +15,7 @@
     - role: container-mosquitto
     - role: container-zigbee2mqtt
     - role: container-netdata
+    - role: container-flame
     - role: apt-upgrade
   handlers:
     - name: Reboot host

@@ -10,8 +10,10 @@
       become: true
     - role: jnv.unattended-upgrades
       become: true
-    - role: container-heimdall
+    - role: container-metube
     - role: container-netdata
+    - role: container-freshrss
+    - role: container-wallabag
     - role: apt-upgrade
   handlers:
     - name: Reboot host

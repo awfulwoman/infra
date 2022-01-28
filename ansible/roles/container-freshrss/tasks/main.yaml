@@ -1,0 +1,30 @@
+- name: Set config path
+  set_fact:
+    user_config_path: "{{ ansible_env.HOME }}"
+
+- name: Create config dir
+  ansible.builtin.file:
+    path: "{{ user_config_path }}/freshrss"
+    state: directory
+
+- name: Add ansible_user to docker group
+  become: true
+  ansible.builtin.user:
+    user: "{{ ansible_user }}"
+    groups: docker
+    append: true
+
+- name: Create container
+  # become: true
+  community.docker.docker_container:
+    name: freshrss
+    image: lscr.io/linuxserver/freshrss
+    state: started
+    restart_policy: unless-stopped
+    ports:
+      - "7580:80"
+    env: 
+      TZ: "Berlin/Europe"
+    volumes:
+      - "{{ user_config_path }}/freshrss:/config"
+      - /etc/localtime:/etc/localtime:ro

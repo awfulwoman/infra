@@ -1,0 +1,47 @@
+    # image: alexta69/metube
+    # container_name: metube
+    # restart: unless-stopped
+    # user: "1001:1001"
+    # ports:
+    #   - "8081:8081"
+    # volumes:
+    #   
+
+- name: Set config path
+  set_fact:
+    user_config_path: "{{ ansible_env.HOME }}"
+
+- name: Create config dir
+  ansible.builtin.file:
+    path: "{{ user_config_path }}/metube/downloads"
+    state: directory
+
+- name: Create config dir
+  ansible.builtin.file:
+    path: "{{ user_config_path }}/metube/state"
+    state: directory
+
+
+- name: Add ansible_user to docker group
+  become: true
+  ansible.builtin.user:
+    user: "{{ ansible_user }}"
+    groups: docker
+    append: true
+
+- name: Create container
+  # become: true
+  community.docker.docker_container:
+    name: metube
+    image: alexta69/metube
+    state: started
+    restart_policy: unless-stopped
+    ports:
+      - "8081:8081"
+    env: 
+      TZ: "Berlin/Europe"
+      STATE_DIR: "/state"
+    volumes:
+      - "{{ user_config_path }}/metube/downloads:/downloads"
+      - "{{ user_config_path }}/metube/state:/state"
+      - /etc/localtime:/etc/localtime:ro

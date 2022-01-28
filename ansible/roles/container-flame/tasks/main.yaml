@@ -1,0 +1,31 @@
+- name: Set config path
+  set_fact:
+    user_config_path: "{{ ansible_env.HOME }}"
+
+- name: Create config dir
+  ansible.builtin.file:
+    path: "{{ user_config_path }}/flame"
+    state: directory
+
+- name: Add ansible_user to docker group
+  become: true
+  ansible.builtin.user:
+    user: "{{ ansible_user }}"
+    groups: docker
+    append: true
+
+- name: Create container
+  community.docker.docker_container:
+    name: flame
+    image: pawelmalak/flame
+    state: started
+    restart_policy: unless-stopped
+    ports:
+      - 80:5005
+    env: 
+      TZ: "Berlin/Europe"
+      STATE_DIR: "/state"
+    volumes:
+      - "{{ user_config_path }}/flame:/app/data"
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock 

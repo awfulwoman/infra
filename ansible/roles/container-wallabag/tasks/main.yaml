@@ -1,0 +1,37 @@
+- name: Set config path
+  set_fact:
+    user_config_path: "{{ ansible_env.HOME }}"
+
+- name: Create config dir
+  ansible.builtin.file:
+    path: "{{ user_config_path }}/wallabag/data"
+    state: directory
+
+- name: Create config dir
+  ansible.builtin.file:
+    path: "{{ user_config_path }}/wallabag/images"
+    state: directory
+
+- name: Add ansible_user to docker group
+  become: true
+  ansible.builtin.user:
+    user: "{{ ansible_user }}"
+    groups: docker
+    append: true
+
+- name: Create container
+  # become: true
+  community.docker.docker_container:
+    name: wallabag
+    image: wallabag/wallabag
+    state: started
+    restart_policy: unless-stopped
+    ports:
+      - "7520:80"
+    env: 
+      TZ: "Berlin/Europe"
+      SYMFONY__ENV__DOMAIN_NAME: "http://{{cname}}:7520" 
+    volumes:
+      - "{{ user_config_path }}/wallabag/data:/var/www/wallabag/data"
+      - "{{ user_config_path }}/wallabag/images:/var/www/wallabag/web/assets/images "
+      - /etc/localtime:/etc/localtime:ro

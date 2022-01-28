@@ -1,0 +1,43 @@
+- name: Set config path
+  set_fact:
+    user_config_path: "{{ ansible_env.HOME }}"
+
+- name: Create config dir
+  ansible.builtin.file:
+    path: "{{ user_config_path }}/wireguard-config"
+    state: directory
+
+- name: Add ansible_user to docker group
+  become: true
+  ansible.builtin.user:
+    user: "{{ ansible_user }}"
+    groups: docker
+    append: true
+
+- name: Create container
+  # become: true
+  community.docker.docker_container:
+    name: wireguard
+    image: linuxserver/wireguard
+    state: started
+    restart_policy: unless-stopped
+    capabilities:
+      - "NET_ADMIN"
+      - "SYS_MODULE"
+    sysctls:
+      net.ipv4.conf.all.src_valid_mark: "1"
+    ports:
+      - 51820:51820/udp
+    env: 
+      TZ: "Berlin/Europe"
+      UID: "1000"
+      PGID: "1000"
+      SERVERURL: "home.affordablepotatoes.com" #optional
+      SERVERPORT: "51820" #optional
+      PEERS: "1" #optional
+      PEERDNS: "auto" #optional
+      INTERNAL_SUBNET: "10.13.13.0" #optional
+    volumes:
+      - "{{ user_config_path }}/wireguard-config:/config"
+      - /lib/modules:/lib/modules
+      - /etc/localtime:/etc/localtime:ro
