@@ -14,6 +14,8 @@
     - role: container-netdata
     - role: container-freshrss
     - role: container-wallabag
+    - role: container-traefik
+    - role: container-whoami
     - role: apt-upgrade
   handlers:
     - name: Reboot host

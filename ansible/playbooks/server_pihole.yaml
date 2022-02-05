@@ -11,6 +11,8 @@
       become: true
     - role: geerlingguy.docker_arm
       become: true
+    - role: jnv.unattended-upgrades
+      become: true
     - role: container-pihole
     - role: container-wireguard
     - role: apt-upgrade

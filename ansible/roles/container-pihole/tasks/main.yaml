@@ -32,7 +32,7 @@
 - name: Create static DHCP leases 
   ansible.builtin.template:
     src: static-dhcp.conf.j2
-    dest: "{{ user_config_path }}/etc-dnsmasq.d/04-static-dhcp.conf"
+    dest: "{{ user_config_path }}/etc-dnsmasq.d/04-pihole-static-dhcp.conf" # must be this file name
 
 # Add a custom domain for certain hosts.
 # Solves corporate computers trying to claim a domain 

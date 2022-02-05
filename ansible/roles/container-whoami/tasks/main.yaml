@@ -1,0 +1,32 @@
+- name: Set config path
+  set_fact:
+    user_config_path: "{{ ansible_env.HOME }}"
+
+- name: Add ansible_user to docker group
+  become: true
+  ansible.builtin.user:
+    user: "{{ ansible_user }}"
+    groups: docker
+    append: true
+
+- name: Create container
+  # become: true
+  community.docker.docker_container:
+    name: whoami
+    image: traefik/whoami
+    state: started
+    restart_policy: unless-stopped
+    ports:
+      - "8888:80"
+    env: 
+      TZ: "Berlin/Europe"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - affordablepotatoes
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.whoami.rule: "Host(`whoami.affordablepotatoes.com`)"
+      traefik.http.routers.whoami.entrypoints: "affordablepotatoes"
+      traefik.http.services.whoami.loadbalancer.server.port: 80
+

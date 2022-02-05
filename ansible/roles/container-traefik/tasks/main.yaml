@@ -1,0 +1,42 @@
+
+
+- name: Set config path
+  set_fact:
+    user_config_path: "{{ ansible_env.HOME }}"
+
+- name: Add ansible_user to docker group
+  become: true
+  ansible.builtin.user:
+    user: "{{ ansible_user }}"
+    groups: docker
+    append: true
+
+- name: Create a docker network
+  community.docker.docker_network:
+    name: affordablepotatoes
+    internal: false
+    
+    
+- name: Create container
+  # become: true
+  community.docker.docker_container:
+    name: traefik
+    image: traefik:v2.6
+    state: started
+    restart_policy: unless-stopped
+    labels:
+      traefik.frontend.rule: "Host:traefik.affordablepotatoes.com"
+      traefik.port: "8080"
+      traefik.enable: "false"
+      traefik.backend: "traefik"
+    networks:
+      - affordablepotatoes
+    env: 
+      TZ: Berlin/Europe
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - "{{ user_config_path }}/traefik/config.toml:/traefik.toml"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "/etc/localtime:/etc/localtime:ro"

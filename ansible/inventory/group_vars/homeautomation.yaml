@@ -5,3 +5,5 @@ unattended_automatic_reboot_time: 03:00
 cloudflare_api_key: "{{vault_cloudflare_token}}"
 cloudflare_zone: affordablepotatoes.com
 cloudflare_subdomain: home
+cnames:
+  - home.affordablepotatoes.com

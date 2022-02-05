@@ -7,6 +7,5 @@
 # storage_uuid: 
 ansible_host: 192.168.1.106
 ansible_user: ubuntu
-cname: home.affordablepotatoes.com
 mac_address: "c0:3f:d5:67:db:ab"
 wireguard_address: "10.8.0.112/24"

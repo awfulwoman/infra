@@ -103,6 +103,10 @@ all:
         host-bigsexybeast:
         host-universallover:
 
+    certificate_authority:
+      hosts:
+        pi-bonerseizure:
+
     # Group: Home Automation
     # Very very stable and boring setup running home automation tasks
     # I Have Learned My Lesson
