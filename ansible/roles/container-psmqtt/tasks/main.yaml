@@ -5,7 +5,7 @@
 - name: Create config file
   ansible.builtin.copy:
     src: psmqtt.conf
-    dest: "{{ user_config_path }}/pstmqtt/psmqtt.conf"
+    dest: "{{ user_config_path }}/psmqtt/psmqtt.conf"
     
 - name: Create container
   become: true

@@ -23,10 +23,10 @@
     volumes:
       - /etc/localtime:/etc/localtime:ro
     networks:
-      - affordablepotatoes
+      - name: "affordablepotatoes"
     labels:
       traefik.enable: "true"
       traefik.http.routers.whoami.rule: "Host(`whoami.affordablepotatoes.com`)"
       traefik.http.routers.whoami.entrypoints: "affordablepotatoes"
-      traefik.http.services.whoami.loadbalancer.server.port: 80
+      traefik.http.services.whoami.loadbalancer.server.port: "80"
 

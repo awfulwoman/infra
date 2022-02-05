@@ -30,7 +30,7 @@
       - "7520:80"
     env: 
       TZ: "Berlin/Europe"
-      SYMFONY__ENV__DOMAIN_NAME: "http://{{cname}}:7520" 
+      SYMFONY__ENV__DOMAIN_NAME: "http://workloads.affordablepotatoes.com:7520" 
     volumes:
       - "{{ user_config_path }}/wallabag/data:/var/www/wallabag/data"
       - "{{ user_config_path }}/wallabag/images:/var/www/wallabag/web/assets/images "

@@ -2,19 +2,19 @@
 - name: Workload containers
   hosts: workloads
   roles:
-    - role: standard_os
-    - role: weareinteractive.environment
-      become: true
-      no_log: true
-    - role: geerlingguy.docker
-      become: true
-    - role: jnv.unattended-upgrades
-      become: true
+    # - role: standard_os
+    # - role: weareinteractive.environment
+    #   become: true
+    #   no_log: true
+    # - role: geerlingguy.docker
+    #   become: true
+    # - role: jnv.unattended-upgrades
+    #   become: true
+    - role: container-traefik
     - role: container-metube
     - role: container-netdata
     - role: container-freshrss
     - role: container-wallabag
-    - role: container-traefik
     - role: container-whoami
     - role: apt-upgrade
   handlers:

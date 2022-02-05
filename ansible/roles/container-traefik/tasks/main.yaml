@@ -1,8 +1,16 @@
-
-
 - name: Set config path
   set_fact:
     user_config_path: "{{ ansible_env.HOME }}"
+
+- name: Create config dir
+  ansible.builtin.file:
+    path: "{{ user_config_path }}/traefik"
+    state: directory
+
+- name: Create config file
+  ansible.builtin.copy:
+    src: config.yaml
+    dest: "{{ user_config_path }}/traefik/config.yaml"
 
 - name: Add ansible_user to docker group
   become: true
@@ -16,7 +24,6 @@
     name: affordablepotatoes
     internal: false
     
-    
 - name: Create container
   # become: true
   community.docker.docker_container:
@@ -26,17 +33,17 @@
     restart_policy: unless-stopped
     labels:
       traefik.frontend.rule: "Host:traefik.affordablepotatoes.com"
-      traefik.port: "8080"
+      traefik.port: "80"
       traefik.enable: "false"
       traefik.backend: "traefik"
     networks:
-      - affordablepotatoes
+      - name: affordablepotatoes
     env: 
       TZ: Berlin/Europe
     ports:
       - "80:80"
       - "8080:8080"
     volumes:
-      - "{{ user_config_path }}/traefik/config.toml:/traefik.toml"
+      - "{{ user_config_path }}/traefik/config.yaml:/traefik.yaml"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "/etc/localtime:/etc/localtime:ro"
