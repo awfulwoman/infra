@@ -7,3 +7,7 @@ cloudflare_zone: affordablepotatoes.com
 cloudflare_subdomain: home
 cnames:
   - home.affordablepotatoes.com
+backups:
+  - hass-config
+  - zigbee2mqtt
+  - mosquitto
