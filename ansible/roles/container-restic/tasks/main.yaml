@@ -14,19 +14,29 @@
     groups: docker
     append: true
 
+
+- name: Set backup volumes
+  set_fact:
+    volumes_to_mount: "{{ volumes_to_mount | default([]) + [ user_config_path  + '/' + item + ':/data/' + item ] }}"
+  with_items: "{{ backups }}"
+
+- name: Show backup volumes
+  debug:
+    var: volumes_to_mount
+
 - name: Create container
   # become: true
   community.docker.docker_container:
-    name: heimdall
+    name: restic-backup
     image: lobaro/restic-backup-docker:1.2-0.9.4
     state: started
     privileged: true
     restart_policy: unless-stopped
     env: 
-      PUID: "1000"
-      PGID: "1000"
-      UMASK: "007"
+      AWS_ACCESS_KEY_ID: "{{ vault_aws_backupuser_access_key_id }}"
+      AWS_SECRET_ACCESS_KEY: "{{ vault_aws_backupuser_access_key_secret }}"
+      RESTIC_REPOSITORY: "{{ vault_restic_repository }}"
+      RESTIC_PASSWORD: "{{ vault_restic_password }}"
+      RESTIC_TAG: "{{ ansible_host }}"
       TZ: Berlin/Europe
-    volumes:
-      - "{{ user_config_path }}/restic:/config"
-      - /etc/localtime:/etc/localtime:ro
+    volumes: "{{ volumes_to_mount }}"

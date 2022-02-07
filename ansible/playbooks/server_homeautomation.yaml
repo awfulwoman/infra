@@ -10,6 +10,7 @@
       become: true
     - role: jnv.unattended-upgrades
       become: true
+    - role: container-restic
     - role: container-ddns
     - role: container-homeassistant
     - role: container-mosquitto
