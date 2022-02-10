@@ -45,11 +45,19 @@ all:
     thinkpad:                     # My partner's work laptop
     unused-asus-board:            # x86_64 Intel Core i3-4170 @ 3.7GHZ 4GB
     unused-pi-zero-wh:            # Raspberry Pi Zero WH
+    vm-whalecoiner:               # Digital Ocean VM
 
   # GROUPS
   # ------
   # Groupings of servers that allow them to be administered collectively.
   children:
+
+    # Machines hosted on Digital Ocean
+    digitalocean:
+      hosts:
+        vm-whalecoiner:
+
+    # PiHole DNS/DHCP servers
     pihole:
       hosts:
         pi-sleeperservice:

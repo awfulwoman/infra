@@ -1,0 +1,14 @@
+---
+- name: Workload containers
+  hosts: vm-whalecoiner
+  roles:
+    - role: standard_os
+    - role: geerlingguy.docker
+      become: true
+    - role: jnv.unattended-upgrades
+      become: true
+    - role: apt-upgrade
+  handlers:
+    - name: Reboot host
+      become: true
+      reboot:

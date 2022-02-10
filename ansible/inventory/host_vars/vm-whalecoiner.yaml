@@ -1,0 +1,3 @@
+ansible_user: charlie
+ansible_host: 161.35.43.104
+wireguard_address: "10.8.0.10/24"
