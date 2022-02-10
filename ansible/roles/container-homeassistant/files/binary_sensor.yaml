@@ -1,0 +1,65 @@
+- platform: ping
+  host: 192.168.1.34
+  name: "Hifi"
+  count: 2
+  scan_interval: 30
+
+- platform: ping
+  host: 192.168.1.100
+  name: "Arbritary"
+  count: 2
+  scan_interval: 60
+
+- platform: ping
+  host: 192.168.1.101
+  name: "Attitude Adjuster"
+  count: 2
+  scan_interval: 60
+
+- platform: ping
+  host: 192.168.1.102
+  name: "Grey Area"
+  count: 2
+  scan_interval: 60
+
+- platform: ping
+  host: 192.168.1.103
+  name: "Sleeper Service"
+  count: 2
+  scan_interval: 60
+
+- platform: ping
+  host: 192.168.1.104
+  name: "Big Sexy Beast"
+  count: 2
+  scan_interval: 60
+
+- platform: ping
+  host: 192.168.1.105
+  name: "Universal Lover"
+  count: 2
+  scan_interval: 60
+
+- platform: ping
+  host: 192.168.1.106
+  name: "Bondage Queen"
+  count: 2
+  scan_interval: 60
+
+- platform: ping
+  host: 192.168.1.107
+  name: "Weaponised Gender"
+  count: 2
+  scan_interval: 60
+
+- platform: ping
+  host: 192.168.1.108
+  name: "Twisty Motherfucker"
+  count: 2
+  scan_interval: 60
+
+- platform: ping
+  host: 192.168.1.109
+  name: "Grab The Tension"
+  count: 2
+  scan_interval: 60

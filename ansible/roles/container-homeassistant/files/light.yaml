@@ -1,0 +1,104 @@
+- platform: group
+  name: Kitchen lights
+  unique_id: d1e8f02d-e5db-46b3-aa1c-434310e67229
+  entities:
+    - light.kitchen_overhead_light
+
+- platform: group
+  name: Pantry lights
+  unique_id: 55761325-c052-4149-a6a4-8e19037f7339
+  entities:
+    - light.pantry_overhead_light
+
+- platform: group
+  name: Entrance Hall lights
+  unique_id: 3ce6c52d-e8b0-4a87-bd99-da1f15d4623a
+  entities:
+    - light.entrancehall_overhead_light
+
+- platform: group
+  name: Living Room Lights
+  unique_id: 8e906136-b04a-448b-8fef-f19a191faf7b
+  entities:
+    - light.livingrm_overhead_filament_light_1
+    - light.livingrm_overhead_filament_light_2
+    - light.livingrm_overhead_filament_light_3
+    - light.livingrm_overhead_filament_light_4
+    - light.livingrm_overhead_filament_light_5
+    - light.livingrm_overhead_filament_light_6
+    - light.livingrm_frame_multicolorlight_1
+    - light.livingrm_frame_multicolorlight_2
+    - light.livingrm_sofa_light
+    - light.livingrm_corner_light
+
+- platform: group
+  name: Living Room Frame Lights
+  unique_id: 5b593333-7eb5-478d-ae00-5fe27aa617fd
+  entities:
+    - light.livingrm_frame_multicolorlight_1
+    - light.livingrm_frame_multicolorlight_2
+
+- platform: group
+  name: Living Room Side Lights
+  unique_id: 95a6263f-40ee-4265-9ebf-0348d8de8f9c
+  entities:
+    - light.livingrm_frame_multicolorlight_1
+    - light.livingrm_frame_multicolorlight_2
+    - light.livingrm_sofa_light
+    - light.livingrm_corner_light
+
+- platform: group
+  name: Living Room Overhead Lights
+  unique_id: aa818575-f4d1-40bd-9bec-3a215c282454
+  entities:
+    - light.livingrm_overhead_filament_light_1
+    - light.livingrm_overhead_filament_light_2
+    - light.livingrm_overhead_filament_light_3
+    - light.livingrm_overhead_filament_light_4
+    - light.livingrm_overhead_filament_light_5
+    - light.livingrm_overhead_filament_light_6
+
+- platform: group
+  name: Office Overhead Lights
+  unique_id: dac08d4c-2f1c-4d3b-b22d-797a91acea19
+  entities:
+    - light.office_overhead_light_1
+    - light.office_overhead_light_2
+    - light.office_overhead_light_3
+
+- platform: group
+  name: Bedroom Lights
+  unique_id: f32f7155-cfee-44e3-84e6-e4353f4b93ad
+  entities:
+    - light.bedroom_overhead_light
+    - light.bedroom_cabinet_light
+    - light.bedroom_bedside_light
+
+- platform: group
+  name: Upstairs Lights
+  unique_id: 0edab730-63a1-4329-a458-7172aa22166a
+  entities:
+    - light.bedroom_overhead_light
+    - light.bedroom_cabinet_light
+    - light.bedroom_bedside_light
+    - light.office_overhead_light_1
+    - light.office_overhead_light_2
+    - light.office_overhead_light_3
+
+- platform: group
+  name: Downstairs Lights
+  unique_id: d31a02d0-6b40-4660-b5d3-909f57d90efa
+  entities:
+    - light.kitchen_overhead_light
+    - light.pantry_overhead_light
+    - light.entrancehall_overhead_light
+    - light.livingrm_overhead_filament_light_1
+    - light.livingrm_overhead_filament_light_2
+    - light.livingrm_overhead_filament_light_3
+    - light.livingrm_overhead_filament_light_4
+    - light.livingrm_overhead_filament_light_5
+    - light.livingrm_overhead_filament_light_6
+    - light.livingrm_frame_multicolorlight_1
+    - light.livingrm_frame_multicolorlight_2
+    - light.livingrm_sofa_light
+    - light.livingrm_corner_light

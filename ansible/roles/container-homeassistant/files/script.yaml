@@ -1,0 +1,61 @@
+learn_hifi_power:
+  sequence:
+    - service: remote.learn_command
+      target:
+        entity_id: remote.broadlink_rm3
+      data:
+        device: hifi
+        command: power
+
+turn_on_kitchen_lights:
+    alias: "Kitchen / lights - on"
+    sequence:
+      - service: light.turn_on
+        target:
+          entity_id: light.kitchen_lights
+        data:
+          brightness: 100
+
+
+turn_on_livingrm_lights_100:
+    alias: "Living room / lights - 100%"
+    sequence:
+      - service: light.turn_on
+        target:
+          entity_id: light.living_room_lights
+        data:
+          brightness: 100
+
+turn_on_livingrm_lights_75:
+    alias: "Living room / lights - 75%"
+    sequence:
+      - service: light.turn_on
+        target:
+          entity_id: light.living_room_lights
+        data:
+          brightness: 75
+
+turn_on_livingrm_lights_50:
+    alias: "Living room / lights - 50%"
+    sequence:
+      - service: light.turn_on
+        target:
+          entity_id: light.living_room_lights
+        data:
+          brightness: 50
+
+turn_on_livingrm_lights_25:
+    alias: "Living room / lights - 25%"
+    sequence:
+      - service: light.turn_on
+        target:
+          entity_id: light.living_room_lights
+        data:
+          brightness: 25
+
+turn_off_livingrm_lights:
+    alias: "Living room / lights - off"
+    sequence:
+      - service: light.turn_off
+        target:
+          entity_id: light.living_room_lights

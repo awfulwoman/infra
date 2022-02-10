@@ -1,0 +1,11 @@
+# - platform: mqtt
+#   unique_id: guinea_pig_power
+#   name: "Guinea Pig Power"
+#   state_topic: "apartment/livingrm/guineapigs/powerswitch/action"
+#   command_topic: "apartment/livingrm/guineapigs/powerswitch/action"
+#   # availability:
+#   #   - topic: "apartment/livingrm/guineapigs/powerswitch/available"
+#   payload_on: "ON"
+#   payload_off: "OFF"
+#   state_on: "ON"
+#   state_off: "OFF"

@@ -7,17 +7,59 @@
     path: "{{ user_config_path }}/hass-config"
     state: directory
 
-- name: Add ansible_user to dialout group
-  become: true
-  ansible.builtin.user:
-    user: "{{ ansible_user }}"
-    groups: dialout
-    append: true
+- name: Copy config file - binary_sensor.yaml
+  ansible.builtin.copy:
+    src: binary_sensor.yaml
+    dest: "{{ user_config_path }}/hass-config/binary_sensor.yaml"
+    backup: yes
 
-- name: Checkout tribut/homeassistant-docker-venv
-  ansible.builtin.git:
-    repo: "https://github.com/tribut/homeassistant-docker-venv"
-    dest: "{{ user_config_path }}/hass-config/docker"
+- name: Copy config file - customize.yaml
+  ansible.builtin.copy:
+    src: customize.yaml
+    dest: "{{ user_config_path }}/hass-config/customize.yaml"
+    backup: yes
+
+- name: Copy config file - group.yaml
+  ansible.builtin.copy:
+    src: group.yaml
+    dest: "{{ user_config_path }}/hass-config/group.yaml"
+    backup: yes
+
+- name: Copy config file - light.yaml
+  ansible.builtin.copy:
+    src: light.yaml
+    dest: "{{ user_config_path }}/hass-config/light.yaml"
+    backup: yes
+
+- name: Copy config file - recorder.yaml
+  ansible.builtin.copy:
+    src: recorder.yaml
+    dest: "{{ user_config_path }}/hass-config/recorder.yaml"
+    backup: yes
+
+- name: Copy config file - scenes.yaml
+  ansible.builtin.copy:
+    src: scenes.yaml
+    dest: "{{ user_config_path }}/hass-config/scenes.yaml"
+    backup: yes
+
+- name: Copy config file - script.yaml
+  ansible.builtin.copy:
+    src: script.yaml
+    dest: "{{ user_config_path }}/hass-config/script.yaml"
+    backup: yes
+
+- name: Copy config file - sensor.yaml
+  ansible.builtin.copy:
+    src: sensor.yaml
+    dest: "{{ user_config_path }}/hass-config/sensor.yaml"
+    backup: yes
+
+- name: Copy config file - switch.yaml
+  ansible.builtin.copy:
+    src: switch.yaml
+    dest: "{{ user_config_path }}/hass-config/switch.yaml"
+    backup: yes
 
 - name: Add ansible_user to docker group
   become: true
@@ -36,11 +78,7 @@
     restart_policy: unless-stopped
     network_mode: host
     env: 
-      PUID: "1000"
-      PGID: "1000"
-      UMASK: "007"
       TZ: Berlin/Europe
     volumes:
       - "{{ user_config_path }}/hass-config:/config"
-      - "{{ user_config_path }}/hass-config/docker/run:/etc/services.d/home-assistant/run"
       - /etc/localtime:/etc/localtime:ro
