@@ -1,4 +1,13 @@
-  # Provisions a generic Debian/Ubuntu/Raspbian machine
+# Provisions a generic Debian/Ubuntu/Raspbian machine
+- name: ansible_ssh_host
+  debug:
+    msg: "{{ ansible_ssh_host }}"
+- name: inventory_hostname
+  debug:
+    msg: "{{ inventory_hostname }}"
+- name: ansible_hostname
+  debug: 
+    msg: "{{ ansible_fqdn }}"
 
 - name: Set ansible_user's authorized keys (from url)
   become: true
@@ -13,6 +22,13 @@
     user: "{{ ansible_user }}"
     key: https://github.com/sonniesedge.keys
     state: present
+
+- name: Add ansible_user to docker group
+  become: true
+  ansible.builtin.user:
+    user: "{{ ansible_user }}"
+    groups: docker
+    append: true
 
 - name: Add Berlin timezone
   become: true
@@ -55,14 +71,14 @@
 - name: Change hostname
   become: true
   ansible.builtin.hostname:
-    name: "{{ ansible_hostname }}"
+    name: "{{ inventory_hostname }}"
 
 - name: Replace 127.0.1.1 on Debian systems
   become: true
   ansible.builtin.lineinfile:
     path: /etc/hosts
     regexp: '^127\.0\.1\.1'
-    line: "127.0.1.1 {{ ansible_hostname }}"
+    line: "127.0.1.1 {{ inventory_hostname }}"
 
 - name: Install apt packages
   become: true
