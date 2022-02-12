@@ -1,6 +1,10 @@
 ---
 all:
   hosts:
+    # device = IoT, cannot be managed
+    # host = a physical machine that can be managed via SSH
+    # vm = a virtual machine
+    # Yes, some of the devices can be SSH'd into. No, I don't consider them to be server-worthy.
     device-applewatch:                    # It's an apple watch and lives on my wrist
     device-belkinsoundform:               # why did I buy this?
     device-broadlink-rm3:                 # A little IR blaster for automating IR devices
@@ -24,8 +28,6 @@ all:
     device-kobo:                          # It displays ebooks that are not from Amazon. I won this at a live Ubuntu Podcast recording I think.
     device-oneplus-6:                     # My partners phone
     device-remarkable:                    # My ReMarkable eink tablet
-    device-unused-pi-zero-wh:             # Raspberry Pi Zero WH
-    device-unused-pi-zero2:               # Raspberry Pi Zero2
     host-aprilashley:                     # Raspberry Pi 4 8GB
     host-attitudeadjuster:                # Raspberry Pi 4 8GB 
     host-bigsexybeast:                    # x86_64 i5 2.90GHz 8GB
@@ -39,6 +41,8 @@ all:
     host-sleeperservice:                  # Raspberry Pi 3 1GB - PiHole DNS + DHCP server
     host-truthandreconciliation:          # Raspberry Pi 4 4GB
     host-twistymotherfucker:              # Raspberry Pi Zero
+    host-unused-pi-zero-wh:               # Raspberry Pi Zero WH
+    host-unused-pi-zero2:                 # Raspberry Pi Zero2
     host-weaponisedgender:                # Raspberry Pi 1 (DO YOU WANT A CUP OF TEA, GRANDMA?)
     host-whifflebumming:                  # opnsense testing box - x86_64 Intel Core i3-4170 @ 3.7GHZ 4GB
     vm-whalecoiner:                       # Digital Ocean VM
@@ -46,7 +50,7 @@ all:
     workstation-mbp2012:                  # Ancient MacBook Pro 2012. It still has Magsafe 1 and an optical drive! :3
     workstation-mbp2020:                  # My fancy Apple Pro M1 work laptop
     workstation-thinkpad:                 # My partner's work laptop. Nope, not touching that with Ansible. Just here so it gets a DHCP address.
-    workstation-universallover:           # x86_64 i5 2.70GHz 8GB
+    workstation-universallover:           # x86_64 i5 2.70GHz 8GB - Arch Linux
 
   # GROUPS
   # ------
