@@ -1,0 +1,4 @@
+ansible_user: ubuntu
+ansible_host: 192.168.1.105
+wireguard_address: "10.8.0.106/24"
+mac_address: "18:03:73:DC:73:53"

@@ -23,6 +23,7 @@ all:
     host-impartialbroadcaster:    # Intel NUC
     host-ladyrona:                # x86_64 Intel Core i3 - Proxmox NAS
     host-universallover:          # x86_64 i5 2.70GHz 8GB
+    host-whifflebumming:          # opnsense testing box - x86_64 Intel Core i3-4170 @ 3.7GHZ 4GB
     ipad-green:                   # An ancient ipad that lives in a nice green case
     ipad-wall:                    # An ancient ipad mini that lives on the wall
     ipad-work:                    # My partners work ipad
@@ -43,8 +44,8 @@ all:
     pi-weaponisedgender:          # Raspberry Pi 1 (DO YOU WANT A CUP OF TEA, GRANDMA?)
     remarkable:                   # My remarkable eink tablet
     thinkpad:                     # My partner's work laptop
-    unused-asus-board:            # x86_64 Intel Core i3-4170 @ 3.7GHZ 4GB
     unused-pi-zero-wh:            # Raspberry Pi Zero WH
+    unused-pi-zero2:              # Raspberry Pi Zero2
     vm-whalecoiner:               # Digital Ocean VM
 
   # GROUPS
@@ -160,3 +161,4 @@ all:
       children:
         servers:
         laptops:
+        digitalocean:
