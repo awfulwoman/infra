@@ -48,13 +48,6 @@
     src: cnames.conf.j2
     dest: "{{ user_config_path }}/etc-dnsmasq.d/05-cnames.list"
 
-- name: Add ansible_user to docker group
-  become: true
-  ansible.builtin.user:
-    user: "{{ ansible_user }}"
-    groups: docker
-    append: true
-
 - name: Create container
   # become: true
   community.docker.docker_container:

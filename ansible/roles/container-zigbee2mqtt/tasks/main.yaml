@@ -20,13 +20,6 @@
     groups: dialout
     append: true
 
-- name: Add ansible_user to docker group
-  become: true
-  ansible.builtin.user:
-    user: "{{ ansible_user }}"
-    groups: docker
-    append: true
-
 - name: Create container
   # become: true
   community.docker.docker_container:
