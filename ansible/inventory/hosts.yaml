@@ -1,10 +1,10 @@
 ---
 all:
   hosts:
-    # device = IoT, cannot be managed
-    # host = a physical machine that can be managed via SSH
-    # vm = a virtual machine
-    # Yes, some of the devices can be SSH'd into. No, I don't consider them to be server-worthy.
+    # device-*       A network-aware device that performs a task. Does not have an OS that can be managed via SSH.
+    # workstation-*  A machine used directly by a person. Has an OS that can be managed via SSH.
+    # host-*         A physical machine used to perform tasks. Has an OS that can be managed via SSH.
+    # vm-*           A virtual machine used to perform tasks. Has an OS that can be managed via SSH.
     device-applewatch:                    # It's an apple watch and lives on my wrist
     device-belkinsoundform:               # why did I buy this?
     device-broadlink-rm3:                 # A little IR blaster for automating IR devices
