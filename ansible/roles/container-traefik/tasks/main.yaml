@@ -16,6 +16,7 @@
   community.docker.docker_network:
     name: affordablepotatoes
     internal: false
+    attachable: true
     
 - name: Create container
   # become: true
