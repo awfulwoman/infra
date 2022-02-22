@@ -1,0 +1,23 @@
+---
+- name: MQTT is life
+  hosts: vm-mqtt
+  roles:
+    - role: standard_os
+    - role: weareinteractive.environment
+      become: true
+      no_log: true
+    - role: geerlingguy.docker
+      become: true
+    - role: docker
+    - role: jnv.unattended-upgrades
+      become: true
+    - role: container-vscode
+    - role: container-mosquitto
+    - role: container-zigbee2mqtt
+    - role: apt-upgrade
+  handlers:
+    - name: Reboot host
+      become: true
+      reboot:
+
+        
