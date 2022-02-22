@@ -7,14 +7,10 @@ roles:
     version: v2.11.1
   - name: weareinteractive.environment
     version: 1.5.0
-  - name: igami.zigbee2mqtt
-    version: v1.0.0
   - name: geerlingguy.docker
-    version: 4.1.1
+    version: 4.1.3
   - name: geerlingguy.docker_arm
     version: 5.0.0
-  - name: githubixx.ansible_role_wireguard
-    version: 8.4.0
   - name: githubixx.harden-linux
     version: v6.0.0
   - name: jnv.unattended-upgrades
