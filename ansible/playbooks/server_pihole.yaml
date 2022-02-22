@@ -15,4 +15,5 @@
       become: true
     - role: container-pihole
     - role: container-wireguard
+    - role: container-vscode
     - role: apt-upgrade
