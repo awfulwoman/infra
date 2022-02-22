@@ -23,13 +23,6 @@
     key: https://github.com/sonniesedge.keys
     state: present
 
-- name: Add ansible_user to docker group
-  become: true
-  ansible.builtin.user:
-    user: "{{ ansible_user }}"
-    groups: docker
-    append: true
-
 - name: Add Berlin timezone
   become: true
   community.general.timezone: 
@@ -108,3 +101,4 @@
 # - name: Self Update Restic package
 #   become: true
 #   ansible.builtin.command: restic self-update
+
