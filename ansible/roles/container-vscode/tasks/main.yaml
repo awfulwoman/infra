@@ -1,0 +1,35 @@
+- name: Set config path
+  set_fact:
+    user_config_path: "{{ ansible_env.HOME }}"
+
+- name: Create config dir
+  ansible.builtin.file:
+    path: "{{ user_config_path }}/vscode"
+    state: directory
+
+- name: Create container
+  become: true
+  community.docker.docker_container:
+    name: vscode
+    image: linuxserver/openvscode-server
+    state: started
+    restart_policy: unless-stopped
+    ports:
+      - "8089:3000"
+    env: 
+      TZ: "Berlin/Europe"
+      STATE_DIR: "/state"
+      PUID: "1000"
+      GUID: "1000"
+    volumes:
+      - "{{ user_config_path }}/vscode:/config"
+      - "{{ user_config_path }}/wireguard-config:/config-wireguard"
+      - /etc/localtime:/etc/localtime:ro
+    # networks:
+    #     - name: "affordablepotatoes"
+    # labels:
+    #   traefik.enable: "true"
+    #   traefik.http.routers.metube.rule: "Host(`vscode.affordablepotatoes.com`)"
+    #   traefik.http.routers.metube.entrypoints: "affordablepotatoes"
+    #   traefik.http.services.metube.loadbalancer.server.port: "8089"
+
