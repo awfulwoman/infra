@@ -1,3 +1,7 @@
 ansible_user: charlie
-ansible_host: 161.35.43.104
-wireguard_address: "10.8.0.10/24"
+# ansible_host: 161.35.43.104
+ansible_host: whalecoiner.com
+wireguard_address: "10.8.0.1/24"
+wireguard_endpoint: "vpn.whalecoiner.com"
+wireguard_persistent_keepalive: 30
+wireguard_allowed_ips: "0.0.0.0/24"

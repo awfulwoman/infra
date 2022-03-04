@@ -1,0 +1,5 @@
+mac_address: "4a:a9:d1:c7:fd:bf"
+ansible_host: 192.168.1.4
+ansible_user: ubuntu
+wireguard_address: "10.8.0.4/24"
+wireguard_allowed_ips: "0.0.0.0/24"

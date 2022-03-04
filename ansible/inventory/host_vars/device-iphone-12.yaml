@@ -8,4 +8,4 @@ vault_mac_address: !vault |
 
 ansible_host: 192.168.1.11
 mac_address: "{{vault_mac_address}}"
-wireguard_address: "10.8.0.117/24"
+wireguard_address: "10.8.0.11/24"

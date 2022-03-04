@@ -8,5 +8,5 @@
 # storage_uuid: 
 ansible_user: ubuntu
 ansible_host: 192.168.1.3
-wireguard_address: "10.8.0.106/24"
+wireguard_address: "10.8.0.3/24"
 mac_address: "18:03:73:DC:73:53"

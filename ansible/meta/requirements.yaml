@@ -15,6 +15,8 @@ roles:
     version: v6.0.0
   - name: jnv.unattended-upgrades
     version: v1.12.1
+  - name: githubixx.ansible_role_wireguard
+    version: 9.0.1
 
 collections: 
   - name: community.docker

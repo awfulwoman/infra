@@ -5,12 +5,11 @@
 # cpu: CPU Cortex-A53
 # mem: 1GB
 # arch: aarch64
-# wireguard_private_key:
-# wireguard_public_key:
 ansible_host: 192.168.1.2
 ansible_python_interpreter: /usr/bin/python3
 ansible_user: pi
 mac_address: "b8:27:eb:6e:31:5a"
 raspberry_pi_disable_bluetooth: true
 raspberry_pi_disable_wifi: true
-wireguard_address: "10.8.0.101/24"
+wireguard_address: "10.8.0.2/24"
+wireguard_endpoint: "vpn.affordablepotatoes.com"

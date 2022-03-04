@@ -7,5 +7,5 @@
 # storage_uuid: 
 ansible_user: pi
 ansible_host: 192.168.1.107
-wireguard_address: "10.8.0.107/24"
-mac_address: "B8:27:EB:66:47:FF"
+# wireguard_address: "10.8.0.107/24"
+# mac_address: "B8:27:EB:66:47:FF"

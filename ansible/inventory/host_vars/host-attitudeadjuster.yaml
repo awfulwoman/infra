@@ -10,4 +10,4 @@ ansible_user: pi
 # mac_address: ""
 storage_mount: /storage
 storage_uuid: 4ad3fab1-708a-4051-a3f7-c8c3db158f7b
-wireguard_address: "10.8.0.114/24"
+# wireguard_address: "10.8.0.114/24"

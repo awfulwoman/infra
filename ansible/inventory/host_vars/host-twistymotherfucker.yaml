@@ -9,4 +9,4 @@
 mac_address: "00:0e:c6:84:3a:64"
 ansible_user: pi
 ansible_host: 192.168.1.108
-wireguard_address: "10.8.0.105/24"
+# wireguard_address: "10.8.0.105/24"

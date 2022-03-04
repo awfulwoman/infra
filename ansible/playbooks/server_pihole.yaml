@@ -14,6 +14,10 @@
     - role: jnv.unattended-upgrades
       become: true
     - role: container-pihole
-    - role: container-wireguard
+    # - role: container-wireguard
     - role: container-vscode
     - role: apt-upgrade
+  handlers:
+    - name: Reboot host
+      become: true
+      reboot:

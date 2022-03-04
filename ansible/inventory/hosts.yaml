@@ -48,6 +48,7 @@ all:
     vm-whalecoiner:                       # Digital Ocean VM
     vm-homeassistant:                     # New Homeassistant.io VM
     vm-mqtt:                              # New MQTT VM
+    vm-pihole:                            # Backup Pihole VM
     workstation-mba2011:                  # MacBook Air 2011 (yes, it's over a decade old. I still use it as my personal machine!)
     workstation-mbp2012:                  # Ancient MacBook Pro 2012. It still has Magsafe 1 and an optical drive! :3
     workstation-mbp2020:                  # My fancy Apple Pro M1 work laptop
@@ -68,6 +69,7 @@ all:
     pihole:
       hosts:
         host-sleeperservice:
+        vm-pihole:
 
     # Group: Laptops and desktops
     workstations:
@@ -164,7 +166,7 @@ all:
     # Group: Wireguard
     # Wireguard is a VPN that allows me to access my LAN remotely
     wireguard:
-      children:
-        servers:
-        laptops:
-        digitalocean:
+      hosts:
+        vm-whalecoiner:
+        # host-sleeperservice:
+        vm-pihole:

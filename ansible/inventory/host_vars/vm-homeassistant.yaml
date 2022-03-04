@@ -1,2 +1,8 @@
+unattended_mail_only_on_error: true
+unattended_mail: unattended@whalecoiner.com
+unattended_automatic_reboot: true
+unattended_automatic_reboot_time: 03:00
 ansible_host: 192.168.1.115
 mac_address: "46:BF:BE:14:D9:52"
+cnames:
+  - homeassistant.affordablepotatoes.com
