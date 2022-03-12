@@ -9,13 +9,17 @@
     - role: weareinteractive.environment
       no_log: true
       become: true
+    - role: geerlingguy.docker
+      become: true
+      when: ansible_architecture == "x86_64"
     - role: geerlingguy.docker_arm
       become: true
+      when: ansible_architecture == "aarch64"
+    - role: docker
     - role: jnv.unattended-upgrades
       become: true
+    - role: container-ddns
     - role: container-pihole
-    # - role: container-wireguard
-    - role: container-vscode
     - role: apt-upgrade
   handlers:
     - name: Reboot host

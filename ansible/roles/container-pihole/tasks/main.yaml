@@ -42,11 +42,16 @@
   ansible.builtin.template:
     src: domains.conf.j2
     dest: "{{ user_config_path }}/etc-dnsmasq.d/07-domains.conf"
+  notify:
+    - Restart Pihole
+
 
 - name: Create cnames
   ansible.builtin.template:
     src: cnames.conf.j2
     dest: "{{ user_config_path }}/etc-dnsmasq.d/05-cnames.list"
+  notify:
+    - Restart Pihole
 
 - name: Create container
   become: true
@@ -76,3 +81,5 @@
       - "{{ user_config_path }}/etc-dnsmasq.d/:/etc/dnsmasq.d/"
     capabilities:
       - NET_ADMIN
+  notify:
+    - Restart Pihole

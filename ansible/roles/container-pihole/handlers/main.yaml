@@ -1,0 +1,7 @@
+---
+- name: Restart Pihole
+  community.docker.docker_container:
+    name: pihole
+    image: pihole/pihole:latest
+    state: started
+    restart: yes

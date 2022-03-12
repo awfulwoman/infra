@@ -1,0 +1,17 @@
+---
+- name: Data server
+  hosts: host-ladyrona
+  roles:
+    - role: standard_os
+    - role: weareinteractive.environment
+      become: true
+      no_log: true
+    - role: jnv.unattended-upgrades
+      become: true
+    - role: apt-upgrade
+  handlers:
+    - name: Reboot host
+      become: true
+      reboot:
+
+        
