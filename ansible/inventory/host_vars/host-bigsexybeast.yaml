@@ -9,4 +9,5 @@
 ansible_host: 192.168.1.104
 ansible_user: root
 mac_address: "00:19:99:f7:80:38"
-# wireguard_address: "10.8.0.113/24"
+# mac_address: "80:49:71:10:bf:e6" # apple usb ethernet dongle
+# wireguard_address: "10.8.0.104/24"
