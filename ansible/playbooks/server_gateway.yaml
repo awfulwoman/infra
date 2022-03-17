@@ -1,0 +1,18 @@
+---
+# DNS + DHCP server
+# Assumes a bare metal install of Ubuntu
+
+- name: Home Gateway
+  hosts: host-whifflebumming
+  roles:
+    - role: standard_os
+    - role: weareinteractive.environment
+      no_log: true
+      become: true
+    - role: jnv.unattended-upgrades
+      become: true
+    - role: apt-upgrade
+  handlers:
+    - name: Reboot host
+      become: true
+      reboot:
