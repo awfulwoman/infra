@@ -3,6 +3,7 @@
   hosts: host-ladyrona
   roles:
     - role: standard_os
+    - role: healthchecks
     - role: weareinteractive.environment
       become: true
       no_log: true

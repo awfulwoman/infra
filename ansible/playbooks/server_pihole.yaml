@@ -6,6 +6,7 @@
   hosts: pihole
   roles:
     - role: standard_os
+    - role: healthchecks
     - role: weareinteractive.environment
       no_log: true
       become: true

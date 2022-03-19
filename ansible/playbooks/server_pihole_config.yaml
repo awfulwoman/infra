@@ -1,0 +1,9 @@
+---
+# DNS + DHCP server
+# Assumes a bare metal install of Raspbian or Ubuntu
+
+- name: PiHole DNS + DHCP server - config only
+  hosts: pihole
+  roles:
+    - role: container-ddns
+    - role: container-pihole

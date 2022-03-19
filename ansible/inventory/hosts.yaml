@@ -46,14 +46,13 @@ all:
     host-weaponisedgender:                # Raspberry Pi 1 (DO YOU WANT A CUP OF TEA, GRANDMA?)
     host-whifflebumming:                  # opnsense testing box - x86_64 Intel Core i3-4170 @ 3.7GHZ 4GB
     vm-whalecoiner:                       # Digital Ocean VM
-    vm-homeassistant:                     # New Homeassistant.io VM
-    vm-mqtt:                              # New MQTT VM
+    vm-homeassistant:                     # Homeassistant.io VM
+    vm-mqtt:                              # MQTT VM
     vm-pihole:                            # Backup Pihole VM
     workstation-mba2011:                  # MacBook Air 2011 (yes, it's over a decade old. I still use it as my personal machine!)
     workstation-mbp2012:                  # Ancient MacBook Pro 2012. It still has Magsafe 1 and an optical drive! :3
     workstation-mbp2020:                  # My fancy Apple Pro M1 work laptop
     workstation-thinkpad:                 # My partner's work laptop. Nope, not touching that with Ansible. Just here so it gets a DHCP address.
-    workstation-universallover:           # x86_64 i5 2.70GHz 8GB - Arch Linux
 
   # GROUPS
   # ------
@@ -77,7 +76,6 @@ all:
         workstation-mba2011:
         workstation-mbp2012:
         workstation-mbp2020:
-        workstation-universallover:
 
     # Group: Servers
     # Machines that act as servers in some capacity or another
@@ -85,7 +83,6 @@ all:
       hosts:
         host-bondagequeen: 
         host-bigsexybeast: 
-        host-universallover: 
         host-impartialbroadcaster: 
         host-aprilashley:
         host-attitudeadjuster: 

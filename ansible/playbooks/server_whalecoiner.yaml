@@ -3,6 +3,7 @@
   hosts: vm-whalecoiner
   roles:
     - role: standard_os
+    - role: healthchecks
     - role: geerlingguy.docker
       become: true
     - role: jnv.unattended-upgrades
