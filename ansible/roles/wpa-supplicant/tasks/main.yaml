@@ -1,0 +1,4 @@
+- name: Create config file
+  ansible.builtin.template:
+    src: wpa_supplicant.conf.j2
+    dest: /etc/wpa_supplicant/wpa_supplicant.conf
