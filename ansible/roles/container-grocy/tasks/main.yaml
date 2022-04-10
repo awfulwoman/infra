@@ -1,0 +1,47 @@
+- name: Set config path
+  set_fact:
+    user_config_path: "{{ ansible_env.HOME }}"
+
+- name: Create config dir
+  ansible.builtin.file:
+    path: "{{ user_config_path }}/grocy"
+    state: directory
+
+- name: Create container
+  community.docker.docker_container:
+    name: grocy
+    image: lscr.io/linuxserver/grocy:latest
+    state: started
+    restart_policy: unless-stopped
+    ports:
+      - "9283:80"
+      # - "9284:443"
+    env: 
+      TZ: "Berlin/Europe"
+      PUID: "1000"
+      PGID: "1000"
+    volumes:
+      - "{{ user_config_path }}/grocy:/config"
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+        - name: "affordablepotatoes"
+    labels:
+      traefik.enable: "true"
+      traefik.docker.network: "affordablepotatoes"
+      traefik.http.services.grocy.loadbalancer.server.port: "9283"
+
+      # HTTP
+      traefik.http.routers.grocy.service: "grocy"
+      traefik.http.routers.grocy.entrypoints: "web"
+      traefik.http.routers.grocy.rule: "Host(`grocy.affordablepotatoes.com`)"
+
+      # Routing for grocy HTTPS
+      traefik.http.routers.grocy-https.service: "grocy"
+      traefik.http.routers.grocy-https.entrypoints: "websecure"
+      traefik.http.routers.grocy-https.rule: "Host(`grocy.affordablepotatoes.com`)"
+      traefik.http.routers.grocy-https.tls: "true"
+
+      # HYYP-to-HTTPS redirect Middleware
+      traefik.http.middlewares.grocy-http2https.redirectscheme.scheme: "https"
+      traefik.http.middlewares.grocy-http2https.redirectscheme.permanent: "true"
+      traefik.http.routers.grocy-http.middlewares: "grocy-http2https"

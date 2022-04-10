@@ -29,7 +29,7 @@
     #     - name: "affordablepotatoes"
     # labels:
     #   traefik.enable: "true"
-    #   traefik.http.routers.metube.rule: "Host(`vscode.affordablepotatoes.com`)"
-    #   traefik.http.routers.metube.entrypoints: "affordablepotatoes"
-    #   traefik.http.services.metube.loadbalancer.server.port: "8089"
+    #   traefik.http.routers.vscode.rule: "Host(`vscode.affordablepotatoes.com`)"
+    #   traefik.http.routers.vscode.entrypoints: "web"
+    #   traefik.http.services.vscode.loadbalancer.server.port: "8089"
 

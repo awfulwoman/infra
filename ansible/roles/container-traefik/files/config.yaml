@@ -1,11 +1,15 @@
 entryPoints:
-  affordablepotatoes:
+  web:
     address: ':80'
+  websecure:
+    address: ':443'
 api:
   dashboard: true
   insecure: true
 providers:
   docker:
+    endpoint: "unix:///var/run/docker.sock"
     watch: true
     network: affordablepotatoes
-    exposedByDefault: false
+    defaultRule: "Host(`{{ .Name }}.affordablepotatoes.com`)"
+    # exposedByDefault: false

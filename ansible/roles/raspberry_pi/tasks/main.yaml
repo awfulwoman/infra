@@ -84,7 +84,7 @@
         owner: root
         group: root
         mode: 0755
-      notify: Reboot system
+      notify: Reboot host
   when: raspberry_pi_cmdline_txt is defined
 
 # - name: If designated NFS node, add NFS server

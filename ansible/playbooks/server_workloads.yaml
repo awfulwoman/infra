@@ -3,19 +3,23 @@
   hosts: workloads
   roles:
     - role: standard_os
+    - role: healthchecks
     - role: weareinteractive.environment
       become: true
       no_log: true
     - role: geerlingguy.docker
       become: true
+    - role: docker
     - role: jnv.unattended-upgrades
       become: true
     - role: container-traefik
     - role: container-metube
     - role: container-netdata
     - role: container-freshrss
+    - role: container-flame
     - role: container-wallabag
     - role: container-whoami
+    - role: container-grocy
     - role: apt-upgrade
   handlers:
     - name: Reboot host

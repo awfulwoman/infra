@@ -1,12 +1,3 @@
-    # image: alexta69/metube
-    # container_name: metube
-    # restart: unless-stopped
-    # user: "1001:1001"
-    # ports:
-    #   - "8081:8081"
-    # volumes:
-    #   
-
 - name: Set config path
   set_fact:
     user_config_path: "{{ ansible_env.HOME }}"
@@ -22,7 +13,6 @@
     state: directory
 
 - name: Create container
-  # become: true
   community.docker.docker_container:
     name: metube
     image: alexta69/metube
@@ -42,6 +32,6 @@
     labels:
       traefik.enable: "true"
       traefik.http.routers.metube.rule: "Host(`metube.affordablepotatoes.com`)"
-      traefik.http.routers.metube.entrypoints: "affordablepotatoes"
+      traefik.http.routers.metube.entrypoints: "web"
       traefik.http.services.metube.loadbalancer.server.port: "8081"
 

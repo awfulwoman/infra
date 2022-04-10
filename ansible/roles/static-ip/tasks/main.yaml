@@ -1,0 +1,8 @@
+  - name: Add an Ethernet connection with static IP configuration
+    community.general.nmcli:
+      conn_name: my-eth1
+      ifname: eth0
+      type: ethernet
+      ip4: 192.1.220.1/24
+      gw4: 192.1.220.0
+      state: present

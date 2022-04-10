@@ -10,11 +10,11 @@
 - name: Create container
   community.docker.docker_container:
     name: flame
-    image: pawelmalak/flame
+    image: pawelmalak/flame:2.2.2
     state: started
     restart_policy: unless-stopped
     ports:
-      - 80:5005
+      - "5005:5005"
     env: 
       TZ: "Berlin/Europe"
       STATE_DIR: "/state"
@@ -22,3 +22,10 @@
       - "{{ user_config_path }}/flame:/app/data"
       - /etc/localtime:/etc/localtime:ro
       - /var/run/docker.sock:/var/run/docker.sock 
+    networks:
+        - name: "affordablepotatoes"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.flame.rule: "Host(`flame.affordablepotatoes.com`)"
+      traefik.http.routers.flame.entrypoints: "web"
+      traefik.http.services.flame.loadbalancer.server.port: "5005"

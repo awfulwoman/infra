@@ -4,3 +4,4 @@
     user: "{{ ansible_user }}"
     groups: docker
     append: true
+  notify: Reboot host

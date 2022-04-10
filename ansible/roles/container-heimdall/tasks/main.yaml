@@ -16,8 +16,8 @@
     privileged: true
     restart_policy: unless-stopped
     ports:
-      - "80:80"
-      - "443:443"
+      - "8012:80"
+      - "8013:443"
     env: 
       PUID: "1000"
       PGID: "1000"
@@ -26,3 +26,8 @@
     volumes:
       - "{{ user_config_path }}/heimdall:/config"
       - /etc/localtime:/etc/localtime:ro
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.heimdall.rule: "Host(`heimdall.affordablepotatoes.com`)"
+      traefik.http.routers.heimdall.entrypoints: "web"
+      traefik.http.services.heimdall.loadbalancer.server.port: "8012"
