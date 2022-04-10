@@ -1,9 +1,18 @@
-  - name: Enable and persist ip forwarding
-    become: true
-    sysctl:
-      name: net.ipv4.ip_forward
-      value: "1"
-      state: present
-      sysctl_set: yes
-      reload: yes
+# Check to see if inventory item has wireguard_address set.
+# if not, abort.
   
+# Install wireguard
+# docker version?
+
+# Get peers ()
+
+# write peers to config file
+
+- name: Enable and persist ip forwarding
+  become: true
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: "1"
+    state: present
+    sysctl_set: yes
+    reload: yes
