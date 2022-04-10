@@ -1,8 +1,10 @@
   - name: Add an Ethernet connection with static IP configuration
     community.general.nmcli:
-      conn_name: my-eth1
-      ifname: eth0
-      type: ethernet
-      ip4: 192.1.220.1/24
-      gw4: 192.1.220.0
-      state: present
+      conn_name: "{{ staticip_conn_name | default('static_ethernet') }}"
+      ifname: "{{ staticip_ifname | default('eth0') }}"
+      type: "{{ staticip_type | default('ethernet') }}"
+      ip4: "{{ staticip_ip4 | default('192.1.220.1/24') }}" 
+      gw4: "{{ staticip_gw4 | default('192.1.220.0') }}" 
+      state: "{{ staticip_state | default('present') }}"
+    notify:
+    - Restart dhcpcd
