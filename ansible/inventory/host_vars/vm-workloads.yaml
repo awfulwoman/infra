@@ -1,0 +1,3 @@
+ansible_host: 192.168.1.117
+ansible_user: ubuntu
+mac_address: "4E:A9:FB:5C:9B:80"
