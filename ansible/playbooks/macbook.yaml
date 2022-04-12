@@ -1,0 +1,4 @@
+- name: MacBook Setup
+  hosts: localhost
+  roles:
+    - role: mac-apps

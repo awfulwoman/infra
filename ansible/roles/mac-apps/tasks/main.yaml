@@ -1,0 +1,5 @@
+- name: Install Mac apps
+  ansible.community.homebrew: 
+    name: 
+      - git
+    state: present
