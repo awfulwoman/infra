@@ -1,4 +1,35 @@
+
 - name: MacBook Setup
   hosts: localhost
+  vars:
+    install_homebrew_if_missing: true
+    upgrade_homebrew_packages: false
+  pre_tasks:
+    - name: Ensuring Homebrew Is Installed
+      stat:
+        path: /usr/local/bin/brew
+      register: homebrew_check
+
+    - name: Fail If Homebrew Is Not Installed and install_homebrew_if_missing Is False
+      fail:
+        msg: Homebrew is missing...Install from http://brew.sh/
+      when:
+        - not homebrew_check.stat.exists
+        - not install_homebrew_if_missing
+
+    - name: Installing Homebrew
+      shell: /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+      when:
+        - not homebrew_check.stat.exists
+        - install_homebrew_if_missing
+
+  tasks:
+    - name: Updating Homebrew
+      community.general.homebrew:
+        update_homebrew: true
+      when: homebrew_check.stat.exists
+    - name: Tap font cask
+      ansible.builtin.command: brew tap homebrew/cask-fonts
+  
   roles:
     - role: mac-apps
