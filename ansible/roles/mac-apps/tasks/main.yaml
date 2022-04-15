@@ -1,4 +1,5 @@
 - name: Install Mac apps
+  become: true
   community.general.homebrew: 
     name: 
       - ffmpeg
@@ -6,12 +7,9 @@
       - get_iplayer
       - git
       - helm
-      - homebrew/cask/alfred
-      - homebrew/cask/balenaetcher
-      - homebrew/cask/imageoptim
-      - homebrew/cask/send-to-kindle
       - jq
       - kubectl
+      - mutt
       - neofetch
       - nmap
       - python@3
@@ -21,4 +19,8 @@
       - wget
       - youtube-dl
       - yq
+      - macvim
+      - starship
     state: present
+
+
