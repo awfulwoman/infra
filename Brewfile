@@ -6,6 +6,7 @@ tap "homebrew/cask"
 tap "homebrew/cask-fonts"
 tap "homebrew/cask-versions"
 tap "homebrew/core"
+tap "buo/cask-upgrade"
 
 # CLI apps
 brew "ansible"
@@ -64,11 +65,12 @@ cask "send-to-kindle"
 cask "telegram-desktop"
 cask "visual-studio-code"
 cask "iterm2"
+cask "slack"
 
 # Mac Store apps
 mas "1Password 7", id: 1333542190
 mas "AdGuard for Safari", id: 1440147259
-mas "Amphetamine", id: 9379847046
+mas "Amphetamine", id: 937984704
 mas "EasyMQTT", id: 1523099606
 mas "iA Writer", id: 775737590
 mas "Pixelmator Pro", id: 1289583905
