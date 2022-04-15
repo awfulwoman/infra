@@ -1,1 +1,34 @@
-<mxfile host="app.diagrams.net" modified="2022-04-15T08:30:56.834Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.4 Safari/605.1.15" etag="_91OQ8MXwyNVxYuAoJ8x" version="17.4.4" type="github"><diagram id="1YSOgjtAHu8lS44mb7FD" name="Page-1">7Zhdj6IwFIZ/DZc7ASoIl4ruTLKz2Q8nmUtTpUJj4ZC2+LG/fgsUAXGSGaOJF3BB2ve0pz2nDxzRQEFyeOY4i39CSJhhm+HBQDPDtv2Rq+6FcKwExx9XQsRpWElWIyzoP6JFU6s5DYnoDJQATNKsK64hTcladjTMOey7wzbAuqtmOCI9YbHGrK++01DGlerZ40Z/ITSK65Ut168sCa4H60hEjEPYtyQ0N1DAAWTVSg4BYUXu6rxU875/YD1tjJNUfmZCvDYXwY+ZK51nS+Zz+u4H3jen8rLDLNcBFyeY6B3LY52GDaQyAAa87CLTdN0gMNB0R7ikKlsTRqNU2SRkLfUVrwj7DYJKCoV1BVJCogawM8NaxUCU7ynWfk5CLBOm+pZqQi4ZTUlwOmlTiRvKWGtjQXkpXUgOW9KyuJ5nTZGyRByHlDThpJCSljyjXHmvtpUCLw5RO6vP3y6UGGdFapJDVGD/lBK5B74VT0mZPjTVeVWJIIcPD8w6YaAeHwIJkfyohugJYw2OfnJ83d03GFqm1uIWgkhrWJMfnRw3cKiG5uMLrLg9VibKkfmu4h54uZYXhrMqBzcAxkJdYkafRcZx7oTMuIdM8GtA5oGQGT0cMl6/Iv15extouZaWHeUyx2wpCN+VAdyAGsc/o8Z1+tRYF6ix7HsVJ7+HzYvyrJSJEFRIrAIbEHoghMb2wyFUr9Zi6BWHxZ7/QooHfK7Fp8JmKSTw8mPrFvi4Z3UL2ZfqlnMBH/Nehcuy+vjQdCuOYkDnWnT2ajojQizjfHUbcJB5Bs6F186l3zve17FR3ebrvrS1/iJB8/8=</diagram></mxfile>
+<mxfile host="app.diagrams.net" modified="2022-04-15T08:35:09.877Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.4 Safari/605.1.15" etag="FqH-ac-rRdvphPMjkIUv" version="17.4.4" type="github">
+  <diagram id="1YSOgjtAHu8lS44mb7FD" name="Page-1">
+    <mxGraphModel dx="946" dy="597" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="hc0SCKD6t5G1tuEiW9C8-5" value="Modem" style="fontColor=#0066CC;verticalAlign=top;verticalLabelPosition=bottom;labelPosition=center;align=center;html=1;outlineConnect=0;fillColor=#CCCCCC;strokeColor=#6881B3;gradientColor=none;gradientDirection=north;strokeWidth=2;shape=mxgraph.networks.modem;" parent="1" vertex="1">
+          <mxGeometry x="70" y="90" width="100" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="hc0SCKD6t5G1tuEiW9C8-6" value="AC Work" style="fontColor=#0066CC;verticalAlign=top;verticalLabelPosition=bottom;labelPosition=center;align=center;html=1;outlineConnect=0;fillColor=#CCCCCC;strokeColor=#6881B3;gradientColor=none;gradientDirection=north;strokeWidth=2;shape=mxgraph.networks.laptop;" parent="1" vertex="1">
+          <mxGeometry x="130" y="490" width="100" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="hc0SCKD6t5G1tuEiW9C8-7" value="CO Work" style="fontColor=#0066CC;verticalAlign=top;verticalLabelPosition=bottom;labelPosition=center;align=center;html=1;outlineConnect=0;fillColor=#CCCCCC;strokeColor=#6881B3;gradientColor=none;gradientDirection=north;strokeWidth=2;shape=mxgraph.networks.laptop;" parent="1" vertex="1">
+          <mxGeometry x="430" y="490" width="100" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="hc0SCKD6t5G1tuEiW9C8-8" value="MQTT" style="fontColor=#0066CC;verticalAlign=top;verticalLabelPosition=bottom;labelPosition=center;align=center;html=1;outlineConnect=0;fillColor=#CCCCCC;strokeColor=#6881B3;gradientColor=none;gradientDirection=north;strokeWidth=2;shape=mxgraph.networks.virtual_server;" parent="1" vertex="1">
+          <mxGeometry x="590" y="465" width="110" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="hc0SCKD6t5G1tuEiW9C8-9" value="Home Assistant" style="fontColor=#0066CC;verticalAlign=top;verticalLabelPosition=bottom;labelPosition=center;align=center;html=1;outlineConnect=0;fillColor=#CCCCCC;strokeColor=#6881B3;gradientColor=none;gradientDirection=north;strokeWidth=2;shape=mxgraph.networks.virtual_server;" parent="1" vertex="1">
+          <mxGeometry x="720" y="465" width="110" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="KFdVDk0zgNlEz9jAVwxf-3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="hc0SCKD6t5G1tuEiW9C8-10" target="hc0SCKD6t5G1tuEiW9C8-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="hc0SCKD6t5G1tuEiW9C8-10" value="ladyrona&lt;br&gt;" style="fontColor=#0066CC;verticalAlign=top;verticalLabelPosition=bottom;labelPosition=center;align=center;html=1;outlineConnect=0;fillColor=#CCCCCC;strokeColor=#6881B3;gradientColor=none;gradientDirection=north;strokeWidth=2;shape=mxgraph.networks.server_storage;" parent="1" vertex="1">
+          <mxGeometry x="660" y="270" width="105" height="105" as="geometry" />
+        </mxCell>
+        <mxCell id="hc0SCKD6t5G1tuEiW9C8-11" value="Linksys" style="fontColor=#0066CC;verticalAlign=top;verticalLabelPosition=bottom;labelPosition=center;align=center;html=1;outlineConnect=0;fillColor=#CCCCCC;strokeColor=#6881B3;gradientColor=none;gradientDirection=north;strokeWidth=2;shape=mxgraph.networks.wireless_hub;" parent="1" vertex="1">
+          <mxGeometry x="300" y="35" width="100" height="85" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
