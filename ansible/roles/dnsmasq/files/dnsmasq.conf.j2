@@ -1,0 +1,7 @@
+interface=eth0       # Use interface eth0  
+listen-address=192.168.220.1   # Specify the address to listen on  
+bind-dynamic         # Bind to the interface
+server=8.8.8.8       # Use Google DNS  
+domain-needed        # Don't forward short names  
+bogus-priv           # Drop the non-routed address spaces.  
+dhcp-range=192.168.220.50,192.168.220.150,12h # IP range and lease time  
