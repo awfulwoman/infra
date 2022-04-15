@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2022-04-15T09:16:09.858Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.4 Safari/605.1.15" etag="d9P_kjKyVhvglSGSxukO" version="17.4.4" type="github">
+<mxfile host="app.diagrams.net" modified="2022-04-15T09:17:32.569Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.4 Safari/605.1.15" etag="2y7nmCT6puPdDnFYrRBf" version="17.4.4" type="github">
   <diagram id="1YSOgjtAHu8lS44mb7FD" name="Page-1">
     <mxGraphModel dx="946" dy="597" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="900" pageHeight="1600" math="0" shadow="0">
       <root>
@@ -40,7 +40,7 @@
         <mxCell id="dhVkkxzpI1AI_c7C-dmG-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.556;entryY=0.164;entryDx=0;entryDy=0;entryPerimeter=0;startArrow=classic;startFill=1;" edge="1" parent="1" source="dhVkkxzpI1AI_c7C-dmG-15" target="dhVkkxzpI1AI_c7C-dmG-25">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="dhVkkxzpI1AI_c7C-dmG-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="dhVkkxzpI1AI_c7C-dmG-36" target="dhVkkxzpI1AI_c7C-dmG-39">
+        <mxCell id="dhVkkxzpI1AI_c7C-dmG-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="dhVkkxzpI1AI_c7C-dmG-36" target="dhVkkxzpI1AI_c7C-dmG-39">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="712.5" y="190" as="sourcePoint" />
             <mxPoint x="621.5" y="310" as="targetPoint" />
@@ -84,10 +84,10 @@
         <mxCell id="dhVkkxzpI1AI_c7C-dmG-18" value="IoT VLAN" style="fontColor=#0066CC;verticalAlign=top;verticalLabelPosition=bottom;labelPosition=center;align=center;html=1;outlineConnect=0;fillColor=#CCCCCC;strokeColor=#6881B3;gradientColor=none;gradientDirection=north;strokeWidth=2;shape=mxgraph.networks.hub;sketch=1;" vertex="1" parent="1">
           <mxGeometry x="390" y="150" width="100" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="dhVkkxzpI1AI_c7C-dmG-25" value="AC Office" style="shape=mxgraph.cisco.misc.access_point;html=1;pointerEvents=1;dashed=0;fillColor=#036897;strokeColor=#ffffff;strokeWidth=2;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;fontFamily=Helvetica;fontSize=12;fontColor=default;sketch=0;" vertex="1" parent="1">
+        <mxCell id="dhVkkxzpI1AI_c7C-dmG-25" value="Office" style="shape=mxgraph.cisco.misc.access_point;html=1;pointerEvents=1;dashed=0;fillColor=#036897;strokeColor=#ffffff;strokeWidth=2;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;fontFamily=Helvetica;fontSize=12;fontColor=default;sketch=1;" vertex="1" parent="1">
           <mxGeometry x="30" y="430" width="90" height="41" as="geometry" />
         </mxCell>
-        <mxCell id="dhVkkxzpI1AI_c7C-dmG-28" value="CO Office" style="shape=mxgraph.cisco.misc.access_point;html=1;pointerEvents=1;dashed=0;fillColor=#036897;strokeColor=#ffffff;strokeWidth=2;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;fontFamily=Helvetica;fontSize=12;fontColor=default;sketch=0;" vertex="1" parent="1">
+        <mxCell id="dhVkkxzpI1AI_c7C-dmG-28" value="Living Room" style="shape=mxgraph.cisco.misc.access_point;html=1;pointerEvents=1;dashed=0;fillColor=#036897;strokeColor=#ffffff;strokeWidth=2;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;fontFamily=Helvetica;fontSize=12;fontColor=default;sketch=1;" vertex="1" parent="1">
           <mxGeometry x="185" y="430" width="90" height="41" as="geometry" />
         </mxCell>
         <mxCell id="dhVkkxzpI1AI_c7C-dmG-30" value="OPNSense (tbd)" style="shape=mxgraph.cisco.security.firewall;sketch=1;html=1;pointerEvents=1;dashed=0;fillColor=#036897;strokeColor=#ffffff;strokeWidth=2;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;" vertex="1" parent="1">
@@ -105,11 +105,14 @@
         <mxCell id="dhVkkxzpI1AI_c7C-dmG-38" style="edgeStyle=orthogonalEdgeStyle;rounded=0;comic=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;startArrow=none;startFill=1;strokeColor=default;exitX=0.5;exitY=0;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="dhVkkxzpI1AI_c7C-dmG-42" target="dhVkkxzpI1AI_c7C-dmG-36">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="dhVkkxzpI1AI_c7C-dmG-37" value="WAP Upstairs" style="shape=mxgraph.cisco.wireless.wireless_transport;sketch=0;html=1;pointerEvents=1;dashed=0;fillColor=#036897;strokeColor=#ffffff;strokeWidth=2;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;" vertex="1" parent="1">
+        <mxCell id="dhVkkxzpI1AI_c7C-dmG-37" value="WAP Upstairs" style="shape=mxgraph.cisco.wireless.wireless_transport;sketch=1;html=1;pointerEvents=1;dashed=0;fillColor=#036897;strokeColor=#ffffff;strokeWidth=2;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;" vertex="1" parent="1">
           <mxGeometry x="350" y="450" width="77" height="54" as="geometry" />
         </mxCell>
         <mxCell id="dhVkkxzpI1AI_c7C-dmG-39" value="Main Server" style="shape=mxgraph.cisco.servers.standard_host;sketch=0;html=1;pointerEvents=1;dashed=0;fillColor=#036897;strokeColor=#ffffff;strokeWidth=2;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;" vertex="1" parent="1">
-          <mxGeometry x="600.5" y="348" width="43" height="62" as="geometry" />
+          <mxGeometry x="817.42" y="264" width="43" height="62" as="geometry" />
+        </mxCell>
+        <mxCell id="dhVkkxzpI1AI_c7C-dmG-47" style="edgeStyle=orthogonalEdgeStyle;rounded=0;comic=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;startArrow=classic;startFill=1;endArrow=classic;endFill=1;strokeColor=default;" edge="1" parent="1" source="dhVkkxzpI1AI_c7C-dmG-41" target="dhVkkxzpI1AI_c7C-dmG-36">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="dhVkkxzpI1AI_c7C-dmG-41" value="Temp Server" style="shape=mxgraph.cisco.servers.standard_host;sketch=0;html=1;pointerEvents=1;dashed=0;fillColor=#036897;strokeColor=#ffffff;strokeWidth=2;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;" vertex="1" parent="1">
           <mxGeometry x="600.5" y="467.5" width="43" height="62" as="geometry" />
@@ -126,7 +129,7 @@
         <mxCell id="dhVkkxzpI1AI_c7C-dmG-45" style="edgeStyle=orthogonalEdgeStyle;rounded=0;comic=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;startArrow=classic;startFill=1;strokeColor=default;" edge="1" parent="1" source="dhVkkxzpI1AI_c7C-dmG-44" target="dhVkkxzpI1AI_c7C-dmG-42">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="dhVkkxzpI1AI_c7C-dmG-44" value="WAP Downstairs" style="shape=mxgraph.cisco.wireless.wireless_transport;sketch=0;html=1;pointerEvents=1;dashed=0;fillColor=#036897;strokeColor=#ffffff;strokeWidth=2;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;" vertex="1" parent="1">
+        <mxCell id="dhVkkxzpI1AI_c7C-dmG-44" value="WAP Downstairs" style="shape=mxgraph.cisco.wireless.wireless_transport;sketch=1;html=1;pointerEvents=1;dashed=0;fillColor=#036897;strokeColor=#ffffff;strokeWidth=2;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;" vertex="1" parent="1">
           <mxGeometry x="467" y="450" width="77" height="54" as="geometry" />
         </mxCell>
       </root>
