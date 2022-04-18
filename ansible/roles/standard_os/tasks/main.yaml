@@ -88,6 +88,9 @@
       - python3-pip
       - python3-docker
       - neofetch
+      - htop
+      - lm-sensors
+      - tmux
     state: present
     update_cache: true
 
