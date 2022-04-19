@@ -40,7 +40,7 @@ What I've currently got on the hardware front:
 
 - 5x Raspberry Pis running Kubernetes (K3s controlled by Flux, currently in development)
 - 1x x86 desktop box running Docker (Home automation services: Home Assistant, MQTT, & Zigbee2MQTT)
-- 1x Raspberry Pi running Docker (DNS via PiHole)
+- 1x Raspberry Pi running Docker (DNS via PiHole container)
 - 1x Proxmox host, 32GB RAM, ZFS, 16TB raw, 8TB usable. Rackmounted.
 
 ## Desired Hardware Setup
