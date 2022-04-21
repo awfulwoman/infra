@@ -62,7 +62,7 @@
         - not install_homebrew_if_missing
 
     - name: Installing Homebrew
-      shell: /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+      shell: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
       when:
         - not homebrew_check.stat.exists
         - install_homebrew_if_missing
@@ -77,6 +77,19 @@
       community.general.homebrew:
         update_homebrew: true
       when: homebrew_check.stat.exists
+
+    - name: check Starship executable is present
+      shell: "which starship"
+      register: starship
+      ignore_errors: true
+
+    - name: Add Starship prompt to .zshrc if Starship installed
+      ansible.builtin.lineinfile:
+        path: ~/.zshrc
+        line: eval "$(starship init zsh)"
+        create: yes
+      when: starship.rc == 0
+
 
     # - name: Upgrading Homebrew Packages
     #   community.general.homebrew:
