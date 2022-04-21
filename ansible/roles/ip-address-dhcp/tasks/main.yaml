@@ -1,0 +1,9 @@
+  - name: Add an Ethernet connection with dynamic IP configuration
+    community.general.nmcli:
+      conn_name: "{{ dhcpip_conn_name | default('dhcp_ethernet') }}"
+      ifname: "{{ dhcpip_ifname | default('eth0') }}"
+      type: "{{ dhcpip_type | default('ethernet') }}"
+      method4: "auto" 
+      state: "{{ dhcpip_state | default('present') }}"
+    notify:
+    - Restart dhcpcd
