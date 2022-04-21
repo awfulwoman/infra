@@ -34,27 +34,23 @@ Anyway, enough of that. I'm sure you're hungry for code by now.
 </details>
 
 
-
 ## Current Hardware Setup
 
-What I've currently got.
+What I've currently got on the hardware front:
 
 - 5x Raspberry Pis running Kubernetes (K3s controlled by Flux, currently in development)
-- 1x Intel NUC running Docker (Home Assistant, DDNS)
-- 1x Raspberry Pi Zero running Mosquitto MQTT Broker
-- 1x Raspberry Pi Zero running Zigbee2MQTT proxy
-- 1x NAS (Proxmox), 8GB RAM, MergerFS, multi-terrabyte storage
+- 1x x86 desktop box running Docker (Home automation services: Home Assistant, MQTT, & Zigbee2MQTT)
+- 1x Raspberry Pi running Docker (DNS via PiHole container)
+- 1x Proxmox host, 32GB RAM, ZFS, 16TB raw, 8TB usable. Rackmounted.
 
 ## Desired Hardware Setup
 
-What I'm working towards.
+Hardware that I'm working towards:
 
 Physical servers (administered via Ansible):
-- Pi or NUC: VPN (Wireguard) baremetal - dedicated VPN machine.
-- Pi or NUC: DNS (Pihole) baremetal - dedicated DNS machine.
-- x86_64 board: NAS (TrueNAS) baremetal (maybe sitting on Hypervisor), 16GB RAM, ZFS filesystem, multi-terrabyte storage - used for critical data.
-- x86_64 board: NAS (TrueNAS) baremetal, 16GB RAM, ZFS filesystem, multi-terrabyte storage - used for offsite data at friends apartment.
-- x86_64 board: Hypervisor (Proxmox), 64GB RAM, ZFS filesystem, multi-terrabyte storage - used for most home workloads.
+- 1x x86 OPNsense gateway
+- 1x Additional Pi as a secondary DNS.
+- x86_64 board: Ubuntu baremetal, 16GB RAM, ZFS filesystem, multi-terrabyte storage - offsite data at friends apartment.
 - All those Raspberry Pis put to good use. I'm thinking interactive touchscreens for Home Assistant, weather station, camera feeds, etc.
 
 Virtual servers (administered via Terraform + Proxmox plugin):
