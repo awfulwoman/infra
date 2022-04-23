@@ -48,6 +48,7 @@ all:
     vm-whalecoiner:                       # Digital Ocean VM
     vm-homeassistant:                     # Homeassistant.io VM
     vm-mqtt:                              # MQTT VM
+    vm-nas:                               # Network Area Store + Media
     vm-pihole:                            # Backup Pihole VM
     vm-workloads:
     workstation-mba2011:                  # MacBook Air 2011 (yes, it's over a decade old. I still use it as my personal machine!)

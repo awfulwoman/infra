@@ -1,3 +1,3 @@
 ansible_user: root
 ansible_host: 192.168.1.116
-mac_address: "4c:cc:6a:b7:d3:99"
+mac_address: "4C:CC:6A:B7:D3:99"

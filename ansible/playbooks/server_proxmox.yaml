@@ -1,6 +1,8 @@
 ---
 - name: Data server
   hosts: host-ladyrona
+  vars:
+    dhcpip_ifname: enp3s0
   roles:
     - role: standard_os
     - role: healthchecks
