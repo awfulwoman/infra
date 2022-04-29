@@ -6,12 +6,12 @@ all:
     # host-*         A physical machine used to perform tasks. Has an OS that can be managed via SSH.
     # vm-*           A virtual machine used to perform tasks. Has an OS that can be managed via SSH.
     device-applewatch:                    # It's an apple watch and lives on my wrist
-    device-belkinsoundform:               # why did I buy this?
+    device-belkinsoundform:               # Why did I buy this?
     device-broadlink-rm3:                 # A little IR blaster for automating IR devices
     device-bunny:                         # Netgear NAS (it belongs to my partner and is about a million years old)
     device-chromecast-audio-1:            # Chromecast Audio 1
     device-chromecast-audio-2:            # Chromecast Audio 2
-    device-chromecast-audio-3:             # Chromecast Audio 3
+    device-chromecast-audio-3:            # Chromecast Audio 3
     device-chromecast:                    # A Chromecast from Google
     device-cleaning-robot-derek:          # Derek cleans the downstairs and is shiny
     device-cleaning-robot-trevor:         # Trevor cleans the upstairs and has gone senile
@@ -25,9 +25,10 @@ all:
     device-iphone-12:                     # My iPhone 12 Pro Max
     device-kindle-paperwhite-gen05:       # It displays ebooks, very slowly
     device-kindle-paperwhite-gen10:       # It displays ebooks
-    device-kobo:                          # It displays ebooks that are not from Amazon. I won this at a live Ubuntu Podcast recording I think.
+    device-kobo:                          # It displays ebooks that are not from Amazon. I won this at a Ubuntu Podcast live recording I think.
     device-oneplus-6:                     # My partners phone
     device-remarkable:                    # My ReMarkable eink tablet
+    device-tl-sg3424:                     # TL-SG3424 managed network switch
     host-aprilashley:                     # Raspberry Pi 4 8GB
     host-attitudeadjuster:                # Raspberry Pi 4 8GB 
     host-bigsexybeast:                    # x86_64 i5 2.90GHz 8GB
@@ -37,19 +38,18 @@ all:
     host-grabthetension:                  # Raspberry Pi Zero W
     host-honestmistake:                   # Raspberry Pi Zero WH
     host-impartialbroadcaster:            # Intel NUC
-    host-ladyrona:                        # x86_64 Intel Core i3 - Proxmox NAS
+    host-ladyrona:                        # Intel i5 8th Gen, 64GB memory, 16TB ZFS array (8TB usable)
     host-sleeperservice:                  # Raspberry Pi 3 1GB - PiHole DNS + DHCP server
-    host-truthandreconciliation:          # Raspberry Pi 4 4GB
     host-twistymotherfucker:              # Raspberry Pi Zero
     host-unused-pi-zero-wh:               # Raspberry Pi Zero WH
     host-unused-pi-zero2:                 # Raspberry Pi Zero2
     host-weaponisedgender:                # Raspberry Pi 1 (DO YOU WANT A CUP OF TEA, GRANDMA?)
     host-whifflebumming:                  # opnsense testing box - x86_64 Intel Core i3-4170 @ 3.7GHZ 4GB
-    vm-whalecoiner:                       # Digital Ocean VM
     vm-homeassistant:                     # Homeassistant.io VM
     vm-mqtt:                              # MQTT VM
     vm-nas:                               # Network Area Store + Media
     vm-pihole:                            # Backup Pihole VM
+    vm-whalecoiner:                       # Digital Ocean VM
     vm-workloads:
     workstation-mba2011:                  # MacBook Air 2011 (yes, it's over a decade old. I still use it as my personal machine!)
     workstation-mbp2012:                  # Ancient MacBook Pro 2012. It still has Magsafe 1 and an optical drive! :3
