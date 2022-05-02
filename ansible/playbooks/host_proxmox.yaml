@@ -1,6 +1,7 @@
 ---
-- name: Data server
-  hosts: proxmox
+- name: Provision the Proxmox host 
+  hosts: host-ladyrona
+  # hosts: proxmox
   vars:
     dhcpip_ifname: enp3s0
     terraform_role: TerraformProv
@@ -25,12 +26,15 @@
     - name: Add Terraform provisioning role
       ansible.builtin.command: "{{terraform_role_command}}"
       when: terraform_role not in proxmox_roles.stdout
+      register: terraform_role_command_output
     - name: Add TerraformProv user
       ansible.builtin.command: "{{terraform_user_command}}"
       when: terraform_user not in proxmox_users.stdout
+      register: terraform_user_command_output
     - name: Add TerraformProv user to role
       ansible.builtin.command: "{{terraform_acl_command}}"
       when: (terraform_user or terraform_role) not in terraform_acls.stdout
+      register: terraform_acl_command_output
 
     # update grub
     # /etc/default/grub
@@ -45,10 +49,6 @@
     # vfio_pci
     # vfio_virqfd
 
-
-
-
-    
   handlers:
     - name: Reboot host
       become: true
