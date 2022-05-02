@@ -115,9 +115,10 @@ all:
     # Group: Proxmox 
     # A virtualisation platform that acts as a Hypervisor for VMs.
     # Can have multiple nodes.
-    proxmox_nodes:
+    proxmox:
       hosts:
         host-bigsexybeast:
+        host-ladyrona:
 
     certificate_authority:
       hosts:

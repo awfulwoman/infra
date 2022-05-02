@@ -1,14 +1,16 @@
 ---
-- name: Data server
-  hosts: host-ladyrona
-  vars:
-    dhcpip_ifname: enp3s0
+- name: NAS
+  hosts: vm-nas
   roles:
     - role: standard_os
     - role: healthchecks
+    - role: vm-guest
     - role: weareinteractive.environment
       become: true
       no_log: true
+    - role: geerlingguy.docker
+      become: true
+    - role: docker
     - role: jnv.unattended-upgrades
       become: true
     - role: apt-upgrade
@@ -16,5 +18,3 @@
     - name: Reboot host
       become: true
       reboot:
-
-        
