@@ -1,0 +1,33 @@
+---
+- name: NAS
+  hosts: host-ladyrona
+  tasks:
+    - name: Install NAS tooling
+      become: true
+      ansible.builtin.apt:
+        name: 
+          - zfsutils-linux
+          - qemu
+          - bridge-utils 
+          - cpu-checker 
+          - libvirt-clients 
+          - libvirt-daemon
+          - qemu-kvm
+          - sanoid
+        state: present
+
+  roles:
+    - role: standard_os
+    # - role: weareinteractive.environment
+    #   become: true
+    #   no_log: true
+    - role: geerlingguy.docker
+      become: true
+    - role: docker
+    - role: jnv.unattended-upgrades
+      become: true
+    - role: apt-upgrade
+  handlers:
+    - name: Reboot host
+      become: true
+      reboot:
