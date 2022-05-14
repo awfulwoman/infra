@@ -1,0 +1,23 @@
+---
+- name: Install virtualisation tooling
+  become: true
+  ansible.builtin.apt:
+    name: 
+      - qemu-kvm
+      - libvirt-clients 
+      - libvirt-daemon-system
+      - bridge-utils 
+      - cpu-checker 
+      - virtinst 
+    state: present
+- name: Add ansible_user to libvirt groups
+  become: true
+  ansible.builtin.user:
+    user: "{{ ansible_user }}"
+    groups: 
+      - libvirt
+      - kvm
+    append: true
+  notify: Reboot host
+- name: Reset connection to get shell groups
+  meta: reset_connection

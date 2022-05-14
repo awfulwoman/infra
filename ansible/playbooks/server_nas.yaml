@@ -1,52 +1,6 @@
 ---
 - name: NAS
   hosts: host-ladyrona
-
-  tasks:
-    - name: Install ZFS tooling
-      become: true
-      ansible.builtin.apt:
-        name: 
-          - zfsutils-linux
-          - sanoid
-        state: present
-    - name: Install virtualisation tooling
-      become: true
-      ansible.builtin.apt:
-        name: 
-          - qemu-kvm
-          - libvirt-clients 
-          - libvirt-daemon-system
-          - bridge-utils 
-          - cpu-checker 
-          - virtinst 
-        state: present
-    - name: Add ansible_user to libvirt groups
-      become: true
-      ansible.builtin.user:
-        user: "{{ ansible_user }}"
-        groups: 
-          - libvirt
-          - kvm
-        append: true
-      notify: Reboot host
-    - name: Reset connection to get shell groups
-      meta: reset_connection
-    - name: Remove Canonical's news at login
-      become: true
-      ansible.builtin.file:
-        path: /etc/update-motd.d/50-motd-news
-        mode: 0664 
-        modification_time: preserve
-        access_time: preserve
-    - name: Remove Canonical's help text at login
-      become: true
-      ansible.builtin.file:
-        path: /etc/update-motd.d/10-help-text
-        mode: 0664
-        modification_time: preserve
-        access_time: preserve
-
   roles:
     - role: standard_os
     # - role: weareinteractive.environment
@@ -57,6 +11,9 @@
     - role: docker
     - role: jnv.unattended-upgrades
       become: true
+    - role: virtualisation-tools
+    - role: zfs-tools
+    - role: motd
     - role: apt-upgrade
   handlers:
     - name: Reboot host

@@ -1,0 +1,15 @@
+---
+- name: Remove Canonical's news at login
+  become: true
+  ansible.builtin.file:
+    path: /etc/update-motd.d/50-motd-news
+    mode: 0664 
+    modification_time: preserve
+    access_time: preserve
+- name: Remove Canonical's help text at login
+  become: true
+  ansible.builtin.file:
+    path: /etc/update-motd.d/10-help-text
+    mode: 0664
+    modification_time: preserve
+    access_time: preserve

@@ -1,0 +1,8 @@
+---
+- name: Install ZFS tooling
+  become: true
+  ansible.builtin.apt:
+    name: 
+      - zfsutils-linux
+      - sanoid
+    state: present
