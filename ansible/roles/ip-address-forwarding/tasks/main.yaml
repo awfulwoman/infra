@@ -1,7 +1,16 @@
-- name: Enable and persist ip forwarding
+- name: Enable and persist IPv4 forwarding
   become: true
   sysctl:
     name: net.ipv4.ip_forward
+    value: "1"
+    state: present
+    sysctl_set: yes
+    reload: yes
+
+- name: Enable and persist IPv6 forwarding
+  become: true
+  sysctl:
+    name: net.ipv6.ip_forward
     value: "1"
     state: present
     sysctl_set: yes
