@@ -9,6 +9,7 @@
       - bridge-utils 
       - cpu-checker 
       - virtinst 
+      - virt-top
     state: present
 - name: Add ansible_user to libvirt groups
   become: true
@@ -19,5 +20,10 @@
       - kvm
     append: true
   notify: Reboot host
+- name: Add the vhost_net module
+  become: true
+  community.general.modprobe:
+    name: vhost_net
+    state: present
 - name: Reset connection to get shell groups
   meta: reset_connection
