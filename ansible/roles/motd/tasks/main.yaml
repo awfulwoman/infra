@@ -14,6 +14,6 @@
     modification_time: preserve
     access_time: preserve
 - name: Create 99
-  ansible.builtin.file:
+  ansible.builtin.copy:
     src: 99-zfspool
     dest: /etc/update-motd.d/99-zfspool
