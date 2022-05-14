@@ -71,6 +71,7 @@ cask "visual-studio-code"
 cask "iterm2"
 cask "slack"
 cask "font-fira-mono-nerd-font"
+cask "utm"
 
 # Mac Store apps
 mas "1Password 7", id: 1333542190
