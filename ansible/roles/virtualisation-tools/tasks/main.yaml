@@ -10,7 +10,9 @@
       - cpu-checker 
       - virtinst 
       - virt-top
+      - net-tools
     state: present
+
 - name: Add ansible_user to libvirt groups
   become: true
   ansible.builtin.user:
@@ -20,10 +22,44 @@
       - kvm
     append: true
   notify: Reboot host
+
 - name: Add the vhost_net module
   become: true
   community.general.modprobe:
     name: vhost_net
     state: present
+
+- name: Create network file
+  become: true
+  ansible.builtin.template:
+    src: default-network.xml.j2
+    dest: /usr/share/libvirt/networks/default.xml
+
+- name: virsh destroy default
+  become: true
+  ansible.builtin.command: virsh net-destroy default
+
+- name: virsh undefine default
+  become: true
+  ansible.builtin.command: virsh net-undefine default
+  
+- name: virsh define default
+  become: true
+  ansible.builtin.command: virsh net-define /usr/share/libvirt/networks/default.xml
+
+- name: virsh start default
+  become: true
+  ansible.builtin.command: virsh net-start default
+
+- name: virsh autostart default
+  become: true
+  ansible.builtin.command: virsh net-autostart default
+
+- name: Restart libvirtd service
+  become: true
+  ansible.builtin.service:
+    name: libvirtd
+    state: restarted
+
 - name: Reset connection to get shell groups
   meta: reset_connection
