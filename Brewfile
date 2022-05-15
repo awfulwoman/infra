@@ -1,12 +1,12 @@
 # Taps
+tap "buo/cask-upgrade"
 tap "fluxcd/tap"
 tap "hashicorp/tap"
 tap "homebrew/bundle"
-tap "homebrew/cask"
 tap "homebrew/cask-fonts"
 tap "homebrew/cask-versions"
+tap "homebrew/cask"
 tap "homebrew/core"
-tap "buo/cask-upgrade"
 
 # CLI apps
 brew "ansible"
@@ -19,6 +19,7 @@ brew "fortune"
 brew "fping"
 brew "get_iplayer"
 brew "git"
+brew "go"
 brew "helm"
 brew "jq"
 brew "kubernetes-cli"
@@ -57,21 +58,21 @@ cask "balenaetcher"
 cask "calibre"
 cask "docker"
 cask "firefox"
-cask "google-chrome"
+cask "font-fira-mono-nerd-font"
 cask "google-chrome-beta"
+cask "google-chrome"
 cask "handbrake"
 cask "home-assistant"
 cask "imageoptim"
+cask "iterm2"
 cask "mullvadvpn"
 cask "multipass"
 cask "raspberry-pi-imager"
 cask "remarkable"
 cask "send-to-kindle"
-cask "visual-studio-code"
-cask "iterm2"
 cask "slack"
-cask "font-fira-mono-nerd-font"
 cask "utm"
+cask "visual-studio-code"
 
 # Mac Store apps
 mas "1Password 7", id: 1333542190
@@ -81,9 +82,9 @@ mas "EasyMQTT", id: 1523099606
 mas "iA Writer", id: 775737590
 mas "Pixelmator Pro", id: 1289583905
 mas "Spark", id: 1176895641
+mas "Telegram", id: 747648890
 mas "Twitterrific", id: 1289378661
 mas "Vinegar", id: 1591303229
 mas "Wayback Machine", id: 1472432422
 mas "WireGuard", id: 1451685025
-mas "Telegram", id: 747648890
 mas "Yoink", id: 457622435
