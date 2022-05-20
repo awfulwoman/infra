@@ -17,6 +17,7 @@ all:
     device-cleaning-robot-trevor:         # Trevor cleans the upstairs and has gone senile
     device-echo-flex-01:                  # For testing TTS via Home Assistant. Microphone OFF.
     device-hifi:                          # It's a device-hifi. It has an ethernet connection. It plays music.
+    device-appletv-livingroom:            # An Apple TV. How decadent.   
     device-homepod-bedroom:               # Homepod Bedroom
     device-homepod-livingroom:            # Homepod Livingroom
     device-ipad-green:                    # An ancient ipad that lives in a nice green case
