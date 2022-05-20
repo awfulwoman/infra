@@ -22,6 +22,6 @@ collections:
   - name: community.docker
     version: 2.0.1
   - name: community.general
-    version: 4.0.2
+    version: 4.8.1
   - name: serdigital64.core
   - name: serdigital64.backup
