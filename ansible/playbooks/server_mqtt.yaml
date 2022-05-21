@@ -1,13 +1,13 @@
 ---
 - name: MQTT is life
-  hosts: vm-mqtt
+  hosts: host-fonduesexparty
   roles:
     - role: standard_os
     - role: healthchecks
     - role: weareinteractive.environment
       become: true
       no_log: true
-    - role: geerlingguy.docker
+    - role: geerlingguy.docker_arm
       become: true
     - role: docker
     - role: jnv.unattended-upgrades

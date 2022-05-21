@@ -7,11 +7,11 @@
     path: "{{ user_config_path }}/zigbee2mqtt"
     state: directory
 
-- name: Copy params to config file
-  ansible.builtin.copy:
-    src: config.yaml
-    dest: "{{ user_config_path }}/zigbee2mqtt/configuration.yaml"
-    force: no
+# - name: Copy params to config file
+#   ansible.builtin.copy:
+#     src: config.yaml
+#     dest: "{{ user_config_path }}/zigbee2mqtt/configuration.yaml"
+#     force: no
 
 - name: Add ansible_user to dialout group
   become: true

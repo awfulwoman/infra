@@ -5,3 +5,7 @@
     groups: docker
     append: true
   notify: Reboot host
+
+- name: Reset connection so shell is picked up.
+  become: true
+  ansible.builtin.meta: reset_connection

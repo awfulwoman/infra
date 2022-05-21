@@ -3,12 +3,9 @@
 # arch: aarch64 
 # cpu: Cortex-A72
 # mem: 8GB
-# default_interface_mac: 
-# bootdisk: 28.4G
 ansible_host: 192.168.1.102
-ansible_python_interpreter: /usr/bin/python3
-ansible_user: pi
+# ansible_user: pi
 mac_address: "E4:5F:01:46:8B:D3"
-storage_mount: /storage
-storage_uuid: 6cf1053f-2948-4808-8e50-d83c63baba77
-# wireguard_address: "10.8.0.115/24"
+# wireguard_address: "10.8.0.102/24"
+cnames:
+  - homeassistant.affordablepotatoes.com

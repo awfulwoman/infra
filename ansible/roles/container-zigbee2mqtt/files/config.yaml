@@ -3,7 +3,7 @@ frontend:
 homeassistant: true
 mqtt:
   base_topic: apartment
-  server: mqtt://172.17.0.1
+  server: mqtt://192.168.1.114
   keepalive: 60
   reject_unauthorized: true
   version: 4
@@ -13,8 +13,6 @@ serial:
 devices:
   '0x8cf681fffe505f93':
     friendly_name: kitchen/wall/singlebutton
-  '0x00158d0006ebd9f7':
-    friendly_name: kitchen/wall/airsensor
   '0x0c4314fffea5674f':
     friendly_name: kitchen/wall/motionsensor
     occupancy_timeout: 120
@@ -29,8 +27,6 @@ devices:
     friendly_name: bedroom/hallway/singlebutton
   '0xcc86ecfffe88f085':
     friendly_name: livingrm/plants/powerswitch
-  '0x0c4314fffe4e823e':
-    friendly_name: livingrm/guineapigs/singlebutton
   '0x50325ffffe04668a':
     friendly_name: entrancehall/door/motiondetector
   '0x00158d0006d0cad9':
@@ -43,8 +39,6 @@ devices:
     friendly_name: bedroom/overhead/light
   '0x0017880109964c5c':
     friendly_name: bedroom/bedside/light
-  '0x0017880109443a3c':
-    friendly_name: pantry/overhead/light
   '0x00178801096fbe3c':
     friendly_name: livingrm/frame/multicolorlight_1
   '0x001788010979b62a':
@@ -55,8 +49,6 @@ devices:
     friendly_name: livingrm/corner/light
   '0x001788010902978e':
     friendly_name: livingrm/overhead/filament_light_1
-  '0x0017880109027560':
-    friendly_name: livingrm/overhead/filament_light_2
   '0x001788010902926f':
     friendly_name: livingrm/overhead/filament_light_3
   '0x001788010902c60f':
@@ -87,19 +79,13 @@ devices:
   '0xb4e3f9fffe2ae457':
     friendly_name: livingrm/general/airpurifier
   '0xcc86ecfffe8dca7e':
-    friendly_name: livingrm/servers/fanswitch
+    friendly_name: bedroom/cabinet/fanswitch
   '0x50325ffffe2bb07c':
     friendly_name: upbathrm/overhead/light
   '0x8cf681fffe51732d':
     friendly_name: pantry/wall/motionsensor
     occupancy_timeout: 10
     illuminance_below_threshold_check: true
-  '0x00158d0007d3c7cf':
-    friendly_name: livingrm/stairs/airsensor
-  '0x00158d0007df91c5':
-    friendly_name: bedroom/cabinet/airsensor
-  '0xcc86ecfffe874bda':
-    friendly_name: bedroom/blanket/powerswitch
   '0x0c4314fffe6e6819':
     friendly_name: bedroom/general/airpurifier
   '0xcc86ecfffe76119f':
@@ -118,6 +104,56 @@ devices:
     friendly_name: livingrm/frame/quadbutton
   '0x00158d0007e3dc2b':
     friendly_name: livingrm/guineapigs/airsensor
+  '0x00158d0007f28062':
+    friendly_name: livingrm/frame/airsensor
+  '0x0017880109027560':
+    friendly_name: livingrm/overhead/filament_light_2
+  '0x0c4314fffe4e823e':
+    friendly_name: livingrm/guineapigs/singlebutton
+  '0x8cf681fffe28832a':
+    friendly_name: bedroom/bedside/doublebutton
+  '0x00158d0007f28524':
+    friendly_name: upbathrm/wall/airsensor
+  '0x00158d0006ebd9f7':
+    friendly_name: kitchen/wall/airsensor
+  '0x00158d000588ca6e':
+    friendly_name: hobbyrm/wall/airsensor
+  '0xcc86ecfffe874bda':
+    friendly_name: bedroom/blanket/powerswitch
+  '0x00158d0007c57ba3':
+    friendly_name: office/balcony/doorsensor
+  '0x7cb03eaa0a03d405':
+    friendly_name: pantry/overhead/light
+  '0xcc86ecfffe93119a':
+    friendly_name: bedroom/bedside/repeater
+  '0x00158d0007efa01a':
+    friendly_name: bedroom/hallway/door
+  '0x00158d0007e7688c':
+    friendly_name: livingrm/balconydoor/contact
+  '0x04cd15fffe70281d':
+    friendly_name: hobbyrm/overhead/light
+  '0x8cf681fffe50613e':
+    friendly_name: hobbyrm/entrance/singlebutton
+  '0x0c4314fffe512aa2':
+    friendly_name: bedroom/bedside/singlebutton
+  '0x54ef4410004205b5':
+    friendly_name: hobbrm/serverrack/meteredswitch
+  '0xb4e3f9fffe6e319e':
+    friendly_name: livingrm/guineapigs/lights
+    transition: 2
+  '0x00158d0008301897':
+    friendly_name: livingrm/stairs/airsensor
+  '0x84ba20fffe7ff568':
+    friendly_name: rearentrance/door/motionsensor
+    illuminance_below_threshold_check: true
+  '0x00158d0007d3c7cf':
+    friendly_name: bedroom/bedside/airsensor
+  '0xcc86ecfffe8dc98f':
+    friendly_name: bedroom/hallway/fanswitch
+  '0xb4e3f9fffebe95cc':
+    friendly_name: livingrm/frame/dockswitch
+  '0xb4e3f9fffe811ebd':
+    friendly_name: livingrm/corner/audiovisualswitch
 groups:
   '1':
     friendly_name: livingrm_lights
@@ -132,6 +168,7 @@ groups:
       - 0x001788010902aa6c/11
       - 0x001788010998977e/11
       - 0x00178801093a9f1e/11
+      - 0xb4e3f9fffe6e319e/1
   '2':
     friendly_name: downstairs_lights
     devices:
@@ -153,10 +190,50 @@ groups:
     devices:
       - 0x0017880109964c5c/11
       - 0x0017880109441c74/11
+      - 0x0017880109418fd6/11
+      - 0xcc86ecfffe76119f/1
   '4':
     friendly_name: upstairs_lights
     devices:
       - 0x0017880109964c5c/11
+      - 0xcc86ecfffe76119f/1
+      - 0x0017880109418fd6/11
+      - 0x0017880109441c74/11
+      - 0xcc86ecfffe92fd8a/1
+      - 0xcc86ecfffe7293b3/1
+      - 0xcc86ecfffe98559f/1
+      - 0x04cd15fffe70281d/1
+  '5':
+    friendly_name: office_lights
+    devices:
+      - 0xcc86ecfffe92fd8a/1
+      - 0xcc86ecfffe7293b3/1
+      - 0xcc86ecfffe98559f/1
+  '6':
+    friendly_name: livingrm_overhead_lights
+    devices:
+      - 0x001788010902978e/11
+      - 0x0017880109027560/11
+      - 0x001788010902926f/11
+      - 0x001788010902c60f/11
+      - 0x001788010902aa6c/11
+      - 0x001788010998977e/11
+  '7':
+    friendly_name: livingrm_side_lights
+    devices:
+      - 0x0017880109419b4f/11
+      - 0x00178801096fbe3c/11
+      - 0x001788010979b62a/11
+      - 0x00178801093a9f1e/11
+  '8':
+    friendly_name: pantry_lights
+    devices:
+      - 0x0017880109443a3c/11
+      - 0x7cb03eaa0a03d405/3
+  '9':
+    friendly_name: kitchen_lights
+    devices:
+      - 0x00178801099d2248/11
 advanced:
   ikea_ota_use_test_url: false
   log_syslog:
