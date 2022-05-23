@@ -10,7 +10,10 @@
     - role: geerlingguy.docker_arm
       become: true
     - role: docker
+    - role: geerlingguy.ansible
+      become: true
     - role: motd
+    - role: generate-sshkey
     - role: jnv.unattended-upgrades
       become: true
     - role: apt-upgrade

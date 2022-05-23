@@ -1,0 +1,10 @@
+- name: account $HOME
+  shell: "echo $HOME"
+  register: account_homedir
+  changed_when: false
+  check_mode: no
+
+- name: Generate an OpenSSH keypair (ed25519) for Ansible user
+  community.crypto.openssh_keypair:
+    type: ed25519
+    path: "{{ account_homedir.stdout }}/.ssh/ed25519"
