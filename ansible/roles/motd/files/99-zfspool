@@ -1,4 +1,6 @@
 #!/bin/sh
 
-zpool list
-echo "\n"
+if [ -x /usr/sbin/zpool ]; then
+    zpool list
+    echo "\n"
+fi

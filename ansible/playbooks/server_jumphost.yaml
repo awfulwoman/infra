@@ -10,6 +10,7 @@
     - role: geerlingguy.docker_arm
       become: true
     - role: docker
+    - role: motd
     - role: jnv.unattended-upgrades
       become: true
     - role: apt-upgrade
