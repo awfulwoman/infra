@@ -1,0 +1,21 @@
+---
+- name: Jumphost
+  hosts: host-attitudeadjuster
+  roles:
+    - role: standard_os
+    - role: healthchecks
+    - role: weareinteractive.environment
+      become: true
+      no_log: true
+    - role: geerlingguy.docker_arm
+      become: true
+    - role: docker
+    - role: jnv.unattended-upgrades
+      become: true
+    - role: apt-upgrade
+  handlers:
+    - name: Reboot host
+      become: true
+      reboot:
+
+        

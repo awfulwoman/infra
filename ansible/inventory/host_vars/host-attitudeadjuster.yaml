@@ -6,8 +6,8 @@
 # bootdisk_size: 28.4G
 ansible_host: 192.168.1.101
 ansible_python_interpreter: /usr/bin/python3
-ansible_user: pi
-# mac_address: ""
-storage_mount: /storage
-storage_uuid: 4ad3fab1-708a-4051-a3f7-c8c3db158f7b
-# wireguard_address: "10.8.0.114/24"
+ansible_user: ubuntu
+mac_address: "E4:5F:01:34:5F:0E"
+# wireguard_address: "10.8.0.101/24"
+cnames:
+  - jumphost.affordablepotatoes.com
