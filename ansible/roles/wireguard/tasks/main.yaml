@@ -4,13 +4,13 @@
     rule: allow
     port: "{{ ansible_ssh_port }}"
     proto: tcp
-  become: yes
+  become: true
   when: ufw_enabled
 
 - name: Set ufw logging
   ufw:
     logging: "on"
-  become: yes
+  become: true
   when: ufw_enabled
 
 - name: inter-node Wireguard UFW connectivity
@@ -18,40 +18,40 @@
     rule: allow
     src: "{{ hostvars[item].wireguard_ip }}"
   with_items: "{{ groups['all'] }}"
-  become: yes
+  become: true
   when: ufw_enabled and item != inventory_hostname
 
 - name: Reject everything and enable UFW
   ufw:
     state: enabled
     policy: reject
-    log: yes
-  become: yes
+    log: true
+  become: true
   when: ufw_enabled
 
 - name: Install wireguard
   apt:
     name: wireguard
     state: present
-  become: yes
+  become: true
 
 - name: Generate Wireguard keypair
   shell: wg genkey | tee /etc/wireguard/privatekey | wg pubkey | tee /etc/wireguard/publickey
   args:
     creates: /etc/wireguard/privatekey
-  become: yes
+  become: true
 
 - name: register private key
   shell: cat /etc/wireguard/privatekey
   register: wireguard_private_key
   changed_when: false
-  become: yes
+  become: true
 
 - name: register public key
   shell: cat /etc/wireguard/publickey
   register: wireguard_public_key
   changed_when: false
-  become: yes
+  become: true
 
 - name: generate Preshared keyskeypair
   shell: "wg genpsk > /etc/wireguard/psk-{{ item }}"
@@ -59,7 +59,7 @@
     creates: "/etc/wireguard/psk-{{ item }}"
   when: inventory_hostname < item
   with_items: "{{ groups['all'] }}"
-  become: yes
+  become: true
 
 - name: register preshared key
   shell: "cat /etc/wireguard/psk-{{ item }}"
@@ -67,13 +67,13 @@
   changed_when: false
   when: inventory_hostname < item
   with_items: "{{ groups['all'] }}"
-  become: yes
+  become: true
 
 - name: massage preshared keys
   set_fact: "wireguard_preshared_keys={{ wireguard_preshared_keys|default({}) | combine( {item.item: item.stdout} ) }}"
   when: item.skipped is not defined
   with_items: "{{ wireguard_preshared_key.results }}"
-  become: yes
+  become: true
 
 - name: Setup wg0 device
   template:
@@ -82,7 +82,7 @@
     owner: root
     group: systemd-network
     mode: 0640
-  become: yes
+  become: true
   notify: systemd network restart
 
 - name: Setup wg0 network
@@ -92,7 +92,7 @@
     owner: root
     group: systemd-network
     mode: 0640
-  become: yes
+  become: true
   notify: systemd network restart
 
 # - name: Enable and persist ip forwarding
