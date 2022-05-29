@@ -1,14 +1,11 @@
-
-
 provider "libvirt" {
    uri = "qemu+ssh://ubuntu@192.168.1.116/system"
 }
 
-
 resource "libvirt_pool" "ubuntu" {
   name = "ubuntu"
   type = "dir"
-  path = "/tank/terraform-provider-libvirt-pool-ubuntu"
+  path = "/tmp/terraform-provider-libvirt-pool-ubuntu"
 }
 
 # We fetch the latest ubuntu release image from their mirrors
@@ -74,4 +71,8 @@ resource "libvirt_domain" "domain-ubuntu" {
     listen_type = "address"
     autoport    = true
   }
+}
+
+terraform {
+  required_version = ">= 0.12"
 }
