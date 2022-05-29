@@ -1,12 +1,99 @@
-# Check to see if inventory item has wireguard_address set.
-# if not, abort.
-  
-# Install wireguard
-# docker version?
+---
+- name: Allow SSH in UFW
+  ufw:
+    rule: allow
+    port: "{{ ansible_ssh_port }}"
+    proto: tcp
+  become: true
+  when: ufw_enabled
 
-# Get peers ()
+- name: Set ufw logging
+  ufw:
+    logging: "on"
+  become: true
+  when: ufw_enabled
 
-# write peers to config file
+- name: inter-node Wireguard UFW connectivity
+  ufw:
+    rule: allow
+    src: "{{ hostvars[item].wireguard_ip }}"
+  with_items: "{{ groups['all'] }}"
+  become: true
+  when: ufw_enabled and item != inventory_hostname
+
+- name: Reject everything and enable UFW
+  ufw:
+    state: enabled
+    policy: reject
+    log: true
+  become: true
+  when: ufw_enabled
+
+- name: Install wireguard
+  apt:
+    name: wireguard
+    state: present
+  become: true
+
+- name: Generate Wireguard keypair
+  shell: wg genkey | tee /etc/wireguard/privatekey | wg pubkey | tee /etc/wireguard/publickey
+  args:
+    creates: /etc/wireguard/privatekey
+  become: true
+
+- name: register private key
+  shell: cat /etc/wireguard/privatekey
+  register: wireguard_private_key
+  changed_when: false
+  become: true
+
+- name: register public key
+  shell: cat /etc/wireguard/publickey
+  register: wireguard_public_key
+  changed_when: false
+  become: true
+
+- name: generate Preshared keyskeypair
+  shell: "wg genpsk > /etc/wireguard/psk-{{ item }}"
+  args:
+    creates: "/etc/wireguard/psk-{{ item }}"
+  when: inventory_hostname < item
+  with_items: "{{ groups['all'] }}"
+  become: true
+
+- name: register preshared key
+  shell: "cat /etc/wireguard/psk-{{ item }}"
+  register: wireguard_preshared_key
+  changed_when: false
+  when: inventory_hostname < item
+  with_items: "{{ groups['all'] }}"
+  become: true
+
+- name: massage preshared keys
+  set_fact: "wireguard_preshared_keys={{ wireguard_preshared_keys|default({}) | combine( {item.item: item.stdout} ) }}"
+  when: item.skipped is not defined
+  with_items: "{{ wireguard_preshared_key.results }}"
+  become: true
+
+- name: Setup wg0 device
+  template:
+    src: ./templates/systemd.netdev
+    dest: /etc/systemd/network/99-wg0.netdev
+    owner: root
+    group: systemd-network
+    mode: 0640
+  become: true
+  notify: systemd network restart
+
+- name: Setup wg0 network
+  template:
+    src: ./templates/systemd.network
+    dest: /etc/systemd/network/99-wg0.network
+    owner: root
+    group: systemd-network
+    mode: 0640
+  become: true
+  notify: systemd network restart
 
 # - name: Enable and persist ip forwarding
 #   become: true
