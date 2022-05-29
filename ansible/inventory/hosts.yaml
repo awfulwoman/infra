@@ -169,5 +169,6 @@ all:
     wireguard:
       hosts:
         vm-whalecoiner:
+        host-attitudeadjuster:
         # host-sleeperservice:
-        vm-pihole:
+        # vm-pihole:
