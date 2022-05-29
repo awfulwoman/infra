@@ -8,7 +8,7 @@
       become: true
     - role: jnv.unattended-upgrades
       become: true
-    # - role: container-wireguard
+    - role: apt-upgrade
   handlers:
     - name: Reboot host
       become: true
