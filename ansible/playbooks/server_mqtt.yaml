@@ -12,6 +12,7 @@
     - role: docker
     - role: jnv.unattended-upgrades
       become: true
+    - role: cron-reboot-weekly
     - role: container-vscode
     - role: container-mosquitto
     - role: container-zigbee2mqtt

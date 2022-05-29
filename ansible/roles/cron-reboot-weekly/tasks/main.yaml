@@ -1,0 +1,8 @@
+- name: Cron job to reboot each Tuesday and Thusday morning
+  become: true
+  ansible.builtin.cron:
+    name: "Regular reboot"
+    day: "2,4" # Tuesday
+    hour: "3"
+    job: "reboot"
+    state: present
