@@ -8,12 +8,10 @@ resource "libvirt_pool" "default" {
   path = "/tank/terraform-provider-libvirt-pool-default"
 }
 
-# We fetch the latest ubuntu release image from their mirrors
-resource "libvirt_volume" "ubuntu-qcow2" {
-  name   = "ubuntu-qcow2"
-  pool   = libvirt_pool.default.name
-  source = "https://cloud-images.ubuntu.com/releases/xenial/release/ubuntu-16.04-server-cloudimg-amd64-disk1.img"
-  format = "qcow2"
+resource "libvirt_volume" "server_data_disk" {
+  name  = "server-data-disk"
+  size  = 32
+  pool  = default
 }
 
 # data "template_file" "user_data" {
