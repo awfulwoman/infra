@@ -1,0 +1,41 @@
+- name: Set config path
+  set_fact:
+    user_config_path: "{{ ansible_env.HOME }}"
+
+- name: Create config dir
+  ansible.builtin.file:
+    path: "{{ user_config_path }}/jellyfin/config"
+    state: directory
+
+- name: Create config dir
+  ansible.builtin.file:
+    path: "{{ user_config_path }}/jellyfin/cache"
+    state: directory
+
+- name: Create config dir
+  ansible.builtin.file:
+    path: "{{ user_config_path }}/jellyfin/media"
+    state: directory
+
+- name: Create container
+  community.docker.docker_container:
+    name: jellyfin
+    image: jellyfin/jellyfin
+    state: started
+    restart_policy: unless-stopped
+    network_mode: host
+    env: 
+      TZ: "Berlin/Europe"
+    volumes:
+      - "{{ user_config_path }}/jellyfin/config:/config"
+      - "{{ user_config_path }}/jellyfin/cache:/cache"
+      - "/tank/media:/media"
+      - /etc/localtime:/etc/localtime:ro
+    # networks:
+    #     - name: "affordablepotatoes"
+    # labels:
+    #   traefik.enable: "true"
+    #   traefik.http.routers.metube.rule: "Host(`jellyfin.affordablepotatoes.com`)"
+    #   traefik.http.routers.metube.entrypoints: "web"
+      # traefik.http.services.metube.loadbalancer.server.port: "8081"
+

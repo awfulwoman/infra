@@ -14,7 +14,9 @@
     - role: virtualisation-tools
     - role: zfs-tools
     - role: motd
+    - role: container-jellyfin
     - role: apt-upgrade
+
   handlers:
     - name: Reboot host
       become: true
