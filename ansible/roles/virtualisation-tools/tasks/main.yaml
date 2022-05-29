@@ -3,7 +3,7 @@
   become: true
   ansible.builtin.apt:
     name: 
-      - qemu-kvm
+      - qemu-system
       - libvirt-clients 
       - libvirt-daemon-system
       - bridge-utils 
@@ -35,6 +35,8 @@
     src: default-network.xml.j2
     dest: /usr/share/libvirt/networks/default.xml
 
+
+# MAKE IDEMPOTENT
 - name: virsh destroy default
   become: true
   ansible.builtin.command: virsh net-destroy default
