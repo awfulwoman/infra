@@ -1,0 +1,37 @@
+# Stuff for server hosts
+
+- name: Install apt packages
+  become: true
+  ansible.builtin.apt:
+    name: 
+      - tmux
+      - unzip
+      - mosh
+    state: present
+    update_cache: true
+
+- name: Set up multiple authorized keys
+  ansible.builtin.authorized_key:
+    user: "{{ ansible_user }}"
+    state: present
+    key: "{{ item }}"
+  loop: "{{ public_keys }}"
+
+- name: Disallow SSH access with passwords
+  become: true
+  ansible.builtin.lineinfile: 
+    path: /etc/ssh/sshd_config 
+    regexp: "^PasswordAuthentication" 
+    line: "PasswordAuthentication no" 
+    state: present
+  notify: Restart SSH
+
+- name: Disallow root SSH access
+  become: true
+  ansible.builtin.lineinfile: 
+    path: /etc/ssh/sshd_config 
+    regexp: "^PermitRootLogin" 
+    line: "PermitRootLogin no" 
+    state: present
+  notify: Restart SSH
+

@@ -3,6 +3,7 @@
   hosts: host-attitudeadjuster
   roles:
     - role: standard_os
+    - role: standard-host
     - role: healthchecks
     - role: weareinteractive.environment
       become: true
@@ -15,6 +16,8 @@
     - role: motd
     - role: generate-sshkey
     - role: jnv.unattended-upgrades
+      become: true
+    - role: diodonfrost.terraform
       become: true
     - role: apt-upgrade
   handlers:

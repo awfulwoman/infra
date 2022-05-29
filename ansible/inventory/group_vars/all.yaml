@@ -1,5 +1,7 @@
 # ansible-vault encrypt_string 'supersecretstring' --name 'vault_xyz'
 
+public_keys:
+  - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEGt7Z1QleOUNalSOYF2KXdD3W9xDhGPFFceIyjWFvHP
 
 vault_password_salting_phrase: !vault |
           $ANSIBLE_VAULT;1.2;AES256;beanpod

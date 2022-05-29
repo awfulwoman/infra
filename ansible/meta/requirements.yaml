@@ -19,6 +19,8 @@ roles:
     version: 9.2.0
   - name: geerlingguy.ansible
     version: 2.1.0
+  - name: diodonfrost.terraform
+    version: 1.6.1
 
 collections: 
   - name: community.docker
