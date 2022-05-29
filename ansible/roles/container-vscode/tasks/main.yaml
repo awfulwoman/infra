@@ -23,7 +23,6 @@
       GUID: "1000"
     volumes:
       - "{{ user_config_path }}/vscode:/config"
-      - "{{ user_config_path }}/wireguard-config:/config-wireguard"
       - /etc/localtime:/etc/localtime:ro
     # networks:
     #     - name: "affordablepotatoes"
