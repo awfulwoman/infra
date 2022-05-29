@@ -1,18 +1,3 @@
 ansible_user: ubuntu
 ansible_host: 192.168.1.116
 mac_address: "4C:CC:6A:B7:D3:99"
-
-# Physical bay arrangement (from front)
-# | hdd_bay_1 | hdd_bay_2 | hdd_bay_3 | hdd_bay_4 |
-# | hdd_bay_5 | hdd_bay_6 | hdd_bay_7 | hdd_bay_8 |
-
-# Main bays (HDDs)
-# bay_XXX1_id: scsi-SATA_ST4000VN008-2DR1_ZDHAMGT1        # 4TB SG
-# bay_XXX1_id: scsi-SATA_WDC_WD40EFZX-68A_WD-WX12DA08KR45 # 4TB WD
-# bay_XXX1_id: scsi-SATA_WDC_WD40EFZX-68A_WD-WX12DA0R1V78 # 4TB WD
-# bay_XXX1_id: scsi-SATA_WDC_WD40EFZX-68A_WD-WX82DA1RHH08 # 4TB WD
-
-# SSDs
-# boot_drive_id: scsi-SATA_SPCC_Solid_State_AAAA0000000000001577 # 128GB SSD
-# ssd_1_id:      scsi-SATA_SanDisk_SDSSDH3_22087N455301 # 1TB SanDisk SSD
-# ssd_2_id: null
