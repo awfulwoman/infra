@@ -11,7 +11,7 @@ resource "libvirt_pool" "default" {
 resource "libvirt_volume" "server_data_disk" {
   name  = "server-data-disk"
   size  = 32
-  pool  = default
+  pool  = default.default
 }
 
 # data "template_file" "user_data" {
