@@ -27,7 +27,7 @@ resource "libvirt_cloudinit_disk" "commoninit" {
   name           = "commoninit.iso"
   user_data      = data.template_file.user_data.rendered
   network_config = data.template_file.network_config.rendered
-  pool           = libvirt_pool.ubuntu.name
+  pool           = libvirt_pool.ubuntu2.name
 }
 
 resource "libvirt_domain" "domain-ubuntu" {
