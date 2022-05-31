@@ -3,7 +3,6 @@ provider "libvirt" {
 }
 
 resource "libvirt_pool" "default-pool" {
-  name = "default"
   type = "dir"
   path = "/tank/terraform-provider-libvirt-pool-default"
 }
@@ -11,7 +10,7 @@ resource "libvirt_pool" "default-pool" {
 resource "libvirt_volume" "server_data_disk" {
   name  = "server-data-disk"
   size  = 32
-  pool  = default-pool.default
+  pool  = default-pool
 }
 
 # data "template_file" "user_data" {
