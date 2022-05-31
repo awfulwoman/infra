@@ -2,7 +2,7 @@ provider "libvirt" {
    uri = "qemu+ssh://ubuntu@192.168.1.116/system"
 }
 
-resource "libvirt_pool" "ubuntu" {
+resource "libvirt_pool" "ubuntu2" {
   name = "ubuntu"
   type = "dir"
   path = var.libvirt_disk_path
@@ -10,7 +10,7 @@ resource "libvirt_pool" "ubuntu" {
 
 resource "libvirt_volume" "ubuntu-qcow2" {
   name = "ubuntu-qcow2"
-  pool = libvirt_pool.ubuntu.name
+  pool = libvirt_pool.ubuntu2.name
   source = var.ubuntu_18_img_url
   format = "qcow2"
 }
