@@ -1,6 +1,6 @@
 terraform {
   required_providers {
-    mycloud = {
+    libvirt = {
       source  = "dmacvicar/libvirt"
       version = "~> 1.0"
     }
