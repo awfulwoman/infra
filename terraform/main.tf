@@ -3,6 +3,7 @@ provider "libvirt" {
 }
 
 resource "libvirt_pool" "default-pool" {
+  name = "default-pool"
   type = "dir"
   path = "/tank/terraform-provider-libvirt-pool-default"
 }
