@@ -1,5 +1,5 @@
-resource "libvirt_pool" "k8s-pool" {
-  name = "k8s-pool"
+resource "libvirt_pool" "default" {
+  name = "default"
   type = "dir"
-  path = "/tank/images/k8s-pool"
+  path = "/tank/pools/default"
 }
