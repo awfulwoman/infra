@@ -2,8 +2,9 @@
 # virsh pool-define-as default --type dir --target /tank/pools/default
 # https://unix.stackexchange.com/questions/216837/virsh-and-creating-storage-pools-what-is-sourcepath
 # It creates a directory and assigns it to the libvirt pool named "default"
+# The following does the same.
 
-resource "libvirt_pool" "default" {
+resource "libvirt_pool" "kubernetes" {
   name = "default"
   type = "dir"
   path = "/tank/pools/default"
