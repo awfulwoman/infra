@@ -1,6 +1,8 @@
 theme: minima
 baseurl: /home
 title: At Home with the GitOps
+description: A repo for learning things.
+author: Chazza
 header_pages:
    - bootstrapping/README.md
    - hardware/README.md
