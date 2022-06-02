@@ -5,7 +5,7 @@ Discoveries that I've made.
 ![](https://media.giphy.com/media/SPZFhfUJjsJO0/giphy.gif)
 
 <ul>
-{% for page in site.collections.discoveries %}
-  <li><a href="{{ page.url }}">{{ page.title }}</a></li>
+{% for discovery in site.discoveries %}
+    <li><a href="{{ discovery.url }}">{{ discovery.title }}</a> - {{ discovery.date }}</li>
 {% endfor %}
 </ul>
