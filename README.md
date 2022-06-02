@@ -10,6 +10,8 @@ Let me and Bill Murray show you our home GitOps setup.
 
 I started out writing this as a series of notes but it's growing into a mini-opera composed of weird sentence structures and addressing a constantly switching audience. I shall one day address this issue.
 
+[View these docs via a Github Pages site](https://whalecoiner.github.io/home/).
+
 ---
 
 <details>
