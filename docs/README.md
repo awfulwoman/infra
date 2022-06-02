@@ -1,5 +1,8 @@
 # Hi there!
 
+So you're interested in the shit that I build for fun, huh?
+
+- [Bootstrapping](bootstrapping/)
 - [Learnings](learnings/)
 - [Hardware](hardware/)
 - [Network](network/)
