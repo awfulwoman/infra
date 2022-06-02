@@ -2,7 +2,13 @@ theme: minima
 baseurl: /home
 title: At Home with the GitOps
 description: A repo for learning things.
-author: Chazza
+author:
+  name: Chazza
+  email: spam@whalecoiner.com
+minima:
+  social_links:
+    twitter: whalecoiner
+    github:  whalecoiner
 header_pages:
    - bootstrapping/README.md
    - hardware/README.md
@@ -12,7 +18,6 @@ header_pages:
    - discoveries/README.md
 plugins:
   - jekyll-titles-from-headings
-  - jekyll-last-modified-at
 titles_from_headings:
   enabled: true
   strip_title: true
