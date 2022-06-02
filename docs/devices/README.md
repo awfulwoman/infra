@@ -8,18 +8,17 @@ Things that definitely _aren't_ simple devices are x86 servers, Raspberry Pi dev
 
 ## Zigbee
 
-Most of the devices in my house are not connected by WiFi - they're connected by [https://en.wikipedia.org/wiki/Zigbee](Zigbee). This is a lightweight over the air protocol that allows simple sensors and switches to form their own radio mesh.
+Most of the devices in my house are not connected by WiFi - they're connected by [Zigbee](https://en.wikipedia.org/wiki/Zigbee). This is a lightweight over the air protocol that allows simple sensors and switches to form their own radio mesh.
 
 They're all controlled by a Conbee II USB stick that is connected to one of my many Raspberry Pis.
 
-
 ## MQTT
 
-MQTT is a simple messaging protocol running over HTTP. 
+[MQTT](https://en.wikipedia.org/wiki/MQTT) is a simple pubsub messaging protocol running over HTTP. 
 
 ## Zigbee and MQTT
 
-I use [http://zigbee2mqtt.io](Zigbee2MQTT) to take the Zigbee signals and turn them into well formatted MQTT messages that can be consumed/updated across my network.
+I use [Zigbee2MQTT](http://zigbee2mqtt.io) to take the Zigbee signals and turn them into well formatted MQTT messages that can be consumed/updated across my network.
 
 ## Naming conventions for Zigbee devices
 
