@@ -5,6 +5,8 @@ header_pages:
    - bootstrapping/README.md
    - hardware/README.md
    - network/README.md
+   - kubernetes/README.md
+   - devices/README.md
 plugins:
   - jekyll-titles-from-headings
 titles_from_headings:
