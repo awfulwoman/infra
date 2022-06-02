@@ -2,8 +2,6 @@
 
 We stand upon the shoulders of giants.
 
-[View these docs via a Github Pages site](https://whalecoiner.github.io/home/).
-
 ## Control node tools
 
 The Ansible Control Node needs some CLI tools before anything else can happen. Most of the time this is just my laptop, but it's moving towards a dedicated [jumphost](/ansible/playbooks/server_jumphost.yaml).
