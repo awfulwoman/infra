@@ -9,5 +9,12 @@ So you're interested in the shit that I build for fun, huh? Well, you're in the 
 - [Kubernetes](kubernetes/)
 - [Devices](devices/)
 
-## Series
-- [Discoveries](discoveries/)
+## Latest Discoveries
+
+<ul>
+  {% for post in site.posts %}
+    <li>
+      <a href="{{ post.url }}">{{ post.title }}</a>
+    </li>
+  {% endfor %}
+</ul>
