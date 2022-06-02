@@ -1,17 +1,28 @@
-## Dependencies
+# Dependencies
 
-The Ansible Control Node needs some CLI tools before anything else can happen. 
+We stand upon the shoulders of giants.
 
-`brew install` ...
-- `ansible`
-- `kubectl`
-- `helm`
-- `flux`
+## Control node tools
 
-The dependencies for Ansible need to be pulled in:
+The Ansible Control Node needs some CLI tools before anything else can happen. Most of the time this is just my laptop, but it's moving towards a dedicated [jumphost](/ansible/playbooks/server_jumphost.yaml).
+
+```bash
+# MacOS
+brew install ansible kubectl helm flux
+```
+
+## Ansible dependencies
+
+Many roles come from Anisble Galaxy and need to be installed.
 
 ```bash
 ansible-galaxy install -r meta/requirements.yaml  
+```
+
+## Terraform dependencies
+```bash
+cd terraform
+terraform init
 ```
 
 ## Stuff
