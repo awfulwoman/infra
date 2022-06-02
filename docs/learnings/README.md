@@ -10,3 +10,11 @@ Going to try and keep a diary of the things I learn here.
 - [LCARs and PiHole](2022.01.21-lcars-pihole/)
 - [Valetudo](2022.01.24-valetudo/)
 - [Carrier Grade NAT](2022.01.27-carrier-grade-nat/)
+
+## Discoveries
+
+<ul>
+{% for page in site.collections.discoveries %}
+  <li><a href="{{ page.url }}">{{ page.title }}</a></li>
+{% endfor %}
+</ul>
