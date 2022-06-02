@@ -13,9 +13,6 @@ plugins:
   - jekyll-titles-from-headings
   - jekyll-last-modified-at
 titles_from_headings:
-  enabled:     true
+  enabled: true
   strip_title: true
   collections: true 
-collections:
-  discoveries:
-    output: true
