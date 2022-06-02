@@ -1,4 +1,4 @@
-# OS configuration
+# Operating systems
 
 Every machine on the cluster runs Raspberry Pi OS. I could have used any other distro, but it doesn't really matter, as all each machine will be doing is acting as a k3s node. Raspberry Pi OS at least has capabilites for handling the Pi hardware via the CLI.
 
