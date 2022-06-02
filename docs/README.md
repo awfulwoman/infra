@@ -10,4 +10,4 @@ So you're interested in the shit that I build for fun, huh? Well, you're in the 
 - [Devices](devices/)
 
 ## Series
-- [Learnings](learnings/)
+- [Discoveries](discoveries/)
