@@ -1,11 +1,13 @@
 # Hi there!
 
-So you're interested in the shit that I build for fun, huh?
+So you're interested in the shit that I build for fun, huh? Well, you're in the right place. Because this is essentially my homelab wiki.
 
-- [Bootstrapping](bootstrapping/)
-- [Learnings](learnings/)
+- [Bootstrapping hosts and infrastructure](bootstrapping/)
 - [Hardware](hardware/)
-- [Network](network/)
-- [Operating System](operating-system.md)
-- [Installing K3s](kubernetes.md)
-- [IoT devices](devices/)
+- [Network setup](network/)
+- [Operating Systems](operating-system.md)
+- [Kubernetes](kubernetes.md)
+- [Devices](devices/)
+
+## Series
+- [Learnings](learnings/)
