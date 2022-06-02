@@ -9,6 +9,7 @@ header_pages:
    - network/README.md
    - kubernetes/README.md
    - devices/README.md
+   - discoveries/README.md
 plugins:
   - jekyll-titles-from-headings
   - jekyll-last-modified-at
