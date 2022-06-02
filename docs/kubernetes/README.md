@@ -1,4 +1,4 @@
-# Installing the Kubernetes infrastructure and apps
+# Kubernetes
 
 After my cluster has been built with Ansible I can bootstrap it using the following command.
 

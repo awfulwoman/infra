@@ -10,6 +10,8 @@ Let me and Bill Murray show you our home GitOps setup.
 
 I started out writing this as a series of notes but it's growing into a mini-opera composed of weird sentence structures and addressing a constantly switching audience. I shall one day address this issue.
 
+The majority of this repo is configuration code. But in `docs` there's a lot about the hardware and the reasons for my decisions. [View the docs directly in this repo](docs/) or [view the docs via a rendered site](https://whalecoiner.github.io/home/).
+
 ---
 
 <details>
@@ -34,42 +36,3 @@ Anyway, enough of that. I'm sure you're hungry for code by now.
 </details>
 
 
-## Current Hardware Setup
-
-What I've currently got on the hardware front:
-
-- 5x Raspberry Pis running Kubernetes (K3s controlled by Flux, currently in development)
-- 1x x86 desktop box running Docker (Home automation services: Home Assistant, MQTT, & Zigbee2MQTT)
-- 1x Raspberry Pi running Docker (DNS via PiHole container)
-- 1x Proxmox host, 32GB RAM, ZFS, 16TB raw, 8TB usable. Rackmounted.
-
-## Desired Hardware Setup
-
-Hardware that I'm working towards:
-
-Physical servers (administered via Ansible):
-- 1x x86 OPNsense gateway
-- 1x Additional Pi as a secondary DNS.
-- x86_64 board: Ubuntu baremetal, 16GB RAM, ZFS filesystem, multi-terrabyte storage - offsite data at friends apartment.
-- All those Raspberry Pis put to good use. I'm thinking interactive touchscreens for Home Assistant, weather station, camera feeds, etc.
-
-Virtual servers (administered via Terraform + Proxmox plugin):
-- k3s x 5 worker nodes.
-- k3s x 3 storage nodes (Longhorn).
-- Docker-compose running various ad-hoc workload.
-
-
-## Resources
-- https://perfectmediaserver.com
-- https://github.com/ironicbadger/infra
-- https://www.tauceti.blog/posts/kubernetes-the-not-so-hard-way-with-ansible-the-basics/
-- https://unraid-guides.com/2020/12/07/dont-ever-use-cheap-pci-e-sata-expansion-cards-with-unraid/
-- https://github.com/onedr0p/home-ops
-- https://github.com/lisenet/kubernetes-homelab
-- https://www.servethehome.com/buyers-guides/top-hardware-components-freenas-nas-servers/top-picks-freenas-hbas/
-- https://www.wireguard.com
-- https://github.com/kelseyhightower/kubernetes-the-hard-way
-- https://github.com/kubernetes/git-sync
-- https://blog.briancmoses.com/2020/11/diy-nas-2020-edition.html
-- https://github.com/lisenet/kubernetes-homelab
-- https://www.pidramble.com

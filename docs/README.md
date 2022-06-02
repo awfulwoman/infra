@@ -1,24 +1,10 @@
-## Dependencies
+# Hi there!
 
-The Ansible Control Node needs some CLI tools before anything else can happen. 
+So you're interested in the shit that I build for fun, huh? Well, you're in the right place. Because this is essentially my homelab wiki.
 
-`brew install` ...
-- `ansible`
-- `kubectl`
-- `helm`
-- `flux`
-
-The dependencies for Ansible need to be pulled in:
-
-```bash
-ansible-galaxy install -r meta/requirements.yaml  
-```
-
-## Stuff
-
-- [Learnings](learnings)
-- [Hardware](hardware.md)
-- [Network](network.md)
-- [Operating System](operating-system.md)
-- [Installing K3s](kubernetes.md)
-- [Naming IoT devices](naming_iot_devices.md)
+- [Bootstrapping hosts and infrastructure](bootstrapping/)
+- [Hardware](hardware/)
+- [Network setup](network/)
+- [Operating Systems](operating-system/)
+- [Kubernetes](kubernetes/)
+- [Devices](devices/)
