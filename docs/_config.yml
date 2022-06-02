@@ -1,2 +1,4 @@
 theme: minima
 baseurl: /home
+plugins:
+  - jekyll-titles-from-headings
