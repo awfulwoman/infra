@@ -9,6 +9,7 @@ header_pages:
    - devices/README.md
 plugins:
   - jekyll-titles-from-headings
+  - jekyll-last-modified-at
 titles_from_headings:
   enabled:     true
   strip_title: true
