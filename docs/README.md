@@ -2,7 +2,7 @@
 
 We stand upon the shoulders of giants.
 
-[https://whalecoiner.github.io/home/](View these docs via a Github Pages site).
+[View these docs via a Github Pages site](https://whalecoiner.github.io/home/).
 
 ## Control node tools
 
