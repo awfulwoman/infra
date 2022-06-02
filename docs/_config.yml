@@ -1,2 +1,5 @@
-theme: jekyll-theme-slate
+theme: minima
 baseurl: /home
+header_pages:
+  - hardware
+  - network
