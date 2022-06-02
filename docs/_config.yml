@@ -1,5 +1,2 @@
 theme: minima
 baseurl: /home
-header_pages:
-  - hardware/README.md
-  - network/README.md
