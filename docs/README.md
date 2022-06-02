@@ -27,9 +27,9 @@ terraform init
 
 ## Stuff
 
-- [Learnings](learnings)
-- [Hardware](hardware.md)
-- [Network](network.md)
+- [Learnings](learnings/)
+- [Hardware](hardware/)
+- [Network](network/)
 - [Operating System](operating-system.md)
 - [Installing K3s](kubernetes.md)
-- [Naming IoT devices](naming_iot_devices.md)
+- [IoT devices](devices/)
