@@ -2,7 +2,7 @@ theme: minima
 baseurl: /home
 title: At Home with the GitOps
 header_pages:
-   - README.md
+   - bootstrapping/README.md
    - hardware/README.md
    - network/README.md
 plugins:
