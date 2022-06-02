@@ -1,4 +1,4 @@
-# Hardware setup
+# Hardware
 
 The [Ansible Inventory](../ansible/inventory/hosts.yaml) describes everything that lives on this network.
 
