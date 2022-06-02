@@ -1,0 +1,8 @@
+- name: Restart libvirtd
+  become: true
+  service: 
+    name: libvirtd
+    state: restarted
+
+- name: Reset connection to get shell groups
+  meta: reset_connection
