@@ -1,4 +1,8 @@
 theme: minima
 baseurl: /home
+header_pages:
+   - README.md
+   - hardware/README.md
+   - network/README.md
 plugins:
   - jekyll-titles-from-headings
