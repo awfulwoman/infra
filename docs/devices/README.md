@@ -24,4 +24,4 @@ I use [Zigbee2MQTT](http://zigbee2mqtt.io) to take the Zigbee signals and turn t
 
 Back when I started I made this spreadsheet to help me to name devices in a way that is compatible with both MQTT and Home Assistant. You might find it useful!
 
-https://docs.google.com/spreadsheets/d/1JEz_QobnGvY8sxKx7RLfsss1d7irSiBMTl8NEbtI3H0
+<https://docs.google.com/spreadsheets/d/1JEz_QobnGvY8sxKx7RLfsss1d7irSiBMTl8NEbtI3H0>
