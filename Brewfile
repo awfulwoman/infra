@@ -10,6 +10,7 @@ tap "homebrew/core"
 
 # CLI apps
 brew "ansible"
+brew "argocd"
 brew "cairo"
 brew "coreutils"
 brew "espeak"
