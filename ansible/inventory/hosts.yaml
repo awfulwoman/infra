@@ -62,6 +62,10 @@ all:
   # Groupings of servers that allow them to be administered collectively.
   children:
 
+    webcams:
+      hosts:
+        host-pi-zero-guineapirate:
+
     # Machines hosted on Digital Ocean
     digitalocean:
       hosts:
