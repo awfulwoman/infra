@@ -1,11 +1,11 @@
 resource "libvirt_domain" "kubernetes-controller" {
-  name = "terraform_test"
+  name = "kubernetes-controller"
   memory = "1024"
   vcpu   = 1
 }
 
 resource "libvirt_domain" "kubernetes-worker" {
-  name = "terraform_test"
+  name = "kubernetes-worker"
   memory = "1024"
   vcpu   = 1
 }
