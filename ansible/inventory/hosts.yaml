@@ -36,14 +36,12 @@ all:
     host-bondagequeen:                    # Intel NUC Atom 1.46GHz 8GB - Runs most of the home automation stuff
     host-bonerseizure:                    # Raspberry Pi 4 2GB
     host-fonduesexparty:                  # Raspberry Pi 4 2GB
-    host-grabthetension:                  # Raspberry Pi Zero W
-    host-honestmistake:                   # Raspberry Pi Zero WH
+    host-pi-zero-grabthetension:          # Raspberry Pi Zero W
     host-impartialbroadcaster:            # Intel NUC
     host-ladyrona:                        # Intel i5 8th Gen, 64GB memory, 16TB ZFS array (8TB usable)
+    host-pi-zero-guineapirate:            # Raspberry Pi WH 1.1
     host-sleeperservice:                  # Raspberry Pi 3 1GB - PiHole DNS + DHCP server
     host-twistymotherfucker:              # Raspberry Pi Zero
-    host-unused-pi-zero-wh:               # Raspberry Pi Zero WH
-    host-unused-pi-zero2:                 # Raspberry Pi Zero2
     host-weaponisedgender:                # Raspberry Pi 1 (DO YOU WANT A CUP OF TEA, GRANDMA?)
     host-whifflebumming:                  # opnsense testing box - x86_64 Intel Core i3-4170 @ 3.7GHZ 4GB
     vm-homeassistant:                     # Homeassistant.io VM
@@ -52,6 +50,8 @@ all:
     vm-pihole:                            # Backup Pihole VM
     vm-whalecoiner:                       # Digital Ocean VM
     vm-workloads:
+    vm-ubuntu-s-1vcpu-1gb-ams3-01:
+    vm-ubuntu-s-1vcpu-1gb-ams3-02:
     workstation-mba2011:                  # MacBook Air 2011 (yes, it's over a decade old. I still use it as my personal machine!)
     workstation-mbp2012:                  # Ancient MacBook Pro 2012. It still has Magsafe 1 and an optical drive! :3
     workstation-mbp2020:                  # My fancy Apple Pro M1 work laptop
@@ -168,7 +168,9 @@ all:
     # Wireguard is a VPN that allows me to access my LAN remotely
     wireguard:
       hosts:
+        vm-ubuntu-s-1vcpu-1gb-ams3-01:
+        vm-ubuntu-s-1vcpu-1gb-ams3-02:
         vm-whalecoiner:
-        host-attitudeadjuster:
-        # host-sleeperservice:
+        # host-attitudeadjuster:
+        host-sleeperservice:
         # vm-pihole:
