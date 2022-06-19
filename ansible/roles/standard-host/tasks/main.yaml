@@ -10,7 +10,7 @@
     state: present
     update_cache: true
 
-- name: Set up multiple authorized keys
+- name: Add authorized keys from Inventory
   ansible.builtin.authorized_key:
     user: "{{ ansible_user }}"
     state: present

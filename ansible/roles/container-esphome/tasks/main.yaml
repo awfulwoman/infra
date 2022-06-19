@@ -1,0 +1,31 @@
+- name: Set config path
+  set_fact:
+    user_config_path: "{{ ansible_env.HOME }}"
+
+- name: Create config dir
+  ansible.builtin.file:
+    path: "{{ user_config_path }}/esphome"
+    state: directory
+
+- name: Create container
+  community.docker.docker_container:
+    name: esphome
+    image: esphome/esphome
+    state: started
+    privileged: true
+    restart_policy: unless-stopped
+    network_mode: host
+    devices:
+      - /dev/ttyACM0
+    env: 
+      TZ: "Berlin/Europe"
+    volumes:
+      - "{{ user_config_path }}/esphome:/config"
+      - /etc/localtime:/etc/localtime:ro
+    # networks:
+    #     - name: "affordablepotatoes"
+    # labels:
+    #   traefik.enable: "true"
+    #   traefik.http.routers.flame.rule: "Host(`esphome.affordablepotatoes.com`)"
+    #   traefik.http.routers.flame.entrypoints: "web"
+    #   traefik.http.services.flame.loadbalancer.server.port: "5005"
