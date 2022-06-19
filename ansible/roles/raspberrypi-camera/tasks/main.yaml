@@ -1,0 +1,16 @@
+- name: Get camera status
+  shell: "raspi-config nonint get_camera"
+  register: camera_status
+  changed_when: False
+
+- name: Print camera status
+  debug:
+    msg: "Camera status is: {{ camera_status.stdout }}"
+
+- name: Enable Camera
+  shell: "raspi-config nonint do_camera 0"
+  when: (CAMERA == True) and (camera_status.stdout != '0')
+
+- name: Disable Camera
+  shell: "raspi-config nonint do_camera 1"
+  when: (CAMERA == False) and (camera_status.stdout != '1')
