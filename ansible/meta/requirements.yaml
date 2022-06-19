@@ -16,7 +16,7 @@ roles:
   - name: jnv.unattended-upgrades
     version: v1.12.1
   - name: githubixx.ansible_role_wireguard
-    version: 9.2.0
+    version: 9.3.0
   - name: geerlingguy.ansible
     version: 2.1.0
   - name: diodonfrost.terraform
