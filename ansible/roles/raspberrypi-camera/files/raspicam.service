@@ -1,0 +1,14 @@
+# for /etc/systemd/system/raspicam.service
+
+[Unit]
+Description=Raspberry Pi Camera Stream Service
+After=network.target
+
+[Service]
+Type=simple
+User=pi
+ExecStartPre=/usr/bin/v4l2-ctl -c video_bitrate=4000000
+ExecStart=/usr/bin/gst-launch-1.0 v4l2src ! video/x-h264,width=1280,height=720,framerate=30/1 ! h264parse config-interval=1 ! matroskamux streamable=true ! tcpserversink host=::0 port=9000 sync=false sync-method=2
+
+[Install]
+WantedBy=multi-user.target

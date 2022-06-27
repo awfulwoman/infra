@@ -8,9 +8,40 @@
     msg: "Camera status is: {{ camera_status.stdout }}"
 
 - name: Enable Camera
+  become: true
   shell: "raspi-config nonint do_camera 0"
   when: (CAMERA == True) and (camera_status.stdout != '0')
 
 - name: Disable Camera
+  become: true
   shell: "raspi-config nonint do_camera 1"
   when: (CAMERA == False) and (camera_status.stdout != '1')
+
+- name: Add the bcm2835-v4l2 module
+  become: true
+  community.general.modprobe:
+    name: bcm2835-v4l2
+    state: present
+
+- name: Install camera packages
+  become: true
+  ansible.builtin.apt:
+    name: 
+      - gstreamer1.0-tools 
+      - gstreamer1.0-plugins-base 
+      - gstreamer1.0-plugins-good 
+      - gstreamer1.0-plugins-bad
+    state: present
+
+- name: Write out service setup
+  become: true
+  ansible.builtin.copy:
+    src: raspicam.service
+    dest: "/etc/systemd/system/raspicam.service"
+
+- name: Start service raspicam, if not started
+  become: true
+  ansible.builtin.systemd:
+    name: raspicam
+    state: started
+    daemon_reload: true
