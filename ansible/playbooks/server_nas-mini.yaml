@@ -1,0 +1,21 @@
+---
+- name: Mini NAS
+  hosts: host-pi-4-4gb-bigsexybeast
+  roles:
+    - role: standard_os
+    - role: standard-host
+    # - role: weareinteractive.environment
+    #   become: true
+    #   no_log: true
+    - role: geerlingguy.docker_arm
+      become: true
+    - role: docker
+    - role: jnv.unattended-upgrades
+      become: true
+    - role: motd
+    - role: apt-upgrade
+
+  handlers:
+    - name: Reboot host
+      become: true
+      reboot:

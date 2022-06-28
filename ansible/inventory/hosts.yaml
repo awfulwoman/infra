@@ -32,7 +32,6 @@ all:
     device-tl-sg3424:                     # TL-SG3424 managed network switch
     host-aprilashley:                     # Raspberry Pi 4 8GB
     host-attitudeadjuster:                # Raspberry Pi 4 8GB 
-    host-bigsexybeast:                    # x86_64 i5 2.90GHz 8GB
     host-bondagequeen:                    # Intel NUC Atom 1.46GHz 8GB - Runs most of the home automation stuff
     host-bonerseizure:                    # Raspberry Pi 4 2GB
     host-fonduesexparty:                  # Raspberry Pi 4 2GB
@@ -50,6 +49,7 @@ all:
     vm-pihole:                            # Backup Pihole VM
     vm-whalecoiner:                       # Digital Ocean VM
     vm-workloads:
+    host-pi-4-4gb-bigsexybeast:
     vm-ubuntu-s-1vcpu-1gb-ams3-01:
     vm-ubuntu-s-1vcpu-1gb-ams3-02:
     workstation-mba2011:                  # MacBook Air 2011 (yes, it's over a decade old. I still use it as my personal machine!)
@@ -89,7 +89,7 @@ all:
     servers: 
       hosts:
         host-bondagequeen: 
-        host-bigsexybeast: 
+        host-pi-4-4gb-bigsexybeast: 
         host-impartialbroadcaster: 
         host-aprilashley:
         host-attitudeadjuster: 
@@ -116,14 +116,6 @@ all:
         host-truthandreconciliation:
         host-twistymotherfucker:
         host-weaponisedgender:
-
-    # Group: Proxmox 
-    # A virtualisation platform that acts as a Hypervisor for VMs.
-    # Can have multiple nodes.
-    proxmox:
-      hosts:
-        host-bigsexybeast:
-        host-ladyrona:
 
     certificate_authority:
       hosts:
