@@ -10,11 +10,13 @@
 - name: Create container
   community.docker.docker_container:
     name: esphome
-    image: esphome/esphome
+    image: esphome/esphome:latest
     state: started
     privileged: true
     restart_policy: unless-stopped
-    network_mode: host
+    ports:
+      - "6052:6052"
+      - "6123:6123"
     devices:
       - /dev/ttyACM0
     env: 

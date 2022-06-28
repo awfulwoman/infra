@@ -1,5 +1,5 @@
 ---
-- name: ESPHome
+- name: New Pi
   hosts: host-attitudeadjuster
   roles:
     - role: standard_os
@@ -14,6 +14,9 @@
     - role: container-esphome
     - role: jnv.unattended-upgrades
       become: true
+    - role: cron-reboot-weekly
+    - role: container-mosquitto
+    - role: container-zigbee2mqtt
     - role: apt-upgrade
 
   handlers:
