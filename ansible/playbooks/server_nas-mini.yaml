@@ -13,6 +13,9 @@
     - role: jnv.unattended-upgrades
       become: true
     - role: motd
+    - role: mount-external
+    - role: geerlingguy.nfs
+      become: true
     - role: apt-upgrade
 
   handlers:
