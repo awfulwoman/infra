@@ -23,7 +23,13 @@
     image: jellyfin/jellyfin
     state: started
     restart_policy: unless-stopped
-    network_mode: host
+    # network_mode: host
+    # user: 1000:1000
+    ports:
+      - 8096:8096
+      # - 8920:8920 #optional
+      # - 7359:7359/udp #optional
+      # - 1900:1900/udp #optional
     env: 
       TZ: "Berlin/Europe"
     volumes:
