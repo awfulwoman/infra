@@ -1,0 +1,42 @@
+# update grub
+# /etc/default/grub
+# ------------
+# GRUB_CMDLINE_LINUX_DEFAULT="quiet intel_iommu=on"
+- name: Ensure Grub has intel_iommu
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/default/grub
+    regexp: '^GRUB_CMDLINE_LINUX_DEFAULT='
+    line: GRUB_CMDLINE_LINUX_DEFAULT="quiet intel_iommu=on"
+  register: grub
+
+# add modules
+# /etc/modules
+# ------------
+# vfio
+# vfio_iommu_type1
+# vfio_pci
+# vfio_virqfd
+- name: Ensure Grub has intel_iommu
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/modules
+    state: present
+    line: "{{ item }}"
+  register: modules
+  with_items:
+    -  vfio
+    -  vfio_iommu_type1
+    -  vfio_pci
+    -  vfio_virqfd
+
+- name: Rebuild grub
+  become: true
+  command: update-grub
+  when: grub.changed
+
+- name: Update initramfs
+  become: true
+  command: update-initramfs -u -k all
+  when: modules.changed 
+  
