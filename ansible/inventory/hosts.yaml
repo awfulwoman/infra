@@ -168,5 +168,5 @@ all:
         # vm-ubuntu-s-1vcpu-1gb-ams3-02:
         vm-whalecoiner:
         # host-attitudeadjuster:
-        host-sleeperservice:
+        # host-sleeperservice:
         host-ladyrona:

@@ -3,3 +3,4 @@ ansible_host: 192.168.1.116
 mac_address: "4C:CC:6A:B7:D3:99"
 wireguard_address: "10.8.0.116/24"
 wireguard_endpoint: 192.168.1.116
+wireguard_persistent_keepalive: "30"
