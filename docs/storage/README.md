@@ -13,7 +13,7 @@ sudo badblocks -wsv /dev/sdX
 
 Wait a couple of days for the last command to finish. :sob:
 
-However you can run equivalent commands on disks in parallel. 
+However you can run equivalent commands on separate disks in parallel. 
 
 ```
 sudo badblocks -wsv /dev/sdX
