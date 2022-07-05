@@ -6,4 +6,4 @@
 ansible_host: 192.168.1.104
 ansible_user: ubuntu
 mac_address: "DC:A6:32:71:1A:37"
-# wireguard_address: "10.8.0.104/24"
+wireguard_address: "10.8.0.104/24"

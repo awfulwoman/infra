@@ -5,6 +5,8 @@
     - role: standard_os
     - role: standard-host
     - role: healthchecks
+    - role: generate-sshkey
+    # - role: motd
     - role: weareinteractive.environment
       become: true
       no_log: true
@@ -13,8 +15,6 @@
     - role: docker
     - role: geerlingguy.ansible
       become: true
-    - role: motd
-    - role: generate-sshkey
     - role: jnv.unattended-upgrades
       become: true
     - role: diodonfrost.terraform

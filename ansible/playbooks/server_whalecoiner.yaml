@@ -3,9 +3,12 @@
   hosts: vm-whalecoiner
   roles:
     - role: standard_os
+    - role: standard-host
+    - role: generate-sshkey
     - role: healthchecks
     - role: geerlingguy.docker
       become: true
+    - role: cron-reboot-weekly
     - role: jnv.unattended-upgrades
       become: true
     - role: apt-upgrade

@@ -2,7 +2,7 @@
 # Wireguard Mesh Network
 # Assumes a bare install of Raspbian or Ubuntu
 
-- name: Wireguard server
+- name: Wireguard servers
   hosts: wireguard
   roles:
     # - role: githubixx.harden-linux
