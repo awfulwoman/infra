@@ -7,3 +7,11 @@
     minute: "0"
     job: "/sbin/shutdown -r"
     state: present
+
+- name: Healthchecks.io on @reboot
+  ansible.builtin.cron:
+    name: "healthchecks.io - system rebooted"
+    special_time: reboot
+    job: curl -fsS -m 10 --retry 5 -o /dev/null https://hc-ping.com/2eb88d8f-c1d9-42bf-a5b8-af41567b2922
+    state: present
+    
