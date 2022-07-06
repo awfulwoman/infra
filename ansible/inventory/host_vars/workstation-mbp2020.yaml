@@ -9,3 +9,8 @@ vault_mac_address: !vault |
 ansible_host: 192.168.1.7
 wireguard_address: "10.8.0.7/24"
 mac_address: "{{vault_mac_address}}"
+interfaces:
+  - name: eth4
+    mac_address: "A0:CE:C8:F8:22:47"
+    ip_address: 192.168.1.197
+    bootproto: dhcp
