@@ -3,6 +3,7 @@
   hosts: host-fonduesexparty
   roles:
     - role: standard_os
+    - role: standard-host
     - role: healthchecks
     - role: weareinteractive.environment
       become: true
