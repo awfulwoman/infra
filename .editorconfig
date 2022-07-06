@@ -9,3 +9,8 @@ root = true
 end_of_line = lf
 indent_style = tab
 insert_final_newline = true
+
+[*.yaml]
+end_of_line = lf
+indent_style = space
+insert_final_newline = true

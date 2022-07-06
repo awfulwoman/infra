@@ -1,7 +1,0 @@
----
-- name: systemd network restart
-  service:
-    name: systemd-networkd
-    state: restarted
-    enabled: yes
-  become: yes

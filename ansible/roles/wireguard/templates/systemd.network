@@ -1,5 +1,0 @@
-[Match]
-Name=wg0
-
-[Network]
-Address={{ wireguard_ip }}/{{ wireguard_mask_bits }}

@@ -1,5 +1,19 @@
+vault_mba2020_wireguard_private_key: !vault |
+          $ANSIBLE_VAULT;1.2;AES256;beanpod
+          38663938666636663839366464373866313665303935366630386138643237646535653039396235
+          3133383131326335643764336230653938343130626364360a323862393139653530333961333937
+          39323332633637663962326464633839613565623534613937636633326265633564626238383462
+          3336333062356138620a316231363364303731626234633037323330326631313938383337363337
+          36326334323138306531376263373566636134653365653834373130643339383733386138363666
+          3239363763353737393830303935333236303762323838653261
+
 wireguard_unmanaged_peers:
   iphone.device.affordablepotatoes.com:
     public_key: FeRDX4+WwoMJwbzH2RVcyJKzIN4MGRDo95OlnjfVolg=
+    private_key: "{{ vault_iphone_wireguard_private_key }}"
   mba2011.device.affordablepotatoes.com:
     public_key: WcDA42UOlx8n9Ykun9MhZ3aPnH2Y1bLuz8VneiJc7D0=
+    private_key: "{{ vault_mba2011_wireguard_private_key }}"
+  mbp2020.device.affordablepotatoes.com:
+    public_key: SmyYy/QMijN/8msQJvzTzezGlvj7GzmKXYAxVmlfyDA=
+    private_key: "{{ vault_mba2020_wireguard_private_key }}"

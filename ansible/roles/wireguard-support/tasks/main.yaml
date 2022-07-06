@@ -1,0 +1,7 @@
+---
+- name: Install Wireguard useful tools
+  become: true
+  ansible.builtin.apt:
+    name: 
+      - qrencode
+    state: present
