@@ -2,9 +2,10 @@
 all:
   hosts:
     # device-*       A network-aware device that performs a task. Does not have an OS that can be managed via SSH.
-    # workstation-*  A machine used directly by a person. Has an OS that can be managed via SSH.
     # host-*         A physical machine used to perform tasks. Has an OS that can be managed via SSH.
     # vm-*           A virtual machine used to perform tasks. Has an OS that can be managed via SSH.
+    # workstation-*  A machine used directly by a person. Has an OS that can be managed via SSH.
+    device-appletv-livingroom:            # An Apple TV. How decadent.   
     device-applewatch:                    # It's an apple watch and lives on my wrist
     device-belkinsoundform:               # Why did I buy this?
     device-broadlink-rm3:                 # A little IR blaster for automating IR devices
@@ -17,7 +18,6 @@ all:
     device-cleaning-robot-trevor:         # Trevor cleans the upstairs and has gone senile
     device-echo-flex-01:                  # For testing TTS via Home Assistant. Microphone OFF.
     device-hifi:                          # It's a device-hifi. It has an ethernet connection. It plays music.
-    device-appletv-livingroom:            # An Apple TV. How decadent.   
     device-homepod-bedroom:               # Homepod Bedroom
     device-homepod-livingroom:            # Homepod Livingroom
     device-ipad-green:                    # An ancient ipad that lives in a nice green case
@@ -35,9 +35,10 @@ all:
     host-bondagequeen:                    # Intel NUC Atom 1.46GHz 8GB - Runs most of the home automation stuff
     host-bonerseizure:                    # Raspberry Pi 4 2GB
     host-fonduesexparty:                  # Raspberry Pi 4 2GB
-    host-pi-zero-grabthetension:          # Raspberry Pi Zero W
     host-impartialbroadcaster:            # Intel NUC
     host-ladyrona:                        # Intel i5 8th Gen, 64GB memory, 16TB ZFS array (8TB usable)
+    host-pi-4-4gb-bigsexybeast:
+    host-pi-zero-grabthetension:          # Raspberry Pi Zero W
     host-pi-zero-guineapirate:            # Raspberry Pi WH 1.1
     host-sleeperservice:                  # Raspberry Pi 3 1GB - PiHole DNS + DHCP server
     host-twistymotherfucker:              # Raspberry Pi Zero
@@ -47,16 +48,13 @@ all:
     vm-mqtt:                              # MQTT VM
     vm-nas:                               # Network Area Store + Media
     vm-pihole:                            # Backup Pihole VM
-    vm-whalecoiner:                       # Digital Ocean VM
+    vm-digitalocean-whalecoiner:          # Digital Ocean VM
+    vm-linode-tinynuggets:
     vm-workloads:
-    host-pi-4-4gb-bigsexybeast:
-    vm-ubuntu-s-1vcpu-1gb-ams3-01:
-    vm-ubuntu-s-1vcpu-1gb-ams3-02:
     workstation-mba2011:                  # MacBook Air 2011 (yes, it's over a decade old. I still use it as my personal machine!)
     workstation-mbp2012:                  # Ancient MacBook Pro 2012. It still has Magsafe 1 and an optical drive! :3
     workstation-mbp2020:                  # My fancy Apple Pro M1 work laptop
     workstation-thinkpad:                 # My partner's work laptop. Nope, not touching that with Ansible. Just here so it gets a DHCP address.
-
   # GROUPS
   # ------
   # Groupings of servers that allow them to be administered collectively.
@@ -69,7 +67,7 @@ all:
     # Machines hosted on Digital Ocean
     digitalocean:
       hosts:
-        vm-whalecoiner:
+        vm-digitalocean-whalecoiner:
 
     # PiHole DNS/DHCP servers
     pihole:
@@ -164,7 +162,8 @@ all:
     # Wireguard is a VPN that allows me to access my LAN remotely
     wireguard:
       hosts:
-        vm-whalecoiner:
+        vm-digitalocean-whalecoiner:
         host-attitudeadjuster:
         # host-sleeperservice:
         host-ladyrona:
+        vm-linode-tinynuggets:
