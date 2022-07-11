@@ -1,7 +1,0 @@
-ansible_host: 159.223.210.230
-ansible_user: root
-wireguard_address: "10.8.0.197/24"    # the address on the Wireguard network
-# wireguard_allowed_ips: "0.0.0.0/24" # the set of IP addresses the local host should route to the remote peer through the WireGuard tunnel
-wireguard_endpoint: 159.223.210.230
-# wireguard_postup: iptables -A FORWARD -i wg1 -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE 
-# wireguard_postdown: iptables -D FORWARD -i wg1 -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE
