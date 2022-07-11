@@ -3,7 +3,7 @@
 # Assumes a bare metal install of Ubuntu
 
 - name: Home Gateway
-  hosts: host-whifflebumming
+  hosts: host-opnsense
   roles:
     - role: standard_os
     - role: healthchecks
