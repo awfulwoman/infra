@@ -43,7 +43,7 @@ all:
     host-sleeperservice:                  # Raspberry Pi 3 1GB - PiHole DNS + DHCP server
     host-twistymotherfucker:              # Raspberry Pi Zero
     host-weaponisedgender:                # Raspberry Pi 1 (DO YOU WANT A CUP OF TEA, GRANDMA?)
-    host-whifflebumming:                  # opnsense testing box - x86_64 Intel Core i3-4170 @ 3.7GHZ 4GB
+    host-opnsense:                        # opnsense testing box - x86_64 Intel Core i3-4170 @ 3.7GHZ 4GB
     vm-homeassistant:                     # Homeassistant.io VM
     vm-mqtt:                              # MQTT VM
     vm-nas:                               # Network Area Store + Media
