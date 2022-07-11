@@ -18,8 +18,8 @@ vault_iphone_wireguard_private_key: ""
 
 wireguard_unmanaged_peers:
   iphone.device.affordablepotatoes.com:
-    public_key: FeRDX4+WwoMJwbzH2RVcyJKzIN4MGRDo95OlnjfVolg=
-    private_key: "{{ vault_iphone_wireguard_private_key }}"
+    public_key: 12ARTouJAF+6Vm873Lv3ZWBd7SvKcdLNsdabCPmBSn8=
+    # private_key: "{{ vault_iphone_wireguard_private_key }}"
   mba2011.device.affordablepotatoes.com:
     public_key: WcDA42UOlx8n9Ykun9MhZ3aPnH2Y1bLuz8VneiJc7D0=
     private_key: "{{ vault_mba2011_wireguard_private_key }}"
