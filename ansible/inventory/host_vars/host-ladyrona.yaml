@@ -4,3 +4,9 @@ mac_address: "4C:CC:6A:B7:D3:99"
 wireguard_address: "10.8.0.116/24"
 wireguard_endpoint: 192.168.1.116
 wireguard_persistent_keepalive: "30"
+
+# NFS shares
+nfs_exports:
+#  - "/tank/media *(rw,all_squash,anonuid=1000,anongid=1000)"
+#  - "/tank/incoming *(rw,all_squash,anonuid=1000,anongid=1000)"
+  - "/tank/media *(rw,all_squash,anonuid=1000,anongid=1000)"

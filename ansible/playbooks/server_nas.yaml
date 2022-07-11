@@ -9,6 +9,8 @@
     #   no_log: true
     - role: geerlingguy.docker
       become: true
+    - role: geerlingguy.nfs
+      become: true
     - role: docker
     - role: jnv.unattended-upgrades
       become: true
