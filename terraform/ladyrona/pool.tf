@@ -4,11 +4,11 @@
 # It creates a directory and assigns it to the libvirt pool named "default"
 # The following does the same.
 
-resource "libvirt_pool" "kubernetes" {
-  name = "default"
-  type = "dir"
-  path = "/tank/pools/default"
-}
+# resource "libvirt_pool" "kubernetes" {
+#   name = var.pool_name
+#   type = "dir"
+#   path = "/tank/pools/${var.pool_name}"
+# }
 
 # pool-define-as --name default --source-name filepool --type zfs
 # It takes a ZFS pool and assigns it in totality to the libvirt pool named "default"

@@ -5,22 +5,20 @@
 #   format = "qcow2"
 # }
 
-resource "libvirt_volume" "opensuse_leap" {
-  name = "opensuse_leap"
-  pool = "default"
-  source = "http://download.opensuse.org/repositories/Cloud:/Images:/Leap_42.1/images/openSUSE-Leap-42.1-OpenStack.x86_64.qcow2"
-}
 
-resource "libvirt_volume" "ubuntu_jammy" {
-  name = "ubuntu-jammy.img"
-  pool = "default"
-  # format = "raw"
-  source = "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img"
-}
+# resource "libvirt_volume" "ubuntu_jammy" {
+#   name = "${var.clientVM_name}.qcow2"
+#   pool = var.pool_name
+#   source = var.clientVM_source_image 
+#   format = "qcow2"
+#   depends_on = [
+#     libvirt_pool.pool,
+#   ]
+# }
 
 # Attach to all VMs in the terraform_test domain
 
-resource "libvirt_volume" "terraform_test" {
-  name           = "master.qcow2"
-  base_volume_id = libvirt_volume.opensuse_leap.id
-}
+# resource "libvirt_volume" "terraform_test" {
+#   name           = "master.qcow2"
+#   base_volume_id = libvirt_volume.opensuse_leap.id
+# }
