@@ -7,7 +7,7 @@
 # resource "libvirt_pool" "kubernetes" {
 #   name = var.pool_name
 #   type = "dir"
-#   path = "/tank/pools/${var.pool_name}"
+#   path = "/slowpool/pools/${var.pool_name}"
 # }
 
 # pool-define-as --name default --source-name filepool --type zfs

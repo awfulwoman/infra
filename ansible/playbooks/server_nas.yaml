@@ -1,12 +1,11 @@
 ---
 - name: NAS
   hosts: host-ladyrona
+  vars:
+    container_config_dir: /fastpool/containers
   roles:
     - role: standard_os
     - role: standard-host
-    # - role: weareinteractive.environment
-    #   become: true
-    #   no_log: true
     - role: geerlingguy.docker
       become: true
     - role: geerlingguy.nfs

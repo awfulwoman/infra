@@ -1,41 +1,27 @@
-- name: Set config path
-  set_fact:
-    user_config_path: "{{ ansible_env.HOME }}"
-
 - name: Create config dir
   ansible.builtin.file:
-    path: "{{ user_config_path }}/jellyfin/config"
+    path: "{{ container_config_dir }}/{{ container_name }}/config"
     state: directory
 
-- name: Create config dir
+- name: Create cache dir
   ansible.builtin.file:
-    path: "{{ user_config_path }}/jellyfin/cache"
-    state: directory
-
-- name: Create config dir
-  ansible.builtin.file:
-    path: "{{ user_config_path }}/jellyfin/media"
+    path: "{{ container_config_dir }}/{{ container_name }}/cache"
     state: directory
 
 - name: Create container
   community.docker.docker_container:
-    name: jellyfin
+    name: "{{ container_name }}"
     image: jellyfin/jellyfin
     state: started
     restart_policy: unless-stopped
-    # network_mode: host
-    # user: 1000:1000
     ports:
       - 8096:8096
-      # - 8920:8920 #optional
-      # - 7359:7359/udp #optional
-      # - 1900:1900/udp #optional
     env: 
       TZ: "Berlin/Europe"
     volumes:
-      - "{{ user_config_path }}/jellyfin/config:/config"
-      - "{{ user_config_path }}/jellyfin/cache:/cache"
-      - "/tank/media:/media"
+      - "{{ container_config_dir }}/{{container_name}}/config:/config"
+      - "{{ container_config_dir }}/{{container_name}}/cache:/cache"
+      - "/slowpool/media:/media"
       - /etc/localtime:/etc/localtime:ro
     # networks:
     #     - name: "affordablepotatoes"
