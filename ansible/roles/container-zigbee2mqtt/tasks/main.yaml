@@ -1,10 +1,6 @@
-- name: Set config path
-  set_fact:
-    user_config_path: "{{ ansible_env.HOME }}"
-
 - name: Create config dir
   ansible.builtin.file:
-    path: "{{ user_config_path }}/zigbee2mqtt"
+    path: "{{ container_config_dir }}/zigbee2mqtt"
     state: directory
 
 # - name: Copy params to config file
@@ -25,7 +21,7 @@
   community.docker.docker_container:
     name: zigbee2mqtt
     image: koenkk/zigbee2mqtt:latest
-    state: started
+    state: stopped
     privileged: true
     # network_mode: host
     restart_policy: unless-stopped
@@ -36,6 +32,6 @@
     devices:
       - /dev/ttyACM0
     volumes:
-      - "{{ user_config_path }}/zigbee2mqtt:/app/data"
+      - "{{ container_config_dir }}/zigbee2mqtt:/app/data"
       - "/run/udev:/run/udev:ro"
       - /etc/localtime:/etc/localtime:ro

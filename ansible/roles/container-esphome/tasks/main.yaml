@@ -1,17 +1,13 @@
-- name: Set config path
-  set_fact:
-    user_config_path: "{{ ansible_env.HOME }}"
-
 - name: Create config dir
   ansible.builtin.file:
-    path: "{{ user_config_path }}/esphome"
+    path: "{{ container_config_dir }}/esphome"
     state: directory
 
 - name: Create container
   community.docker.docker_container:
     name: esphome
     image: esphome/esphome:latest
-    state: started
+    state: stopped
     privileged: true
     restart_policy: unless-stopped
     ports:
@@ -22,7 +18,7 @@
     env: 
       TZ: "Berlin/Europe"
     volumes:
-      - "{{ user_config_path }}/esphome:/config"
+      - "{{ container_config_dir }}/esphome:/config"
       - /etc/localtime:/etc/localtime:ro
     # networks:
     #     - name: "affordablepotatoes"

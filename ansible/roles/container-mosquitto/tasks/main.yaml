@@ -1,26 +1,22 @@
-- name: Set config path
-  set_fact:
-    user_config_path: "{{ ansible_env.HOME }}"
-
 - name: Create config dir
   ansible.builtin.file:
-    path: "{{ user_config_path }}/mosquitto/config"
+    path: "{{ container_config_dir }}/mosquitto/config"
     state: directory
 
 - name: Create logs dir
   ansible.builtin.file:
-    path: "{{ user_config_path }}/mosquitto/log"
+    path: "{{ container_config_dir }}/mosquitto/log"
     state: directory
 
 - name: Create data dir
   ansible.builtin.file:
-    path: "{{ user_config_path }}/mosquitto/data"
+    path: "{{ container_config_dir }}/mosquitto/data"
     state: directory
 
 - name: Create config file 
   ansible.builtin.copy:
     src: mosquitto.conf
-    dest: "{{ user_config_path }}/mosquitto/config/mosquitto.conf"
+    dest: "{{ container_config_dir }}/mosquitto/config/mosquitto.conf"
 
 - name: Create container
   # become: true
@@ -36,7 +32,7 @@
     env: 
       TZ: Berlin/Europe
     volumes:
-      - "{{ user_config_path }}/mosquitto/config:/mosquitto/config"
-      - "{{ user_config_path }}/mosquitto/data:/mosquitto/data"
-      - "{{ user_config_path }}/mosquitto/log/:/mosquitto/log"
+      - "{{ container_config_dir }}/mosquitto/config:/mosquitto/config"
+      - "{{ container_config_dir }}/mosquitto/data:/mosquitto/data"
+      - "{{ container_config_dir }}/mosquitto/log/:/mosquitto/log"
       - /etc/localtime:/etc/localtime:ro

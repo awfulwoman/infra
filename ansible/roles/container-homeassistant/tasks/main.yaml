@@ -1,65 +1,7 @@
-- name: Set config path
-  set_fact:
-    user_config_path: "{{ ansible_env.HOME }}"
-
 - name: Create config dir
   ansible.builtin.file:
-    path: "{{ user_config_path }}/hass-config"
+    path: "{{ container_config_dir }}/homeassistant"
     state: directory
-
-- name: Copy config file - binary_sensor.yaml
-  ansible.builtin.copy:
-    src: binary_sensor.yaml
-    dest: "{{ user_config_path }}/hass-config/binary_sensor.yaml"
-    backup: yes
-
-- name: Copy config file - customize.yaml
-  ansible.builtin.copy:
-    src: customize.yaml
-    dest: "{{ user_config_path }}/hass-config/customize.yaml"
-    backup: yes
-
-- name: Copy config file - group.yaml
-  ansible.builtin.copy:
-    src: group.yaml
-    dest: "{{ user_config_path }}/hass-config/group.yaml"
-    backup: yes
-
-- name: Copy config file - light.yaml
-  ansible.builtin.copy:
-    src: light.yaml
-    dest: "{{ user_config_path }}/hass-config/light.yaml"
-    backup: yes
-
-- name: Copy config file - recorder.yaml
-  ansible.builtin.copy:
-    src: recorder.yaml
-    dest: "{{ user_config_path }}/hass-config/recorder.yaml"
-    backup: yes
-
-- name: Copy config file - scenes.yaml
-  ansible.builtin.copy:
-    src: scenes.yaml
-    dest: "{{ user_config_path }}/hass-config/scenes.yaml"
-    backup: yes
-
-- name: Copy config file - script.yaml
-  ansible.builtin.copy:
-    src: script.yaml
-    dest: "{{ user_config_path }}/hass-config/script.yaml"
-    backup: yes
-
-- name: Copy config file - sensor.yaml
-  ansible.builtin.copy:
-    src: sensor.yaml
-    dest: "{{ user_config_path }}/hass-config/sensor.yaml"
-    backup: yes
-
-- name: Copy config file - switch.yaml
-  ansible.builtin.copy:
-    src: switch.yaml
-    dest: "{{ user_config_path }}/hass-config/switch.yaml"
-    backup: yes
 
 - name: Create container
   # become: true
@@ -73,5 +15,5 @@
     env: 
       TZ: Berlin/Europe
     volumes:
-      - "{{ user_config_path }}/hass-config:/config"
+      - "{{ container_config_dir }}/homeassistant:/config"
       - /etc/localtime:/etc/localtime:ro

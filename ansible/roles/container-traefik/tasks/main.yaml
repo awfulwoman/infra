@@ -1,16 +1,12 @@
-- name: Set config path
-  set_fact:
-    user_config_path: "{{ ansible_env.HOME }}"
-
 - name: Create config dir
   ansible.builtin.file:
-    path: "{{ user_config_path }}/traefik"
+    path: "{{ container_config_dir }}/traefik"
     state: directory
 
 - name: Create config file
   ansible.builtin.copy:
     src: config.yaml
-    dest: "{{ user_config_path }}/traefik/config.yaml"
+    dest: "{{ container_config_dir }}/traefik/config.yaml"
 
 - name: Create a docker network
   community.docker.docker_network:
@@ -38,6 +34,6 @@
       - "80:80"
       - "8080:8080"
     volumes:
-      - "{{ user_config_path }}/traefik/config.yaml:/traefik.yaml"
+      - "{{ container_config_dir }}/traefik/config.yaml:/traefik.yaml"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "/etc/localtime:/etc/localtime:ro"

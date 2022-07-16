@@ -18,6 +18,11 @@
     - role: zfs-tools
     - role: motd
     - role: container-jellyfin
+    - role: container-homeassistant
+    - role: container-mosquitto
+    - role: container-zigbee2mqtt
+    - role: container-traefik
+    - role: container-esphome
     - role: apt-upgrade
 
   handlers:
