@@ -1,0 +1,32 @@
+- name: Set config path
+  set_fact:
+    container_config_dir: "{{ ansible_env.HOME }}"
+  when: container_config_dir is undefined
+
+# - name: Create container config dir
+#   become: true
+#   ansible.builtin.file:
+#     path: "{{ container_config_dir }}"
+#     # owner: "{{ workhorse_user }}"
+#     group: "{{ workhorse_user }}"
+#     mode: '0664'
+#     state: directory
+
+# - name: "Sets default ACL for {{ workhorse_user }} on {{ container_config_dir }}"
+#   become: true
+#   ansible.posix.acl:
+#     path: "{{ container_config_dir }}"
+#     entity: "{{ workhorse_user }}"
+#     etype: group
+#     # permissions: rw
+#     default: yes
+#     state: absent
+
+# - name: Obtain the acl for a specific file
+#   acl:
+#     path: "{{ container_config_dir }}"
+#   register: acl_info
+
+# - name: acl_info
+#   debug:
+#     msg: "{{ acl_info }}"

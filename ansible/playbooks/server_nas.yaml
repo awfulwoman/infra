@@ -3,9 +3,14 @@
   hosts: host-ladyrona
   vars:
     container_config_dir: /fastpool/containers
+    backup_restic_destination: /slowpool/backups/containers
+    backup_sources:
+      - homeassistant
   roles:
     - role: standard_os
     - role: standard-host
+    - role: zfs-tools
+    - role: containers-config
     - role: geerlingguy.docker
       become: true
     - role: geerlingguy.nfs
@@ -15,7 +20,6 @@
       become: true
     - role: host-bus-adapter
     - role: virtualisation-tools
-    - role: zfs-tools
     - role: motd
     - role: container-jellyfin
     - role: container-homeassistant
@@ -23,6 +27,7 @@
     - role: container-zigbee2mqtt
     - role: container-traefik
     - role: container-esphome
+    - role: container-restic
     - role: apt-upgrade
 
   handlers:

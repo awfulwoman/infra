@@ -4,13 +4,13 @@
 
 - name: Create config dir
   ansible.builtin.file:
-    path: "{{ user_config_path }}/restic"
+    path: "{{ container_config_dir }}/restic"
     state: directory
 
 - name: Set backup volumes
   set_fact:
-    volumes_to_mount: "{{ volumes_to_mount | default([]) + [ user_config_path  + '/' + item + ':/data/' + item ] }}"
-  with_items: "{{ backups }}"
+    volumes_to_mount: "{{ volumes_to_mount | default([backup_restic_destination + ':/mnt/restic']) + [ container_config_dir  + '/' + item + ':/data/' + item ] }}"
+  with_items: "{{ backup_sources }}"
 
 - name: Show backup volumes
   debug:
@@ -19,17 +19,17 @@
 - name: Create container
   # become: true
   community.docker.docker_container:
-    name: restic-backup
-    image: lobaro/restic-backup-docker:1.2-0.9.4
+    name: restic
+    image: lobaro/restic-backup-docker:latest
     state: started
     privileged: true
     restart_policy: unless-stopped
     env: 
-      AWS_ACCESS_KEY_ID: "{{ vault_aws_backupuser_access_key_id }}"
-      AWS_SECRET_ACCESS_KEY: "{{ vault_aws_backupuser_access_key_secret }}"
-      RESTIC_REPOSITORY: "{{ vault_restic_repository }}"
+      # AWS_ACCESS_KEY_ID: "{{ vault_aws_backupuser_access_key_id }}"
+      # AWS_SECRET_ACCESS_KEY: "{{ vault_aws_backupuser_access_key_secret }}"
+      # RESTIC_REPOSITORY: /slowpool/backups/containers
       RESTIC_PASSWORD: "{{ vault_restic_password }}"
-      RESTIC_TAG: "{{ ansible_host }}"
-      BACKUP_CRON: "0 4 * * 2,4"
+      # RESTIC_TAG: "{{ ansible_host }}"
+      BACKUP_CRON: "0 4 * * *"
       TZ: Berlin/Europe
     volumes: "{{ volumes_to_mount }}"

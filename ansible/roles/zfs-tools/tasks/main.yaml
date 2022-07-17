@@ -6,3 +6,12 @@
       - zfsutils-linux
       - sanoid
     state: present
+
+- name: Create dataset
+  become: true
+  community.general.zfs:
+    name: fastpool/containers
+    state: present
+    extra_zfs_properties:
+      acltype: posix
+      # xattr: sa

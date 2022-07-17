@@ -16,58 +16,58 @@
 #     password: "{{ login_user_password_salted }}"
 #   notify: Reboot host
 
-- name: Set ansible_user's authorized keys (from url)
-  become: true
-  ansible.posix.authorized_key:
-    user: "{{ ansible_user }}"
-    key: https://github.com/whalecoiner.keys
-    exclusive: true
+# - name: Set ansible_user's authorized keys (from url)
+#   become: true
+#   ansible.posix.authorized_key:
+#     user: "{{ ansible_user }}"
+#     key: https://github.com/whalecoiner.keys
+#     exclusive: true
 
 # Workhorse user
 # might need this for NFS groups?
-- name: Ensure workhorse user exists
-  become: true
-  ansible.builtin.user:
-    name: "{{ workhorse_user }}"
-    password: "{{ workhorse_user_password_salted }}"
-    groups: "sudo"
-    state: present 
+# - name: Ensure workhorse user exists
+#   become: true
+#   ansible.builtin.user:
+#     name: "{{ workhorse_user }}"
+#     password: "{{ workhorse_user_password_salted }}"
+#     groups: "sudo"
+#     state: present 
 
-- name: Set workhorse_user's authorized keys (from url)
-  become: true
-  ansible.posix.authorized_key:
-    user: "{{ workhorse_user }}"
-    key: https://github.com/whalecoiner.keys
-    exclusive: true
+# - name: Set workhorse_user's authorized keys (from url)
+#   become: true
+#   ansible.posix.authorized_key:
+#     user: "{{ workhorse_user }}"
+#     key: https://github.com/whalecoiner.keys
+#     exclusive: true
 
-- name: Install zsh 
-  become: true
-  ansible.builtin.apt:
-    name: 
-      - git
-      - zsh
-    state: present
+# - name: Install zsh 
+#   become: true
+#   ansible.builtin.apt:
+#     name: 
+#       - git
+#       - zsh
+#     state: present
 
-# Look I think this is VERY IMPORTANT
-- name: Enable ZSH shell for login user
-  become: true
-  ansible.builtin.user: 
-    name: "{{ ansible_user }}"
-    shell: /usr/bin/zsh
+# # Look I think this is VERY IMPORTANT
+# - name: Enable ZSH shell for login user
+#   become: true
+#   ansible.builtin.user: 
+#     name: "{{ ansible_user }}"
+#     shell: /usr/bin/zsh
 
-- name: Reset connection so shell is picked up.
-  become: true
-  ansible.builtin.meta: reset_connection
+# - name: Reset connection so shell is picked up.
+#   become: true
+#   ansible.builtin.meta: reset_connection
 
-- name: Install Oh My Zsh
-  ansible.builtin.shell:  'sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" --unattended'
-  args:
-    executable: /usr/bin/sh
-    creates: "{{ ansible_env.HOME }}/.oh-my-zsh"
+# - name: Install Oh My Zsh
+#   ansible.builtin.shell:  'sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" --unattended'
+#   args:
+#     executable: /usr/bin/sh
+#     creates: "{{ ansible_env.HOME }}/.oh-my-zsh"
 
-- name: Reset connection so shell is picked up.
-  become: true
-  ansible.builtin.meta: reset_connection
+# - name: Reset connection so shell is picked up.
+#   become: true
+#   ansible.builtin.meta: reset_connection
 
 # - name: Set Oh My Zsh theme
 #   ansible.builtin.shell: "omz theme set dpoggi"
