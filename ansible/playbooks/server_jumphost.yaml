@@ -1,6 +1,6 @@
 ---
 - name: Jumphost
-  hosts: host-attitudeadjuster
+  hosts: host-pi4-8gb-attitudeadjuster
   roles:
     - role: standard_os
     - role: standard-host

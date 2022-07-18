@@ -1,10 +1,11 @@
+# ------------------------
 # name: Fondue Sex Party
-# type: 
-# arch: 
-# cpu: 
-# mem: 
-# bootdisk: 
-# Raspberry Pi 4 | aarch64 | CPU Cortex-A72 | mem 2GB | bootdisk 64G
+# type: Raspberry Pi 4
+# arch: aarch64
+# cpu: Cortex-A72
+# mem: 2GB
+# ------------------------
+
 ansible_host: 192.168.1.112
 # ansible_python_interpreter: /usr/bin/python3
 ansible_user: ubuntu
@@ -12,6 +13,3 @@ mac_address: "E4:5F:01:7E:4A:4E"
 # storage_mount: /storage
 # storage_uuid: 51b3454d-e956-4199-83f0-af4c929a9d76
 # wireguard_address: "10.8.0.110/24"
-cnames:
-  - mqtt.affordablepotatoes.com
-  - homeassistant.affordablepotatoes.com

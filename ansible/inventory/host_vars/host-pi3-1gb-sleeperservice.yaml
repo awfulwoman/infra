@@ -5,9 +5,9 @@
 # cpu: CPU Cortex-A53
 # mem: 1GB
 # arch: aarch64
-ansible_host: 192.168.1.2
+ansible_host: 192.168.1.208
 ansible_python_interpreter: /usr/bin/python3
-ansible_user: pi
+ansible_user: ubuntu
 mac_address: "b8:27:eb:6e:31:5a"
 raspberry_pi_disable_bluetooth: true
 raspberry_pi_disable_wifi: true

@@ -1,10 +1,10 @@
+# ------------------------
 # name: Boner Seizure
-# type: 
-# arch: 
-# cpu: 
-# mem: 
-# bootdisk: 
-# Raspberry Pi 4 | aarch64 | CPU Cortex-A72 | mem 2GB | bootdisk 28.4G
+# type: Raspberry Pi 4
+# arch: aarch64
+# cpu: Cortex-A72
+# mem: 2GB
+# ------------------------
 ansible_host: 192.168.1.111
 # ansible_python_interpreter: /usr/bin/python3
 ansible_user: root

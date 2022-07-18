@@ -30,31 +30,27 @@ all:
     device-oneplus-6:                     # My partners phone
     device-remarkable:                    # My ReMarkable eink tablet
     device-tl-sg3424:                     # TL-SG3424 managed network switch
-    host-aprilashley:                     # Raspberry Pi 4 8GB
-    host-attitudeadjuster:                # Raspberry Pi 4 8GB 
-    host-bondagequeen:                    # Intel NUC Atom 1.46GHz 8GB - Runs most of the home automation stuff
-    host-bonerseizure:                    # Raspberry Pi 4 2GB
-    host-fonduesexparty:                  # Raspberry Pi 4 2GB
-    host-impartialbroadcaster:            # Intel NUC
-    host-ladyrona:                        # Intel i5 8th Gen, 64GB memory, 16TB ZFS array (8TB usable)
-    host-pi-4-4gb-bigsexybeast:
-    host-pi-zero-grabthetension:          # Raspberry Pi Zero W
-    host-pi-zero-guineapirate:            # Raspberry Pi WH 1.1
-    host-sleeperservice:                  # Raspberry Pi 3 1GB - PiHole DNS + DHCP server
-    host-twistymotherfucker:              # Raspberry Pi Zero
-    host-weaponisedgender:                # Raspberry Pi 1 (DO YOU WANT A CUP OF TEA, GRANDMA?)
-    host-opnsense:                        # opnsense testing box - x86_64 Intel Core i3-4170 @ 3.7GHZ 4GB
-    vm-homeassistant:                     # Homeassistant.io VM
-    vm-mqtt:                              # MQTT VM
-    vm-nas:                               # Network Area Store + Media
-    vm-pihole:                            # Backup Pihole VM
+    host-nuc-bondagequeen:                # Intel NUC Atom 1.46GHz 8GB
+    host-nuc-impartialbroadcaster:        # Intel NUC Atom 1.46GHz 8GB
+    host-pi1-512mb-weaponisedgender:      # Raspberry Pi 1 512MB (DO YOU WANT A CUP OF TEA, GRANDMA?)
+    host-pi3-1gb-sleeperservice:          # Raspberry Pi 3 1GB
+    host-pi4-2gb-bigsexybeast:            # Raspberry Pi 4 4GB
+    host-pi4-2gb-bonerseizure:            # Raspberry Pi 4 2GB
+    host-pi4-2gb-fonduesexparty:          # Raspberry Pi 4 2GB
+    host-pi4-8gb-aprilashley:             # Raspberry Pi 4 8GB
+    host-pi4-8gb-attitudeadjuster:        # Raspberry Pi 4 8GB 
+    host-pizero-grabthetension:           # Raspberry Pi Zero W
+    host-pizero-guineapirate:             # Raspberry Pi WH 1.1
+    host-pizero-twistymotherfucker:       # Raspberry Pi Zero
+    host-x86-ladyrona:                    # Intel i5 8th Gen, 64GB memory, 16TB ZFS array (8TB usable)
+    host-x86-opnsense:                    # opnsense testing box - x86_64 Intel Core i3-4170 @ 3.7GHZ 4GB
     vm-digitalocean-whalecoiner:          # Digital Ocean VM
-    vm-linode-tinynuggets:
-    vm-workloads:
+    vm-linode-tinynuggets:                # Linode VM
     workstation-mba2011:                  # MacBook Air 2011 (yes, it's over a decade old. I still use it as my personal machine!)
     workstation-mbp2012:                  # Ancient MacBook Pro 2012. It still has Magsafe 1 and an optical drive! :3
     workstation-mbp2020:                  # My fancy Apple Pro M1 work laptop
     workstation-thinkpad:                 # My partner's work laptop. Nope, not touching that with Ansible. Just here so it gets a DHCP address.
+
   # GROUPS
   # ------
   # Groupings of servers that allow them to be administered collectively.
@@ -72,8 +68,7 @@ all:
     # PiHole DNS/DHCP servers
     pihole:
       hosts:
-        host-sleeperservice:
-        # vm-pihole:
+        host-pi3-1gb-sleeperservice:
 
     # Group: Laptops and desktops
     workstations:
@@ -86,84 +81,49 @@ all:
     # Machines that act as servers in some capacity or another
     servers: 
       hosts:
-        host-bondagequeen: 
-        host-pi-4-4gb-bigsexybeast: 
-        host-impartialbroadcaster: 
-        host-aprilashley:
-        host-attitudeadjuster: 
-        host-bonerseizure: 
-        host-fonduesexparty:
         host-grabthetension: 
         host-honestmistake: 
+        host-nuc-bondagequeen: 
+        host-nuc-impartialbroadcaster: 
+        host-pi-4-4gb-bigsexybeast: 
+        host-pi1-512mb-weaponisedgender: 
+        host-pi4-2gb-bonerseizure: 
+        host-pi4-2gb-fonduesexparty:
+        host-pi4-8gb-aprilashley:
+        host-pi4-8gb-attitudeadjuster: 
+        host-pizero-twistymotherfucker:
         host-sleeperservice: 
         host-truthandreconciliation:
-        host-twistymotherfucker:
-        host-weaponisedgender: 
 
     # Group: Raspberry Pi hardware
     # Because they are Single Board Computers these devices they can have unique setup requirements
     raspberrypis:
       hosts:
-        host-aprilashley:
-        host-attitudeadjuster:
-        host-bonerseizure:
-        host-fonduesexparty:
-        host-grabthetension:
-        host-honestmistake:
-        host-sleeperservice:
-        host-truthandreconciliation:
-        host-twistymotherfucker:
-        host-weaponisedgender:
+        host-pi1-512mb-weaponisedgender:
+        host-pi3-1gb-sleeperservice:
+        host-pi4-2gb-bonerseizure:
+        host-pi4-2gb-fonduesexparty:
+        host-pi4-8gb-aprilashley:
+        host-pi4-8gb-attitudeadjuster:
+        host-pizero-grabthetension:
+        host-pizero-twistymotherfucker:
 
     certificate_authority:
       hosts:
-        host-bonerseizure:
+        host-pi4-2gb-bonerseizure:
 
     # Group: Home Automation
     # Very very stable and boring setup running home automation tasks
     # I Have Learned My Lesson
     homeautomation:
       hosts:
-        host-bondagequeen:
-
-    workloads:
-      hosts:
-        vm-workloads:
-
-    # Group: Kubernetes - Agent Nodes
-    k8s_agents:
-      hosts:
-        host-attitudeadjuster:
-        host-bonerseizure:
-        host-fonduesexparty:
-        host-truthandreconciliation:
-
-    # Group: Kubernetes - Server Nodes
-    k8s_servers:
-      hosts:
-        host-aprilashley:
-
-    # Group: Kubernetes - Raspberry Pi nodes
-    k8s_raspberrypis:
-      hosts:
-        host-aprilashley:
-        host-attitudeadjuster:
-        host-bonerseizure:
-        host-fonduesexparty:
-        host-truthandreconciliation:
-
-    # Group: Kubernetes - All servers
-    k8s:
-      children:
-        k8s_agents:
-        k8s_servers:
+        host-pi4-8gb-aprilashley:
 
     # Group: Wireguard
     # Wireguard is a VPN that allows me to access my LAN remotely
     wireguard:
       hosts:
+        host-pi4-8gb-attitudeadjuster:
+        host-x86-ladyrona:
         vm-digitalocean-whalecoiner:
-        host-attitudeadjuster:
-        # host-sleeperservice:
-        host-ladyrona:
         vm-linode-tinynuggets:

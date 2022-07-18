@@ -1,6 +1,6 @@
 ---
-- name: MQTT is life
-  hosts: host-fonduesexparty
+- name: Home Automation Pi
+  hosts: host-pi4-8gb-aprilashley
   roles:
     - role: standard_os
     - role: standard-host

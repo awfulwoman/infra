@@ -1,3 +1,11 @@
+# ------------------------
+# name: Lady Rona
+# type: Intel
+# arch: x86_64
+# cpu: Intel i5 8th Gen
+# mem: 64GB
+# ------------------------
+
 ansible_user: ubuntu
 ansible_host: 192.168.1.116
 mac_address: "4C:CC:6A:B7:D3:99"

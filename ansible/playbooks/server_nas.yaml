@@ -1,6 +1,6 @@
 ---
 - name: NAS
-  hosts: host-ladyrona
+  hosts: host-x86-ladyrona
   vars:
     container_config_dir: /fastpool/containers
     backup_restic_destination: /slowpool/backups/containers

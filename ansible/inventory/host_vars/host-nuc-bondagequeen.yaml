@@ -1,10 +1,10 @@
+# ------------------------
 # name: Bondage Queen
 # type: Intel NUC 
-# arch: x86_64 
-# cpu: CPU Intel(R) Atom(TM) CPU  E3815  @ 1.46GHz
+# arch: x86_64
+# cpu: Intel(R) Atom(TM) CPU  E3815  @ 1.46GHz
 # mem: 8GB
-# bootdisk: 110GB
-# storage_uuid: 
+# ------------------------
 ansible_host: 192.168.1.106
 ansible_user: ubuntu
 mac_address: "c0:3f:d5:67:db:ab"

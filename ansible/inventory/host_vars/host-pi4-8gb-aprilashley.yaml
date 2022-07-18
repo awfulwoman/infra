@@ -1,9 +1,15 @@
+# ------------------------
 # name: April Ashley (RIP babe)
 # type: Raspberry Pi 4
-# arch: aarch64 
+# arch: aarch64
 # cpu: Cortex-A72
 # mem: 8GB
+# ------------------------
+
 ansible_host: 192.168.1.102
 # ansible_user: pi
 mac_address: "E4:5F:01:46:8B:D3"
 wireguard_address: "10.8.0.102/24"
+cnames:
+  - mqtt.affordablepotatoes.com
+  - homeassistant.affordablepotatoes.com

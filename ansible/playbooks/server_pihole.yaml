@@ -4,6 +4,10 @@
 
 - name: PiHole DNS + DHCP server
   hosts: pihole
+  tasks:
+    - name: check OS version
+      debug: var=ansible_distribution
+
   roles:
     - role: standard_os
     - role: healthchecks
@@ -19,8 +23,8 @@
     - role: docker
     - role: jnv.unattended-upgrades
       become: true
-    - role: container-ddns
-    - role: container-pihole
+    # - role: container-ddns
+    # - role: container-pihole
     - role: apt-upgrade
   handlers:
     - name: Reboot host

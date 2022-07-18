@@ -1,0 +1,13 @@
+# ------------------------
+# name: OPN Sense
+# type: Intel
+# arch: x86_64
+# cpu: Intel Core i3-4170 @ 3.7GHZ
+# mem: 8GB
+# ------------------------
+
+
+ansible_user: ubuntu
+ansible_host: 192.168.1.105
+# wireguard_address: "10.8.0.105/24"
+mac_address: "30:5A:3A:4B:AF:10"
