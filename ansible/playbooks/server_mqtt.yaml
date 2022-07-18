@@ -13,10 +13,14 @@
     - role: docker
     - role: jnv.unattended-upgrades
       become: true
+    - role: motd
     - role: cron-reboot-weekly
     - role: container-vscode
+    - role: container-homeassistant
+    - role: container-esphome
     - role: container-mosquitto
     - role: container-zigbee2mqtt
+    # - role: container-restic
     - role: apt-upgrade
   handlers:
     - name: Reboot host

@@ -1,8 +1,0 @@
----
-- name: Shutdown all k8s servers and agents 
-  hosts: k8s
-  gather_facts: true
-  become: true
-  tasks:
-    - name: reboot
-      ansible.builtin.reboot:

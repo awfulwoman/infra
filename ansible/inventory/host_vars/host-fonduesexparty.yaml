@@ -14,3 +14,4 @@ mac_address: "E4:5F:01:7E:4A:4E"
 # wireguard_address: "10.8.0.110/24"
 cnames:
   - mqtt.affordablepotatoes.com
+  - homeassistant.affordablepotatoes.com

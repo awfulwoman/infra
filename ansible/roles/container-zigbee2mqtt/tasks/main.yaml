@@ -1,3 +1,8 @@
+- name: Set config path
+  set_fact:
+    container_config_dir: "{{ ansible_env.HOME }}"
+  when: container_config_dir is undefined
+
 - name: Create config dir
   ansible.builtin.file:
     path: "{{ container_config_dir }}/zigbee2mqtt"
