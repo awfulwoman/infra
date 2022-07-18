@@ -1,11 +1,11 @@
+# ------------------------
 # name: Guinea Pirate!
-# type: 
-# arch: 
-# cpu: 
-# mem: 
-# bootdisk: 
-# Raspberry Pi Zero W
-# storage_uuid: 
+# type: Raspberry Pi Zero W
+# arch: ??
+# cpu: ??
+# mem: ??
+# ------------------------
+
 ansible_host: 192.168.1.110
 ansible_user: pi
 mac_address: "B8:27:EB:A3:35:A2"

@@ -23,8 +23,8 @@
     - role: docker
     - role: jnv.unattended-upgrades
       become: true
-    # - role: container-ddns
-    # - role: container-pihole
+    - role: container-ddns
+    - role: container-pihole
     - role: apt-upgrade
   handlers:
     - name: Reboot host

@@ -1,11 +1,11 @@
+# ------------------------
 # name: Twisty Motherfucker
-# type: 
-# arch: 
-# cpu: 
-# mem: 
-# bootdisk: 
-# Raspberry Pi Zero
-# storage_uuid: 
+# type: Raspberry Pi Zero
+# arch: ??
+# cpu: ??
+# mem: ??
+# ------------------------
+
 mac_address: "00:0e:c6:84:3a:64"
 ansible_user: pi
 ansible_host: 192.168.1.108

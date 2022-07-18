@@ -5,47 +5,50 @@ all:
     # host-*         A physical machine used to perform tasks. Has an OS that can be managed via SSH.
     # vm-*           A virtual machine used to perform tasks. Has an OS that can be managed via SSH.
     # workstation-*  A machine used directly by a person. Has an OS that can be managed via SSH.
-    device-appletv-livingroom:            # An Apple TV. How decadent.   
-    device-applewatch:                    # It's an apple watch and lives on my wrist
-    device-belkinsoundform:               # Why did I buy this?
-    device-broadlink-rm3:                 # A little IR blaster for automating IR devices
-    device-bunny:                         # Netgear NAS (it belongs to my partner and is about a million years old)
-    device-chromecast-audio-1:            # Chromecast Audio 1
-    device-chromecast-audio-2:            # Chromecast Audio 2
-    device-chromecast-audio-3:            # Chromecast Audio 3
-    device-chromecast:                    # A Chromecast from Google
-    device-cleaning-robot-derek:          # Derek cleans the downstairs and is shiny
-    device-cleaning-robot-trevor:         # Trevor cleans the upstairs and has gone senile
+    device-appletv-livingroom:            # An Apple TV. How decadent.
+    device-applewatch:                    # It's an apple watch and lives on my wrist.
+    device-belkinsoundform:               # Why did I buy this?.
+    device-broadlink-rm3:                 # A little IR blaster for automating IR devices.
+    device-bunny:                         # Netgear NAS (it belongs to my partner and is about a million years old).
+    device-chromecast-audio-1:            # Chromecast Audio 1.
+    device-chromecast-audio-2:            # Chromecast Audio 2.
+    device-chromecast-audio-3:            # Chromecast Audio 3.
+    device-chromecast:                    # A Chromecast from Google.
+    device-cleaning-robot-derek:          # Derek cleans the downstairs and is shiny.
+    device-cleaning-robot-trevor:         # Trevor cleans the upstairs and has gone senile.
     device-echo-flex-01:                  # For testing TTS via Home Assistant. Microphone OFF.
     device-hifi:                          # It's a device-hifi. It has an ethernet connection. It plays music.
-    device-homepod-bedroom:               # Homepod Bedroom
-    device-homepod-livingroom:            # Homepod Livingroom
-    device-ipad-green:                    # An ancient ipad that lives in a nice green case
-    device-ipad-mini:                     # An ancient ipad mini that lives on the wall
-    device-ipad-work:                     # My partners work ipad
-    device-iphone-12:                     # My iPhone 12 Pro Max
-    device-kindle-paperwhite-gen05:       # It displays ebooks, very slowly
-    device-kindle-paperwhite-gen10:       # It displays ebooks
-    device-kobo:                          # It displays ebooks that are not from Amazon. I won this at a Ubuntu Podcast live recording I think.
-    device-oneplus-6:                     # My partners phone
-    device-remarkable:                    # My ReMarkable eink tablet
-    device-tl-sg3424:                     # TL-SG3424 managed network switch
-    host-nuc-bondagequeen:                # Intel NUC Atom 1.46GHz 8GB
-    host-nuc-impartialbroadcaster:        # Intel NUC Atom 1.46GHz 8GB
-    host-pi1-512mb-weaponisedgender:      # Raspberry Pi 1 512MB (DO YOU WANT A CUP OF TEA, GRANDMA?)
-    host-pi3-1gb-sleeperservice:          # Raspberry Pi 3 1GB
-    host-pi4-2gb-bigsexybeast:            # Raspberry Pi 4 4GB
-    host-pi4-2gb-bonerseizure:            # Raspberry Pi 4 2GB
-    host-pi4-2gb-fonduesexparty:          # Raspberry Pi 4 2GB
-    host-pi4-8gb-aprilashley:             # Raspberry Pi 4 8GB
-    host-pi4-8gb-attitudeadjuster:        # Raspberry Pi 4 8GB 
+    device-homepod-bedroom:               # Homepod Bedroom.
+    device-homepod-livingroom:            # Homepod Livingroom.
+    device-ipad-green:                    # An ancient ipad that lives in a nice green case.
+    device-ipad-mini:                     # An ancient ipad mini that lives on the wall.
+    device-ipad-work:                     # My partners work iPad.
+    device-iphone-12:                     # My iPhone 12 Pro Max.
+    device-kindle-paperwhite-gen05:       # It displays ebooks, very slowly.
+    device-kindle-paperwhite-gen10:       # It displays ebooks.
+    device-kobo:                          # It displays ebooks that are not from Amazon. I think I won this at a Ubuntu Podcast live recording.
+    device-oneplus-6:                     # My partners phone.
+    device-remarkable:                    # My ReMarkable eink tablet.
+    device-tl-sg3424:                     # TL-SG3424 managed network switch.
+
+    host-nuc-bondagequeen:                # Intel NUC
+    host-nuc-impartialbroadcaster:        # Intel NUC
+    host-pi1-512mb-weaponisedgender:      # Raspberry Pi (DO YOU WANT A CUP OF TEA, GRANDMA?)
+    host-pi3-1gb-sleeperservice:          # Raspberry Pi
+    host-pi4-2gb-bigsexybeast:            # Raspberry Pi
+    host-pi4-2gb-bonerseizure:            # Raspberry Pi
+    host-pi4-2gb-fonduesexparty:          # Raspberry Pi
+    host-pi4-8gb-aprilashley:             # Raspberry Pi
+    host-pi4-8gb-attitudeadjuster:        # Raspberry Pi
     host-pizero-grabthetension:           # Raspberry Pi Zero W
-    host-pizero-guineapirate:             # Raspberry Pi WH 1.1
+    host-pizero-guineapirate:             # Raspberry Pi Zero W 1.1
     host-pizero-twistymotherfucker:       # Raspberry Pi Zero
-    host-x86-ladyrona:                    # Intel i5 8th Gen, 64GB memory, 16TB ZFS array (8TB usable)
-    host-x86-opnsense:                    # opnsense testing box - x86_64 Intel Core i3-4170 @ 3.7GHZ 4GB
-    vm-digitalocean-whalecoiner:          # Digital Ocean VM
-    vm-linode-tinynuggets:                # Linode VM
+    host-x86-ladyrona:                    # NAS
+    host-x86-opnsense:                    # OPNsense testing box
+
+    vm-digitalocean-whalecoiner:          # Digital Ocean
+    vm-linode-tinynuggets:                # Linode
+
     workstation-mba2011:                  # MacBook Air 2011 (yes, it's over a decade old. I still use it as my personal machine!)
     workstation-mbp2012:                  # Ancient MacBook Pro 2012. It still has Magsafe 1 and an optical drive! :3
     workstation-mbp2020:                  # My fancy Apple Pro M1 work laptop

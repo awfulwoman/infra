@@ -1,10 +1,11 @@
+# ------------------------
 # name: Sleeper Service
-# type: 
-# arch: 
-# Raspberry Pi 3
-# cpu: CPU Cortex-A53
-# mem: 1GB
+# type: Raspberry Pi 3
 # arch: aarch64
+# cpu: Cortex-A53
+# mem: 1GB
+# ------------------------
+
 ansible_host: 192.168.1.208
 ansible_python_interpreter: /usr/bin/python3
 ansible_user: ubuntu

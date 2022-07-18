@@ -1,11 +1,11 @@
+# ------------------------
 # name: Grab The Tension
-# type: 
-# arch: 
-# cpu: 
-# mem: 
-# bootdisk: 
-# Raspberry Pi Zero W
-# storage_uuid: 
+# type: Raspberry Pi Zero
+# arch: ??
+# cpu: ??
+# mem: ??
+# ------------------------
+
 ansible_host: 192.168.1.109
 ansible_user: pi
 mac_address: "00:0e:c6:84:3a:8f"
