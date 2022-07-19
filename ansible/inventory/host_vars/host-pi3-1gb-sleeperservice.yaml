@@ -6,7 +6,7 @@
 # mem: 1GB
 # ------------------------
 
-ansible_host: 192.168.1.208
+ansible_host: 192.168.1.2
 ansible_python_interpreter: /usr/bin/python3
 ansible_user: ubuntu
 mac_address: "b8:27:eb:6e:31:5a"
@@ -14,3 +14,30 @@ raspberry_pi_disable_bluetooth: true
 raspberry_pi_disable_wifi: true
 wireguard_address: "10.8.0.2/24"
 wireguard_endpoint: 192.168.1.2
+
+# Pihole
+pihole_static_ip: 192.168.1.2
+pihole_netmask: 24
+pihole_gateway: 192.168.1.1
+pihole_password: !vault |
+          $ANSIBLE_VAULT;1.2;AES256;beanpod
+          38656631333564306634353432383439326339656564663563333234653461366364353966396535
+          3232353562346463303663653262666464393437636564340a383131323533303763386532613236
+          36663030356639636434613537363466363663366161336333373232313864663462643236323962
+          3337326339303261610a336639356663393936386633343434323835386237623661366136363039
+          35353763376131613964636164323466343137313162633932646232353331363462336133326564
+          3633353062646330306238643165396663326332666336666166
+          
+# Static IP address (because this is a DHCP server)
+netplan_enabled: true
+netplan_renderer: networkd
+netplan_configuration:
+  network:
+    version: 2
+    ethernets:
+      eth0:
+        addresses:
+        - "{{pihole_static_ip}}/{{pihole_netmask}}"
+        routes:
+        - to: default
+          via: "{{pihole_gateway}}"

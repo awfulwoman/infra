@@ -12,6 +12,8 @@
 #   ansible.builtin.copy:
 #     src: config.yaml
 #     dest: "{{ user_config_path }}/zigbee2mqtt/configuration.yaml"
+#     owner: "{{ansible_user}}"
+#     group: "{{ansible_user}}"
 #     force: no
 
 - name: Add ansible_user to dialout group
@@ -26,7 +28,7 @@
   community.docker.docker_container:
     name: zigbee2mqtt
     image: koenkk/zigbee2mqtt:latest
-    state: stopped
+    state: started
     privileged: true
     # network_mode: host
     restart_policy: unless-stopped

@@ -2,23 +2,6 @@
   set_fact:
     user_config_path: "{{ ansible_env.HOME }}"
 
-- name: Install apt packages
-  become: true
-  ansible.builtin.apt:
-    name: 
-      - network-manager # So that we can set a static IP using nmcli
-    state: present
-
-- name: Add an Ethernet connection with static IP configuration
-  become: true
-  community.general.nmcli:
-    conn_name: default
-    ifname: eth0
-    type: ethernet
-    ip4: "{{pihole_static_ip}}/{{pihole_netmask}}"
-    gw4: "{{pihole_gateway}}"
-    state: present
-
 - name: Create directories
   file:
     path: "{{ item }}"
@@ -57,7 +40,7 @@
   become: true
   community.docker.docker_container:
     name: pihole
-    image: pihole/pihole:latest
+    image: pihole/pihole:2022.02.1
     network_mode: host
     env:
       TZ: "Europe/Berlin"
@@ -72,6 +55,7 @@
       DNS_FQDN_REQUIRED: "true"
       PUID: "1000"
       GUID: "1000"
+      DNSMASQ_USER: "root"
     state: started
     restart_policy: unless-stopped
     dns_servers:

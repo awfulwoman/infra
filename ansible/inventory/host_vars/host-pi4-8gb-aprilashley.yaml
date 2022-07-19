@@ -7,7 +7,7 @@
 # ------------------------
 
 ansible_host: 192.168.1.102
-# ansible_user: pi
+ansible_user: ubuntu
 
 mac_address: "E4:5F:01:46:8B:D3"
 wireguard_address: "10.8.0.102/24"

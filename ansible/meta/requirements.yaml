@@ -21,6 +21,8 @@ roles:
     version: 2.1.0
   - name: diodonfrost.terraform
     version: 1.6.1
+  - name: mrlesmithjr.netplan
+    version: v0.3.0
 
 collections: 
   - name: community.docker

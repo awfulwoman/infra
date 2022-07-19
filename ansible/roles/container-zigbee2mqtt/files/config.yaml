@@ -3,7 +3,7 @@ frontend:
 homeassistant: true
 mqtt:
   base_topic: apartment
-  server: mqtt://192.168.1.114
+  server: mqtt://192.168.1.102
   keepalive: 60
   reject_unauthorized: true
   version: 4
