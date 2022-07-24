@@ -11,6 +11,31 @@
     - "{{ user_config_path }}/etc-pihole"
     # - "/etc/pihole/"
 
+- name: Disable Ubuntu's caching DNS resolver on port 53
+  become: true
+  lineinfile: 
+    dest: /etc/systemd/resolved.conf
+    line: "DNSStubListener=no"
+    regexp: "#?DNSStubListener=yes"
+    state: present
+
+- name: Create a symlink to resolv.conf
+  become: true
+  ansible.builtin.file:
+    src: /run/systemd/resolve/resolv.conf
+    dest: /etc/resolv.conf
+    owner: root
+    group: root
+    state: link
+  register: resolv_conf
+
+- name: restart systemd-resolved
+  become: true
+  service:
+    name: systemd-resolved
+    state: restarted
+  when: resolv_conf.changed
+
 # Add static DHCP leases
 - name: Create static DHCP leases 
   ansible.builtin.template:
@@ -26,21 +51,20 @@
     src: domains.conf.j2
     dest: "{{ user_config_path }}/etc-dnsmasq.d/07-domains.conf"
   notify:
-    - Restart Pihole
-
+    - RESTART PIHOLE
 
 - name: Create cnames
   ansible.builtin.template:
     src: cnames.conf.j2
     dest: "{{ user_config_path }}/etc-dnsmasq.d/05-cnames.list"
   notify:
-    - Restart Pihole
+    - RESTART PIHOLE
 
 - name: Create container
   become: true
   community.docker.docker_container:
     name: pihole
-    image: pihole/pihole:2022.02.1
+    image: pihole/pihole
     network_mode: host
     env:
       TZ: "Europe/Berlin"
@@ -55,7 +79,7 @@
       DNS_FQDN_REQUIRED: "true"
       PUID: "1000"
       GUID: "1000"
-      DNSMASQ_USER: "root"
+      # DNSMASQ_USER: "root"
     state: started
     restart_policy: unless-stopped
     dns_servers:
@@ -65,5 +89,9 @@
       - "{{ user_config_path }}/etc-dnsmasq.d/:/etc/dnsmasq.d/"
     capabilities:
       - NET_ADMIN
+      - NET_BIND_SERVICE
+      - NET_RAW
+      - SYS_NICE
+      - CHOWN
   notify:
-    - Restart Pihole
+    - RESTART PIHOLE

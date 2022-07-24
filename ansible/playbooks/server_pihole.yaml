@@ -4,9 +4,7 @@
 
 - name: PiHole DNS + DHCP server
   hosts: pihole
-  tasks:
-    - name: check OS version
-      debug: var=ansible_distribution
+   
   roles:
     - role: standard_os
     - role: healthchecks

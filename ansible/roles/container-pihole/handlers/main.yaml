@@ -1,5 +1,5 @@
 ---
-- name: Restart Pihole
+- name: RESTART PIHOLE
   community.docker.docker_container:
     name: pihole
     image: pihole/pihole
