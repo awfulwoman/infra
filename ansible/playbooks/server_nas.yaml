@@ -13,8 +13,12 @@
     - role: containers-config
     - role: geerlingguy.docker
       become: true
-    - role: geerlingguy.nfs
+    - role: geerlingguy.docker
       become: true
+      when: ansible_architecture == "x86_64"
+    - role: geerlingguy.docker_arm
+      become: true
+      when: ansible_architecture == "aarch64"
     - role: docker
     - role: jnv.unattended-upgrades
       become: true

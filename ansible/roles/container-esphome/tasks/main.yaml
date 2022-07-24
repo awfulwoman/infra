@@ -7,14 +7,14 @@
   community.docker.docker_container:
     name: esphome
     image: esphome/esphome:latest
-    state: stopped
+    state: started
     privileged: true
     restart_policy: unless-stopped
     ports:
       - "6052:6052"
       - "6123:6123"
     devices:
-      - /dev/ttyACM0
+      - /dev/ttyUSB0
     env: 
       TZ: "Berlin/Europe"
     volumes:
