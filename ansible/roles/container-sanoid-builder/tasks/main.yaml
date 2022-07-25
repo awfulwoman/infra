@@ -1,0 +1,45 @@
+- name: Create config dir
+  ansible.builtin.file:
+    path: "{{ container_config_dir }}/sanoid-image-builder"
+    state: directory
+
+- name: Git checkout
+  ansible.builtin.git:
+    repo: "https://github.com/whalecoiner/docker-sanoid-builder"
+    dest: "{{ container_config_dir }}/sanoid-image-builder"
+
+- name: Check for sanoid bin
+  ansible.builtin.stat: 
+    path: /usr/sbin/sanoid
+  register: sanoid_bin
+
+- name: Check for sanoid bin
+  ansible.builtin.stat: 
+    path: "{{ container_config_dir }}/sanoid-image-builder/sanoid.deb"
+  register: sanoid_deb
+
+# - name: ansible_sanoid
+#   debug: 
+#     msg: "{{ sanoid.stat }}"
+
+# We have to call the script from the dir, otherwise it fails
+- name: Build Sanoid *.deb
+  ansible.builtin.command: ./build.sh 
+  args:
+    chdir: "{{ container_config_dir }}/sanoid-image-builder"
+  when: sanoid_deb.stat.exists != true
+
+# We have to call the script from the dir, otherwise it fails
+- name: Standardise filename of *.deb to sanoid.deb
+  ansible.builtin.command: mv sanoid_*.deb sanoid.deb
+  args:
+    chdir: "{{ container_config_dir }}/sanoid-image-builder"
+  when: sanoid_deb.stat.exists != true
+  
+# Qe have to call the script from the dir, otherwise it fails
+- name: Install Sanoid from deb file
+  become: true
+  ansible.builtin.command: dpkg -i ./sanoid.deb
+  args:
+    chdir: "{{ container_config_dir }}/sanoid-image-builder"
+  when: sanoid_bin.stat.exists != true
