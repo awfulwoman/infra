@@ -9,6 +9,7 @@
   roles:
     - role: standard_os
     - role: standard-host
+    - role: healthchecks
     - role: zfs-tools
     - role: containers-config
     - role: geerlingguy.docker
