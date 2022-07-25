@@ -6,11 +6,13 @@
     backup_restic_destination: /slowpool/backups/containers
     backup_sources:
       - homeassistant
+    healthcheck_url: ""
   roles:
     - role: standard_os
     - role: standard-host
     - role: healthchecks
     - role: zfs-tools
+    - role: cron-reboot-weekly
     - role: containers-config
     - role: geerlingguy.docker
       become: true

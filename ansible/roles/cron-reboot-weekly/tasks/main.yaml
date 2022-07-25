@@ -3,7 +3,7 @@
   ansible.builtin.cron:
     name: "Regular reboot"
     day: "2,4" # Tuesday, Thursday
-    hour: "3"
+    hour: "{{reboot_hour}}"
     minute: "0"
     job: "/sbin/shutdown -r"
     state: present
@@ -12,6 +12,7 @@
   ansible.builtin.cron:
     name: "healthchecks.io - system rebooted"
     special_time: reboot
-    job: curl -fsS -m 10 --retry 5 -o /dev/null https://hc-ping.com/2eb88d8f-c1d9-42bf-a5b8-af41567b2922
+    job: "curl -fsS -m 10 --retry 5 -o /dev/null {{ healthcheck_url }}"
     state: present
+  when: healthcheck_url
     

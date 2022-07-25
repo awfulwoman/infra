@@ -4,7 +4,9 @@
 
 - name: PiHole DNS + DHCP server
   hosts: pihole
-   
+  vars:
+    healthcheck_url: false
+    reboot_hour: 2
   roles:
     - role: standard_os
     - role: healthchecks
