@@ -1,12 +1,6 @@
 ---
 - name: NAS
   hosts: host-x86-ladyrona
-  vars:
-    container_config_dir: /fastpool/containers
-    backup_restic_destination: /slowpool/backups/containers
-    backup_sources:
-      - homeassistant
-    healthcheck_url: ""
   roles:
     - role: standard_os
     - role: standard-host
