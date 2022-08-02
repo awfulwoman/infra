@@ -4,8 +4,9 @@
 
 Let me and Bill Murray show you our home GitOps setup. 
 
-- Configuration as Code FTW.
-- Hardware management: handled by [Ansible](ansible).
+- `configuration_as_code: true`
+- Networking: DHCP and DNS via Pihole and configured via Ansible (though OPNsense soon to replace Pihole and the home router).
+- Hardware management: all machines controlled via [Ansible](ansible).
 - Virtual machines: provisioned via Terraform.
 - Container orchestration: [Flux](flux) (but not for long) and Kubernetes, running on the provisioned VMs.
 
