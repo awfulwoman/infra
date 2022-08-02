@@ -4,11 +4,11 @@
 
 Let me and Bill Murray show you our home GitOps setup. 
 
-- `configuration_as_code: true`
-- Networking: DHCP and DNS via Pihole and configured via Ansible (though OPNsense soon to replace Pihole and the home router).
-- Hardware management: all machines controlled via [Ansible](ansible).
-- Virtual machines: provisioned via Terraform.
-- Container orchestration: [Flux](flux) (but not for long) and Kubernetes, running on the provisioned VMs.
+- **Configuration as code:** `true`
+- **Networking:** DHCP and DNS via Ansible-configured Pihole (though OPNsense soon to replace Pihole and the [Linksys Edge Router](ansible/inventory/host_vars/device-linksys-wrtacm3200.yaml)).
+- **Hardware management:** all machines controlled via [Ansible](ansible).
+- **Virtual machines:** provisioned via Terraform.
+- **Container orchestration:** [Flux](flux) (but not for long) and Kubernetes, running on the provisioned VMs.
 
 I started out writing this as a series of notes but it's growing into a mini-opera composed of weird sentence structures and addressing a constantly switching audience. I shall one day address this issue.
 
