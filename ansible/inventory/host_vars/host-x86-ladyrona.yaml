@@ -15,6 +15,10 @@ wireguard_address: "10.8.0.116/24"
 wireguard_endpoint: 192.168.1.116
 wireguard_persistent_keepalive: "30"
 
+# cnames
+cnames:
+  - jellyfin.affordablepotatoes.com
+
 # NFS shares
 nfs_exports:
 #  - "/slowpool/incoming *(rw,all_squash,anonuid=1000,anongid=1000)"
