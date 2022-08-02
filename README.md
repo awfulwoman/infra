@@ -5,8 +5,9 @@
 Let me and Bill Murray show you our home GitOps setup. 
 
 - Configuration as Code FTW.
-- Hardware inventory management: handled by [Ansible](ansible).
-- Pretty much everything else: handled by [Flux](flux) and Kubernetes.
+- Hardware management: handled by [Ansible](ansible).
+- Virtual machines: provisioned via Terraform.
+- Container orchestration: [Flux](flux) (but not for long) and Kubernetes, running on the provisioned VMs.
 
 I started out writing this as a series of notes but it's growing into a mini-opera composed of weird sentence structures and addressing a constantly switching audience. I shall one day address this issue.
 
