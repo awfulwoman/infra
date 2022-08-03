@@ -3,7 +3,7 @@
     path: "{{ container_config_dir }}/esphome"
     state: directory
 
-- name: Create container
+- name: "Ensure {{container_name}} container exists"
   community.docker.docker_container:
     name: esphome
     image: esphome/esphome:latest

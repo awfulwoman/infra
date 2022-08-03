@@ -60,7 +60,7 @@
   notify:
     - RESTART PIHOLE
 
-- name: Create container
+- name: "Ensure {{container_name}} container exists"
   become: true
   community.docker.docker_container:
     name: pihole

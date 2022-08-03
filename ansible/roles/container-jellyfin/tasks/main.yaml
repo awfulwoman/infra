@@ -13,7 +13,7 @@
     path: "{{ container_config_dir }}/{{ container_name }}/cache"
     state: directory
 
-- name: Create container
+- name: "Ensure {{container_name}} container exists"
   community.docker.docker_container:
     name: "{{ container_name }}"
     image: jellyfin/jellyfin

@@ -8,7 +8,7 @@
     path: "{{ container_config_dir }}/homeassistant"
     state: directory
 
-- name: Create container
+- name: "Ensure {{container_name}} container exists"
   # become: true
   community.docker.docker_container:
     name: homeassistant
