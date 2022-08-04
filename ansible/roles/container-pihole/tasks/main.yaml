@@ -37,7 +37,7 @@
   when: resolv_conf.changed
 
 # Add static DHCP leases
-- name: Create static DHCP leases 
+- name: "Create static DHCP leases"
   ansible.builtin.template:
     src: static-dhcp.conf.j2
     dest: "{{ user_config_path }}/etc-dnsmasq.d/04-pihole-static-dhcp.conf" # must be this file name
@@ -46,14 +46,14 @@
 # Solves corporate computers trying to claim a domain 
 # and generating very annoying errors in pihole
 # https://www.reddit.com/r/pihole/comments/rvattc/dnsmasq_warning_ignoring_domain/
-- name: Create domain
+- name: "Create domains"
   ansible.builtin.template:
     src: domains.conf.j2
     dest: "{{ user_config_path }}/etc-dnsmasq.d/07-domains.conf"
   notify:
     - RESTART PIHOLE
 
-- name: Create cnames
+- name: "Create cnames"
   ansible.builtin.template:
     src: cnames.conf.j2
     dest: "{{ user_config_path }}/etc-dnsmasq.d/05-cnames.list"

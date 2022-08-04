@@ -1,4 +1,5 @@
 - name: Pushover notification on @reboot
+  become: true
   ansible.builtin.cron:
     name: "Pushover - {{inventory_hostname}} rebooted"
     special_time: reboot

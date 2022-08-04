@@ -2,13 +2,14 @@
   become: true
   ansible.builtin.cron:
     name: "Regular reboot"
-    day: "2,4" # Tuesday, Thursday
+    day: "2,4,6" # Tuesday, Thursday
     hour: "{{reboot_hour}}"
     minute: "0"
     job: "/sbin/shutdown -r"
     state: present
 
 - name: Healthchecks.io on @reboot
+  become: true
   ansible.builtin.cron:
     name: "healthchecks.io - system rebooted"
     special_time: reboot
