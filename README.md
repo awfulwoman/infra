@@ -4,6 +4,10 @@
 
 Let me and Bill Murray show you our home GitOps setup. 
 
+![Media server has rebooted on schedule](https://healthchecks.io/badge/37a7ad4c-57bd-4cea-9118-f2c5df/Qx0Lc7eg-2/mediaserver-regular-reboot.svg)
+![Home Automation server has rebooted on schedule](https://healthchecks.io/badge/37a7ad4c-57bd-4cea-9118-f2c5df/i3csSel2-2/homeautomation-regular-reboot.svg)
+
+
 - **Configuration as code:** `true`
 - **Networking:** DHCP and DNS via Ansible-configured Pihole (though OPNsense soon to replace Pihole and the [Linksys Edge Router](ansible/inventory/host_vars/device-linksys-wrtacm3200.yaml)).
 - **Hardware management:** all machines controlled via [Ansible](ansible).
