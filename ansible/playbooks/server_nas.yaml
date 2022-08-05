@@ -1,8 +1,6 @@
 ---
 - name: NAS
   hosts: host-x86-ladyrona
-  vars:
-    healthcheck_url: https://hc-ping.com/a9aac970-4dc2-411c-876d-6dc68c157d8f
   roles:
     - role: standard_os
     - role: standard-host

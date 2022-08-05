@@ -8,12 +8,12 @@
     job: "/sbin/shutdown -r"
     state: present
 
-- name: Healthchecks.io on @reboot
+- name: Ping healthchecks.io on @reboot
   become: true
   ansible.builtin.cron:
     name: "healthchecks.io - system rebooted"
     special_time: reboot
-    job: "curl -fsS -m 10 --retry 5 -o /dev/null {{ healthcheck_url }}"
+    job: "curl -fsS -m 10 --retry 5 -o /dev/null https://hc-ping.com/{{ healthcheck_reboot_id }}"
     state: present
-  when: healthcheck_url
+  when: healthcheck_reboot_id
     

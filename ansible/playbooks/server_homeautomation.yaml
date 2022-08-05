@@ -1,8 +1,6 @@
 ---
 - name: Home Automation Pi
   hosts: host-pi4-8gb-aprilashley
-  vars:
-    healthcheck_url: https://hc-ping.com/2eb88d8f-c1d9-42bf-a5b8-af41567b2922
   roles:
     - role: standard_os
     - role: standard-host

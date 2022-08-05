@@ -1,8 +1,6 @@
 ---
 - name: Workload containers
   hosts: vm-digitalocean-whalecoiner
-  vars:
-    healthcheck_url: false
   roles:
     - role: standard_os
     - role: standard-host
