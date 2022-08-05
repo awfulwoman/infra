@@ -1,6 +1,6 @@
 # At Home With The GitOps
 
-<img align="right" width="100" height="100" src="http://www.fillmurray.com/100/100">
+<img align="right" width="100" height="100" src="http://www.fillmurray.com/100/100" alt="">
 
 Let me and Bill Murray show you our home GitOps setup. 
 
