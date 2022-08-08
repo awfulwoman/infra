@@ -12,6 +12,7 @@
     - role: weareinteractive.environment
       no_log: true
       become: true
+    - role: cron-reboot  
     - role: mrlesmithjr.netplan
       become: true
     - role: geerlingguy.docker

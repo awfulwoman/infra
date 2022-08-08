@@ -1,17 +1,16 @@
 ---
-- name: Workload containers
-  hosts: vm-digitalocean-whalecoiner
+- name: Backup Server
+  hosts: host-x86-gottakeepswimming
   roles:
     - role: standard_os
     - role: standard-host
-    - role: generate-sshkey
     - role: healthchecks
-    - role: geerlingguy.docker
-      become: true
-    - role: cron-reboot
+    - role: zfs-tools
     - role: jnv.unattended-upgrades
       become: true
+    - role: motd
     - role: apt-upgrade
+
   handlers:
     - name: Reboot host
       become: true

@@ -43,9 +43,10 @@ all:
     host-pizero-grabthetension:           # Raspberry Pi Zero W
     host-pizero-guineapirate:             # Raspberry Pi Zero W 1.1
     host-pizero-twistymotherfucker:       # Raspberry Pi Zero
+    host-x86-gottakeepswimming:           # Backups
     host-x86-ladyrona:                    # NAS
     host-x86-opnsense:                    # OPNsense testing box
-
+    
     vm-digitalocean-whalecoiner:          # Digital Ocean
     vm-linode-tinynuggets:                # Linode
 
@@ -126,7 +127,7 @@ all:
     # Wireguard is a VPN that allows me to access my LAN remotely
     wireguard:
       hosts:
-        host-pi4-8gb-attitudeadjuster:
         host-x86-ladyrona:
         vm-digitalocean-whalecoiner:
-        vm-linode-tinynuggets:
+        # vm-linode-tinynuggets:
+        host-x86-gottakeepswimming:

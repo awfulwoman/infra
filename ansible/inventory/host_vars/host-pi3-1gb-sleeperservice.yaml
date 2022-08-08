@@ -41,3 +41,6 @@ netplan_configuration:
         routes:
         - to: default
           via: "{{pihole_gateway}}"
+
+# Reboot regularly
+reboot_hour: 4

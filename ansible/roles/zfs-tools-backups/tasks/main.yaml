@@ -1,0 +1,9 @@
+---
+- name: Install ZFS backup tooling
+  become: true
+  ansible.builtin.apt:
+    name: 
+      - ts
+      - lzop
+      - mbuffer
+    state: present
