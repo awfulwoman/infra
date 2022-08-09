@@ -1,0 +1,57 @@
+---
+- name: Install ZFS backup tooling
+  become: true
+  ansible.builtin.apt:
+    name: 
+      - moreutils # for ts (timestamp) util
+      - lzop
+      - mbuffer
+    state: present
+
+# ENSURE zfsbackup USER EXISTS: 
+# useradd zfsbackup --create-home --system
+- name: Add the user 'zfsbackup'
+  become: true
+  ansible.builtin.user:
+    name: zfsbackup
+    comment: ZFS Backup User
+    system: true
+    create_home: true
+    uid: 1099 # just forcing a higher ID in case we need it later
+    state: present
+  register: created_user
+
+- name: Debug created_user
+  debug:
+    msg: "{{created_user}}.home"
+
+# ENSURE SSH DIR EXISTS FOR zfsbackup USER: 
+- name: Create .ssh dir
+  become: true
+  ansible.builtin.file:
+    path: "{{created_user}}.home/.ssh"
+    state: directory
+    owner: zfsbackup
+    group: zfsbackup
+
+
+# Copy over restricted commands script
+- name: Ensure restricted_commands.sh exists
+  become: true
+  ansible.builtin.copy:
+    src: restricted_commands.sh
+    dest: /usr/local/bin/restricted_commands.sh
+    owner: root
+    group: root
+    mode: o=+x
+
+# LOOP: 
+  # ALLOW BACKUPS ON THESE DATASETS:
+# zfs allow -u zfsbackup send,hold tank/dataset
+- name: Allow backups of datasets 
+  ansible.builtin.command: "zfs allow -u zfsbackup send,hold {{ item  }}"
+  loop: "{{ backup_datasets }}"
+  when: "{{ backup_datasets }}"
+
+# ADD RESTRICTED COMMANDS BACKUPSERVER SSH KEY: 
+# echo 'restrict,command="restrict_commands.sh" ssh-ed25519 ...' > /home/zfsbackup/.ssh/authorized_keys

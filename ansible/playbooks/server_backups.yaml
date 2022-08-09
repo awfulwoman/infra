@@ -1,6 +1,10 @@
 ---
 - name: Backup Server
   hosts: host-x86-gottakeepswimming
+  vars:
+    backup_datasets:
+      - fastpool/containers
+      - slowpool/backups
   roles:
     - role: standard_os
     - role: standard-host

@@ -131,3 +131,9 @@ all:
         vm-digitalocean-whalecoiner:
         # vm-linode-tinynuggets:
         host-x86-gottakeepswimming:
+
+    # Hosts that use ZFS
+    zfs:
+      hosts:
+        host-x86-ladyrona:
+        host-x86-gottakeepswimming:
