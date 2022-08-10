@@ -36,11 +36,11 @@
 
 
 # Copy over restricted commands script
-- name: Ensure restricted_commands.sh exists
+- name: Ensure restrict_commands.sh exists
   become: true
   ansible.builtin.copy:
-    src: restricted_commands.sh
-    dest: /usr/local/bin/restricted_commands.sh
+    src: restrict_commands.sh
+    dest: /usr/local/bin/restrict_commands.sh
     owner: root
     group: root
     mode: o=+x
@@ -48,10 +48,11 @@
 # LOOP: 
   # ALLOW BACKUPS ON THESE DATASETS:
 # zfs allow -u zfsbackup send,hold tank/dataset
-- name: Allow backups of datasets 
+- name: Allow backups of datasets
+  become: true
   ansible.builtin.command: "zfs allow -u zfsbackup send,hold {{ item  }}"
   loop: "{{ backup_datasets }}"
-  when: "{{ backup_datasets }}"
+  when: backup_datasets
 
 # ADD RESTRICTED COMMANDS BACKUPSERVER SSH KEY: 
 # echo 'restrict,command="restrict_commands.sh" ssh-ed25519 ...' > /home/zfsbackup/.ssh/authorized_keys
