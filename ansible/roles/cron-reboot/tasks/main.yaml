@@ -1,4 +1,4 @@
-- name: Apply regular reboot cronjob
+- name: Ensure host regularly reboots via cronjob
   become: true
   ansible.builtin.cron:
     name: "Regular reboot"
