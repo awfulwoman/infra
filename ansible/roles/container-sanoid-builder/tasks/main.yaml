@@ -61,5 +61,5 @@
     hour: "*"
     minute: "*"
     weekday: "*"
-    job: "TZ=UTC /usr/local/bin/sanoid --cron"
+    job: "TZ=UTC /usr/sbin/sanoid --cron"
     state: present
