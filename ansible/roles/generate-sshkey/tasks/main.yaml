@@ -8,3 +8,4 @@
   community.crypto.openssh_keypair:
     type: ed25519
     path: "{{ account_homedir.stdout }}/.ssh/id_ed25519"
+    comment: "{{ ansible_user }}@{{ ansible_hostname }}"

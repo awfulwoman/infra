@@ -1,10 +1,6 @@
 ---
 - name: NAS
   hosts: host-x86-ladyrona
-  vars:
-    backup_datasets:
-      - fastpool/containers
-      - slowpool/backups
   roles:
     - role: standard_os
     - role: standard-host

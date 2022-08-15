@@ -10,7 +10,6 @@
       become: true
     - role: motd
     - role: apt-upgrade
-
   handlers:
     - name: Reboot host
       become: true

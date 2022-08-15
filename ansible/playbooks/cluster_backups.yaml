@@ -1,0 +1,16 @@
+---
+- name: Backup Server
+  hosts: host-x86-gottakeepswimming
+  roles:
+    - role: generate-sshkey
+    - role: zfs-tools-backup-server
+
+- name: Backup Client
+  hosts: host-x86-ladyrona
+  roles:
+    - role: zfs-tools-backup-client
+
+  handlers:
+    - name: Reboot host
+      become: true
+      reboot:

@@ -137,3 +137,8 @@ all:
       hosts:
         host-x86-ladyrona:
         host-x86-gottakeepswimming:
+
+    # ZFS Backup Server
+    zfs-backup-server:
+      hosts:
+        host-x86-gottakeepswimming:
