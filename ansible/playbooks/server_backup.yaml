@@ -5,6 +5,7 @@
     - role: standard_os
     - role: standard-host
     - role: healthchecks
+    - role: grub-tune
     - role: zfs-tools
     - role: jnv.unattended-upgrades
       become: true
