@@ -1,4 +1,13 @@
 ---
+- name: Install ZFS backup tooling
+  become: true
+  ansible.builtin.apt:
+    name: 
+      - moreutils # for ts (timestamp) util
+      - lzop
+      - mbuffer
+    state: present
+    
 - name: Add the user 'zfsbackup'
   become: true
   ansible.builtin.user:
@@ -10,9 +19,18 @@
     state: present
   register: created_user
 
-- name: Debug created_user
-  debug:
-    msg: "{{created_user.home}}"
+- name: Create dataset
+  become: true
+  community.general.zfs:
+    name: fastpool/containers
+    state: present
+    extra_zfs_properties:
+      acltype: posix
+      xattr: sa
+
+- name: Get ZFS Server Public key
+  set_fact:
+    zfs_public_key: "{{ hostvars[groups['zfs-backup-server'][0]]['public_key'] | default(False) }}"
 
 - name: Create .ssh dir
   become: true
@@ -31,9 +49,13 @@
     group: root
     mode: 0777
 
-- name: Allow backups of listed datasets
+- name: Allow zfsbackup user to send backups of listed datasets
   become: true
-  ansible.builtin.command: "zfs allow -u zfsbackup send,hold {{ item }}"
+  community.general.zfs_delegate_admin:
+    name: "{{item}}"
+    users: zfsbackup
+    permissions: send,hold,snapshot
+    descendents: true
   loop: "{{ backup_datasets }}"
   when: backup_datasets
 
@@ -42,6 +64,6 @@
   ansible.posix.authorized_key:
     user: zfsbackup
     state: present
-    key: "{{ hostvars[groups['zfs-backup-server'][0]]['public_key'] | default(False) }}"
+    key: "{{zfs_public_key}}"
     key_options: 'restrict,command="restrict_commands.sh"'
-
+  when: zfs_public_key
