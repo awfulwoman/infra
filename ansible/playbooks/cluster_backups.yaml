@@ -3,6 +3,7 @@
   hosts: host-x86-gottakeepswimming
   roles:
     - role: generate-sshkey
+      become: true
     - role: zfs-tools
     - role: zfs-tools-backup-server
 

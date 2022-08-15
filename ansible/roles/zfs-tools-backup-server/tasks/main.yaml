@@ -8,53 +8,8 @@
       - mbuffer
     state: present
 
-- name: list
-  set_fact: 
-    zfs_permissions: 
-      - allow
-      - clone
-      - create
-      - destroy
-      - mount
-      - promote
-      - receive
-      - rename
-      - rollback
-      # - send
-      # - share
-      # - snapshot
-      # - canmount
-      # - aclinherit
-      # - aclmode
-      # - atime
-      # - canmount
-      # - casesensitivity
-      # - checksum
-      # - compression
-      # - copies
-      # - exec
-      # - devices
-      # - mountpoint
-      # - nbmand
-      # - normalization
-      # - quota
-      # - readonly
-      # - recordsize
-      # - reservation
-      # - setuid
-      # # - shareiscsi
-      # # - sharenfs
-      # # - sharesmb
-      # - snapdir
-      # - userprop
-      # - utf8only
-      # - version
-      # - volsize
-      # - vscan
-      # - xattr
-      # - zoned
-
 - name: Read backup server public key
+  become: true
   ansible.builtin.slurp:
     src: $HOME/.ssh/id_ed25519.pub
   register: slurpfile
@@ -65,16 +20,12 @@
 
 # - name: Allow {{ansible_user}} to receive ZFS backups without sudo
 #   become: true
-#   ansible.builtin.command: "zfs allow -u {{ansible_user}} compression,create,destroy,hold,mount,mountpoint,receive,refreservation,release,rollback,snapshot,xattr,acltype backuppool"
-
-- name: Allow {{ansible_user}} to receive ZFS backups without sudo
-  become: true
-  community.general.zfs_delegate_admin:
-    name: backuppool
-    users: "{{ansible_user}}"
-    # permissions: compression,create,clone,destroy,hold,mount,mountpoint,receive,reservation,release,rollback,snapshot,aclmode,xattr
-    permissions: "{{zfs_permissions | join(',')}}"
-    descendents: true
+#   community.general.zfs_delegate_admin:
+#     name: backuppool
+#     users: "{{ansible_user}}"
+#     permissions: compression,create,clone,destroy,hold,mount,mountpoint,receive,reservation,release,rollback,snapshot,aclmode,xattr
+#     # permissions: "{{zfs_permissions | join(',')}}"
+#     descendents: true
 
 - name: Create dataset
   become: true
