@@ -102,13 +102,13 @@
     groups: "sudo"
     state: present
 
-- name: vault_password
-  debug:
-    msg: "{{ vault_password }}"
+# - name: vault_password
+#   debug:
+#     msg: "{{ vault_password }}"
 
-- name: vault_password_salted
-  debug:
-    msg: "{{ vault_password_salted }}"
+# - name: vault_password_salted
+#   debug:
+#     msg: "{{ vault_password_salted }}"
 
 - name: Add the user "{{ ansible_user }}" to workhorse group
   become: true
