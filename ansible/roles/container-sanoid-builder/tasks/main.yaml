@@ -1,4 +1,4 @@
-- name: Create config dir
+- name: "Create {{ container_name }} config dir"
   ansible.builtin.file:
     path: "{{ container_config_dir }}/sanoid-image-builder"
     state: directory

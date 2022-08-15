@@ -2,7 +2,7 @@
   set_fact:
     user_config_path: "{{ ansible_env.HOME }}"
 
-- name: Create config dir
+- name: "Create {{ container_name }} config dir"
   ansible.builtin.file:
     path: "{{ user_config_path }}/mpd/config"
     state: directory
@@ -22,14 +22,14 @@
     path: "{{ user_config_path }}/mpd/data"
     state: directory
 
-- name: Create config file 
+- name: "Create {{ container_name }} config file" 
   ansible.builtin.copy:
     src: mpd.conf
     dest: "{{ user_config_path }}/mpd/config/mpd.conf"
     owner: "{{ansible_user}}"
     group: "{{ansible_user}}"
 
-- name: Create container
+- name: "Create {{ container_name }} container"
   community.docker.docker_container:
     name: mpd
     image: tobi312/rpi-mpd:debian

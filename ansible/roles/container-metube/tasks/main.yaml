@@ -2,17 +2,17 @@
   set_fact:
     user_config_path: "{{ ansible_env.HOME }}"
 
-- name: Create config dir
+- name: "Create {{ container_name }} config dir"
   ansible.builtin.file:
     path: "{{ user_config_path }}/metube/downloads"
     state: directory
 
-- name: Create config dir
+- name: "Create {{ container_name }} config dir"
   ansible.builtin.file:
     path: "{{ user_config_path }}/metube/state"
     state: directory
 
-- name: Create container
+- name: "Create {{ container_name }} container"
   community.docker.docker_container:
     name: metube
     image: alexta69/metube

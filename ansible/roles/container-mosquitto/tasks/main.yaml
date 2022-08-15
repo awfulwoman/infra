@@ -1,19 +1,19 @@
-- name: Create config dir
+- name: "Create {{ container_name }} config dir"
   ansible.builtin.file:
     path: "{{ container_config_dir }}/mosquitto/config"
     state: directory
 
-- name: Create logs dir
+- name: "Create {{ container_name }} logs dir"
   ansible.builtin.file:
     path: "{{ container_config_dir }}/mosquitto/log"
     state: directory
 
-- name: Create data dir
+- name: "Create {{ container_name }} data dir"
   ansible.builtin.file:
     path: "{{ container_config_dir }}/mosquitto/data"
     state: directory
 
-- name: Create config file 
+- name: "Create {{ container_name }} config file" 
   become: true
   ansible.builtin.copy:
     src: mosquitto.conf

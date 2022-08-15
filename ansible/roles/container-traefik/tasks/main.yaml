@@ -3,12 +3,12 @@
     container_config_dir: "{{ ansible_env.HOME }}"
   when: container_config_dir is undefined
 
-- name: Create config dir
+- name: "Create {{ container_name }} config dir"
   ansible.builtin.file:
     path: "{{ container_config_dir }}/traefik"
     state: directory
 
-- name: Create config file
+- name: "Create {{ container_name }} config file"
   ansible.builtin.copy:
     src: config.yaml
     dest: "{{ container_config_dir }}/traefik/config.yaml"
@@ -21,7 +21,7 @@
     internal: false
     attachable: true
     
-- name: Create container
+- name: "Create {{ container_name }} container"
   # become: true
   community.docker.docker_container:
     name: traefik

@@ -2,12 +2,12 @@
   set_fact:
     user_config_path: "{{ ansible_env.HOME }}"
 
-- name: Create config dir
+- name: "Create {{ container_name }} config dir"
   ansible.builtin.file:
     path: "{{ user_config_path }}/heimdall"
     state: directory
 
-- name: Create container
+- name: "Create {{ container_name }} container"
   # become: true
   community.docker.docker_container:
     name: heimdall

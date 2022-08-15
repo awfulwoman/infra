@@ -3,7 +3,7 @@
     container_config_dir: "{{ ansible_env.HOME }}"
   when: container_config_dir is undefined
 
-- name: Create config dir
+- name: "Create {{ container_name }} config dir"
   ansible.builtin.file:
     path: "{{ container_config_dir }}/zigbee2mqtt"
     state: directory
@@ -16,14 +16,14 @@
 #     group: "{{ansible_user}}"
 #     force: no
 
-- name: Add ansible_user to dialout group
+- name: "Add {{ansible_user}} to dialout group"
   become: true
   ansible.builtin.user:
     user: "{{ ansible_user }}"
     groups: dialout
     append: true
 
-- name: Create container
+- name: "Create {{ container_name }} container"
   # become: true
   community.docker.docker_container:
     name: zigbee2mqtt

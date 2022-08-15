@@ -2,3 +2,12 @@
   service: 
     name: ssh 
     state: restarted
+
+# - name: Kill open ssh sessions - ansible should log back in on next task
+#   shell: "ps -ef | grep sshd | grep `whoami` | awk '{print \"kill -9\", $2}' | sh"
+#   async: 0
+#   poll: 0
+#   when: nvm_installed | changed
+
+# - name: waiting for server to come back
+#   local_action: wait_for host={{ inventory_hostname }} state=started
