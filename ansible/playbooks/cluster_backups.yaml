@@ -12,8 +12,3 @@
   roles:
     - role: zfs-tools
     - role: zfs-tools-backup-client
-
-  handlers:
-    - name: Reboot host
-      become: true
-      reboot:
