@@ -8,9 +8,7 @@
       - mbuffer
     state: present
 
-# ensure SSH keys are generated for ansible_user
-
-- name: Slurp hosts file
+- name: Slurp public key
   ansible.builtin.slurp:
     src: $HOME/.ssh/id_ed25519.pub
   register: slurpfile
@@ -18,14 +16,6 @@
 - name: Set backup server public key as fact
   ansible.builtin.set_fact:
     public_key: "{{ slurpfile['content'] | b64decode }}"
-
-- name: slurpfile server debug slurpfile
-  debug:
-    var: slurpfile
-
-- name: slurpfile server debug public_key
-  debug:
-    var: public_key
 
 # - name: Allow user to deal with ZFS
 #   become: true

@@ -1,15 +1,4 @@
 ---
-# - name: Install ZFS backup tooling
-#   become: true
-#   ansible.builtin.apt:
-#     name: 
-#       - moreutils # for ts (timestamp) util
-#       - lzop
-#       - mbuffer
-#     state: present
-
-# ENSURE zfsbackup USER EXISTS: 
-# useradd zfsbackup --create-home --system
 - name: Add the user 'zfsbackup'
   become: true
   ansible.builtin.user:
@@ -25,7 +14,6 @@
   debug:
     msg: "{{created_user.home}}"
 
-# ENSURE SSH DIR EXISTS FOR zfsbackup USER: 
 - name: Create .ssh dir
   become: true
   ansible.builtin.file:
@@ -34,7 +22,6 @@
     owner: zfsbackup
     group: zfsbackup
 
-# Copy over restricted commands script
 - name: Ensure restrict_commands.sh exists
   become: true
   ansible.builtin.copy:
@@ -49,10 +36,6 @@
   ansible.builtin.command: "zfs allow -u zfsbackup send,hold {{ item }}"
   loop: "{{ backup_datasets }}"
   when: backup_datasets
-
-- name: slurpfile backup client debug
-  debug:
-    msg: "{{ hostvars[groups['zfs-backup-server'][0]]['public_key']}}"
 
 - name: Set authorized key and options
   become: true
