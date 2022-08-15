@@ -3,11 +3,13 @@
   hosts: host-x86-gottakeepswimming
   roles:
     - role: generate-sshkey
+    - role: zfs-tools
     - role: zfs-tools-backup-server
 
 - name: Backup Client
   hosts: host-x86-ladyrona
   roles:
+    - role: zfs-tools
     - role: zfs-tools-backup-client
 
   handlers:
