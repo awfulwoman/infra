@@ -35,7 +35,7 @@
 - name: Create .ssh dir
   become: true
   ansible.builtin.file:
-    path: "{{created_user.home}}/.ssh"
+    path: "{{ created_user.home }}/.ssh"
     state: directory
     owner: zfsbackup
     group: zfsbackup
@@ -49,13 +49,39 @@
     group: root
     mode: 0777
 
+- name: Create Sanoid config file 
+  become: true
+  ansible.builtin.copy:
+    src: sanoid.conf
+    dest: "/etc/sanoid/sanoid.conf"
+    owner: root
+    group: root
+
+- name: Apply Sanoid cronjob
+  become: true
+  ansible.builtin.cron:
+    name: "Sanoid"
+    month: "*" 
+    day: "*" 
+    hour: "*"
+    minute: "*"
+    weekday: "*"
+    job: "TZ=UTC /usr/sbin/sanoid --cron"
+    state: present
+
+- name: List datasets to be given permissions on
+  become: true
+  debug:
+    msg: "{{ item }}"
+  loop: "{{ backup_datasets }}"
+
 - name: Allow zfsbackup user to send backups of listed datasets
   become: true
   community.general.zfs_delegate_admin:
     name: "{{item}}"
     users: zfsbackup
-    permissions: send,hold,snapshot
-    descendents: true
+    permissions: destroy,hold,mount,send,snapshot
+    # descendents: true
   loop: "{{ backup_datasets }}"
   when: backup_datasets
 
@@ -64,6 +90,6 @@
   ansible.posix.authorized_key:
     user: zfsbackup
     state: present
-    key: "{{zfs_public_key}}"
+    key: "{{ zfs_public_key }}"
     key_options: 'restrict,command="restrict_commands.sh"'
   when: zfs_public_key

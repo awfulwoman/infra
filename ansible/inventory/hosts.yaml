@@ -142,3 +142,8 @@ all:
     zfs-backup-server:
       hosts:
         host-x86-gottakeepswimming:
+
+    # ZFS Client Servers
+    zfs-backup-clients:
+      hosts:
+        host-x86-gottakeepswimming:

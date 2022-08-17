@@ -43,23 +43,3 @@
   args:
     chdir: "{{ container_config_dir }}/sanoid-image-builder"
   when: sanoid_bin.stat.exists != true
-
-- name: Create Sanoid config file 
-  become: true
-  ansible.builtin.copy:
-    src: sanoid.conf
-    dest: "/etc/sanoid/sanoid.conf"
-    owner: root
-    group: root
-
-- name: Apply Sanoid cronjob
-  become: true
-  ansible.builtin.cron:
-    name: "Sanoid"
-    month: "*" 
-    day: "*" 
-    hour: "*"
-    minute: "*"
-    weekday: "*"
-    job: "TZ=UTC /usr/sbin/sanoid --cron"
-    state: present
