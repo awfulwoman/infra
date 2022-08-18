@@ -4,6 +4,7 @@
   roles:
     - role: generate-sshkey
       become: true
+    - role: beep
     - role: zfs-tools
     - role: zfs-tools-backup-server
 

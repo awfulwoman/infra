@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# sleep 60
+sleep 60
 
 BACKUP_DIR=/var/log/backups/
 BACKUP_FILE=backups.log
@@ -40,6 +40,7 @@ echo " " >> $BACKUP_DIR/$BACKUP_FILE
 # Notify of failure
 if [ $FAILURE -eq 1 ]
 then
+    /usr/bin/beep -f 5000 -l 50 -r 6
     /usr/bin/curl -s --form-string token="{{vault_pushover_home_automation_key}}" --form-string user="{{vault_pushover_user_key}}" --form-string message="Backup failed - $(date --iso-8601=seconds)" https://api.pushover.net/1/messages.json
 else
     echo "No tears, just dreams"

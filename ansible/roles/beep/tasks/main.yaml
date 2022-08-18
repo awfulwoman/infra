@@ -1,0 +1,28 @@
+- name: Install beep
+  become: true
+  ansible.builtin.apt:
+    name: 
+      - beep
+    state: present
+
+- name: Create udev rule for beepage
+  become: true
+  ansible.builtin.copy:
+    src: 70-pcspkr-beep.rules
+    dest: /etc/udev/rules.d/70-pcspkr-beep.rules
+    owner: root
+    group: root
+    mode: 0664
+  
+- name: Ensure group "beep" exists
+  become: true
+  ansible.builtin.group:
+    name: beep
+    state: present
+
+- name: Add "{{ ansible_user }}" to beep group
+  become: true
+  user:
+    name: "{{ ansible_user }}"
+    groups: beep
+    append: yes
