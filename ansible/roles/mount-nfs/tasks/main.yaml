@@ -1,7 +1,7 @@
 - name: Mount an NFS volume
   ansible.posix.mount:
-    src: 192.168.1.116:/nfs/ssd/shared_data
-    path: /mnt/shared_data
-    opts: rw,sync,hard
+    src: 192.168.1.116:/slowpool/backups
+    path: /mnt/backups
+    opts: rw,all_squash
     state: mounted
     fstype: nfs

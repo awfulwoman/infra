@@ -24,6 +24,7 @@ nfs_exports:
 #  - "/slowpool/incoming *(rw,all_squash,anonuid=1000,anongid=1000)"
   - "/fastpool *(rw,all_squash,anonuid=1000,anongid=1000)"
   - "/slowpool/media *(rw,all_squash,anonuid=1000,anongid=1000)"
+  - "/slowpool/backups *(rw,all_squash,anonuid=1000,anongid=1000)"
 
 # Base for all container dirs. Normally on an SSD.
 container_config_dir: /fastpool/containers

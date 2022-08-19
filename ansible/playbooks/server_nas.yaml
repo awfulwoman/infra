@@ -9,6 +9,8 @@
     - role: zfs-tools-backup-client
     - role: cron-reboot
     - role: containers-config
+    - role: geerlingguy.nfs
+      become: true
     - role: geerlingguy.docker
       become: true
     - role: geerlingguy.docker

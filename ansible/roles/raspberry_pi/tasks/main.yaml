@@ -92,7 +92,3 @@
       notify: Reboot host
   when: raspberry_pi_cmdline_txt is defined
 
-# - name: If designated NFS node, add NFS server
-#   command: 'XYZ'
-# - name: if not designated NFS node, add NFS client
-
