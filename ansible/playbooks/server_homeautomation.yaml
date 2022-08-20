@@ -19,16 +19,21 @@
     - role: jnv.unattended-upgrades
       become: true
     - role: motd
+    # - role: mount-nfs
     - role: container-vscode
     - role: container-homeassistant
     - role: container-esphome
     - role: container-mosquitto
     - role: container-zigbee2mqtt
+    - role: container-zigbee2mqtt # Sandboxed Zigbee network for Aqara devices
+      zigbee_device: /dev/ttyACM1
+      container_name: zigbee2mqtt-aqara
+      container_port: 9092
+      container_state: stopped
     # - role: container-restic
+    - role: docker-cleanup
     - role: apt-upgrade
   handlers:
     - name: Reboot host
       become: true
       reboot:
-
-        

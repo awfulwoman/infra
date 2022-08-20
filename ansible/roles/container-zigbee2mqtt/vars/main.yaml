@@ -1,1 +1,4 @@
 container_name: zigbee2mqtt
+zigbee_device: /dev/ttyACM0
+container_port: 9091
+container_state: started
