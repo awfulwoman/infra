@@ -30,6 +30,7 @@
     - role: container-restic
     - role: container-sanoid-builder
     - role: apt-upgrade
+    - role: docker-cleanup
 
   handlers:
     - name: Reboot host
