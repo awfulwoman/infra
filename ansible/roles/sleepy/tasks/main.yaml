@@ -1,0 +1,15 @@
+- name: "[copy] Scripts"
+  become: true
+  copy:
+    src: files/
+    dest: /usr/local/bin/
+    mode: u=rwx,g=X,o=X
+
+- name: Auto-suspend
+  become: true
+  ansible.builtin.cron:
+    name: "Auto-suspend"
+    hour: "1"
+    minute: "0"
+    job: "/usr/local/bin/suspend_until.sh 08:00"
+    state: present

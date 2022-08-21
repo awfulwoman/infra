@@ -8,6 +8,7 @@
     - role: zfs-tools
     - role: zfs-tools-backup-client
     - role: cron-reboot
+    - role: sleepy
     - role: containers-config
     - role: geerlingguy.nfs
       become: true
