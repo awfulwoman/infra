@@ -8,14 +8,6 @@
     path: "{{ container_config_dir }}/{{ container_name }}"
     state: directory
 
-# - name: Copy params to config file
-#   ansible.builtin.copy:
-#     src: config.yaml
-#     dest: "{{ user_config_path }}/zigbee2mqtt/configuration.yaml"
-#     owner: "{{ansible_user}}"
-#     group: "{{ansible_user}}"
-#     force: no
-
 - name: "Add {{ansible_user}} to dialout group"
   become: true
   ansible.builtin.user:
@@ -24,13 +16,11 @@
     append: true
 
 - name: "Create {{ container_name }} container"
-  # become: true
   community.docker.docker_container:
     name: "{{ container_name }}"
     image: koenkk/zigbee2mqtt:latest
     state: "{{container_state}}"
     privileged: true
-    # network_mode: host
     restart_policy: unless-stopped
     ports:
       - "{{container_port}}:9091"

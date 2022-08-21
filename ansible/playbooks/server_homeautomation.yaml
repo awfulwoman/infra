@@ -24,12 +24,11 @@
     - role: container-homeassistant
     - role: container-esphome
     - role: container-mosquitto
-    - role: container-zigbee2mqtt
+    - role: container-zigbee2mqtt # Core Zigbee network
     - role: container-zigbee2mqtt # Sandboxed Zigbee network for Aqara devices
       zigbee_device: /dev/ttyACM1
       container_name: zigbee2mqtt-aqara
       container_port: 9092
-      container_state: stopped
     # - role: container-restic
     - role: docker-cleanup
     - role: apt-upgrade
