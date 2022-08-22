@@ -4,5 +4,18 @@
     src: 192.168.1.116:/slowpool/backups # hardcoded for now
     path: /mnt/backups
     state: mounted
+    opts: defaults,_netdev,x-systemd.after=network-online.target
     fstype: nfs
     boot: true
+
+# # There seems to be an Ubuntu bug where the _netdev NFS option is ignored and 
+# # therefore tries to mount NFS shares before the network is ready.
+# # https://ubuntuforums.org/showthread.php?t=2392742
+# - name: Add fstab script
+#   become: true
+#   ansible.builtin.copy:
+#     src: fstab
+#     dest: /etc/network/if-up.d/fstab 
+#     owner: root
+#     group: root
+#     mode: 0774
