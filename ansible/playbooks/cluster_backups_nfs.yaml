@@ -1,0 +1,14 @@
+---
+- name: Home Automation Pi
+  hosts: host-pi4-8gb-aprilashley
+  roles:
+    - role: nfs-tools
+    - role: nfs-tools-backup-client
+    # - role: container-restic
+
+
+- name: NAS
+  hosts: host-x86-ladyrona
+  roles:
+    - role: nfs-tools
+    - role: nfs-tools-backup-server

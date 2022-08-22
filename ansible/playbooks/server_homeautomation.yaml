@@ -19,7 +19,8 @@
     - role: jnv.unattended-upgrades
       become: true
     - role: motd
-    # - role: mount-nfs
+    - role: nfs-tools
+    - role: nfs-tools-backup-client
     - role: udev-rules-zigbee # Create /dev/zigbee-* aliases for Zigbee controllers
     - role: container-vscode
     - role: container-homeassistant

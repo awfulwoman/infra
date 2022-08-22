@@ -1,0 +1,14 @@
+---
+- name: Install NFS kernel server
+  become: true
+  ansible.builtin.apt:
+    name: 
+      - nfs-kernel-server
+    state: present
+
+- name: Add NFS shares to backup dataset
+  zfs:
+    name: slowpool/backups
+    state: present
+    extra_zfs_properties:
+      sharenfs: rw=@192.168.1.102/32
