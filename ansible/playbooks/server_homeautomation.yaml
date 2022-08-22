@@ -20,13 +20,15 @@
       become: true
     - role: motd
     # - role: mount-nfs
+    - role: udev-rules-zigbee # Create /dev/zigbee-* aliases for Zigbee controllers
     - role: container-vscode
     - role: container-homeassistant
     - role: container-esphome
     - role: container-mosquitto
     - role: container-zigbee2mqtt # Core Zigbee network
-    - role: container-zigbee2mqtt # Sandboxed Zigbee network for Aqara devices
-      zigbee_device: /dev/ttyACM1
+      zigbee_device: /dev/zigbee-core
+    - role: container-zigbee2mqtt # Sandboxed Zigbee network for Aqara/Xiaomi devices
+      zigbee_device: /dev/zigbee-aqara
       container_name: zigbee2mqtt-aqara
       container_port: 9092
     # - role: container-restic

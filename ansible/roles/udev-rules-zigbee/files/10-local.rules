@@ -1,0 +1,2 @@
+ACTION=="add", ATTRS{serial}=="DE2467569", ATTRS{idVendor}=="1cf1", ATTRS{idProduct}=="0030", SYMLINK+="zigbee-core"
+ACTION=="add", ATTRS{serial}=="DE2652549", ATTRS{idVendor}=="1cf1", ATTRS{idProduct}=="0030", SYMLINK+="zigbee-aqara"

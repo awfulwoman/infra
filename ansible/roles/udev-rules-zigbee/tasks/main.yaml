@@ -1,0 +1,8 @@
+- name: Create udev symlinks for Conbee II Zigbee devices
+  become: true
+  ansible.builtin.copy:
+    src: 10-local.rules
+    dest: /etc/udev/rules.d/10-local.rules
+    owner: root
+    group: root
+    mode: 0664
