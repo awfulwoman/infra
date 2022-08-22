@@ -5,3 +5,4 @@
     path: /mnt/backups
     state: mounted
     fstype: nfs
+    boot: true
