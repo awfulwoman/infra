@@ -1,0 +1,14 @@
+backends:
+  hdd:
+    type: local
+    path: /mnt/backups/restic
+    key: "{{vault_backup_key}}"
+locations:
+{% for item in backup_nfs %}
+  {{item}}:
+      from:
+        - /home/ubuntu/{{item}}
+      to:
+        - hdd
+{% endfor %}
+version: 2

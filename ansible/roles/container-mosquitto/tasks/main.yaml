@@ -1,27 +1,45 @@
+- name: "Set {{container_name}} config path"
+  ansible.builtin.set_fact:
+    container_config_dir: "{{ ansible_env.HOME }}"
+  when: container_config_dir is undefined
+
 - name: "Create {{ container_name }} config dir"
+  become: true
   ansible.builtin.file:
     path: "{{ container_config_dir }}/mosquitto/config"
     state: directory
+    mode: 0774
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
 
 - name: "Create {{ container_name }} logs dir"
+  become: true
   ansible.builtin.file:
     path: "{{ container_config_dir }}/mosquitto/log"
     state: directory
+    mode: 0774
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
 
 - name: "Create {{ container_name }} data dir"
+  become: true
   ansible.builtin.file:
     path: "{{ container_config_dir }}/mosquitto/data"
     state: directory
+    mode: 0774
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
 
-- name: "Create {{ container_name }} config file" 
+- name: "Create {{ container_name }} config file"
   become: true
   ansible.builtin.copy:
     src: mosquitto.conf
     dest: "{{ container_config_dir }}/mosquitto/config/mosquitto.conf"
-    owner: "{{ansible_user}}"
-    group: "{{ansible_user}}"
+    mode: 0774
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
 
-- name: "Ensure {{container_name}} container exists"
+- name: "Ensure {{ container_name }} container exists"
   # become: true
   community.docker.docker_container:
     name: mosquitto
@@ -30,10 +48,11 @@
     # network_mode: host
     privileged: true
     restart_policy: unless-stopped
+    # user: "1000:1000"
     ports:
       - "1883:1883"
-    env: 
-      TZ: Berlin/Europe
+    env:
+      TZ: "Berlin/Europe"
     volumes:
       - "{{ container_config_dir }}/mosquitto/config:/mosquitto/config"
       - "{{ container_config_dir }}/mosquitto/data:/mosquitto/data"

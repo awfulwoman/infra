@@ -1,0 +1,36 @@
+- name: Set config path
+  ansible.builtin.set_fact:
+    user_config_path: "{{ ansible_env.HOME }}"
+
+- name: Check for autorestic installation
+  ansible.builtin.command: which autorestic
+  register: autorestic_installation
+  changed_when: false
+  failed_when: false
+
+- name: Download autorestic installer
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/CupCakeArmy/autorestic/master/install.sh
+    dest: $HOME/autorestic.sh
+    mode: 0744
+  when: autorestic_installation.rc != 0
+
+- name: Install autorestic
+  become: true
+  ansible.builtin.command: "{{ user_config_path }}/autorestic.sh"
+  when: autorestic_installation.rc != 0
+
+- name: Remove autorestic installer
+  ansible.builtin.file:
+    path: "{{ user_config_path }}/autorestic.sh"
+    state: absent
+  when: autorestic_installation.rc != 0
+
+- name: "Copy autorestic file to {{ ansible_user }} home dir"
+  become: true
+  ansible.builtin.template:
+    src: autorestic.yaml.j2
+    dest: "{{ user_config_path }}/.autorestic.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0774

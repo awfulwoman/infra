@@ -1,3 +1,12 @@
+# - name: Test reachability to 192.168.1.116
+#   ansible.netcommon.net_ping:
+#     dest: 192.168.1.116
+#   register: ping_result
+
+# - name: debug NFS
+#   debug:
+#     msg: "{{ping_result}}"
+
 - name: Mount backup NFS volumes
   become: true
   ansible.posix.mount:

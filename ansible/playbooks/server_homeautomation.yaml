@@ -21,7 +21,7 @@
     - role: motd
     - role: nfs-tools
     - role: nfs-tools-backup-client
-    - role: udev-rules-zigbee # Create /dev/zigbee-* aliases for Zigbee controllers
+    - role: autorestic
     - role: container-vscode
     - role: container-homeassistant
     - role: container-esphome
@@ -34,7 +34,8 @@
       container_port: 9092
     - role: docker-cleanup
     - role: apt-upgrade
+
   handlers:
     - name: Reboot host
       become: true
-      reboot:
+      ansible.builtin.reboot:

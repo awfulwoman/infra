@@ -1,0 +1,9 @@
+- name: Home Automation Tester
+  hosts: host-pi4-8gb-aprilashley
+  roles:
+    - role: container-mosquitto
+    - role: autorestic
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:
