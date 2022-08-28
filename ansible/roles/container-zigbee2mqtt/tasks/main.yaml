@@ -25,7 +25,9 @@
     state: "{{ container_state }}"
     privileged: true
     restart_policy: unless-stopped
-    # user: "1000:1000"
+    user: "{{ container_user_id }}:{{ container_user_id }}"
+    groups:
+      - dialout
     ports:
       - "{{ container_port }}:9091"
     env:
