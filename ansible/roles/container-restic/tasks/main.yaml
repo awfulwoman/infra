@@ -1,5 +1,5 @@
 - name: Set config path
-  set_fact:
+  ansible.builtin.set_fact:
     user_config_path: "{{ ansible_env.HOME }}"
 
 - name: "Create {{ container_name }} config dir"
@@ -8,7 +8,7 @@
     state: directory
 
 - name: Set backup volumes
-  set_fact:
+  ansible.builtin.set_fact:
     volumes_to_mount: "{{ volumes_to_mount | default([backup_restic_destination + ':/mnt/restic']) + [ container_config_dir  + '/' + item + ':/data/' + item ] }}"
   with_items: "{{ backup_sources }}"
 

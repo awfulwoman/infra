@@ -1,5 +1,5 @@
 - name: User-based Config path
-  set_fact:
+  ansible.builtin.set_fact:
     user_config_path: "{{ ansible_env.HOME }}"
 
 - name: Create directories
@@ -29,7 +29,7 @@
     state: link
   register: resolv_conf
 
-- name: restart systemd-resolved
+- name: Restart systemd-resolved
   become: true
   service:
     name: systemd-resolved
@@ -46,6 +46,7 @@
 # Solves corporate computers trying to claim a domain 
 # and generating very annoying errors in pihole
 # https://www.reddit.com/r/pihole/comments/rvattc/dnsmasq_warning_ignoring_domain/
+
 - name: "Create domains"
   ansible.builtin.template:
     src: domains.conf.j2

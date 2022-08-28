@@ -1,5 +1,5 @@
 - name: Set config path
-  set_fact:
+  ansible.builtin.set_fact:
     container_config_dir: "{{ ansible_env.HOME }}"
   when: container_config_dir is undefined
 

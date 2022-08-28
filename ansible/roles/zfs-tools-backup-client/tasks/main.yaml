@@ -29,7 +29,7 @@
       xattr: sa
 
 - name: Get ZFS Server Public key
-  set_fact:
+  ansible.builtin.set_fact:
     zfs_public_key: "{{ hostvars[groups['zfs-backup-server'][0]]['public_key'] | default(False) }}"
 
 - name: Create .ssh dir

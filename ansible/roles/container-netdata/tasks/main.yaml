@@ -1,5 +1,5 @@
 - name: Set config path
-  set_fact:
+  ansible.builtin.set_fact:
     user_config_path: "{{ ansible_env.HOME }}"
 
 - name: "Create {{ container_name }} container"

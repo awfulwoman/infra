@@ -58,7 +58,7 @@
       changed_when: false
 
     - name: convert cmdline.txt options to dict object
-      set_fact:
+      ansible.builtin.set_fact:
         _cmdline_dict: |
           {% set d={} -%}
           {% for item in _cmdline_file.stdout.split(' ') -%}
@@ -68,11 +68,11 @@
           {% endfor -%}
           {{ d }}
     - name: combine cmdline.txt options with cmdline_options
-      set_fact:
+      ansible.builtin.set_fact:
         _cmdline_comb: "{{ _cmdline_dict | combine(raspberry_pi_cmdline_options) }}"
 
     - name: create new cmdline.txt options string
-      set_fact:
+      ansible.builtin.set_fact:
         _cmdline: |
           {% for k, v in _cmdline_comb.items() %}
           {% if v | string | length > 0 %}

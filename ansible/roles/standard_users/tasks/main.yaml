@@ -4,7 +4,7 @@
 # - The target machine is running sshd on an open port
 
 # - name: 
-#   set_fact:
+#   ansible.builtin.set_fact:
 #     user_salt: "{{ password_salting_phrase }}"
 
 # Ansible user / default login user
