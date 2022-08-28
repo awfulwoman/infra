@@ -1,1 +1,3 @@
 container_name: mosquitto
+container_user: mosquitto
+container_user_id: 1883

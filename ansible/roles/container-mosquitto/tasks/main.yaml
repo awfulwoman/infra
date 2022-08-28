@@ -3,54 +3,79 @@
     container_config_dir: "{{ ansible_env.HOME }}"
   when: container_config_dir is undefined
 
+- name: "Create {{ container_user }} group because the container is badly made"
+  become: true
+  ansible.builtin.group:
+    name: "{{ container_user }}"
+    state: present
+    gid: "{{ container_user_id }}"
+
+- name: "Create Mosquitto user because the container is badly made"
+  become: true
+  ansible.builtin.user:
+    name: "{{ container_user }}"
+    group: "{{ container_user }}"
+    uid: "{{ container_user_id }}"
+    groups: docker
+    append: true
+    state: present
+
+- name: "Create {{ container_name }} config dir"
+  become: true
+  ansible.builtin.file:
+    path: "{{ container_config_dir }}/{{ container_name }}"
+    state: directory
+    mode: 0777
+    owner: "{{ container_user }}"
+    group: "{{ container_user }}"
+
 - name: "Create {{ container_name }} config dir"
   become: true
   ansible.builtin.file:
     path: "{{ container_config_dir }}/{{ container_name }}/config"
     state: directory
-    mode: 0774
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    mode: 0777
+    owner: "{{ container_user }}"
+    group: "{{ container_user }}"
 
 - name: "Create {{ container_name }} logs dir"
   become: true
   ansible.builtin.file:
     path: "{{ container_config_dir }}/{{ container_name }}/log"
     state: directory
-    mode: 0774
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    mode: 0777
+    owner: "{{ container_user }}"
+    group: "{{ container_user }}"
 
 - name: "Create {{ container_name }} data dir"
   become: true
   ansible.builtin.file:
     path: "{{ container_config_dir }}/{{ container_name }}/data"
     state: directory
-    mode: 0774
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    mode: 0777
+    owner: "{{ container_user }}"
+    group: "{{ container_user }}"
 
 - name: "Create {{ container_name }} config file"
   become: true
   ansible.builtin.copy:
     src: mosquitto.conf
     dest: "{{ container_config_dir }}/{{ container_name }}/config/mosquitto.conf"
-    mode: 0774
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    mode: 0777
+    owner: "{{ container_user }}"
+    group: "{{ container_user }}"
 
 - name: "Ensure {{ container_name }} container exists"
-  # become: true
   community.docker.docker_container:
     name: "{{ container_name }}"
     image: eclipse-mosquitto:latest
     state: started
-    # network_mode: host
     privileged: true
     restart_policy: unless-stopped
     # user: "1000:1000"
     ports:
       - "1883:1883"
+      - "9001:9001"
     env:
       TZ: "Berlin/Europe"
     volumes:
