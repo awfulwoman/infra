@@ -6,7 +6,7 @@
 - name: "Create {{ container_name }} config dir"
   become: true
   ansible.builtin.file:
-    path: "{{ container_config_dir }}/mosquitto/config"
+    path: "{{ container_config_dir }}/{{ container_name }}/config"
     state: directory
     mode: 0774
     owner: "{{ ansible_user }}"
@@ -15,7 +15,7 @@
 - name: "Create {{ container_name }} logs dir"
   become: true
   ansible.builtin.file:
-    path: "{{ container_config_dir }}/mosquitto/log"
+    path: "{{ container_config_dir }}/{{ container_name }}/log"
     state: directory
     mode: 0774
     owner: "{{ ansible_user }}"
@@ -24,7 +24,7 @@
 - name: "Create {{ container_name }} data dir"
   become: true
   ansible.builtin.file:
-    path: "{{ container_config_dir }}/mosquitto/data"
+    path: "{{ container_config_dir }}/{{ container_name }}/data"
     state: directory
     mode: 0774
     owner: "{{ ansible_user }}"
@@ -34,7 +34,7 @@
   become: true
   ansible.builtin.copy:
     src: mosquitto.conf
-    dest: "{{ container_config_dir }}/mosquitto/config/mosquitto.conf"
+    dest: "{{ container_config_dir }}/{{ container_name }}/config/mosquitto.conf"
     mode: 0774
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
@@ -42,7 +42,7 @@
 - name: "Ensure {{ container_name }} container exists"
   # become: true
   community.docker.docker_container:
-    name: mosquitto
+    name: "{{ container_name }}"
     image: eclipse-mosquitto:latest
     state: started
     # network_mode: host
@@ -54,7 +54,7 @@
     env:
       TZ: "Berlin/Europe"
     volumes:
-      - "{{ container_config_dir }}/mosquitto/config:/mosquitto/config"
-      - "{{ container_config_dir }}/mosquitto/data:/mosquitto/data"
-      - "{{ container_config_dir }}/mosquitto/log/:/mosquitto/log"
+      - "{{ container_config_dir }}/{{ container_name }}/config:/mosquitto/config"
+      - "{{ container_config_dir }}/{{ container_name }}/data:/mosquitto/data"
+      - "{{ container_config_dir }}/{{ container_name }}/log/:/mosquitto/log"
       - /etc/localtime:/etc/localtime:ro
