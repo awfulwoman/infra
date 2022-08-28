@@ -25,7 +25,7 @@
   ansible.builtin.file:
     path: "{{ container_config_dir }}/{{ container_name }}"
     state: directory
-    mode: 0777
+    mode: "{{ container_file_permissions }}"
     owner: "{{ container_user }}"
     group: "{{ container_user }}"
 
@@ -34,7 +34,7 @@
   ansible.builtin.file:
     path: "{{ container_config_dir }}/{{ container_name }}/config"
     state: directory
-    mode: 0777
+    mode: "{{ container_file_permissions }}"
     owner: "{{ container_user }}"
     group: "{{ container_user }}"
 
@@ -43,7 +43,7 @@
   ansible.builtin.file:
     path: "{{ container_config_dir }}/{{ container_name }}/log"
     state: directory
-    mode: 0777
+    mode: "{{ container_file_permissions }}"
     owner: "{{ container_user }}"
     group: "{{ container_user }}"
 
@@ -52,7 +52,7 @@
   ansible.builtin.file:
     path: "{{ container_config_dir }}/{{ container_name }}/data"
     state: directory
-    mode: 0777
+    mode: "{{ container_file_permissions }}"
     owner: "{{ container_user }}"
     group: "{{ container_user }}"
 
@@ -61,7 +61,7 @@
   ansible.builtin.copy:
     src: mosquitto.conf
     dest: "{{ container_config_dir }}/{{ container_name }}/config/mosquitto.conf"
-    mode: 0777
+    mode: "{{ container_file_permissions }}"
     owner: "{{ container_user }}"
     group: "{{ container_user }}"
 
@@ -72,7 +72,7 @@
     state: started
     privileged: true
     restart_policy: unless-stopped
-    # user: "1000:1000"
+    user: "{{ container_user_id }}:{{ container_user_id }}"
     ports:
       - "1883:1883"
       - "9001:9001"
