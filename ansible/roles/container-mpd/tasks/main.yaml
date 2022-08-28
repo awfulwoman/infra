@@ -26,8 +26,8 @@
   ansible.builtin.copy:
     src: mpd.conf
     dest: "{{ user_config_path }}/mpd/config/mpd.conf"
-    owner: "{{ansible_user}}"
-    group: "{{ansible_user}}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
 
 - name: "Create {{ container_name }} container"
   community.docker.docker_container:
@@ -40,8 +40,8 @@
       - "8800:8800"
     capabilities:
       - "SYS_NICE"
-    env: 
-      TZ: Berlin/Europe
+    env:
+      TZ: "Berlin/Europe"
     devices:
       - /dev/snd
     volumes:

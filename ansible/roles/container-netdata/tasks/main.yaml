@@ -17,8 +17,8 @@
     restart_policy: unless-stopped
     ports:
       - "19999:19999"
-    env: 
-      TZ: Berlin/Europe
+    env:
+      TZ: "Berlin/Europe"
     volumes:
       - netdataconfig:/etc/netdata
       - netdatalib:/var/lib/netdata

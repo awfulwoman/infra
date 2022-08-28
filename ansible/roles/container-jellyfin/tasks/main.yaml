@@ -1,19 +1,19 @@
-- name: "Set {{container_name}} config path"
+- name: "Set {{ container_name }} config path"
   set_fact:
     container_config_dir: "{{ ansible_env.HOME }}"
   when: container_config_dir is undefined
 
-- name: "Create {{container_name}} config dir"
+- name: "Create {{ container_name }} config dir"
   ansible.builtin.file:
     path: "{{ container_config_dir }}/{{ container_name }}/config"
     state: directory
 
-- name: "Create {{container_name}} cache dir"
+- name: "Create {{ container_name }} cache dir"
   ansible.builtin.file:
     path: "{{ container_config_dir }}/{{ container_name }}/cache"
     state: directory
 
-- name: "Ensure {{container_name}} container exists"
+- name: "Ensure {{ container_name }} container exists"
   community.docker.docker_container:
     name: "{{ container_name }}"
     image: jellyfin/jellyfin
@@ -21,11 +21,11 @@
     restart_policy: unless-stopped
     ports:
       - 8096:8096
-    env: 
+    env:
       TZ: "Berlin/Europe"
     volumes:
-      - "{{ container_config_dir }}/{{container_name}}/config:/config"
-      - "{{ container_config_dir }}/{{container_name}}/cache:/cache"
+      - "{{ container_config_dir }}/{{ container_name }}/config:/config"
+      - "{{ container_config_dir }}/{{ container_name }}/cache:/cache"
       - "/slowpool/media:/media"
       - /etc/localtime:/etc/localtime:ro
     # networks:

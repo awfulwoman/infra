@@ -21,7 +21,7 @@
     restart_policy: unless-stopped
     ports:
       - "7520:80"
-    env: 
+    env:
       TZ: "Berlin/Europe"
       SYMFONY__ENV__DOMAIN_NAME: "http://workloads.affordablepotatoes.com:7520" 
     volumes:

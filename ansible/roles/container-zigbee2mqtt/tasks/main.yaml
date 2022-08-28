@@ -1,5 +1,5 @@
 - name: Set config path
-  set_fact:
+  ansible.nuiltin.set_fact:
     container_config_dir: "{{ ansible_env.HOME }}"
   when: container_config_dir is undefined
 
@@ -7,8 +7,11 @@
   ansible.builtin.file:
     path: "{{ container_config_dir }}/{{ container_name }}"
     state: directory
+    user: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0774
 
-- name: "Add {{ansible_user}} to dialout group"
+- name: "Add {{ ansible_user }} to dialout group"
   become: true
   ansible.builtin.user:
     user: "{{ ansible_user }}"
@@ -19,13 +22,14 @@
   community.docker.docker_container:
     name: "{{ container_name }}"
     image: koenkk/zigbee2mqtt:latest
-    state: "{{container_state}}"
+    state: "{{ container_state }}"
     privileged: true
     restart_policy: unless-stopped
+    # user: "1000:1000"
     ports:
-      - "{{container_port}}:9091"
-    env: 
-      TZ: Berlin/Europe
+      - "{{ container_port }}:9091"
+    env:
+      TZ: "Berlin/Europe"
     devices:
       - "{{ zigbee_device }}"
     volumes:

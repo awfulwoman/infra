@@ -16,7 +16,7 @@
     ports:
       - "9283:80"
       # - "9284:443"
-    env: 
+    env:
       TZ: "Berlin/Europe"
       PUID: "1000"
       PGID: "1000"

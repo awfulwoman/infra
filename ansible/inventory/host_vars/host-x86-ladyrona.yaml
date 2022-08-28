@@ -31,7 +31,7 @@ container_config_dir: /fastpool/containers
 
 # Restic vars
 backup_restic_destination: /slowpool/backups/containers # Restic snapshot location
-backup_sources: # list of directories inside {{container_config_dir}} that should be backed up
+backup_sources: # list of directories inside {{ container_config_dir }} that should be backed up
   - homeassistant
 
 # Healthceck.io

@@ -16,7 +16,7 @@
     restart_policy: unless-stopped
     ports:
       - "8089:3000"
-    env: 
+    env:
       TZ: "Berlin/Europe"
       STATE_DIR: "/state"
       PUID: "1000"

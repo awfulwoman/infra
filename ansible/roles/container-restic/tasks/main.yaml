@@ -24,12 +24,12 @@
     state: started
     privileged: true
     restart_policy: unless-stopped
-    env: 
+    env:
       # AWS_ACCESS_KEY_ID: "{{ vault_aws_backupuser_access_key_id }}"
       # AWS_SECRET_ACCESS_KEY: "{{ vault_aws_backupuser_access_key_secret }}"
       # RESTIC_REPOSITORY: /slowpool/backups/containers
       RESTIC_PASSWORD: "{{ vault_restic_password }}"
       # RESTIC_TAG: "{{ ansible_host }}"
       BACKUP_CRON: "0 4 * * *"
-      TZ: Berlin/Europe
+      TZ: "Berlin/Europe"
     volumes: "{{ volumes_to_mount }}"

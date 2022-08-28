@@ -3,7 +3,7 @@
     path: "{{ container_config_dir }}/esphome"
     state: directory
 
-- name: "Ensure {{container_name}} container exists"
+- name: "Ensure {{ container_name }} container exists"
   community.docker.docker_container:
     name: esphome
     image: esphome/esphome:latest
@@ -15,7 +15,7 @@
       - "6123:6123"
     devices:
       - /dev/ttyUSB0
-    env: 
+    env:
       TZ: "Berlin/Europe"
     volumes:
       - "{{ container_config_dir }}/esphome:/config"

@@ -1,14 +1,14 @@
-- name: "Set {{container_name}} config path"
+- name: "Set {{ container_name }} config path"
   set_fact:
     container_config_dir: "{{ ansible_env.HOME }}"
   when: container_config_dir is undefined
 
-- name: "Create {{container_name}} config dir"
+- name: "Create {{ container_name }} config dir"
   ansible.builtin.file:
     path: "{{ container_config_dir }}/homeassistant"
     state: directory
 
-- name: "Ensure {{container_name}} container exists"
+- name: "Ensure {{ container_name }} container exists"
   # become: true
   community.docker.docker_container:
     name: homeassistant
@@ -17,8 +17,8 @@
     privileged: true
     restart_policy: unless-stopped
     network_mode: host
-    env: 
-      TZ: Berlin/Europe
+    env:
+      TZ: "Berlin/Europe"
     volumes:
       - "{{ container_config_dir }}/homeassistant:/config"
       - /etc/localtime:/etc/localtime:ro

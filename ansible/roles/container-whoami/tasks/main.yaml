@@ -11,7 +11,7 @@
     restart_policy: unless-stopped
     ports:
       - "8888:80"
-    env: 
+    env:
       TZ: "Berlin/Europe"
     volumes:
       - /etc/localtime:/etc/localtime:ro

@@ -44,12 +44,12 @@
       xattr: sa
       # mountpoint: none
 
-- name: "Ensure /backuppool mountpoint is owned by {{ansible_user}}"
+- name: "Ensure /backuppool mountpoint is owned by {{ ansible_user }}"
   become: true
   ansible.builtin.file:
     path: /backups
-    owner: "{{ansible_user}}"
-    group: "{{ansible_user}}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
     state: directory
     mode: 0774
     recurse: yes

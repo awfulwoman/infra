@@ -38,8 +38,8 @@
   ansible.builtin.copy:
     src: raspicam.service
     dest: "/etc/systemd/system/raspicam.service"
-    owner: "{{ansible_user}}"
-    group: "{{ansible_user}}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
 
 - name: Start service raspicam, if not started
   become: true

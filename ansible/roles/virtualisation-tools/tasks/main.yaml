@@ -50,7 +50,7 @@
   ansible.builtin.lineinfile: 
     path: /etc/libvirt/qemu.conf
     regexp: "^user =" 
-    line: 'user = "{{ansible_user}}"'
+    line: 'user = "{{ ansible_user }}"'
     state: present
   notify: Restart libvirtd
 

@@ -21,7 +21,7 @@
       net.ipv4.conf.all.src_valid_mark: "1"
     ports:
       - 51820:51820/udp
-    env: 
+    env:
       TZ: "Berlin/Europe"
       UID: "1000"
       PGID: "1000"

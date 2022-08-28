@@ -18,11 +18,11 @@
     ports:
       - "8012:80"
       - "8013:443"
-    env: 
+    env:
       PUID: "1000"
       PGID: "1000"
       UMASK: "007"
-      TZ: Berlin/Europe
+      TZ: "Berlin/Europe"
     volumes:
       - "{{ user_config_path }}/heimdall:/config"
       - /etc/localtime:/etc/localtime:ro
