@@ -26,7 +26,7 @@
     state: absent
   when: autorestic_installation.rc != 0
 
-- name: "Copy autorestic file to {{ ansible_user }} home dir"
+- name: "Copy .autorestic.yaml file to {{ ansible_user }} home dir"
   become: true
   ansible.builtin.template:
     src: autorestic.yaml.j2
@@ -34,3 +34,24 @@
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: 0774
+
+- name: "Copy autorestic-cron.sh to {{ ansible_user }} home dir"
+  become: true
+  ansible.builtin.template:
+    src: autorestic-cron.sh.j2
+    dest: "{{ user_config_path }}/autorestic-cron.sh"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0774
+
+# This cron is frequent because the called script handles timing of backups
+- name: Ensure autorestic cron exists
+  ansible.builtin.cron:
+    name: "Autorestic"
+    minute: "*/5"
+    hour: "*"
+    day: "*"
+    weekday: "*"
+    month: "*"
+    job: "{{ user_config_path }}/.autorestic-cron.sh"
+    state: present
