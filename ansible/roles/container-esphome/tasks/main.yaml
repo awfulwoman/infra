@@ -1,15 +1,21 @@
 - name: "Create {{ container_name }} config dir"
+  become: true
   ansible.builtin.file:
-    path: "{{ container_config_dir }}/esphome"
+    path: "{{ container_config_dir }}/{{ container_name }}"
     state: directory
+    mode: 0774
+    owner: "{{ ansibel_user }}"
+    group: "{{ ansibel_user }}"
+    recurse: true
 
 - name: "Ensure {{ container_name }} container exists"
   community.docker.docker_container:
-    name: esphome
+    name: "{{ container_name }}"
     image: esphome/esphome:latest
     state: started
     privileged: true
     restart_policy: unless-stopped
+    user: "{{ container_user_id }}:{{ container_user_id }}"
     ports:
       - "6052:6052"
       - "6123:6123"
@@ -18,7 +24,7 @@
     env:
       TZ: "Berlin/Europe"
     volumes:
-      - "{{ container_config_dir }}/esphome:/config"
+      - "{{ container_config_dir }}/{{ container_name }}:/config"
       - /etc/localtime:/etc/localtime:ro
     # networks:
     #     - name: "affordablepotatoes"

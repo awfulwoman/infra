@@ -4,6 +4,7 @@
   when: container_config_dir is undefined
 
 - name: "Create {{ container_name }} config dir"
+  become: true
   ansible.builtin.file:
     path: "{{ container_config_dir }}/{{ container_name }}"
     state: directory
@@ -12,12 +13,18 @@
     mode: 0774
     recurse: true
 
+- name: Check to see if docker-venv is installed
+  ansible.builtin.stat:
+    path: "{{ container_config_dir }}/{{ container_name }}/docker/run"
+  register: docker_venv
+
 - name: Git checkout homeassistant-docker-venv repo
   ansible.builtin.git:
     repo: "https://github.com/tribut/homeassistant-docker-venv"
     dest: "{{ container_config_dir }}/{{ container_name }}/docker"
     version: master
     force: true
+  when: not docker_venv.stat.exists
 
 - name: "Ensure {{ container_name }} container exists"
   community.docker.docker_container:
