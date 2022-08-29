@@ -1,4 +1,4 @@
-# update grub
+# Update grub
 # /etc/default/grub
 # ------------
 # GRUB_CMDLINE_LINUX_DEFAULT="quiet intel_iommu=on"
@@ -25,18 +25,17 @@
     line: "{{ item }}"
   register: modules
   with_items:
-    -  vfio
-    -  vfio_iommu_type1
-    -  vfio_pci
-    -  vfio_virqfd
+    - vfio
+    - vfio_iommu_type1
+    - vfio_pci
+    - vfio_virqfd
 
 - name: Rebuild grub
   become: true
-  command: update-grub
+  ansible.builtin.command: update-grub
   when: grub.changed
 
 - name: Update initramfs
   become: true
   command: update-initramfs -u -k all
-  when: modules.changed 
-  
+  when: modules.changed

@@ -2,7 +2,7 @@
 - name: Install NFS kernel server
   become: true
   ansible.builtin.apt:
-    name: 
+    name:
       - nfs-kernel-server
     state: present
 

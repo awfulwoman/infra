@@ -2,7 +2,7 @@
 - name: Install ZFS backup tooling
   become: true
   ansible.builtin.apt:
-    name: 
+    name:
       - moreutils # for ts (timestamp) util
       - lzop
       - mbuffer
@@ -52,7 +52,7 @@
     group: "{{ ansible_user }}"
     state: directory
     mode: 0774
-    recurse: yes
+    recurse: true
 
 - name: Generate and deploy backup script
   become: true

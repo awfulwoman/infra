@@ -2,6 +2,6 @@
 - name: Install NFS tooling
   become: true
   ansible.builtin.apt:
-    name: 
+    name:
       - nfs-common
     state: present

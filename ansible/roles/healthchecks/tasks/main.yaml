@@ -14,4 +14,3 @@
     job: sleep 30 && /usr/bin/curl -fsS -m 10 --retry 5 -o /dev/null "https://hc-ping.com/{{ healthcheck_reboot_id }}" >> /home/ubuntu/healthchecks.log 2>&1
     state: present
   when: healthcheck_reboot_id
-    
