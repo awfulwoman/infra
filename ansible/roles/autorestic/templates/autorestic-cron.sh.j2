@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
 
+# BACKUP_DESTINATION=192.168.1.116
+# 
+# ping $BACKUP_DESTINATION -c2 
+# if [ $? -eq0 ]; 
+# then 
+#   echo $BACKUP_DESTINATION online. Proceeding.
+# else 
+#   echo "Autorestic backup server offline"
+#   exit 1 
+# fi 
+
 /usr/local/bin/autorestic -c {{ user_config_path }}/.autorestic.yaml --ci cron /tmp/autorestic.log 2>&1
 
 if [ $? -eq 0 ]
