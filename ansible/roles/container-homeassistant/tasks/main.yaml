@@ -5,21 +5,39 @@
 
 - name: "Create {{ container_name }} config dir"
   ansible.builtin.file:
-    path: "{{ container_config_dir }}/homeassistant"
+    path: "{{ container_config_dir }}/{{ container_name }}"
     state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0774
+    recurse: true
+
+- name: Git checkout homeassistant-docker-venv repo
+  ansible.builtin.git:
+    repo: "https://github.com/tribut/homeassistant-docker-venv"
+    dest: "{{ container_config_dir }}/{{ container_name }}/docker"
+    version: master
+    force: true
 
 - name: "Ensure {{ container_name }} container exists"
-  # become: true
   community.docker.docker_container:
-    name: homeassistant
+    name: "{{ container_name }}"
     image: ghcr.io/home-assistant/home-assistant:latest
     state: started
     privileged: true
     restart_policy: unless-stopped
     network_mode: host
+    capabilities:
+      - NET_RAW
+      - NET_ADMIN
     env:
       TZ: "Berlin/Europe"
+      PUID: "1000"
+      PGID: "1000"
+      UMASK: "007"
+      PACKAGES: "iputils"
     volumes:
-      - "{{ container_config_dir }}/homeassistant:/config"
+      - "{{ container_config_dir }}/{{ container_name }}:/config"
       - /etc/localtime:/etc/localtime:ro
       - /run/dbus:/run/dbus:ro
+      - "{{ container_config_dir }}/{{ container_name }}/docker/run:/etc/services.d/home-assistant/run"
