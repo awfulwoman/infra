@@ -53,5 +53,5 @@
     day: "*"
     weekday: "*"
     month: "*"
-    job: "{{ user_config_path }}/.autorestic-cron.sh"
+    job: "{{ user_config_path }}/autorestic-cron.sh"
     state: present

@@ -4,8 +4,8 @@
     path: "{{ container_config_dir }}/{{ container_name }}"
     state: directory
     mode: 0774
-    owner: "{{ ansibel_user }}"
-    group: "{{ ansibel_user }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
     recurse: true
 
 - name: "Ensure {{ container_name }} container exists"
