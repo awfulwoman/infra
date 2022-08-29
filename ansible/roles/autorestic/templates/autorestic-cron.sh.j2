@@ -2,4 +2,9 @@
 
 /usr/local/bin/autorestic -c {{ user_config_path }}/.autorestic.yaml --ci cron /tmp/autorestic.log 2>&1
 
-curl -fsSL https://hc-ping.com/{{ healthcheck_autorestic_id }}
+if [ $? -eq 0 ]
+then
+    curl -fsSL https://hc-ping.com/{{ healthcheck_autorestic_id }}
+else
+    echo "Autorestic failure"
+fi
