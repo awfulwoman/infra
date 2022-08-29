@@ -1,6 +1,7 @@
 - name: Home Automation Tester
   hosts: host-pi4-8gb-aprilashley
   roles:
+    - role: container-homeassistant
     - role: container-mosquitto
     - role: container-zigbee2mqtt # Core Zigbee network
       zigbee_device: /dev/serial/by-id/usb-dresden_elektronik_ingenieurtechnik_GmbH_ConBee_II_DE2467569-if00
