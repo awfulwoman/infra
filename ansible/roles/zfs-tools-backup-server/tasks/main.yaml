@@ -24,7 +24,7 @@
     name: backups
     state: present
 
-- name: Create backups/slowpool dataset
+- name: Ensure backups/slowpool dataset is present
   become: true
   community.general.zfs:
     name: backups/slowpool
@@ -34,7 +34,7 @@
       xattr: sa
       # mountpoint: none
 
-- name: Create backups/fastpool dataset
+- name: Ensure backups/fastpool dataset is present
   become: true
   community.general.zfs:
     name: backups/fastpool
@@ -61,7 +61,7 @@
     dest: /usr/local/sbin/backup.sh
     owner: root
     group: root
-    mode: '0774'
+    mode: 0774
   when: backup_datasets
 
 - name: Cron to run backup.sh

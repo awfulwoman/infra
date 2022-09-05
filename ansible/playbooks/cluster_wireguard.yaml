@@ -1,15 +1,13 @@
 ---
 # Wireguard Mesh Network
-# Assumes a bare install of Raspbian or Ubuntu
-
 - name: Wireguard servers
   hosts: wireguard
   roles:
-    # - role: githubixx.harden-linux
+    - role: wireguard-support
     - role: githubixx.ansible_role_wireguard
       become: true
     - role: ip-address-forwarding
   handlers:
     - name: Reboot host
       become: true
-      reboot:
+      ansible.builtin.reboot:

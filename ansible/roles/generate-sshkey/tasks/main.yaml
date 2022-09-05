@@ -1,11 +1,16 @@
-- name: account $HOME
-  shell: "echo $HOME"
+- name: "Get home directory path for {{ ansible_user }}"
+  ansible.builtin.shell: "echo $HOME"
   register: account_homedir
   changed_when: false
-  check_mode: no
+  check_mode: false
 
-- name: Generate an OpenSSH keypair (ed25519) for Ansible user
+- name: "Generate an OpenSSH keypair (ed25519) for {{ ansible_user }}"
   community.crypto.openssh_keypair:
     type: ed25519
     path: "{{ account_homedir.stdout }}/.ssh/id_ed25519"
     comment: "{{ ansible_user }}@{{ ansible_hostname }}"
+  register: keypair
+
+- name: "Show publickey for {{ ansible_user }}@{{ ansible_hostname }}"
+  ansible.builtin.debug:
+    msg: "{{ keypair.public_key }} {{ ansible_user }}@{{ ansible_hostname }}"

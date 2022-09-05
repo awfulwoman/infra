@@ -2,12 +2,12 @@
 - name: Install ZFS backup tooling
   become: true
   ansible.builtin.apt:
-    name: 
+    name:
       - moreutils # for ts (timestamp) util
       - lzop
       - mbuffer
     state: present
-    
+
 - name: Add the user 'zfsbackup'
   become: true
   ansible.builtin.user:
@@ -32,6 +32,12 @@
   ansible.builtin.set_fact:
     zfs_public_key: "{{ hostvars[groups['zfs-backup-server'][0]]['public_key'] | default(False) }}"
 
+- name: Stat .ssh
+  become: true
+  ansible.builtin.stat:
+    path: "{{ created_user.home }}/.ssh"
+  register: ssh_path
+
 - name: Create .ssh dir
   become: true
   ansible.builtin.file:
@@ -39,6 +45,8 @@
     state: directory
     owner: zfsbackup
     group: zfsbackup
+    mode: 0664
+  when: not ssh_path.stat.exists
 
 - name: Ensure restrict_commands.sh exists
   become: true
@@ -49,20 +57,21 @@
     group: root
     mode: 0777
 
-- name: Create Sanoid config file 
+- name: Create Sanoid config file
   become: true
   ansible.builtin.copy:
     src: sanoid.conf
     dest: "/etc/sanoid/sanoid.conf"
     owner: root
     group: root
+    mode: 0664
 
 - name: Apply Sanoid cronjob
   become: true
   ansible.builtin.cron:
     name: "Sanoid"
-    month: "*" 
-    day: "*" 
+    month: "*"
+    day: "*"
     hour: "*"
     minute: "*"
     weekday: "*"
@@ -78,7 +87,7 @@
 - name: Allow zfsbackup user to send backups of listed datasets
   become: true
   community.general.zfs_delegate_admin:
-    name: "{{item}}"
+    name: "{{ item }}"
     users: zfsbackup
     permissions: destroy,hold,mount,send,snapshot
     # descendents: true

@@ -8,7 +8,7 @@
 
 ansible_host: 192.168.1.101
 ansible_python_interpreter: /usr/bin/python3
-ansible_user: pi
+ansible_user: ubuntu
 
 mac_address: "E4:5F:01:34:5F:0E"
 wireguard_address: "10.8.0.101/24"

@@ -2,7 +2,8 @@
 # name: Lady Rona
 # type: Intel
 # arch: x86_64
-# cpu: Intel i5 8th Gen
+# mainboard: H270 GAMING M3 (MS-7A62)
+# cpu: Intel i5-7500 (8th Gen)
 # mem: 64GB
 # ------------------------
 

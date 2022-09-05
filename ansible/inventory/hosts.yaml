@@ -33,20 +33,20 @@ all:
 
     host-nuc-bondagequeen:                # Intel NUC
     host-nuc-impartialbroadcaster:        # Intel NUC
-    host-pi1-512mb-weaponisedgender:      # Raspberry Pi (DO YOU WANT A CUP OF TEA, GRANDMA?)
-    host-pi3-1gb-sleeperservice:          # Raspberry Pi
-    host-pi4-2gb-bigsexybeast:            # Raspberry Pi
-    host-pi4-2gb-bonerseizure:            # Raspberry Pi
-    host-pi4-2gb-fonduesexparty:          # Raspberry Pi
-    host-pi4-8gb-aprilashley:             # Raspberry Pi
-    host-pi4-8gb-attitudeadjuster:        # Raspberry Pi
+    host-pi1-512mb-weaponisedgender:      # Raspberry Pi 1
+    host-pi3-1gb-sleeperservice:          # Raspberry Pi 3
+    host-pi4-2gb-bigsexybeast:            # Raspberry Pi 4
+    host-pi4-2gb-bonerseizure:            # Raspberry Pi 4
+    host-pi4-2gb-fonduesexparty:          # Raspberry Pi 4
+    host-pi4-8gb-aprilashley:             # Raspberry Pi 4
+    host-pi4-8gb-attitudeadjuster:        # Raspberry Pi 4
     host-pizero-grabthetension:           # Raspberry Pi Zero W
     host-pizero-guineapirate:             # Raspberry Pi Zero W 1.1
     host-pizero-twistymotherfucker:       # Raspberry Pi Zero
     host-x86-gottakeepswimming:           # Backups
     host-x86-ladyrona:                    # NAS
     host-x86-opnsense:                    # OPNsense testing box
-    
+
     vm-digitalocean-whalecoiner:          # Digital Ocean
     vm-linode-tinynuggets:                # Linode
 
@@ -83,20 +83,20 @@ all:
 
     # Group: Servers
     # Machines that act as servers in some capacity or another
-    servers: 
+    servers:
       hosts:
-        host-grabthetension: 
-        host-honestmistake: 
-        host-nuc-bondagequeen: 
-        host-nuc-impartialbroadcaster: 
-        host-pi-4-4gb-bigsexybeast: 
-        host-pi1-512mb-weaponisedgender: 
-        host-pi4-2gb-bonerseizure: 
+        host-grabthetension:
+        host-honestmistake:
+        host-nuc-bondagequeen:
+        host-nuc-impartialbroadcaster:
+        host-pi-4-4gb-bigsexybeast:
+        host-pi1-512mb-weaponisedgender:
+        host-pi4-2gb-bonerseizure:
         host-pi4-2gb-fonduesexparty:
         host-pi4-8gb-aprilashley:
-        host-pi4-8gb-attitudeadjuster: 
+        host-pi4-8gb-attitudeadjuster:
         host-pizero-twistymotherfucker:
-        host-sleeperservice: 
+        host-sleeperservice:
         host-truthandreconciliation:
 
     # Group: Raspberry Pi hardware
@@ -131,6 +131,7 @@ all:
         vm-digitalocean-whalecoiner:
         # vm-linode-tinynuggets:
         host-x86-gottakeepswimming:
+        host-pi4-8gb-aprilashley:
 
     # Hosts that use ZFS
     zfs:
@@ -143,7 +144,7 @@ all:
       hosts:
         host-x86-gottakeepswimming:
 
-    # ZFS Client Servers
+    # ZFS Clients
     zfs-backup-clients:
       hosts:
         host-x86-gottakeepswimming:

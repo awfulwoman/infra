@@ -16,11 +16,12 @@
       become: true
       when: ansible_architecture == "aarch64"
     - role: docker
+    - role: containers-config
     - role: jnv.unattended-upgrades
       become: true
     - role: motd
-    - role: nfs-tools
-    - role: nfs-tools-backup-client
+    # - role: nfs-tools
+    # - role: nfs-tools-backup-client
     - role: autorestic
     - role: container-vscode
     - role: container-homeassistant

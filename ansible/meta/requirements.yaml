@@ -26,7 +26,7 @@ roles:
   - name: fuzzymistborn.autorestic
     version: v0.2.0
 
-collections: 
+collections:
   - name: community.docker
     version: 2.5.1
   - name: community.general

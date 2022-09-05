@@ -6,13 +6,14 @@
     - role: standard-host
     - role: healthchecks
     - role: generate-sshkey
-    # - role: motd
+    - role: motd
     - role: weareinteractive.environment
       become: true
       no_log: true
     - role: geerlingguy.docker_arm
       become: true
     - role: docker
+    - role: containers-config
     - role: geerlingguy.ansible
       become: true
     - role: jnv.unattended-upgrades
@@ -20,9 +21,8 @@
     - role: diodonfrost.terraform
       become: true
     - role: apt-upgrade
+
   handlers:
     - name: Reboot host
       become: true
-      reboot:
-
-        
+      ansible.builtin.reboot:

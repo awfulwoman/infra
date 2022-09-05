@@ -2,6 +2,7 @@
 # name: Gotta Keep Swimming
 # type: Intel
 # arch: x86_64
+# mainboard: P8H61-I R2.0
 # cpu: Intel ??
 # mem: 8GB
 # ------------------------
