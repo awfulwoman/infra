@@ -17,7 +17,7 @@ vault_password: !vault |
           38663632643030626331383739656166316264383531656639336635333132626132656634383633
           3337643063653435300a316432623836393764626566356562373461373232333936316439383866
           6433
-vault_password_salted: "{{ '{{ vault_password }}' | password_hash('sha256', vault_password_salting_phrase) }}"          
+vault_password_salted: "{{ vault_password | password_hash('sha256', vault_password_salting_phrase) }}"
 
 ansible_become_password: "{{ vault_password }}"
 
