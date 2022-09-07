@@ -16,6 +16,7 @@
     - role: containers-config
     - role: geerlingguy.ansible
       become: true
+      ansible_install_method: "pip"
     - role: jnv.unattended-upgrades
       become: true
     - role: diodonfrost.terraform
