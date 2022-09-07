@@ -130,6 +130,7 @@ all:
         host-x86-ladyrona:
         vm-digitalocean-whalecoiner:
         # vm-linode-tinynuggets:
+        host-pi4-8gb-attitudeadjuster:
         host-x86-gottakeepswimming:
         host-pi4-8gb-aprilashley:
 
