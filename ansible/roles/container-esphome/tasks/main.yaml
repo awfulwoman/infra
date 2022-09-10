@@ -15,7 +15,7 @@
     state: started
     privileged: true
     restart_policy: unless-stopped
-    user: "{{ container_user_id }}:{{ container_user_id }}"
+    # user: "{{ container_user_id }}:{{ container_user_id }}"
     ports:
       - "6052:6052"
       - "6123:6123"
@@ -23,6 +23,7 @@
       - /dev/ttyUSB0
     env:
       TZ: "Berlin/Europe"
+      ESPHOME_DASHBOARD_USE_PING: "true"
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}:/config"
       - /etc/localtime:/etc/localtime:ro
