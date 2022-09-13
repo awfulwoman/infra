@@ -1,0 +1,51 @@
+# apt install pulseaudio
+- name: Install audio packages
+  become: true
+  ansible.builtin.apt:
+    name:
+      - pulseaudio
+      - pulseaudio-module-zeroconf
+      - alsa-utils
+      - avahi-daemon
+    state: present
+
+# modprobe snd-bcm2835 
+
+- name: "Set {{ container_name }} config path"
+  ansible.builtin.set_fact:
+    container_config_dir: "{{ ansible_env.HOME }}"
+  when: container_config_dir is undefined
+
+- name: "Create {{ container_name }} config dir"
+  become: true
+  ansible.builtin.file:
+    path: "{{ container_config_dir }}/{{ container_name }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0774
+    recurse: true
+
+- name: "Ensure {{ container_name }} container exists"
+  community.docker.docker_container:
+    name: "{{ container_name }}"
+    image: mycroft
+    state: started
+    privileged: true
+    restart_policy: unless-stopped
+    # network_mode: host
+    # capabilities:
+    #   - NET_RAW
+    #   - NET_ADMIN
+    ports:
+      - 8181:8181
+    env:
+      TZ: "Berlin/Europe"
+      PULSE_SERVER: "unix:/run/user/1000/pulse/native"
+    devices:
+      - /dev/snd
+    volumes:
+      - "{{ container_config_dir }}/{{ container_name }}:/root/.mycroft"
+      - /etc/localtime:/etc/localtime:ro
+      - /run/user/1000/pulse/native:/run/user/1000/pulse/native
+      - "{{ ansible_env.HOME }}/.config/pulse/cookie:/root/.config/pulse/cookie"

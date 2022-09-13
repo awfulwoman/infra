@@ -1,0 +1,11 @@
+---
+- name: Jumphost
+  hosts: host-pi4-8gb-attitudeadjuster
+  roles:
+    - role: audio
+
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:
