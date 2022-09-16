@@ -17,5 +17,5 @@
       CHECK_FREQUENCY: "240"
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}:/config"
-      - /slowmedia/podcasts:/assets"
+      - /slowpool/media/podcasts:/assets"
       - /etc/localtime:/etc/localtime:ro
