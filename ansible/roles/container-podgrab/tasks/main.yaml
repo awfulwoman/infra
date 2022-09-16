@@ -7,7 +7,7 @@
 - name: "Ensure {{ container_name }} container exists"
   community.docker.docker_container:
     name: "{{ container_name }}"
-    image: akhilrex/podgrab
+    image: akhilrex/podgrab:latest
     state: started
     restart_policy: unless-stopped
     ports:
@@ -17,5 +17,5 @@
       CHECK_FREQUENCY: "240"
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}:/config"
-      - /slowpool/media/podcasts:/assets"
+      - /slowpool/media/podcasts:/assets
       - /etc/localtime:/etc/localtime:ro
