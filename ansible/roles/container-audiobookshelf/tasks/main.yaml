@@ -1,0 +1,24 @@
+- name: "Create {{ container_name }} config dir"
+  ansible.builtin.file:
+    path: "{{ container_config_dir }}/{{ container_name }}"
+    state: directory
+    mode: 0744
+
+- name: "Ensure {{ container_name }} container exists"
+  community.docker.docker_container:
+    name: "{{ container_name }}"
+    image: ghcr.io/advplyr/audiobookshelf:latest
+    state: started
+    restart_policy: unless-stopped
+    ports:
+      - 13378:80
+    env:
+      TZ: "Berlin/Europe"
+      AUDIOBOOKSHELF_UID: "99"
+      AUDIOBOOKSHELF_GID: "100"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /slowpool/media/audiobooks:/audiobooks
+      - /slowpool/media/podcasts:/podcasts
+      - "{{ container_config_dir }}/{{ container_name }}/config:/config"
+      - "{{ container_config_dir }}/{{ container_name }}/metadata:/metadata"

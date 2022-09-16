@@ -28,6 +28,7 @@
     - role: motd
     - role: container-jellyfin
     - role: container-podgrab
+    - role: container-audiobookshelf
     - role: container-traefik
     - role: container-restic
     - role: container-sanoid-builder
