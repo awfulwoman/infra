@@ -27,6 +27,7 @@
     - role: virtualisation-tools
     - role: motd
     - role: container-jellyfin
+    - role: container-podgrab
     - role: container-traefik
     - role: container-restic
     - role: container-sanoid-builder
@@ -36,4 +37,4 @@
   handlers:
     - name: Reboot host
       become: true
-      reboot:
+      ansible.builtin.reboot:

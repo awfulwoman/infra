@@ -1,0 +1,21 @@
+- name: "Create {{ container_name }} config dir"
+  ansible.builtin.file:
+    path: "{{ container_config_dir }}/{{ container_name }}"
+    state: directory
+    mode: 0744
+
+- name: "Ensure {{ container_name }} container exists"
+  community.docker.docker_container:
+    name: "{{ container_name }}"
+    image: akhilrex/podgrab
+    state: started
+    restart_policy: unless-stopped
+    ports:
+      - 9876:8080
+    env:
+      TZ: "Berlin/Europe"
+      CHECK_FREQUENCY: "240"
+    volumes:
+      - "{{ container_config_dir }}/{{ container_name }}:/config"
+      - /slowmedia/podcasts:/assets"
+      - /etc/localtime:/etc/localtime:ro
