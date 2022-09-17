@@ -15,4 +15,4 @@
   handlers:
     - name: Reboot host
       become: true
-      reboot:
+      ansible.builtin.reboot:

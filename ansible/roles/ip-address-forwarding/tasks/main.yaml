@@ -4,8 +4,8 @@
     name: net.ipv4.ip_forward
     value: "1"
     state: present
-    sysctl_set: yes
-    reload: yes
+    sysctl_set: true
+    reload: true
 
 # - name: Enable and persist IPv6 forwarding
 #   become: true

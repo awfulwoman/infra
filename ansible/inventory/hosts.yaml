@@ -55,8 +55,6 @@ all:
     workstation-mbp2020:                  # My fancy Apple Pro M1 work laptop
     workstation-thinkpad:                 # My partner's work laptop. Nope, not touching that with Ansible. Just here so it gets a DHCP address.
 
-  # GROUPS
-  # ------
   # Groupings of servers that allow them to be administered collectively.
   children:
 
@@ -117,8 +115,6 @@ all:
         host-pi4-2gb-bonerseizure:
 
     # Group: Home Automation
-    # Very very stable and boring setup running home automation tasks
-    # I Have Learned My Lesson
     homeautomation:
       hosts:
         host-pi4-8gb-aprilashley:
@@ -129,8 +125,9 @@ all:
       hosts:
         host-x86-ladyrona:
         vm-digitalocean-whalecoiner:
+        # vm-digitalocean-jumphost:
         # vm-linode-tinynuggets:
-        host-pi4-8gb-attitudeadjuster:
+        # host-pi4-8gb-attitudeadjuster:
         host-x86-gottakeepswimming:
         host-pi4-8gb-aprilashley:
 

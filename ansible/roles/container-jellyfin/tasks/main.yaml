@@ -32,4 +32,3 @@
     #   traefik.http.routers.metube.rule: "Host(`jellyfin.affordablepotatoes.com`)"
     #   traefik.http.routers.metube.entrypoints: "web"
       # traefik.http.services.metube.loadbalancer.server.port: "8081"
-
