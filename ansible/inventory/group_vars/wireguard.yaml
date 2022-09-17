@@ -6,7 +6,7 @@ wireguard_unmanaged_peers:
     PersistentKeepalive: 30
 
 
-  # mbp2020.device.affordablepotatoes.com:
-  #   public_key: SmyYy/QMijN/8msQJvzTzezGlvj7GzmKXYAxVmlfyDA=
+  mbp2020.device.affordablepotatoes.com:
+    public_key: SmyYy/QMijN/8msQJvzTzezGlvj7GzmKXYAxVmlfyDA=
   # iphone.device.affordablepotatoes.com:
   #   public_key: 12ARTouJAF+6Vm873Lv3ZWBd7SvKcdLNsdabCPmBSn8=
