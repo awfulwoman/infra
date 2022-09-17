@@ -6,6 +6,8 @@ all:
     # vm-*           A virtual machine used to perform tasks. Has an OS that can be managed via SSH.
     # workstation-*  A machine used directly by a person. Has an OS that can be managed via SSH.
     device-appletv-livingroom:            # An Apple TV. How decadent.
+      ansible_host: 192.168.1.12
+      mac_address: "34:FD:6A:38:CC:64"
     device-applewatch:                    # It's an apple watch and lives on my wrist.
     device-belkinsoundform:               # Why did I buy this?.
     device-broadlink-rm3:                 # A little IR blaster for automating IR devices.
