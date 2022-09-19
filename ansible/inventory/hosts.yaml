@@ -32,7 +32,6 @@ all:
     device-oneplus-6:                     # My partners phone.
     device-remarkable:                    # My ReMarkable eink tablet.
     device-tl-sg3424:                     # TL-SG3424 managed network switch.
-
     host-nuc-bondagequeen:                # Intel NUC
     host-nuc-impartialbroadcaster:        # Intel NUC
     host-pi1-512mb-weaponisedgender:      # Raspberry Pi 1
@@ -48,6 +47,7 @@ all:
     host-x86-gottakeepswimming:           # Backups
     host-x86-ladyrona:                    # NAS
     host-x86-opnsense:                    # OPNsense testing box
+    host-x86-smol:
 
     vm-digitalocean-whalecoiner:          # Digital Ocean
     vm-linode-tinynuggets:                # Linode
@@ -130,8 +130,9 @@ all:
         # vm-digitalocean-jumphost:
         # vm-linode-tinynuggets:
         # host-pi4-8gb-attitudeadjuster:
-        host-x86-gottakeepswimming:
+        # host-x86-gottakeepswimming:
         host-pi4-8gb-aprilashley:
+        host-x86-smol:
 
     # Hosts that use ZFS
     zfs:

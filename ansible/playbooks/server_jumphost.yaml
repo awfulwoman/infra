@@ -1,6 +1,6 @@
 ---
-- name: Jumphost
-  hosts: host-pi4-8gb-attitudeadjuster
+- name: Jump Laptop
+  hosts: host-x86-smol
   roles:
     - role: standard_os
     - role: standard-host
@@ -11,7 +11,7 @@
     - role: weareinteractive.environment
       become: true
       no_log: true
-    - role: geerlingguy.docker_arm
+    - role: geerlingguy.docker
       become: true
     - role: docker
     - role: containers-config

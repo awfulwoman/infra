@@ -9,7 +9,8 @@
       - avahi-daemon
     state: present
 
-# modprobe snd-bcm2835 
+# Might be needed
+# - name: "modprobe snd-bcm2835"
 
 - name: "Set {{ container_name }} config path"
   ansible.builtin.set_fact:
