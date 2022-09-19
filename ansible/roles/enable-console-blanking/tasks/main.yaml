@@ -1,0 +1,15 @@
+- name: "Ensure console blanking service file exists"
+  become: true
+  ansible.builtin.template:
+    src: enable-console-blanking.service.j2
+    dest: /etc/systemd/system//enable-console-blanking.service
+    owner: root
+    group: root
+    mode: 0664
+
+- name: Start service enable-console-blanking, if not started
+  become: true
+  ansible.builtin.systemd:
+    name: enable-console-blanking
+    state: started
+    daemon_reload: true

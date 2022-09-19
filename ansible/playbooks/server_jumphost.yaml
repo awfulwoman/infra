@@ -11,6 +11,7 @@
     - role: weareinteractive.environment
       become: true
       no_log: true
+    - role: enable-console-blanking
     - role: geerlingguy.docker
       become: true
     - role: docker
