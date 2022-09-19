@@ -30,7 +30,7 @@
 - name: "Ensure {{ container_name }} container exists"
   community.docker.docker_container:
     name: "{{ container_name }}"
-    image: mycroft
+    image: mycroftai/docker-mycroft
     state: started
     privileged: true
     restart_policy: unless-stopped
