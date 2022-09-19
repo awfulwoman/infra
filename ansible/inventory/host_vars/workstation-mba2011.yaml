@@ -10,5 +10,5 @@ vault_mac_address: !vault |
 ansible_host: 192.168.1.5
 ansible_python_interpreter: /usr/bin/python3.9
 ansible_user: charlie
-mac_address: "{{vault_mac_address}}"
-# wireguard_address: "10.8.0.5/24"
+mac_address: "{{ vault_mac_address }}"
+wireguard_address: "10.8.0.5/24"

@@ -7,8 +7,8 @@ vault_mac_address: !vault |
           36626239616133313536393837323539343437313532643431393632333730383462
 
 ansible_host: 192.168.1.7
-wireguard_address: "10.8.0.7/24"
-mac_address: "{{vault_mac_address}}"
+# wireguard_address: "10.8.0.7/24"
+mac_address: "{{ vault_mac_address }}"
 interfaces:
   - name: eth4
     mac_address: "A0:CE:C8:F8:22:47"

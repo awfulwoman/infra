@@ -1,10 +1,13 @@
 wireguard_unmanaged_peers:
   workstation-mba2011.i.affordablepotatoes.com:
     public_key: zjT4inKNrOkb6U5NANrMGI438z+mQtumI1h9jHcU+Bo=
-    wireguard_address: 10.8.0.5
-    wireguard_allowed_ips: 10.8.0.0/24
-    PersistentKeepalive: 30
+    # wireguard_address: 10.8.0.5/24
+    # wireguard_allowed_ips: 10.8.0.5/32,10.8.0.1/32
+    # PersistentKeepalive: 30
 
+  workstation-mba2010.i.affordablepotatoes.com:
+    public_key: +G62BoNFOA9o/WX3fJjlb40X42OxD+KR41LDMUuOTGA=
+    wireguard_allowed_ips: 10.8.0.1/32,10.8.0.99/32
 
   mbp2020.device.affordablepotatoes.com:
     public_key: SmyYy/QMijN/8msQJvzTzezGlvj7GzmKXYAxVmlfyDA=
