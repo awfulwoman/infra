@@ -3,7 +3,7 @@
   become: true
   ansible.builtin.file:
     path: /etc/update-motd.d/50-motd-news
-    mode: 0664 
+    mode: 0664
     modification_time: preserve
     access_time: preserve
 

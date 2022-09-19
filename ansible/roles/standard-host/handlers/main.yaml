@@ -1,6 +1,6 @@
 - name: Restart SSH
-  service: 
-    name: ssh 
+  ansible.builtin.service:
+    name: ssh
     state: restarted
 
 # - name: Kill open ssh sessions - ansible should log back in on next task

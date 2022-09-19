@@ -1,12 +1,12 @@
 # Provisions a generic Debian/Ubuntu/Raspbian machine
-- name: ansible_ssh_host
-  debug:
+- name: Debug - ansible_ssh_host
+  ansible.builtin.debug:
     msg: "{{ ansible_ssh_host }}"
-- name: inventory_hostname
-  debug:
+- name: Debug - inventory_hostname
+  ansible.builtin.debug:
     msg: "{{ inventory_hostname }}"
-- name: ansible_hostname
-  debug: 
+- name: Debug - ansible_hostname
+  ansible.builtin.debug:
     msg: "{{ ansible_fqdn }}"
 
 - name: Set ansible_user's authorized keys (from url)
@@ -25,7 +25,7 @@
 
 - name: Add Berlin timezone
   become: true
-  community.general.timezone: 
+  community.general.timezone:
     name: Europe/Berlin
 
 - name: Ensure localisation files for '{{ config_system_locale }}' are available
@@ -42,7 +42,7 @@
 
 - name: Get current locale and language configuration
   become: true
-  command: localectl status
+  ansible.builtin.command: localectl status
   register: locale_status
   changed_when: false
 
@@ -58,7 +58,7 @@
 
 - name: Configure locale to '{{ config_system_locale }}' and language to '{{ config_system_language }}'
   become: true
-  command: localectl set-locale LANG={{ config_system_locale }} LANGUAGE={{ config_system_language }}
+  ansible.builtin.command: localectl set-locale LANG={{ config_system_locale }} LANGUAGE={{ config_system_language }}
   changed_when: locale_lang != config_system_locale or locale_language != config_system_language
 
 - name: Change hostname
@@ -76,10 +76,10 @@
 - name: Install apt packages
   become: true
   ansible.builtin.apt:
-    name: 
+    name:
       - vim
-      - curl 
-      - wget 
+      - curl
+      - wget
       - git
       - zsh
       - iptables

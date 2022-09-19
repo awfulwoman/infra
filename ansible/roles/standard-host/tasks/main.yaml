@@ -3,7 +3,7 @@
 - name: Install apt packages
   become: true
   ansible.builtin.apt:
-    name: 
+    name:
       - tmux
       - unzip
       - mosh
@@ -21,19 +21,18 @@
 
 - name: Disallow SSH access with passwords
   become: true
-  ansible.builtin.lineinfile: 
-    path: /etc/ssh/sshd_config 
-    regexp: "^PasswordAuthentication" 
-    line: "PasswordAuthentication no" 
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "^PasswordAuthentication"
+    line: "PasswordAuthentication no"
     state: present
   notify: Restart SSH
 
 - name: Disallow root SSH access
   become: true
-  ansible.builtin.lineinfile: 
-    path: /etc/ssh/sshd_config 
-    regexp: "^PermitRootLogin" 
-    line: "PermitRootLogin no" 
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "^PermitRootLogin"
+    line: "PermitRootLogin no"
     state: present
   notify: Restart SSH
-
