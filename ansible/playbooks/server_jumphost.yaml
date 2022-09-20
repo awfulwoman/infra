@@ -4,7 +4,6 @@
   roles:
     - role: standard_os
     - role: standard-host
-    - role: audio
     - role: healthchecks
     - role: generate-sshkey
     - role: motd

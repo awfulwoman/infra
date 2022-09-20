@@ -7,6 +7,7 @@ Environment=TERM=linux
 StandardOutput=tty
 TTYPath=/dev/console
 ExecStart=/usr/bin/setterm -blank {{ blanking_timeout }}
+RemainAfterExit=yes
 
 [Install]
 WantedBy=multi-user.target
