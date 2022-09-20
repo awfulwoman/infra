@@ -10,6 +10,6 @@ wireguard_unmanaged_peers:
     wireguard_allowed_ips: 10.8.0.1/32,10.8.0.99/32
 
   mbp2020.device.affordablepotatoes.com:
-    public_key: SmyYy/QMijN/8msQJvzTzezGlvj7GzmKXYAxVmlfyDA=
+    public_key: QMvuYu6K6q1eqdZLe7w02iZkMZApESOup3S/BXAAeHY=
   # iphone.device.affordablepotatoes.com:
   #   public_key: 12ARTouJAF+6Vm873Lv3ZWBd7SvKcdLNsdabCPmBSn8=
