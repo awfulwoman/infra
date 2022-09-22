@@ -1,5 +1,12 @@
 ansible_host: whalecoiner.com
 ansible_user: charlie
-wireguard_address: "10.8.0.1/24"
+wireguard_address: "10.8.0.1"
 wireguard_endpoint: "vpn.whalecoiner.com"
+wireguard_allowed_ips: "10.8.0.0/24"
 wireguard_persistent_keepalive: 30
+
+# wireguard_postup:
+#   - iptables -I FORWARD 1 -i wg0 -j ACCEPT; iptables -t nat -I POSTROUTING 1 -o eth0 -j MASQUERADE
+# wireguard_postdown:
+#   - iptables -D FORWARD -i wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE
+

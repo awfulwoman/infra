@@ -13,7 +13,7 @@ ansible_user: ubuntu
 mac_address: "E4:5F:01:46:8B:D3"
 
 # Wireguard
-wireguard_address: "10.8.0.102/24"
+wireguard_address: "10.8.0.102"
 wireguard_endpoint: "{{ ansible_host }}"
 wireguard_persistent_keepalive: "30"
 

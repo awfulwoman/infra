@@ -5,3 +5,13 @@
     name: 
       - qrencode
     state: present
+
+- name: Ensure NAT scripts exists
+  become: true
+  ansible.builtin.copy:
+    src: files/
+    dest: /etc/wireguard/helpers/
+    owner: root
+    group: root
+    mode: 0764
+
