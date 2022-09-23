@@ -5,6 +5,10 @@ wireguard_endpoint: "vpn.whalecoiner.com"
 wireguard_allowed_ips: "10.8.0.0/24"
 wireguard_persistent_keepalive: 30
 
+  # wireguard_postup:
+  #  - iptables -t nat -A POSTROUTING -o ens3 -j MASQUERADE; ip6tables -t nat -A POSTROUTING -o ens3 -j MASQUERADE
+  # wireguard_postdown:
+  #  - iptables -t nat -D POSTROUTING -o ens3 -j MASQUERADE; ip6tables -t nat -D POSTROUTING -o ens3 -j MASQUERADE
 # wireguard_postup:
 #   - iptables -I FORWARD 1 -i wg0 -j ACCEPT; iptables -t nat -I POSTROUTING 1 -o eth0 -j MASQUERADE
 # wireguard_postdown:
