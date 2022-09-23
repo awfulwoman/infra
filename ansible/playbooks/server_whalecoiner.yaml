@@ -12,6 +12,7 @@
     - role: jnv.unattended-upgrades
       become: true
     - role: apt-upgrade
+    - role: ip-address-forwarding
   handlers:
     - name: Reboot host
       become: true
