@@ -11,6 +11,6 @@ ansible_user: root
 mac_address: "E4:5F:01:7E:55:51"
 # storage_mount: /storage
 # storage_uuid: 58112fa4-b24c-4fc1-b9cf-7e86d8601cdd
-wireguard_address: "10.8.0.111/24"
+# wireguard_address: "10.8.0.111/24"
 cnames:
   - pikvm.affordablepotatoes.com

@@ -125,12 +125,8 @@ all:
     # Wireguard is a VPN that allows me to access my LAN remotely
     wireguard:
       hosts:
-        host-x86-ladyrona:
         vm-digitalocean-whalecoiner:
-        # host-x86-gottakeepswimming:
-        host-pi4-8gb-aprilashley:
         host-x86-smol:
-        host-pi3-1gb-sleeperservice:
 
     # Hosts that use ZFS
     zfs:

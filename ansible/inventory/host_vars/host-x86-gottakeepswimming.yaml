@@ -12,9 +12,9 @@ ansible_host: 192.168.1.118
 mac_address: "60:a4:4c:40:52:57"
 
 # Wireguard
-wireguard_address: "10.8.0.118/24"
-wireguard_endpoint: 192.168.1.118
-wireguard_persistent_keepalive: "30"
+# wireguard_address: "10.8.0.118/24"
+# wireguard_endpoint: 192.168.1.118
+# wireguard_persistent_keepalive: "30"
 
 # Healthceck.io
 healthcheck_reboot_id: !vault |
