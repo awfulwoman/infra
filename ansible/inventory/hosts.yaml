@@ -136,6 +136,10 @@ all:
       hosts:
         vm-digitalocean-whalecoiner:
         host-x86-smol:
+        host-x86-ladyrona:
+        host-x86-gottakeepswimming:
+        host-pi4-8gb-aprilashley:
+        host-pi3-1gb-sleeperservice:
 
     # Hosts that use ZFS
     zfs:

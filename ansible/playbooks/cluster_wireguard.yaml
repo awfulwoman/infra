@@ -3,10 +3,23 @@
 - name: Wireguard servers
   hosts: wireguard
   roles:
-    - role: wireguard-support
-    - role: githubixx.ansible_role_wireguard
-      become: true
+    # - role: wireguard-support
+    # - role: githubixx.ansible_role_wireguard
+      # become: true
   #  - role: ip-address-forwarding
+  tasks:
+    - name: Stope and disable WireGuard service
+      become: true
+      ansible.builtin.service:
+        name: "wg-quick@wg0"
+        state: stopped
+        enabled: false
+
+    - name: Remove confs
+      become: true
+      ansible.builtin.file:
+        name: /etc/wireguard
+        state: absent
   handlers:
     - name: Reboot host
       become: true
