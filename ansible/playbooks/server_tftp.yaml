@@ -1,0 +1,57 @@
+---
+- name: TFTP Sever
+  hosts: host-pi4-8gb-attitudeadjuster
+  vars:
+    ansible_user: ubuntu
+    tftp_ip_address: 192.168.0.66
+  roles:
+    - role: standard_os
+    - role: standard-host
+    - role: apt-upgrade
+  post_tasks:
+    - name: Install TFTP software
+      become: true
+      ansible.builtin.apt:
+        name:
+          - atftpd
+          - tftp
+          - network-manager
+
+    - name: Add an Ethernet connection with static IP configuration
+      become: true
+      community.general.nmcli:
+        conn_name: tftp-conn
+        ifname: enx000ec6843a8f
+        type: ethernet
+        ip4: "{{ tftp_ip_address }}/24"
+        gw4: 192.168.0.1
+        state: present
+
+    - name: Make directory /srv/tftp
+      become: true
+      ansible.builtin.file:
+        path: /srv/tftp
+        state: directory
+        mode: 0774
+        owner: "nobody"
+        group: "nogroup"
+        recurse: true
+
+    - name: Get openwrt firmware
+      become: true
+      ansible.builtin.get_url:
+        url: https://downloads.openwrt.org/releases/22.03.0/targets/ath79/generic/openwrt-22.03.0-ath79-generic-tplink_archer-c7-v2-squashfs-factory.bin
+        dest: /srv/tftp/ArcherC7v2_tp_recovery.bin
+        mode: 0744
+        owner: "nobody"
+        group: "nogroup"
+
+    - name: Run TFTP temp server
+      become: true
+      ansible.builtin.command: dnsmasq --port=0 --enable-tftp --tftp-root=/srv/tftp --tftp-no-blocksize --user=root --group=root
+
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:

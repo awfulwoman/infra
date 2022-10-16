@@ -2,9 +2,10 @@
 - name: Install Wireguard useful tools
   become: true
   ansible.builtin.apt:
-    name: 
+    name:
       - qrencode
     state: present
+    update_cache: false
 
 - name: Ensure NAT scripts exists
   become: true
@@ -14,4 +15,3 @@
     owner: root
     group: root
     mode: 0764
-
