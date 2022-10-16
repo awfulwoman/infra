@@ -99,6 +99,15 @@ all:
         host-sleeperservice:
         host-truthandreconciliation:
 
+    tailscale:
+      hosts:
+        host-pi4-8gb-aprilashley:
+        host-x86-gottakeepswimming:
+        host-pi3-1gb-sleeperservice:
+        host-x86-smol:
+        host-x86-ladyrona:
+        vm-digitalocean-whalecoiner:
+
     # Group: Raspberry Pi hardware
     # Because they are Single Board Computers these devices they can have unique setup requirements
     raspberrypis:

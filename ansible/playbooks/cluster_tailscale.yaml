@@ -1,0 +1,6 @@
+- name: 
+  hosts: all
+  roles:
+    - role: artis3n.tailscale
+      vars:
+        tailscale_authkey: "{{ tailscale_server_auth }}"

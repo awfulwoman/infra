@@ -25,6 +25,8 @@ roles:
     version: v0.3.0
   - name: fuzzymistborn.autorestic
     version: v0.2.0
+  - name: artis3n.tailscale
+    version: v3.3.0
 
 collections:
   - name: community.docker
