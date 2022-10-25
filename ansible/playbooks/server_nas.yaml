@@ -19,7 +19,7 @@
       become: true
       when: ansible_architecture == "aarch64"
     - role: docker
-    - role: jnv.unattended-upgrades
+    - role: hifis.unattended_upgrades
       become: true
     - role: host-bus-adapter
     - role: nfs-tools

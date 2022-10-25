@@ -3,18 +3,16 @@
 roles:
   - name: geerlingguy.nfs
     version: 2.0.0
-  - name: xanmanning.k3s
-    version: v3.1.2
   - name: weareinteractive.environment
     version: 1.5.0
   - name: geerlingguy.docker
-    version: 4.2.2
+    version: 6.0.1
   - name: geerlingguy.docker_arm
     version: 5.0.0
   - name: githubixx.harden-linux
     version: v6.0.0
-  - name: jnv.unattended-upgrades
-    version: v1.12.1
+  - name: hifis.unattended_upgrades
+    version: v1.12.2
   - name: githubixx.ansible_role_wireguard
     version: 9.3.0
   - name: geerlingguy.ansible
@@ -26,7 +24,7 @@ roles:
   - name: fuzzymistborn.autorestic
     version: v0.2.0
   - name: artis3n.tailscale
-    version: v3.3.0
+    version: v3.4.0
 
 collections:
   - name: community.docker
@@ -37,3 +35,4 @@ collections:
     version: 3.1.0
   - name: serdigital64.core
   - name: serdigital64.backup
+  - name: devsec.hardening

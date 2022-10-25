@@ -9,7 +9,7 @@
     - role: geerlingguy.docker
       become: true
     - role: cron-reboot
-    - role: jnv.unattended-upgrades
+    - role: hifis.unattended_upgrades
       become: true
     - role: apt-upgrade
     - role: ip-address-forwarding

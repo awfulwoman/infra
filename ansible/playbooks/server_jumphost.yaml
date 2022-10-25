@@ -20,7 +20,7 @@
     - role: geerlingguy.ansible
       become: true
       ansible_install_method: "pip"
-    - role: jnv.unattended-upgrades
+    - role: hifis.unattended_upgrades
       become: true
     - role: diodonfrost.terraform
       become: true

@@ -7,7 +7,7 @@
     - role: healthchecks
     - role: grub-tune
     - role: zfs-tools
-    - role: jnv.unattended-upgrades
+    - role: hifis.unattended_upgrades
       become: true
     - role: motd
     - role: apt-upgrade

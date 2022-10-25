@@ -17,7 +17,7 @@
       when: ansible_architecture == "aarch64"
     - role: docker
     - role: containers-config
-    - role: jnv.unattended-upgrades
+    - role: hifis.unattended_upgrades
       become: true
     - role: motd
     # - role: nfs-tools
