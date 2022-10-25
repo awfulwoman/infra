@@ -14,6 +14,7 @@
     - role: geerlingguy.docker
       become: true
     - role: docker
+    - role: home
     - role: containers-config
     - role: geerlingguy.ansible
       become: true

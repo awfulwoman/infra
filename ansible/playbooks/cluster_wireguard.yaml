@@ -1,4 +1,3 @@
----
 # Wireguard Mesh Network
 - name: Wireguard servers
   hosts: wireguard
@@ -20,6 +19,7 @@
       ansible.builtin.file:
         name: /etc/wireguard
         state: absent
+
   handlers:
     - name: Reboot host
       become: true
