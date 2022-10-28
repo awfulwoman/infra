@@ -30,6 +30,7 @@
     - role: container-audiobookshelf
     - role: container-traefik
     - role: container-restic
+    - role: container-freshrss
     - role: container-sanoid-builder
     - role: apt-upgrade
     - role: docker-cleanup
