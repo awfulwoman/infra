@@ -15,7 +15,7 @@
     state: started
     restart_policy: unless-stopped
     ports:
-      - "7580:7580"
+      - "7580:80"
     env:
       TZ: "Berlin/Europe"
     volumes:
