@@ -47,11 +47,9 @@ all:
     host-x86-gottakeepswimming:           # Backups
     host-x86-ladyrona:                    # NAS
     host-x86-opnsense:                    # OPNsense testing box
-    host-x86-smol:
-
+    host-x86-smol:                        # Jumphost
     vm-digitalocean-whalecoiner:          # Digital Ocean
     vm-linode-tinynuggets:                # Linode
-
     workstation-mba2011:                  # MacBook Air 2011 (yes, it's over a decade old. I still use it as my personal machine!)
     workstation-mbp2012:                  # Ancient MacBook Pro 2012. It still has Magsafe 1 and an optical drive! :3
     workstation-mbp2020:                  # My fancy Apple Pro M1 work laptop
@@ -60,6 +58,7 @@ all:
   # Groupings of servers that allow them to be administered collectively.
   children:
 
+    # Webcams
     webcams:
       hosts:
         host-pi-zero-guineapirate:
@@ -108,38 +107,10 @@ all:
         host-x86-ladyrona:
         vm-digitalocean-whalecoiner:
 
-    # Group: Raspberry Pi hardware
-    # Because they are Single Board Computers these devices they can have unique setup requirements
-    raspberrypis:
-      hosts:
-        host-pi1-512mb-weaponisedgender:
-        host-pi3-1gb-sleeperservice:
-        host-pi4-2gb-bonerseizure:
-        host-pi4-2gb-fonduesexparty:
-        host-pi4-8gb-aprilashley:
-        host-pi4-8gb-attitudeadjuster:
-        host-pizero-grabthetension:
-        host-pizero-twistymotherfucker:
-
-    certificate_authority:
-      hosts:
-        host-pi4-2gb-bonerseizure:
-
     # Group: Home Automation
     homeautomation:
       hosts:
         host-pi4-8gb-aprilashley:
-
-    # Group: Wireguard
-    # Wireguard is a VPN that allows me to access my LAN remotely
-    wireguard:
-      hosts:
-        vm-digitalocean-whalecoiner:
-        host-x86-smol:
-        host-x86-ladyrona:
-        host-x86-gottakeepswimming:
-        host-pi4-8gb-aprilashley:
-        host-pi3-1gb-sleeperservice:
 
     # Hosts that use ZFS
     zfs:
