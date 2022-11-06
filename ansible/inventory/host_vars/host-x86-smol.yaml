@@ -2,7 +2,7 @@ ansible_user: ubuntu
 ansible_host: 192.168.1.119
 
 # Network Interfaces
-mac_address: "00:0e:c6:84:3a:64"
+mac_address: "80:49:71:10:BF:E6"
 
 # Wireguard
 wireguard_address: "10.8.0.119/32"
