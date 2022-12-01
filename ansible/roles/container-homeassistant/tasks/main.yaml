@@ -1,9 +1,9 @@
-- name: "Set {{ container_name }} config path"
+- name: "Set config path: {{ container_name }}"
   ansible.builtin.set_fact:
     container_config_dir: "{{ ansible_env.HOME }}"
   when: container_config_dir is undefined
 
-- name: "Create {{ container_name }} config dir"
+- name: "Create config dir: {{ container_name }}"
   become: true
   ansible.builtin.file:
     path: "{{ container_config_dir }}/{{ container_name }}"
@@ -26,10 +26,15 @@
     force: true
   when: not docker_venv.stat.exists
 
-- name: "Ensure {{ container_name }} container exists"
+- name: "Pull image: {{ container_name }}"
+  community.docker.docker_image:
+    name: "{{ container_image }}"
+    source: pull
+
+- name: "Ensure container exists: {{ container_name }}"
   community.docker.docker_container:
     name: "{{ container_name }}"
-    image: ghcr.io/home-assistant/home-assistant:latest
+    image: "{{ container_image }}"
     state: started
     privileged: true
     restart_policy: unless-stopped
