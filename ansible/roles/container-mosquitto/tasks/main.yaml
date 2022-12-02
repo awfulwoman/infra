@@ -70,6 +70,7 @@
     name: "{{ container_name }}"
     image: eclipse-mosquitto:latest
     pull: true
+    removal_wait_timeout: 600
     state: started
     privileged: true
     restart_policy: unless-stopped

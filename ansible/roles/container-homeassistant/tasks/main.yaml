@@ -31,6 +31,7 @@
     name: "{{ container_name }}"
     image: "{{ image }}"
     pull: true
+    removal_wait_timeout: 600
     state: started
     privileged: true
     restart_policy: unless-stopped

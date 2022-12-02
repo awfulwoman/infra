@@ -25,6 +25,7 @@
     state: "{{ container_state }}"
     privileged: true
     pull: true
+    removal_wait_timeout: 600
     restart_policy: unless-stopped
     user: "{{ container_user_id }}:{{ container_user_id }}"
     groups:
