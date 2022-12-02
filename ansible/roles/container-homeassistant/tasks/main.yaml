@@ -28,13 +28,14 @@
 
 - name: "Pull image: {{ container_name }}"
   community.docker.docker_image:
-    repository: "{{ container_image }}"
+    name: "{{ container_image }}"
+    repository: "{{ container_image }}:latest"
     source: pull
 
 - name: "Ensure container exists: {{ container_name }}"
   community.docker.docker_container:
     name: "{{ container_name }}"
-    image: "{{ container_image }}"
+    image: "{{ container_image }}:latest"
     state: started
     privileged: true
     restart_policy: unless-stopped

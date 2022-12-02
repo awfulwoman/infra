@@ -1,2 +1,2 @@
 container_name: homeassistant
-container_image: ghcr.io/home-assistant/home-assistant:latest
+container_image: ghcr.io/home-assistant/home-assistant
