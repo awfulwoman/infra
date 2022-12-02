@@ -67,6 +67,7 @@
     name: pihole
     image: pihole/pihole
     network_mode: host
+    pull: true
     env:
       TZ: "Europe/Berlin"
       WEBPASSWORD: "{{ pihole_password }}"

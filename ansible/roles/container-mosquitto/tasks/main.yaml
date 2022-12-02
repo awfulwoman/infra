@@ -69,6 +69,7 @@
   community.docker.docker_container:
     name: "{{ container_name }}"
     image: eclipse-mosquitto:latest
+    pull: true
     state: started
     privileged: true
     restart_policy: unless-stopped

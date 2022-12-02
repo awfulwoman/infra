@@ -14,6 +14,7 @@
   community.docker.docker_container:
     name: "{{ container_name }}"
     image: jellyfin/jellyfin
+    pull: true
     state: started
     restart_policy: unless-stopped
     ports:
