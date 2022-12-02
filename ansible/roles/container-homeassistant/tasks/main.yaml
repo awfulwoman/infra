@@ -28,7 +28,7 @@
 
 - name: "Pull image: {{ container_name }}"
   community.docker.docker_image:
-    name: "{{ container_image }}"
+    repository: "{{ container_image }}"
     source: pull
 
 - name: "Ensure container exists: {{ container_name }}"
