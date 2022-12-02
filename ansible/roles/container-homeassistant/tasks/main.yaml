@@ -26,18 +26,11 @@
     force: true
   when: not docker_venv.stat.exists
 
-- name: "Pull image: {{ container_name }}"
-  community.docker.docker_image:
-    name: "{{ container_name }}"
-    repository: "{{ container_image }}"
-    tag: latest
-    source: pull
-    state: present
-
 - name: "Ensure container exists: {{ container_name }}"
   community.docker.docker_container:
     name: "{{ container_name }}"
-    image: "{{ container_name }}:latest"
+    image: "{{ image }}"
+    pull: true
     state: started
     privileged: true
     restart_policy: unless-stopped
