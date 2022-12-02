@@ -29,8 +29,10 @@
 - name: "Pull image: {{ container_name }}"
   community.docker.docker_image:
     name: "{{ container_image }}"
-    repository: "{{ container_image }}:latest"
+    repository: "{{ container_image }}"
+    tag: latest
     source: pull
+    state: present
 
 - name: "Ensure container exists: {{ container_name }}"
   community.docker.docker_container:
