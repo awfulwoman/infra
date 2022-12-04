@@ -1,7 +1,7 @@
 - name: Install beep
   become: true
   ansible.builtin.apt:
-    name: 
+    name:
       - beep
     state: present
 
@@ -13,7 +13,7 @@
     owner: root
     group: root
     mode: 0664
-  
+
 - name: Ensure group "beep" exists
   become: true
   ansible.builtin.group:
@@ -25,4 +25,4 @@
   user:
     name: "{{ ansible_user }}"
     groups: beep
-    append: yes
+    append: true

@@ -1,7 +1,7 @@
 - name: Mount backup NFS volumes
   become: true
   ansible.posix.mount:
-    src: 10.8.0.116:/slowpool/backups # hardcoded for now
+    src: 192.168.1.116:/slowpool/backups # hardcoded for now
     path: /mnt/backups
     state: mounted
     opts: defaults,_netdev,x-systemd.after=network-online.target

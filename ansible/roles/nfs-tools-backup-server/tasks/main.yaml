@@ -11,4 +11,4 @@
     name: slowpool/backups
     state: present
     extra_zfs_properties:
-      sharenfs: rw=@192.168.1.102/32
+      sharenfs: rw=@host-homeautomation.i.affordablepotatoes.com
