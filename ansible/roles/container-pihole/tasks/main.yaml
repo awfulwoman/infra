@@ -3,7 +3,7 @@
     user_config_path: "{{ ansible_env.HOME }}"
 
 - name: Create directories
-  file:
+  ansible.builtin.file:
     path: "{{ item }}"
     state: directory
   loop:
@@ -13,7 +13,7 @@
 
 - name: Disable Ubuntu's caching DNS resolver on port 53
   become: true
-  lineinfile: 
+  ansible.builtin.lineinfile:
     dest: /etc/systemd/resolved.conf
     line: "DNSStubListener=no"
     regexp: "#?DNSStubListener=yes"
@@ -31,7 +31,7 @@
 
 - name: Restart systemd-resolved
   become: true
-  service:
+  ansible.builtin.service:
     name: systemd-resolved
     state: restarted
   when: resolv_conf.changed
