@@ -1,9 +1,0 @@
-- name: Webcams
-  hosts: webcams
-  roles:
-    - role: standard_os
-    - role: raspberrypi-camera
-    - role: apt-upgrade
-  handlers:
-    - name: Reboot host
-      reboot:

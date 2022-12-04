@@ -1,5 +1,0 @@
-# Linksys WRT3200ACM running OpenWRT.
-# Acts as Edge Router and Wifi AP.
-# DHCP and DNS handled by the Pihole.
-
-ansible_host: 192.168.1.1

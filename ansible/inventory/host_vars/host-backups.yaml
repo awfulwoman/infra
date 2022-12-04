@@ -8,7 +8,7 @@
 # ------------------------
 
 ansible_user: ubuntu
-ansible_host: 192.168.1.118
+ansible_host: host-backups.i.affordablepotatoes.com
 mac_address: "60:a4:4c:40:52:57"
 
 # Wireguard

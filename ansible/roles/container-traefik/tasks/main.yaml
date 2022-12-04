@@ -27,6 +27,7 @@
     name: traefik
     image: traefik:v2.6
     state: started
+    pull: true
     restart_policy: unless-stopped
     labels:
       traefik.frontend.rule: "Host:traefik.affordablepotatoes.com"

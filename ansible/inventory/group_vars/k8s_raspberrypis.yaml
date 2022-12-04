@@ -1,7 +1,0 @@
-raspberry_pi_cmdline_txt: "/boot/cmdline.txt"
-raspberry_pi_cmdline_options:
-  cgroup_memory: 1 
-  cgroup_enable: memory
-raspberry_pi_disable_wifi: true
-raspberry_pi_disable_bluetooth: false
-raspberry_pi_legacy_firewall: true

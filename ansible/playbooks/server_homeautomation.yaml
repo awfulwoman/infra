@@ -1,6 +1,6 @@
 ---
 - name: Home Automation Pi
-  hosts: host-pi4-8gb-aprilashley
+  hosts: host-homeautomation
   roles:
     - role: standard_os
     - role: standard-host
@@ -9,6 +9,7 @@
     - role: weareinteractive.environment
       become: true
       no_log: true
+    - role: artis3n.tailscale
     - role: geerlingguy.docker
       become: true
       when: ansible_architecture == "x86_64"

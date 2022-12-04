@@ -1,10 +1,11 @@
 ---
 - name: Backup Server
-  hosts: host-x86-gottakeepswimming
+  hosts: host-backups
   roles:
     - role: standard_os
     - role: standard-host
     - role: healthchecks
+    - role: artis3n.tailscale
     - role: grub-tune
     - role: zfs-tools
     - role: hifis.unattended_upgrades

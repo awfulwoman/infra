@@ -1,6 +1,6 @@
 ---
-- name: NAS
-  hosts: host-x86-ladyrona
+- name: Storage NAS
+  hosts: host-storage
   roles:
     - role: standard_os
     - role: standard-host
@@ -10,14 +10,9 @@
     - role: cron-reboot
     - role: sleepy
     - role: containers-config
+    - role: artis3n.tailscale
     - role: geerlingguy.docker
       become: true
-    - role: geerlingguy.docker
-      become: true
-      when: ansible_architecture == "x86_64"
-    - role: geerlingguy.docker_arm
-      become: true
-      when: ansible_architecture == "aarch64"
     - role: docker
     - role: hifis.unattended_upgrades
       become: true

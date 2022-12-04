@@ -1,12 +1,12 @@
 # ------------------------
-# name: April Ashley
+# name: Home Automation Pi
 # type: Raspberry Pi 4
 # arch: aarch64
 # cpu: Cortex-A72
 # mem: 8GB
 # ------------------------
 
-ansible_host: 192.168.1.102
+ansible_host: host-homeautomation.i.affordablepotatoes.com
 ansible_user: ubuntu
 
 # Network Interfaces

@@ -12,7 +12,8 @@
     - role: weareinteractive.environment
       no_log: true
       become: true
-    - role: cron-reboot  
+    - role: cron-reboot
+    - role: artis3n.tailscale
     - role: mrlesmithjr.netplan
       become: true
     - role: geerlingguy.docker
@@ -30,4 +31,4 @@
   handlers:
     - name: Reboot host
       become: true
-      reboot:
+      ansible.builtin.reboot:
