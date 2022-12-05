@@ -7,6 +7,7 @@
     state: present
 
 - name: Add NFS shares to backup dataset
+  become: true
   zfs:
     name: slowpool/backups
     state: present
