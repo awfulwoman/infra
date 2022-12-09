@@ -18,6 +18,7 @@ all:
     homeautomation:
       hosts:
         host-homeautomation:
+        host-homeautomation-new:
 
     # Hosts that use ZFS
     zfs:
@@ -39,3 +40,4 @@ all:
     autorestic:
       hosts:
         host-homeautomation:
+        host-homeautomation-new:

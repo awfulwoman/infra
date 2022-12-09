@@ -1,8 +1,6 @@
 ---
 - name: Home Automation Pi
-  hosts:
-    - host-homeautomation
-    - host-homeautomation-new
+  hosts: homeautomation 
   roles:
     - role: standard_os
     - role: standard-host
