@@ -22,7 +22,7 @@
     name: restic
     image: lobaro/restic-backup-docker:latest
     state: started
-    pull: true
+    # pull: true
     privileged: true
     restart_policy: unless-stopped
     env:

@@ -13,7 +13,7 @@
     name: freshrss
     image: lscr.io/linuxserver/freshrss
     state: started
-    pull: true
+    # pull: true
     restart_policy: unless-stopped
     ports:
       - "7580:80"

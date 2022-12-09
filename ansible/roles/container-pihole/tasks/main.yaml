@@ -67,7 +67,7 @@
     name: pihole
     image: pihole/pihole
     network_mode: host
-    pull: true
+    # pull: true
     removal_wait_timeout: 600
     env:
       TZ: "Europe/Berlin"
