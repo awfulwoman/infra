@@ -5,9 +5,10 @@ all:
     # host-*         A physical machine used to perform tasks. Has an OS that can be managed via SSH.
     # vm-*           A virtual machine used to perform tasks. Has an OS that can be managed via SSH.
     # workstation-*  A machine used directly by a person. Has an OS that can be managed via SSH.
-    host-homeautomation:                    # Raspberry Pi 4
+    host-homeautomation:                  # Raspberry Pi 4
+    host-homeautomation-new:              # Dell Wyse 5040
     host-backups:                         # Backups
-    host-storage:                           # NAS
+    host-storage:                         # NAS
     host-jumphost:                        # Jumphost
     vm-digitalocean-whalecoiner:          # Digital Ocean VM
 
