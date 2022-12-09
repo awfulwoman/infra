@@ -3,3 +3,8 @@
   ansible.builtin.apt:
     upgrade: full
     update_cache: true
+
+- name: Autoremove apt packages
+  become: true
+  ansible.builtin.apt:
+    autoremove: true
