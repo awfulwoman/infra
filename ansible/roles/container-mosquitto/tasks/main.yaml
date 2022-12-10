@@ -85,3 +85,4 @@
       - "{{ container_config_dir }}/{{ container_name }}/data:/mosquitto/data"
       - "{{ container_config_dir }}/{{ container_name }}/log/:/mosquitto/log"
       - /etc/localtime:/etc/localtime:ro
+  when: use_zigbee_hardware

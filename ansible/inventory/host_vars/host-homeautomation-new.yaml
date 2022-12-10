@@ -5,6 +5,9 @@
 ansible_host: host-homeautomation-new.i.affordablepotatoes.com
 ansible_user: ubuntu
 
+# Whether to initialise Zigbee2MQTT and the MQTT broker
+use_zigbee_hardware: false
+
 # CNAMEs
 cnames:
   - mqtt.affordablepotatoes.com

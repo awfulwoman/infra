@@ -40,3 +40,4 @@
       - "{{ container_config_dir }}/{{ container_name }}:/app/data"
       - "/run/udev:/run/udev:ro"
       - /etc/localtime:/etc/localtime:ro
+  when: use_zigbee_hardware

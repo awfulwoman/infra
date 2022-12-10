@@ -9,6 +9,9 @@
 ansible_host: host-homeautomation.i.affordablepotatoes.com
 ansible_user: ubuntu
 
+# Whether to initialise Zigbee2MQTT and the MQTT broker
+use_zigbee_hardware: true
+
 # Network Interfaces
 mac_address: "E4:5F:01:46:8B:D3"
 
