@@ -9,7 +9,7 @@ Let me and Bill Murray show you our home GitOps setup.
 
 
 - **Configuration as code:** `true`
-- **Networking:** DHCP and DNS via Ansible-configured Pihole (though OPNsense soon to replace Pihole and the [Linksys Edge Router](ansible/inventory/host_vars/device-linksys-wrtacm3200.yaml)).
+- **Networking:** internal DHCP and DNS via an OPNsense box. WireGuard VPN via Tailscale. 
 - **Hardware management:** all machines controlled via [Ansible](ansible).
 - **Virtual machines:** provisioned via Terraform.
 - **Container orchestration:** [Flux](flux) (but not for long) and Kubernetes, running on the provisioned VMs.
