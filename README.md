@@ -39,6 +39,8 @@ So if you see mistakes in this repo... well, it's because I'm new at all this. B
 
 Anyway, enough of that. I'm sure you're hungry for code by now.
 
+UPDATE 1 YEAR LATER: I became a manager again. But it's MUCH better this time. ❤️
+
 </details>
 
 
