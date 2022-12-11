@@ -17,7 +17,7 @@ all:
     # Group: Home Automation
     homeautomation:
       hosts:
-        host-homeautomation:
+        # host-homeautomation:
         host-homeautomation-new:
 
     # Hosts that use ZFS

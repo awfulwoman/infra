@@ -77,7 +77,7 @@
     user: "{{ container_user_id }}:{{ container_user_id }}"
     ports:
       - "1883:1883"
-      - "9001:9001"
+      # - "9001:9001"
     env:
       TZ: "Berlin/Europe"
     volumes:

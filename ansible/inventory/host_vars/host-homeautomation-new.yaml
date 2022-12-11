@@ -6,12 +6,7 @@ ansible_host: host-homeautomation-new.i.affordablepotatoes.com
 ansible_user: ubuntu
 
 # Whether to initialise Zigbee2MQTT and the MQTT broker
-use_zigbee_hardware: false
-
-# CNAMEs
-cnames:
-  - mqtt.affordablepotatoes.com
-  - homeassistant-new.affordablepotatoes.com
+use_zigbee_hardware: true
 
 # Healthcheck.io
 healthcheck_reboot_id: !vault |
