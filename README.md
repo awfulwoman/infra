@@ -9,7 +9,7 @@ Let me and Bill Murray show you our home GitOps setup.
 
 
 - **Configuration as code:** `true`
-- **Networking:** DHCP and DNS via Ansible-configured Pihole (though OPNsense soon to replace Pihole and the [Linksys Edge Router](ansible/inventory/host_vars/device-linksys-wrtacm3200.yaml)).
+- **Networking:** internal DHCP and DNS via an OPNsense box. WireGuard VPN via Tailscale. 
 - **Hardware management:** all machines controlled via [Ansible](ansible).
 - **Virtual machines:** provisioned via Terraform.
 - **Container orchestration:** [Flux](flux) (but not for long) and Kubernetes, running on the provisioned VMs.
@@ -38,6 +38,8 @@ This repo is one of those learnings.
 So if you see mistakes in this repo... well, it's because I'm new at all this. But on the bright side I think I'm coming into this strong and that things will only, as they say, get better. My enormous levels of ADHD (yes really ADHD and no not just being scatty) and me being a junior-grade space cadet means that my brain works well at fitting unrelated concepts and systems together. "Shit at the detail, fantastic at the big picture" is my elevator pitch. 
 
 Anyway, enough of that. I'm sure you're hungry for code by now.
+
+UPDATE 1 YEAR LATER: I became a manager again. But it's MUCH better this time. ❤️
 
 </details>
 
