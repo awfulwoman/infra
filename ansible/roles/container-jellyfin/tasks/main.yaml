@@ -26,10 +26,16 @@
       - "{{ container_config_dir }}/{{ container_name }}/cache:/cache"
       - "/slowpool/media:/media"
       - /etc/localtime:/etc/localtime:ro
-    # networks:
-    #     - name: "affordablepotatoes"
-    # labels:
-    #   traefik.enable: "true"
-    #   traefik.http.routers.metube.rule: "Host(`jellyfin.affordablepotatoes.com`)"
-    #   traefik.http.routers.metube.entrypoints: "web"
-      # traefik.http.services.metube.loadbalancer.server.port: "8081"
+    networks:
+      - name: "affordablepotatoes"
+    labels:
+      traefik.enable: "true"
+      # Routing for HTTP
+      traefik.http.routers.jellyfin.rule: "Host(`jellyfin.affordablepotatoes.com`)"
+      traefik.http.routers.jellyfin.entrypoints: "web"
+      traefik.http.services.jellyfin.loadbalancer.server.port: "8096"
+      # Routing for HTTPS
+      traefik.http.routers.jellyfin-https.service: "jellyfin"
+      traefik.http.routers.jellyfin-https.entrypoints: "websecure"
+      traefik.http.routers.jellyfin-https.rule: "Host(`jellyfin.affordablepotatoes.com`)"
+      traefik.http.routers.jellyfin-https.tls: "true"

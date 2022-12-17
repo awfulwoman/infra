@@ -12,19 +12,6 @@ ansible_user: ubuntu
 # Whether to initialise Zigbee2MQTT and the MQTT broker
 use_zigbee_hardware: true
 
-# Network Interfaces
-mac_address: "E4:5F:01:46:8B:D3"
-
-# Wireguard
-# wireguard_address: "10.8.0.102"
-# wireguard_endpoint: "{{ ansible_host }}"
-# wireguard_persistent_keepalive: "30"
-
-# CNAMEs
-cnames:
-  - mqtt.affordablepotatoes.com
-  - homeassistant.affordablepotatoes.com
-
 # Healthcheck.io
 healthcheck_reboot_id: !vault |
           $ANSIBLE_VAULT;1.2;AES256;beanpod

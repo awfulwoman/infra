@@ -1,0 +1,33 @@
+- name: Set config path
+  ansible.builtin.set_fact:
+    container_config_dir: "{{ ansible_env.HOME }}"
+  when: container_config_dir is undefined
+
+- name: "Create config dir: {{ container_config_dir }}/{{ container_name }} "
+  ansible.builtin.file:
+    path: "{{ container_config_dir }}/{{ container_name }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0774
+
+- name: "Create container: {{ container_name }}"
+  community.docker.docker_container:
+    name: "{{ container_name }}"
+    image: "{{ image }}"
+    state: "{{ container_state }}"
+    privileged: true
+    # pull: true
+    removal_wait_timeout: 600
+    restart_policy: unless-stopped
+    user: "{{ container_user_id }}:{{ container_user_id }}"
+    ports:
+      - "8091:80"
+      - "8092:8080"
+      - "8443:8443"
+    env:
+      TZ: "Berlin/Europe"
+    volumes:
+      - "{{ container_config_dir }}/{{ container_name }}/docker-aio-config:/mnt/docker-aio-config"
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro

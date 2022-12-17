@@ -8,10 +8,10 @@
   community.docker.docker_container:
     name: "{{ container_name }}"
     image: akhilrex/podgrab:latest
-    state: started
+    state: stopped
     restart_policy: unless-stopped
     ports:
-      - 9876:8080
+      - 9876:9876
     env:
       TZ: "Berlin/Europe"
       CHECK_FREQUENCY: "240"

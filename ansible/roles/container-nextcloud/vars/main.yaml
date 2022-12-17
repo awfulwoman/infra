@@ -1,0 +1,4 @@
+container_name: nextcloud-aio-mastercontainer
+container_state: started
+image: nextcloud/all-in-one:latest
+container_user_id: 1000

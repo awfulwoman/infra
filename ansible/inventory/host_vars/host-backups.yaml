@@ -9,12 +9,6 @@
 
 ansible_user: ubuntu
 ansible_host: host-backups.i.affordablepotatoes.com
-mac_address: "60:a4:4c:40:52:57"
-
-# Wireguard
-# wireguard_address: "10.8.0.118/24"
-# wireguard_endpoint: 192.168.1.118
-# wireguard_persistent_keepalive: "30"
 
 # Healthceck.io
 healthcheck_reboot_id: !vault |
@@ -25,7 +19,6 @@ healthcheck_reboot_id: !vault |
           3431363431343934370a383030336238373665623334323331643033313962343435643337613762
           61633265323161656365333764363436623863626465666131366635383733353334323233666661
           3639336261666139616332376534376634663132393532643166
-
 
 vault_private_key: !vault |
           $ANSIBLE_VAULT;1.2;AES256;beanpod

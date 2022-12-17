@@ -2,7 +2,7 @@
 # name: Home Automation server
 # ------------------------
 
-ansible_host: host-homeautomation-new.i.affordablepotatoes.com
+ansible_host: host-homeautomation.i.affordablepotatoes.com
 ansible_user: ubuntu
 
 # Whether to initialise Zigbee2MQTT and the MQTT broker

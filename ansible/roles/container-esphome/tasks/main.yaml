@@ -27,10 +27,16 @@
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}:/config"
       - /etc/localtime:/etc/localtime:ro
-    # networks:
-    #     - name: "affordablepotatoes"
-    # labels:
-    #   traefik.enable: "true"
-    #   traefik.http.routers.flame.rule: "Host(`esphome.affordablepotatoes.com`)"
-    #   traefik.http.routers.flame.entrypoints: "web"
-    #   traefik.http.services.flame.loadbalancer.server.port: "5005"
+    networks:
+      - name: "affordablepotatoes"
+    labels:
+      traefik.enable: "true"
+      # Routing for HTTP
+      traefik.http.routers.esphome.rule: "Host(`esphome.affordablepotatoes.com`)"
+      traefik.http.routers.esphome.entrypoints: "web"
+      traefik.http.services.esphome.loadbalancer.server.port: "6052"
+      # Routing for HTTPS
+      # traefik.http.routers.esphome-https.service: "esphome"
+      # traefik.http.routers.esphome-https.entrypoints: "websecure"
+      # traefik.http.routers.esphome-https.rule: "Host(`esphome.affordablepotatoes.com`)"
+      # traefik.http.routers.esphome-https.tls: "true"
