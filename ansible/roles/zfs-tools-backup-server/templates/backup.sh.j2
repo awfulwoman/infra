@@ -13,7 +13,7 @@ mkdir -p $LOGGING_DIR
 touch $LOGGING_DIR/$LOGGING_FILE
 
 # Is the backup host up?
-ping $BACKUP_ADDRESS -c2 
+ping $BACKUP_ADDRESS -c2 > /dev/null 2>&1
 
 if [ $? -eq 0 ]; 
 then 
