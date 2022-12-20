@@ -20,7 +20,7 @@
     name: affordablepotatoes
     internal: false
     attachable: true
-    
+
 - name: "Create {{ container_name }} container"
   # become: true
   community.docker.docker_container:
