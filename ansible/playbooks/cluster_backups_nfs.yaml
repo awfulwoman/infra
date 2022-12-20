@@ -1,5 +1,5 @@
 ---
-- name: Home Automation Pi
+- name: Home Automation host
   hosts: host-homeautomation
   roles:
     - role: nfs-tools
@@ -7,7 +7,7 @@
     # - role: container-restic
 
 
-- name: NAS
+- name: Storage host
   hosts: host-storage
   roles:
     - role: nfs-tools

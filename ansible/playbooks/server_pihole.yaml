@@ -1,6 +1,6 @@
 ---
 # DNS + DHCP server
-# Assumes a bare metal install of Raspbian or Ubuntu
+# NO LONGER USED
 
 - name: PiHole DNS + DHCP server
   hosts: pihole

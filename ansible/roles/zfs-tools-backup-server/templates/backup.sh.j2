@@ -6,14 +6,14 @@ LOGGING_DIR=/var/log/backups
 LOGGING_FILE=backups.log
 ERROR_FILE=error.log
 # BACKUP_ADDRESS=10.8.0.116
-BACKUP_ADDRESS=192.168.1.116
+BACKUP_ADDRESS=host-backups.i.affordablepotatoes.com
 FAILURE=0
 
 mkdir -p $LOGGING_DIR
 touch $LOGGING_DIR/$LOGGING_FILE
 
 # Is the backup host up?
-ping $BACKUP_ADDRESS -c2 
+ping $BACKUP_ADDRESS -c2 > /dev/null 2>&1
 
 if [ $? -eq 0 ]; 
 then 
