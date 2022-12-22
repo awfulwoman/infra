@@ -10,10 +10,4 @@ vault_backup_key: !vault |
           35626634636432326464666164326663633639633537653362323231623763346633633861633035
           6230
 
-backup_nfs:
-  - homeassistant
-  - zigbee2mqtt
-  - zigbee2mqtt-aqara
-  - mosquitto
-  - esphome
-  - vscode
+

@@ -10,7 +10,7 @@
     state: directory
     mode: 0744
 
-- name: "Ensure {{ container_name }} container exists"
+- name: "Ensure container exists - {{ container_name }}"
   community.docker.docker_container:
     name: "{{ container_name }}"
     image: jellyfin/jellyfin
@@ -30,12 +30,5 @@
       - name: "affordablepotatoes"
     labels:
       traefik.enable: "true"
-      # Routing for HTTP
       traefik.http.routers.jellyfin.rule: "Host(`jellyfin.affordablepotatoes.com`)"
       traefik.http.routers.jellyfin.entrypoints: "web"
-      traefik.http.services.jellyfin.loadbalancer.server.port: "8096"
-      # Routing for HTTPS
-      traefik.http.routers.jellyfin-https.service: "jellyfin"
-      traefik.http.routers.jellyfin-https.entrypoints: "websecure"
-      traefik.http.routers.jellyfin-https.rule: "Host(`jellyfin.affordablepotatoes.com`)"
-      traefik.http.routers.jellyfin-https.tls: "true"

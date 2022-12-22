@@ -1,25 +1,11 @@
-# ------------------------
-# name: Home Automation Pi
-# type: Raspberry Pi 4
-# arch: aarch64
-# cpu: Cortex-A72
-# mem: 8GB
-# ------------------------
-
-ansible_host: host-homeautomation.i.affordablepotatoes.com
+ansible_host: host-monitoring.i.affordablepotatoes.com
 ansible_user: ubuntu
 
 # Whether to initialise Zigbee2MQTT and the MQTT broker
 use_zigbee_hardware: true
 
 # Which container configs to backup to host-storage
-backup_nfs:
-  - homeassistant
-  - zigbee2mqtt
-  - zigbee2mqtt-aqara
-  - mosquitto
-  - esphome
-  - vscode
+backup_nfs: [] 
 
 # Healthcheck.io
 healthcheck_reboot_id: !vault |

@@ -11,7 +11,7 @@
 #   exit 1 
 # fi 
 
-/usr/local/bin/autorestic -c {{ user_config_path }}/.autorestic.yaml --ci cron /tmp/autorestic.log 2>&1
+/usr/local/bin/autorestic -c {{ autorestic_config_path }}/config.yaml --ci cron {{ autorestic_temp_path }}/autorestic.log 
 
 if [ $? -eq 0 ]
 then

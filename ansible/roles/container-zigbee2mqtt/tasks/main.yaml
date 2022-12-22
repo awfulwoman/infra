@@ -1,9 +1,9 @@
-- name: Set config path
+- name: "Set config path for {{ container_name }}"
   ansible.builtin.set_fact:
     container_config_dir: "{{ ansible_env.HOME }}"
   when: container_config_dir is undefined
 
-- name: "Create {{ container_name }} config dir"
+- name: "Create config dir for {{ container_name }}"
   ansible.builtin.file:
     path: "{{ container_config_dir }}/{{ container_name }}"
     state: directory
@@ -11,14 +11,14 @@
     group: "{{ ansible_user }}"
     mode: 0774
 
-- name: "Add {{ ansible_user }} to dialout group"
+- name: "Add user to dialout group for {{ ansible_user }}"
   become: true
   ansible.builtin.user:
     user: "{{ ansible_user }}"
     groups: dialout
     append: true
 
-- name: "Create {{ container_name }} container"
+- name: "Create container for {{ container_name }}"
   community.docker.docker_container:
     name: "{{ container_name }}"
     image: koenkk/zigbee2mqtt:latest

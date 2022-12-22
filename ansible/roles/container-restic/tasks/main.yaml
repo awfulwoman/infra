@@ -2,7 +2,7 @@
   ansible.builtin.set_fact:
     user_config_path: "{{ ansible_env.HOME }}"
 
-- name: "Create {{ container_name }} config dir"
+- name: "Create config dir - {{ container_name }} "
   ansible.builtin.file:
     path: "{{ container_config_dir }}/restic"
     state: directory
@@ -16,7 +16,7 @@
   debug:
     var: volumes_to_mount
 
-- name: "Create {{ container_name }} container"
+- name: "Create container - {{ container_name }}"
   # become: true
   community.docker.docker_container:
     name: restic

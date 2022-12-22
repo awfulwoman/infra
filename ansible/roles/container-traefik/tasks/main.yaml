@@ -30,7 +30,7 @@
     # pull: true
     restart_policy: unless-stopped
     labels:
-      traefik.frontend.rule: "Host:traefik.affordablepotatoes.com"
+      traefik.frontend.rule: "Host:traefik.homeautomation.affordablepotatoes.com"
       traefik.port: "80"
       traefik.enable: "false"
       traefik.backend: "traefik"

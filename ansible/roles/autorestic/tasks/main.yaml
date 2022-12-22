@@ -2,6 +2,14 @@
   ansible.builtin.set_fact:
     user_config_path: "{{ ansible_env.HOME }}"
 
+- name: Set temp path
+  ansible.builtin.set_fact:
+    autorestic_temp_path: "/tmp/autorestic"
+
+- name: Set autorestic config path
+  ansible.builtin.set_fact:
+    autorestic_config_path: "/etc/autorestic"
+
 - name: Check for autorestic installation
   ansible.builtin.command: which autorestic
   register: autorestic_installation
@@ -11,41 +19,60 @@
 - name: Download autorestic installer
   ansible.builtin.get_url:
     url: https://raw.githubusercontent.com/CupCakeArmy/autorestic/master/install.sh
-    dest: $HOME/autorestic.sh
+    dest: "{{ autorestic_temp_path }}/autorestic.sh"
     mode: 0744
   when: autorestic_installation.rc != 0
 
-- name: Install autorestic
+- name: Run autorestic installation script
   become: true
-  ansible.builtin.command: "{{ user_config_path }}/autorestic.sh"
+  ansible.builtin.command: "{{ autorestic_temp_path }}/autorestic.sh"
   when: autorestic_installation.rc != 0
 
 - name: Remove autorestic installer
   ansible.builtin.file:
-    path: "{{ user_config_path }}/autorestic.sh"
+    path: "{{ autorestic_temp_path }}/autorestic.sh"
     state: absent
   when: autorestic_installation.rc != 0
 
-- name: "Copy .autorestic.yaml file to {{ ansible_user }} home dir"
+- name: "Ensure path exists {{ autorestic_config_path }}"
+  become: true
+  ansible.builtin.file:
+    state: directory
+    path: "{{ autorestic_config_path }}"
+    owner: root
+    group: root
+    mode: 0774
+
+- name: "Ensure path exists {{ nfs_backup_path }}/restic"
+  become: true
+  ansible.builtin.file:
+    state: directory
+    path: "{{ nfs_backup_path }}/restic"
+    owner: root
+    group: root
+    mode: 0774
+
+- name: "Copy .autorestic.yaml file to {{ autorestic_config_path }}"
   become: true
   ansible.builtin.template:
     src: autorestic.yaml.j2
-    dest: "{{ user_config_path }}/.autorestic.yaml"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    dest: "{{ autorestic_config_path }}/config.yaml"
+    owner: root
+    group: root
     mode: 0774
 
-- name: "Copy autorestic-cron.sh to {{ ansible_user }} home dir"
+- name: "Copy autorestic-cron.sh {{ autorestic_config_path }}"
   become: true
   ansible.builtin.template:
     src: autorestic-cron.sh.j2
-    dest: "{{ user_config_path }}/autorestic-cron.sh"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    dest: "{{ autorestic_config_path }}/autorestic-cron.sh"
+    owner: root
+    group: root
     mode: 0774
 
 # This cron is frequent because the called script handles timing of backups
 - name: Ensure autorestic cron exists
+  become: true
   ansible.builtin.cron:
     name: "Autorestic"
     minute: "*/5"
@@ -53,5 +80,5 @@
     day: "*"
     weekday: "*"
     month: "*"
-    job: "{{ user_config_path }}/autorestic-cron.sh"
+    job: "{{ autorestic_config_path }}/autorestic-cron.sh"
     state: present

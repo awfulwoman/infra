@@ -1,7 +1,7 @@
 backends:
   hdd:
     type: local
-    path: /mnt/backups/restic
+    path: /mnt/backups/restic # a mounted NFS share
     key: "{{vault_backup_key}}"
 locations:
 {% for item in backup_nfs %}
@@ -10,6 +10,6 @@ locations:
         - /home/ubuntu/{{item}}
       to:
         - hdd
-      cron: "0 0 * * *"
+      cron: "{{ cron_schedule }}"
 {% endfor %}
 version: 2

@@ -11,32 +11,22 @@
 - name: "Ensure {{ container_name }} container exists"
   community.docker.docker_container:
     name: "{{ container_name }}"
-    image: esphome/esphome:latest
+    image: jasonrivers/nagios:latest
     state: started
     privileged: true
     restart_policy: unless-stopped
     # user: "{{ container_user_id }}:{{ container_user_id }}"
     ports:
-      - "6052:6052"
-      - "6123:6123"
-    devices:
-      - /dev/ttyUSB0
+      - "8999:80"
     env:
       TZ: "Berlin/Europe"
-      ESPHOME_DASHBOARD_USE_PING: "true"
     volumes:
-      - "{{ container_config_dir }}/{{ container_name }}:/config"
       - /etc/localtime:/etc/localtime:ro
     networks:
       - name: "affordablepotatoes"
     labels:
       traefik.enable: "true"
       # Routing for HTTP
-      traefik.http.routers.esphome.rule: "Host(`esphome.affordablepotatoes.com`)"
-      traefik.http.routers.esphome.entrypoints: "web"
-      # traefik.http.services.esphome.loadbalancer.server.port: "6052"
-      # Routing for HTTPS
-      # traefik.http.routers.esphome-https.service: "esphome"
-      # traefik.http.routers.esphome-https.entrypoints: "websecure"
-      # traefik.http.routers.esphome-https.rule: "Host(`esphome.affordablepotatoes.com`)"
-      # traefik.http.routers.esphome-https.tls: "true"
+      traefik.http.routers.nagios.rule: "Host(`nagios.affordablepotatoes.com`)"
+      traefik.http.routers.nagios.entrypoints: "web"
+      traefik.http.services.nagios.loadbalancer.server.port: "8999"
