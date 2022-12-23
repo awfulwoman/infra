@@ -4,6 +4,7 @@ backends:
     path: {{ restic_client_path}} # a mounted NFS share
     key: "{{vault_backup_key}}"
 locations:
+# TODO: Make more generic
 {% for item in backup_containers_via_autorestic %}
   {{item}}:
       from:

@@ -1,1 +1,14 @@
-cron_schedule: "* 13 * * *"
+autorestic_internal_cron_schedule: "* 13 * * *"
+
+autorestic_cron_minute: "*"
+autorestic_cron_hour: "6,18"
+autorestic_cron_day: "*"
+autorestic_cron_weekday: "*"
+autorestic_cron_month: "*"
+
+autorestic_temp_path: "/tmp/autorestic"
+autorestic_installer_url: "https://raw.githubusercontent.com/CupCakeArmy/autorestic/master/install.sh"
+autorestic_config_path: "{{ ansible_env.HOME }}"
+autorestic_cron_script_path: "{{ ansible_env.HOME }}"
+autorestic_owner: "{{ ansible_user }}"
+autorestic_group: "{{ ansible_user }}"

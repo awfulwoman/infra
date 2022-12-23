@@ -17,9 +17,7 @@
     - role: hifis.unattended_upgrades
       become: true
     - role: motd
-    - role: nfs-tools
-    - role: nfs-tools-backup-client
-    - role: autorestic
+    # - role: autorestic
     - role: container-vscode
     - role: container-traefik
     - role: container-nagios

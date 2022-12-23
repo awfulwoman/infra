@@ -1,51 +1,43 @@
-- name: Set config path
-  ansible.builtin.set_fact:
-    user_config_path: "{{ ansible_env.HOME }}"
-
-- name: Set temp path
-  ansible.builtin.set_fact:
-    autorestic_temp_path: "/tmp/autorestic"
-
 - name: Check for autorestic installation
   ansible.builtin.command: which autorestic
-  register: autorestic_installation
+  register: autorestic_installation_status
   changed_when: false
   failed_when: false
 
 - name: Download autorestic installer
   ansible.builtin.get_url:
-    url: https://raw.githubusercontent.com/CupCakeArmy/autorestic/master/install.sh
+    url: "{{ autorestic_installer_url }}"
     dest: "{{ autorestic_temp_path }}/autorestic.sh"
     mode: 0744
-  when: autorestic_installation.rc != 0
+  when: autorestic_installation_status.rc != 0
 
-- name: Run autorestic installation script
+- name: Run autorestic installer
   become: true
   ansible.builtin.command: "{{ autorestic_temp_path }}/autorestic.sh"
-  when: autorestic_installation.rc != 0
+  when: autorestic_installation_status.rc != 0
 
 - name: Remove autorestic installer
   ansible.builtin.file:
     path: "{{ autorestic_temp_path }}/autorestic.sh"
     state: absent
-  when: autorestic_installation.rc != 0
+  when: autorestic_installation_status.rc != 0
 
-- name: "Copy .autorestic.yaml file to {{ user_config_path }}"
+- name: "Copy config file to {{ autorestic_config_path }}"
   become: true
   ansible.builtin.template:
     src: autorestic.yaml.j2
-    dest: "{{ user_config_path }}/.autorestic.yaml"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    dest: "{{ autorestic_config_path }}/.autorestic.yaml"
+    owner: "{{ autorestic_owner }}"
+    group: "{{ autorestic_group }}"
     mode: 0755
 
-- name: "Copy autorestic-cron.sh {{ user_config_path }}"
+- name: "Copy cron script {{ autorestic_cron_script_path }}"
   become: true
   ansible.builtin.template:
     src: autorestic-cron.sh.j2
-    dest: "{{ user_config_path }}/autorestic-cron.sh"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    dest: "{{ autorestic_cron_script_path }}/autorestic-cron.sh"
+    owner: "{{ autorestic_owner }}"
+    group: "{{ autorestic_group }}"
     mode: 0755
 
 - name: Autorestic initialise
@@ -55,10 +47,10 @@
 - name: Ensure autorestic cron exists
   ansible.builtin.cron:
     name: "Autorestic"
-    minute: "*"
-    hour: "12"
-    day: "*"
-    weekday: "*"
-    month: "*"
-    job: "{{ ansible_user }}/autorestic-cron.sh"
+    minute: "{{ autorestic_cron_minute }}"
+    hour: "{{ autorestic_cron_hour }}"
+    day: "{{ autorestic_cron_day }}"
+    weekday: "{{ autorestic_cron_weekday }}"
+    month: "{{ autorestic_cron_month }}"
+    job: "{{ autorestic_cron_script_path }}/autorestic-cron.sh"
     state: present
