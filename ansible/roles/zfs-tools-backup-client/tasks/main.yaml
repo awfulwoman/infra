@@ -97,7 +97,7 @@
   become: true
   ansible.builtin.debug:
     msg: "{{ item }}"
-  loop: "{{ backup_datasets }}"
+  loop: "{{ zfs_backup_datasets }}"
 
 - name: Allow zfsbackup user to send backups of listed datasets
   become: true
@@ -106,8 +106,8 @@
     users: zfsbackup
     permissions: destroy,hold,mount,send,snapshot
     # descendents: true
-  loop: "{{ backup_datasets }}"
-  when: backup_datasets
+  loop: "{{ zfs_backup_datasets }}"
+  when: zfs_backup_datasets
 
 - name: Set authorized key and options
   become: true

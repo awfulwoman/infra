@@ -24,7 +24,7 @@
     name: backups
     state: present
 
-- name: Ensure backups/slowpool dataset is present
+- name: Ensure backups/slowpool dataset is present # TODO: Loop over dataset zfs_backup_datasets
   become: true
   community.general.zfs:
     name: backups/slowpool
@@ -34,7 +34,7 @@
       xattr: sa
       # mountpoint: none
 
-- name: Ensure backups/fastpool dataset is present
+- name: Ensure backups/fastpool dataset is present # TODO: Loop over dataset zfs_backup_datasets
   become: true
   community.general.zfs:
     name: backups/fastpool
@@ -62,7 +62,7 @@
     owner: root
     group: root
     mode: 0774
-  when: backup_datasets
+  when: zfs_backup_datasets
 
 - name: Cron to run backup.sh
   become: true
@@ -71,4 +71,4 @@
     special_time: reboot
     job: TZ=UTC /usr/local/sbin/backup.sh
     state: present
-  when: backup_datasets
+  when: zfs_backup_datasets
