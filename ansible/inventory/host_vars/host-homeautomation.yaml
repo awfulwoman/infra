@@ -12,14 +12,15 @@ ansible_user: ubuntu
 # Whether to initialise Zigbee2MQTT and the MQTT broker
 use_zigbee_hardware: true
 
-# Which container configs to backup to host-storage
-backup_nfs:
+# Container names to backup via autorestic
+backup_containers_via_autorestic:
   - homeassistant
   - zigbee2mqtt
   - zigbee2mqtt-aqara
   - mosquitto
   - esphome
   - vscode
+  - test
 
 # Healthcheck.io
 healthcheck_reboot_id: !vault |

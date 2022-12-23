@@ -2,24 +2,23 @@
 - name: Home Automation Server
   hosts: homeautomation
   roles:
-    - role: standard_os
-    - role: standard-host
-    - role: healthchecks
-    - role: cron-reboot
-    - role: weareinteractive.environment
-      become: true
-      no_log: true
-    - role: artis3n.tailscale
-    - role: geerlingguy.docker
-      become: true
-    - role: docker
-    - role: containers-config
-    - role: hifis.unattended_upgrades
-      become: true
-    - role: motd
-    - role: nfs-tools
-    - role: nfs-tools-backup-client
-    # - role: autorestic
+    # - role: standard_os
+    # - role: standard-host
+    # - role: healthchecks
+    # - role: cron-reboot
+    # - role: weareinteractive.environment
+    #   become: true
+    #   no_log: true
+    # - role: artis3n.tailscale
+    # - role: geerlingguy.docker
+    #   become: true
+    # - role: docker
+    # - role: containers-config
+    # - role: hifis.unattended_upgrades
+    #   become: true
+    # - role: motd
+    - role: nfs-client
+    - role: autorestic
     - role: container-vscode
     - role: container-homeassistant
     - role: container-esphome

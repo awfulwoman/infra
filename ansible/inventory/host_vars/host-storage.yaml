@@ -6,15 +6,13 @@ nfs_exports:
 #  - "/slowpool/incoming *(rw,all_squash,anonuid=1000,anongid=1000)"
   - "/fastpool *(rw,all_squash,anonuid=1000,anongid=1000)"
   - "/slowpool/media *(rw,all_squash,anonuid=1000,anongid=1000)"
-  - "/slowpool/backups *(rw,all_squash,anonuid=1000,anongid=1000)"
+  - "{{ restic_server_path }} *(rw,all_squash,anonuid=1000,anongid=1000)"
 
 # Base for all container dirs. Normally on an SSD.
 container_config_dir: /fastpool/containers
 
 # Restic vars
-backup_restic_destination: /slowpool/backups/restic # Restic snapshot location
-backup_sources: # list of directories inside {{ container_config_dir }} that should be backed up
-  - homeassistant
+backup_restic_destination: "{{ restic_server_path }}" # Restic snapshot location
 
 # Healthceck.io
 healthcheck_reboot_id: !vault |

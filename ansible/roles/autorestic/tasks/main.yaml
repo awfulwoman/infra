@@ -6,10 +6,6 @@
   ansible.builtin.set_fact:
     autorestic_temp_path: "/tmp/autorestic"
 
-- name: Set autorestic config path
-  ansible.builtin.set_fact:
-    autorestic_config_path: "/etc/autorestic"
-
 - name: Check for autorestic installation
   ansible.builtin.command: which autorestic
   register: autorestic_installation
@@ -34,51 +30,35 @@
     state: absent
   when: autorestic_installation.rc != 0
 
-- name: "Ensure path exists {{ autorestic_config_path }}"
-  become: true
-  ansible.builtin.file:
-    state: directory
-    path: "{{ autorestic_config_path }}"
-    owner: root
-    group: root
-    mode: 0774
-
-- name: "Ensure path exists {{ nfs_backup_path }}/restic"
-  become: true
-  ansible.builtin.file:
-    state: directory
-    path: "{{ nfs_backup_path }}/restic"
-    owner: root
-    group: root
-    mode: 0774
-
-- name: "Copy .autorestic.yaml file to {{ autorestic_config_path }}"
+- name: "Copy .autorestic.yaml file to {{ user_config_path }}"
   become: true
   ansible.builtin.template:
     src: autorestic.yaml.j2
-    dest: "{{ autorestic_config_path }}/config.yaml"
-    owner: root
-    group: root
-    mode: 0774
+    dest: "{{ user_config_path }}/.autorestic.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0755
 
-- name: "Copy autorestic-cron.sh {{ autorestic_config_path }}"
+- name: "Copy autorestic-cron.sh {{ user_config_path }}"
   become: true
   ansible.builtin.template:
     src: autorestic-cron.sh.j2
-    dest: "{{ autorestic_config_path }}/autorestic-cron.sh"
-    owner: root
-    group: root
-    mode: 0774
+    dest: "{{ user_config_path }}/autorestic-cron.sh"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0755
+
+- name: Autorestic initialise
+  ansible.builtin.command: "autorestic check"
 
 # This cron is frequent because the called script handles timing of backups
 - name: Ensure autorestic cron exists
-  become: true
   ansible.builtin.cron:
     name: "Autorestic"
-    minute: "*/5"
-    hour: "*"
+    minute: "*"
+    hour: "12"
     day: "*"
     weekday: "*"
     month: "*"
-    job: "{{ autorestic_config_path }}/autorestic-cron.sh"
+    job: "{{ ansible_user }}/autorestic-cron.sh"
     state: present

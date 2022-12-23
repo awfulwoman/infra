@@ -1,0 +1,16 @@
+- name: Install NFS packages
+  become: true
+  ansible.builtin.apt:
+    name:
+      - nfs-common
+    state: present
+
+- name: Mount remote NFS volumes
+  become: true
+  ansible.posix.mount:
+    src: "192.168.1.116:{{ restic_server_path }}" # TODO: Make this a look from inventory data
+    path: "{{ restic_client_path }}"
+    state: mounted
+    opts: defaults,_netdev,x-systemd.after=network-online.target
+    fstype: nfs
+    boot: true

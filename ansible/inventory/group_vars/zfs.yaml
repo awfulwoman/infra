@@ -10,6 +10,6 @@ vault_zfsbackup_password: !vault |
 
 backup_datasets:
   - fastpool/containers
-  - slowpool/backups
+  - "{{ restic_zfs_id }}"
   - slowpool/pools
   - slowpool/images

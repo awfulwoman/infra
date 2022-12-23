@@ -35,7 +35,7 @@
   args:
     chdir: "{{ container_config_dir }}/sanoid-image-builder"
   when: sanoid_deb.stat.exists != true
-  
+
 # Qe have to call the script from the dir, otherwise it fails
 - name: Install Sanoid from deb file
   become: true

@@ -17,14 +17,12 @@
     - role: hifis.unattended_upgrades
       become: true
     - role: host-bus-adapter
-    - role: nfs-tools
-    - role: nfs-tools-backup-server
+    - role: nfs-server
     - role: virtualisation-tools
     - role: motd
     - role: container-jellyfin
     - role: container-audiobookshelf
     - role: container-traefik
-    - role: container-restic
     - role: container-freshrss
     - role: container-nextcloud
     - role: container-sanoid-builder

@@ -1,0 +1,16 @@
+---
+- name: Install NFS packages
+  become: true
+  ansible.builtin.apt:
+    name:
+      - nfs-common
+      - nfs-kernel-server
+    state: present
+
+- name: Share ZFS dataset via NFS
+  become: true
+  community.general.zfs:
+    name: "{{ restic_zfs_id }}"
+    state: present
+    extra_zfs_properties:
+      sharenfs: rw=@192.168.1.0/24

@@ -19,7 +19,7 @@
     state: present
   register: created_user
 
-- name: Create dataset
+- name: Create fastpool/containers dataset
   become: true
   community.general.zfs:
     name: fastpool/containers
@@ -27,6 +27,21 @@
     extra_zfs_properties:
       acltype: posix
       xattr: sa
+
+- name: "Create dataset - {{ restic_zfs_id }}"
+  become: true
+  community.general.zfs:
+    name: "{{ restic_zfs_id }}"
+    state: present
+
+- name: "Change ownership - {{ restic_server_path }}"
+  become: true
+  ansible.builtin.file:
+    path: "{{ restic_server_path }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0774
 
 - name: Get ZFS Server Public key
   ansible.builtin.set_fact:
@@ -80,7 +95,7 @@
 
 - name: List datasets to be given permissions on
   become: true
-  debug:
+  ansible.builtin.debug:
     msg: "{{ item }}"
   loop: "{{ backup_datasets }}"
 

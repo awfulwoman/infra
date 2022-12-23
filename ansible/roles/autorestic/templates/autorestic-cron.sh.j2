@@ -11,7 +11,7 @@
 #   exit 1 
 # fi 
 
-/usr/local/bin/autorestic -c {{ autorestic_config_path }}/config.yaml --ci cron {{ autorestic_temp_path }}/autorestic.log 
+/usr/local/bin/autorestic backup -a
 
 if [ $? -eq 0 ]
 then

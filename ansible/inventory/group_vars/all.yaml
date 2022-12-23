@@ -125,11 +125,7 @@ vault_homenetwork_password: !vault |
           3030626362323161650a666662633665383163363933373230396239313830353333366136363336
           35656237653135303962646535343632333365396136373739643633326438396339
 
-environment_config:
-  AWS_ACCESS_KEY_ID: "{{ vault_aws_backupuser_access_key_id }}"
-  AWS_SECRET_ACCESS_KEY: "{{ vault_aws_backupuser_access_key_secret }}"
-  RESTIC_REPOSITORY: "{{ vault_restic_repository }}"
-  RESTIC_PASSWORD: "{{ vault_restic_password }}"
+environment_config: []
 
 vault_ansible_password: !vault |
           $ANSIBLE_VAULT;1.2;AES256;beanpod
@@ -149,4 +145,10 @@ tailscale_authkey: !vault |
           34326365343035343738313432663639393638333137393138613034656332396664353561323561
           633966303732633866383366323633623962
 
-nfs_backup_path: /mnt/backups
+# NFS Client
+nfs_backups_client_path: /mnt/backups
+restic_client_path: "{{ nfs_backups_client_path }}/restic"
+
+# NFS Server
+restic_zfs_id: slowpool/backups/restic
+restic_server_path: "/{{ restic_zfs_id }}"
