@@ -5,6 +5,7 @@
   ansible.builtin.apt:
     name:
       - htop
+      - btop
       - tmux
       - unzip
       - mosh
