@@ -12,7 +12,9 @@
       become: true
     - role: motd
     - role: apt-upgrade
-    - role: sleepy
+    - role: beep
+    - role: sleepuntil
+      sleepuntil_wakeup_script: /usr/local/sbin/backup.sh
 
   handlers:
     - name: Reboot host

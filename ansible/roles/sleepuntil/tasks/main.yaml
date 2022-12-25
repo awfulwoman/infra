@@ -14,9 +14,9 @@
     job: "/usr/local/bin/sleepuntil.sh {{ sleepuntil_sleep_time }}"
     state: present
 
-- name: Sleep now until official wake-up time
+- name: Check to see if sleep until official wake-up time should occur
   become: true
   ansible.builtin.command: "/usr/local/bin/sleepuntil.sh {{ sleepuntil_sleep_time }}"
   async: 10
   poll: 0
-  when: sleepuntil_sleep_immedediately
+  when: sleepuntil_sleep_immediately

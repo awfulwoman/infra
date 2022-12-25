@@ -22,7 +22,7 @@
 
 - name: Add "{{ ansible_user }}" to beep group
   become: true
-  user:
+  ansible.builtin.user:
     name: "{{ ansible_user }}"
     groups: beep
     append: true
