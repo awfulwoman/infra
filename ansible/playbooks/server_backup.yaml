@@ -12,6 +12,7 @@
       become: true
     - role: motd
     - role: apt-upgrade
+    - role: sleepy
 
   handlers:
     - name: Reboot host

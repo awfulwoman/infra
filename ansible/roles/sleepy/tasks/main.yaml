@@ -1,15 +1,22 @@
-- name: "[copy] Scripts"
+- name: "Copy sleepuntil script"
   become: true
-  copy:
-    src: files/
-    dest: /usr/local/bin/
+  ansible.builtin.template:
+    src: sleepuntil.sh.conf
+    dest: "{{ sleepuntil_install_location }}/sleepuntil.sh"
     mode: u=rwx,g=X,o=X
 
-- name: Auto-suspend
+- name: Cron to auto-suspend in early hours
   become: true
   ansible.builtin.cron:
     name: "Auto-suspend"
     hour: "1"
     minute: "0"
-    job: "/usr/local/bin/suspend_until.sh 08:00"
+    job: "/usr/local/bin/sleepuntil.sh {{ sleepuntil_sleep_time }}"
     state: present
+
+- name: Sleep now until official wake-up time
+  become: true
+  ansible.builtin.command: "/usr/local/bin/sleepuntil.sh {{ sleepuntil_sleep_time }}"
+  async: 10
+  poll: 0
+  when: sleepuntil_sleep_immedediately

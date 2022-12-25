@@ -1,12 +1,10 @@
 - name: Include Home Automation Server
   ansible.builtin.import_playbook: server_homeautomation.yaml
-- name: Include Jumphost Server
-  ansible.builtin.import_playbook: server_jumphost.yaml
+- name: Include Monitoring Server
+  ansible.builtin.import_playbook: server_monitoring.yaml
 - name: Include Storage Server
   ansible.builtin.import_playbook: server_storage.yaml
 - name: Include Backup Server
   ansible.builtin.import_playbook: server_backup.yaml
-- name: Include Backup Cluster NFS
-  ansible.builtin.import_playbook: cluster_backups_nfs.yaml
 - name: Include Backup Cluster ZFS
   ansible.builtin.import_playbook: cluster_backups_zfs.yaml
