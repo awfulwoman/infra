@@ -3,8 +3,7 @@
   ansible.builtin.cron:
     name: "Regular reboot"
     day: "2,4,6" # Tuesday, Thursday
-    hour: "{{reboot_hour}}"
+    hour: "{{ reboot_hour }}"
     minute: "0"
     job: "/sbin/shutdown -r"
     state: present
-
