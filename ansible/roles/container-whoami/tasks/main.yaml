@@ -22,4 +22,3 @@
       traefik.http.routers.whoami.rule: "Host(`whoami.affordablepotatoes.com`)"
       traefik.http.routers.whoami.entrypoints: "web"
       traefik.http.services.whoami.loadbalancer.server.port: "8888"
-
