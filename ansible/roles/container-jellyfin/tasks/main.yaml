@@ -1,10 +1,10 @@
-- name: "Create {{ container_name }} config dir"
+- name: "Create config dir - {{ container_name }}"
   ansible.builtin.file:
     path: "{{ container_config_dir }}/{{ container_name }}/config"
     state: directory
     mode: 0744
 
-- name: "Create {{ container_name }} cache dir"
+- name: "Create config dir - {{ container_name }}"
   ansible.builtin.file:
     path: "{{ container_config_dir }}/{{ container_name }}/cache"
     state: directory
@@ -13,7 +13,7 @@
 - name: "Ensure container exists - {{ container_name }}"
   community.docker.docker_container:
     name: "{{ container_name }}"
-    image: jellyfin/jellyfin
+    image: "{{ container_image }}"
     # pull: true
     state: started
     restart_policy: unless-stopped
