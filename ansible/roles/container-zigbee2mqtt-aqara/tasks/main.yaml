@@ -44,6 +44,6 @@
       - name: "affordablepotatoes"
     labels:
       traefik.enable: "true"
-      traefik.http.routers.zigbee2mqtt.rule: "Host(`zigbee2mqtt.affordablepotatoes.com`)"
-      traefik.http.routers.zigbee2mqtt.entrypoints: "web"
+      traefik.http.routers.zigbee2mqtt-aqara.rule: "Host(`zigbee2mqtt-aqara.affordablepotatoes.com`)"
+      traefik.http.routers.zigbee2mqtt-aqara.entrypoints: "web"
   when: use_zigbee_hardware
