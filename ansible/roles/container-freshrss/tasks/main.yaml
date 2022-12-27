@@ -2,28 +2,39 @@
   ansible.builtin.set_fact:
     user_config_path: "{{ ansible_env.HOME }}"
 
-- name: "Create {{ container_name }} config dir"
-  ansible.builtin.file:
-    path: "{{ user_config_path }}/freshrss"
-    state: directory
+# NOTE:
+# There is no config dir here as FreshRSS isn't 
+# great at handling user/file permissions. :(
+# Instead we must use Docker volumes.
 
-- name: "Create {{ container_name }} container"
-  # become: true
+- name: "Create a volume - {{ container_name }}"
+  community.docker.docker_volume:
+    name: freshrss_data
+
+- name: "Create a volume - {{ container_name }}"
+  community.docker.docker_volume:
+    name: freshrss_extensions
+
+- name: "Ensure container exists - {{ container_name }}"
   community.docker.docker_container:
-    name: freshrss
-    image: lscr.io/linuxserver/freshrss
+    name: "{{ container_name }}"
+    image: "{{ container_image }}"
     state: started
     # pull: true
     restart_policy: unless-stopped
     ports:
-      - "7580:80"
+      - 8082:80
     env:
       TZ: "Berlin/Europe"
+      CRON_MIN: "1,31"
     volumes:
-      - "{{ user_config_path }}/freshrss:/config"
+      - "freshrss_data:/data:/var/www/FreshRSS/data:rw"
+      - "freshrss_extensions:/var/www/FreshRSS/extensions:rw"
       - /etc/localtime:/etc/localtime:ro
+    networks:
+      - name: "affordablepotatoes"
     labels:
       traefik.enable: "true"
-      traefik.http.routers.freshrss.rule: "Host(`freshrss.affordablepotatoes.com`)"
+      traefik.http.routers.freshrss.rule: "Host(`rss.affordablepotatoes.com`)"
       traefik.http.routers.freshrss.entrypoints: "web"
-      traefik.http.services.freshrss.loadbalancer.server.port: "7580"
+      traefik.http.services.freshrss.loadbalancer.server.port: "80"
