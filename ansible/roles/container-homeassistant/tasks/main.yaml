@@ -50,16 +50,20 @@
       - /etc/localtime:/etc/localtime:ro
       # - /run/dbus:/run/dbus:ro
       - "{{ container_config_dir }}/{{ container_name }}/docker/run:/etc/services.d/home-assistant/run"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://192.168.1.103:8123"]
+      interval: 30s
+      timeout: 10s
+      retries: 6
+    # etc_hosts:
+    #   "homeassistant.affordablepotatoes.com": "172.18.0.99/16"
     # networks:
     #   - name: "affordablepotatoes"
     # labels:
     #   traefik.enable: "true"
-    #   # Routing for HTTP
-      # traefik.http.routers.homeassistant.rule: "Host(`homeassistant.affordablepotatoes.com`)"
-      # traefik.http.routers.homeassistant.entrypoints: "web"
-      # traefik.http.services.homeassistant.loadbalancer.server.port: "8096"
-      # # Routing for HTTPS
-      # traefik.http.routers.homeassistant-https.service: "homeassistant"
-      # traefik.http.routers.homeassistant-https.entrypoints: "websecure"
-      # traefik.http.routers.homeassistant-https.rule: "Host(`homeassistant.affordablepotatoes.com`)"
-      # traefik.http.routers.homeassistant-https.tls: "true"
+    #   traefik.http.routers.homeassistant.rule: "Host(`homeassistant.affordablepotatoes.com`)"
+    #   traefik.http.routers.homeassistant.entrypoints: "web"
+    # etc_hosts: >
+    # {
+    #   "{{ domain_1 }}": "{{ domain_1_ip }}"
+    # }
