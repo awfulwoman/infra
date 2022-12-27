@@ -22,15 +22,14 @@
     attachable: true
 
 - name: "Create {{ container_name }} container"
-  # become: true
   community.docker.docker_container:
-    name: traefik
-    image: traefik:v2.9
+    name: "{{ container_name }}"
+    image: "{{ container_image }}"
     state: started
     # pull: true
     restart_policy: unless-stopped
     labels:
-      traefik.frontend.rule: "Host:traefik.homeautomation.affordablepotatoes.com"
+      traefik.frontend.rule: "Host:traefik.{{ansible_hostname}}.affordablepotatoes.com"
       traefik.port: "80"
       traefik.enable: "false"
       traefik.backend: "traefik"
