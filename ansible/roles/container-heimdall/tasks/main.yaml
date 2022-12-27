@@ -2,32 +2,33 @@
   ansible.builtin.set_fact:
     user_config_path: "{{ ansible_env.HOME }}"
 
-- name: "Create {{ container_name }} config dir"
+- name: "Create config dir - {{ container_name }}"
   ansible.builtin.file:
-    path: "{{ user_config_path }}/heimdall"
+    path: "{{ user_config_path }}/{{ container_name }}"
     state: directory
+    mode: 0744
 
-- name: "Create {{ container_name }} container"
-  # become: true
+- name: "Create container - {{ container_name }}"
   community.docker.docker_container:
-    name: heimdall
-    image: lscr.io/linuxserver/heimdall:latest
+    name: "{{ container_name }}"
+    image: "{{ container_image }}"
     state: started
-    privileged: true
     restart_policy: unless-stopped
     ports:
-      - "8012:80"
-      - "8013:443"
+      - 8012:80
+      # - 8013:8013
     env:
       PUID: "1000"
       PGID: "1000"
       UMASK: "007"
       TZ: "Berlin/Europe"
     volumes:
-      - "{{ user_config_path }}/heimdall:/config"
+      - "{{ user_config_path }}/{{ container_name }}:/config"
       - /etc/localtime:/etc/localtime:ro
+    networks:
+      - name: "affordablepotatoes"
     labels:
       traefik.enable: "true"
-      traefik.http.routers.heimdall.rule: "Host(`heimdall.affordablepotatoes.com`)"
+      traefik.http.routers.heimdall.rule: "Host(`homeautomation.affordablepotatoes.com`)"
       traefik.http.routers.heimdall.entrypoints: "web"
-      traefik.http.services.heimdall.loadbalancer.server.port: "8012"
+      # traefik.http.services.heimdall.loadbalancer.server.port: "8012"
