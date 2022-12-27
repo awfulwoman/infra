@@ -7,8 +7,8 @@
 - name: "Ensure {{ container_name }} container exists"
   community.docker.docker_container:
     name: "{{ container_name }}"
-    image: akhilrex/podgrab:latest
-    state: stopped
+    image: "{{ container_image }}"
+    state: started
     restart_policy: unless-stopped
     ports:
       - 9876:9876
@@ -19,3 +19,9 @@
       - "{{ container_config_dir }}/{{ container_name }}:/config"
       - /slowpool/media/podcasts:/assets
       - /etc/localtime:/etc/localtime:ro
+    networks:
+      - name: "affordablepotatoes"
+    labels:
+      traefik.enable: "true"
+      "traefik.http.routers.{{ container_name }}.rule": "Host(`{{ container_name }}.affordablepotatoes.com`)"
+      "traefik.http.routers.{{ container_name }}.entrypoints": "web"

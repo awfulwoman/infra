@@ -1,1 +1,2 @@
 container_name: metube
+container_image: alexta69/metube:latest

@@ -14,8 +14,8 @@
 
 - name: "Create {{ container_name }} container"
   community.docker.docker_container:
-    name: metube
-    image: alexta69/metube
+    name: "{{ container_name }}"
+    image: "{{ container_image }}"
     state: started
     restart_policy: unless-stopped
     ports:
@@ -24,14 +24,12 @@
       TZ: "Berlin/Europe"
       STATE_DIR: "/state"
     volumes:
-      - "{{ user_config_path }}/metube/downloads:/downloads"
-      - "{{ user_config_path }}/metube/state:/state"
+      - "/slowpool/media/youtube:/downloads"
+      - "{{ user_config_path }}/{{ container_name }}/state:/state"
       - /etc/localtime:/etc/localtime:ro
     networks:
-        - name: "affordablepotatoes"
+      - name: "affordablepotatoes"
     labels:
       traefik.enable: "true"
       traefik.http.routers.metube.rule: "Host(`metube.affordablepotatoes.com`)"
       traefik.http.routers.metube.entrypoints: "web"
-      traefik.http.services.metube.loadbalancer.server.port: "8081"
-

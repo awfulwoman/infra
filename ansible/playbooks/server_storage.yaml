@@ -23,6 +23,8 @@
     - role: container-jellyfin
     - role: container-audiobookshelf
     - role: container-freshrss
+    - role: container-podgrab
+    - role: container-metube
     # - role: container-nextcloud
     - role: container-sanoid-builder
     - role: apt-upgrade
