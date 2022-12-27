@@ -19,11 +19,11 @@
     - role: nfs-server
     - role: virtualisation-tools
     - role: motd
+    - role: container-traefik
     - role: container-jellyfin
     - role: container-audiobookshelf
-    - role: container-traefik
     - role: container-freshrss
-    - role: container-nextcloud
+    # - role: container-nextcloud
     - role: container-sanoid-builder
     - role: apt-upgrade
     - role: docker-cleanup
