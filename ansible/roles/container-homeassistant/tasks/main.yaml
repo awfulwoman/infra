@@ -56,13 +56,13 @@
       timeout: 10s
       retries: 6
     # etc_hosts:
-    #   "homeassistant.affordablepotatoes.com": "172.18.0.99/16"
+    #   "homeassistant.affordablepotatoes.com": "192.168.1.103"
     # networks:
     #   - name: "affordablepotatoes"
-    # labels:
-    #   traefik.enable: "true"
-    #   traefik.http.routers.homeassistant.rule: "Host(`homeassistant.affordablepotatoes.com`)"
-    #   traefik.http.routers.homeassistant.entrypoints: "web"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.homeassistant.rule: "Host(`homeassistant.affordablepotatoes.com`)"
+      traefik.http.routers.homeassistant.entrypoints: "web"
     # etc_hosts: >
     # {
     #   "{{ domain_1 }}": "{{ domain_1_ip }}"

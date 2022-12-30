@@ -8,6 +8,8 @@ vault_zfsbackup_password: !vault |
           32366466353363306538363235386262653830313162386536366534336635366433316332366461
           356336336636373063396533623362613332
 
+zfs_backup_user: zfsbackup
+
 zfs_backup_datasets:
   - fastpool/containers
   - "{{ restic_zfs_id }}"

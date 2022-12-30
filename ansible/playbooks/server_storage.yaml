@@ -6,7 +6,7 @@
     - role: standard-host
     - role: healthchecks
     - role: zfs-tools
-    - role: zfs-tools-backup-client
+    - role: zfs-backup-client
     - role: cron-reboot
     - role: containers-config
     - role: artis3n.tailscale
@@ -29,6 +29,9 @@
     - role: container-sanoid-builder
     - role: apt-upgrade
     - role: docker-cleanup
+    - role: sleepuntil
+      sleepuntil_sleep_immediately: false
+      sleepuntil_sleep_time: "08:20"
 
   handlers:
     - name: Reboot host

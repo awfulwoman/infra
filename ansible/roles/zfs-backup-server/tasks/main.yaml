@@ -3,6 +3,9 @@
   become: true
   ansible.builtin.apt:
     name:
+      - zfsutils-linux
+      - sanoid
+      - acl
       - moreutils # for ts (timestamp) util
       - lzop
       - mbuffer
@@ -65,10 +68,12 @@
   when: zfs_backup_datasets
 
 - name: Cron to run backup.sh
+  # Runs at a specified time to catch reboots and previous backup failures
   become: true
   ansible.builtin.cron:
     name: "backup.sh"
-    special_time: reboot
     job: TZ=UTC /usr/local/sbin/backup.sh
     state: present
+    minute: "{{ zfsbackup_cron_minute }}"
+    hour: "{{ zfsbackup_cron_hour }}"
   when: zfs_backup_datasets

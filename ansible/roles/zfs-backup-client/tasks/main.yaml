@@ -3,15 +3,18 @@
   become: true
   ansible.builtin.apt:
     name:
+      - zfsutils-linux
+      - sanoid
+      - acl
       - moreutils # for ts (timestamp) util
       - lzop
       - mbuffer
     state: present
 
-- name: Add the user 'zfsbackup'
+- name: Add the user "{{ zfs_backup_user }}"
   become: true
   ansible.builtin.user:
-    name: zfsbackup
+    name: "{{ zfs_backup_user }}"
     comment: ZFS Backup User
     system: true
     create_home: true
@@ -58,19 +61,19 @@
   ansible.builtin.file:
     path: "{{ created_user.home }}/.ssh"
     state: directory
-    owner: zfsbackup
-    group: zfsbackup
+    owner: "{{ zfs_backup_user }}"
+    group: "{{ zfs_backup_user  }}"
     mode: 0664
   when: not ssh_path.stat.exists
 
-- name: Ensure restrict_commands.sh exists
-  become: true
-  ansible.builtin.copy:
-    src: restrict_commands.sh
-    dest: /usr/local/bin/restrict_commands.sh
-    owner: root
-    group: root
-    mode: 0777
+# - name: Ensure restrict_commands.sh exists
+#   become: true
+#   ansible.builtin.copy:
+#     src: restrict_commands.sh
+#     dest: /usr/local/bin/restrict_commands.sh
+#     owner: root
+#     group: root
+#     mode: 0777
 
 - name: Create Sanoid config file
   become: true
@@ -99,12 +102,12 @@
     msg: "{{ item }}"
   loop: "{{ zfs_backup_datasets }}"
 
-- name: Allow zfsbackup user to send backups of listed datasets
+- name: Allow "{{ zfs_backup_user }}" user to send backups of listed datasets
   become: true
   community.general.zfs_delegate_admin:
     name: "{{ item }}"
-    users: zfsbackup
-    permissions: destroy,hold,mount,send,snapshot
+    users: "{{ zfs_backup_user }}"
+    permissions: hold,mount,send,snapshot
     # descendents: true
   loop: "{{ zfs_backup_datasets }}"
   when: zfs_backup_datasets
@@ -112,8 +115,8 @@
 - name: Set authorized key and options
   become: true
   ansible.posix.authorized_key:
-    user: zfsbackup
+    user: "{{ zfs_backup_user }}"
     state: present
     key: "{{ zfs_public_key }}"
-    key_options: 'restrict,command="restrict_commands.sh"'
+    # key_options: 'restrict,command="restrict_commands.sh"'
   when: zfs_public_key

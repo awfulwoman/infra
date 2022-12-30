@@ -1,7 +1,7 @@
 ansible_user: ubuntu
 ansible_host: host-backups.i.affordablepotatoes.com
 
-sleep_until_time: "8am"
+sleepuntil_sleep_time: "08:30"
 
 # Healthceck.io
 healthcheck_reboot_id: !vault |

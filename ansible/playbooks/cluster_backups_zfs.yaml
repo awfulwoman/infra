@@ -5,11 +5,9 @@
     - role: generate-sshkey
       become: true
     - role: beep
-    - role: zfs-tools
-    - role: zfs-tools-backup-server
+    - role: zfs-backup-server
 
 - name: Backup Client
   hosts: host-storage
   roles:
-    - role: zfs-tools
-    - role: zfs-tools-backup-client
+    - role: zfs-backup-client
