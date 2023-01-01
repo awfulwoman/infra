@@ -4,6 +4,8 @@
   roles:
     - role: standard_os
     - role: standard-host
+    - role: wakeonlan
+      wakeonlan_interface: enp5s0f0
     - role: healthchecks
     - role: zfs-backup-client
     - role: cron-reboot
