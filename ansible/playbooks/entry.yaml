@@ -8,3 +8,5 @@
   ansible.builtin.import_playbook: server_backup.yaml
 - name: Include Backup Cluster ZFS
   ansible.builtin.import_playbook: cluster_backups_zfs.yaml
+- name: Include Controller Server
+  ansible.builtin.import_playbook: server_controller.yaml

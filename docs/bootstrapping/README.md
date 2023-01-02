@@ -6,7 +6,7 @@ Almost everything that I build uses the concept of Configuration as Code. That m
 
 The Ansible Control Node needs some CLI tools before anything else can happen. 
 
-Most of the time this Control Node is just my laptop, but I'm moving towards a dedicated [jumphost](/ansible/playbooks/server_jumphost.yaml) to launch commands from.
+Most of the time this Control Node is just my laptop, but I'm moving towards a dedicated [Controller](/ansible/playbooks/server_controller.yaml) to launch commands from.
 
 ```bash
 # MacOS

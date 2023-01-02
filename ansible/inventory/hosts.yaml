@@ -5,11 +5,11 @@ all:
     # host-*         A physical machine used to perform tasks. Has an OS that can be managed via SSH.
     # vm-*           A virtual machine used to perform tasks. Has an OS that can be managed via SSH.
     # workstation-*  A machine used directly by a person. Has an OS that can be managed via SSH.
+    host-controller:                       # Controller
     host-homeautomation:                  # Home Automation - Home Assistant, Zigbee, MQTT, etc
     host-monitoring:                      # Monitoring systems
     host-backups:                         # Backups
     host-storage:                         # NAS
-    host-jumphost:                        # Jumphost
     vm-digitalocean-whalecoiner:          # Digital Ocean VM
 
   # Groupings of servers that allow them to be administered collectively.

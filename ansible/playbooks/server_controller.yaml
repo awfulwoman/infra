@@ -1,23 +1,17 @@
 ---
-- name: Jump Host
-  hosts: host-jumphost
+- name: Controller
+  hosts: host-controller
   roles:
     - role: standard_os
     - role: standard-host
     - role: healthchecks
     - role: generate-sshkey
-    - role: motd
     - role: artis3n.tailscale
     - role: weareinteractive.environment
       become: true
       no_log: true
-    - role: enable-console-blanking
-    - role: geerlingguy.docker
-      become: true
-    - role: docker
     - role: home
     - role: ansible-password
-    - role: containers-config
     - role: geerlingguy.ansible
       become: true
       ansible_install_method: "pip"
