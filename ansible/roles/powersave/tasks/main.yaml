@@ -1,0 +1,22 @@
+---
+- name: Install powertop
+  become: true 
+  ansible.builtin.apt:
+    name:
+      - powertop
+    state: present
+
+- name: Create powertop.service
+  become: true
+  ansible.builtin.copy:
+    src: powertop.service
+    dest: /etc/systemd/system/powertop.service
+    owner: root
+    group: root
+    mode: 0664
+
+- name: Make sure powertop service is running
+  become: true
+  ansible.builtin.systemd:
+    state: started
+    name: powertop

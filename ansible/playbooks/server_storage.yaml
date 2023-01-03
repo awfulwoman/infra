@@ -20,6 +20,7 @@
     - role: nfs-server
     - role: virtualisation-tools
     - role: motd
+    - role: powersave
     - role: container-traefik
     - role: container-jellyfin
     - role: container-audiobookshelf

@@ -17,6 +17,7 @@
     - role: hifis.unattended_upgrades
       become: true
     - role: motd
+    - role: powersave
     - role: nfs-client
     - role: autorestic
     - role: container-vscode
