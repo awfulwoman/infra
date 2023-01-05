@@ -8,11 +8,15 @@
     - role: healthchecks
     - role: geerlingguy.docker
       become: true
+    - role: docker
+    - role: containers-config
     - role: cron-reboot
     - role: hifis.unattended_upgrades
       become: true
+    - role: container-traefik
+    - role: container-uptimekuma
+    - role: docker-cleanup
     - role: apt-upgrade
-    - role: ip-address-forwarding
   handlers:
     - name: Reboot host
       become: true
