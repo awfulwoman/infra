@@ -1,5 +1,5 @@
 provider "libvirt" {
-   uri = "qemu+ssh://ubuntu@192.168.1.116/system"
+   uri = "qemu+ssh://ubuntu@host-storage.i.affordablepotatoes.com/system"
 }
 
 resource "libvirt_network" "network" {
