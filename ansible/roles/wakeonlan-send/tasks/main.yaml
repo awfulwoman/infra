@@ -1,0 +1,10 @@
+- name: Install Wakonlan tools
+  become: true
+  ansible.builtin.apt:
+    name:
+      - wakeonlan
+    state: present
+    update_cache: false
+
+# Script
+# wakeup host-storage
