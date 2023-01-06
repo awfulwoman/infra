@@ -23,7 +23,6 @@
     - role: geerlingguy.ansible
       become: true
       ansible_install_method: "pip"
-    - role: ansible-pull
     - role: healthchecks-ansible-pull # Always the last  
 
   handlers:
