@@ -19,6 +19,11 @@
     - role: sleepuntil
       sleepuntil_wakeup_script: /usr/local/sbin/zfs-backup.sh
       sleepuntil_sleep_immediately: false
+    - role: ansible-password
+    - role: geerlingguy.ansible
+      become: true
+      ansible_install_method: "pip"
+    - role: ansible-pull
     - role: healthchecks-ansible-pull # Always the last  
 
   handlers:

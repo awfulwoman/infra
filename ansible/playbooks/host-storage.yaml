@@ -31,7 +31,6 @@
     - role: container-sanoid-builder
     - role: apt-upgrade
     - role: docker-cleanup
-    - role: home
     - role: ansible-password
     - role: geerlingguy.ansible
       become: true
@@ -41,6 +40,7 @@
     - role: sleepuntil
       sleepuntil_sleep_immediately: false
       sleepuntil_sleep_time: "08:20"
+    - role: ansible-pull
     - role: healthchecks-ansible-pull # Always the last
 
   handlers:

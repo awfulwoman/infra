@@ -14,7 +14,6 @@
     - role: weareinteractive.environment
       become: true
       no_log: true
-    - role: home
     - role: ansible-password
     - role: geerlingguy.ansible
       become: true
@@ -27,6 +26,7 @@
       become: true
     - role: docker-cleanup
     - role: apt-upgrade
+    - role: ansible-pull
     - role: healthchecks-ansible-pull # Always the last
 
   handlers:
