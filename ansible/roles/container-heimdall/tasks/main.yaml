@@ -1,10 +1,10 @@
 - name: Set config path
   ansible.builtin.set_fact:
-    user_config_path: "{{ ansible_env.HOME }}"
+    container_config_dir: "{{ ansible_env.HOME }}"
 
 - name: "Create config dir - {{ container_name }}"
   ansible.builtin.file:
-    path: "{{ user_config_path }}/{{ container_name }}"
+    path: "{{ container_config_dir }}/{{ container_name }}"
     state: directory
     mode: 0744
 
@@ -23,7 +23,7 @@
       UMASK: "007"
       TZ: "Berlin/Europe"
     volumes:
-      - "{{ user_config_path }}/{{ container_name }}:/config"
+      - "{{ container_config_dir }}/{{ container_name }}:/config"
       - /etc/localtime:/etc/localtime:ro
     networks:
       - name: "affordablepotatoes"

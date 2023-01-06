@@ -1,15 +1,15 @@
 - name: Set config path
   ansible.builtin.set_fact:
-    user_config_path: "{{ ansible_env.HOME }}"
+    container_config_dir: "{{ ansible_env.HOME }}"
 
 - name: "Create {{ container_name }} config dir"
   ansible.builtin.file:
-    path: "{{ user_config_path }}/metube/downloads"
+    path: "{{ container_config_dir }}/metube/downloads"
     state: directory
 
 - name: "Create {{ container_name }} config dir"
   ansible.builtin.file:
-    path: "{{ user_config_path }}/metube/state"
+    path: "{{ container_config_dir }}/metube/state"
     state: directory
 
 - name: "Create {{ container_name }} container"
@@ -25,7 +25,7 @@
       STATE_DIR: "/state"
     volumes:
       - "/slowpool/media/youtube:/downloads"
-      - "{{ user_config_path }}/{{ container_name }}/state:/state"
+      - "{{ container_config_dir }}/{{ container_name }}/state:/state"
       - /etc/localtime:/etc/localtime:ro
     networks:
       - name: "affordablepotatoes"

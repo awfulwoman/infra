@@ -1,6 +1,6 @@
 - name: Set config path
   ansible.builtin.set_fact:
-    user_config_path: "{{ ansible_env.HOME }}"
+    container_config_dir: "{{ ansible_env.HOME }}"
 
 # NOTE:
 # There is no config dir here as FreshRSS isn't 

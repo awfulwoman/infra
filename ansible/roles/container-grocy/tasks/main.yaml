@@ -1,10 +1,10 @@
 - name: Set config path
   ansible.builtin.set_fact:
-    user_config_path: "{{ ansible_env.HOME }}"
+    container_config_dir: "{{ ansible_env.HOME }}"
 
 - name: "Create {{ container_name }} config dir"
   ansible.builtin.file:
-    path: "{{ user_config_path }}/grocy"
+    path: "{{ container_config_dir }}/grocy"
     state: directory
 
 - name: "Create {{ container_name }} container"
@@ -21,7 +21,7 @@
       PUID: "1000"
       PGID: "1000"
     volumes:
-      - "{{ user_config_path }}/grocy:/config"
+      - "{{ container_config_dir }}/grocy:/config"
       - /etc/localtime:/etc/localtime:ro
     networks:
         - name: "affordablepotatoes"

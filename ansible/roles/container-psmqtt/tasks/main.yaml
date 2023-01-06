@@ -1,11 +1,11 @@
 - name: Set config path
   ansible.builtin.set_fact:
-    user_config_path: "{{ ansible_env.HOME }}"
+    container_config_dir: "{{ ansible_env.HOME }}"
 
 - name: "Create {{ container_name }} config file"
   ansible.builtin.copy:
     src: psmqtt.conf
-    dest: "{{ user_config_path }}/psmqtt/psmqtt.conf"
+    dest: "{{ container_config_dir }}/psmqtt/psmqtt.conf"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     
@@ -19,5 +19,5 @@
     env:
       TZ: "Berlin/Europe"
     volumes:
-      - "{{ user_config_path }}/psmqtt/psmqtt.conf:/opt/psmqtt/conf/psmqtt.conf"
+      - "{{ container_config_dir }}/psmqtt/psmqtt.conf:/opt/psmqtt/conf/psmqtt.conf"
       - /etc/localtime:/etc/localtime:ro

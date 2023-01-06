@@ -1,14 +1,14 @@
 - name: User-based Config path
   ansible.builtin.set_fact:
-    user_config_path: "{{ ansible_env.HOME }}"
+    container_config_dir: "{{ ansible_env.HOME }}"
 
 - name: Create directories
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
   loop:
-    - "{{ user_config_path }}/etc-dnsmasq.d"
-    - "{{ user_config_path }}/etc-pihole"
+    - "{{ container_config_dir }}/etc-dnsmasq.d"
+    - "{{ container_config_dir }}/etc-pihole"
     # - "/etc/pihole/"
 
 - name: Disable Ubuntu's caching DNS resolver on port 53
@@ -40,7 +40,7 @@
 - name: "Create static DHCP leases"
   ansible.builtin.template:
     src: static-dhcp.conf.j2
-    dest: "{{ user_config_path }}/etc-dnsmasq.d/04-pihole-static-dhcp.conf" # must be this file name
+    dest: "{{ container_config_dir }}/etc-dnsmasq.d/04-pihole-static-dhcp.conf" # must be this file name
 
 # Add a custom domain for certain hosts.
 # Solves corporate computers trying to claim a domain 
@@ -50,14 +50,14 @@
 - name: "Create domains"
   ansible.builtin.template:
     src: domains.conf.j2
-    dest: "{{ user_config_path }}/etc-dnsmasq.d/07-domains.conf"
+    dest: "{{ container_config_dir }}/etc-dnsmasq.d/07-domains.conf"
   notify:
     - RESTART PIHOLE
 
 - name: "Create cnames"
   ansible.builtin.template:
     src: cnames.conf.j2
-    dest: "{{ user_config_path }}/etc-dnsmasq.d/05-cnames.list"
+    dest: "{{ container_config_dir }}/etc-dnsmasq.d/05-cnames.list"
   notify:
     - RESTART PIHOLE
 
@@ -88,8 +88,8 @@
     dns_servers:
       - 127.0.0.1
     volumes:
-      - "{{ user_config_path }}/etc-pihole/:/etc/pihole/"
-      - "{{ user_config_path }}/etc-dnsmasq.d/:/etc/dnsmasq.d/"
+      - "{{ container_config_dir }}/etc-pihole/:/etc/pihole/"
+      - "{{ container_config_dir }}/etc-dnsmasq.d/:/etc/dnsmasq.d/"
     capabilities:
       - NET_ADMIN
       - NET_BIND_SERVICE

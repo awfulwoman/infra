@@ -1,31 +1,31 @@
 - name: Set config path
   ansible.builtin.set_fact:
-    user_config_path: "{{ ansible_env.HOME }}"
+    container_config_dir: "{{ ansible_env.HOME }}"
 
 - name: "Create {{ container_name }} config dir"
   ansible.builtin.file:
-    path: "{{ user_config_path }}/mpd/config"
+    path: "{{ container_config_dir }}/mpd/config"
     state: directory
 
 - name: Create music dir
   ansible.builtin.file:
-    path: "{{ user_config_path }}/mpd/music"
+    path: "{{ container_config_dir }}/mpd/music"
     state: directory
 
 - name: Create playlists dir
   ansible.builtin.file:
-    path: "{{ user_config_path }}/mpd/playlists"
+    path: "{{ container_config_dir }}/mpd/playlists"
     state: directory
 
 - name: Create data dir
   ansible.builtin.file:
-    path: "{{ user_config_path }}/mpd/data"
+    path: "{{ container_config_dir }}/mpd/data"
     state: directory
 
 - name: "Create {{ container_name }} config file" 
   ansible.builtin.copy:
     src: mpd.conf
-    dest: "{{ user_config_path }}/mpd/config/mpd.conf"
+    dest: "{{ container_config_dir }}/mpd/config/mpd.conf"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
 
@@ -45,8 +45,8 @@
     devices:
       - /dev/snd
     volumes:
-      - "{{ user_config_path }}/mpd/music:/var/lib/mpd/music:rw"
-      - "{{ user_config_path }}/mpd/playlists:/var/lib/mpd/playlists:rw"
-      - "{{ user_config_path }}/mpd/data:/var/lib/mpd/data:rw"
-      - "{{ user_config_path }}/mpd/config/mpd.conf:/etc/mpd.conf:rw"
+      - "{{ container_config_dir }}/mpd/music:/var/lib/mpd/music:rw"
+      - "{{ container_config_dir }}/mpd/playlists:/var/lib/mpd/playlists:rw"
+      - "{{ container_config_dir }}/mpd/data:/var/lib/mpd/data:rw"
+      - "{{ container_config_dir }}/mpd/config/mpd.conf:/etc/mpd.conf:rw"
       - /etc/localtime:/etc/localtime:ro
