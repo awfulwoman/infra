@@ -41,6 +41,7 @@
     - role: sleepuntil
       sleepuntil_sleep_immediately: false
       sleepuntil_sleep_time: "08:20"
+    - role: healthchecks-ansible-pull # Always the last
 
   handlers:
     - name: Reboot host

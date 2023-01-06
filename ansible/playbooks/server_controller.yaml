@@ -27,6 +27,7 @@
       become: true
     - role: docker-cleanup
     - role: apt-upgrade
+    - role: healthchecks-ansible-pull # Always the last
 
   handlers:
     - name: Reboot host

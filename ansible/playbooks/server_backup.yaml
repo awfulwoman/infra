@@ -19,6 +19,7 @@
     - role: sleepuntil
       sleepuntil_wakeup_script: /usr/local/sbin/zfs-backup.sh
       sleepuntil_sleep_immediately: false
+    - role: healthchecks-ansible-pull # Always the last  
 
   handlers:
     - name: Reboot host
