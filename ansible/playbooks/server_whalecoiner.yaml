@@ -14,7 +14,6 @@
     - role: hifis.unattended_upgrades
       become: true
     - role: container-traefik
-    - role: container-uptimekuma
     - role: docker-cleanup
     - role: apt-upgrade
   handlers:

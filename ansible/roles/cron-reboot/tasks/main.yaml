@@ -6,4 +6,4 @@
     hour: "{{ reboot_hour }}"
     minute: "0"
     job: "/sbin/shutdown -r"
-    state: present
+    state: absent

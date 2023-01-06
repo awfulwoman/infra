@@ -1,7 +1,3 @@
-- name: Set config path
-  ansible.builtin.set_fact:
-    container_config_dir: "{{ ansible_env.HOME }}"
-
 - name: "Create {{ container_name }} config dir"
   ansible.builtin.file:
     path: "{{ container_config_dir }}/grocy"

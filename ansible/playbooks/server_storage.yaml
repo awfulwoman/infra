@@ -9,7 +9,6 @@
     - role: healthchecks
     - role: zfs-backup-client
     - role: cron-reboot
-    - role: containers-config
     - role: artis3n.tailscale
     - role: geerlingguy.docker
       become: true
@@ -20,7 +19,8 @@
     - role: nfs-server
     - role: virtualisation-tools
     - role: motd
-    - role: powersave
+    - role: powertop
+    - role: containers-config
     - role: container-traefik
     - role: container-jellyfin
     - role: container-audiobookshelf

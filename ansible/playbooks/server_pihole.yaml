@@ -26,6 +26,7 @@
     - role: motd
     - role: hifis.unattended_upgrades
       become: true
+    - role: containers-config  
     - role: container-pihole
     - role: apt-upgrade
   handlers:

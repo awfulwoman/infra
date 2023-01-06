@@ -19,6 +19,8 @@
     - role: geerlingguy.ansible
       become: true
       ansible_install_method: "pip"
+    - role: container-traefik  
+    - role: container-uptimekuma  
     - role: hifis.unattended_upgrades
       become: true
     - role: diodonfrost.terraform

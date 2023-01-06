@@ -1,18 +1,22 @@
-- name: Set config path
-  ansible.builtin.set_fact:
-    container_config_dir: "{{ ansible_env.HOME }}"
-
-- name: "Create {{ container_name }} config dir"
+- name: "Ensure config dir exists - {{ container_config_dir }}/{{ container_name }}"
   ansible.builtin.file:
-    path: "{{ container_config_dir }}/metube/downloads"
+    path: "{{ container_config_dir }}/{{ container_name }}"
     state: directory
+    mode: 0744
 
-- name: "Create {{ container_name }} config dir"
+- name: "Ensure config dir exists - {{ container_config_dir }}/{{ container_name }}/downloads"
   ansible.builtin.file:
-    path: "{{ container_config_dir }}/metube/state"
+    path: "{{ container_config_dir }}/{{ container_name }}/downloads"
     state: directory
+    mode: 0744
 
-- name: "Create {{ container_name }} container"
+- name: "Ensure config dir exists - {{ container_config_dir }}/{{ container_name }}/downloads"
+  ansible.builtin.file:
+    path: "{{ container_config_dir }}/{{ container_name }}/state"
+    state: directory
+    mode: 0744
+
+- name: "Ensure container exists - {{ container_name }}"
   community.docker.docker_container:
     name: "{{ container_name }}"
     image: "{{ container_image }}"

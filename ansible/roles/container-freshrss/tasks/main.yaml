@@ -1,7 +1,3 @@
-- name: Set config path
-  ansible.builtin.set_fact:
-    container_config_dir: "{{ ansible_env.HOME }}"
-
 # NOTE:
 # There is no config dir here as FreshRSS isn't 
 # great at handling user/file permissions. :(

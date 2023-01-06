@@ -1,2 +1,4 @@
 ansible_user: pi
 ansible_host: host-controller.i.affordablepotatoes.com
+# Base for all container dirs. Normally on an SSD.
+container_config_dir: /home/pi

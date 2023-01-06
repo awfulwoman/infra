@@ -1,6 +1,9 @@
 ansible_host: host-monitoring.i.affordablepotatoes.com
 ansible_user: ubuntu
 
+# Base for all container dirs. Normally on an SSD.
+container_config_dir: /home/ubuntu
+
 # Whether to initialise Zigbee2MQTT and the MQTT broker
 use_zigbee_hardware: true
 

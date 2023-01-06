@@ -1,21 +1,11 @@
 #!/usr/bin/env bash
 
-# BACKUP_DESTINATION=192.168.1.116
-# 
-# ping $BACKUP_DESTINATION -c2 
-# if [ $? -eq0 ]; 
-# then 
-#   echo $BACKUP_DESTINATION online. Proceeding.
-# else 
-#   echo "Autorestic backup server offline"
-#   exit 1 
-# fi 
-
 /usr/local/bin/autorestic backup -a
 
 if [ $? -eq 0 ]
 then
-    curl -fsSL https://hc-ping.com/{{ healthcheck_autorestic_id }}
+	echo "Autorestic success"
+    curl -fsSL https://hc-ping.com/{{ vault_autorestic_ping_key }}/host-homeautomation-daily-autorestic-backup
 else
     echo "Autorestic failure"
 fi

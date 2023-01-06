@@ -3,6 +3,9 @@ ansible_host: host-backups.i.affordablepotatoes.com
 
 sleepuntil_sleep_time: "08:30"
 
+# Base for all container dirs. Normally on an SSD.
+container_config_dir: /home/ubuntu
+
 # Healthceck.io
 healthcheck_reboot_id: !vault |
           $ANSIBLE_VAULT;1.2;AES256;beanpod

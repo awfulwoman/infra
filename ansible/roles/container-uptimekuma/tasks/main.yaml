@@ -1,14 +1,15 @@
-- name: Set config path
-  ansible.builtin.set_fact:
-    container_config_dir: "{{ ansible_env.HOME }}"
+- name: "Create a volume - {{ container_name }}"
+  community.docker.docker_volume:
+    name: uptime-kuma
 
 - name: "Create {{ container_name }} container"
   # become: true
   community.docker.docker_container:
-    name: uptime-kuma
-    image: louislam/uptime-kuma:1
+    name: "{{ container_name }}"
+    image: "{{ container_image }}"
     state: started
     restart_policy: unless-stopped
+    platform: "{{ container_platform }}"
     ports:
       - "3001:3001"
     env:
@@ -20,5 +21,6 @@
       - name: "affordablepotatoes"
     labels:
       traefik.enable: "true"
-      traefik.http.routers.uptime-kuma.rule: "Host(`uptime-kuma.affordablepotatoes.com`)"
-      traefik.http.routers.uptime-kuma.entrypoints: "web"
+      traefik.http.routers.uptimekuma.rule: "Host(`uptime-kuma.affordablepotatoes.com`)"
+      traefik.http.routers.uptimekuma.entrypoints: "web"
+      traefik.http.services.uptimekuma.loadbalancer.server.port: "3001"

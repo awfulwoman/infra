@@ -1,7 +1,3 @@
-- name: User-based Config path
-  ansible.builtin.set_fact:
-    container_config_dir: "{{ ansible_env.HOME }}"
-
 - name: Create directories
   ansible.builtin.file:
     path: "{{ item }}"

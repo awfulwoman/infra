@@ -1,10 +1,10 @@
-- name: "Create {{ container_name }} config dir"
+- name: "Ensure config dir exists - {{ container_config_dir }}/{{ container_name }}"
   ansible.builtin.file:
     path: "{{ container_config_dir }}/{{ container_name }}"
     state: directory
     mode: 0744
 
-- name: "Ensure {{ container_name }} container exists"
+- name: "Ensure container exists - {{ container_name }}"
   community.docker.docker_container:
     name: "{{ container_name }}"
     image: "{{ container_image }}"

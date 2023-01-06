@@ -57,22 +57,28 @@
     mode: 0774
     recurse: true
 
+- name: Cleanup older backup scripts
+  become: true
+  ansible.builtin.file:
+    path: /usr/local/sbin/backup.sh
+    state: absent    
+
 - name: Generate and deploy backup script
   become: true
   ansible.builtin.template:
-    src: templates/backup.sh.j2
-    dest: /usr/local/sbin/backup.sh
+    src: templates/zfs-backup.sh.j2
+    dest: /usr/local/sbin/zfs-backup.sh
     owner: root
     group: root
     mode: 0774
   when: zfs_backup_datasets
 
-- name: Cron to run backup.sh
+- name: Cron to run zfs-backup.sh
   # Runs at a specified time to catch reboots and previous backup failures
   become: true
   ansible.builtin.cron:
     name: "backup.sh"
-    job: TZ=UTC /usr/local/sbin/backup.sh
+    job: TZ=UTC /usr/local/sbin/zfs-backup.sh
     state: present
     minute: "{{ zfsbackup_cron_minute }}"
     hour: "{{ zfsbackup_cron_hour }}"

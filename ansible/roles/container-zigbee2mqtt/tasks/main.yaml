@@ -1,8 +1,3 @@
-- name: "Set config path for {{ container_name }}"
-  ansible.builtin.set_fact:
-    container_config_dir: "{{ ansible_env.HOME }}"
-  when: container_config_dir is undefined
-
 - name: "Create config dir for {{ container_name }}"
   ansible.builtin.file:
     path: "{{ container_config_dir }}/{{ container_name }}"

@@ -1,7 +1,15 @@
-- name: Add ansible_user to docker group
+- name: Add to docker group - "{{ ansible_user }}"
   become: true
   ansible.builtin.user:
     user: "{{ ansible_user }}"
+    groups: docker
+    append: true
+  notify: Reboot host
+
+- name: Add to docker group - "{{ workhorse_user }}"
+  become: true
+  ansible.builtin.user:
+    user: "{{ workhorse_user }}"
     groups: docker
     append: true
   notify: Reboot host
