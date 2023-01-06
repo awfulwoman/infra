@@ -12,8 +12,8 @@ mkdir -p $LOGGING_DIR
 touch $LOGGING_DIR/$LOGGING_FILE
 
 # Perform Ansible pull while the machine is awake
-
-ansible-pull -U https://github.com/whalecoiner/home ansible/playbooks/{{ inventory_hostname }}.yaml
+# hardcoded for now
+su -c 'ansible-pull -U https://github.com/whalecoiner/home ansible/playbooks/{{ inventory_hostname }}.yaml' ubuntu
 
 # Is the backup host up?
 ping $BACKUP_ADDRESS -c2 > /dev/null 2>&1
