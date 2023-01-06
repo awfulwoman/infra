@@ -1,13 +1,14 @@
 - name: Set config path
   ansible.builtin.set_fact:
+    # container_config_dir: "/opt/containers"
     container_config_dir: "{{ ansible_env.HOME }}"
   when: container_config_dir is undefined
 
-# - name: "Create {{ container_name }} container" config dir
+# - name: "Ensure container config directory exists at {{ container_config_dir }}"
 #   become: true
 #   ansible.builtin.file:
 #     path: "{{ container_config_dir }}"
-#     # owner: "{{ workhorse_user }}"
+#     owner: "{{ workhorse_user }}"
 #     group: "{{ workhorse_user }}"
 #     mode: '0664'
 #     state: directory
