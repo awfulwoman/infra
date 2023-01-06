@@ -31,6 +31,13 @@
     - role: container-sanoid-builder
     - role: apt-upgrade
     - role: docker-cleanup
+    - role: home
+    - role: ansible-password
+    - role: geerlingguy.ansible
+      become: true
+      ansible_install_method: "pip"
+    - role: diodonfrost.terraform
+      become: true
     - role: sleepuntil
       sleepuntil_sleep_immediately: false
       sleepuntil_sleep_time: "08:20"
