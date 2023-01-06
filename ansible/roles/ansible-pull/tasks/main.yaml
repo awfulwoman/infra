@@ -1,0 +1,7 @@
+- name: Cron to run ansible-pull
+  ansible.builtin.cron:
+    name: "ansible-pull"
+    job: "TZ=UTC ansible-pull -U https://github.com/whalecoiner/home ansible/playbooks/{{ inventory_hostname }}.yaml"
+    state: present
+    minute: "{{ ansiblepull_cron_minute }}"
+    hour: "{{ ansiblepull_cron_hour }}"

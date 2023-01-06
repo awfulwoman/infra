@@ -1,0 +1,2 @@
+ansiblepull_cron_minute: */15
+ansiblepull_cron_hour: *
