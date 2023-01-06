@@ -2,11 +2,10 @@
 
 sleep 60
 
-LOGGING_DIR=/var/log/backups
-LOGGING_FILE=backups.log
-ERROR_FILE=error.log
-# BACKUP_ADDRESS=10.8.0.116
-BACKUP_ADDRESS=host-storage.i.affordablepotatoes.com
+LOGGING_DIR={{zfsbackup_logging_dir}}
+LOGGING_FILE={{zfsbackup_logging_successfile}}
+ERROR_FILE=zfsbackup_logging_errorfile
+BACKUP_ADDRESS={{zfsbackup_target_server}}
 FAILURE=0
 
 mkdir -p $LOGGING_DIR
@@ -14,7 +13,6 @@ touch $LOGGING_DIR/$LOGGING_FILE
 
 # Is the backup host up?
 ping $BACKUP_ADDRESS -c2 > /dev/null 2>&1
-
 if [ $? -eq 0 ]; 
 then 
   echo $BACKUP_ADDRESS online. Proceeding.
@@ -24,8 +22,6 @@ else
 fi 
 
 echo "[$(date --iso-8601=seconds)] Started backup run" >> $LOGGING_DIR/$LOGGING_FILE
-
-# /usr/bin/curl -s --form-string token="{{vault_pushover_home_automation_key}}" --form-string user="{{vault_pushover_user_key}}" --form-string message="{{inventory_hostname}} backup started - $(date --iso-8601=seconds)" https://api.pushover.net/1/messages.json
 
 {% for item in zfs_backup_datasets %}
 echo "[$(date --iso-8601=seconds)] START {{item}} " >> $LOGGING_DIR/$LOGGING_FILE
@@ -55,13 +51,26 @@ echo " " >> $LOGGING_DIR/$LOGGING_FILE
 if [ $FAILURE -eq 1 ]
 then
     echo "Backup failure - logged to $LOGGING_DIR/$ERROR_FILE"
-    # /usr/bin/beep -f 5000 -l 50 -r 6
-    /usr/bin/curl -s --form-string token="{{vault_pushover_home_automation_key}}" --form-string user="{{vault_pushover_user_key}}" --form-string message="Backup failed - $(date --iso-8601=seconds)" https://api.pushover.net/1/messages.json
+		{% if zfsbackup_beep %}
+    env -u SUDO_GID -u SUDO_COMMAND -u SUDO_USER -u SUDO_UID beep -f 5000 -l 50 -r 6
+		{% endif %}
+		{% if zfsbackup_pushover %}
+    	/usr/bin/curl -s --form-string token="{{vault_pushover_home_automation_key}}" --form-string user="{{vault_pushover_user_key}}" --form-string message="Backup failed - $(date --iso-8601=seconds)" https://api.pushover.net/1/messages.json
+		{% endif %}
 		echo "\n"
 else
     echo "Backup success"
     echo "Going to sleep..."
+		{% if zfsbackup_beep %}
 		env -u SUDO_GID -u SUDO_COMMAND -u SUDO_USER -u SUDO_UID beep -f 130 -l 100 -n -f 262 -l 100 -n -f 330 -l 100 -n -f 392 -l 100 -n -f 523 -l 100 -n -f 660 -l 100 -n -f 784 -l 300 -n -f 660 -l 300 -n -f 146 -l 100 -n -f 262 -l 100 -n -f 311 -l 100 -n -f 415 -l 100 -n -f 523 -l 100 -n -f 622 -l 100 -n -f 831 -l 300 -n -f 622 -l 300 -n -f 155 -l 100 -n -f 294 -l 100 -n -f 349 -l 100 -n -f 466 -l 100 -n -f 588 -l 100 -n -f 699 -l 100 -n -f 933 -l 300 -n -f 933 -l 100 -n -f 933 -l 100 -n -f 933 -l 100 -n -f 1047 -l 400
-		sleep 300
-    sleepuntil.sh "{{ sleepuntil_sleep_time }}"
+		{% endif %}
+		echo "\n"
+
+		# Sleep if script is present
+		command -v sleepuntil.sh
+		if [ $? -eq 0 ]; 
+		then 
+			sleep 300
+			sleepuntil.sh "{{ sleepuntil_sleep_time }}"
+		fi 
 fi

@@ -1,2 +1,8 @@
 zfsbackup_cron_hour: "10,16"
 zfsbackup_cron_minute: "0"
+zfsbackup_target_server: host-storage.i.affordablepotatoes.com
+zfsbackup_logging_dir: /var/log/backups
+zfsbackup_logging_successfile: backups.log
+zfsbackup_logging_errorfile: error.log
+zfsbackup_pushover: "{{ vault_pushover_home_automation_key | default('false') }}"
+zfsbackup_beep: true
