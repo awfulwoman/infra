@@ -1,3 +1,16 @@
+# NOTE
+# This assumes that the node has already been initialsed by a remote Ansible connection.
+# This WILL NOT bootstrap installation on a node via localhost. 
+# But, once an initial run of Anisble has been completed, this role will install requirements
+# and set up ansible-pull.
+
+- name: Clone initial copy of repo
+  ansible.builtin.git:
+    repo: https://github.com/whalecoiner/home.git
+    dest: "/tmp/ansible/home.git"
+    clone: true
+    update: true
+
 - name: Cron to run ansible-pull
   ansible.builtin.cron:
     name: "ansible-pull"
