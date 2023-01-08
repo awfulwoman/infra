@@ -1,7 +1,0 @@
-- name: Add ansible password
-  become: true
-  ansible.builtin.lineinfile:
-    name: "{{ ansible_env.HOME }}/.ansible/password"
-    line: "{{ vault_ansible_password }}"
-    state: present
-    create: true

@@ -31,7 +31,6 @@
     - role: container-sanoid-builder
     - role: apt-upgrade
     - role: docker-cleanup
-    - role: ansible-password
     - role: geerlingguy.ansible
       become: true
       ansible_install_method: "pip"

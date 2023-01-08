@@ -17,7 +17,6 @@
     - role: hifis.unattended_upgrades
       become: true
     - role: motd
-    - role: ansible-password
     - role: geerlingguy.ansible
       become: true
       ansible_install_method: "pip"

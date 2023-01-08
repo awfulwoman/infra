@@ -1,8 +1,15 @@
 # NOTE
-# This assumes that the node has already been initialsed by a remote Ansible connection.
-# This WILL NOT bootstrap installation on a node via localhost. 
-# But, once an initial run of Anisble has been completed, this role will install requirements
-# and set up ansible-pull.
+# This needs to be run intially from a remote controller, due to 
+# installing passwords and dependencies. After the initial run 
+# ansible-pull will function as expected.
+
+- name: Add ansible password
+  become: true
+  ansible.builtin.lineinfile:
+    name: "{{ ansible_env.HOME }}/.ansible/password"
+    line: "{{ vault_ansible_password }}"
+    state: present
+    create: true
 
 - name: Make project in /opt/ansible
   become: true
