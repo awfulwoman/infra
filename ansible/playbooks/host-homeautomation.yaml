@@ -36,7 +36,6 @@
     - role: rtl-433
     - role: apt-upgrade
     - role: ansible-pull
-    - role: healthchecks-ansible-pull # Always the last
 
   handlers:
     - name: Reboot host

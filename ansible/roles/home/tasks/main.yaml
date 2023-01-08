@@ -1,6 +1,0 @@
-- name: Clone a github repository
-  ansible.builtin.git:
-    repo: https://github.com/whalecoiner/home.git
-    dest: "{{ ansible_env.HOME }}/home"
-    clone: true
-    update: true

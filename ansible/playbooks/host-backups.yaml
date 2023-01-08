@@ -22,8 +22,7 @@
     - role: ansible-password
     - role: geerlingguy.ansible
       become: true
-      ansible_install_method: "pip"
-    - role: healthchecks-ansible-pull # Always the last  
+      ansible_install_method: "pip" 
 
   handlers:
     - name: Reboot host

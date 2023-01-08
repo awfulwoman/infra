@@ -8,18 +8,15 @@
          exit
  fi
 
-
-# download repo
-
-# cd to download
-
-
-# run ansible-galaxy from within it 
-# Only run this if ansible-pull-full-initialised.lock is not present, and
-# then weekly after that.
-
-ansible-galaxy install -f -r ansible/roles/requirements.yaml
-
-# run ansible-pull as before
-
 TZ=UTC ansible-pull -U https://github.com/whalecoiner/home ansible/playbooks/{{ inventory_hostname }}.yaml
+
+
+if [ $? -eq 0 ]
+then
+  echo "ansible-pull success"
+  # Ensure that galaxy has been marked as installeda t least once
+  touch /opt/ansible/home.git/.installed.lock
+  /usr/bin/curl -fsSL https://hc-ping.com/{{ vault_autorestic_ping_key }}/{{ inventory_hostname }}-ansible-pull
+else
+  echo "ansible-pull failure"
+fi

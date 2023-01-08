@@ -1,2 +1,0 @@
-    - name: Announce completion health
-      shell: "/usr/bin/curl -fsSL https://hc-ping.com/{{ vault_autorestic_ping_key }}/{{ inventory_hostname }}-ansible-pull"
