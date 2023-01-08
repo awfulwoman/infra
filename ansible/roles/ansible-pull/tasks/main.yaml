@@ -35,7 +35,7 @@
 
 - name: Run initial requirements install
   ansible.builtin.command: ansible-galaxy install -f -r ansible/meta/requirements.yaml
-  timeout: 600
+  timeout: 1200
   args:
     chdir: /opt/ansible/home.git
   when: not installed
