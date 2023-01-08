@@ -49,7 +49,7 @@
 - name: Cron to run ansible-galaxy update weekly
   ansible.builtin.cron:
     name: "ansible-galaxy"
-    job: "TZ=UTC ansible-galaxy install -f -r ansible/roles/requirements.yaml"
+    job: "TZ=UTC ansible-galaxy install -f -r /opt/ansible/home.git/ansible/roles/requirements.yaml"
     state: present
     minute: "17" 
     hour: "5"
