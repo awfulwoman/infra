@@ -10,7 +10,6 @@
 
 TZ=UTC ansible-pull -U https://github.com/whalecoiner/home ansible/playbooks/{{ inventory_hostname }}.yaml
 
-
 if [ $? -eq 0 ]
 then
   echo "ansible-pull success"
