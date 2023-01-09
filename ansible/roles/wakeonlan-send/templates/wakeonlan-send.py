@@ -15,7 +15,7 @@ def on_message(client, userdata, msg):
 		# command = "{{ wakeonlansend_command }} " + str(msg.payload.decode("utf-8"))
 		os.system(command)
 
-client = mqtt.Client("wakeonlan_mqtt")
+client = mqtt.Client("wakeonlan-mqtt-{{ inventory_name }}")
 client.on_connect = on_connect
 client.on_message = on_message
 client.connect("mqtt.affordablepotatoes.com", 1883, 60)
