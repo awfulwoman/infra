@@ -6,5 +6,7 @@
     state: present
     update_cache: false
 
-# Script
-# wakeup host-storage
+# pip install paho-mqtt
+
+# Copy script to controller
+# Set script to run constantly
