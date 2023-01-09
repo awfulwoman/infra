@@ -22,6 +22,9 @@
     - role: geerlingguy.ansible
       become: true
       ansible_install_method: "pip" 
+    - role: wakeonlan
+    - role: ansible-pull
+      ansiblepull_install_pull_cron: false
 
   handlers:
     - name: Reboot host

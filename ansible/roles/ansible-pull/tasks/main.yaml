@@ -79,3 +79,4 @@
     state: present
     minute: "{{ ansiblepull_cron_minute }}"
     hour: "{{ ansiblepull_cron_hour }}"
+  when: ansiblepull_install_pull_cron
