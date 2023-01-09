@@ -12,7 +12,7 @@ def on_message(client, userdata, msg):
 	# Valid MAC addresses only
 	if re.match("[0-9a-f]{2}([-:]?)[0-9a-f]{2}(\\1[0-9a-f]{2}){4}$", payload.lower()):
 		command = "wakeonlan " + str(msg.payload.decode("utf-8"))
-		command = "{{ wakeonlansend_command }} " + str(msg.payload.decode("utf-8"))
+		# command = "{{ wakeonlansend_command }} " + str(msg.payload.decode("utf-8"))
 		os.system(command)
 
 client = mqtt.Client("wakeonlan_mqtt")
