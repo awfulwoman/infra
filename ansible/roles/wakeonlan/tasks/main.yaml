@@ -1,4 +1,4 @@
-- name: Ensure wakeonlan destination exists
+- name: Ensure wakeonlan service dir exists
   become: true
   ansible.builtin.file:
     state: directory
