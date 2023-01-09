@@ -43,7 +43,7 @@
 
 - name: Run initial requirements install
   ansible.builtin.command: ansible-galaxy install -f -r ansible/meta/requirements.yaml
-  timeout: 12000
+  timeout: 3600 # stupidly long value because ansible-galaxy installation takes FOREVER
   args:
     chdir: "{{ ansiblepull_workdir }}/{{ repo_name }}"
   when: not installed
