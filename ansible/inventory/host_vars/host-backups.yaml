@@ -2,6 +2,7 @@ ansible_user: ubuntu
 ansible_host: host-backups.i.affordablepotatoes.com
 
 sleepuntil_sleep_time: "08:30"
+wakeonlan_mac_address: "60:a4:4c:40:52:57"
 
 # Base for all container dirs. Normally on an SSD.
 container_config_dir: /home/ubuntu
