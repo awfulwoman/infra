@@ -15,21 +15,22 @@
   become: true
   ansible.builtin.file:
     state: directory
-    path: /opt/ansible
+    path: "{{ ansiblepull_workdir }}"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: 0744
 
 - name: Clone initial copy of repo
   ansible.builtin.git:
-    repo: https://github.com/whalecoiner/home.git
-    dest: "/opt/ansible/home.git"
+    repo: "{{ repo_url }}"
+    dest: "{{ ansiblepull_workdir }}/{{ repo_name }}"
     clone: true
     update: true
+  register: repo_installation_path
 
 - name: Stat installed.lock
   ansible.builtin.stat:
-    path: /opt/ansible/home.git/.installed.lock
+    path: "{{ ansiblepull_workdir }}/.installed.lock"
   register: installlock_raw
 
 - name: Register installation var
@@ -42,30 +43,39 @@
 
 - name: Run initial requirements install
   ansible.builtin.command: ansible-galaxy install -f -r ansible/meta/requirements.yaml
-  timeout: 1200
+  timeout: 12000
   args:
-    chdir: /opt/ansible/home.git
+    chdir: "{{ ansiblepull_workdir }}/{{ repo_name }}"
   when: not installed
 
 - name: Mark initial install as completed
   ansible.builtin.file:
     state: touch
-    path: /opt/ansible/home.git/.installed.lock
+    path: "{{ ansiblepull_workdir }}/{{ansiblepull_initial_installer_lockfile_name}}"
   when: not installed
 
 - name: Cron to run ansible-galaxy update weekly
   ansible.builtin.cron:
     name: "ansible-galaxy"
-    job: "TZ=UTC ansible-galaxy install -f -r /opt/ansible/home.git/ansible/roles/requirements.yaml"
+    job: "TZ=UTC ansible-galaxy install -f -r {{ ansiblepull_workdir }}/{{ repo_name }}/ansible/roles/requirements.yaml"
     state: present
     minute: "17" 
     hour: "5"
     day: "1"
 
+- name: Copy ansible-pull-full.sh script 
+  become: true
+  ansible.builtin.template:
+    src: ansible-pull-full.sh.j2
+    dest: "{{ ansiblepull_workdir }}/{{ ansiblepull_script_name }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0755
+
 - name: Cron to run ansible-pull frequently
   ansible.builtin.cron:
     name: "ansible-pull"
-    job: "TZ=UTC ansible-pull-full.sh"
+    job: "TZ=UTC {{ ansiblepull_workdir }}/{{ ansiblepull_script_name }}"
     state: present
     minute: "{{ ansiblepull_cron_minute }}"
     hour: "{{ ansiblepull_cron_hour }}"

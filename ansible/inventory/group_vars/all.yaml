@@ -158,3 +158,6 @@ unattended_mail_only_on_error: true
 unattended_mail: unattended@whalecoiner.com
 unattended_automatic_reboot: true
 unattended_automatic_reboot_time: 03:00
+
+repo_url: https://github.com/whalecoiner/home
+repo_name: home
