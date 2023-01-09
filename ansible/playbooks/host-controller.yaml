@@ -24,6 +24,7 @@
     - role: diodonfrost.terraform
       become: true
     - role: docker-cleanup
+    - role: wakeonlan-send
     - role: apt-upgrade
     - role: ansible-pull
 
