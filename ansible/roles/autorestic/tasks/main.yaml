@@ -40,8 +40,15 @@
     group: "{{ autorestic_group }}"
     mode: 0755
 
-- name: Autorestic initialise
-  ansible.builtin.command: "autorestic check"
+- name: Attempt to initialise Autorestic
+  block:
+    - name: Autorestic initialise
+      ansible.builtin.command: "autorestic check"
+        boot: true
+  rescue:
+    - name: Debug Autorestic initialisation
+      ansible.builtin.debug:
+        msg: "Could not initialise Autorestic. Non-fatal. Proceeding."
 
 # This cron is frequent because the called script handles timing of backups
 - name: Ensure autorestic cron exists
