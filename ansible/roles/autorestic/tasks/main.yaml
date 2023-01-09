@@ -44,7 +44,6 @@
   block:
     - name: Autorestic initialise
       ansible.builtin.command: "autorestic check"
-        boot: true
   rescue:
     - name: Debug Autorestic initialisation
       ansible.builtin.debug:
