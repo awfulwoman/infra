@@ -93,7 +93,7 @@
     hour: "*"
     minute: "*"
     weekday: "*"
-    job: "TZ=UTC /usr/sbin/sanoid --cron"
+    job: "/usr/sbin/sanoid --cron"
     state: present
 
 - name: List datasets to be given permissions on
