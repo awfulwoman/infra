@@ -1,0 +1,39 @@
+- name: Install Wakonlan tools
+  become: true
+  ansible.builtin.apt:
+    name:
+      - wakeonlan
+    state: present
+    update_cache: false
+
+- name: Install paho-mqtt
+  become: true
+  ansible.builtin.pip:
+    name:
+      - paho-mqtt
+    state: present
+
+# Copy script to controller
+- name: Copy mqtt2wol.py script
+  become: true
+  ansible.builtin.template:
+    src: mqtt2wol.py.j2
+    dest: /usr/local/bin/mqtt2wol
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Create mqtt2wol.service
+  become: true
+  ansible.builtin.copy:
+    src: mqtt2wol.service
+    dest: /etc/systemd/system/mqtt2wol.service
+    owner: root
+    group: root
+    mode: 0664
+
+- name: Make sure mqtt2wol service is running
+  become: true
+  ansible.builtin.systemd:
+    state: started
+    name: mqtt2wol

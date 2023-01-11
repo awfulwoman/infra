@@ -59,7 +59,7 @@
     name: "ansible-galaxy"
     job: "ansible-galaxy install -f -r {{ ansiblepull_workdir }}/{{ repo_name }}/ansible/roles/requirements.yaml"
     state: present
-    minute: "17" 
+    minute: "17"
     hour: "5"
     day: "1"
 

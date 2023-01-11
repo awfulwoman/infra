@@ -1,0 +1,4 @@
+mqtt2wol_topic: "servers/host-controller/wakeup"
+mqtt2wol_command: wakeonlan
+mqtt2wol_broker: mqtt.affordablepotatoes.com
+mqtt2wol_broker_port: 1883

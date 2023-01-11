@@ -17,14 +17,14 @@
     - role: geerlingguy.ansible
       become: true
       ansible_install_method: "pip"
-    - role: container-traefik  
-    - role: container-uptimekuma  
+    - role: container-traefik
+    - role: container-uptimekuma
     - role: hifis.unattended_upgrades
       become: true
     - role: diodonfrost.terraform
       become: true
     - role: docker-cleanup
-    - role: wakeonlan-send
+    - role: mqtt2wol
     - role: apt-upgrade
 
   handlers:

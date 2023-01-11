@@ -1,0 +1,12 @@
+[Unit]
+Description=MQTT2WOL
+
+[Service]
+Type=simple
+Environment="TERM=dumb"
+RemainAfterExit=true
+ExecStart=/usr/local/bin/mqtt2wol
+
+[Install]
+WantedBy=multi-user.target
+
