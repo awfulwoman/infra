@@ -37,6 +37,7 @@
     - role: diodonfrost.terraform
       become: true
     - role: sleepuntil
+      sleepuntil_sleep_immediately: false
     - role: ansible-pull
 
   handlers:
