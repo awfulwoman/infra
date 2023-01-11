@@ -17,8 +17,8 @@
     restart_policy: unless-stopped
     # user: "{{ container_user_id }}:{{ container_user_id }}"
     ports:
-      - "6052:6052"
-      - "6123:6123"
+      - "6056:6052"
+      - "6126:6123"
     devices:
       - /dev/ttyUSB0
     env:
