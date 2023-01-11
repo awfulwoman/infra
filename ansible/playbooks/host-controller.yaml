@@ -26,7 +26,6 @@
     - role: docker-cleanup
     - role: wakeonlan-send
     - role: apt-upgrade
-    - role: ansible-pull
 
   handlers:
     - name: Reboot host
