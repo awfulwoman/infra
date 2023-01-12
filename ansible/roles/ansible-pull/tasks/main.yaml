@@ -45,7 +45,7 @@
 
 - name: Stat installed.lock
   ansible.builtin.stat:
-    path: "{{ ansiblepull_workdir }}/.installed.lock"
+    path: "{{ ansiblepull_workdir }}/{{ ansiblepull_initial_installer_lockfile_name }}"
   register: installlock_raw
 
 - name: Register installation var
