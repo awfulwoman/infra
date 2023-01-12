@@ -8,10 +8,14 @@
       become: true
     - role: hifis.unattended_upgrades
       become: true
+    - role: weareinteractive.environment
+      become: true
+      no_log: true
     - role: motd
     - role: geerlingguy.ansible
       become: true
       ansible_install_method: "pip"
+    - role: powertop
     - role: ansible-pull
       ansiblepull_playbook: cluster_k8s
     - role: apt-upgrade
