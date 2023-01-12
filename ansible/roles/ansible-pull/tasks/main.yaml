@@ -6,7 +6,7 @@
 - name: Add ansible password
   become: true
   ansible.builtin.lineinfile:
-    name: "{{ ansible_env.HOME }}/.ansible/password"
+    name: "{{ ansiblepull_workdir }}/.vaultpassword"
     line: "{{ vault_ansible_password }}"
     mode: 0744
     owner: "{{ ansible_user }}"
@@ -19,6 +19,15 @@
   ansible.builtin.file:
     state: directory
     path: "{{ ansiblepull_workdir }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0744
+
+- name: Make project in /opt/ansible/galaxy-roles
+  become: true
+  ansible.builtin.file:
+    state: directory
+    path: "{{ ansiblepull_workdir }}/galaxy-roles"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: 0744
