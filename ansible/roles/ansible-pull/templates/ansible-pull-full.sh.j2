@@ -1,26 +1,29 @@
 #!/bin/bash
 
-# Check is Lock File exists, if not create it and set trap on exit
- if { set -C; 2>/dev/null >{{ ansiblepull_workdir }}/{{ansiblepull_lockfile_name}}; }; then
-   trap "rm -f {{ ansiblepull_workdir }}/{{ansiblepull_lockfile_name}}" EXIT
- else
-   echo "Cannot get lock as {{ ansiblepull_workdir }}/{{ansiblepull_lockfile_name}} exists."
-   exit
- fi
+### Lockfile ###
+LOCKFILE="{{ ansiblepull_workdir }}/{{ansiblepull_lockfile_name}}"
+LOCKFD=99
+_lock()             { flock -$1 $LOCKFD; }
+_no_more_locking()  { _lock u; _lock xn && rm -f $LOCKFILE; }
+_prepare_locking()  { eval "exec $LOCKFD>\"$LOCKFILE\""; trap _no_more_locking EXIT; }
+_prepare_locking
+exlock_now()        { _lock xn; }
+exlock()            { _lock x; }
+shlock()            { _lock s; }
+unlock()            { _lock u; }
+exlock_now || exit 1
 
-ansible-pull -U https://github.com/whalecoiner/home ansible/playbooks/{{ inventory_hostname }}.yaml
+### END Lockfile ###
+
+ansible-pull -U {{ ansiblepull_repo_url }} ansible/playbooks/{{ inventory_hostname }}.yaml
 
 if [ $? -eq 0 ]
 then
   echo "ansible-pull success"
-
-  # Ensure that ansible-galaxy is marked as ran
-  touch {{ansiblepull_workdir}}/{{ansiblepull_initial_installer_lockfile_name}}
-
 	# Tell healthchecks.io that all is okay
-  /usr/bin/curl -fsSL https://hc-ping.com/{{ vault_autorestic_ping_key }}/{{ inventory_hostname }}-ansible-pull
+  /usr/bin/curl -fsSL https://hc-ping.com/{{ vault_autorestic_ping_key }}/{{ inventory_hostname }}-ansible-pull > /dev/null
 else
   echo "ansible-pull failure"
-	
+	# Report error via Pushover
 	/usr/bin/curl -s --form-string token="{{ vault_pushover_home_automation_key }}" --form-string user="{{ vault_pushover_user_key }}" --form-string message="{{ inventory_hostname }} ansible-pull failed - $(date --iso-8601=seconds)" https://api.pushover.net/1/messages.json > /dev/null
 fi

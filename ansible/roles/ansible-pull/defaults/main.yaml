@@ -1,7 +1,9 @@
 ansiblepull_cron_minute: "*/15"
 ansiblepull_cron_hour: "*"
-ansiblepull_workdir: /opt/ansible
+ansiblepull_workdir: "{{ ansible_home }}"
 ansiblepull_script_name: ansible-pull-full.sh
 ansiblepull_lockfile_name: ansible-pull-full.lock
-ansiblepull_initial_installer_lockfile_name: .installed.lock
+ansiblepull_initial_installer_lockfile_name: .ansible-galaxy-installed.lock
 ansiblepull_install_pull_cron: true
+ansiblepull_password_file: "{{ ansible_vault_password_file }}"
+ansiblepull_repo_url: https://github.com/whalecoiner/home
