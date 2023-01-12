@@ -11,6 +11,8 @@ all:
     host-backups:                         # Backups
     host-storage:                         # NAS
     vm-digitalocean-whalecoiner:          # Digital Ocean VM
+    host-k8s01:
+    host-k8s02:
 
   # Groupings of servers that allow them to be administered collectively.
   children:
@@ -21,6 +23,8 @@ all:
         host-homeautomation:
         host-backups:
         host-storage:
+        host-k8s01:
+        host-k8s02:
 
     # Group: Home Automation
     homeautomation:
@@ -53,3 +57,9 @@ all:
       hosts:
         host-homeautomation:
         host-monitoring:
+
+    # Kubernetes Cluster
+    k8s:
+      hosts:
+        host-k8s01:
+        host-k8s02:

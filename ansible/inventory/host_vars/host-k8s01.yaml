@@ -1,0 +1,2 @@
+ansible_host: host-k8s01.i.affordablepotatoes.com
+ansible_user: ubuntu
