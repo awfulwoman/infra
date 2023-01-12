@@ -102,12 +102,12 @@
 #     groups: "sudo"
 #     state: present
 
-- name: Add the user "{{ ansible_user }}" to workhorse group
-  become: true
-  ansible.builtin.user:
-    name: "{{ ansible_user }}"
-    append: true
-    groups: "{{ workhorse_user }}"
+# - name: Add the user "{{ ansible_user }}" to workhorse group
+#   become: true
+#   ansible.builtin.user:
+#     name: "{{ ansible_user }}"
+#     append: true
+#     groups: "{{ workhorse_user }}"
 
 # - name: Set workhorse_user's authorized keys (from url)
 #   become: true
