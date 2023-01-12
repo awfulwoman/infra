@@ -13,7 +13,7 @@
       become: true
       ansible_install_method: "pip"
     - role: ansible-pull
-      ansiblepull_playbook: k8s
+      ansiblepull_playbook: cluster_k8s
     - role: apt-upgrade
     - role: sleepuntil
 
