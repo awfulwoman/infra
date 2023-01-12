@@ -15,7 +15,7 @@ exlock_now || exit 1
 
 ### END Lockfile ###
 
-ansible-pull -U {{ ansiblepull_repo_url }} ansible/playbooks/{{ inventory_hostname }}.yaml
+ansible-pull -U {{ ansiblepull_repo_url }} ansible/playbooks/{{ ansiblepull_playbook }}.yaml
 
 if [ $? -eq 0 ]
 then

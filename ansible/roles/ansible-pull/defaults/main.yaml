@@ -7,3 +7,4 @@ ansiblepull_initial_installer_lockfile_name: .ansible-galaxy-installed.lock
 ansiblepull_install_pull_cron: true
 ansiblepull_password_file: "{{ ansible_vault_password_file }}"
 ansiblepull_repo_url: https://github.com/whalecoiner/home
+ansiblepull_playbook: "{{ ansible_hostname }}"
