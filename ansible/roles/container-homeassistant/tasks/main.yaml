@@ -8,6 +8,17 @@
     mode: 0774
     recurse: true
 
+- name: "Create media dir: {{ container_config_dir }}/media"
+  become: true
+  ansible.builtin.file:
+    path: "{{ container_config_dir }}/media"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0774
+    recurse: true
+
+
 - name: Check to see if docker-venv is installed
   ansible.builtin.stat:
     path: "{{ container_config_dir }}/{{ container_name }}/docker/run"
@@ -42,6 +53,7 @@
       PACKAGES: "iputils"
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}:/config"
+      - "{{ container_config_dir }}/media:/media"
       - /etc/localtime:/etc/localtime:ro
       # - /run/dbus:/run/dbus:ro
       - "{{ container_config_dir }}/{{ container_name }}/docker/run:/etc/services.d/home-assistant/run"
