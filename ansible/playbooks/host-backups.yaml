@@ -7,6 +7,9 @@
     - role: healthchecks
     - role: artis3n.tailscale
     - role: grub-tune
+    - role: weareinteractive.environment
+      become: true
+      no_log: true
     - role: generate-sshkey
       become: true
     - role: beep
