@@ -4,7 +4,6 @@
   roles:
     - role: standard_os
     - role: standard-host
-    - role: healthchecks
     - role: artis3n.tailscale
     - role: grub-tune
     - role: weareinteractive.environment

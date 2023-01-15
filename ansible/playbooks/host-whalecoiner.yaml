@@ -5,7 +5,6 @@
     - role: standard_os
     - role: standard-host
     - role: generate-sshkey
-    - role: healthchecks
     - role: geerlingguy.docker
       become: true
     - role: docker

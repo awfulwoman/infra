@@ -4,7 +4,6 @@
   roles:
     - role: standard_os
     - role: standard-host
-    - role: healthchecks
     - role: cron-reboot
     - role: weareinteractive.environment
       become: true

@@ -9,7 +9,6 @@
     - role: weareinteractive.environment
       become: true
       no_log: true
-    - role: healthchecks
     - role: zfs-backup-client
     - role: cron-reboot
     - role: artis3n.tailscale

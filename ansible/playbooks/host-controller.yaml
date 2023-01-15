@@ -4,7 +4,6 @@
   roles:
     - role: standard_os
     - role: standard-host
-    - role: healthchecks
     - role: generate-sshkey
     - role: artis3n.tailscale
     - role: geerlingguy.docker
