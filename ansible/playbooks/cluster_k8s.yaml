@@ -4,6 +4,8 @@
     - role: standard_os
     - role: standard-host
     - role: artis3n.tailscale
+    - role: xanmanning.k3s
+      k3s_become: true
     - role: generate-sshkey
       become: true
     - role: hifis.unattended_upgrades
