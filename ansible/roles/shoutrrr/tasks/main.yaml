@@ -1,6 +1,6 @@
 - name: Install shoutrrr snap
   become: true
-  ansible.builtin.snap:
+  community.general.snap:
     name:
       - shoutrrr
     state: present
