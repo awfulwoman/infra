@@ -19,8 +19,6 @@
     image: "{{ container_image }}"
     state: started
     restart_policy: unless-stopped
-    ports:
-      - 8999:8080
     env:
       TZ: "Berlin/Europe"
       WATCHTOWER_CLEANUP: "true"
