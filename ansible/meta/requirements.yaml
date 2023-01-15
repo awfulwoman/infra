@@ -11,6 +11,7 @@ roles:
   - name: diodonfrost.terraform
   - name: mrlesmithjr.netplan
   - name: artis3n.tailscale
+  - name: xanmanning.k3s
 
 collections:
   - name: community.docker
