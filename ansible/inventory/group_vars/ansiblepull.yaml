@@ -1,7 +1,7 @@
 ansible_home: "/opt/ansible"
 ansible_log_path: "{{ ansible_home }}/logs"
 ansible_vault_password_file: "{{ ansible_home }}/.vaultpassword"
-ansible_roles_path: "{{ ansible_home }}/galaxy-roles:{{ ansible_home }}/home/ansible/roles"
+ansible_roles_path: "./ansible/roles:{{ ansible_home }}/galaxy-roles:{{ ansible_home }}/home/ansible/roles"
 
 environment_config:
   ANSIBLE_HOME: "{{ ansible_home }}"
