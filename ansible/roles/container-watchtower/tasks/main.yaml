@@ -1,0 +1,33 @@
+- name: "Ensure config dir exists - {{ container_config_dir }}/{{ container_name }}"
+  ansible.builtin.file:
+    path: "{{ container_config_dir }}/{{ container_name }}"
+    state: directory
+    mode: 0744
+
+- name: Copy config.json script
+  become: true
+  ansible.builtin.copy:
+    src: config.json
+    dest: "{{ container_config_dir }}/{{ container_name }}/config.json"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0755
+
+- name: "Ensure container exists - {{ container_name }}"
+  community.docker.docker_container:
+    name: "{{ container_name }}"
+    image: "{{ container_image }}"
+    state: started
+    restart_policy: unless-stopped
+    ports:
+      - 8096:8096
+    env:
+      TZ: "Berlin/Europe"
+      WATCHTOWER_CLEANUP: "true"
+    command: "--interval 30"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - "{{ container_config_dir }}/{{ container_name }}/config.json:/config.json"
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - name: "affordablepotatoes"
