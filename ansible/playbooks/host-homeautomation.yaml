@@ -20,6 +20,7 @@
     - role: geerlingguy.ansible
       become: true
       ansible_install_method: "pip"
+    - role: shoutrrr
     - role: powertop
     - role: nfs-client
     - role: autorestic

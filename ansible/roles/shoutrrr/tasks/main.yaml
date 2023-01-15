@@ -1,0 +1,5 @@
+- name: Install shoutrrr snap 
+  ansible.builtin.snap:
+    name:
+      - shoutrrr
+    state: present
