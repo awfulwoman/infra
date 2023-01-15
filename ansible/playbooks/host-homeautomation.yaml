@@ -23,6 +23,7 @@
     - role: powertop
     - role: nfs-client
     - role: autorestic
+    - role: container-watchtower
     - role: container-vscode
     - role: container-homeassistant
     - role: container-esphome
