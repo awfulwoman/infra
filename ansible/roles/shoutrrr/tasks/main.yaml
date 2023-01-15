@@ -1,4 +1,5 @@
-- name: Install shoutrrr snap 
+- name: Install shoutrrr snap
+  become: true
   ansible.builtin.snap:
     name:
       - shoutrrr
