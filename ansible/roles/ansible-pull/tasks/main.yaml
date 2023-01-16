@@ -67,6 +67,9 @@
   ansible.builtin.file:
     state: touch
     path: "{{ ansiblepull_workdir }}/{{ ansiblepull_initial_installer_lockfile_name }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0744
   when: not installed
 
 - name: Cron to run ansible-galaxy update weekly
