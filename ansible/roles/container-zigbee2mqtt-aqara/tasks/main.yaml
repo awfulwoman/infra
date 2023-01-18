@@ -16,7 +16,7 @@
 - name: "Create container for {{ container_name }}"
   community.docker.docker_container:
     name: "{{ container_name }}"
-    image: koenkk/zigbee2mqtt:latest
+    image: koenkk/zigbee2mqtt
     state: "{{ container_state }}"
     privileged: true
     # pull: true
