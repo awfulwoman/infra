@@ -9,8 +9,8 @@
   become: true
   ansible.builtin.cron:
     name: "Auto-suspend"
-    hour: "1"
-    minute: "0"
+    hour: "{{ sleepuntil_autosleep_time_hour }}"
+    minute: "{{ sleepuntil_autosleep_time_minute }}"
     job: "/usr/local/bin/sleepuntil.sh {{ sleepuntil_sleep_time }}"
     state: present
 

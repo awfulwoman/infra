@@ -3,3 +3,5 @@ sleepuntil_suspend_mode: mem
 sleepuntil_install_location: /usr/local/bin/
 sleepuntil_sleep_immediately: false
 sleepuntil_wakeup_script: null
+sleepuntil_autosleep_time_hour: "1"
+sleepuntil_autosleep_time_minute: "0"
