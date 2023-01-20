@@ -1,4 +1,4 @@
-sleepuntil_sleep_time: "09:00"
+sleepuntil_sleep_time: "17:30"
 sleepuntil_suspend_mode: mem
 sleepuntil_install_location: /usr/local/bin/
 sleepuntil_sleep_immediately: false

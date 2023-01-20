@@ -2,7 +2,6 @@ ansible_user: ubuntu
 ansible_host: host-storage.i.affordablepotatoes.com
 
 sleepuntil_sleep_immediately: false
-# sleepuntil_sleep_time: "08:20"
 wakeonlan_mac_address: "4c:cc:6a:b7:d3:99"
 
 # NFS shares
