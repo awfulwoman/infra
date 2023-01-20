@@ -13,6 +13,7 @@
       become: true
     - role: beep
     - role: zfs-backup-server
+      zfsbackup_pushover: false
     - role: hifis.unattended_upgrades
       become: true
     - role: motd
@@ -23,7 +24,7 @@
       sleepuntil_sleep_immediately: false
     - role: geerlingguy.ansible
       become: true
-      ansible_install_method: "pip" 
+      ansible_install_method: "pip"
     - role: wakeonlan
     - role: ansible-pull
       ansiblepull_install_pull_cron: false
