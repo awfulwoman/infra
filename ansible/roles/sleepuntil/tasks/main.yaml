@@ -13,6 +13,7 @@
     minute: "{{ sleepuntil_autosleep_time_minute }}"
     job: "/usr/local/bin/sleepuntil.sh {{ sleepuntil_sleep_time }}"
     state: present
+  when: sleepuntil_autosleep
 
 - name: Check to see if sleep until official wake-up time should occur
   become: true
