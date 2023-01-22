@@ -1,0 +1,25 @@
+- name: "Create a volume - {{ container_name }}"
+  community.docker.docker_volume:
+    name: uptime-kuma
+
+- name: "Create {{ container_name }} container"
+  community.docker.docker_container:
+    name: "{{ container_name }}"
+    image: "{{ container_image }}"
+    state: started
+    restart_policy: unless-stopped
+    ports:
+      - "12101:12101"
+    devices:
+      - /dev/snd
+    command: --user-profiles /profiles --profile en
+    volumes:
+      - "{{ container_config_dir }}/{{ container_name }}/profiles:/profiles"
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - name: "affordablepotatoes"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.rhasspy.rule: "Host(`rhasspy.affordablepotatoes.com`)"
+      traefik.http.routers.rhasspy.entrypoints: "web"
+      traefik.http.services.rhasspy.loadbalancer.server.port: "12101"
