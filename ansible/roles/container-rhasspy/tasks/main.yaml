@@ -1,10 +1,16 @@
+- name: Ensure audio tools are installed
+  become: true
+  ansible.builtin.apt:
+    name:
+      - alsa-utils
+    state: present
+
 - name: Add to audio group - "{{ ansible_user }}"
   become: true
   ansible.builtin.user:
     user: "{{ ansible_user }}"
     groups: audio
     append: true
-
 
 - name: "Create {{ container_name }} container"
   community.docker.docker_container:
