@@ -12,7 +12,7 @@
     groups: audio
     append: true
 
-- name: "Create {{ container_name }} container"
+- name: "Create container - {{ container_name }}"
   community.docker.docker_container:
     name: "{{ container_name }}"
     image: "{{ container_image }}"
