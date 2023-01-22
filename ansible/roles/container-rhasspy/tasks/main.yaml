@@ -16,7 +16,7 @@
   community.docker.docker_container:
     name: "{{ container_name }}"
     image: "{{ container_image }}"
-    state: started
+    state: stopped
     restart_policy: unless-stopped
     ports:
       - "12101:12101"
