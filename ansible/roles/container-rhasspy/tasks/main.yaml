@@ -1,6 +1,10 @@
-- name: "Create a volume - {{ container_name }}"
-  community.docker.docker_volume:
-    name: uptime-kuma
+- name: Add to audio group - "{{ ansible_user }}"
+  become: true
+  ansible.builtin.user:
+    user: "{{ ansible_user }}"
+    groups: audio
+    append: true
+
 
 - name: "Create {{ container_name }} container"
   community.docker.docker_container:
