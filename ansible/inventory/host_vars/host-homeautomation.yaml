@@ -1,13 +1,7 @@
-# ------------------------
-# name: Home Automation Pi
-# type: Raspberry Pi 4
-# arch: aarch64
-# cpu: Cortex-A72
-# mem: 8GB
-# ------------------------
-
 ansible_host: host-homeautomation.i.affordablepotatoes.com
 ansible_user: ubuntu
+
+wireguard_address: "10.8.0.103/24"
 
 # Whether to initialise Zigbee2MQTT and the MQTT broker
 use_zigbee_hardware: true

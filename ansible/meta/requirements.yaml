@@ -12,6 +12,7 @@ roles:
   - name: mrlesmithjr.netplan
   - name: artis3n.tailscale
   - name: xanmanning.k3s
+  - name: githubixx.ansible_role_wireguard
 
 collections:
   - name: community.docker

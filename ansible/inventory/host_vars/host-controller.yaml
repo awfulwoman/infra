@@ -1,4 +1,6 @@
 ansible_user: pi
 ansible_host: host-controller.i.affordablepotatoes.com
+wireguard_address: "10.8.0.5/24"
+
 # Base for all container dirs. Normally on an SSD.
 container_config_dir: /home/pi
