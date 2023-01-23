@@ -28,3 +28,10 @@ data "digitalocean_domain" "affordablepotatoes" {
 output "domain_output" {
   value = data.digitalocean_domain.affordablepotatoes.zone_file
 }
+
+resource "digitalocean_droplet" "host_public" {
+  image  = "ubuntu-22-10-x64"
+  name   = "host-public"
+  region = "fra"
+  size   = "s-1vcpu-1gb"
+}
