@@ -3,7 +3,6 @@ ansible_host: host-storage.i.affordablepotatoes.com
 
 wireguard_address: "10.8.0.116/24"
 
-sleepuntil_sleep_immediately: false
 wakeonlan_mac_address: "4c:cc:6a:b7:d3:99"
 
 # NFS shares
