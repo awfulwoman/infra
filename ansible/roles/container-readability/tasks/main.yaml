@@ -1,0 +1,17 @@
+
+- name: "Ensure container exists - {{ container_name }}"
+  community.docker.docker_container:
+    name: "{{ container_name }}"
+    image: "{{ container_image }}"
+    state: started
+    restart_policy: unless-stopped
+    ports:
+      - 3000:3000
+    env:
+      TZ: "Berlin/Europe"
+    networks:
+      - name: "affordablepotatoes"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.readability.rule: "Host(`readability.affordablepotatoes.com`)"
+      traefik.http.routers.readability.entrypoints: "web"

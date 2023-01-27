@@ -1,0 +1,2 @@
+container_name: readability
+container_image: phpdockerio/readability-js-server
