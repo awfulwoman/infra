@@ -35,7 +35,7 @@
       PUID: "1000"
       PGID: "1000"
     volumes:
-      - "{{ container_config_dir }}/{{ container_name }}:/data:/var/www/FreshRSS/data:rw"
+      - "{{ container_config_dir }}/{{ container_name }}/config"
       - /etc/localtime:/etc/localtime:ro
     networks:
       - name: "affordablepotatoes"
