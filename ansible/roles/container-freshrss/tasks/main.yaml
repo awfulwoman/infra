@@ -3,23 +3,13 @@
 # great at handling user/file permissions. :(
 # Instead we must use Docker volumes.
 
-# - name: "Create a volume - {{ container_name }}"
-#   community.docker.docker_volume:
-#     name: freshrss_data
+- name: "Create a volume - {{ container_name }}"
+  community.docker.docker_volume:
+    name: freshrss_data
 
-# - name: "Create a volume - {{ container_name }}"
-#   community.docker.docker_volume:
-#     name: freshrss_extensions
-
-- name: "Create {{ container_name }} config dir"
-  become: true
-  ansible.builtin.file:
-    path: "{{ container_config_dir }}/{{ container_name }}"
-    state: directory
-    mode: 0774
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    recurse: true
+- name: "Create a volume - {{ container_name }}"
+  community.docker.docker_volume:
+    name: freshrss_extensions
 
 - name: "Ensure container exists - {{ container_name }}"
   community.docker.docker_container:
@@ -32,10 +22,10 @@
       - 8082:80
     env:
       TZ: "Berlin/Europe"
-      PUID: "1000"
-      PGID: "1000"
+      CRON_MIN: "1,31"
     volumes:
-      - "{{ container_config_dir }}/{{ container_name }}/config"
+      - "freshrss_data:/data:/var/www/FreshRSS/data:rw"
+      - "freshrss_extensions:/var/www/FreshRSS/extensions:rw"
       - /etc/localtime:/etc/localtime:ro
     networks:
       - name: "affordablepotatoes"

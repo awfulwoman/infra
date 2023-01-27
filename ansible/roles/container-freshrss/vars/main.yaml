@@ -1,2 +1,2 @@
-container_image: lscr.io/linuxserver/freshrss:latest
+container_image: freshrss/freshrss
 container_name: freshrss
