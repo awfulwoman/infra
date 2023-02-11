@@ -4,8 +4,8 @@
   roles:
     - role: standard_os
     - role: standard-host
-    # - role: wakeonlan
-    #   wakeonlan_interface: enp5s0f0
+    - role: wakeonlan
+      wakeonlan_interface: enp3s0
     - role: weareinteractive.environment
       become: true
       no_log: true
