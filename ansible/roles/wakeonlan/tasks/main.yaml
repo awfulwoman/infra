@@ -10,7 +10,7 @@
 - name: Add Wake-on-LAN service
   become: true
   ansible.builtin.template:
-    src: wol.service.j2
+    src: templates/wol.service.j2
     dest: "{{ wakeonlan_destination_path }}/{{ wakeonlan_destination_filename }}"
     owner: "{{ wakeonlan_destination_owner }}"
     group: "{{ wakeonlan_destination_group }}"

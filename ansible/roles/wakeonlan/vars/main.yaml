@@ -1,4 +1,4 @@
-wakeonlan_interface: enp0
+wakeonlan_interface: enp3s0
 wakeonlan_destination_path: /etc/systemd/networkd.conf.d
 wakeonlan_destination_filename: wol.service
 wakeonlan_destination_owner: root
