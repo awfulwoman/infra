@@ -1,9 +1,0 @@
-[Unit]
-Description=Enable Wake On Lan
-
-[Service]
-Type=oneshot
-ExecStart = /sbin/ethtool --change {{wakeonlan_interface}} wol g
-
-[Install]
-WantedBy=basic.target
