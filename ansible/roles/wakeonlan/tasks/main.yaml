@@ -14,7 +14,7 @@
     dest: "{{ wakeonlan_destination_path }}/{{ wakeonlan_destination_filename }}"
     owner: "{{ wakeonlan_destination_owner }}"
     group: "{{ wakeonlan_destination_group }}"
-    mode: 0644
+    mode: 0666
   notify:
     - Restart wol
 
