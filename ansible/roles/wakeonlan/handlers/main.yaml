@@ -1,0 +1,4 @@
+- name: Restart wol
+  ansible.builtin.service:
+    name: wol
+    state: restarted

@@ -15,3 +15,11 @@
     owner: "{{ wakeonlan_destination_owner }}"
     group: "{{ wakeonlan_destination_group }}"
     mode: 0774
+  notify:
+    - Restart wol
+
+- name: Start service httpd, if not started
+  become: true
+  ansible.builtin.service:
+    name: wol
+    state: started
