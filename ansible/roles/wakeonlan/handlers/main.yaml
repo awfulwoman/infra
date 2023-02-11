@@ -1,4 +1,4 @@
 - name: Restart wol
-  ansible.builtin.service:
+  ansible.builtin.systemd:
     name: wol
     state: restarted
