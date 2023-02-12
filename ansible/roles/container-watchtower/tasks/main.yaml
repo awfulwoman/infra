@@ -23,7 +23,7 @@
       TZ: "Berlin/Europe"
       WATCHTOWER_CLEANUP: "true"
       WATCHTOWER_NOTIFICATION_URL: "pushover://shoutrrr:{{ vault_pushover_home_network_key }}@{{ vault_pushover_user_key  }}/?devices=iphone"
-      # WATCHTOWER_HTTP_API_TOKEN: "{{ vault_docker_api_token_watchtower }}"
+      WATCHTOWER_NO_STARTUP_MESSAGE: "true"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - "{{ container_config_dir }}/{{ container_name }}/config.json:/config.json"
