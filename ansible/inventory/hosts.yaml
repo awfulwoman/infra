@@ -13,6 +13,8 @@ all:
     vm-digitalocean-whalecoiner:          # Digital Ocean VM
     host-k8s01:
     host-k8s02:
+    host-k8s03:
+    host-k8s04:
 
   # Groupings of servers that allow them to be administered collectively.
   children:
@@ -25,6 +27,8 @@ all:
         host-storage:
         host-k8s01:
         host-k8s02:
+        host-k8s03:
+        host-k8s04:
 
     # Group: Home Automation
     homeautomation:
@@ -63,3 +67,5 @@ all:
       hosts:
         host-k8s01:
         host-k8s02:
+        host-k8s03:
+        host-k8s04:
