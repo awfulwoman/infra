@@ -3,7 +3,12 @@
   roles:
     - role: standard_os
     - role: standard-host
-    - role: artis3n.tailscale
+    - role: geerlingguy.ansible
+      become: true
+      ansible_install_method: "pip"
+    - role: ansible-pull
+      ansiblepull_playbook: cluster_k8s
+    # - role: artis3n.tailscale
     - role: xanmanning.k3s
       k3s_become: true
     - role: generate-sshkey
@@ -14,12 +19,7 @@
       become: true
       no_log: true
     - role: motd
-    - role: geerlingguy.ansible
-      become: true
-      ansible_install_method: "pip"
     - role: powertop
-    - role: ansible-pull
-      ansiblepull_playbook: cluster_k8s
     - role: apt-upgrade
     - role: sleepuntil
 
