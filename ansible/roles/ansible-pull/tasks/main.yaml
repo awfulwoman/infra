@@ -3,6 +3,10 @@
 # installing passwords and dependencies. After the initial run
 # ansible-pull will function as expected.
 
+- name: Ansible project dir
+  ansible.builtin.debug:
+    msg: "{{ ansiblepull_workdir }}"
+
 - name: Add ansible password
   become: true
   ansible.builtin.lineinfile:
@@ -57,10 +61,8 @@
 #     msg: "{{ installed }}"
 
 - name: Run initial requirements install
-  ansible.builtin.command: ansible-galaxy install -f -r ansible/meta/requirements.yaml
+  ansible.builtin.command: "ansible-galaxy install -f -r {{ ansiblepull_workdir }}/{{ repo_name }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/galaxy-roles"
   timeout: 3600 # stupidly long value because ansible-galaxy installation takes FOREVER
-  args:
-    chdir: "{{ ansiblepull_workdir }}/{{ repo_name }}"
   when: not installed
 
 - name: Mark initial install of galaxy as completed
