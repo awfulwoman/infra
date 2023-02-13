@@ -77,7 +77,7 @@
 - name: Cron to run ansible-galaxy update weekly
   ansible.builtin.cron:
     name: "ansible-galaxy"
-    job: "ansible-galaxy install -f -r {{ ansiblepull_workdir }}/{{ repo_name }}/ansible/meta/requirements.yaml"
+    job: "ansible-galaxy install -f -r {{ ansiblepull_workdir }}/{{ repo_name }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/galaxy-roles"
     state: present
     special_time: weekly
 
