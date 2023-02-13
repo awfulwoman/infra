@@ -8,6 +8,7 @@
       ansible_install_method: "pip"
     - role: ansible-pull
       ansiblepull_playbook: cluster_k8s
+    - role: wakeonlan
     # - role: artis3n.tailscale
     - role: xanmanning.k3s
       k3s_become: true
