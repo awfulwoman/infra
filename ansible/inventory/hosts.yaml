@@ -15,6 +15,7 @@ all:
     host-k8s02:
     host-k8s03:
     host-k8s04:
+    workstation-blackbox:
 
   # Groupings of servers that allow them to be administered collectively.
   children:
@@ -29,6 +30,7 @@ all:
         host-k8s02:
         host-k8s03:
         host-k8s04:
+        workstation-blackbox:
 
     # Group: Home Automation
     homeautomation:

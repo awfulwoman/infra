@@ -1,0 +1,3 @@
+ansible_user: charlie
+ansible_host: workstation-blackbox.i.affordablepotatoes.com
+

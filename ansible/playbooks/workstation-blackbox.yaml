@@ -1,0 +1,7 @@
+---
+- name: Blackbox
+  hosts: workstation-blackbox
+  roles:
+    - role: standard_os
+    - role: generate-sshkey
+      become: true
