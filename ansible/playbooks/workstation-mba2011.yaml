@@ -3,92 +3,56 @@
   hosts: localhost
   become: false
   vars:
-  #   brew_cask_packages:
-  #     - airflow
-  #     - alfred
-  #     - balenaetcher
-  #     - docker
-  #     - firefox
-  #     - google-chrome
-  #     - handbrake
-  #     - home-assistant
-  #     - imageoptim
-  #     - mullvadvpn
-  #     - raspberry-pi-imager
-  #     - remarkable
-  #     - send-to-kindle
-  #     - telegram-desktop
-  #     - visual-studio-code
-  #     - vlc
-  #     - whatsapp
-  #     - discord
-  #   brew_packages:
-  #     - ffmpeg
-  #     - flux
-  #     - get_iplayer
-  #     - git
-  #     - helm
-  #     - jq
-  #     - kubectl
-  #     - macvim
-  #     - mutt
-  #     - neofetch
-  #     - transmission-cli
-  #     - nmap
-  #     - python@3
-  #     - rsync
-  #     - sqlite
-  #     - starship
-  #     - watch
-  #     - wget
-  #     - youtube-dl
-  #     - yq
-  #     - mas
-
-    install_homebrew_if_missing: true
-    upgrade_homebrew_packages: false
-
+    brew_cask_packages:
+      - airflow
+      - alfred
+      - balenaetcher
+      - docker
+      - firefox
+      - google-chrome
+      - handbrake
+      - home-assistant
+      - imageoptim
+      - mullvadvpn
+      - raspberry-pi-imager
+      - remarkable
+      - send-to-kindle
+      - telegram-desktop
+      - visual-studio-code
+      - vlc
+      - whatsapp
+      - discord
+    brew_packages:
+      - ffmpeg
+      - flux
+      - get_iplayer
+      - git
+      - helm
+      - jq
+      - kubectl
+      - macvim
+      - mutt
+      - neofetch
+      - transmission-cli
+      - nmap
+      - rsync
+      - sqlite
+      - watch
+      - wget
+      - youtube-dl
+      - yq
+      - mas
   pre_tasks:
     - name: Ensuring Homebrew Is Installed
       stat:
         path: /usr/local/bin/brew
       register: homebrew_check
 
-    - name: Fail If Homebrew Is Not Installed and install_homebrew_if_missing Is False
-      fail:
-        msg: Homebrew is missing...Install from http://brew.sh/
-      when:
-        - not homebrew_check.stat.exists
-        - not install_homebrew_if_missing
-
-    - name: Installing Homebrew
-      shell: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-      when:
-        - not homebrew_check.stat.exists
-        - install_homebrew_if_missing
-
-    - name: Tap homebrew/bundle
-      community.general.homebrew_tap:
-        name: homebrew/bundle
-        state: present
-
   tasks:
     - name: Updating Homebrew
       community.general.homebrew:
         update_homebrew: true
       when: homebrew_check.stat.exists
-
-    - name: check Starship executable is present
-      shell: "which starship"
-      register: starship
-      ignore_errors: true
-
-    - name: Add Starship prompt to .zshrc if Starship installed
-      ansible.builtin.lineinfile:
-        path: ~/.zshrc
-        line: eval "$(starship init zsh)"
-        create: yes
-      when: starship.rc == 0
 
 
     # - name: Upgrading Homebrew Packages
@@ -98,18 +62,18 @@
     #   until: result is successful
     #   when: homebrew_check.stat.exists
 
-    # - name: Installing Homebrew Casks
-    #   community.general.homebrew_cask:
-    #     name: "{{ brew_cask_packages }}"
-    #     state: present
-    #   register: result
-    #   until: result is successful
-    #   when: homebrew_check.stat.exists
+    - name: Installing Homebrew Casks
+      community.general.homebrew_cask:
+        name: "{{ brew_cask_packages }}"
+        state: present
+      register: result
+      until: result is successful
+      when: homebrew_check.stat.exists
 
-    # - name: Installing Homebrew Packages
-    #   community.general.homebrew:
-    #     name: "{{ brew_packages }}"
-    #     state: present
-    #   register: result
-    #   until: result is successful
-    #   when: homebrew_check.stat.exists
+    - name: Installing Homebrew Packages
+      community.general.homebrew:
+        name: "{{ brew_packages }}"
+        state: present
+      register: result
+      until: result is successful
+      when: homebrew_check.stat.exists
