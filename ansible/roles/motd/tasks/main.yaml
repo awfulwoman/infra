@@ -1,19 +1,12 @@
 ---
-- name: Remove Canonical's news at login
+- name: Disable Canonical Advertisment of the Day
   become: true
   ansible.builtin.file:
-    path: /etc/update-motd.d/50-motd-news
+    path: "{{item}}"
     mode: 0664
     modification_time: preserve
     access_time: preserve
-
-- name: Remove Canonical's help text at login
-  become: true
-  ansible.builtin.file:
-    path: /etc/update-motd.d/10-help-text
-    mode: 0664
-    modification_time: preserve
-    access_time: preserve
+  loop: "{{ motd_targets }}"
 
 - name: Ensure ZFS login message exists
   become: true
