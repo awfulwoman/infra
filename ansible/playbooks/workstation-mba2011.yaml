@@ -3,9 +3,8 @@
   hosts: localhost
   become: false
   vars:
-    brew_cask_packages:
+    brew_cask_packages: 
       - airflow
-      - alfred
       - balenaetcher
       - docker
       - firefox
@@ -20,8 +19,6 @@
       - telegram-desktop
       - visual-studio-code
       - vlc
-      - whatsapp
-      - discord
     brew_packages:
       - ffmpeg
       - flux
@@ -53,7 +50,6 @@
       community.general.homebrew:
         update_homebrew: true
       when: homebrew_check.stat.exists
-
 
     # - name: Upgrading Homebrew Packages
     #   community.general.homebrew:

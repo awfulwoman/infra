@@ -9,7 +9,7 @@
     image: "{{ container_image }}"
     state: started
     restart_policy: unless-stopped
-    platform: "{{ container_platform }}"
+    # platform: "{{ container_platform }}"
     ports:
       - "3001:3001"
     volumes:
