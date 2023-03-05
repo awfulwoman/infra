@@ -8,7 +8,7 @@ variable "controllervm_name" {
 variable "controllervm_source_image" {
   type    = string
   description = "Image source for the Guest VM that will be created."
-  default = "/slowpool/images/cloud/jammy-server-cloudimg-amd64-disk-kvm.img"
+  default = "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64-disk-kvm.img"
 }
 
 variable "controllervm_ram" {

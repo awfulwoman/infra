@@ -1,15 +1,20 @@
-# Base Worker VM Image
-resource "libvirt_volume" "workervm_source_image" {
+# Grab Worker base VM Image
+# Source: https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64-disk-kvm.img
+resource "libvirt_volume" "ubuntu_jammy_image" {
   name   = "workervm_source_image"
-  source = "/slowpool/images/cloud/jammy-server-cloudimg-amd64-disk-kvm.img"
+  source = "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64-disk-kvm.img"
+  pool = var.pool_name
+  depends_on = [
+    libvirt_pool.pool,
+  ]
 }
 
-# Create Worker VM Image
-resource "libvirt_volume" "workervm-base-qcow2" {
-  count = 3
+# Create Worker VM Disk Images
+resource "libvirt_volume" "workervm_disk_image" {
+  count = var.workervm_count
   name = "${var.workervm_prefix}_${format("%02d", count.index + 1)}.qcow2"
   pool = var.pool_name
-  base_volume_id = libvirt_volume.workervm_source_image.id
+  base_volume_id = libvirt_volume.ubuntu_jammy_image.id
   format = "qcow2"
   depends_on = [
     libvirt_pool.pool,
@@ -22,20 +27,19 @@ resource "libvirt_domain" "workervm" {
   name   = "${var.workervm_prefix}_${format("%02d", count.index + 1)}"
   memory = var.workervm_ram
   vcpu   = var.workervm_vcpus
-  count = 3
+  count = var.workervm_count
 
   cloudinit = libvirt_cloudinit_disk.workervm_cloud_init.id
 
   network_interface {
     network_id     = libvirt_network.network.id
     hostname       = "${var.workervm_prefix}_${format("%02d", count.index + 1)}.${var.domain_name}"
-    addresses      = var.workervm_ip
-    mac            = "AA:BB:CC:11:22:22"
+    addresses      = ["192.168.100.1${format("%02d", count.index + 1)}"]
     wait_for_lease = true
   }
 
   disk {
-	volume_id = "${element(libvirt_volume.workervm-base-qcow2.*.id, count.index)}"
+	  volume_id = "${element(libvirt_volume.workervm_disk_image.*.id, format("%02d", count.index + 1))}"
   }
 
   console {

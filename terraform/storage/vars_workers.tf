@@ -1,3 +1,9 @@
+variable "workervm_count" {
+  type    = number
+  description = "Number of workers"
+  default =  3
+}
+
 variable "workervm_prefix" {
   type    = string
   description = "Name of the Guest VM that will be created."
@@ -22,5 +28,5 @@ variable "workervm_vcpus" {
 variable "workervm_ip" {
   type    = list(string)
   description = "List of IP's to assign to the Guest VM."
-  default = ["192.168.100.1"]
+  default = ["192.168.100.200"]
 }

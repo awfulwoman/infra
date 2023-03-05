@@ -45,7 +45,7 @@ variable "network_cidr" {
 variable "domain_name" {
   type    = string
   description = "Network domain name for guests attached to the network."
-  default = "i.affordablepotatoes.com"
+  default = "k8s.i.affordablepotatoes.com"
 }
 
 variable "pool_name" {
@@ -63,5 +63,5 @@ variable "username" {
 variable "ssh_key" {
   type    = string
   description = "SSH key for the admin user."
-  default = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKudLqzujFkNDI6cvO/qdCixN5LlV6qeKz8BLyi5MiKQ charlie@workstation-mba2011"
+  default = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJcD9D+x3UWpKnl44gPW+NeaCo8Y8vGe59FU0Y1ddNLo ubuntu@host-storage"
 }

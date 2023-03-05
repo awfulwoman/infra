@@ -11,7 +11,6 @@ resource "libvirt_domain" "controllervm" {
     network_id     = libvirt_network.network.id
     hostname       = "${var.controllervm_name}.${var.domain_name}"
     addresses      = var.controllervm_ip
-    mac            = "AA:BB:CC:11:22:23"
     wait_for_lease = true
   }
 
