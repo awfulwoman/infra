@@ -1,6 +1,6 @@
 
 resource "libvirt_cloudinit_disk" "workervm_cloud_init" {
-  name = "${var.workervm_name}_cloud_init.iso"
+  name = "${var.workervm_prefix}_cloud_init.iso"
   pool = var.pool_name
   user_data = data.template_file.cloud_init_template.rendered
   depends_on = [

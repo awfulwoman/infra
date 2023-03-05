@@ -1,3 +1,5 @@
+# Controller VMs
+# Replace with a foreach loop
 resource "libvirt_domain" "controllervm" {
   name   = var.controllervm_name
   memory = var.controllervm_ram

@@ -1,15 +1,7 @@
-variable "workervm_name" {
+variable "workervm_prefix" {
   type    = string
   description = "Name of the Guest VM that will be created."
   default = "worker"
-}
-
-variable "workervm_source_image" {
-  type    = string
-  description = "Image source for the Guest VM that will be created."
-  default = "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64-disk-kvm.img"
-  # default = "https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud.qcow2"
-  # TODO: Update to CentOS 8 when a non versoined cloud image is avaliable: https://wiki.centos.org/Download#Cloud_.2F_Containers
 }
 
 variable "workervm_ram" {
