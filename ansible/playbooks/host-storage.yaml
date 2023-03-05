@@ -10,7 +10,6 @@
       become: true
       no_log: true
     - role: generate-sshkey
-      become: true
     - role: zfs-backup-client
     - role: cron-reboot
     - role: artis3n.tailscale
