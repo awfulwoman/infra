@@ -7,9 +7,9 @@
 
 
 # resource "libvirt_volume" "ubuntu_jammy" {
-#   name = "${var.clientVM_name}.qcow2"
+#   name = "${var.workervm_name}.qcow2"
 #   pool = var.pool_name
-#   source = var.clientVM_source_image 
+#   source = var.workervm_source_image 
 #   format = "qcow2"
 #   depends_on = [
 #     libvirt_pool.pool,
