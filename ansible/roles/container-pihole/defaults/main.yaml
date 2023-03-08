@@ -1,1 +1,2 @@
 static_dhcp_group: "{{ groups['all'] }}"
+container_name: pihole
