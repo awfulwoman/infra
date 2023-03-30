@@ -10,7 +10,14 @@
 
 - name: "Create {{ container_name }} config file"
   ansible.builtin.template:
-    src: config.yaml.j2
+    src: docker-compose.yaml.j2
+    dest: "{{ compose_config_dir }}/{{ container_name }}/docker-compose.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
+- name: "Create docker-compose.yaml"
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
     dest: "{{ container_config_dir }}/{{ container_name }}/config.yaml"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
@@ -21,28 +28,10 @@
     internal: false
     attachable: true
 
-- name: "Create {{ container_name }} container"
-  community.docker.docker_container:
-    name: "{{ container_name }}"
-    image: "{{ container_image }}"
-    state: started
-    # pull: true
-    restart_policy: unless-stopped
-    env:
-      DO_AUTH_TOKEN: "{{ vault_ddns_digitalocean_token }}"
-    labels:
-      traefik.frontend.rule: "Host:traefik.{{ansible_hostname}}.affordablepotatoes.com"
-      traefik.port: "80"
-      traefik.enable: "false"
-      traefik.backend: "traefik"
-    networks:
-      - name: affordablepotatoes
-    env:
-      TZ: "Berlin/Europe"
-    ports:
-      - "80:80"
-      - "8080:8080"
-    volumes:
-      - "{{ container_config_dir }}/{{ container_name }}/config.yaml:/traefik.yaml"
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - "/etc/localtime:/etc/localtime:ro"
+- name: Create and start services
+  community.docker.docker_compose:
+    project_src: "{{ container_name }}"
+  register: compose_output
+
+- ansible.builtin.debug:
+    var: compose_output
