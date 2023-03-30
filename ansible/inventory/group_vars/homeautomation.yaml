@@ -1,2 +1,0 @@
-environment_config:
-  DO_AUTH_TOKEN: "{{ vault_ddns_digitalocean_token }}"

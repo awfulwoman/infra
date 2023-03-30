@@ -28,6 +28,8 @@
     state: started
     # pull: true
     restart_policy: unless-stopped
+    env:
+      DO_AUTH_TOKEN: "{{ vault_ddns_digitalocean_token }}"
     labels:
       traefik.frontend.rule: "Host:traefik.{{ansible_hostname}}.affordablepotatoes.com"
       traefik.port: "80"
