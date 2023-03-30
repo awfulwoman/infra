@@ -1,11 +1,11 @@
-- name: "Create {{ container_name }} config dir"
+- name: "Create container config dir"
   ansible.builtin.file:
     path: "{{ container_config_dir }}/{{ container_name }}"
     state: directory
 
-- name: "Create letsencrypt config dir"
+- name: "Create compose config dir"
   ansible.builtin.file:
-    path: "{{ container_config_dir }}/letsencrypt"
+    path: "{{ compose_config_dir }}/{{ container_name }}"
     state: directory
 
 - name: "Create {{ container_name }} config file"
