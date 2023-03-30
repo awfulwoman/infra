@@ -15,7 +15,6 @@
     path: "{{ compose_config_dir }}"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: '0664'
     state: directory
 
 # - name: "Ensure container config directory exists at {{ container_config_dir }}"
