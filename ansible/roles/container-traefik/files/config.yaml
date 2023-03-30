@@ -17,7 +17,7 @@ providers:
 
 
 certificatesresolvers:
-  letsencrypt:
+  le:
     acme:
       dnschallenge: 
         provider: digitalocean
