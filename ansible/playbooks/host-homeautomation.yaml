@@ -9,6 +9,7 @@
       become: true
       no_log: true
     - role: artis3n.tailscale
+    - role: geerlingguy.pip
     - role: geerlingguy.docker
       become: true
     - role: docker
