@@ -3,7 +3,8 @@ entryPoints:
     address: ':80'
   websecure:
     address: ':443'
-    
+log:
+  level: DEBUG
 api:
   dashboard: true
   insecure: true
@@ -14,7 +15,6 @@ providers:
     network: affordablepotatoes
     defaultRule: "Host(`{{ .Name }}.affordablepotatoes.com`)"
     # exposedByDefault: false
-
 
 certificatesresolvers:
   le:
