@@ -4,6 +4,20 @@
     container_config_dir: "{{ ansible_env.HOME }}"
   when: container_config_dir is undefined
 
+- name: Set compose path
+  ansible.builtin.set_fact:
+    compose_config_dir: "{{ container_config_dir }}/composefiles"
+  when: compose_config_dir is undefined
+
+- name: "Ensure container compose directory exists"
+  become: true
+  ansible.builtin.file:
+    path: "{{ compose_config_dir }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0664'
+    state: directory
+
 # - name: "Ensure container config directory exists at {{ container_config_dir }}"
 #   become: true
 #   ansible.builtin.file:

@@ -9,8 +9,8 @@
     state: directory
 
 - name: "Create {{ container_name }} config file"
-  ansible.builtin.copy:
-    src: config.yaml
+  ansible.builtin.template:
+    src: config.yaml.j2
     dest: "{{ container_config_dir }}/{{ container_name }}/config.yaml"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
