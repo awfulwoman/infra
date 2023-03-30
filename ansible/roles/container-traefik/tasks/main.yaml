@@ -1,12 +1,17 @@
 - name: "Create {{ container_name }} config dir"
   ansible.builtin.file:
-    path: "{{ container_config_dir }}/traefik"
+    path: "{{ container_config_dir }}/{{ container_name }}"
+    state: directory
+
+- name: "Create letsencrypt config dir"
+  ansible.builtin.file:
+    path: "{{ container_config_dir }}/letsencrypt"
     state: directory
 
 - name: "Create {{ container_name }} config file"
   ansible.builtin.copy:
     src: config.yaml
-    dest: "{{ container_config_dir }}/traefik/config.yaml"
+    dest: "{{ container_config_dir }}/{{ container_name }}/config.yaml"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
 
@@ -36,6 +41,6 @@
       - "80:80"
       - "8080:8080"
     volumes:
-      - "{{ container_config_dir }}/traefik/config.yaml:/traefik.yaml"
+      - "{{ container_config_dir }}/{{ container_name }}/config.yaml:/traefik.yaml"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "/etc/localtime:/etc/localtime:ro"

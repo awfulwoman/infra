@@ -3,6 +3,7 @@ entryPoints:
     address: ':80'
   websecure:
     address: ':443'
+    
 api:
   dashboard: true
   insecure: true
@@ -13,3 +14,14 @@ providers:
     network: affordablepotatoes
     defaultRule: "Host(`{{ .Name }}.affordablepotatoes.com`)"
     # exposedByDefault: false
+
+
+certificatesresolvers:
+  letsencrypt:
+    acme:
+      dnschallenge: 
+        provider: digitalocean
+        delayBeforeCheck: 0
+      # caserver: https://acme-staging-v02.api.letsencrypt.org/directory
+      email: postmaster@affordablepotatoes.com
+      storage: "{{ container_config_dir }}/letsencrypt/acme.json"
