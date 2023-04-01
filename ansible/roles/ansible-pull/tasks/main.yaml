@@ -61,7 +61,7 @@
 #     msg: "{{ installed }}"
 
 - name: Run initial requirements install
-  ansible.builtin.command: "ansible-galaxy install -f -r {{ ansiblepull_workdir }}/{{ repo_name }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/galaxy-roles"
+  ansible.builtin.command: "ansible-galaxy install -r {{ ansiblepull_workdir }}/{{ repo_name }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/galaxy-roles"
   timeout: 3600 # stupidly long value because ansible-galaxy installation takes FOREVER
   when: not installed
 
