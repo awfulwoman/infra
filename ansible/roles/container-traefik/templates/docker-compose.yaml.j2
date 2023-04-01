@@ -4,8 +4,8 @@ services:
       - "80:80"
       - "8080:8080"
     environment:
-      - TZ: "Berlin/Europe"
-      - DO_AUTH_TOKEN: "{{ vault_ddns_digitalocean_token }}"
+      - "TZ=Berlin/Europe"
+      - "DO_AUTH_TOKEN={{ vault_ddns_digitalocean_token }}"
     image: "{{ container_image }}"
     restart: unless-stopped
     labels:
