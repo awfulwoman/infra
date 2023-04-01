@@ -30,7 +30,7 @@
 
 - name: Create and start services
   community.docker.docker_compose:
-    project_src: "{{ container_name }}"
+    project_src: "{{ compose_config_dir }}/{{ container_name }}"
   register: compose_output
 
 - ansible.builtin.debug:
