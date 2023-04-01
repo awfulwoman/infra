@@ -19,5 +19,8 @@ services:
       - "{{ container_config_dir }}/{{ container_name }}/config.yaml:/traefik.yaml"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "/etc/localtime:/etc/localtime:ro"
+
 networks:
 	affordablepotatoes:
+		name: affordablepotatoes
+    external: true
