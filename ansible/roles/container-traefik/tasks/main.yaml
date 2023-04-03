@@ -15,19 +15,12 @@
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
 
-
-- name: "Create {{ container_name }} config file"
+- name: "Create container config file"
   ansible.builtin.template:
     src: config.yaml.j2
     dest: "{{ container_config_dir }}/{{ container_name }}/config.yaml"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-
-# - name: Create a docker network
-#   community.docker.docker_network:
-#     name: affordablepotatoes
-#     internal: false
-#     attachable: true
 
 - name: Create and start services
   community.docker.docker_compose:
