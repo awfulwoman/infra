@@ -23,7 +23,7 @@
     #     - name: "affordablepotatoes"
     labels:
       traefik.enable: "true"
-      # traefik.docker.network: "affordablepotatoes"
+      # traefik.docker.network: "affordablepotatoes"w
       traefik.http.services.grocy.loadbalancer.server.port: "9283"
 
       # HTTP
