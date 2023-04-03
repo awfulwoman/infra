@@ -21,8 +21,8 @@
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}:/config"
       - /etc/localtime:/etc/localtime:ro
-    networks:
-      - name: "affordablepotatoes"
+    # networks:
+#       - name: "affordablepotatoes"
     labels:
       traefik.enable: "true"
       traefik.http.routers.heimdall.rule: "Host(`homeautomation.affordablepotatoes.com`)"

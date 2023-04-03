@@ -35,8 +35,8 @@
       - "{{ container_config_dir }}/{{ container_name }}:/app/data"
       - "/run/udev:/run/udev:ro"
       - /etc/localtime:/etc/localtime:ro
-    networks:
-      - name: "affordablepotatoes"
+    # networks:
+#       - name: "affordablepotatoes"
     labels:
       traefik.enable: "true"
       traefik.http.routers.zigbee2mqtt-aqara.rule: "Host(`zigbee2mqtt-aqara.affordablepotatoes.com`)"

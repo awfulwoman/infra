@@ -27,8 +27,8 @@
       - "freshrss_data:/data:/var/www/FreshRSS/data:rw"
       - "freshrss_extensions:/var/www/FreshRSS/extensions:rw"
       - /etc/localtime:/etc/localtime:ro
-    networks:
-      - name: "affordablepotatoes"
+    # networks:
+#       - name: "affordablepotatoes"
     labels:
       traefik.enable: "true"
       traefik.http.routers.freshrss.rule: "Host(`rss.affordablepotatoes.com`)"

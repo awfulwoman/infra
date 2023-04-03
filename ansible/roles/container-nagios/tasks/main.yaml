@@ -22,8 +22,8 @@
       TZ: "Berlin/Europe"
     volumes:
       - /etc/localtime:/etc/localtime:ro
-    networks:
-      - name: "affordablepotatoes"
+    # networks:
+#       - name: "affordablepotatoes"
     labels:
       traefik.enable: "true"
       # Routing for HTTP

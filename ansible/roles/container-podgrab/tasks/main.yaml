@@ -19,8 +19,8 @@
       - "{{ container_config_dir }}/{{ container_name }}:/config"
       - /slowpool/media/podcasts:/assets
       - /etc/localtime:/etc/localtime:ro
-    networks:
-      - name: "affordablepotatoes"
+    # networks:
+#       - name: "affordablepotatoes"
     labels:
       traefik.enable: "true"
       "traefik.http.routers.{{ container_name }}.rule": "Host(`{{ container_name }}.affordablepotatoes.com`)"

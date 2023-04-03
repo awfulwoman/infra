@@ -19,11 +19,11 @@
     volumes:
       - "{{ container_config_dir }}/grocy:/config"
       - /etc/localtime:/etc/localtime:ro
-    networks:
-        - name: "affordablepotatoes"
+    # networks:
+    #     - name: "affordablepotatoes"
     labels:
       traefik.enable: "true"
-      traefik.docker.network: "affordablepotatoes"
+      # traefik.docker.network: "affordablepotatoes"
       traefik.http.services.grocy.loadbalancer.server.port: "9283"
 
       # HTTP

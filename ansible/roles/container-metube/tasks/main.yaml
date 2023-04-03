@@ -31,8 +31,8 @@
       - "/slowpool/media/youtube:/downloads"
       - "{{ container_config_dir }}/{{ container_name }}/state:/state"
       - /etc/localtime:/etc/localtime:ro
-    networks:
-      - name: "affordablepotatoes"
+    # networks:
+#       - name: "affordablepotatoes"
     labels:
       traefik.enable: "true"
       traefik.http.routers.metube.rule: "Host(`metube.affordablepotatoes.com`)"

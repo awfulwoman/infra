@@ -9,8 +9,8 @@
       - 3000:3000
     env:
       TZ: "Berlin/Europe"
-    networks:
-      - name: "affordablepotatoes"
+    # networks:
+#       - name: "affordablepotatoes"
     labels:
       traefik.enable: "true"
       traefik.http.routers.readability.rule: "Host(`readability.affordablepotatoes.com`)"

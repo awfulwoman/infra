@@ -11,8 +11,8 @@
       TZ: "Berlin/Europe"
     volumes:
       - /etc/localtime:/etc/localtime:ro
-    networks:
-      - name: "affordablepotatoes"
+    # networks:
+#       - name: "affordablepotatoes"
     labels:
       traefik.enable: "true"
       traefik.http.routers.whoami.rule: "Host(`whoami.affordablepotatoes.com`)"

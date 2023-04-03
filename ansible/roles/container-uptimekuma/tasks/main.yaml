@@ -15,8 +15,8 @@
     volumes:
       - uptime-kuma:/app/data
       - /etc/localtime:/etc/localtime:ro
-    networks:
-      - name: "affordablepotatoes"
+    # networks:
+#       - name: "affordablepotatoes"
     labels:
       traefik.enable: "true"
       traefik.http.routers.uptimekuma.rule: "Host(`uptime-kuma.affordablepotatoes.com`)"

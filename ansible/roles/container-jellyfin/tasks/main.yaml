@@ -25,8 +25,8 @@
       - "{{ container_config_dir }}/{{ container_name }}/cache:/cache"
       - "/slowpool/media:/media"
       - /etc/localtime:/etc/localtime:ro
-    networks:
-      - name: "affordablepotatoes"
+    # networks:
+#       - name: "affordablepotatoes"
     labels:
       traefik.enable: "true"
       traefik.http.routers.jellyfin.rule: "Host(`jellyfin.affordablepotatoes.com`)"
