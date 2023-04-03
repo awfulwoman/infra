@@ -22,6 +22,14 @@
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
 
+- name: "Create letsencrypt dir"
+  ansible.builtin.template:
+    src: traefik-config.yaml.j2
+    dest: "{{ container_config_dir }}/letsencrypt"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0700'
+
 - name: Create and start services
   community.docker.docker_compose:
     project_src: "{{ compose_config_dir }}/{{ container_name }}"
