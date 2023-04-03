@@ -17,11 +17,11 @@ providers:
     # exposedByDefault: false
 
 certificatesresolvers:
-  le:
+  letsencrypt:
     acme:
       dnschallenge: 
         provider: digitalocean
         delayBeforeCheck: 0
-      caserver: https://acme-staging-v02.api.letsencrypt.org/directory
+      # caserver: https://acme-staging-v02.api.letsencrypt.org/directory
       email: postmaster@affordablepotatoes.com
       storage: "{{ container_config_dir }}/letsencrypt/acme.json"
