@@ -17,8 +17,8 @@
 
 - name: "Create container config file"
   ansible.builtin.template:
-    src: config.yaml.j2
-    dest: "{{ container_config_dir }}/{{ container_name }}/config.yaml"
+    src: traefik-config.yaml.j2
+    dest: "{{ container_config_dir }}/{{ container_name }}/traefik-config.yaml"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
 
