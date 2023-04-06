@@ -10,6 +10,7 @@
       - mosh
       - lm-sensors
       - smartmontools
+      - sqlite3
     state: present
     update_cache: true
 
