@@ -1,4 +1,4 @@
-entryPoints:
+{# entryPoints:
   web:
     address: ':80'
   websecure:
@@ -24,4 +24,4 @@ certificatesResolvers:
         delayBeforeCheck: 0
       caserver: https://acme-staging-v02.api.letsencrypt.org/directory
       email: postmaster@affordablepotatoes.com
-      storage: "{{ container_config_dir }}/letsencrypt/acme.json"
+      storage: "{{ container_config_dir }}/letsencrypt/acme.json" #}

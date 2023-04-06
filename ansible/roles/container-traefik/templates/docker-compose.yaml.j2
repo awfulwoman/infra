@@ -9,13 +9,25 @@ services:
       - "DO_AUTH_TOKEN={{ vault_ddns_digitalocean_token }}"
     image: "{{ container_image }}"
     restart: unless-stopped
+    command:      
+      - "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.myresolver.acme.dnschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.dnschallenge.provider=digitalocean"
+      - "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      - "--certificatesresolvers.myresolver.acme.email=certs@whalecoiner.com"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
     labels:
       - "traefik.frontend.rule=Host:traefik.{{ansible_hostname}}.affordablepotatoes.com"
       - "traefik.port=80"
       - "traefik.enable=false"
       - "traefik.backend=traefik"
     volumes:
-      - "{{ container_config_dir }}/{{ container_name }}/traefik-config.yaml:/traefik.yaml"
+      # - "{{ container_config_dir }}/{{ container_name }}/traefik-config.yaml:/traefik.yaml"
       - "{{ container_config_dir }}/letsencrypt:/letsencrypt"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "/etc/localtime:/etc/localtime:ro"
