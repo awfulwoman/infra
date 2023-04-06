@@ -1,0 +1,28 @@
+services:
+  esphome:
+    container_name: traefik
+    ports:
+      - "6056:6052"
+      - "6126:6123"
+    privileged: true
+    environment:
+      - "TZ=Berlin/Europe"
+      - ESPHOME_DASHBOARD_USE_PING: "true"
+    image: "{{ container_image }}"
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.esphome.rule=Host(`esphome.affordablepotatoes.com`)"
+      {# - "traefik.http.routers.esphome.entrypoints=web" #}
+      - "traefik.http.routers.esphome.tls=true"
+      - "traefik.http.routers.esphome.tls.certresolver=myresolver"
+      # traefik.http.services.esphome.loadbalancer.server.port: "6052"
+      # Routing for HTTPS
+      {# traefik.http.routers.esphome-https.service: "esphome"
+      traefik.http.routers.esphome-https.entrypoints: "websecure"
+      traefik.http.routers.esphome-https.rule: "Host(`esphome.affordablepotatoes.com`)"
+      traefik.http.routers.esphome-https.tls: "true"
+      traefik.http.routers.esphome-https.tls.certresolver: "myresolver" #}
+    volumes:
+      - "{{ container_config_dir }}/{{ container_name }}:/config"
+      - "/etc/localtime:/etc/localtime:ro"
