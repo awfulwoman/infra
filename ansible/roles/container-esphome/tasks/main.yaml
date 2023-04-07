@@ -22,4 +22,4 @@
 
 - name: append to compose_list
   ansible.builtin.set_fact:
-    compose_list: "{{ compose_list + [ container_config_dir ] }}"
+    compose_list: "{{ compose_list + [ container_name ] }}"
