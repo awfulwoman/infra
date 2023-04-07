@@ -1,16 +1,16 @@
-- name: Find /var/log all directories, exclude nginx and mysql
-  ansible.builtin.find:
-    paths: "{{ compose_config_dir }}"
-    recurse: no
-    file_type: directory
-  register: compose_list
+# - name: Find /var/log all directories, exclude nginx and mysql
+#   ansible.builtin.find:
+#     paths: "{{ compose_config_dir }}"
+#     recurse: no
+#     file_type: directory
+#   register: compose_list
 
 - name: Create and start docker services
   community.docker.docker_compose:
     project_src: "{{ compose_config_dir }}"
     files:
       - "{{ item }}/docker-compose.yaml"
-  loop: "{{ compose_list }}"
+  loop: "{{ lookup('fileglob', '{{ compose_config_dir }}/*.yaml', wantlist=True) }}"
   register: compose_output
 
 - ansible.builtin.debug:
