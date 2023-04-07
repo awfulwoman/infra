@@ -8,7 +8,7 @@
 - name: Create and start docker services
   community.docker.docker_compose:
     project_src: "{{ compose_config_dir }}"
-    files: "{{ compose_list | product(["/docker-compose.yaml"]) | map('join') | list }}"
+    files: "{{ compose_list | product(['/docker-compose.yaml']) | map('join') | list }}"
       # - "{{ item }}/docker-compose.yaml"
   # loop: "{{ compose_list }}"
   
