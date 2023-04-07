@@ -5,7 +5,7 @@
 - name: Create and start docker services
   community.docker.docker_compose:
     project_src: "{{ compose_config_dir }}"
-    files:
+    files: 
       - "{{ item }}/docker-compose.yaml"
   loop: "{{ compose_list }}"
   register: compose_output
