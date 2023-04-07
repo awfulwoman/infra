@@ -5,6 +5,7 @@
     - role: containers-config
     - role: container-traefik
     - role: container-esphome
+    - role: container-whoami
     - role: docker-cleanup
 
   handlers:
