@@ -3,6 +3,7 @@ services:
     container_name: traefik
     ports:
       - "80:80"
+      - "443:443"
       - "8080:8080"
     environment:
       - "TZ=Berlin/Europe"
