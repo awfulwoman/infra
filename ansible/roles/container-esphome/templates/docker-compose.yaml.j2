@@ -12,9 +12,9 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.https.routers.esphome.rule=Host(`esphome.affordablepotatoes.com`)"
-      - "traefik.https.routers.esphome.tls=true"
-      - "traefik.https.routers.esphome.tls.certresolver=myresolver"
+      - "traefik.http.routers.esphome.rule=Host(`esphome.affordablepotatoes.com`)"
+      - "traefik.http.routers.esphome.tls=true"
+      - "traefik.http.routers.esphome.tls.certresolver=myresolver"
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}:/config"
       - "/etc/localtime:/etc/localtime:ro"
