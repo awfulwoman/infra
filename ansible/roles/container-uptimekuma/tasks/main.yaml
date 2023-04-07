@@ -2,23 +2,13 @@
   community.docker.docker_volume:
     name: uptime-kuma
 
-- name: "Create {{ container_name }} container"
-  # become: true
-  community.docker.docker_container:
-    name: "{{ container_name }}"
-    image: "{{ container_image }}"
-    state: started
-    restart_policy: unless-stopped
-    # platform: "{{ container_platform }}"
-    ports:
-      - "3001:3001"
-    volumes:
-      - uptime-kuma:/app/data
-      - /etc/localtime:/etc/localtime:ro
-    # networks:
-#       - name: "affordablepotatoes"
-    labels:
-      traefik.enable: "true"
-      traefik.http.routers.uptimekuma.rule: "Host(`uptime-kuma.affordablepotatoes.com`)"
-      traefik.http.routers.uptimekuma.entrypoints: "web"
-      traefik.http.services.uptimekuma.loadbalancer.server.port: "3001"
+- name: "Create compose file"
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ compose_config_dir }}/{{ container_name }}/docker-compose.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
+- name: append to compose_list
+  ansible.builtin.set_fact:
+    compose_list: "{{ compose_list + [ container_name ] }}"

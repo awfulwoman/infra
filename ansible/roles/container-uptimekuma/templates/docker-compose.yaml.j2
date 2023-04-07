@@ -1,0 +1,18 @@
+services:
+  jellyfin:
+    container_name: "{{ container_name }}"
+    ports:
+      - "3001:3001"
+    privileged: true
+    environment:
+      - "TZ=Berlin/Europe"
+    image: "{{ container_image }}"
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.uptimekuma.rule=Host(`uptime-kuma.affordablepotatoes.com`)"
+      - "traefik.http.routers.uptimekuma.tls=true"
+      - "traefik.http.routers.uptimekuma.tls.certresolver=myresolver"
+    volumes:
+      - uptime-kuma:/app/data
+      - /etc/localtime:/etc/localtime:ro

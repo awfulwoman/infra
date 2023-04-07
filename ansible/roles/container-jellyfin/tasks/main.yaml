@@ -10,24 +10,13 @@
     state: directory
     mode: 0744
 
-- name: "Ensure container exists - {{ container_name }}"
-  community.docker.docker_container:
-    name: "{{ container_name }}"
-    image: "{{ container_image }}"
-    state: started
-    restart_policy: unless-stopped
-    ports:
-      - 8096:8096
-    env:
-      TZ: "Berlin/Europe"
-    volumes:
-      - "{{ container_config_dir }}/{{ container_name }}/config:/config"
-      - "{{ container_config_dir }}/{{ container_name }}/cache:/cache"
-      - "/slowpool/media:/media"
-      - /etc/localtime:/etc/localtime:ro
-    # networks:
-#       - name: "affordablepotatoes"
-    labels:
-      traefik.enable: "true"
-      traefik.http.routers.jellyfin.rule: "Host(`jellyfin.affordablepotatoes.com`)"
-      traefik.http.routers.jellyfin.entrypoints: "web"
+- name: "Create compose file"
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ compose_config_dir }}/{{ container_name }}/docker-compose.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
+- name: append to compose_list
+  ansible.builtin.set_fact:
+    compose_list: "{{ compose_list + [ container_name ] }}"

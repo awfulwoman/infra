@@ -1,0 +1,20 @@
+services:
+  jellyfin:
+    container_name: "{{ container_name }}"
+    ports:
+      - "8096:8096"
+    privileged: true
+    environment:
+      - "TZ=Berlin/Europe"
+    image: "{{ container_image }}"
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jellyfin.rule=Host(`jellyfin.affordablepotatoes.com`)"
+      - "traefik.http.routers.jellyfin.tls=true"
+      - "traefik.http.routers.jellyfin.tls.certresolver=myresolver"
+    volumes:
+      - "{{ container_config_dir }}/{{ container_name }}/config:/config"
+      - "{{ container_config_dir }}/{{ container_name }}/cache:/cache"
+      - "/slowpool/media:/media"
+      - /etc/localtime:/etc/localtime:ro
