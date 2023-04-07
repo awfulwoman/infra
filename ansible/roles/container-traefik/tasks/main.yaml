@@ -29,11 +29,3 @@
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: '0700'
-
-# - name: Create and start services
-#   community.docker.docker_compose:
-#     project_src: "{{ compose_config_dir }}/{{ container_name }}"
-#   register: compose_output
-
-# - ansible.builtin.debug:
-#     var: compose_output
