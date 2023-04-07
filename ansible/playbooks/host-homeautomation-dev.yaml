@@ -1,0 +1,13 @@
+---
+- name: Home Automation Server - dev
+  hosts: homeautomation
+  roles:
+    - role: containers-config
+    - role: container-traefik
+    - role: container-esphome
+    - role: docker-cleanup
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:
