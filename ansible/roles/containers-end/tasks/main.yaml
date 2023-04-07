@@ -1,0 +1,7 @@
+- name: Create and start docker services
+  community.docker.docker_compose:
+    project_src: "{{ compose_config_dir }}"
+  register: compose_output
+
+- ansible.builtin.debug:
+    var: compose_output
