@@ -2,6 +2,11 @@
   community.docker.docker_volume:
     name: uptime-kuma
 
+- name: "Create compose config dir"
+  ansible.builtin.file:
+    path: "{{ compose_config_dir }}/{{ container_name }}"
+    state: directory
+
 - name: "Create compose file"
   ansible.builtin.template:
     src: docker-compose.yaml.j2
