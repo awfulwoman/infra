@@ -1,6 +1,10 @@
 - name: Create and start docker services
   community.docker.docker_compose:
     project_src: "{{ compose_config_dir }}"
+    files:
+      - traefik/docker-compose.yaml
+      - whoami/docker-compose.yaml
+      - esphome/docker-compose.yaml
   register: compose_output
 
 - ansible.builtin.debug:
