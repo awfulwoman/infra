@@ -3,7 +3,7 @@
   community.docker.docker_compose:
     project_src: "{{ compose_config_dir }}"
     files:
-      - "{{ item.path }}/docker-compose.yaml"
+      - "{{ item }}/docker-compose.yaml"
   loop: "{{ compose_list }}"
   register: compose_output
 
