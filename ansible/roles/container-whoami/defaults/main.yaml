@@ -1,1 +1,2 @@
 container_name: whoami
+container_image: traefik/whoami

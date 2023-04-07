@@ -1,20 +1,19 @@
-- name: "Create {{ container_name }} container"
-  # become: true
-  community.docker.docker_container:
-    name: whoami
-    image: traefik/whoami
-    state: started
-    restart_policy: unless-stopped
-    ports:
-      - "8888:80"
-    env:
-      TZ: "Berlin/Europe"
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-    # networks:
-#       - name: "affordablepotatoes"
-    labels:
-      traefik.enable: "true"
-      traefik.http.routers.whoami.rule: "Host(`whoami.affordablepotatoes.com`)"
-      traefik.http.routers.whoami.entrypoints: "web"
-      traefik.http.services.whoami.loadbalancer.server.port: "8888"
+- name: "Create compose config dir"
+  ansible.builtin.file:
+    path: "{{ compose_config_dir }}/{{ container_name }}"
+    state: directory
+
+- name: "Create compose file"
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ compose_config_dir }}/{{ container_name }}/docker-compose.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
+- name: Create and start services
+  community.docker.docker_compose:
+    project_src: "{{ compose_config_dir }}/{{ container_name }}"
+  register: compose_output
+
+- ansible.builtin.debug:
+    var: compose_output

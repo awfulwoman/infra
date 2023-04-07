@@ -1,0 +1,17 @@
+services:
+  whoami:
+    container_name: "{{ container_name }}"
+    ports:
+      - "8888:80"
+    privileged: true
+    environment:
+      - "TZ=Berlin/Europe"
+    image: "{{ container_image }}"
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.https.routers.whoami.rule=Host(`whoami.affordablepotatoes.com`)"
+      - "traefik.https.routers.whoami.tls=true"
+      - "traefik.https.routers.whoami.tls.certresolver=myresolver"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
