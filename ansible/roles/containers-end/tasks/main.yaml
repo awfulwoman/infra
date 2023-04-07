@@ -12,7 +12,7 @@
   community.docker.docker_compose:
     project_src: "{{ compose_config_dir }}"
     files:
-      - "{{ item }}/docker-compose.yaml"
+      - "{{ item.path }}/docker-compose.yaml"
   loop: "{{ compose_list }}"
   register: compose_output
 
