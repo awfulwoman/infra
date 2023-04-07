@@ -20,10 +20,6 @@
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
 
-# - name: Create and start services
-#   community.docker.docker_compose:
-#     project_src: "{{ compose_config_dir }}/{{ container_name }}"
-#   register: compose_output
-
-# - ansible.builtin.debug:
-#     var: compose_output
+- name: append to compose_list
+  ansible.builtin.set_fact:
+    compose_list: "{{ compose_list + [ container_config_dir ] }}"
