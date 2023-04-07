@@ -1,3 +1,6 @@
+- ansible.builtin.debug:
+    var: compose_list
+
 
 - name: Create and start docker services
   community.docker.docker_compose:
