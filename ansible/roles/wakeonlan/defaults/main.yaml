@@ -1,0 +1,5 @@
+wakeonlan_interface: enp3s0
+wakeonlan_destination_path: /etc/systemd/system
+wakeonlan_destination_filename: wol.service
+wakeonlan_destination_owner: root
+wakeonlan_destination_group: root
