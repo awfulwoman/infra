@@ -15,8 +15,10 @@ exlock_now || exit 1
 
 ### END Lockfile ###
 
-{# ansible-galaxy install -r {{ ansiblepull_workdir }}/{{ repo_name }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/galaxy-roles
-ansible-galaxy collection install -r {{ ansiblepull_workdir }}/{{ repo_name }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/galaxy-roles #}
+cd /opt/ansible/home/
+git pull
+ansible-galaxy install -r {{ ansiblepull_workdir }}/{{ repo_name }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/galaxy-roles
+ansible-galaxy collection install -r {{ ansiblepull_workdir }}/{{ repo_name }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/galaxy-roles
 
 ansible-pull -U {{ ansiblepull_repo_url }} ansible/playbooks/{{ ansiblepull_playbook }}.yaml
 
