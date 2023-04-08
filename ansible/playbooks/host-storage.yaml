@@ -16,6 +16,7 @@
     - role: zfs-backup-client
     - role: cron-reboot
     - role: artis3n.tailscale
+    - role: geerlingguy.pip
     - role: geerlingguy.docker
       become: true
     - role: docker
