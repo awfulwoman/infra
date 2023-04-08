@@ -17,7 +17,7 @@ exlock_now || exit 1
 
 git -C {{ ansiblepull_workdir }}/home/ pull
 ansible-galaxy install -r {{ ansiblepull_workdir }}/{{ repo_name }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/galaxy-roles
-ansible-galaxy collection install -r {{ ansiblepull_workdir }}/{{ repo_name }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/galaxy-roles
+ansible-galaxy collection install -r {{ ansiblepull_workdir }}/{{ repo_name }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/collections
 
 ansible-pull -U {{ ansiblepull_repo_url }} ansible/playbooks/{{ ansiblepull_playbook }}.yaml
 
