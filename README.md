@@ -18,6 +18,19 @@ I started out writing this as a series of notes but it's growing into a mini-ope
 
 The majority of this repo is configuration code. But in `docs` there's a lot about the hardware and the reasons for my decisions. [View the docs directly in this repo](docs/) or [view the docs via a rendered site](https://whalecoiner.github.io/home/).
 
+
+# Installation
+
+```
+# Clone repo
+git clone git@github.com:whalecoiner/home.git /opt/ansible/home/
+
+# Bootstrap Ubuntu
+/opt/ansible/home/scripts/bootstrap-ubuntu.sh
+
+# Run Ansible
+/opt/ansible/ansible-pull-full.sh
+```
 ---
 
 <details>
