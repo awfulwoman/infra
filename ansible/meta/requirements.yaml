@@ -18,6 +18,7 @@ roles:
 collections:
   - name: community.docker
   - name: community.general
+  - name: community.digitalocean
   - name: ansible.netcommon
   - name: serdigital64.core
   - name: serdigital64.backup
