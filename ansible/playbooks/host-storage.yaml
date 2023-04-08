@@ -1,6 +1,9 @@
 ---
 - name: Storage NAS
   hosts: host-storage
+  pre_tasks:
+    - set_fact:
+       compose_list: []
   roles:
     - role: standard_os
     - role: standard-host
@@ -34,8 +37,9 @@
     - role: container-watchtower
     # - role: container-nextcloud
     - role: container-sanoid-builder
-    - role: apt-upgrade
+    - role: containers-end
     - role: docker-cleanup
+    - role: apt-upgrade
     - role: geerlingguy.ansible
       become: true
       ansible_install_method: "pip"
