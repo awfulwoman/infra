@@ -4,36 +4,30 @@
     state: directory
     mode: 0744
 
-- name: "Ensure config dir exists - {{ container_config_dir }}/{{ container_name }}/downloads"
+- name: "Ensure container config dir exists - {{ container_config_dir }}/{{ container_name }}/downloads"
   ansible.builtin.file:
     path: "{{ container_config_dir }}/{{ container_name }}/downloads"
     state: directory
     mode: 0744
 
-- name: "Ensure config dir exists - {{ container_config_dir }}/{{ container_name }}/downloads"
+- name: "Ensure container config dir exists - {{ container_config_dir }}/{{ container_name }}/state"
   ansible.builtin.file:
     path: "{{ container_config_dir }}/{{ container_name }}/state"
     state: directory
     mode: 0744
 
-- name: "Ensure container exists - {{ container_name }}"
-  community.docker.docker_container:
-    name: "{{ container_name }}"
-    image: "{{ container_image }}"
-    state: started
-    restart_policy: unless-stopped
-    ports:
-      - "8081:8081"
-    env:
-      TZ: "Berlin/Europe"
-      STATE_DIR: "/state"
-    volumes:
-      - "/slowpool/media/youtube:/downloads"
-      - "{{ container_config_dir }}/{{ container_name }}/state:/state"
-      - /etc/localtime:/etc/localtime:ro
-    # networks:
-#       - name: "affordablepotatoes"
-    labels:
-      traefik.enable: "true"
-      traefik.http.routers.metube.rule: "Host(`metube.affordablepotatoes.com`)"
-      traefik.http.routers.metube.entrypoints: "web"
+- name: "Create compose config dir"
+  ansible.builtin.file:
+    path: "{{ compose_config_dir }}/{{ container_name }}"
+    state: directory
+
+- name: "Create compose file"
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ compose_config_dir }}/{{ container_name }}/docker-compose.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
+- name: append to compose_list
+  ansible.builtin.set_fact:
+    compose_list: "{{ compose_list + [ container_name ] }}"
