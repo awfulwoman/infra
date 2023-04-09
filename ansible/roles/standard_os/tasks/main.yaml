@@ -95,8 +95,8 @@
     update_cache: true
 
 - name: Install apt packages
-  become: true
   ansible.builtin.include_role:
+    become: true
     name: dmotte.disable_ipv6
 
 # - name: Ensure workhorse user exists
