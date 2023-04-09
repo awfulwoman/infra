@@ -4,27 +4,18 @@
     state: directory
     mode: 0744
 
-- name: "Create container - {{ container_name }}"
-  community.docker.docker_container:
-    name: "{{ container_name }}"
-    image: "{{ container_image }}"
-    state: started
-    restart_policy: unless-stopped
-    ports:
-      - 8012:80
-      # - 8013:8013
-    env:
-      PUID: "1000"
-      PGID: "1000"
-      UMASK: "007"
-      TZ: "Berlin/Europe"
-    volumes:
-      - "{{ container_config_dir }}/{{ container_name }}:/config"
-      - /etc/localtime:/etc/localtime:ro
-    # networks:
-#       - name: "affordablepotatoes"
-    labels:
-      traefik.enable: "true"
-      traefik.http.routers.heimdall.rule: "Host(`homeautomation.affordablepotatoes.com`)"
-      traefik.http.routers.heimdall.entrypoints: "web"
-      # traefik.http.services.heimdall.loadbalancer.server.port: "8012"
+- name: "Create compose config dir"
+  ansible.builtin.file:
+    path: "{{ compose_config_dir }}/{{ container_name }}"
+    state: directory
+
+- name: "Create compose file"
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ compose_config_dir }}/{{ container_name }}/docker-compose.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
+- name: append to compose_list
+  ansible.builtin.set_fact:
+    compose_list: "{{ compose_list + [ container_name ] }}"

@@ -1,0 +1,20 @@
+services:
+  mqttbroker:
+    container_name: "{{ container_name }}"
+    ports:
+      - "1883:1883"
+    privileged: true
+    environment:
+      - "TZ=Berlin/Europe"
+    image: "{{ container_image }}"
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mosquitto.rule=Host(`mosquitto.affordablepotatoes.com`)"
+      - "traefik.http.routers.mosquitto.tls=true"
+      - "traefik.http.routers.mosquitto.tls.certresolver=letsencrypt"
+    volumes:
+      - "{{ container_config_dir }}/{{ container_name }}/config:/mosquitto/config"
+      - "{{ container_config_dir }}/{{ container_name }}/data:/mosquitto/data"
+      - "{{ container_config_dir }}/{{ container_name }}/log/:/mosquitto/log"
+      - "/etc/localtime:/etc/localtime:ro"
