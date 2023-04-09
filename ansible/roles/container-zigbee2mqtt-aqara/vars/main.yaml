@@ -1,5 +1,6 @@
 zigbee_device: /dev/serial/by-id/usb-dresden_elektronik_ingenieurtechnik_GmbH_ConBee_II_DE2652549-if00
 container_name: zigbee2mqtt-aqara
+container_image: koenkk/zigbee2mqtt
 container_port: 9092
 container_state: started
 container_user_id: 1000
