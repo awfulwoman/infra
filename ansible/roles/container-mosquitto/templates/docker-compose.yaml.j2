@@ -11,19 +11,19 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      # - "traefik.http.routers.mosquitto.rule=Host(`mosquitto.affordablepotatoes.com`)"
-      # - "traefik.http.routers.mosquitto.tls=true"
-      # - "traefik.http.routers.mosquitto.tls.certresolver=letsencrypt"
-
       - "traefik.http.routers.mosquitto.rule=Host(`mqtt.affordablepotatoes.com`)"
-      - "traefik.http.routers.mqtt_websocket.entrypoints=websocket"
-      - "traefik.http.routers.mqtt_websocket.tls.certresolver=letsencrypt"
-      - "traefik.http.services.mqtt_websocket.loadbalancer.server.port=9001"
+      - "traefik.http.routers.mosquitto.tls=true"
+      - "traefik.http.routers.mosquitto.tls.certresolver=letsencrypt"
+
+      # - "traefik.http.routers.mosquitto.rule=Host(`mqtt.affordablepotatoes.com`)"
+      # - "traefik.http.routers.mqtt_websocket.entrypoints=websocket"
+      # - "traefik.http.routers.mqtt_websocket.tls.certresolver=letsencrypt"
+      # - "traefik.http.services.mqtt_websocket.loadbalancer.server.port=9001"
       
-      - "traefik.tcp.services.mqtt.loadbalancer.server.port=1883"
-      - "traefik.tcp.routers.mqtt.entrypoints=mqtt"
-      - "traefik.tcp.routers.mqtt.rule=HostSNI(`*`)"
-      - "traefik.tcp.routers.mqtt.service=mqtt"
+      # - "traefik.tcp.services.mqtt.loadbalancer.server.port=1883"
+      # - "traefik.tcp.routers.mqtt.entrypoints=websecure"
+      # - "traefik.tcp.routers.mqtt.rule=HostSNI(`*`)"
+      # - "traefik.tcp.routers.mqtt.service=mqtt"
 
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}/config:/mosquitto/config"
