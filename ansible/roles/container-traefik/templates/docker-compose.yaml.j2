@@ -26,11 +26,19 @@ services:
       # - "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
       - "--certificatesresolvers.letsencrypt.acme.email=certs@whalecoiner.com"
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+      
     labels:
-      - "traefik.frontend.rule=Host:traefik.{{ansible_hostname}}.affordablepotatoes.com"
       - "traefik.port=80"
       - "traefik.enable=true"
       - "traefik.backend=traefik"
+      - "traefik.http.routers.dashboard.rule=Host(`traefik.{{ansible_hostname}}.affordablepotatoes.com`)"
+      - "traefik.http.routers.dashboard.service=dashboard@internal"
+      - "traefik.http.routers.api.rule=Host(`traefik.{{ansible_hostname}}.affordablepotatoes.com`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.api.service=api@internal"
+      - "traefik.http.routers.dashboard.tls=true"
+      - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.api.tls=true"
+      - "traefik.http.routers.api.tls.certresolver=letsencrypt"
     volumes:
       # - "{{ container_config_dir }}/{{ container_name }}/traefik-config.yaml:/traefik.yaml"
       - "{{ container_config_dir }}/letsencrypt:/letsencrypt"
