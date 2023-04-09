@@ -12,7 +12,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.uptimekuma.rule=Host(`uptime-kuma.affordablepotatoes.com`)"
       - "traefik.http.routers.uptimekuma.tls=true"
-      - "traefik.http.routers.uptimekuma.tls.certresolver=myresolver"
+      - "traefik.http.routers.uptimekuma.tls.certresolver=letsencrypt"
     volumes:
       - uptime-kuma:/app/data
       - /etc/localtime:/etc/localtime:ro

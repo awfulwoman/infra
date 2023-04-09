@@ -1,6 +1,6 @@
 services:
   esphome:
-    container_name: esphome
+    container_name: "{{ container_name }}"
     ports:
       - "6052:6052"
       - "6123:6123"
@@ -14,7 +14,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.esphome.rule=Host(`esphome.affordablepotatoes.com`)"
       - "traefik.http.routers.esphome.tls=true"
-      - "traefik.http.routers.esphome.tls.certresolver=myresolver"
+      - "traefik.http.routers.esphome.tls.certresolver=letsencrypt"
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}:/config"
       - "/etc/localtime:/etc/localtime:ro"

@@ -42,3 +42,21 @@
       traefik.http.routers.zigbee2mqtt-aqara.rule: "Host(`zigbee2mqtt-aqara.affordablepotatoes.com`)"
       traefik.http.routers.zigbee2mqtt-aqara.entrypoints: "web"
   when: use_zigbee_hardware
+
+
+
+- name: "Create compose config dir"
+  ansible.builtin.file:
+    path: "{{ compose_config_dir }}/{{ container_name }}"
+    state: directory
+
+- name: "Create compose file"
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ compose_config_dir }}/{{ container_name }}/docker-compose.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
+- name: append to compose_list
+  ansible.builtin.set_fact:
+    compose_list: "{{ compose_list + [ container_name ] }}"

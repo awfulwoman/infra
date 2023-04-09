@@ -1,6 +1,6 @@
 ansiblepull_cron_minute: "*/15"
 ansiblepull_cron_hour: "*"
-ansiblepull_workdir: "{{ ansible_home }}"
+ansiblepull_workdir: "{{ ansible_path }}"
 ansiblepull_script_name: ansible-pull-full.sh
 ansiblepull_lockfile_name: ansible-pull-full.lock
 ansiblepull_initial_installer_lockfile_name: .ansible-galaxy-installed.lock

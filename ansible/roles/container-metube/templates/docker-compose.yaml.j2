@@ -13,7 +13,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.metube.rule=Host(`metube.affordablepotatoes.com`)"
       - "traefik.http.routers.metube.tls=true"
-      - "traefik.http.routers.metube.tls.certresolver=myresolver"
+      - "traefik.http.routers.metube.tls.certresolver=letsencrypt"
     volumes:
       - "{{ metube_downloads_dir }}:/downloads"
       - "{{ container_config_dir }}/{{ container_name }}/state:/state"
