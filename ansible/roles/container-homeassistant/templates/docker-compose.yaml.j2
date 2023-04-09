@@ -1,0 +1,32 @@
+services:
+  homeassistant:
+    container_name: "{{ container_name }}"
+    privileged: true
+    network_mode: host
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN
+    environment:
+      - "PUID=1000"
+      - "PGID=1000"
+      - "UMASK=007"
+      - "PACKAGES=iputils"
+      - "TZ=Berlin/Europe"
+    image: "{{ container_image }}"
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.homeassistant.rule=Host(`homeassistant.affordablepotatoes.com`)"
+      - "traefik.http.routers.homeassistant.tls=true"
+      - "traefik.http.routers.homeassistant.tls.certresolver=letsencrypt"
+    volumes:
+     - "{{ container_config_dir }}/{{ container_name }}:/config"
+      - "{{ container_config_dir }}/media:/media"
+      # - /run/dbus:/run/dbus:ro
+      - "{{ container_config_dir }}/{{ container_name }}/docker/run:/etc/services.d/home-assistant/run"
+      - "/etc/localtime:/etc/localtime:ro"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://192.168.1.103:8123"]
+      interval: 30s
+      timeout: 10s
+      retries: 6

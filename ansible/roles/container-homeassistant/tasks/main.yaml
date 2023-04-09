@@ -18,7 +18,6 @@
     mode: 0774
     recurse: true
 
-
 - name: Check to see if docker-venv is installed
   ansible.builtin.stat:
     path: "{{ container_config_dir }}/{{ container_name }}/docker/run"
@@ -32,45 +31,18 @@
     force: true
   when: not docker_venv.stat.exists
 
-- name: "Ensure container exists: {{ container_name }}"
-  community.docker.docker_container:
-    name: "{{ container_name }}"
-    image: "{{ image }}"
-    # pull: true
-    removal_wait_timeout: 600
-    state: started
-    privileged: true
-    restart_policy: unless-stopped
-    network_mode: host
-    capabilities:
-      - NET_RAW
-      - NET_ADMIN
-    env:
-      TZ: "Berlin/Europe"
-      PUID: "1000"
-      PGID: "1000"
-      UMASK: "007"
-      PACKAGES: "iputils"
-    volumes:
-      - "{{ container_config_dir }}/{{ container_name }}:/config"
-      - "{{ container_config_dir }}/media:/media"
-      - /etc/localtime:/etc/localtime:ro
-      # - /run/dbus:/run/dbus:ro
-      - "{{ container_config_dir }}/{{ container_name }}/docker/run:/etc/services.d/home-assistant/run"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://192.168.1.103:8123"]
-      interval: 30s
-      timeout: 10s
-      retries: 6
-    # etc_hosts:
-    #   "homeassistant.affordablepotatoes.com": "192.168.1.103"
-    # networks:
-    #   - name: "affordablepotatoes"
-    labels:
-      traefik.enable: "true"
-      traefik.http.routers.homeassistant.rule: "Host(`homeassistant.affordablepotatoes.com`)"
-      traefik.http.routers.homeassistant.entrypoints: "web"
-    # etc_hosts: >
-    # {
-    #   "{{ domain_1 }}": "{{ domain_1_ip }}"
-    # }
+- name: "Create compose config dir"
+  ansible.builtin.file:
+    path: "{{ compose_config_dir }}/{{ container_name }}"
+    state: directory
+
+- name: "Create compose file"
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ compose_config_dir }}/{{ container_name }}/docker-compose.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
+- name: append to compose_list
+  ansible.builtin.set_fact:
+    compose_list: "{{ compose_list + [ container_name ] }}"
