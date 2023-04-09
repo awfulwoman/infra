@@ -1,0 +1,24 @@
+services:
+  zigbee2mqtt-aqara:
+    container_name: "{{ container_name }}"
+    ports:
+      - "9091:9091"
+    privileged: true
+    user: "{{ container_user_id }}:{{ container_user_id }}"
+    group_add:
+      - dialout
+    devices:
+      - "{{ zigbee_device }}"
+    environment:
+      - "TZ=Berlin/Europe"
+    image: "{{ container_image }}"
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.zigbee2mqtt-aqara.rule=Host(`zigbee2mqtt-aqara.affordablepotatoes.com`)"
+      - "traefik.http.routers.zigbee2mqtt-aqara.tls=true"
+      - "traefik.http.routers.zigbee2mqtt-aqara.tls.certresolver=letsencrypt"
+    volumes:
+      - "{{ container_config_dir }}/{{ container_name }}:/app/data"
+      - "/run/udev:/run/udev:ro"
+      - /etc/localtime:/etc/localtime:ro
