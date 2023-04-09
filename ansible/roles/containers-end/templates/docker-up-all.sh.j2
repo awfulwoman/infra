@@ -1,1 +1,3 @@
 {{ compose_list }}
+
+{{ compose_list | product(['/docker-compose.yaml']) | map('join') | list }}
