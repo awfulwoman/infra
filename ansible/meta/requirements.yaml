@@ -14,6 +14,7 @@ roles:
   - name: artis3n.tailscale
   - name: xanmanning.k3s
   - name: githubixx.ansible_role_wireguard
+  - name: dmotte.disable_ipv6
 
 collections:
   - name: community.docker
