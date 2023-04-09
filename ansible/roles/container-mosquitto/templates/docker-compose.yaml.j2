@@ -3,6 +3,7 @@ services:
     container_name: "{{ container_name }}"
     ports:
       - "1883:1883"
+      - "9001"
     privileged: true
     environment:
       - "TZ=Berlin/Europe"
