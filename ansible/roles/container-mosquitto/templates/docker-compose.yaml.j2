@@ -15,7 +15,7 @@ services:
       # - "traefik.http.routers.mosquitto.tls=true"
       # - "traefik.http.routers.mosquitto.tls.certresolver=letsencrypt"
 
-      - "traefik.http.routers.mosquitto.rule=Host(`mosquitto.affordablepotatoes.com`)"
+      - "traefik.http.routers.mosquitto.rule=Host(`mqtt.affordablepotatoes.com`)"
       - "traefik.http.routers.mqtt_websocket.entrypoints=websocket"
       - "traefik.http.routers.mqtt_websocket.tls.certresolver=letsencrypt"
       - "traefik.http.services.mqtt_websocket.loadbalancer.server.port=9001"
