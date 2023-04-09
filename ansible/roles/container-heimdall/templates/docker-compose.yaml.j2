@@ -8,6 +8,7 @@ services:
       - "PGID=1000"
       - "UMASK=007"
       - "TZ=Berlin/Europe"
+      - "APP_URL=https://heimdall.affordablepotatoes.com:8012"
     image: "{{ container_image }}"
     restart: unless-stopped
     labels:
@@ -15,6 +16,7 @@ services:
       - "traefik.http.routers.heimdall.rule=Host(`heimdall.affordablepotatoes.com`)"
       - "traefik.http.routers.heimdall.tls=true"
       - "traefik.http.routers.heimdall.tls.certresolver=letsencrypt"
+      - traefik.http.services.heimdall.loadbalancer.server.port=80
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}:/config"
       - "/etc/localtime:/etc/localtime:ro"
