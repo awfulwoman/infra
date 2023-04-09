@@ -1,0 +1,14 @@
+services:
+  updateimages:
+    container_name: "{{ container_name }}"
+    environment:
+      - "WATCHTOWER_CLEANUP=true"
+      - "WATCHTOWER_NOTIFICATION_URL="pushover://shoutrrr:{{ vault_pushover_home_network_key }}@{{ vault_pushover_user_key  }}/?devices=iphone"
+      - "WATCHTOWER_NO_STARTUP_MESSAGE=true"
+      - "TZ=Berlin/Europe"
+    image: "{{ container_image }}"
+    restart: unless-stopped
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "{{ container_config_dir }}/{{ container_name }}/config.json:/config.json"
+      - "/etc/localtime:/etc/localtime:ro"
