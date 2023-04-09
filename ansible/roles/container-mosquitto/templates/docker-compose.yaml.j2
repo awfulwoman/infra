@@ -11,8 +11,6 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.mosquitto.rule=Host(`mosquitto.affordablepotatoes.com`)"
-      {# - "traefik.http.routers.mosquitto.tls=true"
-      - "traefik.http.routers.mosquitto.tls.certresolver=letsencrypt" #}
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}/config:/mosquitto/config"
       - "{{ container_config_dir }}/{{ container_name }}/data:/mosquitto/data"
