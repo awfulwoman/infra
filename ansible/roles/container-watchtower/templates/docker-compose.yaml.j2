@@ -3,7 +3,7 @@ services:
     container_name: "{{ container_name }}"
     environment:
       - "WATCHTOWER_CLEANUP=true"
-      - "WATCHTOWER_NOTIFICATION_URL="pushover://shoutrrr:{{ vault_pushover_home_network_key }}@{{ vault_pushover_user_key  }}/?devices=iphone"
+      - "WATCHTOWER_NOTIFICATION_URL=pushover://shoutrrr:{{ vault_pushover_home_network_key }}@{{ vault_pushover_user_key  }}/?devices=iphone"
       - "WATCHTOWER_NO_STARTUP_MESSAGE=true"
       - "TZ=Berlin/Europe"
     image: "{{ container_image }}"
