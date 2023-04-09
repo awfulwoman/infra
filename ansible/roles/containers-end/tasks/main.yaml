@@ -14,3 +14,11 @@
 
 - ansible.builtin.debug:
     var: compose_output
+
+- name: Generate and deploy docker script
+  ansible.builtin.template:
+    src: templates/docker-up-all.sh.j2
+    dest: "{{ compose_config_dir }}/docker-up-all.sh"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: a+x
