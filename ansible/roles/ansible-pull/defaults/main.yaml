@@ -1,4 +1,4 @@
-ansiblepull_cron_minute: "*/15"
+ansiblepull_cron_minute: "0"
 ansiblepull_cron_hour: "*"
 ansiblepull_workdir: "{{ ansible_path }}"
 ansiblepull_script_name: ansible-pull-full.sh
