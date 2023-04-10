@@ -5,6 +5,12 @@
       - nfs-common
     state: present
 
+- name: Ping storage
+  command: ping -c1 {{ nfsclient_remote_server }}
+  delegate_to: localhost
+  register: ping_result
+  ignore_errors: yes
+
 - name: Attempt to mount remote NFS backup
   block:
     - name: Mount remote NFS volumes
@@ -16,6 +22,7 @@
         opts: "{{ nfsclient_mount_options }}"
         fstype: nfs
         boot: true
+      when: ping_result|success
   rescue:
     - name: Debug remote mount failure
       ansible.builtin.debug:
