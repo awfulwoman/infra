@@ -11,10 +11,6 @@
   register: ping_result
   ignore_errors: yes
 
-- name: Debug Ping
-  ansible.builtin.debug:
-    var: ping_result 
-
 - name: Attempt to mount remote NFS backup
   block:
     - name: Mount remote NFS volumes
