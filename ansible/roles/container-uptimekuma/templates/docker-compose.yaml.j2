@@ -14,7 +14,5 @@ services:
       - "traefik.http.routers.uptimekuma.tls=true"
       - "traefik.http.routers.uptimekuma.tls.certresolver=letsencrypt"
     volumes:
-      - uptime-kuma:/app/data
-      - /etc/localtime:/etc/localtime:ro
-volumes:
-  uptime-kuma:
+      - "{{ container_config_dir }}:/app/data"
+      - "/etc/localtime:/etc/localtime:ro"
