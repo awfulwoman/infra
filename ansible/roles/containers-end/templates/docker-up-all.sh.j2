@@ -1,3 +1,5 @@
-{{ compose_list }}
+{# {{ compose_list }}
 
-{{ compose_list | product(['/docker-compose.yaml']) | map('join') | list }}
+{{ compose_list | product(['/docker-compose.yaml']) | map('join') | list }} #}
+
+docker-compose {% for item in compose_list %} -f {{ item }} {% endfor %} up -d
