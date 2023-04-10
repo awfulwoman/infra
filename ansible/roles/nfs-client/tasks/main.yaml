@@ -26,7 +26,7 @@
         opts: "{{ nfsclient_mount_options }}"
         fstype: nfs
         boot: true
-      when: ping_result|success
+      when: not ping_result.failed
   rescue:
     - name: Debug remote mount failure
       ansible.builtin.debug:
