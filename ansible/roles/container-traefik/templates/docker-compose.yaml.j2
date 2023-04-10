@@ -26,7 +26,8 @@ services:
       # - "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
       - "--certificatesresolvers.letsencrypt.acme.email=certs@whalecoiner.com"
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
-      
+      - "--entrypoints.websecure.http.tls.domains[0].main=affordablepotatoes.com"
+      - "--entrypoints.websecure.http.tls.domains[0].sans=*.affordablepotatoes.com"
     labels:
       - "traefik.port=80"
       - "traefik.enable=true"
