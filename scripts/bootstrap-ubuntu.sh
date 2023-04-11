@@ -23,6 +23,7 @@ fi
 echo " "
 echo "UPDATE GIT"
 echo "************************************"
+mkdir -p "$HOME_REPO_DIR"
 git -C "$HOME_REPO_DIR" pull
 
 echo " "
