@@ -21,6 +21,7 @@
     state: directory
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
+    recurse: true
     mode: '0600'
 
 - name: append to compose_list
