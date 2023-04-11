@@ -1,5 +1,8 @@
 #!/bin/bash
 
+BOOTSTRAP_USER_ID = $(id -u)
+BOOTSTRAP_GROUP_ID = $(id -g)
+
 # Check for defined paths
 if [[ -z "${ANSIBLE_PATH}" ]]; then
   ANSIBLE_PATH="/opt/ansible"
@@ -24,7 +27,7 @@ echo " "
 echo "UPDATE GIT"
 echo "************************************"
 if [ ! -d "$HOME_REPO_DIR" ]; then
-	sudo mkdir -p "$HOME_REPO_DIR" && chown -R $(id -u):$(id -g) $HOME_REPO_DIR
+	sudo mkdir -p "$HOME_REPO_DIR" && chown -R $BOOTSTRAP_USER_ID:$BOOTSTRAP_GROUP_ID $HOME_REPO_DIR
 fi
 if [ `git -C "$HOME_REPO_DIR" branch --list main` ]; then
   git -C "$HOME_REPO_DIR" pull
