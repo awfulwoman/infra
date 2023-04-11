@@ -24,7 +24,7 @@ services:
       - "{{ container_config_dir }}/{{ container_name }}:/config"
       - "{{ container_config_dir }}/media:/media"
       # - /run/dbus:/run/dbus:ro
-      - "{{ container_config_dir }}/{{ container_name }}/docker/run:/etc/services.d/home-assistant/run"
+      # - "{{ container_config_dir }}/{{ container_name }}/docker/run:/etc/services.d/home-assistant/run"
       - "/etc/localtime:/etc/localtime:ro"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://192.168.1.103:8123"]

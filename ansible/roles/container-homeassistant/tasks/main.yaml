@@ -18,18 +18,18 @@
     mode: 0774
     recurse: true
 
-- name: Check to see if docker-venv is installed
-  ansible.builtin.stat:
-    path: "{{ container_config_dir }}/{{ container_name }}/docker/run"
-  register: docker_venv
+# - name: Check to see if docker-venv is installed
+#   ansible.builtin.stat:
+#     path: "{{ container_config_dir }}/{{ container_name }}/docker/run"
+#   register: docker_venv
 
-- name: Git checkout homeassistant-docker-venv repo
-  ansible.builtin.git:
-    repo: "https://github.com/tribut/homeassistant-docker-venv"
-    dest: "{{ container_config_dir }}/{{ container_name }}/docker"
-    version: master
-    force: true
-  when: not docker_venv.stat.exists
+# - name: Git checkout homeassistant-docker-venv repo
+#   ansible.builtin.git:
+#     repo: "https://github.com/tribut/homeassistant-docker-venv"
+#     dest: "{{ container_config_dir }}/{{ container_name }}/docker"
+#     version: master
+#     force: true
+#   when: not docker_venv.stat.exists
 
 - name: "Create compose config dir"
   ansible.builtin.file:

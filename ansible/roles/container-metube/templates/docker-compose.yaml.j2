@@ -3,7 +3,6 @@ services:
     container_name: "{{ container_name }}"
     ports:
        - "8081:8081"
-    privileged: true
     environment:
       - "TZ=Berlin/Europe"
       - "STATE_DIR=/state"

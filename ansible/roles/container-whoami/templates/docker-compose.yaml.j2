@@ -3,7 +3,6 @@ services:
     container_name: "{{ container_name }}"
     ports:
       - "8888:80"
-    privileged: true
     environment:
       - "TZ=Berlin/Europe"
     image: "{{ container_image }}"
