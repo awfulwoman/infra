@@ -1,10 +1,7 @@
 - name: "Create {{ container_name }} config dir"
-  become: true
   ansible.builtin.file:
     path: "{{ container_config_dir }}/{{ container_name }}"
     state: directory
-    owner: "{{ container_user }}"
-    group: "{{ container_user }}"
 
 - name: "Create compose config dir"
   ansible.builtin.file:
