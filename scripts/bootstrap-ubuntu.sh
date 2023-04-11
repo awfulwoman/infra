@@ -28,7 +28,7 @@ git -C "$HOME_REPO_DIR" pull
 echo " "
 echo "ENSURE ANSIBLE PASSWORD FILE EXISTS"
 echo "************************************"
-if test -f "$ANSIBLE_PATH/.vaultpassword"; then
+if [ ! -f "$ANSIBLE_PATH/.vaultpassword" ];
 	if [[ -z "${ANSIBLE_VAULT_PASSWORD}" ]]; then
   	read -sp "Vault password: " ANSIBLE_VAULT_PASSWORD
 	fi
