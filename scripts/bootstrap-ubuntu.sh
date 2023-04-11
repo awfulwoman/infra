@@ -28,13 +28,14 @@ git -C "$HOME_REPO_DIR" pull
 echo " "
 echo "ENSURE ANSIBLE PASSWORD FILE EXISTS"
 echo "************************************"
-
-# if ANSIBLE_VAULT_PASSWORD exists
 if [[ -z "${ANSIBLE_VAULT_PASSWORD}" ]]; then
-	read -sp "Vault password: " ANSIBLE_VAULT_PASSWORD
+  read -sp "Vault password: " ANSIBLE_VAULT_PASSWORD
 fi
-
-echo ANSIBLE_VAULT_PASSWORD: $ANSIBLE_VAULT_PASSWORD
+if test -f "$ANSIBLE_PATH/.vaultpassword"; then
+  if [[ $(< $ANSIBLE_PATH/.vaultpassword) != "$ANSIBLE_VAULT_PASSWORD" ]]; then
+    echo $ANSIBLE_VAULT_PASSWORD > $ANSIBLE_PATH/.vaultpassword
+  fi
+fi
 
 echo " "
 echo "UPDATE ANSIBLE GALAXY ROLES"
