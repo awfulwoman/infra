@@ -35,7 +35,7 @@ fi
 if [ `git -C "$HOME_REPO_DIR" branch --list main` ]; then
   git -C "$HOME_REPO_DIR" pull
 else
-	git clone git@github.com:whalecoiner/home.git $HOME_REPO_DIR
+	git clone https://github.com/whalecoiner/home.git $HOME_REPO_DIR
 fi
 
 echo " "
