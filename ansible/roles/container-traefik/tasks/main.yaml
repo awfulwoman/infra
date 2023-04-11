@@ -16,6 +16,7 @@
     group: "{{ ansible_user }}"
 
 - name: "Create letsencrypt dir"
+  become: true
   ansible.builtin.file:
     dest: "{{ container_config_dir }}/letsencrypt"
     state: directory
@@ -24,6 +25,7 @@
     mode: '0700'
 
 - name: "Create letsencrypt dir"
+  become: true
   ansible.builtin.file:
     dest: "{{ container_config_dir }}/letsencrypt/acme.json"
     owner: "{{ ansible_user }}"
