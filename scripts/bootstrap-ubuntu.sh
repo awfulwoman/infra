@@ -23,8 +23,14 @@ fi
 echo " "
 echo "UPDATE GIT"
 echo "************************************"
-mkdir -p "$HOME_REPO_DIR"
-git -C "$HOME_REPO_DIR" pull
+if [ ! -d "$HOME_REPO_DIR" ]; then
+	sudo mkdir -p "$HOME_REPO_DIR" && chown -R $(id -u):$(id -g) $HOME_REPO_DIR
+fi
+if [ `git -C "$HOME_REPO_DIR" branch --list main` ]; then
+  git -C "$HOME_REPO_DIR" pull
+else
+	git clone git@github.com:whalecoiner/home.git $HOME_REPO_DIR
+fi
 
 echo " "
 echo "ENSURE ANSIBLE PASSWORD FILE EXISTS"
