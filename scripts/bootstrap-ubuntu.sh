@@ -3,7 +3,7 @@ BOOTSTRAP_USER_ID=$(id -u)
 BOOTSTRAP_GROUP_ID=$(id -g)
 
 echo "BOOTSTRAP_USER_ID: $BOOTSTRAP_USER_ID"
-echo "BOOTSTRAP_GROUP_ID: $BOOTSTRAP_GROUP_IDt"
+echo "BOOTSTRAP_GROUP_ID: $BOOTSTRAP_GROUP_ID"
 
 # Check for defined paths
 if [[ -z "${ANSIBLE_PATH}" ]]; then
