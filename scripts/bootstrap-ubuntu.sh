@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# Check for defined paths
 if [[ -z "${ANSIBLE_PATH}" ]]; then
   ANSIBLE_PATH="/opt/ansible"
 fi
@@ -8,7 +9,6 @@ if [[ -z "${HOME_REPO_DIR}" ]]; then
   HOME_REPO_DIR="$ANSIBLE_PATH/home"
   # HOME_REPO_DIR="/opt/home"
 fi
-
 
 # Install Ansible
 which ansible
@@ -24,6 +24,17 @@ echo " "
 echo "UPDATE GIT"
 echo "************************************"
 git -C "$HOME_REPO_DIR" pull
+
+echo " "
+echo "ENSURE ANSIBLE PASSWORD FILE EXISTS"
+echo "************************************"
+
+# if ANSIBLE_VAULT_PASSWORD exists
+if [[ -z "${ANSIBLE_VAULT_PASSWORD}" ]]; then
+	read -sp "Vault password: " ANSIBLE_VAULT_PASSWORD
+fi
+
+echo "ANSIBLE_VAULT_PASSWORD: " ANSIBLE_VAULT_PASSWORD
 
 echo " "
 echo "UPDATE ANSIBLE GALAXY ROLES"
