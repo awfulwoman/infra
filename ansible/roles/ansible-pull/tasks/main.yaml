@@ -83,7 +83,7 @@
   ansible.builtin.cron:
     name: "ansible-galaxy"
     job: "ansible-galaxy install -f -r {{ ansiblepull_workdir }}/{{ repo_name }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/galaxy-roles"
-    state: present
+    state: absent
     special_time: weekly
 
 - name: Copy ansible-pull-full.sh script
