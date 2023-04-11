@@ -5,6 +5,9 @@ services:
       - "3001:3001"
     image: "{{ container_image }}"
     restart: unless-stopped
+    environment:
+      PUID: "1000"
+      PGID: "1000"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.uptimekuma.rule=Host(`uptime-kuma.affordablepotatoes.com`)"
