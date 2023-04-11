@@ -21,7 +21,7 @@
     state: directory
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: '0700'
+    mode: '0600'
 
 - name: append to compose_list
   ansible.builtin.set_fact:
