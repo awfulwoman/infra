@@ -1,0 +1,25 @@
+services:
+  mpd:
+    container_name: "{{ container_name }}"
+    ports:
+      - "6600:6600"
+      # - "8800:8800"
+    cap_add:
+      - "SYS_NICE"
+    environment:
+      - "TZ=Berlin/Europe"
+    image: tobi312/rpi-mpd:debian
+    restart: unless-stopped
+    #labels:
+    #  - "traefik.enable=true"
+    #  - "traefik.http.routers.mpd.rule=Host(`mpd.affordablepotatoes.com`)"
+    #  - "traefik.http.routers.mpd.tls=true"
+    #  - "traefik.http.routers.mpd.tls.certresolver=letsencrypt"
+    volumes:
+      - "{{ container_config_dir }}/{{ container_name }}/music:/var/lib/mpd/music:rw"
+      - "{{ container_config_dir }}/{{ container_name }}/playlists:/var/lib/mpd/playlists:rw"
+      - "{{ container_config_dir }}/{{ container_name }}/data:/var/lib/mpd/data:rw"
+      - "{{ container_config_dir }}/{{ container_name }}/config/mpd.conf:/etc/mpd.conf:rw"
+      - /etc/localtime:/etc/localtime:ro
+    devices:
+      - /dev/snd
