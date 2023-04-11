@@ -2,9 +2,6 @@
 BOOTSTRAP_USER_ID=$(id -un)
 BOOTSTRAP_GROUP_ID=$(id -gn)
 
-echo "BOOTSTRAP_USER_ID: $BOOTSTRAP_USER_ID"
-echo "BOOTSTRAP_GROUP_ID: $BOOTSTRAP_GROUP_ID"
-
 # Check for defined paths
 if [[ -z "${ANSIBLE_PATH}" ]]; then
   ANSIBLE_PATH="/opt/ansible"
@@ -48,8 +45,10 @@ if [ ! -f "$ANSIBLE_PATH/.vaultpassword" ]; then
   if [[ $(< $ANSIBLE_PATH/.vaultpassword) != "$ANSIBLE_VAULT_PASSWORD" ]]; then
     echo $ANSIBLE_VAULT_PASSWORD > $ANSIBLE_PATH/.vaultpassword
   fi
+	echo "File created."
+else
+	echo "File exists."
 fi
-echo " "
 
 echo " "
 echo "UPDATE ANSIBLE GALAXY ROLES"
