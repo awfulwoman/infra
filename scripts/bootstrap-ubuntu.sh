@@ -29,9 +29,12 @@ if [ ! -d "$HOME_REPO_DIR" ]; then
 	sudo mkdir -p $HOME_REPO_DIR
 	sudo chown -R $BOOTSTRAP_USER_ID:$BOOTSTRAP_GROUP_ID $HOME_REPO_DIR
 fi
+
 if [ `git -C "$HOME_REPO_DIR" branch --list main` ]; then
+	echo "Update repo."
   git -C "$HOME_REPO_DIR" pull
 else
+	echo "Clone repo."
 	git clone https://github.com/whalecoiner/home.git $HOME_REPO_DIR
 fi
 
