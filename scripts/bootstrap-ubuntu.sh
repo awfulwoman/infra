@@ -29,8 +29,8 @@ echo " "
 echo "UPDATE GIT"
 echo "************************************"
 if [ ! -d "$HOME_REPO_DIR" ]; then
-	echo "sudo mkdir -p $HOME_REPO_DIR"
-	echo "sudo chown -R $BOOTSTRAP_USER_ID:$BOOTSTRAP_GROUP_ID $HOME_REPO_DIR"
+	sudo mkdir -p $HOME_REPO_DIR
+	sudo chown -R $BOOTSTRAP_USER_ID:$BOOTSTRAP_GROUP_ID $HOME_REPO_DIR
 fi
 if [ `git -C "$HOME_REPO_DIR" branch --list main` ]; then
   git -C "$HOME_REPO_DIR" pull
