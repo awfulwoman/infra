@@ -21,7 +21,13 @@
     state: directory
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    recurse: true
+    mode: '0700'
+
+- name: "Create letsencrypt dir"
+  ansible.builtin.file:
+    dest: "{{ container_config_dir }}/letsencrypt/acme.json"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
     mode: '0600'
 
 - name: append to compose_list
