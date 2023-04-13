@@ -12,8 +12,13 @@
     files: "{{ compose_list | product(['/docker-compose.yaml']) | map('join') | list }}" 
   register: compose_output
 
+- name: Get info on docker host and list containers matching the filter
+  community.docker.docker_host_info:
+    containers: true
+  register: containers_result
+
 - ansible.builtin.debug:
-    var: compose_output
+    var: containers_result.host_info
 
 - name: Generate and deploy docker script
   ansible.builtin.template:
