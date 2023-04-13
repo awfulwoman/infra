@@ -19,7 +19,7 @@
     
 - name: Show containers
   ansible.builtin.debug:
-    var: result
+    var: result.stdout_lines
 
 - name: Generate and deploy docker script
   ansible.builtin.template:
