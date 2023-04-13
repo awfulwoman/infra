@@ -13,9 +13,9 @@
   register: compose_output
 
 - name: Get info on docker host and list containers matching the filter
-  ansible.builtin.command: docker ps --format "{{ '{{' }} .Names {{ '}}' }}"
+  # ansible.builtin.command: docker ps --format "{{ '{{' }} .Names {{ '}}' }}"
+  ansible.builtin.command: docker ps --format "table {{ '{{' }}.Names{{ '}}' }}\t{{ '{{' }}.Image{{ '}}' }}\t{{ '{{' }}.State{{ '}}' }}"
   register: result
-    
     
 - name: Show containers
   ansible.builtin.debug:
