@@ -13,12 +13,13 @@
   register: compose_output
 
 - name: Get info on docker host and list containers matching the filter
-  community.docker.docker_host_info:
-    containers: true
-  register: containers_result
-
-- ansible.builtin.debug:
-    var: containers_result.host_info
+  ansible.builtin.command: docker ps --format "{{ '{{' }} .Names {{ '}}' }}"
+  register: result
+    
+    
+- name: Show containers
+  ansible.builtin.debug:
+    var: result.cmd|join(' ')
 
 - name: Generate and deploy docker script
   ansible.builtin.template:
