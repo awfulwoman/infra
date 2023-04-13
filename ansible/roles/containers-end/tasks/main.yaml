@@ -5,7 +5,7 @@
 #     msg: "{{ item }}/docker-compose.yaml"
 #   loop: "{{ compose_list }}"
 
-- name: Create and start docker services
+- name: Create and start docker compose services
   community.docker.docker_compose:
     project_src: "{{ compose_config_dir }}"
     # via https://www.itix.fr/blog/ansible-add-prefix-suffix-to-list/
@@ -16,12 +16,13 @@
   # ansible.builtin.command: docker ps --format "{{ '{{' }} .Names {{ '}}' }}"
   ansible.builtin.command: docker ps --format "table {{ '{{' }}.Names{{ '}}' }}\t{{ '{{' }}.Image{{ '}}' }}\t{{ '{{' }}.State{{ '}}' }}"
   register: result
+  changed_when: false
     
 - name: Show containers
   ansible.builtin.debug:
     msg: "{{ result.stdout_lines }}"
 
-- name: Generate and deploy docker script
+- name: Generate and deploy docker-up-all.sh
   ansible.builtin.template:
     src: templates/docker-up-all.sh.j2
     dest: "{{ compose_config_dir }}/docker-up-all.sh"
@@ -29,7 +30,7 @@
     group: "{{ ansible_user }}"
     mode: a+x
 
-- name: Generate and deploy docker script
+- name: Generate and deploy docker-down-all.sh
   ansible.builtin.template:
     src: templates/docker-down-all.sh.j2
     dest: "{{ compose_config_dir }}/docker-down-all.sh"
@@ -37,7 +38,7 @@
     group: "{{ ansible_user }}"
     mode: a+x
 
-- name: Generate and deploy docker script
+- name: Generate and deploy docker-restart-all.sh
   ansible.builtin.template:
     src: templates/docker-restart-all.sh.j2
     dest: "{{ compose_config_dir }}/docker-restart-all.sh"
