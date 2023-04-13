@@ -1,9 +1,9 @@
-- ansible.builtin.debug:
-    var: compose_list
+# - ansible.builtin.debug:
+#     var: compose_list
 
-- ansible.builtin.debug:
-    msg: "{{ item }}/docker-compose.yaml"
-  loop: "{{ compose_list }}"
+# - ansible.builtin.debug:
+#     msg: "{{ item }}/docker-compose.yaml"
+#   loop: "{{ compose_list }}"
 
 - name: Create and start docker services
   community.docker.docker_compose:
@@ -19,7 +19,7 @@
     
 - name: Show containers
   ansible.builtin.debug:
-    var: result.cmd
+    var: result
 
 - name: Generate and deploy docker script
   ansible.builtin.template:
