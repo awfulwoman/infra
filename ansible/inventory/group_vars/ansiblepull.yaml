@@ -5,6 +5,7 @@ ansible_roles_path: "./ansible/roles:{{ ansible_path }}/galaxy-roles:{{ ansible_
 home_repo_dir: "/opt/home"
 
 environment_config:
+  ANSIBLE_FORCE_COLOR: true
   ANSIBLE_PATH: "{{ ansible_path }}"
   ANSIBLE_LOG_PATH: "{{ ansible_log_path }}"
   ANSIBLE_VAULT_PASSWORD_FILE: "{{ ansible_vault_password_file }}"
