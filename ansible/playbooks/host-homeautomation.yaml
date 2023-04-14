@@ -37,6 +37,7 @@
     - role: container-mosquitto
     - role: container-uptimekuma
     - role: container-heimdall
+    - role: container-smtp
     - role: container-zigbee2mqtt # Core Zigbee network
     - role: container-zigbee2mqtt-aqara # Sandboxed Zigbee network for Aqara/Xiaomi devices
     - role: container-traefik
