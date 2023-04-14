@@ -11,7 +11,6 @@ services:
       # - "SMARTHOST_PASSWORD={{ vault_smtp_password }}"
       - "GMAIL_USER={{ vault_smtp_gmail_username }}"
       - "GMAIL_PASSWORD={{ vault_smtp_gmail_password }}"
-      - "DISABLE_IPV6=true"
     image: "{{ container_image }}"
     restart: unless-stopped
     volumes:
