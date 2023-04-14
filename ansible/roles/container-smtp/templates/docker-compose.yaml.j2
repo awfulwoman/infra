@@ -5,10 +5,12 @@ services:
       - 127.0.0.1:25:25 # allows sending from host
     environment:
       - "TZ=Berlin/Europe"
-      - "SMARTHOST_ADDRESS={{ vault_smtp_server }}"
-      - "SMARTHOST_PORT=587"
-      - "SMARTHOST_USER={{ vault_smtp_user }}"
-      - "SMARTHOST_PASSWORD={{ vault_smtp_password }}"
+      # - "SMARTHOST_ADDRESS={{ vault_smtp_server }}"
+      # - "SMARTHOST_PORT=587"
+      # - "SMARTHOST_USER={{ vault_smtp_user }}"
+      # - "SMARTHOST_PASSWORD={{ vault_smtp_password }}"
+      - "GMAIL_USER={{ vault_smtp_gmail_username }}"
+      - "GMAIL_PASSWORD={{ vault_smtp_gmail_password }}"
       - "DISABLE_IPV6=true"
     image: "{{ container_image }}"
     restart: unless-stopped
