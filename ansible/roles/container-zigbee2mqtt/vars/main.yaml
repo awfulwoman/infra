@@ -1,4 +1,4 @@
-zigbee_device: /dev/serial/by-id/usb-dresden_elektronik_ingenieurtechnik_GmbH_ConBee_II_DE2467569-if00
+zigbee_device: /dev/serial/by-id/usb-Silicon_Labs_Sonoff_Zigbee_3.0_USB_Dongle_Plus_0001-if00-port0
 container_name: zigbee2mqtt
 container_image: koenkk/zigbee2mqtt
 container_port: 9091
