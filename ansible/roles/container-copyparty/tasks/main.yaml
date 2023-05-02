@@ -3,6 +3,11 @@
     path: "{{ compose_config_dir }}/{{ container_name }}"
     state: directory
 
+- name: "Create container config dir"
+  ansible.builtin.file:
+    path: "{{ container_config_dir }}/{{ container_name }}"
+    state: directory
+
 - name: "Create config file"
   ansible.builtin.template:
     src: files/copyparty.conf
