@@ -5,7 +5,7 @@
 
 - name: "Create config file"
   ansible.builtin.template:
-    src: copyparty.conf
+    src: files/copyparty.conf
     dest: "{{ container_config_dir }}/{{ container_name }}/copyparty.conf"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
