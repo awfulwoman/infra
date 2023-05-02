@@ -31,6 +31,7 @@
     - role: containers-config
     - role: container-traefik
     - role: container-jellyfin
+    - role: container-copyparty
     # - role: container-audiobookshelf
     # - role: container-freshrss
     # - role: container-podgrab

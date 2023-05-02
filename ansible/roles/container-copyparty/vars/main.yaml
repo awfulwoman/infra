@@ -1,0 +1,3 @@
+container_name: copyparty
+container_image: copyparty/ac
+copyparty_filepath: /slowpool/media

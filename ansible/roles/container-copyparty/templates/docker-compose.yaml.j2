@@ -1,0 +1,18 @@
+services:
+  whoami:
+    container_name: "{{ container_name }}"
+    ports:
+      - 3923
+    environment:
+      - "TZ=Berlin/Europe"
+    user: 1000
+    image: "{{ container_image }}"
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.copyparty.rule=Host(`copyparty.affordablepotatoes.com`)"
+      - "traefik.http.routers.copyparty.tls=true"
+      - "traefik.http.routers.copyparty.tls.certresolver=letsencrypt"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "{{ copyparty_filepath }}:/w"
