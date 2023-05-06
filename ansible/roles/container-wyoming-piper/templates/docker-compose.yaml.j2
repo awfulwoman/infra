@@ -1,5 +1,5 @@
 services:
-  wyomingwpiper:
+  wyomingpiper:
     container_name: "{{ container_name }}"
     ports:
       - 10200:10200
@@ -8,11 +8,6 @@ services:
     image: "{{ container_image }}"
     restart: unless-stopped
     command: "--voice en-gb-southern_english_female-low"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.wyomingwpiper.rule=Host(`wyomingwpiper.affordablepotatoes.com`)"
-      - "traefik.http.routers.wyomingwpiper.tls=true"
-      - "traefik.http.routers.wyomingwpiper.tls.certresolver=letsencrypt"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "{{ container_config_dir }}/{{ container_name }}:/data"
