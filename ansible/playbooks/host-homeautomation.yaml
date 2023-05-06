@@ -36,6 +36,7 @@
     - role: container-esphome
     - role: container-mosquitto
     - role: container-wyoming-whisper
+    - role: container-wyoming-piper
     - role: container-uptimekuma
     - role: container-heimdall
     - role: container-smtp

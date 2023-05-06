@@ -1,0 +1,2 @@
+container_name: wyomingpiper
+container_image: rhasspy/wyoming-piper

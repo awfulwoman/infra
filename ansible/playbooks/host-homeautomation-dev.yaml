@@ -13,6 +13,7 @@
     - role: container-mosquitto
     - role: container-uptimekuma
     - role: container-wyoming-whisper
+    - role: container-wyoming-piper
     - role: container-smtp
     - role: container-heimdall
     - role: container-zigbee2mqtt # Core Zigbee network

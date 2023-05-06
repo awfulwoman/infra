@@ -1,0 +1,18 @@
+services:
+  wyomingwpiper:
+    container_name: "{{ container_name }}"
+    ports:
+      - 10300:10300
+    environment:
+      - "TZ=Berlin/Europe"
+    image: "{{ container_image }}"
+    restart: unless-stopped
+    command: "--model tiny-int8 --language en"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.wyomingwpiper.rule=Host(`wyomingwpiper.affordablepotatoes.com`)"
+      - "traefik.http.routers.wyomingwpiper.tls=true"
+      - "traefik.http.routers.wyomingwpiper.tls.certresolver=letsencrypt"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "{{ container_config_dir }}/{{ container_name }}:/data"
