@@ -2,7 +2,7 @@ services:
   wyomingwpiper:
     container_name: "{{ container_name }}"
     ports:
-      - 10300:10300
+      - 10200:10200
     environment:
       - "TZ=Berlin/Europe"
     image: "{{ container_image }}"
