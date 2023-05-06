@@ -1,0 +1,2 @@
+container_name: wyomingwhisper
+container_image: rhasspy/wyoming-whisper
