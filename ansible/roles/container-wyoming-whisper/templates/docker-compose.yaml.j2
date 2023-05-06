@@ -8,11 +8,6 @@ services:
     image: "{{ container_image }}"
     restart: unless-stopped
     command: "--model tiny-int8 --language en"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.wyomingwhisper.rule=Host(`wyomingwhisper.affordablepotatoes.com`)"
-      - "traefik.http.routers.wyomingwhisper.tls=true"
-      - "traefik.http.routers.wyomingwhisper.tls.certresolver=letsencrypt"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "{{ container_config_dir }}/{{ container_name }}:/data"
