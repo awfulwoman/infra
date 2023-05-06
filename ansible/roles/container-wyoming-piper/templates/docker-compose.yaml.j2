@@ -7,7 +7,7 @@ services:
       - "TZ=Berlin/Europe"
     image: "{{ container_image }}"
     restart: unless-stopped
-    command: "--voice en-us-lessac-low"
+    command: "--voice en-gb-southern_english_female-low"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.wyomingwpiper.rule=Host(`wyomingwpiper.affordablepotatoes.com`)"
