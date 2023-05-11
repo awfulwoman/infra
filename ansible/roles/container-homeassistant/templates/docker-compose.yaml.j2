@@ -6,6 +6,8 @@ services:
     cap_add:
       - NET_RAW
       - NET_ADMIN
+    ports:
+      - 8123:8123
     environment:
       - "PUID=1000"
       - "PGID=1000"
