@@ -2,10 +2,10 @@ http:
   routers:
     homeassistant:
       rule: Host(`homeassistant.affordablepotatoes.com`)
-			{# # tls:
-      #	certresolver: letsencrypt
-      # entrypoints:
-      #  - http #}
+			# tls:
+      #	  certresolver: letsencrypt
+      entrypoints:
+        - http
       service: homeassistant
   services:
     homeassistant:
