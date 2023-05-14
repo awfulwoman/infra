@@ -1,14 +1,14 @@
 http:
   routers:
-    homeassistant-router:
+    homeassistant-file-router:
       rule: Host(`homeassistant.affordablepotatoes.com`)
 			tls:
         certresolver: letsencrypt
       entrypoints:
         - web
-      service: homeassistant
+      service: homeassistant-file-service
   services:
-    homeassistant:
+    homeassistant-file-service:
       loadBalancer:
         servers:
           - url: 'http://172.18.0.1:8123'
