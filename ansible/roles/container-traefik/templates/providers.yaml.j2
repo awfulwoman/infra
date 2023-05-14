@@ -1,10 +1,30 @@
+tls:
+  options:
+    default:
+      minVersion: VersionTLS13
+      sniStrict: true
+
 http:
+  middlewares:
+    secHeaders:
+      headers:
+        browserXssFilter: true
+        contentTypeNosniff: true
+        frameDeny: true
+        sslRedirect: true
+        stsIncludeSubdomains: true
+        stsPreload: true
+        stsSeconds: 31536000
+        customFrameOptionsValue: SAMEORIGIN
+    https-redirect:
+      redirectScheme:
+        scheme: https
   routers:
     homeassistant:
       service: homeassistant
       rule: Host(`homeassistant.affordablepotatoes.com`)
-      #tls:
-        #certresolver: letsencrypt
+      tls:
+        certresolver: letsencrypt
       entrypoints:
         - web
 
@@ -12,4 +32,5 @@ http:
     homeassistant:
       loadBalancer:
         servers:
-          - url: "http://172.17.0.1:8123"
+          # - url: "http://172.17.0.1:8123"
+          - url: "http://192.168.1.103:8123"
