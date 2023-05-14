@@ -15,7 +15,7 @@ services:
     image: "{{ container_image }}"
     restart: unless-stopped
     labels:
-      - "traefik.enable=true"
+      # - "traefik.enable=true"
       # - "traefik.http.routers.homeassistant.rule=Host(`homeassistant.affordablepotatoes.com`)"
       # - "traefik.http.routers.homeassistant.tls=true"
       # - "traefik.http.routers.homeassistant.tls.certresolver=letsencrypt"
