@@ -11,8 +11,8 @@ services:
     image: "{{ container_image }}"
     restart: unless-stopped
     command:      
-      # - "--log.level=DEBUG"
-      # - "--api.insecure=true"
+      - "--log.level=DEBUG"
+      - "--api.insecure=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--providers.docker.endpoint=unix:///var/run/docker.sock"
