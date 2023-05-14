@@ -18,6 +18,7 @@ services:
       - "--providers.docker.endpoint=unix:///var/run/docker.sock"
       - "--providers.file=true"
       - "--providers.file.filename=/etc/traefik/providers.yaml"
+      - "--providers.file.watch=true"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
       # - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
