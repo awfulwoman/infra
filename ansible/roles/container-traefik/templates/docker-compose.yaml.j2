@@ -27,9 +27,9 @@ services:
       - "--certificatesresolvers.letsencrypt.acme.dnschallenge=true"
       - "--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=digitalocean"
       - "--certificatesresolvers.letsencrypt.acme.dnschallenge.delaybeforecheck=0"
-      # - "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
       - "--certificatesresolvers.letsencrypt.acme.email=certs@whalecoiner.com"
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+      # - "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
       - "--entrypoints.websecure.http.tls.domains[0].main=affordablepotatoes.com"
       - "--entrypoints.websecure.http.tls.domains[0].sans=*.affordablepotatoes.com"
     labels:
