@@ -22,8 +22,10 @@ services:
       - "--providers.file.watch=true"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
+      # Upgrade connections
       # - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
       # - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      # Letsencrypt ACME
       - "--certificatesresolvers.letsencrypt.acme.dnschallenge=true"
       - "--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=digitalocean"
       - "--certificatesresolvers.letsencrypt.acme.dnschallenge.delaybeforecheck=0"
@@ -33,14 +35,16 @@ services:
       - "--entrypoints.websecure.http.tls.domains[0].main=affordablepotatoes.com"
       - "--entrypoints.websecure.http.tls.domains[0].sans=*.affordablepotatoes.com"
     labels:
-      - "traefik.port=80"
+      # Traefik-ception
       - "traefik.enable=true"
+      - "traefik.port=80"
       - "traefik.backend=traefik"
       # Allow dashboard access via traefik.{{ansible_hostname}}.affordablepotatoes.com
       - "traefik.http.routers.dashboard.rule=Host(`traefik.{{ansible_hostname}}.affordablepotatoes.com`)"
       - "traefik.http.routers.dashboard.service=dashboard@internal"
       - "traefik.http.routers.dashboard.tls=true"
       - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
+      # Allow API access via traefik.{{ansible_hostname}}.affordablepotatoes.com
       - "traefik.http.routers.api.rule=Host(`traefik.{{ansible_hostname}}.affordablepotatoes.com`) && PathPrefix(`/api`)"
       - "traefik.http.routers.api.service=api@internal"
       - "traefik.http.routers.api.tls=true"
