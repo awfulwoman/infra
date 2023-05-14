@@ -17,7 +17,7 @@ services:
       - "--providers.docker.exposedbydefault=false"
       - "--providers.docker.endpoint=unix:///var/run/docker.sock"
       - "--providers.file=true"
-      - "--providers.file.filename=/providers.yaml"
+      - "--providers.file.filename=/etc/traefik/providers.yaml"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
       - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
@@ -43,9 +43,9 @@ services:
       - "traefik.http.routers.api.tls=true"
       - "traefik.http.routers.api.tls.certresolver=letsencrypt"
     volumes:
-      - "{{ container_config_dir }}/{{ container_name }}/providers.yaml:/providers.yaml"
+      - "{{ container_config_dir }}/{{ container_name }}/providers.yaml:/etc/traefik/providers.yaml"
       - "{{ container_config_dir }}/letsencrypt:/letsencrypt"
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "/etc/localtime:/etc/localtime:ro"
-    extra_hosts:
-      - host.docker.internal:172.17.0.1
+    #extra_hosts:
+    #  - host.docker.internal:172.17.0.1
