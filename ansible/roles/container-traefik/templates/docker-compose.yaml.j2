@@ -42,6 +42,7 @@ services:
       - "--certificatesresolvers.letsencrypt.acme.dnschallenge.delaybeforecheck=0"
       - "--certificatesresolvers.letsencrypt.acme.email=certs@whalecoiner.com"
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+      # Enable the following to use the ACME staging server
       # - "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
     labels:
       # Traefik can also pick up label instructions just like any other container.
