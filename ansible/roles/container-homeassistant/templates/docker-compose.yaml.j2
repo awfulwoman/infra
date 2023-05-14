@@ -16,10 +16,10 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.homeassistant.rule=Host(`homeassistant.affordablepotatoes.com`)"
-      - "traefik.http.routers.homeassistant.tls=true"
-      - "traefik.http.routers.homeassistant.tls.certresolver=letsencrypt"
-      - "traefik.http.services.homeassistant.loadbalancer.server.port=8123"
+      # - "traefik.http.routers.homeassistant.rule=Host(`homeassistant.affordablepotatoes.com`)"
+      # - "traefik.http.routers.homeassistant.tls=true"
+      # - "traefik.http.routers.homeassistant.tls.certresolver=letsencrypt"
+      # - "traefik.http.services.homeassistant.loadbalancer.server.port=8123"
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}:/config"
       - "{{ container_config_dir }}/media:/media"
@@ -28,6 +28,7 @@ services:
       - "/etc/localtime:/etc/localtime:ro"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://192.168.1.103:8123"]
+      # test: ["CMD", "curl", "-f", "https://homeassistant.affordablepotatoes.com"]
       interval: 30s
       timeout: 10s
       retries: 6

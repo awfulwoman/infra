@@ -1,0 +1,12 @@
+http:
+  routers:
+    homeassistant:
+      rule: Host(`homeassistant.affordablepotatoes.com`)
+      entrypoints:
+        - web
+      service: homeassistant
+  services:
+    homeassistant:
+      loadBalancer:
+        servers:
+          - url: 'http://172.18.0.1:8123'

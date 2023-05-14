@@ -6,7 +6,6 @@
        compose_list: []
   roles:
     - role: containers-config
-    # - role: container-watchtower
     - role: container-whoami
     - role: container-homeassistant
     - role: container-esphome

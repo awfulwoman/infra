@@ -15,6 +15,13 @@
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
 
+- name: "Create providers file"
+  ansible.builtin.template:
+    src: providers.toml.j2
+    dest: "{{ container_config_dir }}/{{ container_name }}/providers.toml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
 - name: "Create letsencrypt dir"
   become: true
   ansible.builtin.file:
