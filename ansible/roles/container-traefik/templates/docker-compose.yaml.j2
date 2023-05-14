@@ -9,39 +9,8 @@ services:
       - "DO_AUTH_TOKEN={{ vault_letsencrypt_digitalocean_token }}"
     image: "{{ container_image }}"
     restart: unless-stopped
-    command:
-      # These are commands passed directly to the Traefik container
-      #
-      # General
-      # - "--log.level=DEBUG"
-      - "--api.dashboard=true"
-      - "--api.debug=true"
-      # Define a Docker Provider
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--providers.docker.endpoint=unix:///var/run/docker.sock"
-      # Define a File Provider
-      - "--providers.file=true"
-      - "--providers.file.filename=/etc/traefik/providers.yaml"
-      - "--providers.file.watch=true"
-      # Define Entrypoints
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.websecure.address=:443"
-      - "--entrypoints.websecure.http.tls.domains[0].main=affordablepotatoes.com"
-      - "--entrypoints.websecure.http.tls.domains[0].sans=*.affordablepotatoes.com"
-      # Upgrade connections from HTTP to HTTPS
-      # - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
-      # - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
-      # Letsencrypt ACME certificates
-      - "--certificatesresolvers.letsencrypt.acme.dnschallenge=true"
-      - "--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=digitalocean"
-      - "--certificatesresolvers.letsencrypt.acme.dnschallenge.delaybeforecheck=0"
-      - "--certificatesresolvers.letsencrypt.acme.email=certs@whalecoiner.com"
-      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
-      # - "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory" # Enable this to use the Letsencrypt staging server
     labels:
-      # Traefik can also pick up label instructions just like any other container.
-      #
+      # Traefik can pick up label instructions just like any other container.
       # Traefik-ception so that Traefik is provided via Traefik
       - "traefik.enable=true"
       - "traefik.port=80"
@@ -58,6 +27,7 @@ services:
       - "traefik.http.routers.api.tls.certresolver=letsencrypt"
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}/providers.yaml:/etc/traefik/providers.yaml"
+      - "{{ container_config_dir }}/{{ container_name }}/config.yaml:/traefik.yaml"
       - "{{ container_config_dir }}/letsencrypt:/letsencrypt"
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "/etc/localtime:/etc/localtime:ro"

@@ -14,17 +14,9 @@ services:
       - "TZ=Berlin/Europe"
     image: "{{ container_image }}"
     restart: unless-stopped
-    # labels:
-      # - "traefik.enable=true"
-      # - "traefik.http.routers.homeassistant.rule=Host(`homeassistant.affordablepotatoes.com`)"
-      # - "traefik.http.routers.homeassistant.tls=true"
-      # - "traefik.http.routers.homeassistant.tls.certresolver=letsencrypt"
-      # - "traefik.http.services.homeassistant.loadbalancer.server.port=8123"
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}:/config"
       - "{{ container_config_dir }}/media:/media"
-      # - /run/dbus:/run/dbus:ro
-      # - "{{ container_config_dir }}/{{ container_name }}/docker/run:/etc/services.d/home-assistant/run"
       - "/etc/localtime:/etc/localtime:ro"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://172.17.0.1:8123"]
