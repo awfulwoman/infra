@@ -4,46 +4,59 @@ services:
     ports:
       - "80:80"
       - "443:443"
-      # - "8080:8080"
     environment:
       - "TZ=Berlin/Europe"
       - "DO_AUTH_TOKEN={{ vault_letsencrypt_digitalocean_token }}"
     image: "{{ container_image }}"
     restart: unless-stopped
-    command:      
+    command:
+      # These are commands passed directly to the Traefik container
+
+      # General
       - "--log.level=DEBUG"
       - "--api.dashboard=true"
       - "--api.debug=true"
+
+      # Define Providers
+      # Here it's Docker and a YAML file
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--providers.docker.endpoint=unix:///var/run/docker.sock"
       - "--providers.file=true"
       - "--providers.file.filename=/etc/traefik/providers.yaml"
       - "--providers.file.watch=true"
+
+      # Define Entrypoints
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
-      # Upgrade connections
+      - "--entrypoints.websecure.http.tls.domains[0].main=affordablepotatoes.com"
+      - "--entrypoints.websecure.http.tls.domains[0].sans=*.affordablepotatoes.com"
+
+      # Upgrade connections from HTTP to HTTPS
       # - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
       # - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
-      # Letsencrypt ACME
+
+      # Letsencrypt ACME certificates
       - "--certificatesresolvers.letsencrypt.acme.dnschallenge=true"
       - "--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=digitalocean"
       - "--certificatesresolvers.letsencrypt.acme.dnschallenge.delaybeforecheck=0"
       - "--certificatesresolvers.letsencrypt.acme.email=certs@whalecoiner.com"
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
       # - "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
-      - "--entrypoints.websecure.http.tls.domains[0].main=affordablepotatoes.com"
-      - "--entrypoints.websecure.http.tls.domains[0].sans=*.affordablepotatoes.com"
     labels:
-      # Traefik-ception
+      # Traefik can also pick up label instructions just like any other container.
+
+      # Traefik-ception so that Traefik is provided via Traefik
       - "traefik.enable=true"
       - "traefik.port=80"
       - "traefik.backend=traefik"
+
       # Allow dashboard access via traefik.{{ansible_hostname}}.affordablepotatoes.com
       - "traefik.http.routers.dashboard.rule=Host(`traefik.{{ansible_hostname}}.affordablepotatoes.com`)"
       - "traefik.http.routers.dashboard.service=dashboard@internal"
       - "traefik.http.routers.dashboard.tls=true"
       - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
+
       # Allow API access via traefik.{{ansible_hostname}}.affordablepotatoes.com
       - "traefik.http.routers.api.rule=Host(`traefik.{{ansible_hostname}}.affordablepotatoes.com`) && PathPrefix(`/api`)"
       - "traefik.http.routers.api.service=api@internal"
