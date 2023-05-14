@@ -1,2 +1,2 @@
 container_name: traefik
-container_image: traefik:v2.9
+container_image: traefik:v2.10
