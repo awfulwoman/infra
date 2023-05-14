@@ -7,17 +7,17 @@
   roles:
     - role: containers-config
     - role: container-traefik
-    # - role: container-whoami
-    # - role: container-mosquitto
-    # - role: container-zigbee2mqtt # Core Zigbee network
-    # - role: container-zigbee2mqtt-aqara # Sandboxed Zigbee network for Aqara/Xiaomi devices
-    # - role: container-wyoming-whisper
-    # - role: container-wyoming-piper
+    - role: container-whoami
+    - role: container-mosquitto
+    - role: container-zigbee2mqtt # Core Zigbee network
+    - role: container-zigbee2mqtt-aqara # Sandboxed Zigbee network for Aqara/Xiaomi devices
+    - role: container-wyoming-whisper
+    - role: container-wyoming-piper
     - role: container-homeassistant
-    # - role: container-esphome
-    # - role: container-uptimekuma
-    # - role: container-heimdall
-    # - role: container-smtp
+    - role: container-esphome
+    - role: container-uptimekuma
+    - role: container-heimdall
+    - role: container-smtp
     - role: containers-end
     - role: docker-cleanup
 
