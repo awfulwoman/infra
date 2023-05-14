@@ -27,8 +27,8 @@ services:
       # - "{{ container_config_dir }}/{{ container_name }}/docker/run:/etc/services.d/home-assistant/run"
       - "/etc/localtime:/etc/localtime:ro"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://192.168.1.103:8123"]
-      # test: ["CMD", "curl", "-f", "https://homeassistant.affordablepotatoes.com"]
+      # test: ["CMD", "curl", "-f", "http://192.168.1.103:8123"]
+      test: ["CMD", "curl", "-f", "https://homeassistant.affordablepotatoes.com"]
       interval: 30s
       timeout: 10s
       retries: 6
