@@ -4,7 +4,7 @@ services:
     ports:
       - "80:80"
       - "443:443"
-      - "8080:8080"
+      # - "8080:8080"
     environment:
       - "TZ=Berlin/Europe"
       - "DO_AUTH_TOKEN={{ vault_letsencrypt_digitalocean_token }}"
