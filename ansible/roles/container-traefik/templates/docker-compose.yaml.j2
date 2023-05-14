@@ -20,8 +20,8 @@ services:
       - "--providers.file.filename=/etc/traefik/providers.yaml"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
-      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
-      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      # - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      # - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
       - "--certificatesresolvers.letsencrypt.acme.dnschallenge=true"
       - "--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=digitalocean"
       - "--certificatesresolvers.letsencrypt.acme.dnschallenge.delaybeforecheck=0"
@@ -47,5 +47,5 @@ services:
       - "{{ container_config_dir }}/letsencrypt:/letsencrypt"
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "/etc/localtime:/etc/localtime:ro"
-    #extra_hosts:
+    # extra_hosts:
     #  - host.docker.internal:172.17.0.1
