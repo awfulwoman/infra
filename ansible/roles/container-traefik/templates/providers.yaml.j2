@@ -2,13 +2,13 @@ http:
   routers:
     homeassistant:
       rule: Host(`homeassistant.affordablepotatoes.com`)
-			tls:
-      	certresolver: letsencrypt
-      entrypoints:
-        - http
+			{# # tls:
+      #	certresolver: letsencrypt
+      # entrypoints:
+      #  - http #}
       service: homeassistant
   services:
     homeassistant:
       loadBalancer:
         servers:
-          - url: 'http://localhost:8123'
+          - url: 'http://127.0.0.1:8123'
