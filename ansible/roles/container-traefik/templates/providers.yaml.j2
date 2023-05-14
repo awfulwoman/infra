@@ -12,4 +12,6 @@ http:
     homeassistantfileservice:
       loadBalancer:
         servers:
-          - url: "http://172.18.0.1:8123"
+          - url: "http://172.17.0.1"
+        server:
+          port: 8123

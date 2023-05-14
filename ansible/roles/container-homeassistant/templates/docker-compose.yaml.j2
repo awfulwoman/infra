@@ -15,11 +15,11 @@ services:
     image: "{{ container_image }}"
     restart: unless-stopped
     labels:
-       - "traefik.enable=true"
-      # - "traefik.http.routers.homeassistant.rule=Host(`homeassistant.affordablepotatoes.com`)"
+      - "traefik.enable=true"
+      - "traefik.http.routers.homeassistant.rule=Host(`homeassistant.affordablepotatoes.com`)"
       # - "traefik.http.routers.homeassistant.tls=true"
       # - "traefik.http.routers.homeassistant.tls.certresolver=letsencrypt"
-      # - "traefik.http.services.homeassistant.loadbalancer.server.port=8123"
+      - "traefik.http.services.homeassistant.loadbalancer.server.port=8123"
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}:/config"
       - "{{ container_config_dir }}/media:/media"
