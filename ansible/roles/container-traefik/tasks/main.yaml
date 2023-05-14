@@ -16,16 +16,23 @@
     group: "{{ ansible_user }}"
 
 - name: "Create config file"
-  ansible.builtin.template:
-    src: config.yaml.j2
+  ansible.builtin.copy:
+    src: config.yaml
     dest: "{{ container_config_dir }}/{{ container_name }}/config.yaml"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
 
+- name: "Create providers dir"
+  ansible.builtin.file:
+    dest: "{{ container_config_dir }}/{{ container_name }}/providers"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
 - name: "Create providers file"
-  ansible.builtin.template:
-    src: providers.yaml.j2
-    dest: "{{ container_config_dir }}/{{ container_name }}/providers.yaml"
+  ansible.builtin.copy:
+    src: files/providers/homeassistant.yaml
+    dest: "{{ container_config_dir }}/{{ container_name }}/providers/homeassistant.yaml"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: 0774

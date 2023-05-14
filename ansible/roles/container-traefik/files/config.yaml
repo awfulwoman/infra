@@ -17,7 +17,7 @@ providers:
     exposedbydefault: false
     endpoint: "unix:///var/run/docker.sock"
   file:
-    filename: /etc/traefik/providers.yaml
+    directory: /etc/traefik/providers
     watch: true
 
 certificatesResolvers:
