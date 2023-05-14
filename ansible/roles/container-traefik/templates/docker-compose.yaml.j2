@@ -47,3 +47,5 @@ services:
       - "{{ container_config_dir }}/letsencrypt:/letsencrypt"
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "/etc/localtime:/etc/localtime:ro"
+    extra_hosts:
+      - host.docker.internal:172.17.0.1
