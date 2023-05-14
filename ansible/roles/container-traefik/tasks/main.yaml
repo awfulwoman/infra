@@ -21,6 +21,7 @@
     dest: "{{ container_config_dir }}/{{ container_name }}/providers.yaml"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
+    mode: 0774
 
 - name: "Create letsencrypt dir"
   become: true
