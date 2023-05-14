@@ -17,7 +17,7 @@ services:
       - "--providers.docker.exposedbydefault=false"
       - "--providers.docker.endpoint=unix:///var/run/docker.sock"
       - "--providers.file=true"
-      - "--providers.file.filename=/providers.toml"
+      - "--providers.file.filename=/providers.yaml"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
       - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
