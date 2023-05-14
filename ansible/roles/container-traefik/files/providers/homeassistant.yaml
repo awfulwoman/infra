@@ -19,6 +19,7 @@ http:
     https-redirect:
       redirectScheme:
         scheme: https
+
   routers:
     homeassistant:
       service: homeassistant
@@ -34,4 +35,3 @@ http:
       loadBalancer:
         servers:
           - url: "http://172.17.0.1:8123"
-          # - url: "http://192.168.1.103:8123"
