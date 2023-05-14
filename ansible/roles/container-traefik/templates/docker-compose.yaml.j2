@@ -12,7 +12,8 @@ services:
     restart: unless-stopped
     command:      
       - "--log.level=DEBUG"
-      - "--api.insecure=true"
+      - "--api.dashboard=true"
+      - "--api.debug=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--providers.docker.endpoint=unix:///var/run/docker.sock"
@@ -35,6 +36,7 @@ services:
       - "traefik.port=80"
       - "traefik.enable=true"
       - "traefik.backend=traefik"
+      # Allow dashboard access via traefik.{{ansible_hostname}}.affordablepotatoes.com
       - "traefik.http.routers.dashboard.rule=Host(`traefik.{{ansible_hostname}}.affordablepotatoes.com`)"
       - "traefik.http.routers.dashboard.service=dashboard@internal"
       - "traefik.http.routers.dashboard.tls=true"
