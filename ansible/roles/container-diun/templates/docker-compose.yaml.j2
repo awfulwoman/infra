@@ -8,6 +8,7 @@ services:
       - "DIUN_WATCH_WORKERS=20"
       - "DIUN_WATCH_SCHEDULE=0 */6 * * *"
       - "DIUN_WATCH_JITTER=30s"
+      - "DIUN_NOTIF_PUSHOVER_TOKEN={{vault_pushover_home_automation_key}}"
       - "DIUN_PROVIDERS_DOCKER=true"
       - "TZ=Berlin/Europe"
     image: "{{ container_image }}"
