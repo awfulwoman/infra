@@ -1,0 +1,2 @@
+container_name: diun
+container_image: crazymax/diun:latest
