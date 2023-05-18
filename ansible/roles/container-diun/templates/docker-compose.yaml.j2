@@ -10,5 +10,4 @@ services:
     restart: unless-stopped
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}/data:/data"
-      - "{{ container_config_dir }}/{{ container_name }}/diun.yml:/diun.yml:ro"
       - "/var/run/docker.sock:/var/run/docker.sock"
