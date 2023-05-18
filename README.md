@@ -11,8 +11,8 @@ Let me and Bill Murray show you our home GitOps setup.
 - **Configuration as code:** `true`
 - **Networking:** internal DHCP and DNS via an OPNsense box. WireGuard VPN via Tailscale. 
 - **Hardware management:** all machines controlled via [Ansible](ansible).
-- **Virtual machines:** provisioned via Terraform.
-- **Container orchestration:** [Flux](flux) (but not for long) and Kubernetes, running on the provisioned VMs.
+- **Networking:** provisioned via Terraform.
+- **Container orchestration:** [Flux](flux) and Kubernetes, running on Dell Wyse 5070 thin clients.
 
 I started out writing this as a series of notes but it's growing into a mini-opera composed of weird sentence structures and addressing a constantly switching audience. I shall one day address this issue.
 
