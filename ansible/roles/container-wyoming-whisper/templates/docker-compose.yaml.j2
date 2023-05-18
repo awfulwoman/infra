@@ -8,6 +8,8 @@ services:
     image: "{{ container_image }}"
     restart: unless-stopped
     command: "--model tiny-int8 --language en"
+    labels:
+      - "diun.enable=true"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "{{ container_config_dir }}/{{ container_name }}:/data"

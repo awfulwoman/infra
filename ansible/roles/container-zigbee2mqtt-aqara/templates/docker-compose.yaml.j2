@@ -18,6 +18,7 @@ services:
       - "traefik.http.routers.zigbee2mqtt-aqara.rule=Host(`zigbee2mqtt-aqara.affordablepotatoes.com`)"
       - "traefik.http.routers.zigbee2mqtt-aqara.tls=true"
       - "traefik.http.routers.zigbee2mqtt-aqara.tls.certresolver=letsencrypt"
+      - "diun.enable=true"
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}:/app/data"
       - "/run/udev:/run/udev:ro"

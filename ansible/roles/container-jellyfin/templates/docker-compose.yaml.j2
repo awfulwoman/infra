@@ -13,6 +13,7 @@ services:
       - "traefik.http.routers.jellyfin.rule=Host(`jellyfin.affordablepotatoes.com`)"
       - "traefik.http.routers.jellyfin.tls=true"
       - "traefik.http.routers.jellyfin.tls.certresolver=letsencrypt"
+      - "diun.enable=true"
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}/config:/config"
       - "{{ container_config_dir }}/{{ container_name }}/cache:/cache"

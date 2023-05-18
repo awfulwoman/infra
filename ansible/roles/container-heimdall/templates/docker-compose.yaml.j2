@@ -16,7 +16,7 @@ services:
       - "traefik.http.routers.heimdall.rule=Host(`homeautomation.affordablepotatoes.com`)"
       - "traefik.http.routers.heimdall.tls=true"
       - "traefik.http.routers.heimdall.tls.certresolver=letsencrypt"
-      # - traefik.http.services.heimdall.loadbalancer.server.port=80
+      - "diun.enable=true"
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}:/config"
       - "/etc/localtime:/etc/localtime:ro"

@@ -15,6 +15,7 @@ services:
       - "traefik.http.routers.esphome.rule=Host(`esphome.affordablepotatoes.com`)"
       - "traefik.http.routers.esphome.tls=true"
       - "traefik.http.routers.esphome.tls.certresolver=letsencrypt"
+      - "diun.enable=true"
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}:/config"
       - "/etc/localtime:/etc/localtime:ro"
