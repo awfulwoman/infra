@@ -31,12 +31,37 @@ output "domain_output" {
 
 resource "digitalocean_domain" "homeassistant" {
   name       = "homeassistant.affordablepotatoes.com"
-  ip_address = "192.168.1.103"
+  ip_address = "100.89.157.31"
+}
+
+resource "digitalocean_domain" "homeautomation" {
+  name       = "homeautomation.affordablepotatoes.com"
+  ip_address = "100.89.157.31"
+}
+
+resource "digitalocean_domain" "esphome" {
+  name       = "esphome.affordablepotatoes.com"
+  ip_address = "100.89.157.31"
+}
+
+resource "digitalocean_domain" "zigbee2mqtt" {
+  name       = "zigbee2mqtt.affordablepotatoes.com"
+  ip_address = "100.89.157.31"
+}
+
+resource "digitalocean_domain" "zigbee2mqtt-aqara" {
+  name       = "zigbee2mqtt-aqara.affordablepotatoes.com"
+  ip_address = "100.89.157.31"
+}
+
+resource "digitalocean_domain" "uptimekuma" {
+  name       = "uptimekuma.affordablepotatoes.com"
+  ip_address = "100.89.157.31"
 }
 
 resource "digitalocean_domain" "jellyfin" {
   name       = "jellyfin.affordablepotatoes.com"
-  ip_address = "192.168.1.116"
+  ip_address = "100.83.127.33"
 }
 
 resource "digitalocean_droplet" "host_public" {
