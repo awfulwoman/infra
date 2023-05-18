@@ -12,5 +12,6 @@ services:
       - "traefik.http.routers.whoami.rule=Host(`whoami.affordablepotatoes.com`)"
       - "traefik.http.routers.whoami.tls=true"
       - "traefik.http.routers.whoami.tls.certresolver=letsencrypt"
+      - "diun.enable=true"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
