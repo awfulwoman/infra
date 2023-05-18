@@ -2,6 +2,9 @@ services:
   diun:
     container_name: "{{ container_name }}"
     command: serve
+    platform:
+      os: linux
+      arch: amd64
     environment:
       - "LOG_LEVEL=info"
       - "LOG_JSON=false"
