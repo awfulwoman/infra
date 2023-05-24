@@ -1,0 +1,14 @@
+[Unit]
+Description=RTSP video streaming server
+After=network.target
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=5
+User=root
+Group=video
+ExecStartPre=ffmpeg -f v4l2 -i /dev/video0 -pix_fmt yuv420p -preset ultrafast -b:v 600k -f rtsp rtsp://localhost:$RTSP_PORT/$RTSP_PATH -vframes 1 -y thumbnail.jpg
+
+[Install]
+WantedBy=multi-user.target
