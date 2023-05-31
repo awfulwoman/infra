@@ -48,8 +48,10 @@
 
 - name: "Touch letsencrypt file"
   become: true
-  ansible.builtin.file:
+  ansible.builtin.copy:
+    content: ""
     dest: "{{ container_config_dir }}/letsencrypt/acme.json"
+    force: false
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: '0600'
