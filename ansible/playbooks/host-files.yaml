@@ -1,0 +1,43 @@
+---
+- name: File server
+  hosts: host-files
+  pre_tasks:
+    - set_fact:
+       compose_list: []
+  roles:
+    - role: standard_os
+    - role: standard-host
+    - role: wakeonlan
+    - role: weareinteractive.environment
+      become: true
+      no_log: true
+    - role: generate-sshkey
+    # - role: artis3n.tailscale
+    # - role: zfs-backup-client
+    - role: geerlingguy.pip
+    - role: geerlingguy.ansible
+      become: true
+      ansible_install_method: "pip"
+    - role: geerlingguy.docker
+      become: true
+    - role: docker
+    - role: hifis.unattended_upgrades
+      become: true
+    - role: nfs-server
+    - role: motd
+    - role: powertop
+    - role: containers-config
+    - role: container-traefik
+    - role: container-sanoid-builder
+    - role: containers-end
+    - role: docker-cleanup
+    - role: apt-upgrade
+    - role: diodonfrost.terraform
+      become: true
+    - role: sleepuntil
+    - role: ansible-pull
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:

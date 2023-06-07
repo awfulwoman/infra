@@ -15,6 +15,7 @@ all:
     host-k8s02:
     host-k8s03:
     host-k8s04:
+    host-files:
     workstation-blackbox:
 
   # Groupings of servers that allow them to be administered collectively.
@@ -47,6 +48,7 @@ all:
       hosts:
         host-storage:
         host-backups:
+        host-files:
 
     # ZFS Backup Server
     zfs-backup-server:
