@@ -1,2 +1,2 @@
 container_name: uptimekuma
-container_image: louislam/uptime-kuma:1
+container_image: louislam/uptime-kuma
