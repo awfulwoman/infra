@@ -31,3 +31,13 @@ healthcheck_reboot_id: !vault |
 pip_install_packages:
   - name: docker
   - name: docker-compose
+
+# NFS Server
+restic_zfs_id: slowpool/backups/restic
+restic_server_path: "/{{ restic_zfs_id }}"
+
+zfs_backup_datasets:
+  - fastpool/containers
+  - "{{ restic_zfs_id }}"
+  - slowpool/pools
+  - slowpool/images

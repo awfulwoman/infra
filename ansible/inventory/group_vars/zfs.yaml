@@ -10,8 +10,4 @@ vault_zfsbackup_password: !vault |
 
 zfs_backup_user: zfsbackup
 
-zfs_backup_datasets:
-  - fastpool/containers
-  - "{{ restic_zfs_id }}"
-  - slowpool/pools
-  - slowpool/images
+
