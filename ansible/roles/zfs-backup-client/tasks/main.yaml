@@ -36,6 +36,7 @@
   community.general.zfs:
     name: "{{ restic_zfs_id }}"
     state: present
+  when: restic_zfs_id is defined
 
 - name: "Change ownership - {{ restic_server_path }}"
   become: true
@@ -75,32 +76,32 @@
 #     group: root
 #     mode: 0777
 
-- name: Create Sanoid config file
-  become: true
-  ansible.builtin.copy:
-    src: sanoid.conf
-    dest: "/etc/sanoid/sanoid.conf"
-    owner: root
-    group: root
-    mode: 0664
+# - name: Create Sanoid config file
+#   become: true
+#   ansible.builtin.copy:
+#     src: sanoid.conf
+#     dest: "/etc/sanoid/sanoid.conf"
+#     owner: root
+#     group: root
+#     mode: 0664
 
-- name: Apply Sanoid cronjob
-  become: true
-  ansible.builtin.cron:
-    name: "Sanoid"
-    month: "*"
-    day: "*"
-    hour: "*"
-    minute: "*"
-    weekday: "*"
-    job: "/usr/sbin/sanoid --cron"
-    state: present
+# - name: Apply Sanoid cronjob
+#   become: true
+#   ansible.builtin.cron:
+#     name: "Sanoid"
+#     month: "*"
+#     day: "*"
+#     hour: "*"
+#     minute: "*"
+#     weekday: "*"
+#     job: "/usr/sbin/sanoid --cron"
+#     state: present
 
-- name: List datasets to be given permissions on
-  become: true
-  ansible.builtin.debug:
-    msg: "{{ item }}"
-  loop: "{{ zfs_backup_datasets }}"
+# - name: List datasets to be given permissions on
+#   become: true
+#   ansible.builtin.debug:
+#     msg: "{{ item }}"
+#   loop: "{{ zfs_backup_datasets }}"
 
 - name: Allow "{{ zfs_backup_user }}" user to send backups of listed datasets
   become: true
