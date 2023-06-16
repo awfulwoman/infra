@@ -38,7 +38,7 @@
 
 # We have to call the script from the dir, otherwise it fails
 - name: Standardise filename of *.deb to sanoid.deb
-  ansible.builtin.command: mv {{find_result[0] | basename}} sanoid.deb
+  ansible.builtin.command: "mv {{find_result.files[0].path | basename}} sanoid.deb"
   args:
     chdir: "{{ container_config_dir }}/sanoid-image-builder"
   when: sanoid_deb.stat.exists != true
