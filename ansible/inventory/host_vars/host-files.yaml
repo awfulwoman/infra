@@ -10,5 +10,5 @@ pip_install_packages:
 zfs_backup_datasets:
   - /home/ubuntu
 
-restic_zfs_id: slowpool/backups/restic
-restic_server_path: "/{{ restic_zfs_id }}"
+# restic_zfs_id: slowpool/backups/restic
+# restic_server_path: "/{{ restic_zfs_id }}"
