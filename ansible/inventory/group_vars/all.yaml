@@ -176,10 +176,6 @@ vault_docker_api_token_watchtower: !vault |
 nfs_backups_client_path: /mnt/backups
 restic_client_path: "{{ nfs_backups_client_path }}/restic"
 
-# NFS Server
-restic_zfs_id: slowpool/backups/restic
-restic_server_path: "/{{ restic_zfs_id }}"
-
 # Unattended upgrades settings
 unattended_mail_only_on_error: true
 unattended_mail: unattended@whalecoiner.com
