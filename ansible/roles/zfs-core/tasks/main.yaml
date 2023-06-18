@@ -17,6 +17,16 @@
       xattr: sa
   loop: "{{ zfs_critical_datasets }}"
 
+- name: "Ensure critical datasets are owned by ansible user"
+  become: true
+  ansible.builtin.file:
+    path: "/{{ item }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0774
+  loop: "{{ zfs_critical_datasets }}"
+
 - name: "Create dataset - {{ restic_zfs_id }}"
   become: true
   community.general.zfs:
