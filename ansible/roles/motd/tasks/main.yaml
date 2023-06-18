@@ -2,7 +2,7 @@
 - name: Disable Canonical Advertisment of the Day
   become: true
   ansible.builtin.file:
-    path: "{{item}}"
+    path: "{{ item }}"
     mode: 0664
     modification_time: preserve
     access_time: preserve

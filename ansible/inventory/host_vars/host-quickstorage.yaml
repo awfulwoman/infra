@@ -1,20 +1,46 @@
 ansible_host: host-quickstorage.i.affordablepotatoes.com
 ansible_user: ubuntu
+
+
+# --- NETWORK -------------
 wakeonlan_interface: enp1s0
 wakeonlan_mac_address: "a4:bb:6d:26:57:e9"
 
+
+# --- PACKAGES -------------
+# pip packages to install on this server
 pip_install_packages:
   - name: docker
   - name: docker-compose
 
-# Base for all container dirs. Normally on an SSD.
-container_config_dir: /opt/containers
 
-# restic_zfs_id: slowpool/backups/restic
-# restic_server_path: "/{{ restic_zfs_id }}"
+# --- ZFS -------------
+# ZFS datasets to be present
+container_config_zfs_id: fastpool/containers
+restic_zfs_id: slowpool/backups/restic
+
+# Define paths from ZFS datasets
+container_config_dir: "/{{ container_config_zfs_id }}"
+restic_server_path: "/{{ restic_zfs_id }}"
 
 # Critical datasets
 # These datasets should always exist on this server
 zfs_critical_datasets: 
-  - "{{ container_config_dir }}"
+  - "{{ container_config_zfs_id }}"
   - "{{ restic_zfs_id }}"
+
+# Datasets to be backed-up
+# These datasets will be pulled to a backup server
+zfs_backup_datasets:
+  - "{{ container_config_zfs_id }}"
+  - "{{ restic_zfs_id }}"
+  
+
+# --- NFS -------------
+# These dirs will be shared via NFS
+nfs_exports:
+  - "{{ restic_server_path }} *(rw,all_squash,anonuid=1000,anongid=1000)"
+
+
+# --- RESTIC --------------
+backup_restic_destination: "{{ restic_server_path }}" # Restic snapshot location

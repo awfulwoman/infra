@@ -22,14 +22,15 @@
     state: present
   register: created_user
 
-- name: Create fastpool/containers dataset
+- name: Ensure critical datasets exist
   become: true
   community.general.zfs:
-    name: fastpool/containers
+    name: "{{ item }}"
     state: present
     extra_zfs_properties:
       acltype: posix
       xattr: sa
+  loop: "{{ zfs_critical_datasets }}"
 
 - name: "Create dataset - {{ restic_zfs_id }}"
   become: true

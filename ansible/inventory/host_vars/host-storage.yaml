@@ -1,24 +1,52 @@
 ansible_user: ubuntu
 ansible_host: host-storage.i.affordablepotatoes.com
 
+# --- NETWORK -------------
 wireguard_address: "10.8.0.116/24"
-
 wakeonlan_mac_address: "34:60:f9:bb:3d:16"
 
-# NFS shares
+
+# --- PACKAGES -------------
+pip_install_packages:
+  - name: docker
+  - name: docker-compose
+
+
+# --- ZFS -------------
+# ZFS datasets to be present
+container_config_zfs_id: fastpool/containers
+restic_zfs_id: slowpool/backups/restic
+
+# Define paths from ZFS datasets
+container_config_dir: "/{{ container_config_zfs_id }}"
+restic_server_path: "/{{ restic_zfs_id }}"
+
+# Critical datasets
+# These datasets should always exist on this server
+zfs_critical_datasets: 
+  - "{{ container_config_zfs_id }}"
+  - "{{ restic_zfs_id }}"
+
+# Datasets to be backed-up
+zfs_backup_datasets:
+  - "{{ container_config_zfs_id }}"
+  - "{{ restic_zfs_id }}"
+  - slowpool/pools
+  - slowpool/images
+
+
+# --- NFS -------------
 nfs_exports:
-#  - "/slowpool/incoming *(rw,all_squash,anonuid=1000,anongid=1000)"
   - "/fastpool *(rw,all_squash,anonuid=1000,anongid=1000)"
   - "/slowpool/media *(rw,all_squash,anonuid=1000,anongid=1000)"
   - "{{ restic_server_path }} *(rw,all_squash,anonuid=1000,anongid=1000)"
 
-# Base for all container dirs. Normally on an SSD.
-container_config_dir: /fastpool/containers
 
-# Restic vars
+# --- RESTIC --------------
 backup_restic_destination: "{{ restic_server_path }}" # Restic snapshot location
 
-# Healthceck.io
+
+# --- HEALTHCHECKS --------------
 healthcheck_reboot_id: !vault |
           $ANSIBLE_VAULT;1.2;AES256;beanpod
           65663932633330643236653037333637613138323963333861643330346362303561666534343131
@@ -27,17 +55,3 @@ healthcheck_reboot_id: !vault |
           3233396133653561310a656531303330646133303166646464323936373535613935636236383561
           61316664346365363331316236373063633164663335643837383465643337643634646535616133
           3134386264386231643866303138643266316131636536656436
-
-pip_install_packages:
-  - name: docker
-  - name: docker-compose
-
-# NFS Server
-restic_zfs_id: slowpool/backups/restic
-restic_server_path: "/{{ restic_zfs_id }}"
-
-zfs_backup_datasets:
-  - fastpool/containers
-  - "{{ restic_zfs_id }}"
-  - slowpool/pools
-  - slowpool/images
