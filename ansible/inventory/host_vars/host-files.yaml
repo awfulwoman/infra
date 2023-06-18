@@ -1,4 +1,4 @@
-ansible_host: host-files.i.affordablepotatoes.com
+ansible_host: host-quickstorage.i.affordablepotatoes.com
 ansible_user: ubuntu
 wakeonlan_interface: enp1s0
 wakeonlan_mac_address: "a4:bb:6d:26:57:e9"
@@ -7,8 +7,14 @@ pip_install_packages:
   - name: docker
   - name: docker-compose
 
-zfs_backup_datasets:
-  - /home/ubuntu
+# Base for all container dirs. Normally on an SSD.
+container_config_dir: /opt/containers
 
 # restic_zfs_id: slowpool/backups/restic
 # restic_server_path: "/{{ restic_zfs_id }}"
+
+# Critical datasets
+# These datasets should always exist on this server
+zfs_critical_datasets: 
+  - "{{ container_config_dir }}"
+  - "{{ restic_zfs_id }}"
