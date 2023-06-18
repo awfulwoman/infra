@@ -1,0 +1,33 @@
+---
+- name: Install ZFS tooling
+  become: true
+  ansible.builtin.apt:
+    name:
+      - zfsutils-linux
+      - acl
+    state: present
+
+- name: Ensure critical datasets exist
+  become: true
+  community.general.zfs:
+    name: fastpool/containers
+    state: present
+    extra_zfs_properties:
+      acltype: posix
+      xattr: sa
+
+- name: "Create dataset - {{ restic_zfs_id }}"
+  become: true
+  community.general.zfs:
+    name: "{{ restic_zfs_id }}"
+    state: present
+  when: restic_zfs_id is defined
+
+- name: "Change ownership - {{ restic_server_path }}"
+  become: true
+  ansible.builtin.file:
+    path: "{{ restic_server_path }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0774

@@ -12,6 +12,7 @@
     - role: generate-sshkey
       become: true
     - role: beep
+    - role: zfs-core
     - role: zfs-backup-server
       zfsbackup_pushover: false
     - role: hifis.unattended_upgrades

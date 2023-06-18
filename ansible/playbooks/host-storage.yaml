@@ -13,6 +13,7 @@
       become: true
       no_log: true
     - role: generate-sshkey
+    - role: zfs-core
     - role: zfs-backup-client
     - role: cron-reboot
     - role: artis3n.tailscale
