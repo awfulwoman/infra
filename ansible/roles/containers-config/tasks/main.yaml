@@ -9,7 +9,16 @@
     compose_config_dir: "{{ container_config_dir }}/composefiles"
   when: compose_config_dir is undefined
 
-- name: "Ensure container compose directory exists"
+# Create dirs
+- name: Ensure container_config_dir exists
+  become: true
+  ansible.builtin.file:
+    path: "{{ container_config_dir }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    state: directory
+
+- name: "Ensure compose_config_dir exists"
   become: true
   ansible.builtin.file:
     path: "{{ compose_config_dir }}"
