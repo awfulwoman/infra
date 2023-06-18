@@ -1,6 +1,6 @@
 ---
 - name: File server
-  hosts: host-files
+  hosts: host-quickstorage
   pre_tasks:
     - set_fact:
        compose_list: []
