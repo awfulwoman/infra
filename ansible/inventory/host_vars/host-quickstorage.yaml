@@ -16,7 +16,7 @@ pip_install_packages:
 
 # --- ZFS -------------
 # ZFS datasets to be present
-container_config_zfs_id: fastpool/containers
+container_config_zfs_id: tank/containers
 restic_zfs_id: slowpool/backups/restic
 
 # Define paths from ZFS datasets
