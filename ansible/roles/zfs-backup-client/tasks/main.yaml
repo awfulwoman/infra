@@ -22,15 +22,7 @@
     state: present
   register: created_user
 
-- name: Ensure critical datasets exist
-  become: true
-  community.general.zfs:
-    name: "{{ item }}"
-    state: present
-    extra_zfs_properties:
-      acltype: posix
-      xattr: sa
-  loop: "{{ zfs_critical_datasets }}"
+
 
 - name: "Create dataset - {{ restic_zfs_id }}"
   become: true
