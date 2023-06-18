@@ -17,7 +17,7 @@ pip_install_packages:
 # --- ZFS -------------
 # ZFS datasets to be present
 container_config_zfs_id: tank/containers
-restic_zfs_id: slowpool/backups/restic
+restic_zfs_id: tank/restic
 
 # Define paths from ZFS datasets
 container_config_dir: "/{{ container_config_zfs_id }}"
@@ -43,4 +43,5 @@ nfs_exports:
 
 
 # --- RESTIC --------------
-backup_restic_destination: "{{ restic_server_path }}" # Restic snapshot location
+# Restic snapshot location
+backup_restic_destination: "{{ restic_server_path }}"
