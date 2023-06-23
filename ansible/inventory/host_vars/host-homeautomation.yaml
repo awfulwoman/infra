@@ -13,6 +13,7 @@ mount_requests:
   - path: /mnt/data
     src: /dev/disks/by-id/scsi-SSABRENT__DB9876543214E
     state: present
+    opts: rw,uid=ubuntu,gid=ubuntu
     fstype: ext4
 
 # Container names to backup via autorestic
