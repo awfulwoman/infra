@@ -13,6 +13,7 @@
       become: true
       no_log: true
     - role: artis3n.tailscale
+    - role: robertdebock.mount
     - role: geerlingguy.pip
     - role: geerlingguy.docker
       become: true
