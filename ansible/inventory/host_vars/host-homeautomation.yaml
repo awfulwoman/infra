@@ -9,13 +9,6 @@ use_zigbee_hardware: true
 # Base for all container dirs. Normally on an SSD.
 container_config_dir: /home/ubuntu
 
-mount_requests:
-  - path: /mnt/data
-    src: /dev/disks/by-id/scsi-SSABRENT__DB9876543214E
-    state: present
-    opts: rw,uid=ubuntu,gid=ubuntu
-    fstype: ext4
-
 # Container names to backup via autorestic
 backup_containers_via_autorestic:
   - homeassistant
