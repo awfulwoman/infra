@@ -3,6 +3,11 @@
     path: "{{ container_config_dir }}/{{ container_name }}"
     state: directory
 
+- name: "Create container config dir"
+  ansible.builtin.file:
+    path: "{{ container_config_dir }}/{{ container_name }}/config"
+    state: directory
+
 - name: "Create compose config dir"
   ansible.builtin.file:
     path: "{{ compose_config_dir }}/{{ container_name }}"
@@ -18,7 +23,7 @@
 - name: "Create config file"
   ansible.builtin.copy:
     src: config.yaml
-    dest: "{{ container_config_dir }}/{{ container_name }}/config.yaml"
+    dest: "{{ container_config_dir }}/{{ container_name }}/config/traefik.yaml"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
 
