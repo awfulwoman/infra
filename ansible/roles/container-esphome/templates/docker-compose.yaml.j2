@@ -6,7 +6,7 @@ services:
       # - "6123:6123"
     privileged: true
     environment:
-      - "TZ=Berlin/Europe"
+      - "TZ=Europe/Berlin"
       - "ESPHOME_DASHBOARD_USE_PING=true"
     image: "{{ container_image }}"
     restart: unless-stopped

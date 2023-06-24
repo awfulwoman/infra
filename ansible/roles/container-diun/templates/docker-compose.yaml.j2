@@ -11,7 +11,7 @@ services:
       - "DIUN_WATCH_JITTER=30s"
       - "DIUN_NOTIF_PUSHOVER_TOKEN={{vault_pushover_home_automation_key}}"
       - "DIUN_PROVIDERS_DOCKER=true"
-      - "TZ=Berlin/Europe"
+      - "TZ=Europe/Berlin"
     image: "{{ container_image }}"
     restart: unless-stopped
     volumes:

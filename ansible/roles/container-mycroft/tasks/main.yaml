@@ -36,7 +36,7 @@
     ports:
       - 8181:8181
     env:
-      TZ: "Berlin/Europe"
+      TZ: "Europe/Berlin"
       PULSE_SERVER: "unix:/run/user/1000/pulse/native"
     devices:
       - /dev/snd

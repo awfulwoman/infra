@@ -19,7 +19,7 @@
     ports:
       - "8999:80"
     env:
-      TZ: "Berlin/Europe"
+      TZ: "Europe/Berlin"
     volumes:
       - /etc/localtime:/etc/localtime:ro
     # networks:

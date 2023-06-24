@@ -4,7 +4,7 @@ services:
     ports:
        - "8081:8081"
     environment:
-      - "TZ=Berlin/Europe"
+      - "TZ=Europe/Berlin"
       - "STATE_DIR=/state"
     image: "{{ container_image }}"
     restart: unless-stopped

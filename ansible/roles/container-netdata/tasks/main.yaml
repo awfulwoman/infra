@@ -14,7 +14,7 @@
     ports:
       - "19999:19999"
     env:
-      TZ: "Berlin/Europe"
+      TZ: "Europe/Berlin"
     volumes:
       - netdataconfig:/etc/netdata
       - netdatalib:/var/lib/netdata

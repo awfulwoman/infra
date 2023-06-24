@@ -13,7 +13,7 @@
       - "9283:80"
       # - "9284:443"
     env:
-      TZ: "Berlin/Europe"
+      TZ: "Europe/Berlin"
       PUID: "1000"
       PGID: "1000"
     volumes:

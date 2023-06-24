@@ -4,7 +4,7 @@ services:
     ports:
       - 10200:10200
     environment:
-      - "TZ=Berlin/Europe"
+      - "TZ=Europe/Berlin"
     image: "{{ container_image }}"
     restart: unless-stopped
     command: "--voice en-gb-southern_english_female-low"

@@ -5,7 +5,7 @@ services:
       - "80:80"
       - "443:443"
     environment:
-      - "TZ=Berlin/Europe"
+      - "TZ=Europe/Berlin"
       - "DO_AUTH_TOKEN={{ vault_letsencrypt_digitalocean_token }}"
     image: "{{ container_image }}"
     restart: unless-stopped

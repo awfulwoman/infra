@@ -12,7 +12,7 @@
     ports:
       - "5005:5005"
     env:
-      TZ: "Berlin/Europe"
+      TZ: "Europe/Berlin"
       STATE_DIR: "/state"
     volumes:
       - "{{ container_config_dir }}/flame:/app/data"

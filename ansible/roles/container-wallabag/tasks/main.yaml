@@ -18,7 +18,7 @@
     ports:
       - "7520:80"
     env:
-      TZ: "Berlin/Europe"
+      TZ: "Europe/Berlin"
       SYMFONY__ENV__DOMAIN_NAME: "http://workloads.affordablepotatoes.com:7520" 
     volumes:
       - "{{ container_config_dir }}/wallabag/data:/var/www/wallabag/data"

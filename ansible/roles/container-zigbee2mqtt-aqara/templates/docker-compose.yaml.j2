@@ -10,7 +10,7 @@ services:
     devices:
       - "{{ zigbee_device }}"
     environment:
-      - "TZ=Berlin/Europe"
+      - "TZ=Europe/Berlin"
     image: "{{ container_image }}"
     restart: unless-stopped
     labels:

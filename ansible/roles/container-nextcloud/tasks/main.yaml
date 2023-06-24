@@ -21,7 +21,7 @@
       - "8092:8080"
       - "8443:8443"
     env:
-      TZ: "Berlin/Europe"
+      TZ: "Europe/Berlin"
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}/docker-aio-config:/mnt/docker-aio-config"
       - /etc/localtime:/etc/localtime:ro
