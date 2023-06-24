@@ -16,6 +16,7 @@
     - role: geerlingguy.pip
     - role: geerlingguy.docker
       become: true
+    - role: zfs-core
     - role: docker
     - role: hifis.unattended_upgrades
       become: true
