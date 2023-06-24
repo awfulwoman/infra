@@ -28,8 +28,8 @@ zfs_backup_datasets:
   - "{{ container_config_zfs_id }}"
 
 # Create paths from ZFS datasets
-container_config_dir: /home/ubuntu
-# container_config_dir: "/{{ container_config_zfs_id }}"
+# container_config_dir: /home/ubuntu/
+container_config_dir: "/{{ container_config_zfs_id }}"
 
 # --- RESTIC -------------
 # Container names to backup via autorestic
