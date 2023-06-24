@@ -1,14 +1,37 @@
 ansible_host: host-homeautomation.i.affordablepotatoes.com
 ansible_user: ubuntu
 
+# --- NETWORK -------------
 wireguard_address: "10.8.0.103/24"
 
 # Whether to initialise Zigbee2MQTT and the MQTT broker
 use_zigbee_hardware: true
 
-# Base for all container dirs. Normally on an SSD.
-container_config_dir: /home/ubuntu
+# --- PACKAGES -------------
+# pip packages to install on this server
+pip_install_packages:
+  - name: docker
+  - name: docker-compose
 
+# --- ZFS -------------
+# ZFS datasets to be present
+container_config_zfs_id: tank/containers
+
+# Critical datasets
+# These datasets should always exist on this server
+zfs_critical_datasets: 
+  - "{{ container_config_zfs_id }}"
+
+# Datasets to be backed-up
+# These datasets will be pulled to a backup server
+zfs_backup_datasets:
+  - "{{ container_config_zfs_id }}"
+
+# Create paths from ZFS datasets
+container_config_dir: /home/ubuntu
+# container_config_dir: "/{{ container_config_zfs_id }}"
+
+# --- RESTIC -------------
 # Container names to backup via autorestic
 backup_containers_via_autorestic:
   - homeassistant
