@@ -28,6 +28,7 @@
     - role: motd
     - role: powertop
     - role: containers-config
+    - role: container-gluetun
     - role: container-traefik
     - role: container-sanoid-builder
     - role: containers-end

@@ -1,0 +1,16 @@
+services:
+  gluetun:
+    container_name: "{{ container_name }}"
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - "TZ=Europe/Berlin"
+      - VPN_SERVICE_PROVIDER=mullvad
+      - VPN_TYPE=wireguard
+    image: "{{ container_image }}"
+    restart: unless-stopped
+    labels:
+      - "diun.enable=true"
+    volumes:
+      # - "{{ container_config_dir }}/{{ container_name }}:/config"
+      - "/etc/localtime:/etc/localtime:ro"
