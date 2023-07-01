@@ -1,0 +1,6 @@
+services:
+  curl:
+    container_name: "{{ container_name }}"
+    image: "{{ container_image }}"
+    restart: unless-stopped
+    network_mode: "service:gluetun" 

@@ -1,0 +1,2 @@
+container_image: curlimages/curl
+container_name: curl

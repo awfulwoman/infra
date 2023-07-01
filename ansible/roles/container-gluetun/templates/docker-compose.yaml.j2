@@ -4,13 +4,16 @@ services:
     cap_add:
       - NET_ADMIN
     environment:
-      - "TZ=Europe/Berlin"
       - VPN_SERVICE_PROVIDER=mullvad
       - VPN_TYPE=wireguard
+      - WIREGUARD_PRIVATE_KEY="{{ vault_mullvad_key }}"
+      - WIREGUARD_ADDRESSES="{{ vault_mullvad_address }}"
+      - SERVER_CITIES=zurich
+      - SERVER_COUNTRIES=switzerland
     image: "{{ container_image }}"
     restart: unless-stopped
     labels:
       - "diun.enable=true"
     volumes:
-      # - "{{ container_config_dir }}/{{ container_name }}:/config"
+      - "{{ container_config_dir }}/{{ container_name }}:/gluetun"
       - "/etc/localtime:/etc/localtime:ro"

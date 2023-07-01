@@ -11,6 +11,7 @@
       - lm-sensors
       - smartmontools
       - sqlite3
+      - python-is-python3
     state: present
     update_cache: true
 
