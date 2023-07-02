@@ -7,18 +7,7 @@
       - acl
     state: present
 
-- name: Ensure critical datasets exist
-  become: true
-  community.general.zfs:
-    name: "{{ item }}"
-    state: present
-    extra_zfs_properties:
-      acltype: posix
-      xattr: sa
-  loop: "{{ zfs_critical_datasets }}"
-  when: zfs_critical_datasets is defined
-
-- name: "Ensure critical datasets are owned by ansible user"
+- name: Ensure ZFS pools are owned by user
   become: true
   ansible.builtin.file:
     path: "/{{ item }}"
@@ -26,5 +15,5 @@
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: 0774
-  loop: "{{ zfs_critical_datasets }}"
-  when: zfs_critical_datasets is defined
+  loop: "{{ zfs_pools }}"
+  when: zfs_pools is defined

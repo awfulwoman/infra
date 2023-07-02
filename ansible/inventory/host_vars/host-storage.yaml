@@ -13,19 +13,18 @@ pip_install_packages:
 
 
 # --- ZFS -------------
-# ZFS datasets to be present
+# ZFS pool
+zfs_pools:
+  - slowpool
+  - fastpool
+
+# Named ZFS datasets
 container_config_zfs_id: fastpool/containers
 restic_zfs_id: slowpool/backups/restic
 
 # Define paths from ZFS datasets
 container_config_dir: "/{{ container_config_zfs_id }}"
 restic_server_path: "/{{ restic_zfs_id }}"
-
-# Critical datasets
-# These datasets should always exist on this server
-zfs_critical_datasets: 
-  - "{{ container_config_zfs_id }}"
-  - "{{ restic_zfs_id }}"
 
 # Datasets to be backed-up
 zfs_backup_datasets:

@@ -14,13 +14,13 @@ pip_install_packages:
   - name: docker-compose
 
 # --- ZFS -------------
-# ZFS datasets to be present
-container_config_zfs_id: tank/containers
 
-# Critical datasets
-# These datasets should always exist on this server
-zfs_critical_datasets: 
-  - "{{ container_config_zfs_id }}"
+# ZFS pool
+zfs_pools:
+  - tank
+
+# Named ZFS datasets
+container_config_zfs_id: tank/containers
 
 # Datasets to be backed-up
 # These datasets will be pulled to a backup server

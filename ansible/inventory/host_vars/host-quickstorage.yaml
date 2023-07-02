@@ -13,21 +13,21 @@ pip_install_packages:
   - name: docker
   - name: docker-compose
 
+ansible_pip_executable: '/usr/bin/pip3'
 
 # --- ZFS -------------
-# ZFS datasets to be present
+
+# ZFS pool
+zfs_pools:
+  - tank
+
+# Named ZFS datasets
 container_config_zfs_id: tank/containers
 restic_zfs_id: tank/restic
 
 # Define paths from ZFS datasets
 container_config_dir: "/{{ container_config_zfs_id }}"
 restic_server_path: "/{{ restic_zfs_id }}"
-
-# Critical datasets
-# These datasets should always exist on this server
-zfs_critical_datasets: 
-  - "{{ container_config_zfs_id }}"
-  - "{{ restic_zfs_id }}"
 
 # Datasets to be backed-up
 # These datasets will be pulled to a backup server
