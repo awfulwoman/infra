@@ -1,3 +1,14 @@
+- name: Install apt packages
+  become: true
+  ansible.builtin.apt:
+    name:
+      - lzop
+      - pv
+      - mbuffer
+      - libconfig-inifiles-perl
+      - libcapture-tiny-perl
+    state: present
+
 - name: "Create {{ container_name }} config dir"
   ansible.builtin.file:
     path: "{{ container_config_dir }}/sanoid-image-builder"
