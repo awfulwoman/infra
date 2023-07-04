@@ -8,7 +8,6 @@ services:
       - PUID="{{ container_user_id }}
       - PGID="{{ container_user_id }}
       - TZ=Europe/Berlin
-      - TRANSMISSION_WEB_HOME=/flood-for-transmission/ 
     labels:
       - "diun.enable=true"
     volumes:
