@@ -29,6 +29,7 @@
     - role: powertop
     - role: containers-config
     - role: container-gluetun
+    - role: container-transmission
     - role: container-curl
     - role: container-traefik
     - role: container-sanoid-builder

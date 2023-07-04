@@ -11,6 +11,10 @@ services:
       - SERVER_CITIES=zurich
       - SERVER_COUNTRIES=switzerland
     image: "{{ container_image }}"
+    ports:
+      - "0.0.0.0:9091:9091/tcp"
+      - 51413:51413/tcp
+      - 51413:51413/udp
     restart: unless-stopped
     labels:
       - "diun.enable=true"
