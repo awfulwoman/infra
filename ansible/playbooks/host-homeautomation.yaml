@@ -32,6 +32,7 @@
     - role: container-traefik
     - role: container-whoami
     - role: container-diun
+    - role: container-homepage
     - role: container-mosquitto
     - role: container-zigbee2mqtt # Core Zigbee network
     - role: container-zigbee2mqtt-aqara # Sandboxed Zigbee network for Aqara/Xiaomi devices
