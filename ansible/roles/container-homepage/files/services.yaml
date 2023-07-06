@@ -2,17 +2,14 @@
 # For configuration options and examples, please see:
 # https://gethomepage.dev/en/configs/services
 
-- My First Group:
-    - My First Service:
-        href: http://localhost/
-        description: Homepage is awesome
+- Home Automation:
 
 - My Second Group:
     - My Second Service:
         href: http://localhost/
         description: Homepage is the best
 
-- My Third Group:
+- Access Points:
     - My Third Service:
         href: http://localhost/
         description: Homepage is 😎
