@@ -2,7 +2,13 @@
 # For configuration options and examples, please see:
 # https://gethomepage.dev/en/configs/services
 
+- Group A:
+    - Service A:
+        href: http://localhost/
+
 - Home Automation:
+    - Service B:
+        href: http://localhost/
 
 - My Second Group:
     - My Second Service:
