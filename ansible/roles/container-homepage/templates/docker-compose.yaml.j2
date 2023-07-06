@@ -14,8 +14,8 @@ services:
       - "traefik.http.routers.{{ container_name }}.tls.certresolver=letsencrypt"
       - "diun.enable=true"
     environment:
-      PUID: "{{ ansible_user }}"
-      PGID: "{{ ansible_user }}"
+      PUID: 1000
+      PGID: 1000
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}:/app/config"
       - /var/run/docker.sock:/var/run/docker.sock:ro
