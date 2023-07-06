@@ -29,9 +29,9 @@
   ansible.builtin.set_fact:
     compose_list: "{{ compose_list + [ container_name ] }}"
 
-- name: Copy config
+- name: Copy app config
   ansible.builtin.copy:
     src: files/
-    dest: "{{ compose_config_dir }}/{{ container_name }}"
+    dest: "{{ container_config_dir }}/{{ container_name }}"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
