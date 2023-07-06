@@ -20,6 +20,10 @@ services:
       - "/etc/localtime:/etc/localtime:ro"
     labels:
       - "diun.enable=true"
+      - "homepage.group=Home Automation"
+      - "homepage.name=Home Assistant"
+      - "homepage.href=https://homeassistant.affordablepotatoes.com"
+      - "homepage.description=Home sutomation server"
     healthcheck:
       # test: ["CMD", "curl", "-f", "http://172.19.0.1:8123"]
       test: ["CMD", "curl", "-f", "http://homeassistant.affordablepotatoes.com:8123"]
