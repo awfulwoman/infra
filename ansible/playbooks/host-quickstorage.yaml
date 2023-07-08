@@ -18,7 +18,8 @@
     - role: geerlingguy.pip
     - role: geerlingguy.ansible
       become: true
-      ansible_install_method: "pip"
+      ansible_install_method: pip
+      ansible_pip_executable: '/usr/bin/pip3'
     - role: geerlingguy.docker
       become: true
     - role: docker

@@ -12,8 +12,12 @@
     - role: weareinteractive.environment
       become: true
       no_log: true
-    - role: artis3n.tailscale
+    # - role: artis3n.tailscale
     - role: geerlingguy.pip
+    - role: geerlingguy.ansible
+      become: true
+      ansible_install_method: pip
+      ansible_pip_executable: '/usr/bin/pip3'
     - role: geerlingguy.docker
       become: true
     - role: zfs-core
@@ -21,10 +25,8 @@
     - role: hifis.unattended_upgrades
       become: true
     - role: motd
-    - role: geerlingguy.ansible
-      become: true
-      ansible_install_method: "pip"
     - role: shoutrrr
+      become: true
     - role: powertop
     # - role: nfs-client
     - role: autorestic

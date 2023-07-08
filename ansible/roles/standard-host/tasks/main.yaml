@@ -8,6 +8,7 @@
       - tmux
       - unzip
       - mosh
+      - dirmngr
       - lm-sensors
       - smartmontools
       - sqlite3

@@ -18,6 +18,10 @@
     - role: cron-reboot
     - role: artis3n.tailscale
     - role: geerlingguy.pip
+    - role: geerlingguy.ansible
+      become: true
+      ansible_install_method: pip
+      ansible_pip_executable: '/usr/bin/pip3'
     - role: geerlingguy.docker
       become: true
     - role: docker
@@ -44,9 +48,6 @@
     - role: containers-end
     - role: docker-cleanup
     - role: apt-upgrade
-    - role: geerlingguy.ansible
-      become: true
-      ansible_install_method: "pip"
     - role: diodonfrost.terraform
       become: true
     - role: sleepuntil

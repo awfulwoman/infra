@@ -4,6 +4,13 @@
   changed_when: false
   failed_when: false
 
+- name: Ensure autorestic temp path exists 
+  ansible.builtin.file:
+    path: "{{ autorestic_temp_path }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
 - name: Download autorestic installer
   ansible.builtin.get_url:
     url: "{{ autorestic_installer_url }}"
