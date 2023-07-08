@@ -12,6 +12,7 @@ services:
       - SERVER_COUNTRIES=switzerland
     image: "{{ container_image }}"
     ports:
+      - 8000:8000/tcp
       - "0.0.0.0:9091:9091/tcp"
       - 51413:51413/tcp
       - 51413:51413/udp
