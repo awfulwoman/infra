@@ -9,7 +9,9 @@ services:
     restart: unless-stopped
     command: "--model tiny-int8 --language en"
     labels:
-      - "diun.enable=true"
+      - "homepage.group=Home Automation"
+      - "homepage.name=Piper"
+      - "homepage.description=Speech Recognition"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "{{ container_config_dir }}/{{ container_name }}:/data"
