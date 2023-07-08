@@ -10,6 +10,9 @@
         description: Homepage is the best
 
 - Access Points:
-    - My Third Service:
+    - Living Room:
         href: http://localhost/
-        description: Homepage is 😎
+    - Pantry:
+        href: http://localhost/
+    - Upstairs:
+        href: http://localhost/
