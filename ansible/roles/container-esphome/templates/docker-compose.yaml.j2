@@ -15,7 +15,10 @@ services:
       - "traefik.http.routers.esphome.rule=Host(`esphome.affordablepotatoes.com`)"
       - "traefik.http.routers.esphome.tls=true"
       - "traefik.http.routers.esphome.tls.certresolver=letsencrypt"
-      - "diun.enable=true"
+      - "homepage.group=Home Automation"
+      - "homepage.name=ESPhome"
+      - "homepage.href=https://esphome.affordablepotatoes.com"
+      - "homepage.description=Controller for ESP32 devices"
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}:/config"
       - "/etc/localtime:/etc/localtime:ro"

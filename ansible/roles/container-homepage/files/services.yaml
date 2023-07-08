@@ -2,20 +2,7 @@
 # For configuration options and examples, please see:
 # https://gethomepage.dev/en/configs/services
 
-- Home Automation:
-    - Home Assistant:
-        href: "https://homeassistant.affordablepotatoes.com/"
-        description: Automating the home
-        server: my-docker # The docker server that was configured
-        container: homeassistant # The name of the container you'd like to connect
-    - Zigbee - Core:
-        href: https://zigbee.affordablepotatoes.com/
-        server: my-docker 
-        container: zigbee2mqtt
-    - Zigbee - Aqara:
-        href: https://zigbee-aqara.affordablepotatoes.com/
-        server: my-docker 
-        container: zigbee2mqtt-aqara
+- Home Automation: []
 
 - My Second Group:
     - My Second Service:
