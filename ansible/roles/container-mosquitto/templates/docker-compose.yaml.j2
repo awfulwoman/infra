@@ -12,6 +12,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.mosquitto.rule=Host(`mqtt.affordablepotatoes.com`)"
       - "diun.enable=true"
+      - "homepage.group=Home Automation"
+      - "homepage.name=Mosquitto"
+      - "homepage.description=MQTT Broker"
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}/config:/mosquitto/config"
       - "{{ container_config_dir }}/{{ container_name }}/data:/mosquitto/data"
