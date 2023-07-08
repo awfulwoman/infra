@@ -12,6 +12,3 @@
 - resources:
     label: ZFS
     disk: /tank/
-- widget:
-    type: gluetun
-    url: http://gluetun.host.or.ip
