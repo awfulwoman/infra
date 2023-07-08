@@ -12,9 +12,6 @@ services:
       - "traefik.http.routers.{{ container_name }}.rule=Host(`{{ container_name }}.affordablepotatoes.com`)"
       - "traefik.http.routers.{{ container_name }}.tls=true"
       - "traefik.http.routers.{{ container_name }}.tls.certresolver=letsencrypt"
-    environment:
-      PUID: 1000
-      PGID: 1000
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}:/app/config"
       - /var/run/docker.sock:/var/run/docker.sock
