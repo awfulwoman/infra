@@ -5,10 +5,11 @@
 - Group A:
     - Service A:
         href: http://localhost/
-
-- Home Automation:
-    - Service B:
-        href: http://localhost/
+    - Home Assistant:
+        href: "http://homeassistant.affordablepotatoes.com/"
+        description: Automating the home
+        server: my-docker # The docker server that was configured
+        container: homeassistant # The name of the container you'd like to connect
 
 - My Second Group:
     - My Second Service:
