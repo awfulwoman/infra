@@ -5,8 +5,10 @@
 - resources:
     cpu: true
     memory: true
+- resources:
+    label: OS
     disk: /
+- resources:
+    label: ZFS
+    disk: /tank/
 
-- search:
-    provider: duckduckgo
-    target: _blank

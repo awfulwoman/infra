@@ -5,3 +5,4 @@ background: https://images.unsplash.com/photo-1502790671504-542ad42d5189?auto=fo
 providers:
   openweathermap: openweathermapapikey
   weatherapi: weatherapiapikey
+target: _blank 
