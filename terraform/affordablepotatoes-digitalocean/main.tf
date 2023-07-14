@@ -77,9 +77,9 @@ resource "digitalocean_domain" "gluetun" {
   ip_address = "100.89.157.33"
 }
 
-resource "digitalocean_droplet" "host_public" {
-  image  = "ubuntu-22-10-x64"
-  name   = "host-public"
-  region = "fra1"
-  size   = "s-1vcpu-1gb"
-}
+# resource "digitalocean_droplet" "host_public" {
+#   image  = "ubuntu-22-10-x64"
+#   name   = "host-public"
+#   region = "fra1"
+#   size   = "s-1vcpu-1gb"
+# }
