@@ -5,9 +5,9 @@ services:
     image: "{{ container_image }}"
     restart: unless-stopped
     environment:
-      - PUID="{{ container_user_id }}
-      - PGID="{{ container_user_id }}
-      - TZ=Europe/Berlin
+      - "PUID={{ container_user_id }}"
+      - "PGID={{ container_user_id }}"
+      - "TZ=Europe/Berlin"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.{{ container_name }}.rule=Host(`{{ container_name }}.affordablepotatoes.com`)"
