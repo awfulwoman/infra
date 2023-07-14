@@ -29,8 +29,8 @@
       - /etc/localtime:/etc/localtime:ro
     # networks:
 #       - name: "affordablepotatoes"
-    labels:
-      traefik.enable: "true"
-      traefik.https.routers.freshrss.rule: "Host(`rss.affordablepotatoes.com`)"
-      traefik.https.routers.freshrss.entrypoints: "web"
-      traefik.https.services.freshrss.loadbalancer.server.port: "80"
+    # labels:
+    #   traefik.enable: "true"
+    #   traefik.https.routers.freshrss.rule: "Host(`rss.affordablepotatoes.com`)"
+    #   traefik.https.routers.freshrss.entrypoints: "web"
+    #   traefik.https.services.freshrss.loadbalancer.server.port: "80"
