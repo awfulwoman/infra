@@ -1,2 +1,3 @@
 container_name: traefik
 container_image: traefik:v2.10
+traefik_providers: false

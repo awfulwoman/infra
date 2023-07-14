@@ -32,6 +32,7 @@
     - role: autorestic
     - role: containers-config
     - role: container-traefik
+      traefik_providers: true
     - role: container-whoami
     - role: container-watchtower
     - role: container-homepage
