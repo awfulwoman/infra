@@ -10,9 +10,9 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.metube.rule=Host(`metube.affordablepotatoes.com`)"
-      - "traefik.http.routers.metube.tls=true"
-      - "traefik.http.routers.metube.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.{{ container_name }}.rule=Host(`{{ container_name }}.affordablepotatoes.com`)"
+      - "traefik.http.routers.{{ container_name }}.tls=true"
+      - "traefik.http.routers.{{ container_name }}.tls.certresolver=letsencrypt"
     volumes:
       - "{{ metube_downloads_dir }}:/downloads"
       - "{{ container_config_dir }}/{{ container_name }}/state:/state"
