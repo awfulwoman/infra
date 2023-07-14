@@ -40,13 +40,13 @@
     - role: container-gluetun
     - role: container-transmission
     - role: container-curl
-    # - role: container-audiobookshelf
-    # - role: container-freshrss
-    # - role: container-podgrab
-    # - role: container-metube
+    - role: container-audiobookshelf
+    - role: container-freshrss
+    - role: container-podgrab
+    - role: container-metube
     - role: container-diun
     - role: container-mpd
-    # - role: container-nextcloud
+    - role: container-nextcloud
     - role: container-sanoid-builder
     - role: containers-end
     - role: docker-cleanup
