@@ -45,7 +45,7 @@
     - role: container-podgrab
     - role: container-metube
     - role: container-diun
-    - role: container-mpd
+    # - role: container-mpd
     - role: container-nextcloud
     - role: container-sanoid-builder
     - role: containers-end
