@@ -34,7 +34,6 @@
     - role: container-traefik
     - role: container-whoami
     - role: container-watchtower
-    # - role: container-diun
     - role: container-homepage
     - role: container-mosquitto
     - role: container-zigbee2mqtt # Core Zigbee network

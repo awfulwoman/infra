@@ -13,7 +13,6 @@ services:
       - "traefik.http.routers.uptimekuma.rule=Host(`uptime-kuma.affordablepotatoes.com`)"
       - "traefik.http.routers.uptimekuma.tls=true"
       - "traefik.http.routers.uptimekuma.tls.certresolver=letsencrypt"
-      - "diun.enable=true"
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}:/app/data"
       - "/etc/localtime:/etc/localtime:ro"

@@ -17,8 +17,6 @@ services:
       - 51413:51413/tcp
       - 51413:51413/udp
     restart: unless-stopped
-    labels:
-      - "diun.enable=true"
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}:/gluetun"
       - "/etc/localtime:/etc/localtime:ro"
