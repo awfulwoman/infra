@@ -17,6 +17,16 @@ services:
       - 51413:51413/tcp
       - 51413:51413/udp
     restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      # Gluetun Built-in HTTP control server
+      - "traefik.http.routers.gluetun.rule=Host(`gluetun.affordablepotatoes.com`)"
+      - "traefik.http.routers.gluetun.service=gluetun"
+      - "traefik.http.services.gluetun.loadbalancer.server.port=8000"    
+      # Transmission
+      - "traefik.http.routers.transmission.rule=Host(`transmission.affordablepotatoes.com`)"
+      - "traefik.http.routers.transmission.service=transmission"
+      - "traefik.http.services.transmission.loadbalancer.server.port=9091"
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}:/gluetun"
       - "/etc/localtime:/etc/localtime:ro"
