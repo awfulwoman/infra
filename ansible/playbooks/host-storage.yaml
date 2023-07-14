@@ -37,6 +37,9 @@
     - role: container-traefik
     - role: container-jellyfin
     - role: container-copyparty
+    - role: container-gluetun
+    - role: container-transmission
+    - role: container-curl
     # - role: container-audiobookshelf
     # - role: container-freshrss
     # - role: container-podgrab
