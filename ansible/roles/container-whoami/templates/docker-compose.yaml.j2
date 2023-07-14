@@ -9,8 +9,8 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.whoami.rule=Host(`whoami.affordablepotatoes.com`)"
-      - "traefik.http.routers.whoami.tls=true"
-      - "traefik.http.routers.whoami.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.{{ container_name }}.rule=Host(`{{ container_name }}.affordablepotatoes.com`)"
+      - "traefik.http.routers.{{ container_name }}.tls=true"
+      - "traefik.http.routers.{{ container_name }}.tls.certresolver=letsencrypt"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
