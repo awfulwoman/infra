@@ -2,7 +2,7 @@ terraform {
   cloud {
     organization = "whalecoiner"
     workspaces {
-      name = "domains"
+      name = "affordablepotatoes_subdomains"
     }
   }
 }
