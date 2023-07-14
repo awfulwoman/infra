@@ -1,9 +1,28 @@
+# Deactivate role
+- name: Deactivate Cron
+  become: true
+  ansible.builtin.cron:
+    name: "Auto-suspend"
+    state: absent
+  when: sleepuntil_active is false
+
+- name: Remove script
+  become: true
+  ansible.builtin.file:
+    dest: "{{ sleepuntil_install_location }}/sleepuntil.sh"
+    state: absent
+  when: sleepuntil_active is false
+
+
+
+# Activate role
 - name: "Copy sleepuntil script"
   become: true
   ansible.builtin.template:
     src: sleepuntil.sh.conf
     dest: "{{ sleepuntil_install_location }}/sleepuntil.sh"
     mode: u=rwx,g=X,o=X
+  when: sleepuntil_active
 
 - name: Cron to auto-suspend in early hours
   become: true
@@ -13,13 +32,13 @@
     minute: "{{ sleepuntil_autosleep_time_minute }}"
     job: "/usr/local/bin/sleepuntil.sh {{ sleepuntil_sleep_time }}"
     state: present
-  when: sleepuntil_autosleep
+  when: sleepuntil_autosleep and sleepuntil_active
 
 - name: Check to see if sleep until official wake-up time should occur
   become: true
   ansible.builtin.command: "/usr/local/bin/sleepuntil.sh {{ sleepuntil_sleep_time }}"
   async: 10
   poll: 0
-  when: sleepuntil_sleep_immediately
+  when: sleepuntil_sleep_immediately and sleepuntil_active
 
 # TODO: Listen for sleepuntil MQTT message

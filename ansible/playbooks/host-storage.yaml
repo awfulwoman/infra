@@ -5,53 +5,54 @@
     - set_fact:
        compose_list: []
   roles:
-    - role: standard_os
-    - role: standard-host
-    - role: wakeonlan
-      wakeonlan_interface: enp3s0
-    - role: weareinteractive.environment
-      become: true
-      no_log: true
-    - role: generate-sshkey
-    - role: zfs-core
-    - role: zfs-backup-client
-    - role: cron-reboot
-    - role: artis3n.tailscale
-    - role: geerlingguy.pip
-    - role: geerlingguy.ansible
-      become: true
-      ansible_install_method: pip
-      ansible_pip_executable: '/usr/bin/pip3'
-    - role: geerlingguy.docker
-      become: true
-    - role: docker
-    - role: hifis.unattended_upgrades
-      become: true
-    - role: ip-address-forwarding
-    - role: host-bus-adapter
-    - role: nfs-server
-    - role: virtualisation-tools
-    - role: motd
-    - role: powertop
-    - role: containers-config
-    - role: container-traefik
-    - role: container-jellyfin
-    - role: container-copyparty
-    # - role: container-audiobookshelf
-    # - role: container-freshrss
-    # - role: container-podgrab
-    # - role: container-metube
-    - role: container-diun
-    - role: container-mpd
-    # - role: container-nextcloud
-    - role: container-sanoid-builder
-    - role: containers-end
-    - role: docker-cleanup
-    - role: apt-upgrade
-    - role: diodonfrost.terraform
-      become: true
-    # - role: sleepuntil
-    - role: ansible-pull
+    # - role: standard_os
+    # - role: standard-host
+    # - role: wakeonlan
+    #   wakeonlan_interface: enp3s0
+    # - role: weareinteractive.environment
+    #   become: true
+    #   no_log: true
+    # - role: generate-sshkey
+    # - role: zfs-core
+    # - role: zfs-backup-client
+    # - role: cron-reboot
+    # - role: artis3n.tailscale
+    # - role: geerlingguy.pip
+    # - role: geerlingguy.ansible
+    #   become: true
+    #   ansible_install_method: pip
+    #   ansible_pip_executable: '/usr/bin/pip3'
+    # - role: geerlingguy.docker
+    #   become: true
+    # - role: docker
+    # - role: hifis.unattended_upgrades
+    #   become: true
+    # - role: ip-address-forwarding
+    # - role: host-bus-adapter
+    # - role: nfs-server
+    # - role: virtualisation-tools
+    # - role: motd
+    # - role: powertop
+    # - role: containers-config
+    # - role: container-traefik
+    # - role: container-jellyfin
+    # - role: container-copyparty
+    # # - role: container-audiobookshelf
+    # # - role: container-freshrss
+    # # - role: container-podgrab
+    # # - role: container-metube
+    # - role: container-diun
+    # - role: container-mpd
+    # # - role: container-nextcloud
+    # - role: container-sanoid-builder
+    # - role: containers-end
+    # - role: docker-cleanup
+    # - role: apt-upgrade
+    # - role: diodonfrost.terraform
+    #   become: true
+    - role: sleepuntil
+      sleepuntil_active: false
+    # - role: ansible-pull
 
   handlers:
     - name: Reboot host
