@@ -12,5 +12,6 @@
 - name: Start service if not started
   become: true
   ansible.builtin.service:
+    enabled: true
     name: wol
     state: started

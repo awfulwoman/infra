@@ -7,8 +7,8 @@
   roles:
     - role: standard_os
     - role: standard-host
-    # - role: wakeonlan
-    #   wakeonlan_interface: enp3s0
+    - role: wakeonlan
+      wakeonlan_interface: enp3s0
     - role: weareinteractive.environment
       become: true
       no_log: true
@@ -50,7 +50,7 @@
     - role: apt-upgrade
     - role: diodonfrost.terraform
       become: true
-    - role: sleepuntil
+    # - role: sleepuntil
     - role: ansible-pull
 
   handlers:
