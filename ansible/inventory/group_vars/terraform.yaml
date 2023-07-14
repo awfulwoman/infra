@@ -1,0 +1,2 @@
+environment_config:
+  TF_VAR_digitalocean_token: "{{ vault_ddns_digitalocean_token }}"

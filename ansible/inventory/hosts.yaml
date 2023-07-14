@@ -20,6 +20,8 @@ all:
 
   # Groupings of servers that allow them to be administered collectively.
   children:
+    terraform:
+      host-storage:
 
     # Hosts that utilise ansible-pull
     ansiblepull:
