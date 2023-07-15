@@ -1,0 +1,2 @@
+container_name: prowlarr
+container_image: lscr.io/linuxserver/prowlarr:latest
