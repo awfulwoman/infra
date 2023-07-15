@@ -131,6 +131,27 @@ resource "digitalocean_record" "radarr" {
   value  = "100.83.127.33"
 }
 
+resource "digitalocean_record" "lidarr" {
+  domain = digitalocean_domain.default.id
+  type   = "A"
+  name   = "lidarr"
+  value  = "100.83.127.33"
+}
+
+resource "digitalocean_record" "prowlarr" {
+  domain = digitalocean_domain.default.id
+  type   = "A"
+  name   = "prowlarr"
+  value  = "100.83.127.33"
+}
+
+resource "digitalocean_record" "readarr" {
+  domain = digitalocean_domain.default.id
+  type   = "A"
+  name   = "readarr"
+  value  = "100.83.127.33"
+}
+
 resource "digitalocean_record" "podgrab" {
   domain = digitalocean_domain.default.id
   type   = "A"
@@ -158,6 +179,8 @@ resource "digitalocean_record" "freshrss" {
   name   = "freshrss"
   value  = "100.83.127.33"
 }
+
+
 
 # resource "digitalocean_droplet" "host_public" {
 #   image  = "ubuntu-22-10-x64"
