@@ -117,6 +117,48 @@ resource "digitalocean_record" "gluetun" {
   value  = "100.83.127.33"
 }
 
+resource "digitalocean_record" "sonarr" {
+  domain = digitalocean_domain.default.id
+  type   = "A"
+  name   = "sonarr"
+  value  = "100.83.127.33"
+}
+
+resource "digitalocean_record" "radarr" {
+  domain = digitalocean_domain.default.id
+  type   = "A"
+  name   = "radarr"
+  value  = "100.83.127.33"
+}
+
+resource "digitalocean_record" "podgrab" {
+  domain = digitalocean_domain.default.id
+  type   = "A"
+  name   = "podgrab"
+  value  = "100.83.127.33"
+}
+
+resource "digitalocean_record" "audiobookshelf" {
+  domain = digitalocean_domain.default.id
+  type   = "A"
+  name   = "audiobookshelf"
+  value  = "100.83.127.33"
+}
+
+resource "digitalocean_record" "copyparty" {
+  domain = digitalocean_domain.default.id
+  type   = "A"
+  name   = "copyparty"
+  value  = "100.83.127.33"
+}
+
+resource "digitalocean_record" "freshrss" {
+  domain = digitalocean_domain.default.id
+  type   = "A"
+  name   = "freshrss"
+  value  = "100.83.127.33"
+}
+
 # resource "digitalocean_droplet" "host_public" {
 #   image  = "ubuntu-22-10-x64"
 #   name   = "host-public"
