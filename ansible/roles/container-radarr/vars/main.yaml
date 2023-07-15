@@ -1,2 +1,2 @@
-container_name: sonarr
+container_name: radarr
 container_image: lscr.io/linuxserver/radarr:latest
