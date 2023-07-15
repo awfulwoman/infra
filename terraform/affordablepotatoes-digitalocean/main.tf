@@ -69,12 +69,12 @@ resource "digitalocean_domain" "jellyfin" {
 
 resource "digitalocean_domain" "transmission" {
   name       = "transmission.affordablepotatoes.com"
-  ip_address = "100.89.157.33"
+  ip_address = "100.83.127.33"
 }
 
 resource "digitalocean_domain" "gluetun" {
   name       = "gluetun.affordablepotatoes.com"
-  ip_address = "100.89.157.33"
+  ip_address = "100.83.127.33"
 }
 
 # resource "digitalocean_droplet" "host_public" {
