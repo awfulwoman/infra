@@ -2,3 +2,4 @@ container_name: transmission
 container_image: lscr.io/linuxserver/transmission:latest
 container_user_id: 1000
 container_user: ubuntu
+transmission_torrent_path: /slowpool/media/downloads

@@ -10,5 +10,5 @@ services:
       - "TZ=Europe/Berlin"
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}:/config"
-      - /slowpool/torrents:/downloads
+      - "{{ transmission_torrent_path }}:/data/torrents"
       - "/etc/localtime:/etc/localtime:ro"
