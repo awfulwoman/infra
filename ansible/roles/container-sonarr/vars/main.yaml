@@ -1,0 +1,2 @@
+container_name: sonarr
+container_image: lscr.io/linuxserver/sonarr:latest
