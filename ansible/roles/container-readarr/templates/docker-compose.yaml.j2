@@ -1,0 +1,23 @@
+services:
+  "{{ container_name }}":
+    container_name: "{{ container_name }}"
+    ports:
+      - "8787:8787"
+    # privileged: true
+    environment:
+      - "TZ=Europe/Berlin"      
+      - PUID=1000
+      - PGID=1000
+      - UMASK=002
+    image: "{{ container_image }}"
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.{{ container_name }}.rule=Host(`{{ container_name }}.affordablepotatoes.com`)"
+      - "traefik.http.routers.{{ container_name }}.tls=true"
+      - "traefik.http.routers.{{ container_name }}.tls.certresolver=letsencrypt"
+    volumes:
+      - "{{ container_config_dir }}/{{ container_name }}:/config"
+      {# - /slowpool/media/movies:/movies
+      - /slowpool/torrents:/downloads #}
+      - /etc/localtime:/etc/localtime:ro

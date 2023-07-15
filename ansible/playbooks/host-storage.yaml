@@ -45,7 +45,11 @@
     - role: container-freshrss
     - role: container-podgrab
     - role: container-metube
+    - role: container-prowlarr
     - role: container-sonarr
+    - role: container-lidarr
+    - role: container-radarr
+    - role: container-readarr
     # - role: container-mpd
     # - role: container-nextcloud
     - role: container-sanoid-builder
