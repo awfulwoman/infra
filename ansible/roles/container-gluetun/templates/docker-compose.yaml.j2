@@ -22,11 +22,15 @@ services:
       # Gluetun Built-in HTTP control server
       - "traefik.http.routers.gluetun.rule=Host(`gluetun.affordablepotatoes.com`)"
       - "traefik.http.routers.gluetun.service=gluetun"
-      - "traefik.http.services.gluetun.loadbalancer.server.port=8000"    
+      - "traefik.http.services.gluetun.loadbalancer.server.port=8000"
+      - "traefik.http.routers.gluetun.tls=true"
+      - "traefik.http.routers.gluetun.tls.certresolver=letsencrypt"
       # Transmission
       - "traefik.http.routers.transmission.rule=Host(`transmission.affordablepotatoes.com`)"
       - "traefik.http.routers.transmission.service=transmission"
       - "traefik.http.services.transmission.loadbalancer.server.port=9091"
+      - "traefik.http.routers.transmission.tls=true"
+      - "traefik.http.routers.transmission.tls.certresolver=letsencrypt"
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}:/gluetun"
       - "/etc/localtime:/etc/localtime:ro"
