@@ -6,9 +6,9 @@ services:
     # privileged: true
     environment:
       - "TZ=Europe/Berlin"      
-      - PUID=1000
-      - PGID=1000
-      - UMASK=002
+      - "PUID=1000"
+      - "PGID=1000"
+      - "UMASK=002"
     image: "{{ container_image }}"
     restart: unless-stopped
     labels:
@@ -18,6 +18,4 @@ services:
       - "traefik.http.routers.{{ container_name }}.tls.certresolver=letsencrypt"
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}:/config"
-      {# - /slowpool/media/movies:/movies
-      - /slowpool/torrents:/downloads #}
       - /etc/localtime:/etc/localtime:ro
