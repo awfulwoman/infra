@@ -56,42 +56,42 @@ resource "digitalocean_record" "homeassistant" {
   domain = digitalocean_domain.default.id
   type   = "A"
   name   = "homeassistant"
-  value  = "100.89.157.31"
+  value  = "100.66.127.130"
 }
 
 resource "digitalocean_record" "homeautomation" {
   domain = digitalocean_domain.default.id
   type   = "A"
   name   = "homeautomation"
-  value  = "100.89.157.31"
+  value  = "100.66.127.130"
 }
 
 resource "digitalocean_record" "esphome" {
   domain = digitalocean_domain.default.id
   type   = "A"
   name   = "esphome"
-  value  = "100.89.157.31"
+  value  = "100.66.127.130"
 }
 
 resource "digitalocean_record" "zigbee2mqtt" {
   domain = digitalocean_domain.default.id
   type   = "A"
   name   = "zigbee2mqtt"
-  value  = "100.89.157.31"
+  value  = "100.66.127.130"
 }
 
 resource "digitalocean_record" "zigbee2mqtt-aqara" {
   domain = digitalocean_domain.default.id
   type   = "A"
   name   = "zigbee2mqtt-aqara"
-  value  = "100.89.157.31"
+  value  = "100.66.127.130"
 }
 
 resource "digitalocean_record" "uptimekuma" {
   domain = digitalocean_domain.default.id
   type   = "A"
   name   = "uptimekuma"
-  value  = "100.89.157.31"
+  value  = "100.66.127.130"
 }
 
 
