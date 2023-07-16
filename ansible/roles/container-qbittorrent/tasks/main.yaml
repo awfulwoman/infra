@@ -25,6 +25,7 @@
     repo: "https://github.com/WDaan/VueTorrent.git"
     dest: "{{ container_config_dir }}/{{ container_name }}/vuetorrent"
     single_branch: true
+    force: true
     version: "latest-release"
 
 - name: append to compose_list
