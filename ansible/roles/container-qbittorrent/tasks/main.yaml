@@ -23,7 +23,7 @@
 - name: Git checkout VueTorrent
   ansible.builtin.git:
     repo: 'https://github.com/WDaan/VueTorrent.git'
-    dest: "{{ container_config_dir }}/{{ container_name }}"
+    dest: "{{ container_config_dir }}/{{ container_name }}/vuetorrent"
     version: latest-release
 
 - name: append to compose_list
