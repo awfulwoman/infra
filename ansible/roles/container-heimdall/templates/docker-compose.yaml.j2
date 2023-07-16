@@ -13,9 +13,9 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.heimdall.rule=Host(`homeautomation.affordablepotatoes.com`)"
-      - "traefik.http.routers.heimdall.tls=true"
-      - "traefik.http.routers.heimdall.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.{{ container_name }}.rule=Host(`{{ heimdall_subdomain }}.affordablepotatoes.com`)"
+      - "traefik.http.routers.{{ container_name }}.tls=true"
+      - "traefik.http.routers.{{ container_name }}.tls.certresolver=letsencrypt"
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}:/config"
       - "/etc/localtime:/etc/localtime:ro"

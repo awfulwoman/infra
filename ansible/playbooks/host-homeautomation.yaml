@@ -45,6 +45,7 @@
     - role: container-esphome
     - role: container-uptimekuma
     - role: container-heimdall
+      heimdall_subdomain: homeautomation
     - role: container-smtp
     - role: containers-end
     - role: docker-cleanup
