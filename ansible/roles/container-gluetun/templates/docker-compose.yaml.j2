@@ -12,10 +12,16 @@ services:
       - SERVER_COUNTRIES=switzerland
     image: "{{ container_image }}"
     ports:
+      # UI
       - 8000:8000/tcp
+      # Transmission
       - "0.0.0.0:9091:9091/tcp"
       - 51413:51413/tcp
       - 51413:51413/udp
+      # Qbittorrent
+      - "0.0.0.0:8080:8080/tcp"
+      - 6881:6881/tcp
+      - 6881:6881/udp
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
@@ -31,6 +37,12 @@ services:
       - "traefik.http.services.transmission.loadbalancer.server.port=9091"
       - "traefik.http.routers.transmission.tls=true"
       - "traefik.http.routers.transmission.tls.certresolver=letsencrypt"
+      # Qbittorrent
+      - "traefik.http.routers.qbittorrent.rule=Host(`qbittorrent.affordablepotatoes.com`)"
+      - "traefik.http.routers.qbittorrent.service=qbittorrent"
+      - "traefik.http.services.qbittorrent.loadbalancer.server.port=8080"
+      - "traefik.http.routers.qbittorrent.tls=true"
+      - "traefik.http.routers.qbittorrent.tls.certresolver=letsencrypt"
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}:/gluetun"
       - "/etc/localtime:/etc/localtime:ro"

@@ -1,0 +1,5 @@
+container_name: qbittorrent
+container_image: lscr.io/linuxserver/qbittorrent:latest
+container_user_id: 1000
+container_user: ubuntu
+transmission_torrent_path: /slowpool/media/downloads/torrents
