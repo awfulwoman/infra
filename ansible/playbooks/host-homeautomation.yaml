@@ -12,7 +12,7 @@
     - role: weareinteractive.environment
       become: true
       no_log: true
-    # - role: artis3n.tailscale
+    - role: artis3n.tailscale
     - role: geerlingguy.pip
     - role: geerlingguy.ansible
       become: true
