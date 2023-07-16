@@ -11,6 +11,6 @@ services:
       - WEBUI_PORT=8080
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}:/config"
-      - "{{ container_config_dir }}/{{ container_name }}/vuetorrent/public:/vuetorrent"
+      - "{{ container_config_dir }}/{{ container_name }}/vuetorrentdeb:/vuetorrent"
       - "{{ transmission_torrent_path }}:/data/downloads/torrents"
       - "/etc/localtime:/etc/localtime:ro"
