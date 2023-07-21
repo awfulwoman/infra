@@ -8,6 +8,23 @@
     group: "{{ ansible_user }}"
     recurse: true
 
+- name: "Create {{ container_name }} config dir"
+  become: true
+  ansible.builtin.file:
+    path: "{{ container_config_dir }}/{{ container_name }}/.get_iplayer"
+    state: directory
+    mode: 0774
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    recurse: true
+
+- name: "Create config file"
+  ansible.builtin.template:
+    src: templates/get-iplayer-config
+    dest: "{{ container_config_dir }}/{{ container_name }}/.get_iplayer/options"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
 - name: "Create compose config dir"
   ansible.builtin.file:
     path: "{{ compose_config_dir }}/{{ container_name }}"
