@@ -1,5 +1,5 @@
 services:
-  getiplayer:
+  "{{ container_name}}":
     container_name: "{{ container_name }}"
     network_mode: "service:gluetun-uk" 
     image: "{{ container_image }}"
@@ -9,6 +9,6 @@ services:
       - "PGID={{ container_user_id }}"
       - "TZ=Europe/Berlin"
     volumes:
-      - "{{ container_config_dir }}/{{ container_name }}:/config"
+      - "{{ container_config_dir }}/{{ container_name }}:/output"
       - "{{ getiplayer_download_path }}:/data/downloads/iplayer"
       - "/etc/localtime:/etc/localtime:ro"
