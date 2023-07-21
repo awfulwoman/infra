@@ -1,0 +1,5 @@
+container_name: getiplayer
+container_image: marginal/get_iplayer:latest
+container_user_id: 1000
+container_user: ubuntu
+getiplayer_download_path: /slowpool/media/downloads/iplayer

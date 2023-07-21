@@ -1,0 +1,34 @@
+services:
+  gluetun-uk:
+    container_name: "{{ container_name }}"
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - "VPN_SERVICE_PROVIDER=nordvpn"
+      - "OPENVPN_USER={{ vault_nordvpn_username }}"
+      - "OPENVPN_PASSWORD={{ vault_nordvpn_password }}"
+      - "SERVER_COUNTRIES=United Kingdom"
+    image: "{{ container_image }}"
+    ports:
+      # Gluetun control server
+      - 8000:8001/tcp
+      # get-iplayer PVR
+      - "0.0.0.0:1935:1935/tcp"
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      # Gluetun Built-in HTTP control server
+      - "traefik.http.routers.gluetun-uk.rule=Host(`gluetun-uk.affordablepotatoes.com`)"
+      - "traefik.http.routers.gluetun-uk.service=gluetun"
+      - "traefik.http.services.gluetun-uk.loadbalancer.server.port=8001"
+      - "traefik.http.routers.gluetun-uk.tls=true"
+      - "traefik.http.routers.gluetun-uk.tls.certresolver=letsencrypt"
+      # Transmission
+      - "traefik.http.routers.getiplayer.rule=Host(`getiplayer.affordablepotatoes.com`)"
+      - "traefik.http.routers.getiplayer.service=transmission"
+      - "traefik.http.services.getiplayer.loadbalancer.server.port=1935"
+      - "traefik.http.routers.getiplayer.tls=true"
+      - "traefik.http.routers.getiplayer.tls.certresolver=letsencrypt"
+    volumes:
+      - "{{ container_config_dir }}/{{ container_name }}:/gluetun"
+      - "/etc/localtime:/etc/localtime:ro"

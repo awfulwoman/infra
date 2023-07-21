@@ -12,7 +12,7 @@ services:
       - SERVER_COUNTRIES=switzerland
     image: "{{ container_image }}"
     ports:
-      # UI
+      # Gluetun Control server
       - 8000:8000/tcp
       # Transmission
       - "0.0.0.0:9091:9091/tcp"
