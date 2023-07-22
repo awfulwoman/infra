@@ -11,7 +11,7 @@ services:
     image: "{{ container_image }}"
     ports:
       # Gluetun control server
-      - 8000:8001/tcp
+      - 8001:8000/tcp
       # get-iplayer PVR
       - "0.0.0.0:1935:1935/tcp"
     restart: unless-stopped
