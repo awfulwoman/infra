@@ -7,7 +7,7 @@ services:
       - "VPN_SERVICE_PROVIDER=nordvpn"
       - "OPENVPN_USER={{ vault_nordvpn_username }}"
       - "OPENVPN_PASSWORD={{ vault_nordvpn_password }}"
-      - "SERVER_COUNTRIES=United Kingdom"
+      # - "SERVER_COUNTRIES=United Kingdom"
     image: "{{ container_image }}"
     ports:
       # Gluetun control server
