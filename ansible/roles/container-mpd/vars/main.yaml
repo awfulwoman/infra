@@ -1,4 +1,4 @@
 container_name: mpd
-container_image: vimagick/mpd
+container_image: tobi312/rpi-mpd:debian
 music_path: /slowpool/media/music
 playlist_path: /slowpool/media/music-playlists
