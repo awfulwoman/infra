@@ -2,21 +2,33 @@
   ansible.builtin.file:
     path: "{{ container_config_dir }}/{{ container_name }}/config"
     state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0774
 
 - name: Create music dir
   ansible.builtin.file:
     path: "{{ music_path }}"
     state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0774
 
 - name: Create playlists dir
   ansible.builtin.file:
     path: "{{ playlist_path }}"
     state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0774
 
 - name: Create data dir
   ansible.builtin.file:
     path: "{{ container_config_dir }}/{{ container_name }}/data"
     state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0774
 
 - name: "Create {{ container_name }} config file" 
   ansible.builtin.copy:
