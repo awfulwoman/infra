@@ -1,1 +1,4 @@
 container_name: mpd
+container_image: vimagick/mpd
+music_path: /slowpool/media/music
+playlist_path: /slowpool/media/music-playlists

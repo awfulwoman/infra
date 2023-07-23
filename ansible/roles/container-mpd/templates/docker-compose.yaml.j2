@@ -1,14 +1,13 @@
 services:
-  mpd:
+  "{{ container_name }}":
     container_name: "{{ container_name }}"
     ports:
       - "6600:6600"
-      # - "8800:8800"
     cap_add:
       - "SYS_NICE"
     environment:
       - "TZ=Europe/Berlin"
-    image: tobi312/rpi-mpd:debian
+    image: "{{ container_image }}"
     restart: unless-stopped
     #labels:
     #  - "traefik.enable=true"
@@ -16,10 +15,9 @@ services:
     #  - "traefik.http.routers.mpd.tls=true"
     #  - "traefik.http.routers.mpd.tls.certresolver=letsencrypt"
     volumes:
-      - "{{ container_config_dir }}/{{ container_name }}/music:/var/lib/mpd/music:rw"
-      - "{{ container_config_dir }}/{{ container_name }}/playlists:/var/lib/mpd/playlists:rw"
-      - "{{ container_config_dir }}/{{ container_name }}/data:/var/lib/mpd/data:rw"
-      - "{{ container_config_dir }}/{{ container_name }}/config/mpd.conf:/etc/mpd.conf:rw"
+      - "{{ music_path }}:/var/lib/mpd/music"
+      - "{{ playlist_path }}:/var/lib/mpd/playlists"
+      - "{{ container_config_dir }}/{{ container_name }}/mpd.conf:/etc/mpd.conf"
       - /etc/localtime:/etc/localtime:ro
     devices:
       - /dev/snd
