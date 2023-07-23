@@ -18,5 +18,4 @@ services:
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}:/config"
       - /slowpool/media:/data
-      - /slowpool/torrents:/downloads
       - /etc/localtime:/etc/localtime:ro
