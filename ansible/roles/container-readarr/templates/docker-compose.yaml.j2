@@ -3,9 +3,8 @@ services:
     container_name: "{{ container_name }}"
     ports:
       - "8787:8787"
-    # privileged: true
     environment:
-      - "TZ=Europe/Berlin"      
+      - "TZ=Europe/Berlin"
       - "PUID=1000"
       - "PGID=1000"
       - "UMASK=002"

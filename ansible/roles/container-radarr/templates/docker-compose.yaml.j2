@@ -3,11 +3,11 @@ services:
     container_name: "{{ container_name }}"
     ports:
       - "7878:7878"
-    # privileged: true
     environment:
       - "TZ=Europe/Berlin"      
-      - PUID=1000
-      - PGID=1000
+      - "PUID=1000"
+      - "PGID=1000"
+      - "UMASK=002"
     image: "{{ container_image }}"
     restart: unless-stopped
     labels:
