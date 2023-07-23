@@ -28,7 +28,7 @@
     state: directory
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: 0774
+    mode: 0777
 
 - name: "Create {{ container_name }} config file" 
   ansible.builtin.copy:
@@ -36,7 +36,7 @@
     dest: "{{ container_config_dir }}/{{ container_name }}/mpd.conf"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: 0774
+    mode: 0777
 
 - name: "Create compose config dir"
   ansible.builtin.file:
