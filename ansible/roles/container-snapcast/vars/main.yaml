@@ -1,2 +1,2 @@
-container_name: CONTAINERNAME
-container_image: CONTAINERIMAGE
+container_name: snapserver
+container_image: ivdata/snapserver

@@ -18,7 +18,7 @@ services:
       - "{{ music_path }}:/var/lib/mpd/music"
       - "{{ playlist_path }}:/var/lib/mpd/playlists"
       - "{{ container_config_dir }}/{{ container_name }}/data:/var/lib/mpd/data"
-      # - "{{ container_config_dir }}/{{ container_name }}/mpd.conf:/etc/mpd.conf"
+      - "{{ container_config_dir }}/{{ container_name }}/mpd.conf:/etc/mpd.conf"
       - /etc/localtime:/etc/localtime:ro
     devices:
       - /dev/snd

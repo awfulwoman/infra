@@ -32,10 +32,11 @@
 
 - name: "Create {{ container_name }} config file" 
   ansible.builtin.copy:
-    src: mpd.conf
+    src: files/mpd.conf
     dest: "{{ container_config_dir }}/{{ container_name }}/mpd.conf"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
+    mode: 0774
 
 - name: "Create compose config dir"
   ansible.builtin.file:
