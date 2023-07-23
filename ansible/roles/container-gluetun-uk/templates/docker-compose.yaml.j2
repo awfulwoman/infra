@@ -25,7 +25,7 @@ services:
       - "traefik.http.routers.gluetun-uk.tls.certresolver=letsencrypt"
       # Transmission
       - "traefik.http.routers.getiplayer.rule=Host(`getiplayer.affordablepotatoes.com`)"
-      - "traefik.http.routers.getiplayer.service=transmission"
+      - "traefik.http.routers.getiplayer.service=getiplayer"
       - "traefik.http.services.getiplayer.loadbalancer.server.port=1935"
       - "traefik.http.routers.getiplayer.tls=true"
       - "traefik.http.routers.getiplayer.tls.certresolver=letsencrypt"
