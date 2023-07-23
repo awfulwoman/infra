@@ -103,13 +103,6 @@ resource "digitalocean_record" "jellyfin" {
   value  = "100.83.127.33"
 }
 
-resource "digitalocean_record" "transmission" {
-  domain = digitalocean_domain.default.id
-  type   = "A"
-  name   = "transmission"
-  value  = "100.83.127.33"
-}
-
 resource "digitalocean_record" "gluetun" {
   domain = digitalocean_domain.default.id
   type   = "A"

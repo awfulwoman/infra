@@ -23,12 +23,6 @@ services:
       - "traefik.http.services.gluetun-uk.loadbalancer.server.port=8001"
       - "traefik.http.routers.gluetun-uk.tls=true"
       - "traefik.http.routers.gluetun-uk.tls.certresolver=letsencrypt"
-      # Transmission
-      - "traefik.http.routers.getiplayer.rule=Host(`getiplayer.affordablepotatoes.com`)"
-      - "traefik.http.routers.getiplayer.service=getiplayer"
-      - "traefik.http.services.getiplayer.loadbalancer.server.port=1935"
-      - "traefik.http.routers.getiplayer.tls=true"
-      - "traefik.http.routers.getiplayer.tls.certresolver=letsencrypt"
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}:/gluetun"
       - "/etc/localtime:/etc/localtime:ro"

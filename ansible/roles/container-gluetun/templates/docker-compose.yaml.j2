@@ -14,10 +14,6 @@ services:
     ports:
       # Gluetun Control server
       - 8000:8000/tcp
-      # Transmission
-      - "0.0.0.0:9091:9091/tcp"
-      - 51413:51413/tcp
-      - 51413:51413/udp
       # Qbittorrent
       - "0.0.0.0:8080:8080/tcp"
       - 6881:6881/tcp
@@ -31,12 +27,6 @@ services:
       - "traefik.http.services.gluetun.loadbalancer.server.port=8000"
       - "traefik.http.routers.gluetun.tls=true"
       - "traefik.http.routers.gluetun.tls.certresolver=letsencrypt"
-      # Transmission
-      - "traefik.http.routers.transmission.rule=Host(`transmission.affordablepotatoes.com`)"
-      - "traefik.http.routers.transmission.service=transmission"
-      - "traefik.http.services.transmission.loadbalancer.server.port=9091"
-      - "traefik.http.routers.transmission.tls=true"
-      - "traefik.http.routers.transmission.tls.certresolver=letsencrypt"
       # Qbittorrent
       - "traefik.http.routers.qbittorrent.rule=Host(`qbittorrent.affordablepotatoes.com`)"
       - "traefik.http.routers.qbittorrent.service=qbittorrent"
