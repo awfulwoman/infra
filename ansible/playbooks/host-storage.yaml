@@ -39,8 +39,8 @@
     - role: container-watchtower
     - role: container-copyparty
     - role: container-gluetun
-    - role: container-gluetun-uk
-    - role: container-getiplayer
+    #- role: container-gluetun-uk
+    #- role: container-getiplayer
     - role: container-qbittorrent
     - role: container-curl
     - role: container-audiobookshelf
