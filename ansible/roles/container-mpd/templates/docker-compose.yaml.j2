@@ -16,6 +16,7 @@ services:
       - "traefik.http.routers.{{ container_name }}.tls.certresolver=letsencrypt"
     volumes:
       - "{{ music_path }}:/var/lib/mpd/music"
+      - "/tmp/snapfifo:/tmp/snapfifo"
       - "{{ playlist_path }}:/var/lib/mpd/playlists"
       - "{{ container_config_dir }}/{{ container_name }}/data:/var/lib/mpd/data"
       - "{{ container_config_dir }}/{{ container_name }}/mpd.conf:/etc/mpd.conf"

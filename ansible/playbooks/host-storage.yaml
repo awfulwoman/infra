@@ -55,6 +55,7 @@
     - role: container-radarr
     - role: container-readarr
     - role: container-mpd
+    - role: container-snapcast
     # - role: container-nextcloud
     - role: container-sanoid-builder
     - role: containers-end
