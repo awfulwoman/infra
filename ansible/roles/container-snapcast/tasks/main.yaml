@@ -13,14 +13,14 @@
     groups: dialout
     append: true
 
-- name: "Create snapfifo"
-  become: true
-  ansible.builtin.file:
-    path: /tmp/snapfifo
-    state: touch
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    mode: 0777
+# - name: "Create snapfifo"
+#   become: true
+#   ansible.builtin.file:
+#     path: /tmp/snapfifo
+#     state: touch
+#     owner: "{{ ansible_user }}"
+#     group: "{{ ansible_user }}"
+#     mode: 0777
 
 
 
