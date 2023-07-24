@@ -13,6 +13,16 @@
     groups: dialout
     append: true
 
+- name: "Create snapfifo"
+  ansible.builtin.file:
+    path: /tmp/snapfifo
+    state: touch
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0777
+
+
+
 - name: "Create compose config dir"
   ansible.builtin.file:
     path: "{{ compose_config_dir }}/{{ container_name }}"
