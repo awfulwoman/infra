@@ -13,7 +13,9 @@
     groups: dialout
     append: true
 
-- name: "Create config dir for {{ container_name }}"
+# https://github.com/tubearchivist/tubearchivist/blob/master/README.md#permissions-for-elasticsearch
+- name: Ownership of elasticsearch
+  become: true
   ansible.builtin.file:
     path: "{{ container_config_dir }}/{{ container_name }}/es"
     owner: "1000"
