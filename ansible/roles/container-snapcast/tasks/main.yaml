@@ -14,6 +14,7 @@
     append: true
 
 - name: "Create snapfifo"
+  become: true
   ansible.builtin.file:
     path: /tmp/snapfifo
     state: touch
