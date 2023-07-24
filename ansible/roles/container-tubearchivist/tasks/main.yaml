@@ -13,6 +13,13 @@
     groups: dialout
     append: true
 
+- name: "Create config dir for {{ container_name }}"
+  ansible.builtin.file:
+    path: "{{ container_config_dir }}/{{ container_name }}/es"
+    owner: "1000"
+    group: "0"
+    recurse: true
+
 - name: "Create compose config dir"
   ansible.builtin.file:
     path: "{{ compose_config_dir }}/{{ container_name }}"
