@@ -18,7 +18,7 @@
 
 - name: Create mqtt2cmd.service
   become: true
-  ansible.builtin.copy:
+  ansible.builtin.template:
     src: mqtt2cmd.service
     dest: /etc/systemd/system/mqtt2cmd.service
     owner: root
