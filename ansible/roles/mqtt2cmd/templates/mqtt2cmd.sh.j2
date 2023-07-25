@@ -22,7 +22,7 @@ do
         fi
         # if payload = ansiblepull
         if [ "$payload" == "ansiblepull" ]; then
-            runuser -l "{{ ansible_user }}" -c "/opt/ansible/ansible-pull-pull.sh"
+            runuser -l "{{ ansible_user }}" -c "/opt/ansible/ansible-pull-full.sh"
         fi
     done
     sleep 10 
