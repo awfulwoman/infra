@@ -24,7 +24,6 @@
     - role: diodonfrost.terraform
       become: true
     - role: docker-cleanup
-    - role: mqtt2wol
     - role: apt-upgrade
 
   handlers:
