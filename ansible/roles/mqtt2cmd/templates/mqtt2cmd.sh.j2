@@ -13,6 +13,7 @@ do
         fi
         # if payload = sleep
         if [ "$payload" == "sleep" ]; then
+            echo "suspending" >> /root/suspend.log
             systemctl suspend
         fi
         # if payload = reboot
