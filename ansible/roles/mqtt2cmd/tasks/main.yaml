@@ -10,8 +10,8 @@
 - name: Copy script
   become: true
   ansible.builtin.template:
-    src: mqtt2cmd.sh
-    dest: /usr/local/bin/mqtt2cmd
+    src: mqtt2cmd.sh.j2
+    dest: "{{ mqtt2cmd_executable_path }}/{{ mqtt2cmd_executable }}"
     owner: root
     group: root
     mode: 0755

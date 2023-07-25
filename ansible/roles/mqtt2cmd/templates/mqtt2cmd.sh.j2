@@ -8,13 +8,21 @@ do
     do
         echo "Rx MQTT: ${payload}"
         # if payload = shutdown
-        # ...........
+        if [ "$payload" == "shutdown" ]; then
+            shutdown now
+        fi
         # if payload = sleep
-        # ...........
+        if [ "$payload" == "sleep" ]; then
+            systemctl suspend
+        fi
         # if payload = reboot
-        # ...........
+        if [ "$payload" == "reboot" ]; then
+            reboot
+        fi
         # if payload = ansiblepull
-        # ...........
+        if [ "$payload" == "ansiblepull" ]; then
+            runuser -l "{{ ansible_user }}" -c "/opt/ansible/ansible-pull-pull.sh"
+        fi
     done
     sleep 10 
 done

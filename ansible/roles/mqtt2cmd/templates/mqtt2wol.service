@@ -5,7 +5,7 @@ Description=MQTT2CMD
 Type=simple
 Environment="TERM=dumb"
 RemainAfterExit=true
-ExecStart=/usr/local/bin/mqtt2cmd
+ExecStart="{{ mqtt2cmd_executable_path }}/{{ mqtt2cmd_executable }}"
 
 [Install]
 WantedBy=multi-user.target
