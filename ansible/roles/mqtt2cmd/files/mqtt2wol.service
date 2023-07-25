@@ -1,11 +1,11 @@
 [Unit]
-Description=MQTT2WOL
+Description=MQTT2CMD
 
 [Service]
 Type=simple
 Environment="TERM=dumb"
 RemainAfterExit=true
-ExecStart=/usr/local/bin/mqtt2wol
+ExecStart=/usr/local/bin/mqtt2cmd
 
 [Install]
 WantedBy=multi-user.target

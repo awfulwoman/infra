@@ -1,0 +1,32 @@
+- name: Install MQTT tools
+  become: true
+  ansible.builtin.apt:
+    name:
+      - mosquitto-clients
+    state: present
+    update_cache: false
+
+# Copy script to controller
+- name: Copy script
+  become: true
+  ansible.builtin.template:
+    src: mqtt2cmd.sh
+    dest: /usr/local/bin/mqtt2cmd
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Create mqtt2cmd.service
+  become: true
+  ansible.builtin.copy:
+    src: mqtt2cmd.service
+    dest: /etc/systemd/system/mqtt2cmd.service
+    owner: root
+    group: root
+    mode: 0664
+
+- name: Make sure mqtt2cmd service is running
+  become: true
+  ansible.builtin.systemd:
+    state: started
+    name: mqtt2cmd

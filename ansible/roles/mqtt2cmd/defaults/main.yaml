@@ -1,0 +1,2 @@
+mqtt2cmd_basetopic: servers
+mqtt2cmd_broker: mqtt.affordablepotatoes.com
