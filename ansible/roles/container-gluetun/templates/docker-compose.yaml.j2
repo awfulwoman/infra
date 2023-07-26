@@ -6,10 +6,8 @@ services:
     environment:
       - VPN_SERVICE_PROVIDER=mullvad
       - VPN_TYPE=wireguard
-      - WIREGUARD_PRIVATE_KEY="{{ vault_mullvad_key }}"
-      - WIREGUARD_ADDRESSES="{{ vault_mullvad_address }}"
-      - SERVER_CITIES=zurich
-      - SERVER_COUNTRIES=switzerland
+      - WIREGUARD_PRIVATE_KEY="{{ vault_mullvad_wireguard_key }}"
+      - WIREGUARD_ADDRESSES="{{ vault_mullvad_wireguard_ipaddress }}"
     image: "{{ container_image }}"
     ports:
       # Gluetun Control server
