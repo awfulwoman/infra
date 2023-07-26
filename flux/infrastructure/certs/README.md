@@ -1,3 +1,0 @@
-# Certificates
-
-Certificates and stuff.
