@@ -22,7 +22,11 @@ if [[ $? != 0 ]] ; then
   echo " "
   echo "INSTALL PIP"
   echo "************************************"
-  python -m ensurepip --upgrade
+  curl https://bootstrap.pypa.io/get-pip.py > get-pip.py
+  python get-pip.py
+  if [[ $? == 0 ]] ; then
+  	rm get-pip.py
+  fi
 fi
 
 # Install Ansible
