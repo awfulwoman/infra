@@ -5,18 +5,9 @@ all:
     # host-*         A physical machine used to perform tasks. Has an OS that can be managed via SSH.
     # vm-*           A virtual machine used to perform tasks. Has an OS that can be managed via SSH.
     # workstation-*  A machine used directly by a person. Has an OS that can be managed via SSH.
-    host-controller:                       # Controller
     host-homeautomation:                  # Home Automation - Home Assistant, Zigbee, MQTT, etc
-    host-monitoring:                      # Monitoring systems
     host-backups:                         # Backups
     host-storage:                         # NAS
-    vm-digitalocean-whalecoiner:          # Digital Ocean VM
-    host-k8s01:
-    host-k8s02:
-    host-k8s03:
-    host-k8s04:
-    host-quickstorage:
-    workstation-blackbox:
 
   # Groupings of servers that allow them to be administered collectively.
   children:
@@ -29,29 +20,18 @@ all:
         host-homeautomation:
         host-backups:
         host-storage:
-        host-k8s01:
-        host-k8s02:
-        host-k8s03:
-        host-k8s04:
         host-quickstorage:
-        workstation-blackbox:
 
     # Group: Home Automation
     homeautomation:
       hosts:
         host-homeautomation:
 
-    # Group: Monitoring
-    monitoring:
-      hosts:
-        host-monitoring:
-
     # Hosts that use ZFS
     zfs:
       hosts:
         host-storage:
         host-backups:
-        host-quickstorage:
 
     # ZFS Backup Server
     zfs-backup-server:
@@ -67,12 +47,3 @@ all:
     autorestic:
       hosts:
         host-homeautomation:
-        host-monitoring:
-
-    # Kubernetes Cluster
-    k8s:
-      hosts:
-        host-k8s01:
-        host-k8s02:
-        host-k8s03:
-        host-k8s04:

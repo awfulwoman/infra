@@ -2,11 +2,7 @@
   ansible.builtin.import_playbook: host-homeautomation.yaml
 - name: Include Storage Server
   ansible.builtin.import_playbook: host-storage.yaml
-- name: Include Controller Server
-  ansible.builtin.import_playbook: host-controller.yaml
 - name: Include Backup Server
   ansible.builtin.import_playbook: host-backups.yaml
 - name: Include Backup Cluster ZFS
   ansible.builtin.import_playbook: cluster_backups_zfs.yaml
-- name: Include Monitoring Server
-  ansible.builtin.import_playbook: host-monitoring.yaml
