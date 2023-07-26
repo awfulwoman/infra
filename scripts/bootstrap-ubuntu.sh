@@ -12,6 +12,10 @@ if [[ -z "${HOME_REPO_DIR}" ]]; then
   # HOME_REPO_DIR="/opt/home"
 fi
 
+# Import keys
+
+ssh-import-id-gh whalecoiner
+
 # Install Pip
 which pip
 if [[ $? != 0 ]] ; then
