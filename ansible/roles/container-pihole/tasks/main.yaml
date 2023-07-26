@@ -3,9 +3,8 @@
     path: "{{ item }}"
     state: directory
   loop:
-    - "{{ container_config_dir }}/etc-dnsmasq.d"
-    - "{{ container_config_dir }}/etc-pihole"
-    # - "/etc/pihole/"
+    - "{{ container_config_dir }}/{{ container_name }}/pihole"
+    - "{{ container_config_dir }}/{{ container_name }}/dns"
 
 - name: Disable Ubuntu's caching DNS resolver on port 53
   become: true
@@ -36,61 +35,39 @@
 - name: "Create static DHCP leases"
   ansible.builtin.template:
     src: static-dhcp.conf.j2
-    dest: "{{ container_config_dir }}/etc-dnsmasq.d/04-pihole-static-dhcp.conf" # must be this file name
+    dest: "{{ container_config_dir }}/{{ container_name }}/dns/04-pihole-static-dhcp.conf" # must be this file name
 
 # Add a custom domain for certain hosts.
 # Solves corporate computers trying to claim a domain 
 # and generating very annoying errors in pihole
 # https://www.reddit.com/r/pihole/comments/rvattc/dnsmasq_warning_ignoring_domain/
-
 - name: "Create domains"
   ansible.builtin.template:
     src: domains.conf.j2
-    dest: "{{ container_config_dir }}/etc-dnsmasq.d/07-domains.conf"
+    dest: "{{ container_config_dir }}/{{ container_name }}/dns/07-domains.conf"
   notify:
     - RESTART PIHOLE
 
 - name: "Create cnames"
   ansible.builtin.template:
     src: cnames.conf.j2
-    dest: "{{ container_config_dir }}/etc-dnsmasq.d/05-cnames.list"
+    dest: "{{ container_config_dir }/{{ container_name }}}/dns/05-cnames.list"
   notify:
     - RESTART PIHOLE
 
-- name: "Ensure {{ container_name }} container exists"
-  become: true
-  community.docker.docker_container:
-    name: pihole
-    image: pihole/pihole
-    network_mode: host
-    # pull: true
-    removal_wait_timeout: 600
-    env:
-      TZ: "Europe/Berlin"
-      WEBPASSWORD: "{{ pihole_password }}"
-      DHCP_ACTIVE: "true"
-      DHCP_START: "192.168.1.150"
-      DHCP_END: "192.168.1.199"
-      DHCP_ROUTER: "192.168.1.1"
-      PIHOLE_DOMAIN: "i.affordablepotatoes.com"
-      WEBTHEME: "lcars"
-      ADMIN_EMAIL: pihole@affordablepotatoes.com
-      DNS_FQDN_REQUIRED: "true"
-      PUID: "1000"
-      GUID: "1000"
-      # DNSMASQ_USER: "root"
-    state: started
-    restart_policy: unless-stopped
-    dns_servers:
-      - 127.0.0.1
-    volumes:
-      - "{{ container_config_dir }}/etc-pihole/:/etc/pihole/"
-      - "{{ container_config_dir }}/etc-dnsmasq.d/:/etc/dnsmasq.d/"
-    capabilities:
-      - NET_ADMIN
-      - NET_BIND_SERVICE
-      - NET_RAW
-      - SYS_NICE
-      - CHOWN
-  notify:
-    - RESTART PIHOLE
+# Docker Compose
+- name: "Create compose config dir"
+  ansible.builtin.file:
+    path: "{{ compose_config_dir }}/{{ container_name }}"
+    state: directory
+
+- name: "Create compose file"
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ compose_config_dir }}/{{ container_name }}/docker-compose.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
+- name: append to compose_list
+  ansible.builtin.set_fact:
+    compose_list: "{{ compose_list + [ container_name ] }}"

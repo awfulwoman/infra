@@ -8,6 +8,7 @@ all:
     host-homeautomation:                  # Home Automation - Home Assistant, Zigbee, MQTT, etc
     host-backups:                         # Backups
     host-storage:                         # NAS
+    host-pihole:                          # DHCP + DNS
 
   # Groupings of servers that allow them to be administered collectively.
   children:
@@ -20,7 +21,7 @@ all:
         host-homeautomation:
         host-backups:
         host-storage:
-        host-quickstorage:
+        host-pihole:
 
     # Group: Home Automation
     homeautomation:
