@@ -12,6 +12,15 @@ if [[ -z "${HOME_REPO_DIR}" ]]; then
   # HOME_REPO_DIR="/opt/home"
 fi
 
+# Install Pip
+which pip
+if [[ $? != 0 ]] ; then
+  echo " "
+  echo "INSTALL PIP"
+  echo "************************************"
+  python -m ensurepip --upgrade
+fi
+
 # Install Ansible
 which ansible
 if [[ $? != 0 ]] ; then
