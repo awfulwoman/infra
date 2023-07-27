@@ -16,11 +16,11 @@
     mode: 0774
 
 - name: Write out index page
-  ansible.builtin.template:
-    src: index.html
-    dest: "{{ container_config_dir }}/{{ container_name }}/index.html"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+  # ansible.builtin.template:
+  #   src: index.html
+  #   dest: "{{ container_config_dir }}/{{ container_name }}/index.html"
+  #   owner: "{{ ansible_user }}"
+  #   group: "{{ ansible_user }}"
 
 
 - name: Write out bootstrap scripts
