@@ -86,9 +86,13 @@ cd $HOME_REPO_DIR
 echo " "
 echo "UPDATE ANSIBLE GALAXY ROLES"
 echo "************************************"
-ansible-galaxy install -r $HOME_REPO_DIR/ansible/meta/requirements.yaml -p $ANSIBLE_PATH/galaxy-roles
+mkdir -p $ANSIBLE_ROLES_PATH
+chown -r ubuntu:ubuntu $ANSIBLE_ROLES_PATH
+ansible-galaxy install -r $HOME_REPO_DIR/ansible/meta/requirements.yaml -p $ANSIBLE_ROLES_PATH
 
 echo " "
 echo "UPDATE ANSIBLE GALAXY COLLECTIONS"
 echo "************************************"
-ansible-galaxy collection install -r $HOME_REPO_DIR/ansible/meta/requirements.yaml -p $ANSIBLE_PATH/collections
+mkdir -p $ANSIBLE_COLLECTIONS_PATH
+chown -r ubuntu:ubuntu $ANSIBLE_COLLECTIONS_PATH
+ansible-galaxy collection install -r $HOME_REPO_DIR/ansible/meta/requirements.yaml -p $ANSIBLE_COLLECTIONS_PATH
