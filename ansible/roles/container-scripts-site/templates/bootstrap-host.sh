@@ -2,7 +2,7 @@
 BOOTSTRAP_USER_ID=$(id -un)
 BOOTSTRAP_GROUP_ID=$(id -gn)
 ANSIBLEPULL_REPO_URL="{{ repo_url }}"
-ANSIBLE_VAULT_PASSWORD="{{ vault_password }}"
+ANSIBLE_VAULT_PASSWORD="{{ vault_ansible_password }}"
 
 # Check for defined paths
 if [[ -z "${ANSIBLE_PATH}" ]]; then
