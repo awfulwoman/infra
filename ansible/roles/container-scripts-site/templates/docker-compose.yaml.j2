@@ -14,5 +14,5 @@ services:
       - "traefik.http.routers.{{ container_name }}.tls=true"
       - "traefik.http.routers.{{ container_name }}.tls.certresolver=letsencrypt"
     volumes:
-      - "{{ container_config_dir }}/{{ container_name }}:/static"
+      - "{{ container_config_dir }}/{{ container_name }}:/usr/share/nginx/html:ro"
       - /etc/localtime:/etc/localtime:ro

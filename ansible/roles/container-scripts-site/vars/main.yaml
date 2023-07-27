@@ -1,3 +1,3 @@
 container_name: scripts
-container_image: flashspys/nginx-static
+container_image: nginx
 container_hosts: "{{ groups['all'] }}"
