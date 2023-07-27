@@ -15,13 +15,16 @@ fi
 # Import keys
 ssh-import-id-gh whalecoiner
 
+# Install PIP
+sudo apt install pip3
+
 # Install Ansible
 which ansible
 if [[ $? != 0 ]] ; then
   echo " "
   echo "INSTALL ANSIBLE"
   echo "************************************"
-  python3 -m pip install ansible
+  pip3 install ansible
 fi
 
 # Satisfy Ansible role dependencies
