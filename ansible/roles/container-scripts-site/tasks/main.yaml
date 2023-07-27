@@ -6,11 +6,11 @@
     group: "{{ ansible_user }}"
     mode: 0774
 
- - name: Write out bootstrap scripts
-    template:
-      src: bootstrap-host.sh
-      dest: "{{ container_config_dir }}/{{ container_name }}/bootstrap/{{ item }}.sh"
-    loop: container_hosts
+- name: Write out bootstrap scripts
+  ansible.builtin.template:
+    src: bootstrap-host.sh
+    dest: "{{ container_config_dir }}/{{ container_name }}/bootstrap/{{ item }}.sh"
+  loop: container_hosts
 
 
 - name: "Create compose config dir"
