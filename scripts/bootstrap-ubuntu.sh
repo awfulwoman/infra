@@ -73,6 +73,8 @@ fi
 # 	echo "File exists."
 # fi
 
+cd $HOME_REPO_DIR
+
 # Satisfy Ansible role dependencies
 echo " "
 echo "UPDATE ANSIBLE GALAXY ROLES"
