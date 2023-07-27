@@ -7,6 +7,13 @@ if [[ -z "${ANSIBLE_PATH}" ]]; then
   ANSIBLE_PATH="/opt/ansible"
 fi
 
+if [[ -z "${ANSIBLE_COLLECTIONS_PATH}" ]]; then
+    ANSIBLE_COLLECTIONS_PATH="$ANSIBLE_PATH/collections"
+fi
+if [[ -z "${ANSIBLE_ROLES_PATH}" ]]; then
+    ANSIBLE_ROLES_PATH="$ANSIBLE_PATH/galaxy-roles"
+fi
+
 if [[ -z "${HOME_REPO_DIR}" ]]; then
 #   HOME_REPO_DIR="$ANSIBLE_PATH/home"
   HOME_REPO_DIR="/opt/home.git"
