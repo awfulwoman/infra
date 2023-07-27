@@ -2,8 +2,7 @@
 BOOTSTRAP_USER_ID=$(id -un)
 BOOTSTRAP_GROUP_ID=$(id -gn)
 ANSIBLEPULL_REPO_URL="{{ repo_url }}"
-
-TEST: {{item}}
+ANSIBLE_VAULT_PASSWORD="{{ vault_password }}"
 
 # Check for defined paths
 if [[ -z "${ANSIBLE_PATH}" ]]; then
@@ -59,7 +58,7 @@ find "$HOME_REPO_DIR" -maxdepth 0 -empty -exec echo {} is empty. \;
 # Clone repo
 if [[ $? == 0 ]]; then
     echo "No repo present in $HOME_REPO_DIR. Cloning."
-    git clone https://github.com/whalecoiner/home.git $HOME_REPO_DIR
+    git clone $ANSIBLEPULL_REPO_URL $HOME_REPO_DIR
 else
 # Update repo
     echo "Update repo."
@@ -67,21 +66,12 @@ else
 fi
 
 
-
-# echo " "
-# echo "ENSURE ANSIBLE PASSWORD FILE EXISTS"
-# echo "************************************"
-# if [ ! -f "$ANSIBLE_PATH/.vaultpassword" ]; then
-# 	if [[ -z "${ANSIBLE_VAULT_PASSWORD}" ]]; then
-#   	read -sp "Vault password: " ANSIBLE_VAULT_PASSWORD
-# 	fi
-#   if [[ $(< $ANSIBLE_PATH/.vaultpassword) != "$ANSIBLE_VAULT_PASSWORD" ]]; then
-#     echo $ANSIBLE_VAULT_PASSWORD > $ANSIBLE_PATH/.vaultpassword
-#   fi
-# 	echo "File created."
-# else
-# 	echo "File exists."
-# fi
+echo " "
+echo "ENSURE ANSIBLE PASSWORD FILE EXISTS"
+echo "************************************"
+if [[ $(< $ANSIBLE_PATH/.vaultpassword) != "$ANSIBLE_VAULT_PASSWORD" ]]; then
+    echo $ANSIBLE_VAULT_PASSWORD > $ANSIBLE_PATH/.vaultpassword
+fi
 
 cd $HOME_REPO_DIR
 
@@ -100,6 +90,5 @@ sudo mkdir -p $ANSIBLE_COLLECTIONS_PATH
 sudo chown -R ubuntu:ubuntu $ANSIBLE_COLLECTIONS_PATH
 ansible-galaxy collection install -r $HOME_REPO_DIR/ansible/meta/requirements.yaml -p $ANSIBLE_COLLECTIONS_PATH
 
-
 # Run Ansible Pull
-ansible-pull -U $ANSIBLEPULL_REPO_URL "ansible/playbooks/$ANSIBLEPULL_PLAYBOOK.yaml"
+ansible-pull -U $ANSIBLEPULL_REPO_URL "ansible/playbooks/{{item}}.yaml"
