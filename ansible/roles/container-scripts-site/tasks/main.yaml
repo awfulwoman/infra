@@ -15,7 +15,7 @@
     group: "{{ ansible_user }}"
     mode: 0774
 
-- name: Write out index page
+# - name: Write out index page
   # ansible.builtin.template:
   #   src: index.html
   #   dest: "{{ container_config_dir }}/{{ container_name }}/index.html"
