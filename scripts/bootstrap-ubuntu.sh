@@ -32,7 +32,7 @@ if [[ $? != 0 ]] ; then
   sudo pip3 install ansible
 fi
 
-# Satisfy Ansible role dependencies
+# Ensure repo location exists
 echo " "
 echo "UPDATE LOCAL REPO"
 echo "************************************"
@@ -46,7 +46,7 @@ fi
 
 # Clone repo
 find "$HOME_REPO_DIR" -maxdepth 0 -empty -exec echo {} is empty. \;
-if [[ $? != 0 ]]; then
+if [[ $? == 0 ]]; then
     echo "No repo present in $HOME_REPO_DIR. Cloning."
     git clone https://github.com/whalecoiner/home.git $HOME_REPO_DIR
 fi
@@ -70,6 +70,7 @@ git -C "$HOME_REPO_DIR" pull
 # 	echo "File exists."
 # fi
 
+# Satisfy Ansible role dependencies
 echo " "
 echo "UPDATE ANSIBLE GALAXY ROLES"
 echo "************************************"
