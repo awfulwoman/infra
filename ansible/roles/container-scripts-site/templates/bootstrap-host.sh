@@ -66,12 +66,11 @@ else
 fi
 
 
+
 echo " "
 echo "ENSURE ANSIBLE PASSWORD FILE EXISTS"
 echo "************************************"
-if [[ $(< $ANSIBLE_PATH/.vaultpassword) != "$ANSIBLE_VAULT_PASSWORD" ]]; then
-    echo $ANSIBLE_VAULT_PASSWORD > $ANSIBLE_PATH/.vaultpassword
-fi
+echo $ANSIBLE_VAULT_PASSWORD > $ANSIBLE_PATH/.vaultpassword
 
 cd $HOME_REPO_DIR
 
