@@ -2,7 +2,7 @@ services:
   "{{ container_name }}":
     container_name: "{{ container_name }}"
     ports:
-      - "INTERNAL:EXTERNAL"
+      - "8080:80"
     # privileged: true
     environment:
       - "TZ=Europe/Berlin"
