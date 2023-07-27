@@ -29,19 +29,22 @@ echo " "
 echo "UPDATE GIT"
 echo "************************************"
 if [ ! -d "$HOME_REPO_DIR" ]; then
-	echo "$HOME_REPO_DIR does not exist. Creating."
-	sudo mkdir -p $HOME_REPO_DIR
-	sudo chown -R $BOOTSTRAP_USER_ID:$BOOTSTRAP_GROUP_ID $HOME_REPO_DIR
+    echo "$HOME_REPO_DIR does not exist. Creating."
+    sudo mkdir -p $HOME_REPO_DIR
+    sudo chown -R $BOOTSTRAP_USER_ID:$BOOTSTRAP_GROUP_ID $HOME_REPO_DIR
 else
-	echo "$HOME_REPO_DIR exists."
+    echo "$HOME_REPO_DIR exists."
 fi
 
 if [ `git -C "$HOME_REPO_DIR" branch --list main` ]; then
-	echo "Update repo."
-  git -C "$HOME_REPO_DIR" pull
+    echo "Update repo."
+    git -C "$HOME_REPO_DIR" pull
 else
-	echo "No repo present in $HOME_REPO_DIR. Cloning."
-	git clone https://github.com/whalecoiner/home.git $HOME_REPO_DIR
+    find "$HOME_REPO_DIR" -maxdepth 0 -empty -exec echo {} is empty. \;
+    if [[ $? != 0 ]]; then
+        echo "No repo present in $HOME_REPO_DIR. Cloning."
+        git clone https://github.com/whalecoiner/home.git $HOME_REPO_DIR
+    fi
 fi
 
 # echo " "
