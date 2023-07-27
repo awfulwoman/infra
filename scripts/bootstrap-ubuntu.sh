@@ -44,16 +44,19 @@ else
     echo "$HOME_REPO_DIR exists."
 fi
 
-# Clone repo
+# If home repo is empty...
 find "$HOME_REPO_DIR" -maxdepth 0 -empty -exec echo {} is empty. \;
+# Clone repo
 if [[ $? == 0 ]]; then
     echo "No repo present in $HOME_REPO_DIR. Cloning."
     git clone https://github.com/whalecoiner/home.git $HOME_REPO_DIR
+else
+# Update repo
+    echo "Update repo."
+    git -C "$HOME_REPO_DIR" pull
 fi
 
-# Update repo
-echo "Update repo."
-git -C "$HOME_REPO_DIR" pull
+
 
 # echo " "
 # echo "ENSURE ANSIBLE PASSWORD FILE EXISTS"
