@@ -16,7 +16,7 @@ fi
 ssh-import-id-gh whalecoiner
 
 # Install PIP
-sudo apt install pip3
+sudo apt install python3-pip
 
 # Install Ansible
 which ansible
