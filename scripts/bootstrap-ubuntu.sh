@@ -8,8 +8,8 @@ if [[ -z "${ANSIBLE_PATH}" ]]; then
 fi
 
 if [[ -z "${HOME_REPO_DIR}" ]]; then
-  HOME_REPO_DIR="$ANSIBLE_PATH/home"
-  # HOME_REPO_DIR="/opt/home"
+#   HOME_REPO_DIR="$ANSIBLE_PATH/home"
+  HOME_REPO_DIR="/opt/home"
 fi
 
 # Import keys
@@ -44,13 +44,14 @@ else
     echo "$HOME_REPO_DIR exists."
 fi
 
-
+# Clone repo
 find "$HOME_REPO_DIR" -maxdepth 0 -empty -exec echo {} is empty. \;
 if [[ $? != 0 ]]; then
     echo "No repo present in $HOME_REPO_DIR. Cloning."
     git clone https://github.com/whalecoiner/home.git $HOME_REPO_DIR
 fi
 
+# Update repo
 echo "Update repo."
 git -C "$HOME_REPO_DIR" pull
 
