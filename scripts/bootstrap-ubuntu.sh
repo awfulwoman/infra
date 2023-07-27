@@ -9,7 +9,7 @@ fi
 
 if [[ -z "${HOME_REPO_DIR}" ]]; then
 #   HOME_REPO_DIR="$ANSIBLE_PATH/home"
-  HOME_REPO_DIR="/opt/home"
+  HOME_REPO_DIR="/opt/home.git"
 fi
 
 # Import keys
