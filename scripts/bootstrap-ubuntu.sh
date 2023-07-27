@@ -44,20 +44,20 @@ else
 	git clone https://github.com/whalecoiner/home.git $HOME_REPO_DIR
 fi
 
-echo " "
-echo "ENSURE ANSIBLE PASSWORD FILE EXISTS"
-echo "************************************"
-if [ ! -f "$ANSIBLE_PATH/.vaultpassword" ]; then
-	if [[ -z "${ANSIBLE_VAULT_PASSWORD}" ]]; then
-  	read -sp "Vault password: " ANSIBLE_VAULT_PASSWORD
-	fi
-  if [[ $(< $ANSIBLE_PATH/.vaultpassword) != "$ANSIBLE_VAULT_PASSWORD" ]]; then
-    echo $ANSIBLE_VAULT_PASSWORD > $ANSIBLE_PATH/.vaultpassword
-  fi
-	echo "File created."
-else
-	echo "File exists."
-fi
+# echo " "
+# echo "ENSURE ANSIBLE PASSWORD FILE EXISTS"
+# echo "************************************"
+# if [ ! -f "$ANSIBLE_PATH/.vaultpassword" ]; then
+# 	if [[ -z "${ANSIBLE_VAULT_PASSWORD}" ]]; then
+#   	read -sp "Vault password: " ANSIBLE_VAULT_PASSWORD
+# 	fi
+#   if [[ $(< $ANSIBLE_PATH/.vaultpassword) != "$ANSIBLE_VAULT_PASSWORD" ]]; then
+#     echo $ANSIBLE_VAULT_PASSWORD > $ANSIBLE_PATH/.vaultpassword
+#   fi
+# 	echo "File created."
+# else
+# 	echo "File exists."
+# fi
 
 echo " "
 echo "UPDATE ANSIBLE GALAXY ROLES"
