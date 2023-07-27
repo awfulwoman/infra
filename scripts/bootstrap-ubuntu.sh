@@ -25,7 +25,7 @@ if [[ $? != 0 ]] ; then
   echo " "
   echo "INSTALL ANSIBLE"
   echo "************************************"
-  pip3 install ansible
+  sudo pip3 install ansible
 fi
 
 # Satisfy Ansible role dependencies
