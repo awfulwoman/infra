@@ -1,6 +1,9 @@
 #!/bin/bash
 BOOTSTRAP_USER_ID=$(id -un)
 BOOTSTRAP_GROUP_ID=$(id -gn)
+ANSIBLEPULL_REPO_URL=https://github.com/whalecoiner/home.git
+
+read -sp "Playbook: " ANSIBLEPULL_PLAYBOOK
 
 # Check for defined paths
 if [[ -z "${ANSIBLE_PATH}" ]]; then
@@ -96,3 +99,7 @@ echo "************************************"
 sudo mkdir -p $ANSIBLE_COLLECTIONS_PATH
 sudo chown -R ubuntu:ubuntu $ANSIBLE_COLLECTIONS_PATH
 ansible-galaxy collection install -r $HOME_REPO_DIR/ansible/meta/requirements.yaml -p $ANSIBLE_COLLECTIONS_PATH
+
+
+# Run Ansible Pull
+ansible-pull -U $ANSIBLEPULL_REPO_URL "ansible/playbooks/$ANSIBLEPULL_PLAYBOOK.yaml"
