@@ -16,6 +16,8 @@ services:
       - "0.0.0.0:8080:8080/tcp"
       - 6881:6881/tcp
       - 6881:6881/udp
+      # Prowlarr
+      - 9696:9696
     restart: unless-stopped
     labels:
       - "traefik.enable=true"

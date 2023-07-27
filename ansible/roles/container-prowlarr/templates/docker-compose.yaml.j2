@@ -1,9 +1,7 @@
 services:
   "{{ container_name }}":
     container_name: "{{ container_name }}"
-    ports:
-    - "9696:9696"
-    # privileged: true
+    network_mode: "service:gluetun" 
     environment:
       - "TZ=Europe/Berlin"      
       - PUID=1000
