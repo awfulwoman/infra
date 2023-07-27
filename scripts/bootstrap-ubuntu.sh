@@ -26,7 +26,7 @@ fi
 
 # Satisfy Ansible role dependencies
 echo " "
-echo "UPDATE GIT"
+echo "UPDATE LOCAL REPO"
 echo "************************************"
 if [ ! -d "$HOME_REPO_DIR" ]; then
     echo "$HOME_REPO_DIR does not exist. Creating."
@@ -36,16 +36,15 @@ else
     echo "$HOME_REPO_DIR exists."
 fi
 
-if [ `git -C "$HOME_REPO_DIR" branch --list main` ]; then
-    echo "Update repo."
-    git -C "$HOME_REPO_DIR" pull
-else
-    find "$HOME_REPO_DIR" -maxdepth 0 -empty -exec echo {} is empty. \;
-    if [[ $? != 0 ]]; then
-        echo "No repo present in $HOME_REPO_DIR. Cloning."
-        git clone https://github.com/whalecoiner/home.git $HOME_REPO_DIR
-    fi
+
+find "$HOME_REPO_DIR" -maxdepth 0 -empty -exec echo {} is empty. \;
+if [[ $? != 0 ]]; then
+    echo "No repo present in $HOME_REPO_DIR. Cloning."
+    git clone https://github.com/whalecoiner/home.git $HOME_REPO_DIR
 fi
+
+echo "Update repo."
+git -C "$HOME_REPO_DIR" pull
 
 # echo " "
 # echo "ENSURE ANSIBLE PASSWORD FILE EXISTS"
