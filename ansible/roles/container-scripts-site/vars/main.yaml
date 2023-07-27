@@ -1,0 +1,3 @@
+container_name: bootstrap-site
+container_image: flashspys/nginx-static
+container_hosts: "{{ groups['all'] }}"

@@ -1,0 +1,18 @@
+services:
+  "{{ container_name }}":
+    container_name: "{{ container_name }}"
+    ports:
+      - "INTERNAL:EXTERNAL"
+    # privileged: true
+    environment:
+      - "TZ=Europe/Berlin"
+    image: "{{ container_image }}"
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.{{ container_name }}.rule=Host(`{{ container_name }}.affordablepotatoes.com`)"
+      - "traefik.http.routers.{{ container_name }}.tls=true"
+      - "traefik.http.routers.{{ container_name }}.tls.certresolver=letsencrypt"
+    volumes:
+      - "{{ container_config_dir }}/{{ container_name }}:/static"
+      - /etc/localtime:/etc/localtime:ro
