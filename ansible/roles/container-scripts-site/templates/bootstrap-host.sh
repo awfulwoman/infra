@@ -76,8 +76,6 @@ echo "ENSURE ANSIBLE PASSWORD FILE EXISTS"
 echo "************************************"
 echo $ANSIBLE_VAULT_PASSWORD > $ANSIBLE_PATH/.vaultpassword
 
-
-
 # Satisfy Ansible role dependencies
 echo " "
 echo "UPDATE ANSIBLE GALAXY ROLES"
@@ -100,4 +98,4 @@ echo " "
 echo "START ANSIBLE PULL"
 echo "************************************"
 cd $HOME_REPO_DIR
-ansible-pull -U $ANSIBLEPULL_REPO_URL "ansible/playbooks/{{item}}.yaml"
+ansible-pull -U $ANSIBLEPULL_REPO_URL "ansible/playbooks/{{item}}.yaml" --vault-password-file $ANSIBLE_PATH/.vaultpassword
