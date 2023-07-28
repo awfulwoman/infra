@@ -36,7 +36,7 @@ services:
       # Prowlarr
       - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.affordablepotatoes.com`)"
       - "traefik.http.routers.prowlarr.service=qbittorrent"
-      - "traefik.http.services.prowlarr.loadbalancer.server.port=8080"
+      - "traefik.http.services.prowlarr.loadbalancer.server.port=9696"
       - "traefik.http.routers.prowlarr.tls=true"
       - "traefik.http.routers.prowlarr.tls.certresolver=letsencrypt"
     volumes:
