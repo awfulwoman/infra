@@ -40,8 +40,6 @@ echo "ANSIBLEPULL_REPO_URL: $ANSIBLEPULL_REPO_URL"
 echo "BOOTSTRAP_USER_ID: $BOOTSTRAP_USER_ID"
 echo "BOOTSTRAP_GROUP_ID: $BOOTSTRAP_GROUP_ID"
 
-
-
 # Import keys
 ssh-import-id-gh whalecoiner
 
