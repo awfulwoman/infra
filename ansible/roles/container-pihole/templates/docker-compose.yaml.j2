@@ -2,7 +2,7 @@ services:
   "{{ container_name }}":
     container_name: "{{ container_name }}"
     network_mode: host
-    capabilities:
+    cap_add:
       - NET_ADMIN
       - NET_BIND_SERVICE
       - NET_RAW
