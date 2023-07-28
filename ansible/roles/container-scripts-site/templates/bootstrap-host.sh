@@ -65,19 +65,24 @@ else
     git -C "$HOME_REPO_DIR" pull
 fi
 
-
+echo " "
+echo "ENSURE ANSIBLE PATH EXISTS"
+echo "************************************"
+sudo mkdir -p $ANSIBLE_PATH
+sudo chown -R ubuntu:ubuntu $ANSIBLE_PATH
 
 echo " "
 echo "ENSURE ANSIBLE PASSWORD FILE EXISTS"
 echo "************************************"
 echo $ANSIBLE_VAULT_PASSWORD > $ANSIBLE_PATH/.vaultpassword
 
-cd $HOME_REPO_DIR
+
 
 # Satisfy Ansible role dependencies
 echo " "
 echo "UPDATE ANSIBLE GALAXY ROLES"
 echo "************************************"
+cd $HOME_REPO_DIR
 sudo mkdir -p $ANSIBLE_ROLES_PATH
 sudo chown -R ubuntu:ubuntu $ANSIBLE_ROLES_PATH
 ansible-galaxy install -r $HOME_REPO_DIR/ansible/meta/requirements.yaml -p $ANSIBLE_ROLES_PATH
@@ -85,6 +90,7 @@ ansible-galaxy install -r $HOME_REPO_DIR/ansible/meta/requirements.yaml -p $ANSI
 echo " "
 echo "UPDATE ANSIBLE GALAXY COLLECTIONS"
 echo "************************************"
+cd $HOME_REPO_DIR
 sudo mkdir -p $ANSIBLE_COLLECTIONS_PATH
 sudo chown -R ubuntu:ubuntu $ANSIBLE_COLLECTIONS_PATH
 ansible-galaxy collection install -r $HOME_REPO_DIR/ansible/meta/requirements.yaml -p $ANSIBLE_COLLECTIONS_PATH
@@ -93,4 +99,5 @@ ansible-galaxy collection install -r $HOME_REPO_DIR/ansible/meta/requirements.ya
 echo " "
 echo "START ANSIBLE PULL"
 echo "************************************"
+cd $HOME_REPO_DIR
 ansible-pull -U $ANSIBLEPULL_REPO_URL "ansible/playbooks/{{item}}.yaml"
