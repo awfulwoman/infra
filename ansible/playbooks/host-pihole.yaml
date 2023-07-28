@@ -11,8 +11,12 @@
     - role: artis3n.tailscale
     - role: mrlesmithjr.netplan
       become: true
+    - role: geerlingguy.docker
+      become: true
+      when: ansible_architecture == "x86_64"
     - role: geerlingguy.docker_arm
       become: true
+      when: ansible_architecture == "aarch64"
     - role: docker
     - role: motd
     - role: hifis.unattended_upgrades

@@ -58,10 +58,28 @@ else
     echo "$HOME_REPO_DIR exists."
 fi
 
+
+
+FILE=""
+HOME_REPO_DIR="$1"
+# init
+# look for empty dira
+if [ -d "$HOME_REPO_DIR" ]
+then
+	if [ "$(ls -A $HOME_REPO_DIR)" ]; then
+     echo "Take action $HOME_REPO_DIR is not Empty"
+	else
+    echo "$HOME_REPO_DIR is Empty"
+	fi
+else
+	echo "Directory $HOME_REPO_DIR not found."
+fi
+
+
 # If home repo is empty...
 find "$HOME_REPO_DIR" -maxdepth 0 -empty -exec echo {} is empty. \;
 # Clone repo
-if [[ $? == 0 ]]; then
+if [[ $? != 0 ]]; then
     echo "No repo present in $HOME_REPO_DIR. Cloning."
     git clone $ANSIBLEPULL_REPO_URL $HOME_REPO_DIR
 else
