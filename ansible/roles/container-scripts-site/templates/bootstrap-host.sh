@@ -118,6 +118,7 @@ echo " "
 echo "UPDATE ANSIBLE GALAXY ROLES"
 echo "************************************"
 cd $HOME_REPO_DIR
+echo "Changed to: $HOME_REPO_DIR"
 sudo mkdir -p $ANSIBLE_ROLES_PATH
 sudo chown -R $BOOTSTRAP_USER_ID:$BOOTSTRAP_GROUP_ID $ANSIBLE_ROLES_PATH
 ansible-galaxy install -r "$HOME_REPO_DIR/ansible/meta/requirements.yaml" -p $ANSIBLE_ROLES_PATH
@@ -126,6 +127,7 @@ echo " "
 echo "UPDATE ANSIBLE GALAXY COLLECTIONS"
 echo "************************************"
 cd $HOME_REPO_DIR
+echo "Changed to: $HOME_REPO_DIR"
 sudo mkdir -p $ANSIBLE_COLLECTIONS_PATH
 sudo chown -R $BOOTSTRAP_USER_ID:$BOOTSTRAP_GROUP_ID $ANSIBLE_COLLECTIONS_PATH
 ansible-galaxy collection install -r "$HOME_REPO_DIR/ansible/meta/requirements.yaml" -p $ANSIBLE_COLLECTIONS_PATH
