@@ -51,7 +51,7 @@
 - name: "Create cnames"
   ansible.builtin.template:
     src: cnames.conf.j2
-    dest: "{{ container_config_dir }/{{ container_name }}/dns/05-cnames.list"
+    dest: "{{ container_config_dir }}/{{ container_name }}/dns/05-cnames.list"
   notify:
     - RESTART PIHOLE
 
