@@ -120,7 +120,7 @@ echo "************************************"
 cd $HOME_REPO_DIR
 sudo mkdir -p $ANSIBLE_ROLES_PATH
 sudo chown -R $BOOTSTRAP_USER_ID:$BOOTSTRAP_GROUP_ID $ANSIBLE_ROLES_PATH
-ansible-galaxy install -r ansible/meta/requirements.yaml -p $ANSIBLE_ROLES_PATH
+ansible-galaxy install -r "$HOME_REPO_DIR/ansible/meta/requirements.yaml" -p $ANSIBLE_ROLES_PATH
 
 echo " "
 echo "UPDATE ANSIBLE GALAXY COLLECTIONS"
@@ -128,11 +128,11 @@ echo "************************************"
 cd $HOME_REPO_DIR
 sudo mkdir -p $ANSIBLE_COLLECTIONS_PATH
 sudo chown -R $BOOTSTRAP_USER_ID:$BOOTSTRAP_GROUP_ID $ANSIBLE_COLLECTIONS_PATH
-ansible-galaxy collection install -r ansible/meta/requirements.yaml -p $ANSIBLE_COLLECTIONS_PATH
+ansible-galaxy collection install -r "$HOME_REPO_DIR/ansible/meta/requirements.yaml" -p $ANSIBLE_COLLECTIONS_PATH
 
 # Run Ansible Pull
 echo " "
 echo "START ANSIBLE PULL"
 echo "************************************"
 cd $HOME_REPO_DIR
-ansible-pull -U $ANSIBLEPULL_REPO_URL -i ansible/inventory/host_vars/{{ item }}.yaml "ansible/playbooks/{{ item }}.yaml" --vault-password-file $ANSIBLE_VAULT_PASSWORD_FILE
+ansible-pull -U $ANSIBLEPULL_REPO_URL -i "ansible/inventory/host_vars/{{ item }}.yaml" "ansible/playbooks/{{ item }}.yaml" --vault-password-file $ANSIBLE_VAULT_PASSWORD_FILE
