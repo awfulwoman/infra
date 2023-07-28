@@ -10,7 +10,7 @@ if [[ -z "${ANSIBLE_PATH}" ]]; then
   ANSIBLE_PATH="/opt/ansible"
 fi
 
-ANSIBLE_VAULT_PASSWORD_FILE="${ANSIBLE_PATH}/.vaultpassword"
+export ANSIBLE_VAULT_PASSWORD_FILE="${ANSIBLE_PATH}/.vaultpassword"
 
 echo $ANSIBLE_VAULT_PASSWORD_FILE
 
