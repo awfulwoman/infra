@@ -62,7 +62,7 @@ fi
 
 # Ensure repo location exists
 echo " "
-echo "UPDATE LOCAL REPO"
+echo "BUILD & UPDATE LOCAL REPO"
 echo "************************************"
 if [ ! -d "$HOME_REPO_DIR" ]; then
     echo "$HOME_REPO_DIR does not exist. Creating."
@@ -72,34 +72,32 @@ else
     echo "$HOME_REPO_DIR exists."
 fi
 
-
-
-FILE=""
-# init
-# look for empty dira
 if [ -d "$HOME_REPO_DIR" ]
 then
 	if [ "$(ls -A $HOME_REPO_DIR)" ]; then
-     echo "Take action $HOME_REPO_DIR is not Empty"
+        echo "$HOME_REPO_DIR is not Empty. Pulling from git."
+        git -C "$HOME_REPO_DIR" pull
 	else
-    echo "$HOME_REPO_DIR is Empty"
+        echo "$HOME_REPO_DIR is Empty"
+        echo "No repo present in $HOME_REPO_DIR. Cloning."
+        git clone $ANSIBLEPULL_REPO_URL $HOME_REPO_DIR
 	fi
 else
 	echo "Directory $HOME_REPO_DIR not found."
 fi
 
 
-# If home repo is empty...
-find "$HOME_REPO_DIR" -maxdepth 0 -empty -exec echo {} is empty. \;
-# Clone repo
-if [[ $? != 0 ]]; then
-    echo "No repo present in $HOME_REPO_DIR. Cloning."
-    git clone $ANSIBLEPULL_REPO_URL $HOME_REPO_DIR
-else
-# Update repo
-    echo "Update repo."
-    git -C "$HOME_REPO_DIR" pull
-fi
+# # If home repo is empty...
+# find "$HOME_REPO_DIR" -maxdepth 0 -empty -exec echo {} is empty. \;
+# # Clone repo
+# if [[ $? != 0 ]]; then
+#     echo "No repo present in $HOME_REPO_DIR. Cloning."
+#     git clone $ANSIBLEPULL_REPO_URL $HOME_REPO_DIR
+# else
+# # Update repo
+#     echo "Update repo."
+#     git -C "$HOME_REPO_DIR" pull
+# fi
 
 echo " "
 echo "ENSURE ANSIBLE PATH EXISTS"
