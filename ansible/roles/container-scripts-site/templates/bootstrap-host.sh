@@ -1,4 +1,6 @@
 #!/bin/bash
+
+# Base info
 BOOTSTRAP_USER_ID=$(id -un)
 BOOTSTRAP_GROUP_ID=$(id -gn)
 ANSIBLEPULL_REPO_URL="{{ repo_url }}"
@@ -7,18 +9,16 @@ ANSIBLE_VAULT_PASSWORD="{{ vault_ansible_password }}"
 
 # Check for defined paths
 if [[ -z "${ANSIBLE_PATH}" ]]; then
-  ANSIBLE_PATH="/opt/ansible"
+  export ANSIBLE_PATH="/opt/ansible"
 fi
 
 export ANSIBLE_VAULT_PASSWORD_FILE="${ANSIBLE_PATH}/.vaultpassword"
 
-
-
 if [[ -z "${ANSIBLE_COLLECTIONS_PATH}" ]]; then
-    ANSIBLE_COLLECTIONS_PATH="$ANSIBLE_PATH/collections"
+    export ANSIBLE_COLLECTIONS_PATH="$ANSIBLE_PATH/collections"
 fi
 if [[ -z "${ANSIBLE_ROLES_PATH}" ]]; then
-    ANSIBLE_ROLES_PATH="$ANSIBLE_PATH/galaxy-roles"
+    export ANSIBLE_ROLES_PATH="$ANSIBLE_PATH/galaxy-roles"
 fi
 
 if [[ -z "${HOME_REPO_DIR}" ]]; then
