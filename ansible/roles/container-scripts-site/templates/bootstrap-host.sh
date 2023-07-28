@@ -48,7 +48,7 @@ echo "BOOTSTRAP_GROUP_ID: $BOOTSTRAP_GROUP_ID"
 echo " "
 echo "SET HOSTNAME"
 echo "************************************"
-sudo hostname "{{ ansible_host }}"
+sudo hostname "{{ item }}"
 echo "Hostname: $(hostname)"
 
 echo " "
