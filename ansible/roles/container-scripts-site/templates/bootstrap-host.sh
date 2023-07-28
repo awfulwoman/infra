@@ -103,4 +103,4 @@ echo " "
 echo "START ANSIBLE PULL"
 echo "************************************"
 cd $HOME_REPO_DIR
-ansible-pull -U $ANSIBLEPULL_REPO_URL "ansible/playbooks/{{item}}.yaml" --vault-password-file $ANSIBLE_VAULT_PASSWORD_FILE
+ansible-pull -U $ANSIBLEPULL_REPO_URL -i ansible/inventory/host_vars/{{ item }}.yaml "ansible/playbooks/{{ item }}.yaml" --vault-password-file $ANSIBLE_VAULT_PASSWORD_FILE
