@@ -43,7 +43,6 @@ echo "BOOTSTRAP_GROUP_ID: $BOOTSTRAP_GROUP_ID"
 # Import keys
 ssh-import-id-gh whalecoiner >/dev/null
 
-
 echo " "
 echo "UPDATE APT"
 echo "************************************"
@@ -78,11 +77,10 @@ fi
 
 if [ -d "$HOME_REPO_DIR" ]; then
 	if [ "$(ls -A $HOME_REPO_DIR)" ]; then
-        echo "$HOME_REPO_DIR is not Empty. Stupidly assuming it's got a repo in it and pulling."
+        echo "$HOME_REPO_DIR is not empty. Stupidly assuming it's got a repo in it and pulling."
         git -C "$HOME_REPO_DIR" pull --quiet
 	else
-        echo "$HOME_REPO_DIR is Empty"
-        echo "No repo present in $HOME_REPO_DIR. Cloning."
+        echo "$HOME_REPO_DIR is empty. Cloning repo."
         git clone $ANSIBLEPULL_REPO_URL $HOME_REPO_DIR --quiet
 	fi
 else
@@ -94,14 +92,16 @@ if [ ! -d "$ANSIBLE_PATH" ]; then
 echo " "
 echo "ENSURE ANSIBLE PATH EXISTS"
 echo "************************************"
+echo "Creating $ANSIBLE_PATH"
 sudo mkdir -p $ANSIBLE_PATH
 sudo chown -R $BOOTSTRAP_USER_ID:$BOOTSTRAP_GROUP_ID $ANSIBLE_PATH
 fi
 
-if [ ! -d "$ANSIBLE_VAULT_PASSWORD_FILE" ]; then
+if [ ! -f "$ANSIBLE_VAULT_PASSWORD_FILE" ]; then
 echo " "
 echo "ENSURE ANSIBLE PASSWORD FILE EXISTS"
 echo "************************************"
+echo "Creating $ANSIBLE_VAULT_PASSWORD_FILE"
 echo $ANSIBLE_VAULT_PASSWORD > $ANSIBLE_VAULT_PASSWORD_FILE
 fi
 
