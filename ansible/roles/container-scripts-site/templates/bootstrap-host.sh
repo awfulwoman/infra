@@ -137,4 +137,4 @@ ansible-galaxy collection install -r "$HOME_REPO_DIR/ansible/meta/requirements.y
 echo " "
 echo "START ANSIBLE PULL"
 echo "************************************"
-ansible-pull -U $ANSIBLEPULL_REPO_URL -i "$HOME_REPO_DIR/ansible/inventory/host_vars/{{ item }}.yaml" "$HOME_REPO_DIR/ansible/playbooks/{{ item }}.yaml" --vault-password-file $ANSIBLE_VAULT_PASSWORD_FILE
+ansible-pull -U $ANSIBLEPULL_REPO_URL -i "{{ item }}" "$HOME_REPO_DIR/ansible/playbooks/{{ item }}.yaml" --vault-password-file $ANSIBLE_VAULT_PASSWORD_FILE
