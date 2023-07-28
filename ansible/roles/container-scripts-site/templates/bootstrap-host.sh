@@ -4,10 +4,13 @@ BOOTSTRAP_GROUP_ID=$(id -gn)
 ANSIBLEPULL_REPO_URL="{{ repo_url }}"
 ANSIBLE_VAULT_PASSWORD="{{ vault_ansible_password }}"
 
+
 # Check for defined paths
 if [[ -z "${ANSIBLE_PATH}" ]]; then
   ANSIBLE_PATH="/opt/ansible"
 fi
+
+ANSIBLE_VAULT_PASSWORD_FILE="${ANSIBLE_PATH}/.vaultpassword"
 
 if [[ -z "${ANSIBLE_COLLECTIONS_PATH}" ]]; then
     ANSIBLE_COLLECTIONS_PATH="$ANSIBLE_PATH/collections"
@@ -74,7 +77,7 @@ sudo chown -R ubuntu:ubuntu $ANSIBLE_PATH
 echo " "
 echo "ENSURE ANSIBLE PASSWORD FILE EXISTS"
 echo "************************************"
-echo $ANSIBLE_VAULT_PASSWORD > $ANSIBLE_PATH/.vaultpassword
+echo $ANSIBLE_VAULT_PASSWORD > $ANSIBLE_VAULT_PASSWORD_FILE
 
 # Satisfy Ansible role dependencies
 echo " "
@@ -98,4 +101,4 @@ echo " "
 echo "START ANSIBLE PULL"
 echo "************************************"
 cd $HOME_REPO_DIR
-ansible-pull -U $ANSIBLEPULL_REPO_URL "ansible/playbooks/{{item}}.yaml" --vault-password-file $ANSIBLE_PATH/.vaultpassword
+ansible-pull -U $ANSIBLEPULL_REPO_URL "ansible/playbooks/{{item}}.yaml" --vault-password-file $ANSIBLE_VAULT_PASSWORD_FILE
