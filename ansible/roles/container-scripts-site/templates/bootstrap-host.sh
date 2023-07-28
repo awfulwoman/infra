@@ -79,7 +79,7 @@ fi
 if [ -d "$HOME_REPO_DIR" ]; then
 	if [ "$(ls -A $HOME_REPO_DIR)" ]; then
         echo "$HOME_REPO_DIR is not Empty. Stupidly assuming it's got a repo in it and pulling."
-        git -C "$HOME_REPO_DIR" pull
+        git -C "$HOME_REPO_DIR" pull --quiet
 	else
         echo "$HOME_REPO_DIR is Empty"
         echo "No repo present in $HOME_REPO_DIR. Cloning."
