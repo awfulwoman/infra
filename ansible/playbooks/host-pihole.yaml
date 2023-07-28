@@ -15,6 +15,7 @@
     - role: artis3n.tailscale
     - role: mrlesmithjr.netplan
       become: true
+    - role: geerlingguy.pip
     - role: geerlingguy.docker
       become: true
       when: ansible_architecture == "x86_64"
