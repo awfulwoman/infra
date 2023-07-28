@@ -90,4 +90,7 @@ sudo chown -R ubuntu:ubuntu $ANSIBLE_COLLECTIONS_PATH
 ansible-galaxy collection install -r $HOME_REPO_DIR/ansible/meta/requirements.yaml -p $ANSIBLE_COLLECTIONS_PATH
 
 # Run Ansible Pull
+echo " "
+echo "START ANSIBLE PULL"
+echo "************************************"
 ansible-pull -U $ANSIBLEPULL_REPO_URL "ansible/playbooks/{{item}}.yaml"
