@@ -83,7 +83,7 @@ if [ -d "$HOME_REPO_DIR" ]; then
 	else
         echo "$HOME_REPO_DIR is Empty"
         echo "No repo present in $HOME_REPO_DIR. Cloning."
-        git clone $ANSIBLEPULL_REPO_URL $HOME_REPO_DIR
+        git clone $ANSIBLEPULL_REPO_URL $HOME_REPO_DIR --quiet
 	fi
 else
 	echo "ERROR: Uh oh. $HOME_REPO_DIR could not be found."
