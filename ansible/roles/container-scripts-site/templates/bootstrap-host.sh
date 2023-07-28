@@ -28,7 +28,7 @@ fi
 
 # DEBUG
 echo " "
-echo "INSTALL ANSIBLE"
+echo "DEBUG INFO"
 echo "************************************"
 echo "HOME_REPO_DIR: $HOME_REPO_DIR"
 echo "ANSIBLE_PATH: $ANSIBLE_PATH"
@@ -43,21 +43,27 @@ echo "BOOTSTRAP_GROUP_ID: $BOOTSTRAP_GROUP_ID"
 # Import keys
 ssh-import-id-gh whalecoiner
 
-# Install PIP
-sudo apt update
+
+echo " "
+echo "UPDATE APT"
+echo "************************************"
+sudo apt -q update 
 
 which pip3
 if [[ $? != 0 ]] ; then
-    sudo apt install python3-pip -y
+echo " "
+echo "INSTALLING PIP"
+echo "************************************"
+sudo apt install python3-pip -y
 fi
 
 # Install Ansible
 which ansible
 if [[ $? != 0 ]] ; then
-  echo " "
-  echo "INSTALL ANSIBLE"
-  echo "************************************"
-  sudo pip3 install ansible
+echo " "
+echo "INSTALLING ANSIBLE VIA PIP"
+echo "************************************"
+sudo pip3 install ansible
 fi
 
 # Ensure repo location exists
@@ -68,14 +74,11 @@ if [ ! -d "$HOME_REPO_DIR" ]; then
     echo "$HOME_REPO_DIR does not exist. Creating."
     sudo mkdir -p $HOME_REPO_DIR
     sudo chown -R $BOOTSTRAP_USER_ID:$BOOTSTRAP_GROUP_ID $HOME_REPO_DIR
-else
-    echo "$HOME_REPO_DIR exists."
 fi
 
-if [ -d "$HOME_REPO_DIR" ]
-then
+if [ -d "$HOME_REPO_DIR" ]; then
 	if [ "$(ls -A $HOME_REPO_DIR)" ]; then
-        echo "$HOME_REPO_DIR is not Empty. Pulling from git."
+        echo "$HOME_REPO_DIR is not Empty. Stupidly assuming it's got a repo in it and pulling."
         git -C "$HOME_REPO_DIR" pull
 	else
         echo "$HOME_REPO_DIR is Empty"
@@ -83,32 +86,24 @@ then
         git clone $ANSIBLEPULL_REPO_URL $HOME_REPO_DIR
 	fi
 else
-	echo "Directory $HOME_REPO_DIR not found."
+	echo "ERROR: Uh oh. $HOME_REPO_DIR could not be found."
+    exit 1
 fi
 
-
-# # If home repo is empty...
-# find "$HOME_REPO_DIR" -maxdepth 0 -empty -exec echo {} is empty. \;
-# # Clone repo
-# if [[ $? != 0 ]]; then
-#     echo "No repo present in $HOME_REPO_DIR. Cloning."
-#     git clone $ANSIBLEPULL_REPO_URL $HOME_REPO_DIR
-# else
-# # Update repo
-#     echo "Update repo."
-#     git -C "$HOME_REPO_DIR" pull
-# fi
-
+if [ -d "$ANSIBLE_PATH" ]; then
 echo " "
 echo "ENSURE ANSIBLE PATH EXISTS"
 echo "************************************"
 sudo mkdir -p $ANSIBLE_PATH
 sudo chown -R $BOOTSTRAP_USER_ID:$BOOTSTRAP_GROUP_ID $ANSIBLE_PATH
+fi
 
+if [ -d "$ANSIBLE_VAULT_PASSWORD_FILE" ]; then
 echo " "
 echo "ENSURE ANSIBLE PASSWORD FILE EXISTS"
 echo "************************************"
 echo $ANSIBLE_VAULT_PASSWORD > $ANSIBLE_VAULT_PASSWORD_FILE
+fi
 
 # Satisfy Ansible role dependencies
 echo " "
@@ -134,4 +129,5 @@ echo " "
 echo "START ANSIBLE PULL"
 echo "************************************"
 cd $HOME_REPO_DIR
-ansible-pull -U $ANSIBLEPULL_REPO_URL -i "ansible/inventory/host_vars/{{ item }}.yaml" "ansible/playbooks/{{ item }}.yaml" --vault-password-file $ANSIBLE_VAULT_PASSWORD_FILE
+echo "Changed to: $HOME_REPO_DIR"
+ansible-pull -U $ANSIBLEPULL_REPO_URL -i "$HOME_REPO_DIR/ansible/inventory/host_vars/{{ item }}.yaml" "$HOME_REPO_DIR/ansible/playbooks/{{ item }}.yaml" --vault-password-file $ANSIBLE_VAULT_PASSWORD_FILE
