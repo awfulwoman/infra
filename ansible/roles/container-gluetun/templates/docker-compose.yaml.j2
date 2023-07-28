@@ -33,6 +33,12 @@ services:
       - "traefik.http.services.qbittorrent.loadbalancer.server.port=8080"
       - "traefik.http.routers.qbittorrent.tls=true"
       - "traefik.http.routers.qbittorrent.tls.certresolver=letsencrypt"
+      # Prowlarr
+      - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.affordablepotatoes.com`)"
+      - "traefik.http.routers.prowlarr.service=qbittorrent"
+      - "traefik.http.services.prowlarr.loadbalancer.server.port=8080"
+      - "traefik.http.routers.prowlarr.tls=true"
+      - "traefik.http.routers.prowlarr.tls.certresolver=letsencrypt"
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}:/gluetun"
       - "/etc/localtime:/etc/localtime:ro"
