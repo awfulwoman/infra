@@ -12,7 +12,7 @@ fi
 
 export ANSIBLE_VAULT_PASSWORD_FILE="${ANSIBLE_PATH}/.vaultpassword"
 
-echo $ANSIBLE_VAULT_PASSWORD_FILE
+
 
 if [[ -z "${ANSIBLE_COLLECTIONS_PATH}" ]]; then
     ANSIBLE_COLLECTIONS_PATH="$ANSIBLE_PATH/collections"
@@ -25,6 +25,19 @@ if [[ -z "${HOME_REPO_DIR}" ]]; then
 #   HOME_REPO_DIR="$ANSIBLE_PATH/home"
   HOME_REPO_DIR="/opt/home.git"
 fi
+
+# DEBUG
+
+echo "ANSIBLE_VAULT_PASSWORD_FILE: $ANSIBLE_VAULT_PASSWORD_FILE"
+echo "ANSIBLE_COLLECTIONS_PATH: $ANSIBLE_COLLECTIONS_PATH"
+echo "ANSIBLE_VAULT_PASSWORD: $ANSIBLE_VAULT_PASSWORD"
+echo "ANSIBLEPULL_REPO_URL: $ANSIBLEPULL_REPO_URL"
+echo "ANSIBLE_PATH: $ANSIBLE_PATH"
+echo "ANSIBLE_COLLECTIONS_PATH: $ANSIBLE_COLLECTIONS_PATH"
+echo "ANSIBLE_ROLES_PATH: $ANSIBLE_ROLES_PATH"
+echo "BOOTSTRAP_USER_ID: $BOOTSTRAP_USER_ID"
+echo "BOOTSTRAP_GROUP_ID: $BOOTSTRAP_GROUP_ID"
+
 
 # Import keys
 ssh-import-id-gh whalecoiner
@@ -92,7 +105,7 @@ echo " "
 echo "ENSURE ANSIBLE PATH EXISTS"
 echo "************************************"
 sudo mkdir -p $ANSIBLE_PATH
-sudo chown -R ubuntu:ubuntu $ANSIBLE_PATH
+sudo chown -R $BOOTSTRAP_USER_ID:$BOOTSTRAP_GROUP_ID $ANSIBLE_PATH
 
 echo " "
 echo "ENSURE ANSIBLE PASSWORD FILE EXISTS"
@@ -105,7 +118,7 @@ echo "UPDATE ANSIBLE GALAXY ROLES"
 echo "************************************"
 cd $HOME_REPO_DIR
 sudo mkdir -p $ANSIBLE_ROLES_PATH
-sudo chown -R ubuntu:ubuntu $ANSIBLE_ROLES_PATH
+sudo chown -R $BOOTSTRAP_USER_ID:$BOOTSTRAP_GROUP_ID $ANSIBLE_ROLES_PATH
 ansible-galaxy install -r $HOME_REPO_DIR/ansible/meta/requirements.yaml -p $ANSIBLE_ROLES_PATH
 
 echo " "
@@ -113,7 +126,7 @@ echo "UPDATE ANSIBLE GALAXY COLLECTIONS"
 echo "************************************"
 cd $HOME_REPO_DIR
 sudo mkdir -p $ANSIBLE_COLLECTIONS_PATH
-sudo chown -R ubuntu:ubuntu $ANSIBLE_COLLECTIONS_PATH
+sudo chown -R $BOOTSTRAP_USER_ID:$BOOTSTRAP_GROUP_ID $ANSIBLE_COLLECTIONS_PATH
 ansible-galaxy collection install -r $HOME_REPO_DIR/ansible/meta/requirements.yaml -p $ANSIBLE_COLLECTIONS_PATH
 
 # Run Ansible Pull
