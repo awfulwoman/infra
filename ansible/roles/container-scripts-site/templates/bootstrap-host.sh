@@ -12,18 +12,24 @@ if [[ -z "${ANSIBLE_PATH}" ]]; then
   export ANSIBLE_PATH="/opt/ansible"
 fi
 
+if [[ -z "${HOME_REPO_DIR}" ]]; then
+#   HOME_REPO_DIR="$ANSIBLE_PATH/home"
+  HOME_REPO_DIR="/opt/home.git"
+fi
+
 export ANSIBLE_VAULT_PASSWORD_FILE="${ANSIBLE_PATH}/.vaultpassword"
 
 if [[ -z "${ANSIBLE_COLLECTIONS_PATH}" ]]; then
     export ANSIBLE_COLLECTIONS_PATH="$ANSIBLE_PATH/collections"
 fi
 if [[ -z "${ANSIBLE_ROLES_PATH}" ]]; then
-    export ANSIBLE_ROLES_PATH="$ANSIBLE_PATH/galaxy-roles"
+    export ANSIBLE_ROLES_PATH="$ANSIBLE_PATH/galaxy-roles:$HOME_REPO_DIR/ansible/roles"
 fi
-
-if [[ -z "${HOME_REPO_DIR}" ]]; then
-#   HOME_REPO_DIR="$ANSIBLE_PATH/home"
-  HOME_REPO_DIR="/opt/home.git"
+if [[ -z "${ANSIBLE_ROLES_PATH}" ]]; then
+    export ANSIBLE_ROLES_PATH="$ANSIBLE_PATH/galaxy-roles:$HOME_REPO_DIR/ansible/roles"
+fi
+if [[ -z "${ANSIBLE_PLAYBOOK_DIR}" ]]; then
+    export ANSIBLE_PLAYBOOK_DIR="$HOME_REPO_DIR/ansible/playbooks"
 fi
 
 # DEBUG
@@ -35,7 +41,6 @@ echo "ANSIBLE_PATH: $ANSIBLE_PATH"
 echo "ANSIBLE_VAULT_PASSWORD_FILE: $ANSIBLE_VAULT_PASSWORD_FILE"
 echo "ANSIBLE_COLLECTIONS_PATH: $ANSIBLE_COLLECTIONS_PATH"
 echo "ANSIBLE_ROLES_PATH: $ANSIBLE_ROLES_PATH"
-echo "ANSIBLE_VAULT_PASSWORD: $ANSIBLE_VAULT_PASSWORD"
 echo "ANSIBLEPULL_REPO_URL: $ANSIBLEPULL_REPO_URL"
 echo "BOOTSTRAP_USER_ID: $BOOTSTRAP_USER_ID"
 echo "BOOTSTRAP_GROUP_ID: $BOOTSTRAP_GROUP_ID"
