@@ -4,6 +4,7 @@ roles:
   - name: geerlingguy.nfs
   - name: weareinteractive.environment
   - name: geerlingguy.docker
+  - name: geerlingguy.docker_arm
   - name: geerlingguy.pip
   - name: githubixx.harden-linux
   - name: hifis.unattended_upgrades
