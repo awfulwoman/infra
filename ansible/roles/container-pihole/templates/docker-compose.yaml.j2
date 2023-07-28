@@ -12,7 +12,7 @@ services:
       - 127.0.0.1  
     environment:
       - "TZ=Europe/Berlin"
-      - "WEBPASSWORD={{ pihole_password }}"
+      - "WEBPASSWORD={{ vault_pihole_password }}"
       - "DHCP_ACTIVE=false"
       - "DHCP_START=192.168.1.150"
       - "DHCP_END=192.168.1.199"
