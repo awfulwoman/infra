@@ -2,7 +2,7 @@
 # DNS + DHCP server
 
 - name: PiHole DNS + DHCP server
-  hosts: pihole
+  hosts: host-pihole
   roles:
     - role: standard_os
     - role: weareinteractive.environment
