@@ -75,7 +75,6 @@ fi
 
 
 FILE=""
-HOME_REPO_DIR="$1"
 # init
 # look for empty dira
 if [ -d "$HOME_REPO_DIR" ]
