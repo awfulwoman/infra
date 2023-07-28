@@ -32,7 +32,6 @@ if [[ -z "${ANSIBLE_PLAYBOOK_DIR}" ]]; then
     export ANSIBLE_PLAYBOOK_DIR="$HOME_REPO_DIR/ansible/playbooks"
 fi
 
-# DEBUG
 echo " "
 echo "DEBUG INFO"
 echo "************************************"
@@ -46,7 +45,12 @@ echo "ANSIBLE_VAULT_IDENTITY: $ANSIBLE_VAULT_IDENTITY"
 echo "BOOTSTRAP_USER_ID: $BOOTSTRAP_USER_ID"
 echo "BOOTSTRAP_GROUP_ID: $BOOTSTRAP_GROUP_ID"
 
-# Import keys
+echo " "
+echo "SET HOSTNAME"
+echo "************************************"
+sudo hostname "{{ ansible_host }}"
+echo "Hostname: $(hostname)"
+
 echo " "
 echo "IMPORT PUBLIC KEYS"
 echo "************************************"
@@ -65,7 +69,6 @@ echo "************************************"
 sudo apt install python3-pip -y
 fi
 
-# Install Ansible
 which ansible
 if [[ $? != 0 ]] ; then
 echo " "
@@ -74,7 +77,6 @@ echo "************************************"
 sudo pip3 install ansible
 fi
 
-# Ensure repo location exists
 echo " "
 echo "BUILD & UPDATE LOCAL REPO"
 echo "************************************"
@@ -114,7 +116,6 @@ echo "Creating $ANSIBLE_VAULT_PASSWORD_FILE"
 echo $ANSIBLE_VAULT_PASSWORD > $ANSIBLE_VAULT_PASSWORD_FILE
 fi
 
-# Satisfy Ansible role dependencies
 echo " "
 echo "UPDATE ANSIBLE GALAXY ROLES"
 echo "************************************"
@@ -133,7 +134,6 @@ if [ ! -d "$ANSIBLE_COLLECTIONS_PATH" ]; then
 fi
 ansible-galaxy collection install -r "$HOME_REPO_DIR/ansible/meta/requirements.yaml" -p $ANSIBLE_COLLECTIONS_PATH
 
-# Run Ansible Pull
 echo " "
 echo "START ANSIBLE PULL"
 echo "************************************"
