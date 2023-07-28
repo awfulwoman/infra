@@ -90,7 +90,7 @@ else
     exit 1
 fi
 
-if [ -d "$ANSIBLE_PATH" ]; then
+if [ ! -d "$ANSIBLE_PATH" ]; then
 echo " "
 echo "ENSURE ANSIBLE PATH EXISTS"
 echo "************************************"
@@ -98,7 +98,7 @@ sudo mkdir -p $ANSIBLE_PATH
 sudo chown -R $BOOTSTRAP_USER_ID:$BOOTSTRAP_GROUP_ID $ANSIBLE_PATH
 fi
 
-if [ -d "$ANSIBLE_VAULT_PASSWORD_FILE" ]; then
+if [ ! -d "$ANSIBLE_VAULT_PASSWORD_FILE" ]; then
 echo " "
 echo "ENSURE ANSIBLE PASSWORD FILE EXISTS"
 echo "************************************"
