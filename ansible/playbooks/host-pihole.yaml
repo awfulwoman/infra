@@ -3,6 +3,10 @@
 
 - name: PiHole DNS + DHCP server
   hosts: host-pihole
+  pre_tasks:
+    - set_fact:
+       compose_list: []
+
   roles:
     - role: standard_os
     - role: weareinteractive.environment
