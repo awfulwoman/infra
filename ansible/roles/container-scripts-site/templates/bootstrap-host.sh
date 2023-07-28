@@ -41,7 +41,7 @@ echo "BOOTSTRAP_USER_ID: $BOOTSTRAP_USER_ID"
 echo "BOOTSTRAP_GROUP_ID: $BOOTSTRAP_GROUP_ID"
 
 # Import keys
-ssh-import-id-gh whalecoiner
+ssh-import-id-gh whalecoiner >/dev/null
 
 
 echo " "
@@ -113,7 +113,7 @@ cd $HOME_REPO_DIR
 echo "Changed to: $HOME_REPO_DIR"
 sudo mkdir -p $ANSIBLE_ROLES_PATH
 sudo chown -R $BOOTSTRAP_USER_ID:$BOOTSTRAP_GROUP_ID $ANSIBLE_ROLES_PATH
-ansible-galaxy install -r "$HOME_REPO_DIR/ansible/meta/requirements.yaml" -p $ANSIBLE_ROLES_PATH
+ansible-galaxy install -r "$HOME_REPO_DIR/ansible/meta/requirements.yaml" -p $ANSIBLE_ROLES_PATH  >/dev/null
 
 echo " "
 echo "UPDATE ANSIBLE GALAXY COLLECTIONS"
@@ -122,7 +122,7 @@ cd $HOME_REPO_DIR
 echo "Changed to: $HOME_REPO_DIR"
 sudo mkdir -p $ANSIBLE_COLLECTIONS_PATH
 sudo chown -R $BOOTSTRAP_USER_ID:$BOOTSTRAP_GROUP_ID $ANSIBLE_COLLECTIONS_PATH
-ansible-galaxy collection install -r "$HOME_REPO_DIR/ansible/meta/requirements.yaml" -p $ANSIBLE_COLLECTIONS_PATH
+ansible-galaxy collection install -r "$HOME_REPO_DIR/ansible/meta/requirements.yaml" -p $ANSIBLE_COLLECTIONS_PATH  >/dev/null
 
 # Run Ansible Pull
 echo " "
