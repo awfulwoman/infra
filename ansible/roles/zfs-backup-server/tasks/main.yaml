@@ -27,25 +27,16 @@
     name: backuppool
     state: present
 
-- name: Ensure backups/slowpool dataset is present # TODO: Loop over dataset zfs_backup_datasets
+- name: Ensure host datasets are present 
   become: true
   community.general.zfs:
-    name: backuppool/slowpool
+    name: "backuppool/{{ item }}"
     state: present
     extra_zfs_properties:
       acltype: posix
       xattr: sa
       # mountpoint: none
-
-- name: Ensure backups/fastpool dataset is present # TODO: Loop over dataset zfs_backup_datasets
-  become: true
-  community.general.zfs:
-    name: backuppool/fastpool
-    state: present
-    extra_zfs_properties:
-      acltype: posix
-      xattr: sa
-      # mountpoint: none
+  loop: "{{ zfsbackup_clients }}"
 
 - name: "Ensure /backuppool mountpoint is owned by {{ ansible_user }}"
   become: true
