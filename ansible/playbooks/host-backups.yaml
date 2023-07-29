@@ -13,6 +13,9 @@
     - role: zfs-core
     - role: zfs-backup-server
       zfsbackup_pushover: false
+      zfsbackup_clients:
+        - host-homeautomation
+        - host-storage
     - role: hifis.unattended_upgrades
       become: true
     - role: motd
