@@ -57,12 +57,6 @@
     mode: 0774
     recurse: true
 
-- name: Cleanup older backup scripts
-  become: true
-  ansible.builtin.file:
-    path: /usr/local/sbin/backup.sh
-    state: absent    
-
 - name: Generate and deploy backup script
   become: true
   ansible.builtin.template:

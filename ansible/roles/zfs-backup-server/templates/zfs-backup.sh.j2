@@ -84,7 +84,7 @@ echo "[$(date --iso-8601=seconds)] Started {{ zfsbackup_client }} backup run" >>
 # GET BACKUP DATASETS FROM THAT CLIENT
 # Backup these datasets: {{hostvars[zfsbackup_client]['zfs_backup_datasets']}}
 
-{% for zfs_backup_dataset in zfs_backup_datasets %}
+{% for zfs_backup_dataset in hostvars[zfsbackup_client]['zfs_backup_datasets'] %}
 echo "[$(date --iso-8601=seconds)] START {{zfs_backup_dataset}} " >> $LOGGING_DIR/$LOGGING_FILE
 SYNCOID_OUTPUT=$( /usr/sbin/syncoid --sendoptions=Rw --no-privilege-elevation --no-sync-snap --quiet {{zfs_backup_user}}@{{ zfsbackup_client }}.$SEARCHDOMAIN:{{zfs_backup_dataset}} backuppool/{{ zfsbackup_client }}/{{zfs_backup_dataset}} 2>&1 )
 
