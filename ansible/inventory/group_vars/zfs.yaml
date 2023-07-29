@@ -9,5 +9,3 @@ vault_zfsbackup_password: !vault |
           356336336636373063396533623362613332
 
 zfs_backup_user: zfsbackup
-
-

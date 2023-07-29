@@ -33,6 +33,7 @@ all:
       hosts:
         host-storage:
         host-backups:
+        host-homeautomation:
 
     # ZFS Backup Server
     zfs-backup-server:
@@ -43,6 +44,7 @@ all:
     zfs-backup-clients:
       hosts:
         host-storage:
+        host-homeautomation:
 
     # Autorestic source
     autorestic:
