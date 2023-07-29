@@ -66,7 +66,9 @@ su -c '{{ zfsbackup_ansiblepull_workdir }}/{{ zfsbackup_ansiblepull_script_name 
 # Loop over clients
 {% for zfsbackup_client in zfsbackup_clients %}
 
-# ------------------------------------------------
+
+# BACKUP {{ zfsbackup_client }}
+# *******************************************************************
 
 # Is the backup host up?
 ping "{{ zfsbackup_client }}.$SEARCHDOMAIN" -c2 > /dev/null 2>&1
@@ -76,15 +78,16 @@ then
 else 
   echo "{{ zfsbackup_client }}" offline. Failure."
   failure
-  exit 1 
-fi 
+
 
 echo "[$(date --iso-8601=seconds)] Started {{ zfsbackup_client }} backup run" >> $LOGGING_DIR/$LOGGING_FILE
 
-# GET BACKUP DATASETS FROM THAT CLIENT
 # Backup these datasets: {{hostvars[zfsbackup_client]['zfs_backup_datasets']}}
 
 {% for zfs_backup_dataset in hostvars[zfsbackup_client]['zfs_backup_datasets'] %}
+
+# Backup {{ hostvars[zfsbackup_client]['zfs_backup_datasets'] }}@{{ zfsbackup_client }}
+
 echo "[$(date --iso-8601=seconds)] START {{zfs_backup_dataset}} " >> $LOGGING_DIR/$LOGGING_FILE
 SYNCOID_OUTPUT=$( /usr/sbin/syncoid --sendoptions=Rw --no-privilege-elevation --no-sync-snap --quiet {{zfs_backup_user}}@{{ zfsbackup_client }}.$SEARCHDOMAIN:{{zfs_backup_dataset}} backuppool/{{ zfsbackup_client }}/{{zfs_backup_dataset}} 2>&1 )
 
@@ -110,6 +113,10 @@ echo " " >> $LOGGING_DIR/$LOGGING_FILE
 
 # ------------------------------------------------
 {% endfor %}
+
+
+
+fi # End online check
 
 
 # Notify of outcome
