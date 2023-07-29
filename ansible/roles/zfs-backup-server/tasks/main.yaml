@@ -24,7 +24,7 @@
 - name: Ensure backups pool exists
   become: true
   community.general.zfs:
-    name: backups
+    name: backuppool
     state: present
 
 - name: Ensure backups/slowpool dataset is present # TODO: Loop over dataset zfs_backup_datasets
