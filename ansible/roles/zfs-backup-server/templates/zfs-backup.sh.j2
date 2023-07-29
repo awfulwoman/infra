@@ -74,6 +74,8 @@ touch $LOGGING_DIR/$LOGGING_FILE
 # *******************************************************************
 
 echo "Backing up {{ zfsbackup_client }}."
+echo "**********************************"
+echo " "
 
 # Is the backup host up?
 ping "{{ zfsbackup_client }}.$SEARCHDOMAIN" -c2 > /dev/null 2>&1
