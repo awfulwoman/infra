@@ -80,16 +80,14 @@ touch $LOGGING_DIR/$LOGGING_FILE
 
 echo "Backing up {{ zfsbackup_client }}."
 echo "**********************************"
-echo " "
 
 # Is the backup host up?
-echo "Pinging {{ zfsbackup_client }}$SEARCHDOMAIN"
+echo "🔶 Pinging {{ zfsbackup_client }}$SEARCHDOMAIN"
 ping "{{ zfsbackup_client }}$SEARCHDOMAIN" -c2 > /dev/null 2>&1
 
 if [ $? -eq 0 ]; 
 then 
   echo "✅ {{ zfsbackup_client }} online. Proceeding."
-  echo " "
 
   echo "[$(date --iso-8601=seconds)] Started {{ zfsbackup_client }} backup run" >> $LOGGING_DIR/$LOGGING_FILE
 
@@ -97,43 +95,38 @@ then
 
   {% for zfs_backup_dataset in hostvars[zfsbackup_client]['zfs_backup_datasets'] %}
 
-  echo Backup {{ zfsbackup_client }}:{{ zfs_backup_dataset }}
-  echo "[$(date --iso-8601=seconds)] START {{zfs_backup_dataset}} "
+  echo "🔶 Backup {{ zfsbackup_client }}:{{ zfs_backup_dataset }}"
+  echo "🔶 [$(date --iso-8601=seconds)] START {{zfs_backup_dataset}} "
 
   echo "[$(date --iso-8601=seconds)] START {{zfs_backup_dataset}} " >> $LOGGING_DIR/$LOGGING_FILE
   SYNCOID_COMMAND="/usr/sbin/syncoid --sendoptions=Rw --no-privilege-elevation --no-sync-snap --quiet {{ zfs_backup_user }}@{{ zfsbackup_client }}$SEARCHDOMAIN:{{zfs_backup_dataset}} backuppool/{{ zfsbackup_client }}/{{zfs_backup_dataset}}"
-  echo "DEBUG: -----------------------"
-  echo "DEBUG: $SYNCOID_COMMAND"
-  echo "DEBUG: -----------------------"
-  echo " "
+
+  echo "🔶 -----------------------"
+  echo "🔶 $SYNCOID_COMMAND"
+  echo "🔶 -----------------------"
+
   SYNCOID_OUTPUT=$( $SYNCOID_COMMAND 2>&1 )
 
   if [ $? -eq 0 ]
   then
       echo "[$(date --iso-8601=seconds)] SUCCESS {{zfs_backup_dataset}}" >> $LOGGING_DIR/$LOGGING_FILE
       echo "✅ Successfully backed up {{zfs_backup_dataset}}"
-      #echo " "
-      #echo "-----------------------"
-      #echo "Syncoid Output"
-      #echo $SYNCOID_OUTPUT
-      #echo "-----------------------"
-      #echo " "
   else
       FAILURE=1
       echo "[$(date --iso-8601=seconds)] FAILURE {{zfs_backup_dataset}} " >> $LOGGING_DIR/$LOGGING_FILE
       echo "[$(date --iso-8601=seconds)] FAILURE {{zfs_backup_dataset}} " >> $LOGGING_DIR/$ERROR_FILE
       echo "[$(date --iso-8601=seconds)] FAILURE OUTPUT: " >> $LOGGING_DIR/$ERROR_FILE
       echo $SYNCOID_OUTPUT >> $LOGGING_DIR/$ERROR_FILE
+
       echo "🛑 Syncoid failure backing up {{zfs_backup_dataset}}"
-      
-      echo "DEBUG: Syncoid output follows..."
-      echo "DEBUG: -----------------------"
+      echo "🔶 Syncoid output follows..."
+      echo "🔶 -----------------------"
       echo $SYNCOID_OUTPUT
-      echo "DEBUG: -----------------------"
+      echo "🔶 -----------------------"
       echo " "  
   fi
   echo "[$(date --iso-8601=seconds)] END {{zfs_backup_dataset}} " >> $LOGGING_DIR/$LOGGING_FILE
-  echo "[$(date --iso-8601=seconds)] END {{zfs_backup_dataset}}"
+  echo "🔶 [$(date --iso-8601=seconds)] END {{zfs_backup_dataset}}"
   echo " "
 
   {% endfor %}
