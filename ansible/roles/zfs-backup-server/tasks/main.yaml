@@ -71,7 +71,7 @@
     owner: root
     group: root
     mode: 0774
-  when: zfs_backup_datasets
+  when: zfs_backup_datasets is defined
 
 - name: Cron to run zfs-backup.sh
   # Runs at a specified time to catch reboots and previous backup failures
@@ -82,4 +82,4 @@
     state: present
     minute: "{{ zfsbackup_cron_minute }}"
     hour: "{{ zfsbackup_cron_hour }}"
-  when: zfs_backup_datasets
+  when: zfs_backup_datasets is defined

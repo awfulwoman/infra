@@ -85,7 +85,7 @@
     permissions: hold,mount,send,snapshot
     # descendents: true
   loop: "{{ zfs_backup_datasets }}"
-  when: zfs_backup_datasets
+  when: zfs_backup_datasets is defined
 
 - name: Set authorized key and options
   become: true
@@ -94,4 +94,4 @@
     state: present
     key: "{{ zfs_public_key }}"
     # key_options: 'restrict,command="restrict_commands.sh"'
-  when: zfs_public_key
+  when: zfs_public_key is defined
