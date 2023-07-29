@@ -87,9 +87,9 @@ echo "{{ zfsbackup_client }}$SEARCHDOMAIN"
 ping "{{ zfsbackup_client }}$SEARCHDOMAIN" -c2 > /dev/null 2>&1
 if [ $? -eq 0 ]; 
 then 
-  echo "{{ zfsbackup_client }} online. Proceeding.""
+  echo "{{ zfsbackup_client }} online. Proceeding."
 else 
-  echo "{{ zfsbackup_client }}" offline. Failure."
+  echo "{{ zfsbackup_client }} offline. Failure."
   failure
 
 
