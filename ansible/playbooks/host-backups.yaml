@@ -19,9 +19,11 @@
     - role: apt-upgrade
     - role: sleepuntil
       sleepuntil_wakeup_script: /usr/local/sbin/zfs-backup.sh
+    - role: geerlingguy.pip
     - role: geerlingguy.ansible
       become: true
-      ansible_install_method: "pip"
+      ansible_install_method: pip
+      ansible_pip_executable: '/usr/bin/pip3'
     - role: wakeonlan
     - role: ansible-pull
       ansiblepull_install_pull_cron: false
