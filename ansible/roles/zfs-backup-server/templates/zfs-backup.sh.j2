@@ -52,7 +52,7 @@ touch $LOGGING_DIR/$LOGGING_FILE
 
 # Perform Ansible pull while the machine is awake
 {% if (zfsbackup_ansiblepull_workdir) and (zfsbackup_ansiblepull_script_name) %}
-su -c '{{ zfsbackup_ansiblepull_workdir }}/{{ zfsbackup_ansiblepull_script_name }}' ubuntu
+# su -c '{{ zfsbackup_ansiblepull_workdir }}/{{ zfsbackup_ansiblepull_script_name }}' ubuntu
 {% endif %}
 
 
