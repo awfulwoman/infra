@@ -21,6 +21,7 @@ echo "***********"
 echo "Logging to: $LOGGING_DIR/$LOGGING_FILE"
 echo "Logging errors to: $LOGGING_DIR/$ERROR_FILE"
 echo "Search domain: $SEARCHDOMAIN"
+echo " "
 
 sleepnow() {
 	# Sleep if script is present
@@ -82,6 +83,7 @@ echo "**********************************"
 echo " "
 
 # Is the backup host up?
+echo "{{ zfsbackup_client }}.$SEARCHDOMAIN"
 ping "{{ zfsbackup_client }}.$SEARCHDOMAIN" -c2 > /dev/null 2>&1
 if [ $? -eq 0 ]; 
 then 
