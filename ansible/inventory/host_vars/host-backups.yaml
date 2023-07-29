@@ -1,12 +1,10 @@
 ansible_user: ubuntu
 ansible_host: host-backups.i.affordablepotatoes.com
 
-wireguard_address: "10.8.0.118/24"
-
 wakeonlan_mac_address: "60:a4:4c:40:52:57"
 
 # Base for all container dirs. Normally on an SSD.
-container_config_dir: /home/ubuntu
+container_config_dir: /opt/containers
 
 # Healthceck.io
 healthcheck_reboot_id: !vault |

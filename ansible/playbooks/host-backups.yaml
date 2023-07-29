@@ -5,13 +5,11 @@
     - role: standard_os
     - role: standard-host
     - role: artis3n.tailscale
-    - role: grub-tune
     - role: weareinteractive.environment
       become: true
       no_log: true
     - role: generate-sshkey
       become: true
-    - role: beep
     - role: zfs-core
     - role: zfs-backup-server
       zfsbackup_pushover: false
@@ -19,7 +17,6 @@
       become: true
     - role: motd
     - role: apt-upgrade
-    - role: beep
     - role: sleepuntil
       sleepuntil_wakeup_script: /usr/local/sbin/zfs-backup.sh
     - role: geerlingguy.ansible
