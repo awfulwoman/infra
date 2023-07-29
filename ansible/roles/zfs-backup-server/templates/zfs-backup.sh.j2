@@ -100,7 +100,7 @@ then
   echo "[$(date --iso-8601=seconds)] START {{zfs_backup_dataset}} "
 
   echo "[$(date --iso-8601=seconds)] START {{zfs_backup_dataset}} " >> $LOGGING_DIR/$LOGGING_FILE
-  SYNCOID_OUTPUT=$( /usr/sbin/syncoid --sendoptions=Rw --no-privilege-elevation --no-sync-snap --quiet {{ zfs_backup_user }}@{{ zfsbackup_client }}.$SEARCHDOMAIN:{{zfs_backup_dataset}} backuppool/{{ zfsbackup_client }}/{{zfs_backup_dataset}} 2>&1 )
+  SYNCOID_OUTPUT=$( /usr/sbin/syncoid --sendoptions=Rw --no-privilege-elevation --no-sync-snap --quiet {{ zfs_backup_user }}@{{ zfsbackup_client }}$SEARCHDOMAIN:{{zfs_backup_dataset}} backuppool/{{ zfsbackup_client }}/{{zfs_backup_dataset}} 2>&1 )
 
 
 
