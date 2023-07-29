@@ -14,7 +14,7 @@ fi
 
 if [[ -z "${HOME_REPO_DIR}" ]]; then
 #   HOME_REPO_DIR="$ANSIBLE_PATH/home"
-  HOME_REPO_DIR="/opt/home.git"
+  HOME_REPO_DIR="/opt/{{ repo_name }}"
 fi
 
 export ANSIBLE_VAULT_PASSWORD_FILE="${ANSIBLE_PATH}/.vaultpassword"
