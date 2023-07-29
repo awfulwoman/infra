@@ -10,13 +10,17 @@ echo " "
 #echo "Continuing."
 #echo " "
 
-
 LOGGING_DIR={{zfsbackup_logging_dir}}
 LOGGING_FILE={{zfsbackup_logging_successfile}}
 ERROR_FILE=zfsbackup_logging_errorfile
-BACKUP_ADDRESS={{zfsbackup_target_server}}
 FAILURE=0
 SEARCHDOMAIN=.i.affordablepotatoes.com
+
+echo "DEBUG INFO"
+echo "***********"
+echo "Logging to: $LOGGING_DIR/$LOGGING_FILE"
+echo "Logging errors to: $LOGGING_DIR/$ERROR_FILE"
+echo "Search domain: $SEARCHDOMAIN"
 
 sleepnow() {
 	# Sleep if script is present
