@@ -82,7 +82,7 @@ echo "Backing up {{ zfsbackup_client }}."
 echo "**********************************"
 
 # Is the backup host up?
-echo "🔶 Pinging {{ zfsbackup_client }}$SEARCHDOMAIN"
+echo "👉 Pinging {{ zfsbackup_client }}$SEARCHDOMAIN"
 ping "{{ zfsbackup_client }}$SEARCHDOMAIN" -c2 > /dev/null 2>&1
 
 if [ $? -eq 0 ]; 
@@ -95,8 +95,8 @@ then
 
   {% for zfs_backup_dataset in hostvars[zfsbackup_client]['zfs_backup_datasets'] %}
 
-  echo "🔶 Backup {{ zfsbackup_client }}:{{ zfs_backup_dataset }}"
-  echo "🔶 [$(date --iso-8601=seconds)] START {{zfs_backup_dataset}} "
+  echo "👉 Backup {{ zfsbackup_client }}:{{ zfs_backup_dataset }}"
+  echo "👉 [$(date --iso-8601=seconds)] START {{zfs_backup_dataset}} "
 
   echo "[$(date --iso-8601=seconds)] START {{zfs_backup_dataset}} " >> $LOGGING_DIR/$LOGGING_FILE
   SYNCOID_COMMAND="/usr/sbin/syncoid --sendoptions=Rw --no-privilege-elevation --no-sync-snap --quiet {{ zfs_backup_user }}@{{ zfsbackup_client }}$SEARCHDOMAIN:{{zfs_backup_dataset}} backuppool/{{ zfsbackup_client }}/{{zfs_backup_dataset}}"
@@ -125,7 +125,7 @@ then
       echo "🔶 -----------------------"
   fi
   echo "[$(date --iso-8601=seconds)] END {{zfs_backup_dataset}} " >> $LOGGING_DIR/$LOGGING_FILE
-  echo "🔶 [$(date --iso-8601=seconds)] END {{zfs_backup_dataset}}"
+  echo "👉 [$(date --iso-8601=seconds)] END {{zfs_backup_dataset}}"
   {% endfor %}
 
   echo "[$(date --iso-8601=seconds)] Finished backup run" >> $LOGGING_DIR/$LOGGING_FILE
