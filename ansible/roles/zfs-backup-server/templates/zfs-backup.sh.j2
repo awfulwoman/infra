@@ -61,8 +61,10 @@ touch $LOGGING_DIR/$LOGGING_FILE
 {% for zfsbackup_client in zfsbackup_clients %}
 
 
-# BACKUP {{ zfsbackup_client }}
+# PER CLIENT BACKUP 
 # *******************************************************************
+
+echo "Backing up {{ zfsbackup_client }}."
 
 # Is the backup host up?
 ping "{{ zfsbackup_client }}.$SEARCHDOMAIN" -c2 > /dev/null 2>&1
