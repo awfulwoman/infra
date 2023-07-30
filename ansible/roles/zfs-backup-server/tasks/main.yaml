@@ -81,3 +81,11 @@
     mode: 0600
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user}}"
+
+- name: Allow non-sudo account to do ZFS things
+  become: true
+  community.general.zfs_delegate_admin:
+    name: backuppool
+    users: "{{ ansible_user }}"
+    permissions: compression,mountpoint,create,mount,receive
+    descendents: true
