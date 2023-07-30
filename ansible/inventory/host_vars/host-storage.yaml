@@ -26,6 +26,15 @@ restic_zfs_id: slowpool/backups/restic
 container_config_dir: "/{{ container_config_zfs_id }}"
 restic_server_path: "/{{ restic_zfs_id }}"
 
+# Datasets present 
+zfs_datasets:
+  - "{{ container_config_zfs_id }}"
+  - "{{ restic_zfs_id }}"
+  - slowpool/pools
+  - slowpool/images
+  - slowpool/media
+  - slowpool/backups
+
 # Datasets to be backed-up
 zfs_backup_datasets:
   - "{{ container_config_zfs_id }}"

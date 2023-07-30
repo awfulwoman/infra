@@ -21,10 +21,6 @@
     state: present
   register: created_user
 
-- name: Get ZFS Server Public key
-  ansible.builtin.set_fact:
-    zfs_public_key: "{{ hostvars[groups['zfs-backup-server'][0]]['public_key'] | default(False) }}"
-
 - name: Stat .ssh
   become: true
   ansible.builtin.stat:
@@ -41,41 +37,41 @@
     mode: 0664
   when: not ssh_path.stat.exists
 
-# - name: Ensure restrict_commands.sh exists
-#   become: true
-#   ansible.builtin.copy:
-#     src: restrict_commands.sh
-#     dest: /usr/local/bin/restrict_commands.sh
-#     owner: root
-#     group: root
-#     mode: 0777
+- name: Ensure restrict_commands.sh exists
+  become: true
+  ansible.builtin.copy:
+    src: restrict_commands.sh
+    dest: /usr/local/bin/restrict_commands.sh
+    owner: root
+    group: root
+    mode: 0777
 
-# - name: Create Sanoid config file
-#   become: true
-#   ansible.builtin.copy:
-#     src: sanoid.conf
-#     dest: "/etc/sanoid/sanoid.conf"
-#     owner: root
-#     group: root
-#     mode: 0664
+- name: Create Sanoid config file
+  become: true
+  ansible.builtin.template:
+    src: sanoid.conf.j2
+    dest: "/etc/sanoid/sanoid.conf"
+    owner: root
+    group: root
+    mode: 0664
 
-# - name: Apply Sanoid cronjob
-#   become: true
-#   ansible.builtin.cron:
-#     name: "Sanoid"
-#     month: "*"
-#     day: "*"
-#     hour: "*"
-#     minute: "*"
-#     weekday: "*"
-#     job: "/usr/sbin/sanoid --cron"
-#     state: present
+- name: Apply Sanoid cronjob
+  become: true
+  ansible.builtin.cron:
+    name: "Sanoid"
+    month: "*"
+    day: "*"
+    hour: "*"
+    minute: "*"
+    weekday: "*"
+    job: "/usr/sbin/sanoid --cron"
+    state: present
 
-# - name: List datasets to be given permissions on
-#   become: true
-#   ansible.builtin.debug:
-#     msg: "{{ item }}"
-#   loop: "{{ zfs_backup_datasets }}"
+- name: List datasets to be given permissions on
+  become: true
+  ansible.builtin.debug:
+    msg: "{{ item }}"
+  loop: "{{ zfs_backup_datasets }}"
 
 - name: Allow "{{ zfs_backup_user }}" user to send backups of listed datasets
   become: true
@@ -92,6 +88,6 @@
   ansible.posix.authorized_key:
     user: "{{ zfs_backup_user }}"
     state: present
-    key: "{{ zfs_public_key }}"
-    # key_options: 'restrict,command="restrict_commands.sh"'
-  when: zfs_public_key is defined
+    key: "{{ vault_public_key }}"
+    key_options: 'restrict,command="restrict_commands.sh"'
+  when: vault_public_key is defined

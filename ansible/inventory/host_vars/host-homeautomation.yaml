@@ -22,6 +22,10 @@ zfs_pools:
 # Named ZFS datasets
 container_config_zfs_id: tank/containers
 
+# Datasets present
+zfs_datasets:
+  - "{{ container_config_zfs_id }}"
+
 # Datasets to be backed-up
 # These datasets will be pulled to a backup server
 zfs_backup_datasets:

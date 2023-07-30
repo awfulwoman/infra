@@ -1,0 +1,17 @@
+{% for zfs_dataset in zfs_datasets %}
+[{{ zfs_dataset }}]
+	use_template = production
+{% endfor %}
+
+#############################
+# templates below this line #
+#############################
+
+[template_production]
+        frequently = 0
+        hourly = 36
+        daily = 30
+        monthly = 3
+        yearly = 0
+        autosnap = yes
+        autoprune = yes
