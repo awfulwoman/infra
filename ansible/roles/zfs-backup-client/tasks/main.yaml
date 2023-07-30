@@ -89,5 +89,5 @@
     user: "{{ vault_zfsbackups_user }}"
     state: present
     key: "{{ vault_zfsbackups_public_key }}"
-    key_options: 'restrict,command="restrict_commands.sh"'
+    # key_options: 'restrict,command="restrict_commands.sh"'
   when: vault_zfsbackups_public_key is defined
