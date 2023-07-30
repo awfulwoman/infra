@@ -10,10 +10,10 @@
       - mbuffer
     state: present
 
-- name: Add the user "{{ zfs_backup_user }}"
+- name: Add the user "{{ vault_zfsbackups_user }}"
   become: true
   ansible.builtin.user:
-    name: "{{ zfs_backup_user }}"
+    name: "{{ vault_zfsbackups_user }}"
     comment: ZFS Backup User
     system: true
     create_home: true
@@ -32,8 +32,8 @@
   ansible.builtin.file:
     path: "{{ created_user.home }}/.ssh"
     state: directory
-    owner: "{{ zfs_backup_user }}"
-    group: "{{ zfs_backup_user  }}"
+    owner: "{{ vault_zfsbackups_user }}"
+    group: "{{ vault_zfsbackups_user  }}"
     mode: 0664
   when: not ssh_path.stat.exists
 
@@ -73,11 +73,11 @@
     msg: "{{ item }}"
   loop: "{{ zfs_backup_datasets }}"
 
-- name: Allow "{{ zfs_backup_user }}" user to send backups of listed datasets
+- name: Allow "{{ vault_zfsbackups_user }}" user to send backups of listed datasets
   become: true
   community.general.zfs_delegate_admin:
     name: "{{ item }}"
-    users: "{{ zfs_backup_user }}"
+    users: "{{ vault_zfsbackups_user }}"
     permissions: hold,mount,send,snapshot
     # descendents: true
   loop: "{{ zfs_backup_datasets }}"
@@ -86,8 +86,8 @@
 - name: Set authorized key and options
   become: true
   ansible.posix.authorized_key:
-    user: "{{ zfs_backup_user }}"
+    user: "{{ vault_zfsbackups_user }}"
     state: present
-    key: "{{ vault_public_key }}"
+    key: "{{ vault_zfsbackups_public_key }}"
     key_options: 'restrict,command="restrict_commands.sh"'
-  when: vault_public_key is defined
+  when: vault_zfsbackups_public_key is defined

@@ -11,15 +11,9 @@
       - mbuffer
     state: present
 
-- name: Read backup server public key
-  become: true
-  ansible.builtin.slurp:
-    src: $HOME/.ssh/id_ed25519.pub
-  register: slurpfile
-
 - name: Publish backup server public key as fact
   ansible.builtin.set_fact:
-    public_key: "{{ slurpfile['content'] | b64decode }}"
+    public_key: "{{ vault_zfsbackups_public_key }}"
 
 - name: Ensure backups pool exists
   become: true
@@ -78,11 +72,11 @@
 
 - name: debug
   debug: 
-    var: vault_private_key
+    var: vault_zfsbackups_privatekey_b64
 
 - name: Install ssh key
   ansible.builtin.copy: 
-    content: "{{ vault_private_key }}" 
+    content: "{{ vault_zfsbackups_privatekey_b64 | b64decode }}" 
     dest: "/home/{{ ansible_user}}/.ssh/id_rsa"
     mode: 0600
     owner: "{{ ansible_user }}"

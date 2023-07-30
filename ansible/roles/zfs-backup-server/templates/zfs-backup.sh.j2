@@ -99,7 +99,7 @@ then
   echo "👉 [$(date --iso-8601=seconds)] START {{zfs_backup_dataset}} "
 
   echo "[$(date --iso-8601=seconds)] START {{zfs_backup_dataset}} " >> $LOGGING_DIR/$LOGGING_FILE
-  SYNCOID_COMMAND="/usr/sbin/syncoid --sendoptions=Rw --no-privilege-elevation --no-sync-snap --quiet {{ zfs_backup_user }}@{{ zfsbackup_client }}$SEARCHDOMAIN:{{zfs_backup_dataset}} backuppool/{{ zfsbackup_client }}/{{zfs_backup_dataset}}"
+  SYNCOID_COMMAND="/usr/sbin/syncoid --sendoptions=Rw --no-privilege-elevation --no-sync-snap --quiet {{ vault_zfsbackups_user }}@{{ zfsbackup_client }}$SEARCHDOMAIN:{{zfs_backup_dataset}} backuppool/{{ zfsbackup_client }}/{{zfs_backup_dataset}}"
 
   echo "🔶 -----------------------"
   echo "🔶 $SYNCOID_COMMAND"
