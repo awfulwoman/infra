@@ -10,7 +10,7 @@
 - name: Ensure datasets are present 
   become: true
   community.general.zfs:
-    name: "/{{ item }}"
+    name: "{{ item }}"
     state: present
     extra_zfs_properties:
       acltype: posix
