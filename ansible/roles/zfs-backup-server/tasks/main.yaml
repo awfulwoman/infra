@@ -69,7 +69,7 @@
 
 # SET PRIVATE BACKUP KEY FROM VAULT
 - name: Ensure .ssh directory exists.
-   ansible.builtin.file: 
+  ansible.builtin.file: 
     dest: "/home/{{ ansible_user}}/.ssh"
     mode: 0700 
     owner: user 
