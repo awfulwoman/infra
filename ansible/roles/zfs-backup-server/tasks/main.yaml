@@ -37,6 +37,8 @@
   ansible.builtin.debug:
     var: client_host_datasets
 
+# client_host_datasets.item
+
 # - set_fact:
 #     test: hostvars['{{ item }}']
 # - name: Ensure backup datasets are present
