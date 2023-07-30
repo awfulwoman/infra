@@ -67,6 +67,17 @@
     minute: "{{ zfsbackup_cron_minute }}"
     hour: "{{ zfsbackup_cron_hour }}"
 
+# SET PRIVATE BACKUP KEY FROM VAULT
+- name: Ensure .ssh directory exists.
+   ansible.builtin.file: 
+    dest: "/home/{{ ansible_user}}/.ssh"
+    mode: 0700 
+    owner: user 
+    state: directory
 
-
-# SET PRIVATE KEY FROM VAULT
+- name: Install ssh key
+  ansible.builtin.copy: 
+    content: "{{ vault_private_key }}" 
+    dest: "/home/{{ ansible_user}}/.ssh/id_rsa"
+    mode: 0600
+    owner: "{{ ansible_user }}"
