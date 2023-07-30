@@ -21,7 +21,7 @@
     name: backuppool
     state: present
 
-- name: Ensure host datasets are present 
+- name: Ensure client host datasets are present 
   become: true
   community.general.zfs:
     name: "backuppool/{{ item }}"
@@ -31,6 +31,21 @@
       xattr: sa
       # mountpoint: none
   loop: "{{ zfsbackup_clients }}"
+  register: client_host_datasets
+
+- name: debug client_host_datasets
+  ansible.builtin.debug:
+    var: client_host_datasets
+
+# - set_fact:
+#     test: hostvars['{{ item }}']
+# - name: Ensure backup datasets are present
+# loop over backup clients  {{ zfsbackup_clients }}
+# hostvars['test-1']
+# grab backup datasets from clients
+# register datasets as var
+# create datasets locally
+
 
 - name: "Ensure /backuppool mountpoint is owned by {{ ansible_user }}"
   become: true
