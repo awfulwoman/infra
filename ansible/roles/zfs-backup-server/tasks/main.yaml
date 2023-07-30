@@ -76,6 +76,10 @@
     group: "{{ ansible_user}}"
     state: directory
 
+- name: debug
+  debug: 
+    var: vault_private_key
+
 - name: Install ssh key
   ansible.builtin.copy: 
     content: "{{ vault_private_key }}" 
