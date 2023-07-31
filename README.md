@@ -2,7 +2,7 @@
 
 <img align="right" width="100" height="100" src="http://www.fillmurray.com/100/100" alt="">
 
-Let me and Bill Murray show you our home GitOps setup. 
+Let me show you my home network setup. 
 
 ![Media server has rebooted on schedule](https://healthchecks.io/badge/37a7ad4c-57bd-4cea-9118-f2c5df/Qx0Lc7eg-2/mediaserver-regular-reboot.svg)
 ![Home Automation server has rebooted on schedule](https://healthchecks.io/badge/37a7ad4c-57bd-4cea-9118-f2c5df/i3csSel2-2/homeautomation-regular-reboot.svg)
@@ -12,7 +12,6 @@ Let me and Bill Murray show you our home GitOps setup.
 - **Networking:** internal DHCP and DNS via an OPNsense box. WireGuard VPN via Tailscale. 
 - **Hardware management:** all machines controlled via [Ansible](ansible).
 - **Networking:** provisioned via Terraform.
-- **Container orchestration:** [Flux](flux) and Kubernetes, running on Dell Wyse 5070 thin clients.
 
 I started out writing this as a series of notes but it's growing into a mini-opera composed of weird sentence structures and addressing a constantly switching audience. I shall one day address this issue.
 
