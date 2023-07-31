@@ -1,4 +1,4 @@
-# At Home With The GitOps
+# There’s no place like 127.0.0.1
 
 <img align="right" width="100" height="100" src="http://www.fillmurray.com/100/100" alt="">
 
