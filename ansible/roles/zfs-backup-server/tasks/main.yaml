@@ -42,7 +42,7 @@
     users: "{{ ansible_user }}"
     descendents: true
     state: present
-    permissions: mount,compression,mountpoint,create,receive,xattr,acltype,rollback
+    permissions: mount,compression,mountpoint,create,receive,xattr,acltype,rollback,rename,snapshot,canmount
   loop: "{{ zfsbackup_clients }}"
 
 
