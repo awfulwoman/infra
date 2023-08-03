@@ -51,7 +51,7 @@
 
 - name: Show value of 'hostvars[item]['zfs_backup_datasets']'
   set_fact:
-    blah: lookup("vars", test)
+    blah: "{{ lookup('vars', test) }}"
   vars: 
     test: hostvars[item].zfs_backup_datasets
   loop: "{{ zfsbackup_clients }}"
