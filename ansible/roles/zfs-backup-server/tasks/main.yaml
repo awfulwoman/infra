@@ -87,7 +87,7 @@
   become: true
   ansible.builtin.template:
     src: templates/zfs-backup.sh.j2
-    dest: /usr/local/sbin/zfs-backup.sh
+    dest: /usr/local/bin/zfs-backup.sh
     owner: root
     group: root
     mode: 0774
@@ -97,7 +97,7 @@
   become: true
   ansible.builtin.cron:
     name: "backup.sh"
-    job: /usr/local/sbin/zfs-backup.sh
+    job: /usr/local/bin/zfs-backup.sh
     state: present
     minute: "{{ zfsbackup_cron_minute }}"
     hour: "{{ zfsbackup_cron_hour }}"
