@@ -55,9 +55,9 @@
   loop: "{{ zfsbackup_clients }}"
     # _start: "{{ _var.action_list.start.0|default('') }}"
 
-# - name: Show value dataset_names
-#   ansible.builtin.debug: 
-#     var: dataset_names
+- name: Show value dataset_names
+  ansible.builtin.debug: 
+    var: blah
 
 
 # - name: Show value of 'hostvars[item]['zfs_backup_datasets']'
