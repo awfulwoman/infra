@@ -84,7 +84,7 @@
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     state: directory
-    mode: 0777
+    mode: 0774
     recurse: true
 
 - name: Generate and deploy backup script
