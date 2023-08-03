@@ -32,11 +32,26 @@
       # mountpoint: none
   loop: "{{ zfsbackup_clients }}"
 
+# EXAMPLE HOST LIST
+# zfsbackup_clients:
+# - host-storage
+# - host-homeautomation
+
+# EXAMPLE FROM zfsbackup_clients[0]
+# zfs_datasets: 
+# - slowpool/pools
+# - slowpool/images
+# - slowpool/media
+# - slowpool/backups
+
+
 - name: Show value of 'hostvars[item]['zfs_backup_datasets']'
   ansible.builtin.debug: 
-    var: lookup(hostvars[item]['zfs_backup_datasets'])
+    var: "lookup(hostvars[{{ item }}]['zfs_backup_datasets'])"
   loop: "{{ zfsbackup_clients }}"
   register: client_host_datasets
+
+
 
 - name: "Ensure /backuppool mountpoint is owned by {{ ansible_user }}"
   become: true
