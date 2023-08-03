@@ -43,12 +43,8 @@
     users: "{{ ansible_user }}"
     descendents: true
     state: present
-    #permissions: acltype,compression,create,mount,mountpoint,receive,xattr #,rollback,rename,snapshot,canmount
     permissions: compression,mountpoint,create,mount,receive,rollback,snapshot,hold,release,destroy,xattr,acltype,refreservation,rename
-    # ,aclinherit,aclmode,atime,canmount,casesensitivity,checksum,compression,copies,exec,devices,mountpoint,nbmand,normalization,quota,readonly,recordsize,reservation,setuid,shareiscsi,sharenfs,sharesmb,snapdir,userprop,utf8only,version,volsize,vscan,xattr,zoned
   # loop: "{{ zfsbackup_clients }}"
-
-
 
 - name: Create dataset list
   set_fact:
