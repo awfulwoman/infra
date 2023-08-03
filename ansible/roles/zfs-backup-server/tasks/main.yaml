@@ -83,6 +83,16 @@
     mode: 0774
     recurse: true
 
+- name: Generate and deploy backup script dir
+  become: true
+  ansible.builtin.file:
+    path: "/opt/zfsbackup"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0774
+
+
 - name: Generate and deploy backup script
   become: true
   ansible.builtin.template:
