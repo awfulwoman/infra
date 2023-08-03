@@ -82,11 +82,11 @@ echo "Backing up {{ zfsbackup_client }}."
 echo "**********************************"
 
 ## Is the backup host up?
-#echo "👉 Pinging {{ zfsbackup_client }}$SEARCHDOMAIN"
-#ping "{{ zfsbackup_client }}$SEARCHDOMAIN" -c2 > /dev/null 2>&1
+echo "👉 Pinging {{ zfsbackup_client }}$SEARCHDOMAIN"
+ping "{{ zfsbackup_client }}$SEARCHDOMAIN" -c2 > /dev/null 2>&1
 
-#if [ $? -eq 0 ]; 
-#then 
+if [ $? -eq 0 ]; 
+then 
   echo "✅ {{ zfsbackup_client }} online. Proceeding."
 
   echo "[$(date --iso-8601=seconds)] Started {{ zfsbackup_client }} backup run" >> $LOGGING_DIR/$LOGGING_FILE
@@ -130,11 +130,11 @@ echo "**********************************"
   echo " " >> $LOGGING_DIR/$LOGGING_FILE
   echo "---------------------" >> $LOGGING_DIR/$LOGGING_FILE
   echo " " >> $LOGGING_DIR/$LOGGING_FILE
-#else 
-#  echo "🛑 {{ zfsbackup_client }} offline. Failure."
-#  echo " "
-#  failure
-#fi # End online check
+else 
+  echo "🛑 {{ zfsbackup_client }} offline. Failure."
+  echo " "
+  failure
+fi # End online check
 # ------------------------------------------------
 {% endfor %}
 
