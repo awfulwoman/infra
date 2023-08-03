@@ -31,23 +31,10 @@
       xattr: sa
       # mountpoint: none
   loop: "{{ zfsbackup_clients }}"
+
+- name: Show value of 'hostvars[item]['zfs_backup_datasets']'
+  ansible.builtin.debug: msg="{{ lookup(hostvars[item]['zfs_backup_datasets']) }}"
   register: client_host_datasets
-
-- name: debug client_host_datasets
-  ansible.builtin.debug:
-    var: client_host_datasets
-
-# client_host_datasets.item
-
-# - set_fact:
-#     test: hostvars['{{ item }}']
-# - name: Ensure backup datasets are present
-# loop over backup clients  {{ zfsbackup_clients }}
-# hostvars['test-1']
-# grab backup datasets from clients
-# register datasets as var
-# create datasets locally
-
 
 - name: "Ensure /backuppool mountpoint is owned by {{ ansible_user }}"
   become: true
