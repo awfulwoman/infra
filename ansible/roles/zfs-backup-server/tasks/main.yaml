@@ -117,5 +117,5 @@
   community.general.zfs_delegate_admin:
     name: backuppool
     users: "{{ ansible_user }}"
-    permissions: mount,compression,mountpoint,create,mount,receive
+    permissions: mount,compression,mountpoint,create,mount,receive,xattr,acltype
     descendents: true
