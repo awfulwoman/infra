@@ -50,16 +50,14 @@
 #     dataset_names: []
 
 - name: Show value of 'hostvars[item]['zfs_backup_datasets']'
-  set_fact: 
-    dataset_names: "hostvars['{{ item }}'].zfs_backup_datasets"
+  debug:
+    msg: "hostvars['{{ item }}'].zfs_backup_datasets"
   loop: "{{ zfsbackup_clients }}"
-  # vars:
-  #   _datasets: 
     # _start: "{{ _var.action_list.start.0|default('') }}"
 
-- name: Show value dataset_names
-  ansible.builtin.debug: 
-    var: dataset_names
+# - name: Show value dataset_names
+#   ansible.builtin.debug: 
+#     var: dataset_names
 
 
 # - name: Show value of 'hostvars[item]['zfs_backup_datasets']'
