@@ -101,9 +101,9 @@ then
   echo "[$(date --iso-8601=seconds)] START {{zfs_backup_dataset}} " >> $LOGGING_DIR/$LOGGING_FILE
   SYNCOID_COMMAND="/usr/sbin/syncoid --sendoptions=Rw --no-privilege-elevation --no-sync-snap --quiet {{ vault_zfsbackups_user }}@{{ zfsbackup_client }}$SEARCHDOMAIN:{{zfs_backup_dataset}} backuppool/{{ zfsbackup_client }}/{{zfs_backup_dataset}}"
 
-  echo "🔶 -----------------------"
-  echo "🔶 $SYNCOID_COMMAND"
-  echo "🔶 -----------------------"
+  #echo "🔶 -----------------------"
+  #echo "🔶 $SYNCOID_COMMAND"
+  #echo "🔶 -----------------------"
 
   SYNCOID_OUTPUT=$( $SYNCOID_COMMAND 2>&1 )
 
@@ -119,7 +119,7 @@ then
       echo $SYNCOID_OUTPUT >> $LOGGING_DIR/$ERROR_FILE
 
       echo "🛑 Syncoid failure backing up {{zfs_backup_dataset}}"
-      echo "🔶 MSG: $SYNCOID_OUTPUT"
+      # echo "🔶 MSG: $SYNCOID_OUTPUT"
   fi
   echo "[$(date --iso-8601=seconds)] END {{zfs_backup_dataset}} " >> $LOGGING_DIR/$LOGGING_FILE
   echo "👉 [$(date --iso-8601=seconds)] END {{zfs_backup_dataset}}"
