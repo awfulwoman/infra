@@ -47,7 +47,7 @@
 
 - name: Show value of 'hostvars[item]['zfs_backup_datasets']'
   ansible.builtin.debug: 
-    var: "hostvars['{{ item }}'']['zfs_backup_datasets']"
+    var: "hostvars['{{ item }}''].zfs_backup_dataset"
   loop: "{{ zfsbackup_clients }}"
   register: client_host_datasets
 
