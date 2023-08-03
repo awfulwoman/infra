@@ -94,7 +94,6 @@
 
 - name: Cron to run zfs-backup.sh
   # Runs at a specified time to catch reboots and previous backup failures
-  become: true
   ansible.builtin.cron:
     name: "backup.sh"
     job: /usr/local/bin/zfs-backup.sh
