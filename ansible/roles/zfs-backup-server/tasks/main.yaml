@@ -32,7 +32,6 @@
       # mountpoint: none
   loop: "{{ zfsbackup_clients }}"
 
-
 - name: Set dataset list
   set_fact:
     datasets: []
@@ -42,7 +41,7 @@
     datasets: "{{ datasets + _result }}"
   loop: "{{ zfsbackup_clients }}"
   vars:
-    _host_datasets: "{{ hostvars[item].zfs_backup_datasets }}"
+    _host_datasets: "{{ hostvars[item].zfs_pools }}"
     _result: "{{ [item + '/'] | product(_host_datasets) | map('join') | list }}"
 
 - name: Show value of dataset_names
