@@ -29,9 +29,9 @@
     path: "{{ container_config_dir }}/sanoid-image-builder/sanoid.deb"
   register: sanoid_deb
 
-# - name: ansible_sanoid
-#   debug: 
-#     msg: "{{ sanoid.stat }}"
+- name: sanoid_bin
+  ansible.builtin.debug: 
+    msg: "{{ sanoid_bin.stat }}"
 
 # We have to call the script from the dir, otherwise it fails
 - name: Build Sanoid *.deb
