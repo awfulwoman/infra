@@ -20,17 +20,20 @@
   community.general.zfs:
     name: backuppool
     state: present
-
-- name: Ensure a dataset for each backup client is present
-  become: true
-  community.general.zfs:
-    name: "backuppool/{{ item }}"
-    state: present
     extra_zfs_properties:
       acltype: posix
       xattr: sa
-      # mountpoint: none
-  loop: "{{ zfsbackup_clients }}"
+
+# - name: Ensure a dataset for each backup client is present
+#   become: true
+#   community.general.zfs:
+#     name: "backuppool/{{ item }}"
+#     state: present
+#     extra_zfs_properties:
+#       acltype: posix
+#       xattr: sa
+#       # mountpoint: none
+#   loop: "{{ zfsbackup_clients }}"
 
 - name: Set dataset list
   set_fact:
@@ -97,9 +100,9 @@
     group: "{{ ansible_user}}"
     state: directory
 
-- name: debug
-  debug: 
-    var: vault_zfsbackups_privatekey_b64
+# - name: debug
+  # debug: 
+  #   var: vault_zfsbackups_privatekey_b64
 
 - name: Install ssh key
   ansible.builtin.copy: 
