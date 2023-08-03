@@ -55,7 +55,7 @@
   loop: "{{ zfsbackup_clients }}"
   vars:
     _host_datasets: "{{ hostvars[item].zfs_backup_datasets }}"
-    _result: "{{ [item] | product(_host_datasets + '/') | map('join') | list }}"
+    _result: "{{ [item + '/'] | product(_host_datasets) | map('join') | list }}"
     # _start: "{{ _var.action_list.start.0|default('') }}"
 
 - name: Show value dataset_names
