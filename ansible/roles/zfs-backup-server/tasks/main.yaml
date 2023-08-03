@@ -42,7 +42,9 @@
     users: "{{ ansible_user }}"
     descendents: true
     state: present
-    permissions: mount,compression,mountpoint,create,receive,xattr,acltype,rollback,rename,snapshot,canmount
+    #permissions: acltype,compression,create,mount,mountpoint,receive,xattr #,rollback,rename,snapshot,canmount
+    permissions: allow,clone,create,destroy,mount,promote,receive,rename,rollback,send,share,snapshot,aclinherit,aclmode,atime,canmount,casesensitivity,checksum,compression,copies,exec,devices,mountpoint,nbmand,normalization,quota,readonly,recordsize,reservation,setuid,shareiscsi,sharenfs,sharesmb,snapdir,userprop,utf8only,version,volsize,vscan,xattr,zoned
+
   loop: "{{ zfsbackup_clients }}"
 
 
@@ -73,6 +75,7 @@
       xattr: sa
       # mountpoint: none
   loop: "{{ datasets }}"
+
 
 - name: "Ensure /backuppool mountpoint is owned by {{ ansible_user }}"
   become: true
