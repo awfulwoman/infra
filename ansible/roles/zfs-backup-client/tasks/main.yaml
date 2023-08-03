@@ -47,6 +47,7 @@
     mode: 0777
 
 - name: Make sure destination dir exists
+  become: true
   file:
     path: /etc/sanoid
     state: directory
