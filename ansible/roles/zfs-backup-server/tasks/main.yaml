@@ -34,6 +34,7 @@
 
 - name: Show value of 'hostvars[item]['zfs_backup_datasets']'
   ansible.builtin.debug: msg="{{ lookup(hostvars[item]['zfs_backup_datasets']) }}"
+  loop: "{{ zfsbackup_clients }}"
   register: client_host_datasets
 
 - name: "Ensure /backuppool mountpoint is owned by {{ ansible_user }}"
