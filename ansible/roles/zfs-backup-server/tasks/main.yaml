@@ -51,10 +51,10 @@
 
 - name: Show value of 'hostvars[item]['zfs_backup_datasets']'
   set_fact: 
-    dataset_names: "{{ dataset_names + [lookup('vars', _datasets)] }}"
+    dataset_names: "hostvars['{{ item }}'].zfs_backup_datasets"
   loop: "{{ zfsbackup_clients }}"
-  vars:
-    _datasets: hostvars['{{ item }}'].zfs_backup_datasets
+  # vars:
+  #   _datasets: 
     # _start: "{{ _var.action_list.start.0|default('') }}"
 
 - name: Show value dataset_names
