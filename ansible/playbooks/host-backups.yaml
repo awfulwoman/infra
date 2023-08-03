@@ -16,6 +16,11 @@
       zfsbackup_clients:
         - host-homeautomation
         - host-storage
+          # # Datasets to be backed-up
+          # zfs_backup_datasets:
+          #   - slowpool/containers
+          #   - slowpool/pools
+          #   - slowpool/images
     - role: hifis.unattended_upgrades
       become: true
     - role: motd
