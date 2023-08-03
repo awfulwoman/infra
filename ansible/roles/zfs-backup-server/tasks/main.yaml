@@ -43,7 +43,7 @@
     users: "{{ ansible_user }}"
     descendents: true
     state: present
-    permissions: compression,mountpoint,create,mount,receive,rollback,snapshot,hold,release,destroy,xattr,acltype,refreservation,rename
+    permissions: compression,mountpoint,create,mount,receive,rollback,snapshot,hold,release,destroy,xattr,acltype,rename
   # loop: "{{ zfsbackup_clients }}"
 
 - name: Create dataset list
