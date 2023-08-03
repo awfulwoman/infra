@@ -33,11 +33,11 @@
   loop: "{{ zfsbackup_clients }}"
 
 
-- name: Set dataset
+- name: Set dataset list
   set_fact:
     datasets: []
 
-- name: Show value of 'hostvars[item]['zfs_backup_datasets']'
+- name: Construct a list of datasets to create
   set_fact:
     datasets: "{{ datasets + _result }}"
   loop: "{{ zfsbackup_clients }}"
@@ -45,7 +45,7 @@
     _host_datasets: "{{ hostvars[item].zfs_backup_datasets }}"
     _result: "{{ [item + '/'] | product(_host_datasets) | map('join') | list }}"
 
-- name: Show value dataset_names
+- name: Show value of dataset_names
   ansible.builtin.debug: 
     var: datasets
 
@@ -59,7 +59,6 @@
       xattr: sa
       # mountpoint: none
   loop: "{{ datasets }}"
-
 
 - name: "Ensure /backuppool mountpoint is owned by {{ ansible_user }}"
   become: true
