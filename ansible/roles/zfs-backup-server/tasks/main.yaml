@@ -45,13 +45,13 @@
 # - slowpool/media
 # - slowpool/backups
 
-# - name: sdsdfsdfsdf
-#   set_fact:
-#     dataset_names: []
+- name: Set blah dataset
+  set_fact:
+    blah: []
 
 - name: Show value of 'hostvars[item]['zfs_backup_datasets']'
   set_fact:
-    blah: "{{ hostvars[item].zfs_backup_datasets }}"
+    blah: "{{ blah + hostvars[item].zfs_backup_datasets }}"
   loop: "{{ zfsbackup_clients }}"
     # _start: "{{ _var.action_list.start.0|default('') }}"
 
