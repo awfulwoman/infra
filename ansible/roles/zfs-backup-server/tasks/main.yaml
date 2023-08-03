@@ -24,16 +24,16 @@
       acltype: posix
       xattr: sa
 
-# - name: Ensure a dataset for each backup client is present
-#   become: true
-#   community.general.zfs:
-#     name: "backuppool/{{ item }}"
-#     state: present
-#     extra_zfs_properties:
-#       acltype: posix
-#       xattr: sa
-#       # mountpoint: none
-#   loop: "{{ zfsbackup_clients }}"
+- name: Ensure a dataset for each backup client is present
+  become: true
+  community.general.zfs:
+    name: "backuppool/{{ item }}"
+    state: present
+    extra_zfs_properties:
+      acltype: posix
+      xattr: sa
+      # mountpoint: none
+  loop: "{{ zfsbackup_clients }}"
 
 - name: Set dataset list
   set_fact:
@@ -115,7 +115,9 @@
 - name: Allow non-sudo account to do ZFS things
   become: true
   community.general.zfs_delegate_admin:
-    name: backuppool
+    ame: "backuppool/{{ item }}"
     users: "{{ ansible_user }}"
-    permissions: mount,compression,mountpoint,create,mount,receive,xattr,acltype
     descendents: true
+    state: present
+    permissions: mount,compression,mountpoint,create,receive,xattr,acltype
+  loop: "{{ zfsbackup_clients }}"
