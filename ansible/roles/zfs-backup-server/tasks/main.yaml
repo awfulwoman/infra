@@ -45,9 +45,9 @@
 # - slowpool/media
 # - slowpool/backups
 
-- name: sdsdfsdfsdf
-  set_fact:
-    dataset_names: []
+# - name: sdsdfsdfsdf
+#   set_fact:
+#     dataset_names: []
 
 - name: Show value of 'hostvars[item]['zfs_backup_datasets']'
   set_fact: 
