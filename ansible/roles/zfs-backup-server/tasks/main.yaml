@@ -50,8 +50,8 @@
 #     dataset_names: []
 
 - name: Show value of 'hostvars[item]['zfs_backup_datasets']'
-  debug:
-    msg: "{{ lookup('vars', hostvars[item].zfs_backup_datasets) | join(',') }}"
+  set_fact:
+    blah: "{{ lookup('vars', hostvars[item].zfs_backup_datasets) | join(',') }}"
   loop: "{{ zfsbackup_clients }}"
     # _start: "{{ _var.action_list.start.0|default('') }}"
 
