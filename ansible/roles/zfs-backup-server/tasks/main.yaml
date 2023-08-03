@@ -54,7 +54,7 @@
     blah: "{{ blah + thingy }}"
   loop: "{{ zfsbackup_clients }}"
   vars:
-    thingy: hostvars[item].zfs_backup_datasets
+    thingy: "{{ hostvars[item].zfs_backup_datasets }}"
     # _start: "{{ _var.action_list.start.0|default('') }}"
 
 - name: Show value dataset_names
