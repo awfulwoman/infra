@@ -46,6 +46,14 @@
     group: root
     mode: 0777
 
+- name: Make sure destination dir exists
+  file:
+    path: /etc/sanoid
+    state: directory
+    owner: root
+    group: root
+    mode: 0664
+
 - name: Create Sanoid config file
   become: true
   ansible.builtin.template:
