@@ -47,7 +47,7 @@
 
 
 
-- name: Set dataset list
+- name: Create dataset list
   set_fact:
     datasets: []
 
