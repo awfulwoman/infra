@@ -33,9 +33,10 @@
   loop: "{{ zfsbackup_clients }}"
 
 # EXAMPLE HOST LIST
-# zfsbackup_clients:
-# - host-storage
-# - host-homeautomation
+# vars: 
+#   zfsbackup_clients:
+#   - host-storage
+#   - host-homeautomation
 
 # EXAMPLE FROM zfsbackup_clients[0]
 # zfs_datasets: 
@@ -46,17 +47,21 @@
 
 
 - name: Show value of 'hostvars[item]['zfs_backup_datasets']'
-  ansible.builtin.debug: 
-    var: "hostvars['{{ item }}'].zfs_backup_datasets"
+  set_fact: 
+    dataset_names: "hostvars['{{ item }}'].zfs_backup_datasets"
   loop: "{{ zfsbackup_clients }}"
-  register: client_host_datasets
+  register: tester
+
+- name: Show value dataset_names
+  ansible.builtin.debug: 
+    var: tester
 
 
-- name: Show value of 'hostvars[item]['zfs_backup_datasets']'
-  ansible.builtin.debug: 
-    var: "hostvars['{{ item }}'].zfs_backup_datasets"
-  loop: "{{ zfsbackup_clients }}"
-  register: client_host_datasets
+# - name: Show value of 'hostvars[item]['zfs_backup_datasets']'
+#   ansible.builtin.debug: 
+#     var: "hostvars['{{ item }}'].zfs_backup_datasets"
+#   loop: "{{ zfsbackup_clients }}"
+#   register: client_host_datasets
 
 # Result of client_host_datasets
 # "client_host_datasets": {
