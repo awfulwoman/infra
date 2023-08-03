@@ -21,6 +21,7 @@
     - role: geerlingguy.docker
       become: true
     - role: zfs-core
+    - role: zfs-backup-client
     - role: docker
     - role: hifis.unattended_upgrades
       become: true
