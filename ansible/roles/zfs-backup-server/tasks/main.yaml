@@ -43,7 +43,8 @@
     descendents: true
     state: present
     #permissions: acltype,compression,create,mount,mountpoint,receive,xattr #,rollback,rename,snapshot,canmount
-    permissions: allow,clone,create,destroy,mount,promote,receive,rename,rollback,send,share,snapshot,aclinherit,aclmode,atime,canmount,casesensitivity,checksum,compression,copies,exec,devices,mountpoint,nbmand,normalization,quota,readonly,recordsize,reservation,setuid,shareiscsi,sharenfs,sharesmb,snapdir,userprop,utf8only,version,volsize,vscan,xattr,zoned
+    permissions: allow,clone,create,destroy,mount,promote,receive,rename,rollback,send,share,snapshot
+    # ,aclinherit,aclmode,atime,canmount,casesensitivity,checksum,compression,copies,exec,devices,mountpoint,nbmand,normalization,quota,readonly,recordsize,reservation,setuid,shareiscsi,sharenfs,sharesmb,snapdir,userprop,utf8only,version,volsize,vscan,xattr,zoned
   loop: "{{ zfsbackup_clients }}"
 
 
