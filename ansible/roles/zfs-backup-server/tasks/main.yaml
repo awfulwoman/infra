@@ -115,7 +115,7 @@
 - name: Allow non-sudo account to do ZFS things
   become: true
   community.general.zfs_delegate_admin:
-    ame: "backuppool/{{ item }}"
+    name: "backuppool/{{ item }}"
     users: "{{ ansible_user }}"
     descendents: true
     state: present
