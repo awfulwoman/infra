@@ -20,6 +20,7 @@
       ansible_pip_executable: '/usr/bin/pip3'
     - role: geerlingguy.docker
       become: true
+    - role: container-sanoid-builder  
     - role: zfs-core
     - role: zfs-backup-client
     - role: docker
