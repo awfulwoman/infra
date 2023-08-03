@@ -32,20 +32,8 @@
       # mountpoint: none
   loop: "{{ zfsbackup_clients }}"
 
-# EXAMPLE HOST LIST
-# vars: 
-#   zfsbackup_clients:
-#   - host-storage
-#   - host-homeautomation
 
-# EXAMPLE FROM zfsbackup_clients[0]
-# zfs_datasets: 
-# - slowpool/pools
-# - slowpool/images
-# - slowpool/media
-# - slowpool/backups
-
-- name: Set blah dataset
+- name: Set dataset
   set_fact:
     datasets: []
 
@@ -56,55 +44,21 @@
   vars:
     _host_datasets: "{{ hostvars[item].zfs_backup_datasets }}"
     _result: "{{ [item + '/'] | product(_host_datasets) | map('join') | list }}"
-    # _start: "{{ _var.action_list.start.0|default('') }}"
 
 - name: Show value dataset_names
   ansible.builtin.debug: 
     var: datasets
 
-
-# - name: Show value of 'hostvars[item]['zfs_backup_datasets']'
-#   ansible.builtin.debug: 
-#     var: "hostvars['{{ item }}'].zfs_backup_datasets"
-#   loop: "{{ zfsbackup_clients }}"
-#   register: client_host_datasets
-
-# Result of client_host_datasets
-# "client_host_datasets": {
-#         "changed": false,
-#         "msg": "All items completed",
-#         "results": [
-#             {
-#                 "ansible_loop_var": "item",
-#                 "changed": false,
-#                 "failed": false,
-#                 "hostvars['host-homeautomation'].zfs_backup_datasets": [
-#                     "tank/containers"
-#                 ],
-#                 "item": "host-homeautomation"
-#             },
-#             {
-#                 "ansible_loop_var": "item",
-#                 "changed": false,
-#                 "failed": false,
-#                 "hostvars['host-storage'].zfs_backup_datasets": [
-#                     "fastpool/containers",
-#                     "slowpool/backups/restic",
-#                     "slowpool/pools",
-#                     "slowpool/images"
-#                 ],
-#                 "item": "host-storage"
-#             }
-#         ],
-#         "skipped": false
-#     }
-
-#you want:
-#client_host_datasets.results[0]."hostvars['host-homeautomation'].zfs_backup_datasets"
-
-# - name: Show value of client_host_datasets
-#   ansible.builtin.debug: 
-#     var: client_host_datasets.results
+- name: Ensure a dataset for each dataset in backup client is present
+  become: true
+  community.general.zfs:
+    name: "backuppool/{{ item }}"
+    state: present
+    extra_zfs_properties:
+      acltype: posix
+      xattr: sa
+      # mountpoint: none
+  loop: "{{ datasets }}"
 
 
 - name: "Ensure /backuppool mountpoint is owned by {{ ansible_user }}"
