@@ -21,7 +21,7 @@
     name: backuppool
     state: present
 
-- name: Ensure client host datasets are present 
+- name: Ensure a dataset for each backup client is present
   become: true
   community.general.zfs:
     name: "backuppool/{{ item }}"
