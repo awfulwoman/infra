@@ -45,14 +45,17 @@
 # - slowpool/media
 # - slowpool/backups
 
+- name: sdsdfsdfsdf
+  set_fact:
+    dataset_names: []
 
 - name: Show value of 'hostvars[item]['zfs_backup_datasets']'
   set_fact: 
-    dataset_names: lookup(hostvars['{{ item }}'].zfs_backup_datasets)
+    dataset_names: "{{ dataset_names + hostvars['{{ item }}'].zfs_backup_datasets }}"
   loop: "{{ zfsbackup_clients }}"
   # vars:
-  #   _var: "{{ lookup('vars', item) }}"
-  #   _start: "{{ _var.action_list.start.0|default('') }}"
+  #   _datasets: hostvars['{{ item }}'].zfs_backup_datasets
+    # _start: "{{ _var.action_list.start.0|default('') }}"
   register: tester
 
 - name: Show value dataset_names
