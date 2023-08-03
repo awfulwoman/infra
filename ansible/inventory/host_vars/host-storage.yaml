@@ -38,7 +38,6 @@ zfs_datasets:
 # Datasets to be backed-up
 zfs_backup_datasets:
   - "{{ container_config_zfs_id }}"
-  - "{{ restic_zfs_id }}"
   - slowpool/pools
   - slowpool/images
 
