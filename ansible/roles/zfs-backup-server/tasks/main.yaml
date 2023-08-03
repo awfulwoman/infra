@@ -51,9 +51,49 @@
   loop: "{{ zfsbackup_clients }}"
   register: client_host_datasets
 
+
+- name: Show value of 'hostvars[item]['zfs_backup_datasets']'
+  ansible.builtin.debug: 
+    var: "hostvars['{{ item }}'].zfs_backup_datasets"
+  loop: "{{ zfsbackup_clients }}"
+  register: client_host_datasets
+
+# Result of client_host_datasets
+# "client_host_datasets": {
+#         "changed": false,
+#         "msg": "All items completed",
+#         "results": [
+#             {
+#                 "ansible_loop_var": "item",
+#                 "changed": false,
+#                 "failed": false,
+#                 "hostvars['host-homeautomation'].zfs_backup_datasets": [
+#                     "tank/containers"
+#                 ],
+#                 "item": "host-homeautomation"
+#             },
+#             {
+#                 "ansible_loop_var": "item",
+#                 "changed": false,
+#                 "failed": false,
+#                 "hostvars['host-storage'].zfs_backup_datasets": [
+#                     "fastpool/containers",
+#                     "slowpool/backups/restic",
+#                     "slowpool/pools",
+#                     "slowpool/images"
+#                 ],
+#                 "item": "host-storage"
+#             }
+#         ],
+#         "skipped": false
+#     }
+
+#you want:
+#client_host_datasets.results[0]."hostvars['host-homeautomation'].zfs_backup_datasets"
+
 - name: Show value of client_host_datasets
   ansible.builtin.debug: 
-    var: client_host_datasets
+    var: client_host_datasets.results
 
 
 - name: "Ensure /backuppool mountpoint is owned by {{ ansible_user }}"
