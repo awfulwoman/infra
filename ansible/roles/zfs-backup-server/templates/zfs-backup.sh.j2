@@ -164,43 +164,33 @@ echo "Backing up {{ zfsbackup_client }}."
 echo "**********************************"
 
 ## Is the backup host up?
-log_info "Pinging {{ zfsbackup_client }}$SEARCHDOMAIN"
+log_info "Pinging {{ zfsbackup_client }}$SEARCHDOMAIN..."
 ping "{{ zfsbackup_client }}$SEARCHDOMAIN" -c2 > /dev/null 2>&1
 
 if [ $? -eq 0 ]; 
 then 
-  log_info "{{ zfsbackup_client }} online. Proceeding."
-
-  log_info "[Started {{ zfsbackup_client }} backup run."
-
-  # Backup these datasets: {{hostvars[zfsbackup_client]['zfs_backup_datasets']}}
+  log_info "{{ zfsbackup_client }} is online. Proceeding."
 
   {% for zfs_backup_dataset in hostvars[zfsbackup_client]['zfs_backup_datasets'] %}
-  log_info "START {{zfs_backup_dataset}}"
   SYNCOID_COMMAND="/usr/sbin/syncoid --sendoptions=Rw --no-privilege-elevation --no-sync-snap --quiet {{ vault_zfsbackups_user }}@{{ zfsbackup_client }}$SEARCHDOMAIN:{{zfs_backup_dataset}} backuppool/{{ zfsbackup_client }}/{{zfs_backup_dataset}}"
-
-  #echo "💭 -----------------------"
-  #echo "💭 $SYNCOID_COMMAND"
-  #echo "💭 -----------------------"
-
   SYNCOID_OUTPUT=$( $SYNCOID_COMMAND 2>&1 )
 
   if [ $? -eq 0 ]
   then
-      log_info "SUCCESS {{zfs_backup_dataset}}"
+      log_info "Finished backup of {{zfs_backup_dataset}}"
   else
       FAILURE=1
-      log_error "FAILURE {{zfs_backup_dataset}}" 
+      log_error "Could not backup {{zfs_backup_dataset}}" 
       log_error $SYNCOID_OUTPUT
   fi
-  log_info "END {{zfs_backup_dataset}} "
   {% endfor %}
 
-  log_info "Finished backup run."
+  log_info "Finished backup of {{ zfsbackup_client }}."
 else 
-  log_error "{{ zfsbackup_client }} was not online."
+  log_warn "{{ zfsbackup_client }} was not online."
   failure
 fi # End online check
+echo " "
 # ------------------------------------------------
 {% endfor %}
 
