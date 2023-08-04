@@ -21,7 +21,7 @@
   ansible.builtin.template:
     src: sleepuntil.sh.conf
     dest: "{{ sleepuntil_install_location }}/sleepuntil.sh"
-    mode: u=rwx,g=X,o=X
+    mode: 0755
   when: sleepuntil_active
 
 - name: Cron to auto-suspend in early hours
