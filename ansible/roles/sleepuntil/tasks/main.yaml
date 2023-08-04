@@ -41,4 +41,12 @@
   poll: 0
   when: sleepuntil_sleep_immediately and sleepuntil_active
 
+- name: Allow the "{{ ansible_user }}" user to sudo /usr/sbin/rtcwake
+  become: true
+  community.general.sudoers:
+    name: allow-rtcwake
+    state: present
+    user: "{{ ansible_user }}"
+    commands: /usr/sbin/rtcwake
+
 # TODO: Listen for sleepuntil MQTT message
