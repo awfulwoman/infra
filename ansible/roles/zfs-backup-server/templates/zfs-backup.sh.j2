@@ -18,7 +18,7 @@ SEARCHDOMAIN=.i.affordablepotatoes.com
 
 # Logging functions
 function log_output {
-  if [ $QUIET -eq 1 ]; then
+  if [ $QUIET -eq 0 ]; then
     echo `date "+%Y/%m/%d %H:%M:%S"`" $1"
   fi
   echo `date "+%Y/%m/%d %H:%M:%S"`" $1" >> $LOGDIR/$LOGFILE
