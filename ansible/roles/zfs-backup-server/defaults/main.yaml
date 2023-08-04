@@ -6,6 +6,6 @@ zfsbackup_logging_errorfile: error.log
 zfsbackup_pushover: "{{ vault_pushover_home_network_key | default('false') }}"
 zfsbackup_healthcheck_send: true
 zfsbackup_beep: true
-
+zfsbackup_script_path: /opt/zfsbackup/zfs-backup
 zfsbackup_ansiblepull_workdir: "{{ ansiblepull_workdir | default(undefined) }}"
 zfsbackup_ansiblepull_script_name: "{{ ansiblepull_script_name | default(undefined) }}"

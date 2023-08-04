@@ -38,13 +38,11 @@
 - name: Allow non-sudo account to do ZFS things
   become: true
   community.general.zfs_delegate_admin:
-    # name: "backuppool/{{ item }}"
     name: backuppool
     users: "{{ ansible_user }}"
     descendents: true
     state: present
     permissions: compression,mountpoint,create,mount,receive,rollback,snapshot,hold,release,destroy,xattr,acltype,rename
-  # loop: "{{ zfsbackup_clients }}"
 
 - name: Create dataset list
   set_fact:
@@ -96,32 +94,32 @@
   become: true
   ansible.builtin.template:
     src: templates/zfs-backup.sh.j2
-    dest: /opt/zfsbackup/zfs-backup
+    dest: "{{ zfsbackup_script_path }}"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: 0774
+    
+- name: Add to system-wide $PATH
+  copy:
+    dest: /etc/profile.d/custom-path-zfs-backup.sh
+    content: 'PATH=$PATH:{{ zfsbackup_script_path | dirname }}'
 
-- name: Cron to run zfs-backup.sh
+- name: Cron to run zfs-backup
   # Runs at a specified time to catch reboots and previous backup failures
   ansible.builtin.cron:
     name: "backup.sh"
-    job: /opt/zfsbackup/zfs-backup
+    job: "{{ zfsbackup_script_path }}"
     state: present
     minute: "{{ zfsbackup_cron_minute }}"
     hour: "{{ zfsbackup_cron_hour }}"
 
-# SET PRIVATE BACKUP KEY FROM VAULT
-- name: Ensure .ssh directory exists.
+- name: Ensure .ssh directory exists
   ansible.builtin.file: 
     dest: "/home/{{ ansible_user}}/.ssh"
     mode: 0700 
     owner: "{{ ansible_user}}"
     group: "{{ ansible_user}}"
     state: directory
-
-# - name: debug
-  # debug: 
-  #   var: vault_zfsbackups_privatekey_b64
 
 - name: Install ssh key
   ansible.builtin.copy: 
