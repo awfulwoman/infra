@@ -48,7 +48,7 @@
 
 - name: Make sure destination dir exists
   become: true
-  file:
+  ansible.builtin.file:
     path: /etc/sanoid
     state: directory
     owner: root
