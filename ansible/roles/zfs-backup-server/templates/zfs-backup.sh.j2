@@ -157,8 +157,7 @@ fi
 # Loop over clients
 {% for zfsbackup_client in zfsbackup_clients %}
 
-echo "Backing up {{ zfsbackup_client }}."
-echo "**********************************"
+log_info "Backing up {{ zfsbackup_client }}."
 
 ## Is the backup host up?
 log_info "Pinging {{ zfsbackup_client }}$SEARCHDOMAIN..."
