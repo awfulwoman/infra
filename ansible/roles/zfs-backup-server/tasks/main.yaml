@@ -129,3 +129,23 @@
     mode: 0600
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user}}"
+
+
+# temp?
+- name: Ensure .ssh directory exists ROOT
+  become: true
+  ansible.builtin.file: 
+    dest: "/root/.ssh"
+    mode: 0700 
+    owner: root
+    group: root
+    state: directory
+
+- name: Install ssh key ROOT
+  ansible.builtin.copy: 
+  become: true
+    content: "{{ vault_zfsbackups_privatekey_b64 | b64decode }}" 
+    dest: "/root/.ssh/id_rsa"
+    mode: 0600
+    owner: root
+    group: root
