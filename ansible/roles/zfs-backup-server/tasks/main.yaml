@@ -142,8 +142,8 @@
     state: directory
 
 - name: Install ssh key ROOT
-  ansible.builtin.copy: 
   become: true
+  ansible.builtin.copy: 
     content: "{{ vault_zfsbackups_privatekey_b64 | b64decode }}" 
     dest: "/root/.ssh/id_rsa"
     mode: 0600
