@@ -8,6 +8,9 @@ services:
       - "TZ=Europe/Berlin"      
       - PUID=1000
       - PGID=1000
+    depends_on:
+      - prowlarr
+      - gluetun
     image: "{{ container_image }}"
     restart: unless-stopped
     labels:
