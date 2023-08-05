@@ -27,35 +27,32 @@ function log_output {
 
 function log_debug {
   if [[ "$LOGLEVEL" =~ ^(DEBUG)$ ]]; then
-    log_output "DEBUG $1"
+    log_output "🐞 DEBUG $1"
   fi
 }
 
 function log_info {
   if [[ "$LOGLEVEL" =~ ^(DEBUG|INFO)$ ]]; then
-    log_output "INFO $1"
+    log_output "👉 INFO $1"
   fi
 }
 
 function log_warn {
   if [[ "$LOGLEVEL" =~ ^(DEBUG|INFO|WARN)$ ]]; then
-    log_output "WARN $1"
+    log_output "⚠️ WARN $1"
   fi
 }
 
 function log_error {
   if [[ "$LOGLEVEL" =~ ^(DEBUG|INFO|WARN|ERROR)$ ]]; then
-    log_output "ERROR $1"
+    log_output "⛔️ ERROR $1"
   fi
 }
-
-# Some other helper functions
-# ...
 
 # Help output
 function usage {
   echo
-  echo "This is a Bash script template"
+  echo "This is a Bash script that pulls ZFS backups from client machines."
   echo "Usage: ./zfs-backup -l <logfile> -L <loglevel> --quiet"
   echo "Example: ./zfs-backup -l example.log -L INFO --quiet"
   echo
