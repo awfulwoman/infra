@@ -1,2 +1,2 @@
-container_image: freshrss/freshrss
 container_name: freshrss
+container_image: freshrss/freshrss
