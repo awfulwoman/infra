@@ -91,7 +91,7 @@ echo "ZFS Backups"
 echo "***********"
 echo " "
 
-echo "💭 [$(date --iso-8601=seconds)] Pausing for 60 seconds."
+echo "Pausing for 60 seconds."
 echo " "
 pausesecs=$((1 * 60))
 while [ $pausesecs -gt 0 ]; do
@@ -113,14 +113,14 @@ sleepnow() {
     command -v sleepuntil.sh
     if [ $? -eq 0 ]; 
     then 
-        echo "💭 [$(date --iso-8601=seconds)] Going to sleep in 5 mins. {{ ansible_hostname }} will wake up at {{ sleepuntil_sleep_time }}."
+        log_info "Going to sleep in 5 mins. {{ ansible_hostname }} will wake up at {{ sleepuntil_sleep_time }}."
         secs=$((5 * 60))
         while [ $secs -gt 0 ]; do
             echo -ne "🕗 $secs\033[0K\r"
             sleep 1
             : $((secs--))
         done
-        echo "💭 [$(date --iso-8601=seconds)] Sleeping..."
+        log_info "Calling sleepuntil.sh"
         sleepuntil.sh "{{ sleepuntil_sleep_time }}"
     fi 
 }
