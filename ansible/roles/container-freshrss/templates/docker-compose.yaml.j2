@@ -15,6 +15,6 @@ services:
       - "traefik.http.routers.{{ container_name }}.tls=true"
       - "traefik.http.routers.{{ container_name }}.tls.certresolver=letsencrypt"
     volumes:
-      - "{{ container_config_dir }}/{{ container_name }}/data:/data:/var/www/FreshRSS/data:rw"
-      - "{{ container_config_dir }}/{{ container_name }}/extensions:/var/www/FreshRSS/extensions:rw"
+      - "{{ container_config_dir }}/{{ container_name }}/data:/var/www/FreshRSS/data"
+      - "{{ container_config_dir }}/{{ container_name }}/extensions:/var/www/FreshRSS/extensions"
       - /etc/localtime:/etc/localtime:ro
