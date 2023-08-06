@@ -13,6 +13,7 @@
       - smartmontools
       - sqlite3
       - python-is-python3
+      - ffmpeg
     state: present
     update_cache: true
 
