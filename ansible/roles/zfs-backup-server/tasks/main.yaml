@@ -149,3 +149,16 @@
     mode: 0600
     owner: root
     group: root
+
+
+- name: Ensure ZFS pools are owned by user
+  become: true
+  ansible.builtin.file:
+    path: "/{{ item }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0774
+  loop: "{{ zfs_datasets }}"
+  when: zfs_datasets is defined
+

@@ -27,7 +27,6 @@
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: 0774
-    recurse: true
   loop: "{{ zfs_pools }}"
   when: zfs_pools is defined
 
