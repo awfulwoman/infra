@@ -34,7 +34,6 @@ zfs_datasets:
   - slowpool/images
   - slowpool/media
   - slowpool/media/music
-  - slowpool/backups
 
 # Datasets to be backed-up
 zfs_backup_datasets:
