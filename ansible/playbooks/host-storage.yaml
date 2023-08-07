@@ -43,6 +43,7 @@
     #- role: container-getiplayer
     - role: container-qbittorrent
     - role: container-curl
+    - role: container-isos-site
     - role: container-audiobookshelf
     - role: container-heimdall
       heimdall_subdomain: storage
