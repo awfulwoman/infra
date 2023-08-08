@@ -99,7 +99,7 @@
     group: "{{ ansible_user }}"
     mode: 0774
     
-# uh ih now doesn't work. see https://unix.stackexchange.com/questions/374093/why-doesnt-sudo-sh-source-profile-d-scripts
+# uh oh now doesn't work. see https://unix.stackexchange.com/questions/374093/why-doesnt-sudo-sh-source-profile-d-scripts
 - name: Add script to system-wide $PATH
   become: true
   ansible.builtin.copy:
