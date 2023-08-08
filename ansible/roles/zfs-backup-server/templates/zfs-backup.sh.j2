@@ -107,11 +107,13 @@ done
 echo " "
 fi
 
+if [[ "$LOGLEVEL" =~ ^(DEBUG)$ ]]; then
 echo "DEBUG INFO"
 echo "***********"
 echo "Logging to: $LOGDIR/$LOGFILE"
 echo "Search domain: $SEARCHDOMAIN"
 echo " "
+fi
 
 sleepnow() {
     # Sleep if script is present
@@ -174,8 +176,13 @@ then
 # Loop over client datasets
 # **************************
   {% for zfs_backup_dataset in hostvars[zfsbackup_client]['zfs_backup_datasets'] %}
-  SYNCOID_COMMAND="/usr/sbin/syncoid --sendoptions=Rw --no-privilege-elevation --no-sync-snap --quiet {{ vault_zfsbackups_user }}@{{ zfsbackup_client }}$SEARCHDOMAIN:{{zfs_backup_dataset}} backuppool/{{ zfsbackup_client }}/{{zfs_backup_dataset}}"
+  SYNCOID_COMMAND="/usr/sbin/syncoid --sendoptions=Rw --no-privilege-elevation --no-sync-snap --quiet {{ vault_zfsbackups_user }}@{{ zfsbackup_client }}$SEARCHDOMAIN:{{zfs_backup_dataset}} {{ zfsbackup_poolname }}/{{ zfsbackup_client }}/{{zfs_backup_dataset}}"
   SYNCOID_OUTPUT=$( $SYNCOID_COMMAND 2>&1 )
+
+  if [[ "$LOGLEVEL" =~ ^(DEBUG)$ ]]; then
+  echo $SYNCOID_COMMAND
+  echo $SYNCOID_OUTPUT
+  fi
 
   if [ $? -eq 0 ]
   then
