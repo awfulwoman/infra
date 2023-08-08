@@ -4,7 +4,6 @@
 #################################
 # Constants / global variables
 #################################
-LOGFILE='example.log'
 LOGLEVEL='INFO'
 QUIET=0 # verbose by default
 SKIP_ANSIBLE_PULL=0
@@ -56,7 +55,27 @@ function usage {
   echo "This is a Bash script that pulls ZFS backups from client machines."
   echo "Usage: ./zfs-backup -l <logfile> -L <loglevel> --quiet"
   echo "Example: ./zfs-backup -l example.log -L INFO --quiet"
-  echo
+  echo " "
+  echo "Options"
+  echo "-l | --logfile "
+  echo "                   Change logfile name"
+  echo " "
+  echo "-L | --loglevel"
+  echo "                   Change the log level"
+  echo "                   DEBUG|INFO|WARN|ERROR"
+  echo " "
+  echo "-S | --skip-ansible-pull"
+  echo "                   Skip pulling and running ansible playbook for this host"
+  echo " "
+  echo "-Q | --quiet "
+  echo "                   Quieten output"
+  echo " "
+  echo "-p | --skip-pause "
+  echo "                   Skip the default pause"
+  echo " "
+  echo "-h | --help"
+  echo "                   This help"s
+  echo " "
 }
 
 #################################
