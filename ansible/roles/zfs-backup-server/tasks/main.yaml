@@ -24,14 +24,14 @@
       acltype: posix
       xattr: sa
 
-- name: Allow non-sudo account to do ZFS things
-  become: true
-  community.general.zfs_delegate_admin:
-    name: "{{ zfsbackup_poolname }}"
-    users: "{{ ansible_user }}"
-    descendents: true
-    state: absent
-    permissions: compression,mountpoint,create,mount,receive,rollback,snapshot,hold,release,destroy,xattr,acltype,rename
+# - name: Allow non-sudo account to do ZFS things
+#   become: true
+#   community.general.zfs_delegate_admin:
+#     name: "{{ zfsbackup_poolname }}"
+#     users: "{{ ansible_user }}"
+#     descendents: true
+#     state: absent
+#     permissions: compression,mountpoint,create,mount,receive,rollback,snapshot,hold,release,destroy,xattr,acltype,rename
 
 - name: Create dataset list
   set_fact:
@@ -115,6 +115,15 @@
     state: present
     minute: "{{ zfsbackup_cron_minute }}"
     hour: "{{ zfsbackup_cron_hour }}"
+
+- name: Allow the root user to sudo "{{ zfsbackup_script_path }}" with no password
+  become: true
+  community.general.sudoers:
+    name: allow-zfsbackup
+    state: present
+    user: root
+    nopassword: true
+    commands: "{{ zfsbackup_script_path }}"
 
 - name: Ensure .ssh directory exists
   ansible.builtin.file: 
