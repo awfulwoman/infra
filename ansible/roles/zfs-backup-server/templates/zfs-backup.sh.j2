@@ -8,7 +8,7 @@ LOGFILE='example.log'
 LOGLEVEL='INFO'
 QUIET=0 # verbose by default
 SKIP_ANSIBLE_PULL=0
-NOPAUSE=0
+SKIPAUSE=0
 
 LOGDIR={{zfsbackup_logging_dir}}
 LOGFILE={{zfsbackup_logging_successfile}}
@@ -78,8 +78,8 @@ while [[ "$1" != "" ]]; do
       -Q | --quiet )          shift
                               QUIET=1
                               ;;
-      -p | --no-pause )       shift
-                              NOPAUSE=1
+      -p | --skip-pause )     shift
+                              SKIPAUSE=1
                               ;;
       -h | --help )           usage
                               exit
@@ -95,7 +95,7 @@ echo "ZFS Backups"
 echo "***********"
 echo " "
 
-if [ $NOPAUSE -eq 0 ]; then
+if [ $SKIPAUSE -eq 0 ]; then
 echo "Pausing for 60 seconds."
 echo " "
 pausesecs=$((1 * 60))
