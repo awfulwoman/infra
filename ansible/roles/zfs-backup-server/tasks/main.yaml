@@ -30,7 +30,7 @@
     name: "{{ zfsbackup_poolname }}"
     users: "{{ ansible_user }}"
     descendents: true
-    state: present
+    state: absent
     permissions: compression,mountpoint,create,mount,receive,rollback,snapshot,hold,release,destroy,xattr,acltype,rename
 
 - name: Create dataset list
