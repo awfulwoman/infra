@@ -57,7 +57,7 @@
     extra_zfs_properties:
       acltype: posix
       xattr: sa
-      mountpoint: none
+      # mountpoint: none
   loop: "{{ datasets }}"
 
 - name: "Ensure {{ zfsbackup_poolmountpoint }} mountpoint is owned by {{ ansible_user }}"
