@@ -9,3 +9,5 @@ zfsbackup_beep: true
 zfsbackup_script_path: /opt/zfsbackup/zfs-backup
 zfsbackup_ansiblepull_workdir: "{{ ansiblepull_workdir | default(undefined) }}"
 zfsbackup_ansiblepull_script_name: "{{ ansiblepull_script_name | default(undefined) }}"
+zfsbackup_poolname: backuppool
+zfsbackup_poolmountpoint: "/{{ zfsbackup_poolname }}"

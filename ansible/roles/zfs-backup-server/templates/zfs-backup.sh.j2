@@ -148,18 +148,17 @@ touch $LOGDIR/$LOGFILE
 # Perform Ansible pull while the machine is awake
 {% if (zfsbackup_ansiblepull_workdir) and (zfsbackup_ansiblepull_script_name) %}
 if [ $SKIP_ANSIBLE_PULL -eq 0 ]; then
-su -c '{{ zfsbackup_ansiblepull_workdir }}/{{ zfsbackup_ansiblepull_script_name }}' ubuntu
+  su -c '{{ zfsbackup_ansiblepull_workdir }}/{{ zfsbackup_ansiblepull_script_name }}' {{ ansible_user }}
 fi
 {% endif %}
 
-
-
 # Loop over clients
+# *******************
 {% for zfsbackup_client in zfsbackup_clients %}
 
 log_info "Backing up {{ zfsbackup_client }}."
 
-## Is the backup host up?
+## Is the client host up?
 log_info "Pinging {{ zfsbackup_client }}$SEARCHDOMAIN..."
 ping "{{ zfsbackup_client }}$SEARCHDOMAIN" -c2 > /dev/null 2>&1
 
@@ -167,6 +166,8 @@ if [ $? -eq 0 ];
 then 
   log_info "{{ zfsbackup_client }} is online. Proceeding."
 
+# Loop over client datasets
+# **************************
   {% for zfs_backup_dataset in hostvars[zfsbackup_client]['zfs_backup_datasets'] %}
   SYNCOID_COMMAND="/usr/sbin/syncoid --sendoptions=Rw --no-privilege-elevation --no-sync-snap --quiet {{ vault_zfsbackups_user }}@{{ zfsbackup_client }}$SEARCHDOMAIN:{{zfs_backup_dataset}} backuppool/{{ zfsbackup_client }}/{{zfs_backup_dataset}}"
   SYNCOID_OUTPUT=$( $SYNCOID_COMMAND 2>&1 )
@@ -179,16 +180,17 @@ then
       log_error "Could not backup {{zfs_backup_dataset}}" 
       log_error $SYNCOID_OUTPUT
   fi
-  {% endfor %}
+  {% endfor %} # End daatset loop
+
 
   log_info "Finished backup of {{ zfsbackup_client }}."
 else 
   log_warn "{{ zfsbackup_client }} was not online."
   failure
-fi # End online check
+fi # End online status check
 echo " "
 # ------------------------------------------------
-{% endfor %}
+{% endfor %} # End client loop
 
 # Notify of outcome
 if [ $FAILURE -eq 1 ]

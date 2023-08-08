@@ -18,27 +18,16 @@
 - name: Ensure backups pool exists
   become: true
   community.general.zfs:
-    name: backuppool
+    name: "{{ zfsbackup_poolname }}"
     state: present
     extra_zfs_properties:
       acltype: posix
       xattr: sa
 
-# - name: Ensure a dataset for each backup client is present
-#   become: true
-#   community.general.zfs:
-#     name: "backuppool/{{ item }}"
-#     state: present
-#     extra_zfs_properties:
-#       acltype: posix
-#       xattr: sa
-#       mountpoint: none
-#   loop: "{{ zfsbackup_clients }}"
-
 - name: Allow non-sudo account to do ZFS things
   become: true
   community.general.zfs_delegate_admin:
-    name: backuppool
+    name: "{{ zfsbackup_poolname }}"
     users: "{{ ansible_user }}"
     descendents: true
     state: present
@@ -60,10 +49,10 @@
   ansible.builtin.debug: 
     var: datasets
 
-- name: Ensure a dataset for each dataset in backup client is present
+- name: Ensure a dataset for each dataset of each backup client is present
   become: true
   community.general.zfs:
-    name: "backuppool/{{ item }}"
+    name: "{{ zfsbackup_poolname }}/{{ item }}"
     state: present
     extra_zfs_properties:
       acltype: posix
@@ -71,10 +60,10 @@
       mountpoint: none
   loop: "{{ datasets }}"
 
-- name: "Ensure /backuppool mountpoint is owned by {{ ansible_user }}"
+- name: "Ensure {{ zfsbackup_poolmountpoint }} mountpoint is owned by {{ ansible_user }}"
   become: true
   ansible.builtin.file:
-    path: /backuppool
+    path: "{{ zfsbackup_poolmountpoint }}"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     state: directory
@@ -99,7 +88,7 @@
     group: "{{ ansible_user }}"
     mode: 0774
     
-- name: Add to system-wide $PATH
+- name: Add script to system-wide $PATH
   become: true
   ansible.builtin.copy:
     dest: /etc/profile.d/custom-path-zfs-backup.sh
@@ -130,7 +119,6 @@
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user}}"
 
-
 # temp?
 - name: Ensure .ssh directory exists ROOT
   become: true
@@ -150,8 +138,7 @@
     owner: root
     group: root
 
-
-- name: Ensure ZFS pools are owned by user
+- name: "Ensure ZFS pools are owned by {{ ansible_user }}"
   become: true
   ansible.builtin.file:
     path: "/{{ item }}"
