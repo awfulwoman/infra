@@ -116,12 +116,12 @@
     minute: "{{ zfsbackup_cron_minute }}"
     hour: "{{ zfsbackup_cron_hour }}"
 
-- name: Allow the root user to sudo "{{ zfsbackup_script_path }}" with no password
+- name: "Allow the {{ ansible_user }} user to sudo {{ zfsbackup_script_path }} with no password"
   become: true
   community.general.sudoers:
     name: allow-zfsbackup
     state: present
-    user: root
+    user: "{{ ansible_user }}"
     nopassword: true
     commands: "{{ zfsbackup_script_path }}"
 
