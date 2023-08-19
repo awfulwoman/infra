@@ -31,7 +31,7 @@ services:
       timeout: 3s
 
 
-   wallabag_db:
+  wallabag_db:
     image: mariadb
     environment:
       - "MYSQL_ROOT_PASSWORD={{ vault_mysql_root_password }}"
