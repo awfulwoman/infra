@@ -46,7 +46,7 @@
   community.general.sudoers:
     name: allow-rtcwake
     state: present
-    user: root
+    user: "{{ ansible_user }}"
     nopassword: true
     commands: /usr/sbin/rtcwake
 
@@ -55,9 +55,14 @@
   community.general.sudoers:
     name: allow-killall
     state: present
-    user: root
+    user: "{{ ansible_user }}"
     nopassword: true
     commands: /usr/bin/killall
 
 
 # TODO: Listen for sleepuntil MQTT message
+
+
+
+
+
