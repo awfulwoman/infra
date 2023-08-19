@@ -1,0 +1,2 @@
+container_name: backups-site
+container_image: halverneus/static-file-server:latest
