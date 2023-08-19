@@ -35,6 +35,7 @@ services:
 
   wallabag_db:
     image: mariadb
+    container_name: wallabag_db
     environment:
       - "MYSQL_ROOT_PASSWORD={{ vault_mysql_root_password }}"
     volumes:
