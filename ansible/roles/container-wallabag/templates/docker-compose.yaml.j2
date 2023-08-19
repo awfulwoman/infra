@@ -29,6 +29,8 @@ services:
       test: ["CMD", "wget" ,"--no-verbose", "--tries=1", "--spider", "{{ container_name }}.affordablepotatoes.com"]
       interval: 1m
       timeout: 3s
+    depends_on:
+      - wallabag_db
 
 
   wallabag_db:
