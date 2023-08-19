@@ -173,6 +173,12 @@ resource "digitalocean_record" "freshrss" {
   value  = "100.83.127.33"
 }
 
+resource "digitalocean_record" "wallabag" {
+  domain = digitalocean_domain.default.id
+  type   = "A"
+  name   = "freshrss"
+  value  = "100.83.127.33"
+}
 
 
 # resource "digitalocean_droplet" "host_public" {
