@@ -1,1 +1,2 @@
-container_name: wallabag
+container_name: CONTAINERNAME
+container_image: CONTAINERIMAGE

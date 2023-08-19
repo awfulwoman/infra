@@ -1,26 +1,30 @@
-- name: "Create {{ container_name }} config dir"
+- name: "Create config dir for {{ container_name }}"
   ansible.builtin.file:
-    path: "{{ container_config_dir }}/wallabag/data"
+    path: "{{ container_config_dir }}/{{ container_name }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0774
+
+- name: "Add user to dialout group for {{ ansible_user }}"
+  become: true
+  ansible.builtin.user:
+    user: "{{ ansible_user }}"
+    groups: dialout
+    append: true
+
+- name: "Create compose config dir"
+  ansible.builtin.file:
+    path: "{{ compose_config_dir }}/{{ container_name }}"
     state: directory
 
-- name: "Create {{ container_name }} config dir"
-  ansible.builtin.file:
-    path: "{{ container_config_dir }}/wallabag/images"
-    state: directory
+- name: "Create compose file"
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ compose_config_dir }}/{{ container_name }}/docker-compose.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
 
-- name: "Create {{ container_name }} container"
-  # become: true
-  community.docker.docker_container:
-    name: wallabag
-    image: wallabag/wallabag
-    state: started
-    restart_policy: unless-stopped
-    ports:
-      - "7520:80"
-    env:
-      TZ: "Europe/Berlin"
-      SYMFONY__ENV__DOMAIN_NAME: "http://workloads.affordablepotatoes.com:7520" 
-    volumes:
-      - "{{ container_config_dir }}/wallabag/data:/var/www/wallabag/data"
-      - "{{ container_config_dir }}/wallabag/images:/var/www/wallabag/web/assets/images "
-      - /etc/localtime:/etc/localtime:ro
+- name: append to compose_list
+  ansible.builtin.set_fact:
+    compose_list: "{{ compose_list + [ container_name ] }}"
