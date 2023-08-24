@@ -29,6 +29,7 @@
     - role: motd
     - role: shoutrrr
       become: true
+    - role: hardware-wyse-5070
     - role: powertop
     # - role: nfs-client
     - role: autorestic

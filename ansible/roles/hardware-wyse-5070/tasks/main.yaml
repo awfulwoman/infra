@@ -1,0 +1,6 @@
+- name: Install apt packages
+  become: true
+  ansible.builtin.apt:
+    name:
+      - r8168-dkms
+    state: present
