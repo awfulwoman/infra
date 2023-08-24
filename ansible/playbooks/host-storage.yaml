@@ -28,7 +28,7 @@
     - role: hifis.unattended_upgrades
       become: true
     - role: ip-address-forwarding
-    - role: host-bus-adapter
+    - role: hardware-host-bus-adapter
     - role: nfs-server
     - role: virtualisation-tools
     - role: motd
