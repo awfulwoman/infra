@@ -30,6 +30,7 @@
     - role: shoutrrr
       become: true
     - role: hardware-wyse-5070
+    - role: hardware-rtl-433
     - role: powertop
     # - role: nfs-client
     - role: autorestic
@@ -53,7 +54,6 @@
     - role: container-smtp
     - role: containers-end
     - role: docker-cleanup
-    - role: rtl-433
     - role: apt-upgrade
     - role: ansible-pull
 

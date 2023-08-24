@@ -1,6 +1,6 @@
-- name: remove 433 packages
+- name: Add rtl-433 packages
   become: true
   ansible.builtin.apt:
     name:
       - rtl-433
-    state: absent
+    state: present
