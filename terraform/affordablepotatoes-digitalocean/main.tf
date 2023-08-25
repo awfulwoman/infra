@@ -176,7 +176,14 @@ resource "digitalocean_record" "freshrss" {
 resource "digitalocean_record" "wallabag" {
   domain = digitalocean_domain.default.id
   type   = "A"
-  name   = "freshrss"
+  name   = "wallabag"
+  value  = "100.83.127.33"
+}
+
+resource "digitalocean_record" "syncthing" {
+  domain = digitalocean_domain.default.id
+  type   = "A"
+  name   = "syncthing"
   value  = "100.83.127.33"
 }
 
