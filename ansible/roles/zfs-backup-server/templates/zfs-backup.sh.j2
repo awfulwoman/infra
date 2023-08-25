@@ -174,7 +174,7 @@ touch $LOGDIR/$LOGFILE
 # Perform Ansible pull while the machine is awake
 {% if (zfsbackup_ansiblepull_workdir) and (zfsbackup_ansiblepull_script_name) %}
 if [ $SKIP_ANSIBLE_PULL -eq 0 ]; then
-  su -c '{{ zfsbackup_ansiblepull_workdir }}/{{ zfsbackup_ansiblepull_script_name }}' {{ ansible_user }}
+  {{ zfsbackup_ansiblepull_workdir }}/{{ zfsbackup_ansiblepull_script_name }}
 fi
 {% endif %}
 
