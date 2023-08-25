@@ -159,3 +159,12 @@
     mode: 0600
     owner: root
     group: root
+
+- name: Allow the user to sudo /usr/sbin/syncoid with no password
+  become: true
+  community.general.sudoers:
+    name: allow-syncoid
+    state: present
+    user: "{{ ansible_user }}"
+    nopassword: true
+    commands: /usr/sbin/syncoid
