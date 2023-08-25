@@ -147,7 +147,7 @@ sleepnow() {
             : $((secs--))
         done
         log_info "Calling sleepuntil.sh"
-        sleepuntil.sh "{{ sleepuntil_sleep_time }}"
+        sleepuntil.sh {{ sleepuntil_sleep_time }}
     fi 
 }
 
