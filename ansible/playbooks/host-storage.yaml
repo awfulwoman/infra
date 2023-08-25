@@ -58,6 +58,7 @@
     - role: container-readarr
     - role: container-mpd
     - role: container-snapcast
+    - role: container-syncthing
     - role: container-tubearchivist
     # - role: container-nextcloud
     - role: container-sanoid-builder
