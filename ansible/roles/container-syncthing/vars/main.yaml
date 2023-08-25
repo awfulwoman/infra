@@ -1,0 +1,2 @@
+container_name: syncthing
+container_image: syncthing/syncthing

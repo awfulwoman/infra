@@ -34,6 +34,8 @@ zfs_datasets:
   - slowpool/images
   - slowpool/media
   - slowpool/media/music
+  - slowpool/charlie
+  - slowpool/charlie/syncthing
 
 # Datasets to be backed-up
 zfs_backup_datasets:
@@ -41,6 +43,7 @@ zfs_backup_datasets:
   - slowpool/pools
   - slowpool/images
   - slowpool/media/music
+  - slowpool/charlie/syncthing
 
 
 # --- NFS -------------
