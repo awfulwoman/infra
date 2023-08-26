@@ -1,7 +1,7 @@
 #!/usr/bin/python
 def zfs_path(a):
     ''' transforms a zfs object to a path '''
-    return False
+    return "Banana"
 
 class FilterModule(object):
     def filters(self):
