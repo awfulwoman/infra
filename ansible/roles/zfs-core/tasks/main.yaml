@@ -7,6 +7,10 @@
       - acl
     state: present
 
+- name: Debug ZFS PATH
+  ansible.builtin.debug:
+    var: zfs_debug
+
 - name: Ensure datasets are present 
   become: true
   community.general.zfs:
