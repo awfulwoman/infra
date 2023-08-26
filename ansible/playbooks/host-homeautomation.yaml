@@ -49,6 +49,7 @@
     - role: container-homeassistant
     - role: container-esphome
     - role: container-uptimekuma
+    - role: container-syncthing
     - role: container-heimdall
       heimdall_subdomain: homeautomation
     - role: container-smtp

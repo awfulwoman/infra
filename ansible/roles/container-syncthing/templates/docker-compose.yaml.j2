@@ -16,5 +16,5 @@ services:
       - "traefik.http.routers.{{ container_name }}.tls=true"
       - "traefik.http.routers.{{ container_name }}.tls.certresolver=letsencrypt"
     volumes:
-      - "/slowpool/charlie/syncthing:/var/syncthing"
+      - "{{ syncthing_data_path }}:/var/syncthing"
       - /etc/localtime:/etc/localtime:ro
