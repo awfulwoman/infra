@@ -14,6 +14,21 @@ pip_install_packages:
 
 # --- ZFS -------------
 
+# DO NOT USE! EXPERIMENTAL! 
+zfs:
+  slowpool:
+    misc:
+    media:
+      shows:
+      movies:
+      music:
+    charlie:
+      syncthing:
+  fastpool:
+    containers:
+
+zfs_debug: "{{ zfs.tank1.media.shows | zfs_path }}"
+
 # ZFS pool
 zfs_pools:
   - slowpool
