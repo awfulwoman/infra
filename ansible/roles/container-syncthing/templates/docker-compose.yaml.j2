@@ -16,6 +16,6 @@ services:
       - "traefik.http.routers.{{ container_name }}.tls=true"
       - "traefik.http.routers.{{ container_name }}.tls.certresolver=letsencrypt"
     volumes:
-      - "{{ syncthing_data_path }}:/var/syncthing/shares"
+      - "{{ syncthing_data_path }}:/var/syncthing/Sync"
       - "{{ container_config_dir }}/{{ container_name }}:/var/syncthing/config"
       - /etc/localtime:/etc/localtime:ro
