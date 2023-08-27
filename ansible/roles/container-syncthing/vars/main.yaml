@@ -1,3 +1,3 @@
 container_name: syncthing
-container_image: syncthing/syncthing
+container_image: lscr.io/linuxserver/syncthing:latest
 syncthing_data_path: /home/ubuntu/sync
