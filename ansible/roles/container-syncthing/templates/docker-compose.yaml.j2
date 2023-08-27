@@ -8,6 +8,8 @@ services:
       - 21027:21027/udp # Receive local discovery broadcasts
     environment:
       - "TZ=Europe/Berlin"
+      - PUID=1000
+      - PGID=1000
     image: "{{ container_image }}"
     restart: unless-stopped
     labels:
