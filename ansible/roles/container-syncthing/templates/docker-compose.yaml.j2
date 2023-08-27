@@ -8,8 +8,6 @@ services:
       - 21027:21027/udp # Receive local discovery broadcasts
     environment:
       - "TZ=Europe/Berlin"
-      - PUID=1000
-      - PGID=1000
     image: "{{ container_image }}"
     restart: unless-stopped
     labels:
@@ -18,6 +16,6 @@ services:
       - "traefik.http.routers.{{ container_name }}.tls=true"
       - "traefik.http.routers.{{ container_name }}.tls.certresolver=letsencrypt"
     volumes:
-      - "{{ syncthing_data_path }}:/data"
-      - "{{ container_config_dir }}/{{ container_name }}:/config"
+      - "{{ syncthing_data_path }}:/var/syncthing/shares"
+      - "{{ container_config_dir }}/{{ container_name }}:/var/syncthing/config"
       - /etc/localtime:/etc/localtime:ro
