@@ -6,12 +6,9 @@
     group: "{{ ansible_user }}"
     mode: 0774
 
-- name: "Add user to dialout group for {{ ansible_user }}"
-  become: true
-  ansible.builtin.user:
-    user: "{{ ansible_user }}"
-    groups: dialout
-    append: true
+- name: Debug syncthing
+  debug:
+    var: syncthing_data_path
 
 - name: "Create compose config dir"
   ansible.builtin.file:
