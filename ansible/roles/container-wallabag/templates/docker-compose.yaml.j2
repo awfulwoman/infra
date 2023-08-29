@@ -21,7 +21,7 @@ services:
       - "traefik.http.routers.{{ container_name }}.tls=true"
       - "traefik.http.routers.{{ container_name }}.tls.certresolver=letsencrypt"
     volumes:
-      - "{{ container_config_dir }}/{{ container_name }}:/var/www/wallabag/web/assets/images"
+      - "{{ container_config_dir }}/{{ container_name }}/images:/var/www/wallabag/web/assets/images"
       - /etc/localtime:/etc/localtime:ro
     healthcheck:
       test: ["CMD", "wget" ,"--no-verbose", "--tries=1", "--spider", "{{ container_name }}.affordablepotatoes.com"]
@@ -29,7 +29,6 @@ services:
       timeout: 3s
     depends_on:
       - wallabag_db
-
 
   wallabag_db:
     image: mariadb
