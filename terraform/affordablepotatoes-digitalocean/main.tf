@@ -187,6 +187,12 @@ resource "digitalocean_record" "syncthing" {
   value  = "100.83.127.33"
 }
 
+resource "digitalocean_record" "shiori" {
+  domain = digitalocean_domain.default.id
+  type   = "A"
+  name   = "shiori"
+  value  = "100.83.127.33"
+}
 
 # resource "digitalocean_droplet" "host_public" {
 #   image  = "ubuntu-22-10-x64"
