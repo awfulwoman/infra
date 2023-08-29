@@ -44,7 +44,7 @@
     - role: container-curl
     - role: container-isos-site
     - role: container-audiobookshelf
-    - role: container-wallabag
+    - role: container-shiori
     - role: container-heimdall
       heimdall_subdomain: storage
     - role: container-freshrss
