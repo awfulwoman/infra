@@ -6,13 +6,13 @@ services:
     environment:
       - "TZ=Europe/Berlin"
       - "SYMFONY__ENV__DOMAIN_NAME={{ container_name }}.affordablepotatoes.com"
-      - "MYSQL_ROOT_PASSWORD={{ vault_mysql_root_password }}"
-      - "SYMFONY__ENV__DATABASE_DRIVER=pdo_mysql"
-      - "SYMFONY__ENV__DATABASE_HOST=wallabag_db"
-      - "SYMFONY__ENV__DATABASE_PORT=3306"
-      - "SYMFONY__ENV__DATABASE_NAME=wallabag"
-      - "SYMFONY__ENV__DATABASE_USER=wallabag"
-      - "SYMFONY__ENV__DATABASE_PASSWORD={{ vault_wallabag_password }}"
+      # - "MYSQL_ROOT_PASSWORD={{ vault_mysql_root_password }}"
+      # - "SYMFONY__ENV__DATABASE_DRIVER=pdo_mysql"
+      # - "SYMFONY__ENV__DATABASE_HOST=wallabag_db"
+      # - "SYMFONY__ENV__DATABASE_PORT=3306"
+      # - "SYMFONY__ENV__DATABASE_NAME=wallabag"
+      # - "SYMFONY__ENV__DATABASE_USER=wallabag"
+      # - "SYMFONY__ENV__DATABASE_PASSWORD={{ vault_wallabag_password }}"
     image: "{{ container_image }}"
     restart: unless-stopped
     labels:
@@ -21,23 +21,24 @@ services:
       - "traefik.http.routers.{{ container_name }}.tls=true"
       - "traefik.http.routers.{{ container_name }}.tls.certresolver=letsencrypt"
     volumes:
+      - "{{ container_config_dir }}/{{ container_name }}/data:/var/www/wallabag/data"
       - "{{ container_config_dir }}/{{ container_name }}/images:/var/www/wallabag/web/assets/images"
       - /etc/localtime:/etc/localtime:ro
     healthcheck:
       test: ["CMD", "wget" ,"--no-verbose", "--tries=1", "--spider", "{{ container_name }}.affordablepotatoes.com"]
       interval: 1m
       timeout: 3s
-    depends_on:
-      - wallabag_db
+    # depends_on:
+    #   - wallabag_db
 
-  wallabag_db:
-    image: mariadb
-    container_name: wallabag_db
-    environment:
-      - "MYSQL_ROOT_PASSWORD={{ vault_mysql_root_password }}"
-    volumes:
-      - "{{ container_config_dir }}/{{ container_name }}/database:/var/lib/mysql"
-    healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
-      interval: 20s
-      timeout: 3s
+  # wallabag_db:
+  #   image: mariadb
+  #   container_name: wallabag_db
+  #   environment:
+  #     - "MYSQL_ROOT_PASSWORD={{ vault_mysql_root_password }}"
+  #   volumes:
+  #     - "{{ container_config_dir }}/{{ container_name }}/database:/var/lib/mysql"
+  #   healthcheck:
+  #     test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+  #     interval: 20s
+  #     timeout: 3s
