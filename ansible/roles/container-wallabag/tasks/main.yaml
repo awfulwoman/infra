@@ -6,13 +6,13 @@
     group: "{{ ansible_user }}"
     mode: 0774
 
-# - name: "Create config dir for {{ container_name }}/data"
-#   become: true
-#   ansible.builtin.file:
-#     path: "{{ container_config_dir }}/{{ container_name }}/data"
-#     state: directory
-#     owner: nobody
-#     mode: 0774
+- name: "Create config dir for {{ container_name }}/database"
+  become: true
+  ansible.builtin.file:
+    path: "{{ container_config_dir }}/{{ container_name }}/database"
+    state: directory
+    owner: nobody
+    mode: 0774
 - name: "Create config dir for {{ container_name }}/images"
   become: true
   ansible.builtin.file:
