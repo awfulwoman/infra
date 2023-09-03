@@ -13,10 +13,44 @@
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: 0774
-
 - name: "Create config dir for {{ container_name }}/images"
   ansible.builtin.file:
     path: "{{ container_config_dir }}/{{ container_name }}/images"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0774
+- name: "Create config dir for {{ container_name }}/bin"
+  ansible.builtin.file:
+    path: "{{ container_config_dir }}/{{ container_name }}/bin"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0774
+- name: "Create config dir for {{ container_name }}/app"
+  ansible.builtin.file:
+    path: "{{ container_config_dir }}/{{ container_name }}/app"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0774
+- name: "Create config dir for {{ container_name }}/app/config"
+  ansible.builtin.file:
+    path: "{{ container_config_dir }}/{{ container_name }}/app/config"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0774
+- name: "Create config dir for {{ container_name }}/vendor"
+  ansible.builtin.file:
+    path: "{{ container_config_dir }}/{{ container_name }}/vendor"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0774
+- name: "Create config dir for {{ container_name }}/web"
+  ansible.builtin.file:
+    path: "{{ container_config_dir }}/{{ container_name }}/web"
     state: directory
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
