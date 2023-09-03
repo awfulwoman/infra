@@ -21,7 +21,7 @@ services:
       - "traefik.http.routers.{{ container_name }}.tls=true"
       - "traefik.http.routers.{{ container_name }}.tls.certresolver=letsencrypt"
     volumes:
-      - "{{ container_config_dir }}/{{ container_name }}:/var/www/wallabag/data"
+      # - "{{ container_config_dir }}/{{ container_name }}:/var/www/wallabag/data"
       - "{{ container_config_dir }}/{{ container_name }}/images:/var/www/wallabag/web/assets/images"
       - /etc/localtime:/etc/localtime:ro
     healthcheck:
