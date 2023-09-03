@@ -5,7 +5,7 @@ services:
       - "8672:80"
     environment:
       - "TZ=Europe/Berlin"
-      - "SYMFONY__ENV__SERVER_NAME={{ container_name }}.affordablepotatoes.com2"read.example.com"
+      - "SYMFONY__ENV__SERVER_NAME={{ container_name }}.affordablepotatoes.com"
       - "SYMFONY__ENV__DOMAIN_NAME=https://{{ container_name }}.affordablepotatoes.com"
       # - "MYSQL_ROOT_PASSWORD={{ vault_mysql_root_password }}"
       # - "SYMFONY__ENV__DATABASE_DRIVER=pdo_mysql"
