@@ -12,7 +12,6 @@
     path: "{{ container_config_dir }}/{{ container_name }}/data"
     state: directory
     owner: nobody
-    group: nobody
     mode: 0774
 - name: "Create config dir for {{ container_name }}/images"
   become: true
@@ -20,7 +19,6 @@
     path: "{{ container_config_dir }}/{{ container_name }}/images"
     state: directory
     owner: nobody
-    group: nobody
     mode: 0774
 
 
