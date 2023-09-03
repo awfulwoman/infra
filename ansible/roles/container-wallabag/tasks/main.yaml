@@ -10,8 +10,9 @@
   become: true
   ansible.builtin.file:
     path: "{{ container_config_dir }}/{{ container_name }}/database"
-    state: "{{ ansible_user }}"
+    state: directory
     owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
     mode: 0774
 - name: "Create config dir for {{ container_name }}/images"
   become: true
