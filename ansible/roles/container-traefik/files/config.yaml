@@ -1,6 +1,6 @@
 api:
   dashboard: true
-
+acmeLogging: true
 entryPoints:
   web:
     address: ":80"
@@ -22,11 +22,9 @@ providers:
 
 certificatesResolvers:
   letsencrypt:
-    acmeLogging: true
     acme:
       email: certs@whalecoiner.com
       storage: /letsencrypt/acme.json
-      
       # caserver: https://acme-staging-v02.api.letsencrypt.org/directory" # Enable this to use the Letsencrypt staging server
       dnschallenge:
         provider: digitalocean
