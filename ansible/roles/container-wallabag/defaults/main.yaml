@@ -1,2 +1,3 @@
 container_name: wallabag
 container_image: wallabag/wallabag
+subdomain: bookmarks
