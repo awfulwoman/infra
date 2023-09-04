@@ -1,6 +1,7 @@
 api:
   dashboard: true
-acmeLogging: true
+acme:
+  acmeLogging: true
 entryPoints:
   web:
     address: ":80"
