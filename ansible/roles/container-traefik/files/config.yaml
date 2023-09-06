@@ -8,10 +8,10 @@ entryPoints:
   web:
     address: ":80"
     http:
-      tls:
-        domains:
-          main: "affordablepotaotes.com"
-          sans: "*.affordablepotaotes.com"
+      # tls:
+      #   domains:
+      #     main: "affordablepotaotes.com"
+      #     sans: "*.affordablepotaotes.com"
       redirections:
         entrypoint:
           to: websecure
@@ -31,7 +31,7 @@ certificatesResolvers:
     acme:
       email: certs@whalecoiner.com
       storage: /letsencrypt/acme.json
-      caserver: https://acme-staging-v02.api.letsencrypt.org/directory" # Enable this to use the Letsencrypt staging server
+      # caserver: https://acme-staging-v02.api.letsencrypt.org/directory" # Enable this to use the Letsencrypt staging server
       dnschallenge:
         provider: digitalocean
         delaybeforecheck: 0
