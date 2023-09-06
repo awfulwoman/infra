@@ -24,7 +24,7 @@ services:
       - "traefik.http.routers.{{ subdomain }}.tls=true"
       - "traefik.http.routers.{{ subdomain }}.tls.certresolver=letsencrypt"
       - "traefik.http.middlewares.{{ subdomain }}-header.headers.customRequestHeaders.X-Forwarded-Proto=https"
-      - "traefik.http.routers.{{ subdomain }}.middlewares=wallabag-header"
+      - "traefik.http.routers.{{ subdomain }}.middlewares={{ subdomain }}-header"
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}/images:/var/www/wallabag/web/assets/images"
       - "{{ container_config_dir }}/{{ container_name }}/data:/var/www/wallabag/data"
