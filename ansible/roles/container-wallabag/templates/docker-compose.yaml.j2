@@ -48,6 +48,8 @@ services:
       test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
       interval: 20s
       timeout: 3s
+    expose:
+      - "3306"
   wallabag_redis:
     image: redis:alpine
     container_name: wallabag_redis
@@ -55,3 +57,5 @@ services:
       test: ["CMD", "redis-cli", "ping"]
       interval: 20s
       timeout: 3s
+    expose:
+      - "6379"
