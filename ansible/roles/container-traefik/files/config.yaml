@@ -9,7 +9,7 @@ entryPoints:
     address: ":80"
     http:
       tls:
-        domains[0]:
+        domains:
           main: "affordablepotaotes.com"
           sans: "*.affordablepotaotes.com"
       redirections:
