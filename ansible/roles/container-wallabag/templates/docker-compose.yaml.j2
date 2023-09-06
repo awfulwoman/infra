@@ -29,10 +29,6 @@ services:
       - "{{ container_config_dir }}/{{ container_name }}/images:/var/www/wallabag/web/assets/images"
       - "{{ container_config_dir }}/{{ container_name }}/data:/var/www/wallabag/data"
       - /etc/localtime:/etc/localtime:ro
-    healthcheck:
-      test: ["CMD", "wget" ,"--no-verbose", "--tries=1", "--spider", "{{ subdomain }}.affordablepotatoes.com"]
-      interval: 1m
-      timeout: 3s
     depends_on:
       - wallabag_db
       - wallabag_redis
@@ -44,18 +40,10 @@ services:
       - "MYSQL_ROOT_PASSWORD={{ vault_mysql_root_password }}"
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}/database:/var/lib/mysql"
-    healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
-      interval: 20s
-      timeout: 3s
     expose:
       - "3306"
   wallabag_redis:
     image: redis:alpine
     container_name: wallabag_redis
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 20s
-      timeout: 3s
     expose:
       - "6379"
