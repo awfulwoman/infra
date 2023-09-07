@@ -38,6 +38,7 @@ services:
     container_name: wallabag_db
     environment:
       - "MYSQL_ROOT_PASSWORD={{ vault_mysql_root_password }}"
+      - "TZ=Europe/Berlin"
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}/database:/var/lib/mysql"
     expose:
