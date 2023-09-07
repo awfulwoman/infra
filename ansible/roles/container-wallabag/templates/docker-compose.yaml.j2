@@ -5,8 +5,8 @@ services:
       - "8672:80"
     environment:
       - "TZ=Europe/Berlin"
-      - "SYMFONY__ENV__SERVER_NAME={{ subdomain }}.affordablepotatoes.com"
-      - "SYMFONY__ENV__DOMAIN_NAME=https://{{ subdomain }}.affordablepotatoes.com"
+      - "SYMFONY__ENV__SERVER_NAME={{ subdomain }}.{{ domain_name }}"
+      - "SYMFONY__ENV__DOMAIN_NAME=https://{{ subdomain }}.{{ domain_name }}"
       - "MYSQL_ROOT_PASSWORD={{ vault_mysql_root_password }}"
       - "SYMFONY__ENV__DATABASE_DRIVER=pdo_mysql"
       - "SYMFONY__ENV__DATABASE_HOST=wallabag_db"
@@ -20,7 +20,7 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.{{ subdomain }}.rule=Host(`{{ subdomain }}.affordablepotatoes.com`)"
+      - "traefik.http.routers.{{ subdomain }}.rule=Host(`{{ subdomain }}.{{ domain_name }}`)"
       - "traefik.http.routers.{{ subdomain }}.tls=true"
       - "traefik.http.routers.{{ subdomain }}.tls.certresolver=letsencrypt"
       - "traefik.http.middlewares.{{ subdomain }}-header.headers.customRequestHeaders.X-Forwarded-Proto=https"

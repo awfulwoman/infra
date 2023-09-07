@@ -12,12 +12,12 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.esphome.rule=Host(`esphome.affordablepotatoes.com`)"
+      - "traefik.http.routers.esphome.rule=Host(`esphome.{{ domain_name }}`)"
       - "traefik.http.routers.esphome.tls=true"
       - "traefik.http.routers.esphome.tls.certresolver=letsencrypt"
       - "homepage.group=Home Automation"
       - "homepage.name=ESPHome"
-      - "homepage.href=https://esphome.affordablepotatoes.com"
+      - "homepage.href=https://esphome.{{ domain_name }}"
       - "homepage.description=Controller for ESP32 devices"
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}:/config"

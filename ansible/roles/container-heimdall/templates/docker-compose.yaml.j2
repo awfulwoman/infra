@@ -8,12 +8,12 @@ services:
       - "PGID=1000"
       - "UMASK=007"
       - "TZ=Europe/Berlin"
-      # - "APP_URL=https://heimdall.affordablepotatoes.com:8012"
+      # - "APP_URL=https://heimdall.{{ domain_name }}:8012"
     image: "{{ container_image }}"
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.{{ container_name }}.rule=Host(`{{ heimdall_subdomain }}.affordablepotatoes.com`)"
+      - "traefik.http.routers.{{ container_name }}.rule=Host(`{{ heimdall_subdomain }}.{{ domain_name }}`)"
       - "traefik.http.routers.{{ container_name }}.tls=true"
       - "traefik.http.routers.{{ container_name }}.tls.certresolver=letsencrypt"
     volumes:

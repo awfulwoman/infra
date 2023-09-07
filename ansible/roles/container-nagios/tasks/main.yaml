@@ -27,6 +27,6 @@
     labels:
       traefik.enable: "true"
       # Routing for HTTP
-      traefik.http.routers.nagios.rule: "Host(`nagios.affordablepotatoes.com`)"
+      traefik.http.routers.nagios.rule: "Host(`nagios.{{ domain_name }}`)"
       traefik.http.routers.nagios.entrypoints: "web"
       traefik.http.services.nagios.loadbalancer.server.port: "8999"

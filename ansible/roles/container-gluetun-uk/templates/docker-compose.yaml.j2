@@ -18,7 +18,7 @@ services:
     labels:
       - "traefik.enable=true"
       # Gluetun Built-in HTTP control server
-      - "traefik.http.routers.gluetun-uk.rule=Host(`gluetun-uk.affordablepotatoes.com`)"
+      - "traefik.http.routers.gluetun-uk.rule=Host(`gluetun-uk.{{ domain_name }}`)"
       - "traefik.http.routers.gluetun-uk.service=gluetun"
       - "traefik.http.services.gluetun-uk.loadbalancer.server.port=8001"
       - "traefik.http.routers.gluetun-uk.tls=true"

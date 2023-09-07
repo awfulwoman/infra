@@ -237,3 +237,5 @@ unattended_automatic_reboot_time: 03:00
 
 repo_url: https://github.com/whalecoiner/home
 repo_name: home
+
+domain_name: affordablepotatoes.com

@@ -10,7 +10,7 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.mosquitto.rule=Host(`mqtt.affordablepotatoes.com`)"
+      - "traefik.http.routers.mosquitto.rule=Host(`mqtt.{{ domain_name }}`)"
       - "homepage.group=Home Automation"
       - "homepage.name=Mosquitto"
       - "homepage.description=MQTT Broker"

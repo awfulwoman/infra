@@ -13,5 +13,5 @@
 #       - name: "affordablepotatoes"
     labels:
       traefik.enable: "true"
-      traefik.http.routers.readability.rule: "Host(`readability.affordablepotatoes.com`)"
+      traefik.http.routers.readability.rule: "Host(`readability.{{ domain_name }}`)"
       traefik.http.routers.readability.entrypoints: "web"

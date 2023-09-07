@@ -22,19 +22,19 @@ services:
     labels:
       - "traefik.enable=true"
       # Gluetun Built-in HTTP control server
-      - "traefik.http.routers.gluetun.rule=Host(`gluetun.affordablepotatoes.com`)"
+      - "traefik.http.routers.gluetun.rule=Host(`gluetun.{{ domain_name }}`)"
       - "traefik.http.routers.gluetun.service=gluetun"
       - "traefik.http.services.gluetun.loadbalancer.server.port=8000"
       - "traefik.http.routers.gluetun.tls=true"
       - "traefik.http.routers.gluetun.tls.certresolver=letsencrypt"
       # Qbittorrent
-      - "traefik.http.routers.qbittorrent.rule=Host(`qbittorrent.affordablepotatoes.com`)"
+      - "traefik.http.routers.qbittorrent.rule=Host(`qbittorrent.{{ domain_name }}`)"
       - "traefik.http.routers.qbittorrent.service=qbittorrent"
       - "traefik.http.services.qbittorrent.loadbalancer.server.port=8080"
       - "traefik.http.routers.qbittorrent.tls=true"
       - "traefik.http.routers.qbittorrent.tls.certresolver=letsencrypt"
       # Prowlarr
-      - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.affordablepotatoes.com`)"
+      - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.{{ domain_name }}`)"
       - "traefik.http.routers.prowlarr.service=prowlarr"
       - "traefik.http.services.prowlarr.loadbalancer.server.port=9696"
       - "traefik.http.routers.prowlarr.tls=true"

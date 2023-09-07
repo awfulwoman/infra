@@ -29,12 +29,12 @@
       # HTTP
       traefik.http.routers.grocy.service: "grocy"
       traefik.http.routers.grocy.entrypoints: "web"
-      traefik.http.routers.grocy.rule: "Host(`grocy.affordablepotatoes.com`)"
+      traefik.http.routers.grocy.rule: "Host(`grocy.{{ domain_name }}`)"
 
       # Routing for grocy HTTPS
       traefik.http.routers.grocy-https.service: "grocy"
       traefik.http.routers.grocy-https.entrypoints: "websecure"
-      traefik.http.routers.grocy-https.rule: "Host(`grocy.affordablepotatoes.com`)"
+      traefik.http.routers.grocy-https.rule: "Host(`grocy.{{ domain_name }}`)"
       traefik.http.routers.grocy-https.tls: "true"
 
       # HYYP-to-HTTPS redirect Middleware

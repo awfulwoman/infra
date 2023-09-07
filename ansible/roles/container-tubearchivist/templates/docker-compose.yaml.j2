@@ -15,14 +15,14 @@ services:
       - REDIS_HOST=archivist-redis          # don't add protocol
       - HOST_UID=1000
       - HOST_GID=1000
-      - TA_HOST=tubearchivist.affordablepotatoes.com         # set your host name
+      - "TA_HOST=tubearchivist.{{ domain_name }}"
       - TA_USERNAME=tubearchivist           # your initial TA credentials
       - TA_PASSWORD=verysecret              # your initial TA credentials
       - ELASTIC_PASSWORD=verysecret         # set password for Elasticsearch
       - "TZ=Europe/Berlin"                # set your time zone
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.{{ container_name }}.rule=Host(`{{ container_name }}.affordablepotatoes.com`)"
+      - "traefik.http.routers.{{ container_name }}.rule=Host(`{{ container_name }}.{{ domain_name }}`)"
       - "traefik.http.routers.{{ container_name }}.tls=true"
       - "traefik.http.routers.{{ container_name }}.tls.certresolver=letsencrypt"
     depends_on:

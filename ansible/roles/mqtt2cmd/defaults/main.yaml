@@ -1,4 +1,4 @@
 mqtt2cmd_basetopic: servers
-mqtt2cmd_broker: mqtt.affordablepotatoes.com
+mqtt2cmd_broker: "mqtt.{{ domain_name }}"
 mqtt2cmd_executable: mqtt2cmd
 mqtt2cmd_executable_path: /usr/local/bin

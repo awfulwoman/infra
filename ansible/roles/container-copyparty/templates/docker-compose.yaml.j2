@@ -10,7 +10,7 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.copyparty.rule=Host(`copyparty.affordablepotatoes.com`)"
+      - "traefik.http.routers.copyparty.rule=Host(`copyparty.{{ domain_name }}`)"
       - "traefik.http.routers.copyparty.tls=true"
       - "traefik.http.routers.copyparty.tls.certresolver=letsencrypt"
     volumes:

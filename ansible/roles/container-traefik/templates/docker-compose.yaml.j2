@@ -15,13 +15,13 @@ services:
       - "traefik.enable=true"
       - "traefik.port=80"
       - "traefik.backend=traefik"
-      # Allow dashboard access via traefik.{{ansible_hostname}}.affordablepotatoes.com
-      - "traefik.http.routers.dashboard.rule=Host(`traefik.{{ansible_hostname}}.affordablepotatoes.com`)"
+      # Allow dashboard access via traefik.{{ansible_hostname}}.{{ domain_name }}
+      - "traefik.http.routers.dashboard.rule=Host(`traefik.{{ansible_hostname}}.{{ domain_name }}`)"
       - "traefik.http.routers.dashboard.service=dashboard@internal"
       - "traefik.http.routers.dashboard.tls=true"
       - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
-      # Allow API access via traefik.{{ansible_hostname}}.affordablepotatoes.com
-      - "traefik.http.routers.api.rule=Host(`traefik.{{ansible_hostname}}.affordablepotatoes.com`) && PathPrefix(`/api`)"
+      # Allow API access via traefik.{{ansible_hostname}}.{{ domain_name }}
+      - "traefik.http.routers.api.rule=Host(`traefik.{{ansible_hostname}}.{{ domain_name }}`) && PathPrefix(`/api`)"
       - "traefik.http.routers.api.service=api@internal"
       - "traefik.http.routers.api.tls=true"
       - "traefik.http.routers.api.tls.certresolver=letsencrypt"

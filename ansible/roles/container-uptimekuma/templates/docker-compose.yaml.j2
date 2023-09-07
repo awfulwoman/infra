@@ -10,7 +10,7 @@ services:
       PGID: "1000"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.uptimekuma.rule=Host(`uptime-kuma.affordablepotatoes.com`)"
+      - "traefik.http.routers.uptimekuma.rule=Host(`uptime-kuma.{{ domain_name }}`)"
       - "traefik.http.routers.uptimekuma.tls=true"
       - "traefik.http.routers.uptimekuma.tls.certresolver=letsencrypt"
     volumes:

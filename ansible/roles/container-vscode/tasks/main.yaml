@@ -24,7 +24,7 @@
     #     - name: "affordablepotatoes"
     # labels:
     #   traefik.enable: "true"
-    #   traefik.http.routers.vscode.rule: "Host(`vscode.affordablepotatoes.com`)"
+    #   traefik.http.routers.vscode.rule: "Host(`vscode.{{ domain_name }}`)"
     #   traefik.http.routers.vscode.entrypoints: "web"
     #   traefik.http.services.vscode.loadbalancer.server.port: "8089"
 
