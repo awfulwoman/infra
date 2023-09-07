@@ -7,13 +7,13 @@ services:
       - "TZ=Europe/Berlin"
       - "SYMFONY__ENV__SERVER_NAME={{ subdomain }}.affordablepotatoes.com"
       - "SYMFONY__ENV__DOMAIN_NAME=https://{{ subdomain }}.affordablepotatoes.com"
-      # - "MYSQL_ROOT_PASSWORD={{ vault_mysql_root_password }}"
-      # - "SYMFONY__ENV__DATABASE_DRIVER=pdo_mysql"
-      # - "SYMFONY__ENV__DATABASE_HOST=wallabag_db"
-      # - "SYMFONY__ENV__DATABASE_PORT=3306"
-      # - "SYMFONY__ENV__DATABASE_NAME=wallabag"
-      # - "SYMFONY__ENV__DATABASE_USER=wallabag"
-      # - "SYMFONY__ENV__DATABASE_PASSWORD={{ vault_wallabag_password }}"
+      - "MYSQL_ROOT_PASSWORD={{ vault_mysql_root_password }}"
+      - "SYMFONY__ENV__DATABASE_DRIVER=pdo_mysql"
+      - "SYMFONY__ENV__DATABASE_HOST=wallabag_db"
+      - "SYMFONY__ENV__DATABASE_PORT=3306"
+      - "SYMFONY__ENV__DATABASE_NAME=wallabag"
+      - "SYMFONY__ENV__DATABASE_USER=wallabag"
+      - "SYMFONY__ENV__DATABASE_PASSWORD={{ vault_wallabag_password }}"
       - "PUID=1000"
       - "PGID=1000"
     image: "{{ container_image }}"
@@ -29,22 +29,22 @@ services:
       - "{{ container_config_dir }}/{{ container_name }}/images:/var/www/wallabag/web/assets/images"
       - "{{ container_config_dir }}/{{ container_name }}/data:/var/www/wallabag/data"
       - /etc/localtime:/etc/localtime:ro
-  #   depends_on:
-  #     - wallabag_db
-  #     - wallabag_redis
+    depends_on:
+      - wallabag_db
+      - wallabag_redis
 
-  # wallabag_db:
-  #   image: mariadb
-  #   container_name: wallabag_db
-  #   environment:
-  #     - "MYSQL_ROOT_PASSWORD={{ vault_mysql_root_password }}"
-  #     - "TZ=Europe/Berlin"
-  #   volumes:
-  #     - "{{ container_config_dir }}/{{ container_name }}/database:/var/lib/mysql"
-  #   expose:
-  #     - "3306"
-  # wallabag_redis:
-  #   image: redis:alpine
-  #   container_name: wallabag_redis
-  #   expose:
-  #     - "6379"
+  wallabag_db:
+    image: mariadb
+    container_name: wallabag_db
+    environment:
+      - "MYSQL_ROOT_PASSWORD={{ vault_mysql_root_password }}"
+      - "TZ=Europe/Berlin"
+    volumes:
+      - "{{ container_config_dir }}/{{ container_name }}/database:/var/lib/mysql"
+    expose:
+      - "3306"
+  wallabag_redis:
+    image: redis:alpine
+    container_name: wallabag_redis
+    expose:
+      - "6379"
