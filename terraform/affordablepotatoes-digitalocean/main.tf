@@ -201,6 +201,13 @@ resource "digitalocean_record" "bookmarks" {
   value  = "100.83.127.33"
 }
 
+resource "digitalocean_record" "gitea" {
+  domain = digitalocean_domain.default.id
+  type   = "A"
+  name   = "gitea"
+  value  = "100.83.127.33"
+}
+
 # resource "digitalocean_droplet" "host_public" {
 #   image  = "ubuntu-22-10-x64"
 #   name   = "host-public"
