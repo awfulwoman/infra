@@ -16,6 +16,8 @@ services:
       - "traefik.http.routers.{{ container_name }}.rule=Host(`{{ container_name }}.affordablepotatoes.com`)"
       - "traefik.http.routers.{{ container_name }}.tls=true"
       - "traefik.http.routers.{{ container_name }}.tls.certresolver=letsencrypt"
+      - "traefik.http.middlewares.{{ container_name }}-header.headers.customRequestHeaders.X-Forwarded-Proto=https"
+      - "traefik.http.routers.{{ container_name }}.middlewares={{ container_name }}-header"
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}:/data"
       - /etc/timezone:/etc/timezone:ro
