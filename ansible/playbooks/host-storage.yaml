@@ -36,6 +36,7 @@
     - role: containers-config
     - role: container-traefik
     - role: container-jellyfin
+    - role: container-jellyfin-vue
     - role: container-watchtower
     - role: container-gluetun
     #- role: container-gluetun-uk

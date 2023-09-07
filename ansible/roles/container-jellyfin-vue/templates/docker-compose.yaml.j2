@@ -1,0 +1,19 @@
+services:
+  "{{ container_name }}":
+    container_name: "{{ container_name }}"
+    ports:
+      - "8734:80"
+    # privileged: true
+    environment:
+      - "TZ=Europe/Berlin"
+      - "DEFAULT_SERVERS=jellyfin.{{ domain_name }}"
+    image: "{{ container_image }}"
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.{{ container_name }}.rule=Host(`{{ container_name }}.{{ domain_name }}`)"
+      - "traefik.http.routers.{{ container_name }}.tls=true"
+      - "traefik.http.routers.{{ container_name }}.tls.certresolver=letsencrypt"
+    volumes:
+      # - "{{ container_config_dir }}/{{ container_name }}:/APPLICAATIONINTERNALDIR"
+      - /etc/localtime:/etc/localtime:ro
