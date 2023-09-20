@@ -6,12 +6,15 @@ all:
     # vm-*           A virtual machine used to perform tasks. Has an OS that can be managed via SSH.
     # workstation-*  A machine used directly by a person. Has an OS that can be managed via SSH.
     host-homeautomation:                  # Home Automation - Home Assistant, Zigbee, MQTT, etc
+    # host-homeautomation-new:              # Home Automation - new apartment
     host-backups:                         # Backups
     host-storage:                         # NAS
     host-pihole:                          # DHCP + DNS
 
   # Groupings of servers that allow them to be administered collectively.
   children:
+
+    # Host that run Terraform
     terraform:
       host-storage:
 
@@ -27,6 +30,7 @@ all:
     homeautomation:
       hosts:
         host-homeautomation:
+        # host-homeautomation-new:
 
     # Hosts that use ZFS
     zfs:
@@ -34,6 +38,7 @@ all:
         host-storage:
         host-backups:
         host-homeautomation:
+        # host-homeautomation-new:
 
     # ZFS Backup Server
     zfs-backup-server:
@@ -45,6 +50,7 @@ all:
       hosts:
         host-storage:
         host-homeautomation:
+        # host-homeautomation-new:
 
     # Autorestic source
     autorestic:
