@@ -1,2 +1,2 @@
 container_name: readarr
-container_image: linuxserver/readarr
+container_image: linuxserver/readarr:0.3.6-develop
