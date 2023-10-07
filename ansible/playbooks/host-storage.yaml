@@ -49,6 +49,7 @@
     - role: container-wallabag
     - role: container-heimdall
       heimdall_subdomain: storage
+    - role: container-pinry
     - role: container-freshrss
     - role: container-podgrab
     - role: container-metube
