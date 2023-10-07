@@ -1,2 +1,2 @@
 container_name: readarr
-container_image: cr.hotio.dev/hotio/readarr
+container_image: linuxserver/readarr
