@@ -1,0 +1,2 @@
+container_name: bazarr
+container_image: lscr.io/linuxserver/bazarr:latest

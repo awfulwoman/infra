@@ -38,6 +38,7 @@
     - role: container-jellyfin
     - role: container-jellyfin-vue
     - role: container-watchtower
+    - role: container-bazarr
     - role: container-gluetun
     #- role: container-gluetun-uk
     #- role: container-getiplayer
