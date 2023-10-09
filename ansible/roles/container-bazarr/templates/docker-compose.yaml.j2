@@ -6,6 +6,8 @@ services:
       - gluetun
     environment:
       - "TZ=Europe/Berlin"
+      - "PUID={{ container_user_id }}"
+      - "PGID={{ container_user_id }}"
     image: "{{ container_image }}"
     restart: unless-stopped
     labels:
