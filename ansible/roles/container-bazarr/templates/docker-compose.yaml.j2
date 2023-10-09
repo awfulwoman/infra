@@ -1,8 +1,9 @@
 services:
   "{{ container_name }}":
     container_name: "{{ container_name }}"
-    ports:
-      - "6767:6767"
+    network_mode: "service:gluetun" 
+    depends_on:
+      - gluetun
     environment:
       - "TZ=Europe/Berlin"
     image: "{{ container_image }}"
