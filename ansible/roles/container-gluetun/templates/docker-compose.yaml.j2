@@ -43,6 +43,12 @@ services:
       - "traefik.http.services.prowlarr.loadbalancer.server.port=9696"
       - "traefik.http.routers.prowlarr.tls=true"
       - "traefik.http.routers.prowlarr.tls.certresolver=letsencrypt"
+      # Bazarr
+      - "traefik.http.routers.bazarr.rule=Host(`bazarr.{{ domain_name }}`)"
+      - "traefik.http.routers.bazarr.service=bazarr"
+      - "traefik.http.services.bazarr.loadbalancer.server.port=6767"
+      - "traefik.http.routers.bazarr.tls=true"
+      - "traefik.http.routers.bazarr.tls.certresolver=letsencrypt"
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}:/gluetun"
       - "/etc/localtime:/etc/localtime:ro"
