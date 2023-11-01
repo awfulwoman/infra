@@ -54,6 +54,8 @@
     - role: container-freshrss
     - role: container-podgrab
     - role: container-metube
+    - role: container-wyoming-whisper
+    - role: container-wyoming-piper
     - role: container-prowlarr
     - role: container-sonarr
     - role: container-lidarr
