@@ -1,0 +1,23 @@
+services:
+  "{{ container_name }}":
+    container_name: "{{ container_name }}"
+    ports:
+      - "80:8999"
+      - "2003-2004:2003-2004"
+      - "2023-2024:2023-2024"
+      - "8125:8125/udp"
+      - "8126:8126"
+    # privileged: true
+    environment:
+      - "TZ=Europe/Berlin"
+    image: "{{ container_image }}"
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.{{ container_name }}.rule=Host(`{{ container_name }}.{{ domain_name }}`)"
+      - "traefik.http.services.{{ container_name }}.loadbalancer.server.port=8999"
+      - "traefik.http.routers.{{ container_name }}.tls=true"
+      - "traefik.http.routers.{{ container_name }}.tls.certresolver=letsencrypt"
+    volumes:
+      - "{{ container_config_dir }}/{{ container_name }}:/APPLICAATIONINTERNALDIR"
+      - /etc/localtime:/etc/localtime:ro
