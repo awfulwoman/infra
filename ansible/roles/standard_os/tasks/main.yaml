@@ -91,6 +91,7 @@
       - htop
       - lm-sensors
       - tmux
+      - pipx
     state: present
     update_cache: true
 
