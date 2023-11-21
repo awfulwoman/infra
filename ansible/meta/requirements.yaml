@@ -15,9 +15,11 @@ roles:
   - name: xanmanning.k3s
   - name: githubixx.ansible_role_wireguard
   - name: dmotte.disable_ipv6
+  - name: nginxinc.nginx
 
 collections:
   - name: community.docker
+  - name: community.posix
   - name: community.general
   - name: community.digitalocean
   - name: ansible.netcommon
