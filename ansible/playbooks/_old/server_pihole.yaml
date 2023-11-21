@@ -7,7 +7,7 @@
   vars:
     reboot_hour: 2
   roles:
-    - role: standard_os
+    - role: bootstrap
     - role: weareinteractive.environment
       no_log: true
       become: true

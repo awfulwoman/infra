@@ -6,8 +6,8 @@
        compose_list: []
 
   roles:
-    - role: standard_os
-    - role: standard-host
+    - role: bootstrap
+    - role: bootstrap-host
     - role: cron-reboot
     - role: weareinteractive.environment
       become: true

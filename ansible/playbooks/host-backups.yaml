@@ -2,8 +2,8 @@
 - name: Backup Server
   hosts: host-backups
   roles:
-    - role: standard_os
-    - role: standard-host
+    - role: bootstrap
+    - role: bootstrap-host
     - role: artis3n.tailscale
     - role: weareinteractive.environment
       become: true

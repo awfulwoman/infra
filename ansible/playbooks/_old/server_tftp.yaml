@@ -5,8 +5,8 @@
     ansible_user: ubuntu
     tftp_ip_address: 192.168.0.66
   roles:
-    - role: standard_os
-    - role: standard-host
+    - role: bootstrap
+    - role: bootstrap-host
     - role: apt-upgrade
   post_tasks:
     - name: Install TFTP software

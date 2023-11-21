@@ -5,8 +5,8 @@
     - set_fact:
        compose_list: []
   roles:
-    - role: standard_os
-    - role: standard-host
+    - role: bootstrap
+    - role: bootstrap-host
     - role: wakeonlan
       wakeonlan_interface: enp3s0
     - role: weareinteractive.environment
