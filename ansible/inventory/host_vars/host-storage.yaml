@@ -37,12 +37,15 @@ zfs_pools:
 # Named ZFS datasets
 container_config_zfs_id: fastpool/containers
 restic_zfs_id: slowpool/backups/restic
-syncthing_data_path_zfs_id: slowpool/charlie/syncthing
+charlie_data_path_zfs_id: slowpool/charlie
+charlie_syncthing_data_path_zfs_id: slowpool/charlie/syncthing
+wifey_data_path_zfs_id: "slowpool/{{vault_wifey_name}}"
 
 # Define useful paths from ZFS datasets
 container_config_dir: "/{{ container_config_zfs_id }}"
 restic_server_path: "/{{ restic_zfs_id }}"
-syncthing_data_path: "/{{ syncthing_data_path_zfs_id }}"
+syncthing_data_path: "/{{ charlie_syncthing_data_path_zfs_id }}"
+wifey_data_path: "/{{ wifey_data_path_zfs_id }}"
 
 # Datasets present 
 zfs_datasets:
@@ -52,8 +55,9 @@ zfs_datasets:
   - slowpool/images
   - slowpool/media
   - slowpool/media/music
+  - "{{ wifey_data_path_zfs_id }}"
   - slowpool/charlie
-  - "{{ syncthing_data_path_zfs_id }}"
+  - "{{ charlie_syncthing_data_path_zfs_id }}"
 
 # Datasets to be backed-up
 zfs_backup_datasets:
@@ -61,7 +65,8 @@ zfs_backup_datasets:
   - slowpool/pools
   - slowpool/images
   - slowpool/media/music
-  - "{{ syncthing_data_path_zfs_id }}"
+  - "{{ charlie_syncthing_data_path_zfs_id }}"
+  - "{{ wifey_data_path_zfs_id }}"
 
 
 # --- NFS -------------
