@@ -114,17 +114,17 @@ echo "ZFS Backups"
 echo "***********"
 echo " "
 
-if [ $SKIPAUSE -eq 0 ]; then
-echo "Pausing for 60 seconds."
-echo " "
-pausesecs=$((1 * 60))
-while [ $pausesecs -gt 0 ]; do
-    echo -ne "🕗 $pausesecs\033[0K\r"
-    sleep 1
-    : $((pausesecs--))
-done
-echo " "
-fi
+# if [ $SKIPAUSE -eq 0 ]; then
+# echo "Pausing for 60 seconds."
+# echo " "
+# pausesecs=$((1 * 60))
+# while [ $pausesecs -gt 0 ]; do
+#     echo -ne "🕗 $pausesecs\033[0K\r"
+#     sleep 1
+#     : $((pausesecs--))
+# done
+# echo " "
+# fi
 
 if [[ "$LOGLEVEL" =~ ^(DEBUG)$ ]]; then
 echo "DEBUG INFO"
