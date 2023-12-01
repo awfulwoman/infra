@@ -16,6 +16,7 @@ roles:
   - name: githubixx.ansible_role_wireguard
   - name: dmotte.disable_ipv6
   - name: nginxinc.nginx
+  - name: ironicbadger.figurine
 
 collections:
   - name: community.docker

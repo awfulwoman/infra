@@ -76,6 +76,7 @@
       sleepuntil_active: false
     - role: ansible-pull
     - role: mqtt2cmd
+    - role: ironicbadger.figurine
 
   handlers:
     - name: Reboot host
