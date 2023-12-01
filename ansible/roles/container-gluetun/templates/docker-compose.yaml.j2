@@ -21,7 +21,7 @@ services:
       # Prowlarr
       - "0.0.0.0:9696:9696/tcp"
       # Bazarr
-      - "0.0.0.0:6767:6767/tcp"
+      # - "0.0.0.0:6767:6767/tcp"
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
