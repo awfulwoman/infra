@@ -77,6 +77,7 @@
     - role: ansible-pull
     - role: mqtt2cmd
     - role: ironicbadger.figurine
+      become: true
 
   handlers:
     - name: Reboot host
