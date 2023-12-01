@@ -8,7 +8,7 @@ services:
     ports:
       - 8099:8000
     volumes:
-      - /slowpool/media/youtube:/youtube
+      - "{{ shared_media_path }}/youtube:/youtube"
       - "{{ container_config_dir }}/{{ container_name }}/cache:/cache"
     environment:
       - ES_URL=http://archivist-es:9200     # needs protocol e.g. http and port

@@ -74,7 +74,7 @@ zfs_backup_datasets:
 # --- NFS -------------
 nfs_exports:
   - "/fastpool *(rw,all_squash,anonuid=1000,anongid=1000)"
-  - "/slowpool/media *(rw,all_squash,anonuid=1000,anongid=1000)"
+  - "{{ shared_media_path }} *(rw,all_squash,anonuid=1000,anongid=1000)"
   - "{{ restic_server_path }} *(rw,all_squash,anonuid=1000,anongid=1000)"
 
 

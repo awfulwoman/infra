@@ -18,7 +18,7 @@
       AUDIOBOOKSHELF_GID: "100"
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - /slowpool/media/audiobooks:/audiobooks
-      - /slowpool/media/podcasts:/podcasts
+      - "{{ shared_media_path }}/audiobooks:/audiobooks"
+      - "{{ shared_media_path }}/podcasts:/podcasts"
       - "{{ container_config_dir }}/{{ container_name }}/config:/config"
       - "{{ container_config_dir }}/{{ container_name }}/metadata:/metadata"
