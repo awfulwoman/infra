@@ -206,10 +206,10 @@ then
 	log_info "{{zfs_backup_dataset}}..."
   if [ $? -eq 0 ]
   then
-      log_info "🟩 Success!"
+      log_info "Success!"
   else
       FAILURE=1
-      log_error "🟥 Failure!" 
+      log_error "Failure!" 
       log_error $SYNCOID_OUTPUT
   fi
   {% endfor %} # End dataset loop
