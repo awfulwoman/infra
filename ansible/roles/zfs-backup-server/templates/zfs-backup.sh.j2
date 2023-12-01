@@ -182,10 +182,10 @@ fi
 # *******************
 {% for zfsbackup_client in zfsbackup_clients %}
 
-log_info "Backing up {{ zfsbackup_client }}."
+# log_info "Backing up {{ zfsbackup_client }}."
 
 ## Is the client host up?
-log_info "Pinging {{ zfsbackup_client }}$SEARCHDOMAIN..."
+# log_info "Pinging {{ zfsbackup_client }}$SEARCHDOMAIN..."
 ping "{{ zfsbackup_client }}$SEARCHDOMAIN" -c2 > /dev/null 2>&1
 
 if [ $? -eq 0 ]; 
@@ -203,18 +203,19 @@ then
   echo $SYNCOID_OUTPUT
   fi
 
+	log_info "{{zfs_backup_dataset}}..."
   if [ $? -eq 0 ]
   then
-      log_info "Finished backup of {{zfs_backup_dataset}}"
+      log_info "Success."
   else
       FAILURE=1
-      log_error "Could not backup {{zfs_backup_dataset}}" 
+      log_error "Failure!" 
       log_error $SYNCOID_OUTPUT
   fi
-  {% endfor %} # End daatset loop
+  {% endfor %} # End dataset loop
 
 
-  log_info "Finished backup of {{ zfsbackup_client }}."
+  log_info "{{ zfsbackup_client }} backup finished."
 else 
   log_warn "{{ zfsbackup_client }} was not online."
   failure
