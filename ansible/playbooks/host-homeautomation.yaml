@@ -57,6 +57,8 @@
     - role: docker-cleanup
     - role: apt-upgrade
     - role: ansible-pull
+    - role: ironicbadger.figurine
+      become: true
 
   handlers:
     - name: Reboot host
