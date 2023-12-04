@@ -21,7 +21,6 @@
     - role: motd
     - role: apt-upgrade
     - role: sleepuntil
-      sleepuntil_wakeup_script: /opt/zfsbackup/zfs-backup
     - role: geerlingguy.pip
     - role: geerlingguy.ansible
       become: true

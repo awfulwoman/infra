@@ -93,7 +93,7 @@
 - name: Generate and deploy backup script
   become: true
   ansible.builtin.template:
-    src: templates/zfs-backup.sh.j2
+    src: templates/pull-zfs-backups.sh.j2
     dest: "{{ zfsbackup_script_path }}"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
