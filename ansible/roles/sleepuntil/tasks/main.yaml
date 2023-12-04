@@ -14,8 +14,14 @@
   when: sleepuntil_active is false
 
 
-
 # Activate role
+
+- name: "Remove any traces of old .sh script"
+  become: true
+  ansible.builtin.file:
+    dest: /usr/local/bin/sleepuntil.sh
+    state: absent
+
 - name: "Copy sleepuntil script"
   become: true
   ansible.builtin.template:

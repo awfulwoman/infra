@@ -136,7 +136,7 @@ fi
 
 sleepnow() {
     # Sleep if script is present
-    command -v sleepuntil.sh &> /dev/null
+    command -v sleepuntil &> /dev/null
     if [ $? -eq 0 ]; 
     then 
         log_info "Going to sleep in 5 mins. {{ ansible_hostname }} will wake up at {{ sleepuntil_sleep_time }}."
@@ -148,8 +148,8 @@ sleepnow() {
         done
 				sleep 5
 				echo " "
-        # log_info "Calling sleepuntil.sh"
-        sleepuntil.sh --time {{ sleepuntil_sleep_time }}
+        # log_info "Calling sleepuntil"
+        sleepuntil --time {{ sleepuntil_sleep_time }}
     fi 
 }
 
