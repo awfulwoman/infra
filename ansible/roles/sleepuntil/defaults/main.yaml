@@ -1,9 +1,8 @@
 sleepuntil_active: true
 sleepuntil_sleep_time: "17:30"
 sleepuntil_suspend_mode: mem
-sleepuntil_install_location: /usr/local/bin/
-sleepuntil_sleep_immediately: false
+sleepuntil_script_path: /usr/local/bin/sleepuntil
 sleepuntil_wakeup_script: null
-sleepuntil_autosleep: true
+sleepuntil_autosleep: false
 sleepuntil_autosleep_time_hour: "1"
 sleepuntil_autosleep_time_minute: "0"

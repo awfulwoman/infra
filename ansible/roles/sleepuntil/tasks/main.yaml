@@ -9,7 +9,7 @@
 - name: Remove script
   become: true
   ansible.builtin.file:
-    dest: "{{ sleepuntil_install_location }}/sleepuntil.sh"
+    dest: "{{ sleepuntil_script_path }}"
     state: absent
   when: sleepuntil_active is false
 
@@ -20,7 +20,7 @@
   become: true
   ansible.builtin.template:
     src: sleepuntil.sh.conf
-    dest: "{{ sleepuntil_install_location }}/sleepuntil.sh"
+    dest: "{{ sleepuntil_script_path }}"
     mode: 0755
   when: sleepuntil_active
 
@@ -30,16 +30,9 @@
     name: "Auto-suspend"
     hour: "{{ sleepuntil_autosleep_time_hour }}"
     minute: "{{ sleepuntil_autosleep_time_minute }}"
-    job: "/usr/local/bin/sleepuntil.sh {{ sleepuntil_sleep_time }}"
+    job: "{{ sleepuntil_script_path }} -T {{ sleepuntil_sleep_time }}"
     state: present
   when: sleepuntil_autosleep and sleepuntil_active
-
-- name: Check to see if sleep until official wake-up time should occur
-  become: true
-  ansible.builtin.command: "/usr/local/bin/sleepuntil.sh {{ sleepuntil_sleep_time }}"
-  async: 10
-  poll: 0
-  when: sleepuntil_sleep_immediately and sleepuntil_active
 
 - name: Allow the root user to sudo /usr/sbin/rtcwake with no password
   become: true

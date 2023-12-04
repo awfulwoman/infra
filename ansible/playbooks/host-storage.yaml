@@ -73,7 +73,6 @@
     - role: diodonfrost.terraform
       become: true
     - role: sleepuntil
-      sleepuntil_active: false
     - role: ansible-pull
     - role: mqtt2cmd
     - role: ironicbadger.figurine
