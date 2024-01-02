@@ -16,7 +16,7 @@ services:
     command: quickstart
     privileged: true
     depends_on: [concourse-db]
-    ports: ["8080:8089"]
+    ports: ["8089:8080"]
     environment:
       TZ: Europe/Berlin
       CONCOURSE_POSTGRES_HOST: concourse-db
