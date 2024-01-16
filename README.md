@@ -4,8 +4,9 @@
 
 Let me show you my home network setup. 
 
-![Media server has rebooted on schedule](https://healthchecks.io/badge/37a7ad4c-57bd-4cea-9118-f2c5df/Qx0Lc7eg-2/mediaserver-regular-reboot.svg)
-![Home Automation server has rebooted on schedule](https://healthchecks.io/badge/37a7ad4c-57bd-4cea-9118-f2c5df/i3csSel2-2/homeautomation-regular-reboot.svg)
+![Backups]( https://healthchecks.io/badge/37a7ad4c-57bd-4cea-9118-f2c5df/NqTeGVVP-2/host-backups.svg )
+![Home Automation](https://healthchecks.io/badge/37a7ad4c-57bd-4cea-9118-f2c5df/n4SwgVdV/host-homeautomation.svg)
+![Storage](https://healthchecks.io/badge/37a7ad4c-57bd-4cea-9118-f2c5df/1bQ__A5n/host-storage.svg)
 
 
 - **Configuration as code:** `true`
