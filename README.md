@@ -1,6 +1,6 @@
 # There’s no place like 127.0.0.1
 
-<img align="right" width="100" height="100" src="http://www.fillmurray.com/100/100" alt="">
+<img align="right" width="300" src="https://i.insider.com/5b8ec9f52badb96daa2c4818?width=700" alt="">
 
 Let me show you my home network setup. 
 
