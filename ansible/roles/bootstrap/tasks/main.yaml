@@ -92,6 +92,7 @@
       - lm-sensors
       - tmux
       - pipx
+      - uptimed
     state: present
     update_cache: true
 
