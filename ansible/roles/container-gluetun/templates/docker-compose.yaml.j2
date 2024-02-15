@@ -7,7 +7,7 @@ services:
       - VPN_SERVICE_PROVIDER=mullvad
       - VPN_TYPE=wireguard
       - WIREGUARD_PRIVATE_KEY="{{ vault_mullvad_wireguard_private_key }}"
-      - WIREGUARD_ADDRESSES="{{ vault_mullvad_wireguard_ipaddress }}"
+      - WIREGUARD_ADDRESSES="{{ vault_mullvad_wireguard_ipaddress }}" # IPv4 only!
       - SERVER_CITIES=zurich
       - SERVER_COUNTRIES=switzerland
     image: "{{ container_image }}"
