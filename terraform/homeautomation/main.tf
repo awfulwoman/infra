@@ -1,6 +1,6 @@
 terraform {
   cloud {
-    organization = "whalecoiner"
+    organization = "Home Automation"
     workspaces {
       name = "affordablepotatoes_subdomains"
     }
