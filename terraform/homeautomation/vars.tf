@@ -3,3 +3,9 @@ variable "digitalocean_token" {
   type = string
   sensitive = true
 }
+
+variable "domain_name" {
+  description = "The home automation domain name"
+  type = string
+  sensitive = true
+}
