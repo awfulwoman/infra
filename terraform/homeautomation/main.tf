@@ -24,6 +24,20 @@ resource "digitalocean_domain" "default" {
    name = var.domain_name
 }
 
+resource "digitalocean_project" "homeautomation" {
+  name        = "Home Automation"
+  description = "Home Automation support"
+  purpose     = "Web Application"
+  environment = "Production"
+}
+
+resource "digitalocean_project_resources" "homeautomation" {
+  project = digitalocean_project.homeautomation.id
+  resources = [
+    digitalocean_domain.default.urn
+  ]
+}
+
 
 # output "domain_output" {
 #   value = data.digitalocean_domain.default.zone_file
