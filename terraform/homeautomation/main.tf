@@ -56,42 +56,42 @@ resource "digitalocean_record" "homeassistant" {
   domain = digitalocean_domain.default.id
   type   = "A"
   name   = "homeassistant"
-  value  = "100.66.127.130"
+  value  = var.tailscale_ip_host_homeautomation
 }
 
 resource "digitalocean_record" "homeautomation" {
   domain = digitalocean_domain.default.id
   type   = "A"
   name   = "homeautomation"
-  value  = "100.66.127.130"
+  value  = var.tailscale_ip_host_homeautomation
 }
 
 resource "digitalocean_record" "esphome" {
   domain = digitalocean_domain.default.id
   type   = "A"
   name   = "esphome"
-  value  = "100.66.127.130"
+  value  = var.tailscale_ip_host_homeautomation
 }
 
 resource "digitalocean_record" "zigbee2mqtt" {
   domain = digitalocean_domain.default.id
   type   = "A"
   name   = "zigbee2mqtt"
-  value  = "100.66.127.130"
+  value  = var.tailscale_ip_host_homeautomation
 }
 
 resource "digitalocean_record" "zigbee2mqtt-aqara" {
   domain = digitalocean_domain.default.id
   type   = "A"
   name   = "zigbee2mqtt-aqara"
-  value  = "100.66.127.130"
+  value  = var.tailscale_ip_host_homeautomation
 }
 
 resource "digitalocean_record" "uptimekuma" {
   domain = digitalocean_domain.default.id
   type   = "A"
   name   = "uptimekuma"
-  value  = "100.66.127.130"
+  value  = var.tailscale_ip_host_homeautomation
 }
 
 
@@ -100,133 +100,133 @@ resource "digitalocean_record" "jellyfin" {
   domain = digitalocean_domain.default.id
   type   = "A"
   name   = "jellyfin"
-  value  = "100.83.127.33"
+  value  = var.tailscale_ip_host_storage
 }
 
 resource "digitalocean_record" "gluetun" {
   domain = digitalocean_domain.default.id
   type   = "A"
   name   = "gluetun"
-  value  = "100.83.127.33"
+  value  = var.tailscale_ip_host_storage
 }
 
 resource "digitalocean_record" "sonarr" {
   domain = digitalocean_domain.default.id
   type   = "A"
   name   = "sonarr"
-  value  = "100.83.127.33"
+  value  = var.tailscale_ip_host_storage
 }
 
 resource "digitalocean_record" "radarr" {
   domain = digitalocean_domain.default.id
   type   = "A"
   name   = "radarr"
-  value  = "100.83.127.33"
+  value  = var.tailscale_ip_host_storage
 }
 
 resource "digitalocean_record" "lidarr" {
   domain = digitalocean_domain.default.id
   type   = "A"
   name   = "lidarr"
-  value  = "100.83.127.33"
+  value  = var.tailscale_ip_host_storage
 }
 
 resource "digitalocean_record" "prowlarr" {
   domain = digitalocean_domain.default.id
   type   = "A"
   name   = "prowlarr"
-  value  = "100.83.127.33"
+  value  = var.tailscale_ip_host_storage
 }
 
 resource "digitalocean_record" "readarr" {
   domain = digitalocean_domain.default.id
   type   = "A"
   name   = "readarr"
-  value  = "100.83.127.33"
+  value  = var.tailscale_ip_host_storage
 }
 
 resource "digitalocean_record" "podgrab" {
   domain = digitalocean_domain.default.id
   type   = "A"
   name   = "podgrab"
-  value  = "100.83.127.33"
+  value  = var.tailscale_ip_host_storage
 }
 
 resource "digitalocean_record" "audiobookshelf" {
   domain = digitalocean_domain.default.id
   type   = "A"
   name   = "audiobookshelf"
-  value  = "100.83.127.33"
+  value  = var.tailscale_ip_host_storage
 }
 
 resource "digitalocean_record" "copyparty" {
   domain = digitalocean_domain.default.id
   type   = "A"
   name   = "copyparty"
-  value  = "100.83.127.33"
+  value  = var.tailscale_ip_host_storage
 }
 
 resource "digitalocean_record" "freshrss" {
   domain = digitalocean_domain.default.id
   type   = "A"
   name   = "freshrss"
-  value  = "100.83.127.33"
+  value  = var.tailscale_ip_host_storage
 }
 
 resource "digitalocean_record" "wallabag" {
   domain = digitalocean_domain.default.id
   type   = "A"
   name   = "wallabag"
-  value  = "100.83.127.33"
+  value  = var.tailscale_ip_host_storage
 }
 
 resource "digitalocean_record" "syncthing" {
   domain = digitalocean_domain.default.id
   type   = "A"
   name   = "syncthing"
-  value  = "100.83.127.33"
+  value  = var.tailscale_ip_host_storage
 }
 
 resource "digitalocean_record" "shiori" {
   domain = digitalocean_domain.default.id
   type   = "A"
   name   = "shiori"
-  value  = "100.83.127.33"
+  value  = var.tailscale_ip_host_storage
 }
 
 resource "digitalocean_record" "bookmarks" {
   domain = digitalocean_domain.default.id
   type   = "A"
   name   = "bookmarks"
-  value  = "100.83.127.33"
+  value  = var.tailscale_ip_host_storage
 }
 
 resource "digitalocean_record" "gitea" {
   domain = digitalocean_domain.default.id
   type   = "A"
   name   = "gitea"
-  value  = "100.83.127.33"
+  value  = var.tailscale_ip_host_storage
 }
 
 resource "digitalocean_record" "jellyfin-vue" {
   domain = digitalocean_domain.default.id
   type   = "A"
   name   = "jellyfin-vue"
-  value  = "100.83.127.33"
+  value  = var.tailscale_ip_host_storage
 }
 
 resource "digitalocean_record" "pinry" {
   domain = digitalocean_domain.default.id
   type   = "A"
   name   = "pinry"
-  value  = "100.83.127.33"
+  value  = var.tailscale_ip_host_storage
 }
 
 resource "digitalocean_record" "bazarr" {
   domain = digitalocean_domain.default.id
   type   = "A"
   name   = "bazarr"
-  value  = "100.83.127.33"
+  value  = var.tailscale_ip_host_storage
 }
 
 # resource "digitalocean_droplet" "host_public" {
