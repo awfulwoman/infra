@@ -38,31 +38,35 @@ resource "digitalocean_project_resources" "homeautomation" {
   ]
 }
 
+# data "digitalocean_domain" "default" {
+#   name = var.domain_name
+# }
 
 # output "domain_output" {
 #   value = data.digitalocean_domain.default.zone_file
 # }
+
 # Nameservers
-# resource "digitalocean_record" "ns1" {
-#   domain = digitalocean_domain.default.id
-#   type   = "NS"
-#   value   = "ns1.digitalocean.com."
-#   name  = "@"
-# }
+resource "digitalocean_record" "ns1" {
+  domain = digitalocean_domain.default.id
+  type   = "NS"
+  value   = "ns1.digitalocean.com."
+  name  = "@"
+}
 
-# resource "digitalocean_record" "ns2" {
-#   domain = digitalocean_domain.default.id
-#   type   = "NS"
-#   value   = "ns2.digitalocean.com."
-#   name  = "@"
-# }
+resource "digitalocean_record" "ns2" {
+  domain = digitalocean_domain.default.id
+  type   = "NS"
+  value   = "ns2.digitalocean.com."
+  name  = "@"
+}
 
-# resource "digitalocean_record" "ns3" {
-#   domain = digitalocean_domain.default.id
-#   type   = "NS"
-#   value   = "ns3.digitalocean.com."
-#   name  = "@"
-# }
+resource "digitalocean_record" "ns3" {
+  domain = digitalocean_domain.default.id
+  type   = "NS"
+  value   = "ns3.digitalocean.com."
+  name  = "@"
+}
 
 
 # Home Automation
