@@ -24,15 +24,15 @@ resource "digitalocean_domain" "default" {
    name = var.domain_name
 }
 
-resource "digitalocean_project" "homeautomation" {
-  name        = "Home Automation"
-  description = "Home Automation support"
+resource "digitalocean_project" "network" {
+  name        = "Home Network"
+  description = "Networking for the home."
   purpose     = "Web Application"
   environment = "Production"
 }
 
-resource "digitalocean_project_resources" "homeautomation" {
-  project = digitalocean_project.homeautomation.id
+resource "digitalocean_project_resources" "network" {
+  project = digitalocean_project.network.id
   resources = [
     digitalocean_domain.default.urn
   ]
@@ -45,6 +45,14 @@ resource "digitalocean_project_resources" "homeautomation" {
 # output "domain_output" {
 #   value = data.digitalocean_domain.default.zone_file
 # }
+
+# Home Automation
+resource "digitalocean_record" "root" {
+  domain = digitalocean_domain.default.id
+  type   = "A"
+  name   = "@"
+  value  = var.tailscale_ip_host_homeautomation
+}
 
 # Nameservers
 resource "digitalocean_record" "ns1" {

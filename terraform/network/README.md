@@ -1,6 +1,6 @@
-# Home Automation Domains
+# Home Network
 
-This will provide a domain for Home Automation and create all necessary subdomains.
+This will provide a domain for my home network and create all necessary subdomains.
 
 ## Usage
 
