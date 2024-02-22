@@ -129,6 +129,13 @@ resource "digitalocean_record" "jellyfin" {
   value  = var.tailscale_ip_host_storage
 }
 
+resource "digitalocean_record" "qbittorrent" {
+  domain = digitalocean_domain.default.id
+  type   = "A"
+  name   = "qbittorrent"
+  value  = var.tailscale_ip_host_storage
+}
+
 resource "digitalocean_record" "gluetun" {
   domain = digitalocean_domain.default.id
   type   = "A"
