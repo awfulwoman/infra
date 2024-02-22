@@ -39,11 +39,11 @@ services:
       - "traefik.http.routers.qbittorrent.tls=true"
       - "traefik.http.routers.qbittorrent.tls.certresolver=letsencrypt"
       # Prowlarr
-      - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.{{ domain_name }}`)"
-      - "traefik.http.routers.prowlarr.service=prowlarr"
-      - "traefik.http.services.prowlarr.loadbalancer.server.port=9696"
-      - "traefik.http.routers.prowlarr.tls=true"
-      - "traefik.http.routers.prowlarr.tls.certresolver=letsencrypt"
+      # - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.{{ domain_name }}`)"
+      # - "traefik.http.routers.prowlarr.service=prowlarr"
+      # - "traefik.http.services.prowlarr.loadbalancer.server.port=9696"
+      # - "traefik.http.routers.prowlarr.tls=true"
+      # - "traefik.http.routers.prowlarr.tls.certresolver=letsencrypt"
       # Bazarr
       # - "traefik.http.routers.bazarr.rule=Host(`bazarr.{{ domain_name }}`)"
       # - "traefik.http.routers.bazarr.service=bazarr"
