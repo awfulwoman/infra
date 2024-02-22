@@ -8,6 +8,8 @@ services:
       - PGID=1000
     image: "{{ container_image }}"
     restart: unless-stopped
+    ports:
+      - "9696:9696"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.{{ container_name }}.rule=Host(`{{ container_name }}.{{ domain_name }}`)"
