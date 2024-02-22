@@ -1,7 +1,6 @@
 services:
   "{{ container_name }}":
     container_name: "{{ container_name }}"
-    network_mode: "service:gluetun" 
     environment:
       - "TZ=Europe/Berlin"      
       - PUID=1000
