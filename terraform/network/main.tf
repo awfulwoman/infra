@@ -99,6 +99,13 @@ resource "digitalocean_record" "esphome" {
   value  = var.tailscale_ip_host_homeautomation
 }
 
+resource "digitalocean_record" "mqtt" {
+  domain = digitalocean_domain.default.id
+  type   = "A"
+  name   = "mqtt"
+  value  = var.tailscale_ip_host_homeautomation
+}
+
 resource "digitalocean_record" "zigbee2mqtt" {
   domain = digitalocean_domain.default.id
   type   = "A"

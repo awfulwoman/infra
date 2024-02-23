@@ -23,7 +23,7 @@ http:
   routers:
     homeassistant:
       service: homeassistant
-      rule: Host(`homeassistant.affordablepotatoes.com`)
+      rule: "Host(`homeassistant.{{ domain_name }}`)"
       tls:
         certresolver: letsencrypt
       entrypoints:
