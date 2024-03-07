@@ -4,8 +4,8 @@
     path: "{{ container_config_dir }}/{{ container_name }}"
     state: directory
     mode: 0774
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    owner: "root"
+    group: "root"
     recurse: true
 
 - name: "Create compose config dir"
