@@ -16,9 +16,9 @@ http:
         stsPreload: true
         stsSeconds: 31536000
         customFrameOptionsValue: SAMEORIGIN
-    https-redirect:
-      redirectScheme:
-        scheme: https
+    # https-redirect:
+    #   redirectScheme:
+    #     scheme: https
 
   routers:
     homeassistant:
@@ -32,6 +32,7 @@ http:
 
   services:
     homeassistant:
+      passHostHeader: true 
       loadBalancer:
         servers:
           # - url: "http://172.17.0.1:8123"
