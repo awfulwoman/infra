@@ -16,5 +16,3 @@ services:
       - "{{ container_config_dir }}/{{ container_name }}/vuetorrent:/vuetorrent"
       - "{{ torrent_path }}:/data/downloads/torrents"
       - "/etc/localtime:/etc/localtime:ro"
-    networks:
-      - "{{ docker_default_network }}"

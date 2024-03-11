@@ -29,5 +29,3 @@ services:
       - "{{ container_config_dir }}/{{ container_name }}/pihole/:/etc/pihole/"
       - "{{ container_config_dir }}/{{ container_name }}/dns/:/etc/dnsmasq.d/"
       - /etc/localtime:/etc/localtime:ro
-    networks:
-      - "{{ docker_default_network }}"
