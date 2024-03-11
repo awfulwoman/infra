@@ -32,8 +32,8 @@ http:
 
   services:
     homeassistant:
-      networks:
-        - "{{ docker_default_network }}"
+      labels:
+        - "traefik.enable=true"
       loadBalancer:
         servers:
           - url: "http://172.17.0.1:8123"

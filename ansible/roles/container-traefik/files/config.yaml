@@ -8,10 +8,6 @@ entryPoints:
   web:
     address: ":80"
     http:
-      # tls:
-      #   domains:
-      #     main: "affordablepotaotes.com"
-      #     sans: "*.affordablepotaotes.com"
       redirections:
         entrypoint:
           to: websecure
@@ -35,3 +31,4 @@ certificatesResolvers:
       dnschallenge:
         provider: digitalocean
         delaybeforecheck: 0
+        DisablePropagationCheck: true
