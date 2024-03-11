@@ -16,9 +16,9 @@ http:
         stsPreload: true
         stsSeconds: 31536000
         customFrameOptionsValue: SAMEORIGIN
-    https-redirect:
-      redirectScheme:
-        scheme: https
+    # https-redirect:
+    #   redirectScheme:
+    #     scheme: https
 
   routers:
     homeassistant:
@@ -28,10 +28,10 @@ http:
         certresolver: letsencrypt
       entrypoints:
         - web
-        - websecure
-      middlewares:
-        - secHeaders
-        - https-redirect
+        # - websecure
+      # middlewares:
+      #   - secHeaders
+      #   - https-redirect
 
   services:
     homeassistant:

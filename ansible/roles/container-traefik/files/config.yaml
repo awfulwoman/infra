@@ -16,8 +16,7 @@ entryPoints:
     address: ":443"
 providers:
   docker:
-    # exposedbydefault: false
-    exposedbydefault: true
+    exposedbydefault: false
     endpoint: "unix:///var/run/docker.sock"
   file:
     directory: /etc/traefik/providers
