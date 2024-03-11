@@ -12,3 +12,5 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "{{ container_config_dir }}/{{ container_name }}/config.json:/config.json"
       - "/etc/localtime:/etc/localtime:ro"
+    networks:
+      - "{{ docker_default_network }}"

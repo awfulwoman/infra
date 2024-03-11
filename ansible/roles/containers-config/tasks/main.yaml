@@ -25,3 +25,20 @@
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     state: directory
+
+
+- name: "Create compose config dir"
+  ansible.builtin.file:
+    path: "{{ compose_config_dir }}/{{ base_name }}"
+    state: directory
+
+- name: "Create compose file"
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ compose_config_dir }}/{{ base_name }}/docker-compose.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
+- name: append to compose_list
+  ansible.builtin.set_fact:
+    compose_list: "{{ compose_list + [ base_name ] }}"

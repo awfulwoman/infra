@@ -17,3 +17,5 @@ services:
     volumes:
       # - "{{ container_config_dir }}/{{ container_name }}:/APPLICAATIONINTERNALDIR"
       - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ docker_default_network }}"

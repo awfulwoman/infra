@@ -17,3 +17,5 @@ services:
       - "{{ metube_downloads_dir }}:/downloads"
       - "{{ container_config_dir }}/{{ container_name }}/state:/state"
       - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ docker_default_network }}"

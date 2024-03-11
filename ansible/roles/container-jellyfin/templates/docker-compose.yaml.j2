@@ -18,3 +18,5 @@ services:
       - "{{ container_config_dir }}/{{ container_name }}/cache:/cache"
       - "{{ shared_media_path }}:/data"
       - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ docker_default_network }}"

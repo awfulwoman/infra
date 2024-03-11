@@ -17,3 +17,5 @@
     volumes:
       - "{{ container_config_dir }}/psmqtt/psmqtt.conf:/opt/psmqtt/conf/psmqtt.conf"
       - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ docker_default_network }}"

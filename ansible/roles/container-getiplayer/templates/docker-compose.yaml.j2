@@ -12,3 +12,5 @@ services:
       - "{{ container_config_dir }}/{{ container_name }}:/output"
       - "{{ getiplayer_download_path }}:/data/downloads/iplayer"
       - "/etc/localtime:/etc/localtime:ro"
+    networks:
+      - "{{ docker_default_network }}"

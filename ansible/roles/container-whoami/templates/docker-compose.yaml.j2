@@ -14,3 +14,5 @@ services:
       - "traefik.http.routers.{{ container_name }}.tls.certresolver=letsencrypt"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
+    networks:
+      - "{{ docker_default_network }}"

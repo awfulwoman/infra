@@ -16,3 +16,5 @@ services:
     volumes:
       - "/slowpool/images:/web"
       - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ docker_default_network }}"

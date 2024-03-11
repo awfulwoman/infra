@@ -23,3 +23,5 @@ services:
       - "{{ container_config_dir }}/{{ container_name }}:/data"
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ docker_default_network }}"

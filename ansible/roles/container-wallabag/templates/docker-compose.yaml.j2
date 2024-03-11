@@ -32,6 +32,8 @@ services:
     depends_on:
       - wallabag_db
       - wallabag_redis
+    networks:
+      - "{{ docker_default_network }}"
 
   wallabag_db:
     image: mariadb
@@ -48,3 +50,5 @@ services:
     container_name: wallabag_redis
     expose:
       - "6379"
+  networks:
+    - "{{ docker_default_network }}"

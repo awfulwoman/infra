@@ -17,3 +17,5 @@ services:
       - "/etc/localtime:/etc/localtime:ro"
       - "{{ copyparty_filepath }}:/w"
       - "{{ container_config_dir }}/{{ container_name }}:/cfg"
+    networks:
+      - "{{ docker_default_network }}"

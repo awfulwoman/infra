@@ -15,3 +15,5 @@ services:
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "{{ container_config_dir }}/{{ container_name }}:/data"
+    networks:
+      - "{{ docker_default_network }}"

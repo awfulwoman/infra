@@ -31,5 +31,7 @@ services:
       - "{{ container_config_dir }}/letsencrypt:/letsencrypt"
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "/etc/localtime:/etc/localtime:ro"
+    networks:
+      - "{{ docker_default_network }}"
     extra_hosts:
       - "host.docker.internal:host-gateway"

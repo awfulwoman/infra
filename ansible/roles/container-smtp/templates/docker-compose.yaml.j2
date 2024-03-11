@@ -15,3 +15,5 @@ services:
     restart: unless-stopped
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
+    networks:
+      - "{{ docker_default_network }}"

@@ -22,6 +22,8 @@ services:
       - "homepage.name=zigbee2mqtt-aqara"
       - "homepage.href=https://zigbee2mqtt-aqara.{{ domain_name }}"
       - "homepage.description=Zigbee controller for Aqara devices"
+    networks:
+      - "{{ docker_default_network }}"
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}:/app/data"
       - "/run/udev:/run/udev:ro"

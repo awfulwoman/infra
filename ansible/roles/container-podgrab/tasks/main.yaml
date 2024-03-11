@@ -20,3 +20,5 @@
       - "{{ shared_media_path }}/podcasts:/assets"
       - /etc/localtime:/etc/localtime:ro
 
+    networks:
+      - "{{ docker_default_network }}"

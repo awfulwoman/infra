@@ -18,3 +18,5 @@ services:
       - "{{ container_config_dir }}/{{ container_name }}/data:/var/www/FreshRSS/data"
       - "{{ container_config_dir }}/{{ container_name }}/extensions:/var/www/FreshRSS/extensions"
       - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ docker_default_network }}"

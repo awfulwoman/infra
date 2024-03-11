@@ -28,3 +28,5 @@
     #   traefik.http.routers.vscode.entrypoints: "web"
     #   traefik.http.services.vscode.loadbalancer.server.port: "8089"
 
+    networks:
+      - "{{ docker_default_network }}""

@@ -41,3 +41,5 @@ services:
       - "traefik.http.routers.{{ app_name }}.rule=Host(`{{ app_name }}.{{ domain_name }}`)"
       - "traefik.http.routers.{{ app_name }}.tls=true"
       - "traefik.http.routers.{{ app_name }}.tls.certresolver=letsencrypt"
+    networks:
+      - "{{ docker_default_network }}"

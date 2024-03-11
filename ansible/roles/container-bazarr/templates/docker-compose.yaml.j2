@@ -22,3 +22,5 @@ services:
       - "{{ shared_media_path }}/movies:/movies"
       - "{{ shared_media_path }}/shows:/tv"
       - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ docker_default_network }}"
