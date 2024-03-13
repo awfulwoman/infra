@@ -53,7 +53,7 @@
       heimdall_subdomain: storage
     - role: container-pinry
     - role: container-freshrss
-    - role: container-podgrab
+    # - role: container-podgrab
     - role: container-metube
     - role: container-wyoming-whisper
     - role: container-wyoming-piper
