@@ -48,7 +48,7 @@
     - role: container-gitea
     - role: container-isos-site
     - role: container-audiobookshelf
-    - role: container-wallabag
+    # - role: container-wallabag
     - role: container-heimdall
       heimdall_subdomain: storage
     - role: container-pinry
