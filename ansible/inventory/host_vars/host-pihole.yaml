@@ -1,4 +1,4 @@
-ansible_user: ubuntu
+ansible_user: "{{ vault_server_username }}"
 ansible_host: host-pihole.i.affordablepotatoes.com
 
 # --- PACKAGES -------------
