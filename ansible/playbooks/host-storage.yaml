@@ -46,6 +46,7 @@
     - role: container-qbittorrent
     - role: container-curl
     - role: container-gitea
+    - role: container-changedetection
     - role: container-isos-site
     - role: container-audiobookshelf
     # - role: container-wallabag
