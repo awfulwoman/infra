@@ -4,6 +4,7 @@ ansible_host: host-storage.i.affordablepotatoes.com
 # --- NETWORK -------------
 wireguard_address: "10.8.0.116/24"
 wakeonlan_mac_address: "34:60:f9:bb:3d:16"
+tailscale_address: "100.83.127.33"
 
 
 # --- PACKAGES -------------
