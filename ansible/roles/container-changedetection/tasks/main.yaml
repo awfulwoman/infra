@@ -32,6 +32,7 @@
     name: "{{ app_name if app_name else container_name  }}.{{ vault_domain_name }}"
     ip: "{{ tailscale_address }}"
     project: "Home Network"
+    oauth_token: "{{ vault_digitalocean_domain_token }}"
 
 - name: append to compose_list
   ansible.builtin.set_fact:
