@@ -25,6 +25,14 @@
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
 
+
+- name: Create subdomain
+  community.digitalocean.digital_ocean_domain:
+    state: present
+    name: "{{ app_name if app_name else container_name  }}.{{ vault_domain_name }}"
+    ip: "{{ tailscale_address }}"
+    project: "Home Network"
+
 - name: append to compose_list
   ansible.builtin.set_fact:
     compose_list: "{{ compose_list + [ container_name ] }}"
