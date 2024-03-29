@@ -283,6 +283,14 @@ resource "digitalocean_record" "traefik-host-storage" {
   value  = var.tailscale_ip_host_storage
 }
 
+resource "digitalocean_record" "changedetection" {
+  domain = digitalocean_domain.default.id
+  type   = "A"
+  name   = "changedetection"
+  value  = var.tailscale_ip_host_storage
+}
+
+
 # resource "digitalocean_droplet" "host_public" {
 #   image  = "ubuntu-22-10-x64"
 #   name   = "host-public"
