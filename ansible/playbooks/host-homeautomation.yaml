@@ -39,7 +39,6 @@
     - role: container-traefik
       traefik_providers: true
     - role: container-whoami
-    - role: container-watchtower
     - role: container-homepage
     - role: container-mosquitto
     - role: container-zigbee2mqtt # Core Zigbee network
