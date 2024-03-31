@@ -19,10 +19,7 @@ services:
       - "{{ container_config_dir }}/media:/media"
       - "/etc/localtime:/etc/localtime:ro"
     labels:
-      - "homepage.group=Home Automation"
-      - "homepage.name=Home Assistant"
-      - "homepage.href=https://homeassistant.{{ domain_name }}"
-      - "homepage.description=Home automation server"
+      - "traefik.enable=true"
     healthcheck:
       # test: ["CMD", "curl", "-f", "http://172.19.0.1:8123"]
       test: ["CMD", "curl", "-f", "http://homeassistant.{{ domain_name }}:8123"]
