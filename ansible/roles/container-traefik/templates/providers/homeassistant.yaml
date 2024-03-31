@@ -16,9 +16,9 @@ http:
         stsPreload: true
         stsSeconds: 31536000
         customFrameOptionsValue: SAMEORIGIN
-    https-redirect:
-      redirectScheme:
-        scheme: https
+    # https-redirect:
+    #   redirectScheme:
+    #     scheme: https
 
   routers:
     homeassistant:
@@ -28,7 +28,7 @@ http:
         certresolver: letsencrypt
       entrypoints:
         - web
-        - websecure
+        # - websecure
       # middlewares:
       #   - secHeaders
       #   - https-redirect
@@ -38,5 +38,5 @@ http:
       passHostHeader: true 
       loadBalancer:
         servers:
-          - url: "http://172.17.0.1:8123"
-          # - url: "http://192.168.1.103:8123"
+          # - url: "http://172.17.0.1:8123"
+          - url: "http://192.168.1.103:8123"
