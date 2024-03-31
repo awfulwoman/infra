@@ -26,9 +26,9 @@ http:
         stsPreload: true
         stsSeconds: 31536000
         customFrameOptionsValue: SAMEORIGIN
-    # https-redirect:
-    #   redirectScheme:
-    #     scheme: https
+    https-redirect:
+      redirectScheme:
+        scheme: https
 
   services:
     homeassistant:
