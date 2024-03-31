@@ -8,6 +8,10 @@ services:
       - "TZ=Europe/Berlin"
     image: "{{ container_image }}"
     restart: unless-stopped
+    group_add:
+      - "109"
+    devices:
+      - /dev/dri/renderD128:/dev/dri/renderD128
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.jellyfin.rule=Host(`jellyfin.{{ domain_name }}`)"
