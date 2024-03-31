@@ -30,18 +30,18 @@
     group: "{{ ansible_user }}"
     mode: a+x
 
-- name: Generate and deploy docker-down-all.sh
-  ansible.builtin.template:
-    src: templates/docker-down-all.sh.j2
-    dest: "{{ compose_config_dir }}/docker-down-all.sh"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    mode: a+x
+# - name: Generate and deploy docker-down-all.sh
+#   ansible.builtin.template:
+#     src: templates/docker-down-all.sh.j2
+#     dest: "{{ compose_config_dir }}/docker-down-all.sh"
+#     owner: "{{ ansible_user }}"
+#     group: "{{ ansible_user }}"
+#     mode: a+x
 
-- name: Generate and deploy docker-restart-all.sh
-  ansible.builtin.template:
-    src: templates/docker-restart-all.sh.j2
-    dest: "{{ compose_config_dir }}/docker-restart-all.sh"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    mode: a+x
+# - name: Generate and deploy docker-restart-all.sh
+#   ansible.builtin.template:
+#     src: templates/docker-restart-all.sh.j2
+#     dest: "{{ compose_config_dir }}/docker-restart-all.sh"
+#     owner: "{{ ansible_user }}"
+#     group: "{{ ansible_user }}"
+#     mode: a+x
