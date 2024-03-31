@@ -13,7 +13,7 @@ http:
         certresolver: letsencrypt
       entrypoints:
         - web
-        # - websecure
+        - websecure
   
   middlewares:
     secHeaders:
