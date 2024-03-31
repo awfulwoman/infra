@@ -4,6 +4,7 @@ services:
     ports:
       - "8072:80"
     # privileged: true
+    hostname: "{{ ansible_hostname }}"
     environment:
       - "TZ=Europe/Berlin"
       - "TOKEN=superSecretPassw0rd"
@@ -11,7 +12,7 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.{{ container_name }}.rule=Host(`{{ container_name }}.{{ansible_hostname}}.{{ domain_name }}`)"
+      - "traefik.http.routers.{{ container_name }}.rule=Host(`{{ container_name }}.{{ ansible_hostname }}.{{ domain_name }}`)"
       - "traefik.http.routers.{{ container_name }}.tls=true"
       - "traefik.http.routers.{{ container_name }}.tls.certresolver=letsencrypt"
     volumes:
