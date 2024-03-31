@@ -48,6 +48,7 @@
     - role: container-changedetection
     - role: container-isos-site
     - role: container-audiobookshelf
+    - role: container-dockcheck
     # - role: container-wallabag
     - role: container-heimdall
       heimdall_subdomain: storage

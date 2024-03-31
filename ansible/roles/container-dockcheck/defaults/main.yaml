@@ -1,0 +1,2 @@
+container_name: dockcheck
+container_image: palleri/dcw:latest
