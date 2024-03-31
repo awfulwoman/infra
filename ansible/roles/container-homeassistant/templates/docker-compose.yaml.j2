@@ -18,8 +18,6 @@ services:
       - "{{ container_config_dir }}/{{ container_name }}:/config"
       - "{{ container_config_dir }}/media:/media"
       - "/etc/localtime:/etc/localtime:ro"
-    labels:
-      - "traefik.enable=true"
     healthcheck:
       # test: ["CMD", "curl", "-f", "http://172.19.0.1:8123"]
       test: ["CMD", "curl", "-f", "http://homeassistant.{{ domain_name }}:8123"]
