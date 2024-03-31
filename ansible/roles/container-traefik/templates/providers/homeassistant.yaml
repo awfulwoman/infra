@@ -35,7 +35,7 @@ http:
 
   services:
     homeassistant:
-      passHostHeader: true 
+      # passHostHeader: true 
       loadBalancer:
         servers:
           # - url: "http://172.17.0.1:8123"
