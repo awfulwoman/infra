@@ -43,7 +43,6 @@
     #- role: container-gluetun-uk
     #- role: container-getiplayer
     - role: container-qbittorrent
-    - role: container-curl
     - role: container-gitea
     - role: container-changedetection
     - role: container-isos-site
