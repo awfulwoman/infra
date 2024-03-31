@@ -5,6 +5,16 @@ tls:
       sniStrict: true
 
 http:
+  routers:
+    homeassistant:
+      service: homeassistant
+      rule: "Host(`homeassistant.{{ domain_name }}`)"
+      tls:
+        certresolver: letsencrypt
+      entrypoints:
+        - web
+        # - websecure
+  
   middlewares:
     secHeaders:
       headers:
@@ -20,23 +30,10 @@ http:
     #   redirectScheme:
     #     scheme: https
 
-  routers:
-    homeassistant:
-      service: homeassistant
-      rule: "Host(`homeassistant.{{ domain_name }}`)"
-      tls:
-        certresolver: letsencrypt
-      entrypoints:
-        - web
-        # - websecure
-      # middlewares:
-      #   - secHeaders
-      #   - https-redirect
-
   services:
     homeassistant:
-      # passHostHeader: true 
       loadBalancer:
+        passHostHeader: true
         servers:
           # - url: "http://172.17.0.1:8123"
           - url: "http://192.168.1.103:8123"
