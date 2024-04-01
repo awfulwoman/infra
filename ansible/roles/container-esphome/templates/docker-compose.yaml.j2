@@ -15,10 +15,7 @@ services:
       - "traefik.http.routers.esphome.rule=Host(`esphome.{{ domain_name }}`)"
       - "traefik.http.routers.esphome.tls=true"
       - "traefik.http.routers.esphome.tls.certresolver=letsencrypt"
-      - "homepage.group=Home Automation"
-      - "homepage.name=ESPHome"
-      - "homepage.href=https://esphome.{{ domain_name }}"
-      - "homepage.description=Controller for ESP32 devices"
+      - "com.centurylinklabs.watchtower.enable=false"
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}:/config"
       - "/etc/localtime:/etc/localtime:ro"
