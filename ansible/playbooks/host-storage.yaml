@@ -41,8 +41,8 @@
     - role: container-jellyfin-vue
     - role: container-bazarr
     - role: container-gluetun
-    #- role: container-gluetun-uk
-    #- role: container-getiplayer
+    - role: container-gluetun-uk
+    - role: container-getiplayer
     - role: container-qbittorrent
     - role: container-gitea
     - role: container-changedetection
