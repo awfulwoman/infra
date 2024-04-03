@@ -4,8 +4,6 @@ services:
     network_mode: "container:gluetun-uk" 
     image: "{{ container_image }}"
     restart: unless-stopped
-    ports:
-      - 1935:1935
     environment:
       - "PUID={{ container_user_id }}"
       - "PGID={{ container_user_id }}"
