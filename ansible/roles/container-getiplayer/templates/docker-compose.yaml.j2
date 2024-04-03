@@ -4,10 +4,17 @@ services:
     network_mode: "service:gluetun-uk" 
     image: "{{ container_image }}"
     restart: unless-stopped
+    ports:
+      - 1935:1935
     environment:
       - "PUID={{ container_user_id }}"
       - "PGID={{ container_user_id }}"
       - "TZ=Europe/Berlin"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.{{ container_name }}.rule=Host(`{{ container_name }}.{{ domain_name }}`)"
+      - "traefik.http.routers.{{ container_name }}.tls=true"
+      - "traefik.http.routers.{{ container_name }}.tls.certresolver=letsencrypt"
     volumes:
       - "{{ container_config_dir }}/{{ container_name }}:/output"
       - "{{ getiplayer_download_path }}:/data/downloads/iplayer"

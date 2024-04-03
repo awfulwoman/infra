@@ -13,7 +13,7 @@ services:
       # Gluetun control server
       - 8001:8000/tcp
       # get-iplayer PVR
-      - "1935:1935/tcp"
+      - "1935:1935"
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
