@@ -1,7 +1,7 @@
 services:
   "{{ container_name}}":
     container_name: "{{ container_name }}"
-    network_mode: "service:gluetun-uk" 
+    network_mode: "container:gluetun-uk" 
     image: "{{ container_image }}"
     restart: unless-stopped
     ports:
