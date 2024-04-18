@@ -54,6 +54,7 @@
 
 - name: Make sure mqtt2cmd service is running
   become: true
-  ansible.builtin.systemd:
+  ansible.builtin.systemd_service:
     state: started
     name: mqtt2cmd
+    enabled: true
