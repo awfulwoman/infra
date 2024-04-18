@@ -29,6 +29,7 @@
     - role: wakeonlan
     - role: ansible-pull
       ansiblepull_install_pull_cron: false
+    - role: mqtt2cmd
     - role: ironicbadger.figurine
       become: true
 
