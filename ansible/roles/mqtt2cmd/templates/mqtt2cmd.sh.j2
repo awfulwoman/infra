@@ -9,18 +9,22 @@ do
         echo "Rx MQTT: ${payload}"
         # if payload = shutdown
         if [ "$payload" == "shutdown" ]; then
+            wall "System is being shutdown via mqtt2cmd"
             shutdown now
         fi
         # if payload = sleep
         if [ "$payload" == "suspend" ]; then
+            wall "System is being suspended via mqtt2cmd"
             systemctl suspend
         fi
         # if payload = reboot
         if [ "$payload" == "reboot" ]; then
+            wall "System is being rebooted via mqtt2cmd"
             reboot
         fi
         # if payload = ansiblepull
         if [ "$payload" == "ansiblepull" ]; then
+            wall "System is being updated via mqtt2cmd"
             runuser -l "{{ ansible_user }}" -c "/opt/ansible/ansible-pull-full.sh"
         fi
     done
