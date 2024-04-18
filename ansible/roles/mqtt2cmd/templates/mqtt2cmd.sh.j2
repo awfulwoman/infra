@@ -12,7 +12,7 @@ do
             shutdown now
         fi
         # if payload = sleep
-        if [ "$payload" == "sleep" ]; then
+        if [ "$payload" == "suspend" ]; then
             echo "suspending" >> /root/suspend.log
             systemctl suspend
         fi
