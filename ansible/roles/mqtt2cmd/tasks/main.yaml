@@ -47,7 +47,7 @@
   become: true
   ansible.builtin.template:
     src: mqtt2cmd.service
-    dest: c
+    dest: /etc/systemd/system/mqtt2cmd.service
     owner: root
     group: root
     mode: 0664
