@@ -16,11 +16,38 @@
     group: root
     mode: 0755
 
+- name: Ensure shutdown without sudo password
+  become: true
+  community.general.sudoers:
+    name: allow-shutdown
+    state: present
+    user: "{{ ansible_user }}"
+    nopassword: true
+    commands: /usr/sbin/shutdown
+
+- name: Ensure suspend without sudo password
+  become: true
+  community.general.sudoers:
+    name: allow-suspend
+    state: present
+    user: "{{ ansible_user }}"
+    nopassword: true
+    commands: /usr/bin/systemctl suspend
+
+- name: Ensure reboot without sudo password
+  become: true
+  community.general.sudoers:
+    name: allow-reboot
+    state: present
+    user: "{{ ansible_user }}"
+    nopassword: true
+    commands: /usr/sbin/reboot
+
 - name: Create mqtt2cmd.service
   become: true
   ansible.builtin.template:
     src: mqtt2cmd.service
-    dest: /etc/systemd/system/mqtt2cmd.service
+    dest: c
     owner: root
     group: root
     mode: 0664
