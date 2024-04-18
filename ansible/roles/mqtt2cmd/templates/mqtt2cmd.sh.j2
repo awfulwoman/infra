@@ -12,8 +12,8 @@ do
             shutdown now
         fi
         # if payload = sleep
-        if [ "$payload" == "hibernate" ]; then
-            systemctl hibernate
+        if [ "$payload" == "suspend" ]; then
+            systemctl suspend
         fi
         # if payload = reboot
         if [ "$payload" == "reboot" ]; then
