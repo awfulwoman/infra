@@ -32,7 +32,7 @@
     state: present
     user: "{{ ansible_user }}"
     nopassword: true
-    commands: /usr/bin/systemctl suspend
+    commands: /usr/bin/systemctl hibernate
 
 - name: Ensure reboot without sudo password
   become: true
