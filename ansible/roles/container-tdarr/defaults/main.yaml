@@ -1,0 +1,2 @@
+container_name: tdarr
+container_image: ghcr.io/haveagitgat/tdarr:latest
