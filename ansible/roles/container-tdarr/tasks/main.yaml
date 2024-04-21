@@ -6,12 +6,38 @@
     group: "{{ ansible_user }}"
     mode: 0774
 
-- name: "Add user to dialout group for {{ ansible_user }}"
-  become: true
-  ansible.builtin.user:
-    user: "{{ ansible_user }}"
-    groups: dialout
-    append: true
+- name: "Create config dir for {{ container_name }}/server"
+  ansible.builtin.file:
+    path: "{{ container_config_dir }}/{{ container_name }}/server"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0774
+
+- name: "Create config dir for {{ container_name }}/config"
+  ansible.builtin.file:
+    path: "{{ container_config_dir }}/{{ container_name }}/config"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0774
+
+- name: "Create config dir for {{ container_name }}/logs"
+  ansible.builtin.file:
+    path: "{{ container_config_dir }}/{{ container_name }}/logs"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0774
+
+- name: "Create config dir for {{ container_name }}/transcode_cache"
+  ansible.builtin.file:
+    path: "{{ container_config_dir }}/{{ container_name }}/transcode_cache"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0774
+
 
 - name: "Create compose config dir"
   ansible.builtin.file:
