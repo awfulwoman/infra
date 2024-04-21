@@ -10,32 +10,32 @@
   ansible.builtin.file:
     path: "{{ container_config_dir }}/{{ container_name }}/server"
     state: directory
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    owner: "root"
+    group: "root"
     mode: 0774
 
-- name: "Create config dir for {{ container_name }}/config"
+- name: "Create config dir for {{ container_name }}/configs"
   ansible.builtin.file:
-    path: "{{ container_config_dir }}/{{ container_name }}/config"
+    path: "{{ container_config_dir }}/{{ container_name }}/configs"
     state: directory
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    owner: "root"
+    group: "root"
     mode: 0774
 
 - name: "Create config dir for {{ container_name }}/logs"
   ansible.builtin.file:
     path: "{{ container_config_dir }}/{{ container_name }}/logs"
     state: directory
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    owner: "root"
+    group: "root"
     mode: 0774
 
 - name: "Create config dir for {{ container_name }}/transcode_cache"
   ansible.builtin.file:
     path: "{{ container_config_dir }}/{{ container_name }}/transcode_cache"
     state: directory
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    owner: "root"
+    group: "root"
     mode: 0774
 
 
