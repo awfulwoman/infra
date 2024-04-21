@@ -7,6 +7,7 @@
     mode: 0774
 
 - name: "Create config dir for {{ container_name }}/server"
+  become: true
   ansible.builtin.file:
     path: "{{ container_config_dir }}/{{ container_name }}/server"
     state: directory
@@ -15,6 +16,7 @@
     mode: 0774
 
 - name: "Create config dir for {{ container_name }}/configs"
+  become: true
   ansible.builtin.file:
     path: "{{ container_config_dir }}/{{ container_name }}/configs"
     state: directory
@@ -23,6 +25,7 @@
     mode: 0774
 
 - name: "Create config dir for {{ container_name }}/logs"
+  become: true
   ansible.builtin.file:
     path: "{{ container_config_dir }}/{{ container_name }}/logs"
     state: directory
@@ -31,6 +34,7 @@
     mode: 0774
 
 - name: "Create config dir for {{ container_name }}/transcode_cache"
+  become: true
   ansible.builtin.file:
     path: "{{ container_config_dir }}/{{ container_name }}/transcode_cache"
     state: directory
