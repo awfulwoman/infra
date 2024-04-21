@@ -7,8 +7,8 @@ services:
     # privileged: true
     environment:
       - "TZ=Europe/Berlin"
-      - PUID=${PUID}
-      - PGID=${PGID}
+      - "PUID={{ container_user_id }}"
+      - "PGID={{ container_user_id }}"
       - UMASK_SET=002
       - serverIP=0.0.0.0
       - serverPort=8266
