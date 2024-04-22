@@ -63,7 +63,7 @@
     - role: container-lidarr
     - role: container-radarr
     - role: container-readarr
-    - role: container-tdarr
+    # - role: container-tdarr
     # - role: container-mpd
     # - role: container-snapcast
     - role: container-syncthing
