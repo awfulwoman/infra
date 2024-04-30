@@ -24,8 +24,10 @@ packages:
     files:
       - esphome/packages/esphome.yaml
       - esphome/packages/ethernet.yaml
+      - esphome/packages/wifi.yaml
       - esphome/packages/logger.yaml
       - esphome/packages/ota.yaml
       - esphome/packages/api.yaml
+      - esphome/packages/time.yaml
       - etc
 ```

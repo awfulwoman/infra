@@ -1,0 +1,4 @@
+time:
+  - platform: homeassistant
+    timezone: Europe/Berlin
+    id: hass_time
