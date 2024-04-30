@@ -1,7 +1,10 @@
-defaults:
+substitutions:  
+  name: "project-mcproject"
+  friendly_name: "A PROJECT"
+  comment: "A COMMENT"
   area: "Living Room"
-  version: "1.0.0"
-  owner: "awfulwoman"
+  platform: ESP32
+  board: esp32dev
 
 esphome:
   name: "${name}"
