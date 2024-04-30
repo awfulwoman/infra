@@ -10,6 +10,7 @@ substitutions:
   secret_ota_password: !secret ota_password
   secret_wifi_ssid: !secret wifi_ssid
   secret_wifi_password: !secret wifi_password
+  secret_ap_password: !secret ap_password
 ```
 
 Import into each project:
