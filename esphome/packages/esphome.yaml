@@ -5,6 +5,8 @@ substitutions:
   area: "Living Room"
   platform: ESP32
   board: esp32dev
+  owner: awfulwowman
+  version: "1.0.0"
 
 esphome:
   name: "${name}"
