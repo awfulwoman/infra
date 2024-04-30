@@ -18,3 +18,13 @@ esphome:
   project:
     name: ${owner}.${name}
     version: ${version}
+
+text_sensor:
+  - platform: template
+    name: Device ID
+    id: device_id
+    entity_category: diagnostic
+    update_interval: never
+  - platform: version
+    name: ESPHome Version
+    hide_timestamp: true
