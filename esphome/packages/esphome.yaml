@@ -1,0 +1,15 @@
+defaults:
+  area: "Living Room"
+  version: "1.0.0"
+  owner: "awfulwoman"
+
+esphome:
+  name: "${name}"
+  friendly_name: "${friendly_name}"
+  comment: "${comment}"
+  platform: "${platform}"
+  board: "${board}"
+  area: "${area}"
+  project:
+    name: ${owner}.${name}
+    version: ${version}

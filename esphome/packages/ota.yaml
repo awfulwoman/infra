@@ -1,0 +1,2 @@
+ota:
+  password: !secret ${secret_ota_password}

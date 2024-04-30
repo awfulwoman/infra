@@ -1,0 +1,3 @@
+api:
+  encryption:
+    key: ${secret_api_key}
