@@ -2,7 +2,17 @@
 
 A bunch of defaults for my esphome devices.
 
-Import into each project using:
+Ensure the following values are set in the project yaml (because secrets can't be used inside imported code):
+
+```yaml
+substitutions:
+  secret_api_key: !secret api_key
+  secret_ota_password: !secret ota_password
+  secret_wifi_ssid: !secret wifi_ssid
+  secret_wifi_password: !secret wifi_password
+```
+
+Import into each project:
 
 ```yaml
 packages:
@@ -17,12 +27,4 @@ packages:
       - esphome/packages/ota.yaml
       - esphome/packages/api.yaml
       - etc
-```
-
-Ensure the following values are set in the host yaml (because secrets can't be used inside imported code):
-
-```yaml
-substitutions:
-  secret_api_key: !secret api_key
-  secret_ota_password: !secret ota_password
 ```
