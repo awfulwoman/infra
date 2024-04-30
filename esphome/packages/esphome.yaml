@@ -7,12 +7,6 @@ substitutions:
   board: esp32dev
   owner: awfulwowman
   version: "1.0.0"
-  on_boot:
-    priority: 800.0
-    then:
-      - text_sensor.template.publish:
-          id: device_id
-          state: !lambda 'return get_mac_address();'
 
 esphome:
   name: "${name}"
@@ -26,11 +20,6 @@ esphome:
     version: ${version}
 
 text_sensor:
-  - platform: template
-    name: Device ID
-    id: device_id
-    entity_category: diagnostic
-    update_interval: never
   - platform: version
     name: ESPHome Version
     hide_timestamp: true
