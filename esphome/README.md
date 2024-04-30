@@ -11,11 +11,11 @@ packages:
     ref: main
     refresh: 5min
     files:
-      - packages/esphome.yaml
-      - packages/ethernet.yaml
-      - packages/logger.yaml
-      - packages/ota.yaml
-      - packages/api.yaml
+      - esphome/packages/esphome.yaml
+      - esphome/packages/ethernet.yaml
+      - esphome/packages/logger.yaml
+      - esphome/packages/ota.yaml
+      - esphome/packages/api.yaml
       - etc
 ```
 
