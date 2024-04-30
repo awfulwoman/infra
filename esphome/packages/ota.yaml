@@ -1,2 +1,2 @@
 ota:
-  password: !secret ${secret_ota_password}
+  password: ${secret_ota_password}
