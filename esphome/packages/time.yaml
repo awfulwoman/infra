@@ -1,4 +1,9 @@
+# We don't use Home Assistant as a time source in case it is down.
 time:
-  - platform: homeassistant
+  - platform: sntp
+    id: sntp_time
     timezone: Europe/Berlin
-    id: hass_time
+    servers:
+     - 0.pool.ntp.org
+     - 1.pool.ntp.org
+     - 2.pool.ntp.org
