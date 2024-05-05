@@ -1,6 +1,7 @@
 wifi:
   ssid: "${secret_wifi_ssid}"
   password: "${secret_wifi_password}"
+  domain: "${secret_wifi_domain}"
   
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:

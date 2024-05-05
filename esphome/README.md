@@ -11,6 +11,7 @@ substitutions:
   secret_wifi_ssid: !secret wifi_ssid
   secret_wifi_password: !secret wifi_password
   secret_ap_password: !secret ap_password
+  secret_wifi_domain: !secret wifi_domain
 ```
 
 Import into each project:
