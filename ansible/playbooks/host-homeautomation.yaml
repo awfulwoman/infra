@@ -1,6 +1,6 @@
 ---
 - name: Home Automation Server
-  hosts: homeautomation
+  hosts: host-homeautomation
   pre_tasks:
     - set_fact:
        compose_list: []
