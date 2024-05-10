@@ -1,0 +1,23 @@
+- name: Add repo using key from URL
+  become: true
+  ansible.builtin.deb822_repository:
+    name: example
+    types: deb
+    uris: https://download.docker.com/linux/ubuntu
+    suites: '{{ ansible_distribution_release }}'
+    components: stable
+    architectures: amd64
+    signed_by: https://download.docker.com/linux/ubuntu/gpg
+
+- name: Install Docker from Docker repository
+  become: true
+  ansible.builtin.apt:
+    name:
+      - docker-ce 
+      - docker-ce-cli 
+      - containerd.io 
+      - docker-buildx-plugin 
+      - docker-compose-plugin
+    update_cache: true
+    state: present
+
