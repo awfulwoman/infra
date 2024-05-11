@@ -8,13 +8,13 @@
     state: present
 
 # No way to create pools using zfs ansible modules, so use direct command
-- name: Create ZFS pools
-  become: true
-  ansible.builtin.command:
-    cmd: zpool create {{ item.name }} {{ item.members }} -f
-    creates: /{{ item.name }}
-  loop: "{{ zfs_pools }}"
-  tags: ['zfs']
+# - name: Create ZFS pools
+#   become: true
+#   ansible.builtin.command:
+#     cmd: zpool create {{ item.name }} {{ item.members }} -f
+#     creates: /{{ item.name }}
+#   loop: "{{ zfs_pools }}"
+#   tags: ['zfs']
 
 - name: Ensure ZFS datasets are present 
   become: true
