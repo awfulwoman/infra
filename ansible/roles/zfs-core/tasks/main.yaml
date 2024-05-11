@@ -7,11 +7,16 @@
       - acl
     state: present
 
-- name: Debug ZFS PATH
-  ansible.builtin.debug:
-    var: zfs_debug
+# No way to create pools using zfs ansible modules, so use direct command
+- name: Create ZFS pools
+  become: true
+  ansible.builtin.command:
+    cmd: zpool create {{ item.name }} {{ item.members }} -f
+    creates: /{{ item.name }}
+  loop: "{{ zfs_pools }}"
+  tags: ['zfs']
 
-- name: Ensure datasets are present 
+- name: Ensure ZFS datasets are present 
   become: true
   community.general.zfs:
     name: "{{ item }}"
@@ -19,11 +24,11 @@
     extra_zfs_properties:
       acltype: posix
       xattr: sa
-      # mountpoint: none
   loop: "{{ zfs_datasets }}"
   when: zfs_datasets is defined
+  tags: ['zfs']
 
-- name: Ensure ZFS pools are owned by user
+- name: Ensure dataset roots are owned by user
   become: true
   ansible.builtin.file:
     path: "/{{ item }}"
@@ -31,6 +36,6 @@
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: 0774
-  loop: "{{ zfs_pools }}"
-  when: zfs_pools is defined
-
+  loop: "{{ zfs_datasets }}"
+  when: zfs_datasets is defined
+  tags: ['zfs']
