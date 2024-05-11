@@ -1,1 +1,3 @@
-docker-compose {% for item in compose_list %} -f {{ item }}/docker-compose.yaml{% endfor %} restart -d
+#!/usr/bin/env bash
+
+docker kill $(docker ps -q)  && docker rm $(docker ps -a -q) && docker system prune -f && {{ compose_config_dir }}/docker-up-all.sh 

@@ -5,12 +5,53 @@
 #     msg: "{{ item }}/docker-compose.yaml"
 #   loop: "{{ compose_list }}"
 
-- name: Create and start docker compose services
-  community.docker.docker_compose:
-    project_src: "{{ compose_config_dir }}"
-    # via https://www.itix.fr/blog/ansible-add-prefix-suffix-to-list/
-    files: "{{ compose_list | product(['/docker-compose.yaml']) | map('join') | list }}" 
-  register: compose_output
+# - name: Create and start docker compose services
+#   community.docker.docker_compose:
+#     project_src: "{{ compose_config_dir }}"
+#     # via https://www.itix.fr/blog/ansible-add-prefix-suffix-to-list/
+#     files: "{{ compose_list | product(['/docker-compose.yaml']) | map('join') | list }}" 
+#   register: compose_output
+
+- name: Check if docker-compose exists in PATH
+  command: which docker-compose
+  ignore_errors: true
+  register: which_out 
+
+- name: Create docker-compose alias
+  become: true
+  ansible.builtin.template:
+    src: templates/docker-compose.sh.j2
+    dest: /bin/docker-compose
+    mode: a+x
+  when: which_out.failed
+
+- name: Reset ssh connection
+  ansible.builtin.meta: reset_connection
+
+- name: DEBUG compose_list
+  ansible.builtin.debug:
+    var: compose_list
+
+- name: Generate and deploy docker-up-all.sh
+  ansible.builtin.template:
+    src: templates/docker-up-all.sh.j2
+    dest: "{{ compose_config_dir }}/docker-up-all.sh"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: a+x
+
+- name: Generate and deploy docker-restart-all.sh
+  ansible.builtin.template:
+    src: templates/docker-restart-all.sh.j2
+    dest: "{{ compose_config_dir }}/docker-restart-all.sh"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: a+x
+
+
+- name: Start all containers
+  ansible.builtin.command:
+    cmd: "{{ compose_config_dir }}/docker-up-all.sh"
 
 - name: Get info on docker host and list containers matching the filter
   # ansible.builtin.command: docker ps --format "{{ '{{' }} .Names {{ '}}' }}"
@@ -21,27 +62,3 @@
 - name: Show containers
   ansible.builtin.debug:
     msg: "{{ result.stdout_lines }}"
-
-- name: Generate and deploy docker-up-all.sh
-  ansible.builtin.template:
-    src: templates/docker-up-all.sh.j2
-    dest: "{{ compose_config_dir }}/docker-up-all.sh"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    mode: a+x
-
-# - name: Generate and deploy docker-down-all.sh
-#   ansible.builtin.template:
-#     src: templates/docker-down-all.sh.j2
-#     dest: "{{ compose_config_dir }}/docker-down-all.sh"
-#     owner: "{{ ansible_user }}"
-#     group: "{{ ansible_user }}"
-#     mode: a+x
-
-# - name: Generate and deploy docker-restart-all.sh
-#   ansible.builtin.template:
-#     src: templates/docker-restart-all.sh.j2
-#     dest: "{{ compose_config_dir }}/docker-restart-all.sh"
-#     owner: "{{ ansible_user }}"
-#     group: "{{ ansible_user }}"
-#     mode: a+x
