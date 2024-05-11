@@ -1,5 +1,5 @@
 container_name: mosquitto
 container_image: eclipse-mosquitto:latest
-container_user: ubuntu # Seems like you can force the user: https://github.com/eclipse/mosquitto/issues/1411#issuecomment-625205054
+container_user: "{{ ansible_user }}" # Seems like you can force the user: https://github.com/eclipse/mosquitto/issues/1411#issuecomment-625205054
 container_user_id: 1000
 container_file_permissions: 0774
