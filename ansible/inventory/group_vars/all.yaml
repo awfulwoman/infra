@@ -25,9 +25,9 @@ ansible_become_password: "{{ vault_password }}"
 login_user_password: "{{ vault_password }}"
 login_user_password_salted: "{{ vault_password_salted }}"
 
-workhorse_user: workhorse
-workhorse_user_password: "{{ vault_password }}"
-workhorse_user_password_salted: "{{ vault_password_salted }}"
+# workhorse_user: workhorse
+# workhorse_user_password: "{{ vault_password }}"
+# workhorse_user_password_salted: "{{ vault_password_salted }}"
 
 config_system_locale: 'en_GB.UTF-8'
 config_system_language: 'en_GB.UTF-8'
