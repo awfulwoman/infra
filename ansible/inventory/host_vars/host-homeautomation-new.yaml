@@ -1,0 +1,36 @@
+ansible_host: "192.168.1.130"
+ansible_user: "{{ vault_server_username }}"
+
+# --- NETWORK -------------
+tailscale_address: "100.66.127.130"
+
+# Whether to initialise Zigbee2MQTT and the MQTT broker
+use_zigbee_hardware: true
+
+# --- ZFS -------------
+
+# ZFS pools
+zfs_pools:
+  - name: fastpool
+    members: >-
+      /dev/disk/by-id/scsi-SATA_INTENSO_SSD_AA000000000000001079-part3
+
+# Named ZFS datasets
+container_config_zfs_id: fastpool/containers
+syncthing_data_path_zfs_id: fastpool/misc/syncthing
+
+# Datasets present
+zfs_datasets:
+  - "{{ container_config_zfs_id }}"
+  - fastpool/misc
+  - "{{ syncthing_data_path_zfs_id }}"
+
+# Datasets to be backed-up
+# These datasets will be pulled to a backup server
+zfs_backup_datasets:
+  - "{{ container_config_zfs_id }}"
+
+# Define useful paths from ZFS datasets
+# container_config_dir: /home/ubuntu/
+container_config_dir: "/{{ container_config_zfs_id }}"
+syncthing_data_path: "/{{ syncthing_data_path_zfs_id }}"

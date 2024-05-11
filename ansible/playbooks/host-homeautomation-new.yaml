@@ -1,0 +1,47 @@
+---
+- name: Home Automation Server NEW
+  hosts: host-homeautomation-new
+  pre_tasks:
+    - set_fact:
+       compose_list: []
+
+  roles:
+    - role: bootstrap
+    - role: bootstrap-host
+    - role: weareinteractive.environment
+      become: true
+      no_log: true
+    - role: docker-install
+    - role: docker
+    - role: ansible-install
+    - role: ansible-pull
+    - role: artis3n.tailscale
+    - role: zfs-core
+    - role: container-sanoid-builder  
+    - role: zfs-backup-client
+    - role: hifis.unattended_upgrades
+      become: true
+    - role: motd
+    - role: beep
+    - role: shoutrrr
+      become: true
+    - role: containers-config
+    - role: container-traefik
+      traefik_providers: true
+    - role: container-mosquitto
+    - role: container-zigbee2mqtt
+    - role: container-wyoming-whisper
+    - role: container-wyoming-piper
+    - role: container-homeassistant
+    - role: container-esphome
+    - role: container-syncthing
+    - role: containers-end
+    - role: docker-cleanup
+    - role: ironicbadger.figurine
+      become: true
+    - role: apt-upgrade
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:
