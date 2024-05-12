@@ -16,15 +16,13 @@ cdmirror_resources:
   - name: debian/live/12.5
     uri: rsync://rsync.uni-bayreuth.de/debian-cd/12.5.0-live/amd64/iso-hybrid/
   # Lubuntu
-  - name: ubuntu/lubuntu/24.04 
-    uri: rsync://cdimage.ubuntu.com/lubuntu/releases/24.04/release/
-  - name: ubuntu/lubuntu/22.04 
-    uri: rsync://cdimage.ubuntu.com/lubuntu/releases/22.04/release/
+  # - name: ubuntu/lubuntu/24.04 
+  #   uri: rsync://cdimage.ubuntu.com/lubuntu/releases/24.04/release/
+  # - name: ubuntu/lubuntu/22.04 
+  #   uri: rsync://cdimage.ubuntu.com/lubuntu/releases/22.04/release/
   # Xubuntu
-  # - name: ubuntu/xubuntu/24.04 
-  #   uri: rsync://cdimage.ubuntu.com/xubuntu/releases/24.04/release/
-  # - name: ubuntu/xubuntu/22.04 
-  #   uri: rsync://cdimage.ubuntu.com/xubuntu/releases/22.04/release/
+  - name: ubuntu/xubuntu/24.04 
+    uri: rsync://se.archive.ubuntu.com/mirror/cdimage.ubuntu.com/xubuntu/noble/daily-live/current/
   # # RaspiOS
   # - name: raspios/2024-03-15
   #   uri: https://downloads.raspberrypi.org/raspios_arm64/images/raspios_arm64-2024-03-15/
