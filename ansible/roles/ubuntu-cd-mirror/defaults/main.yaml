@@ -2,7 +2,7 @@ cdmirror_base: /slowpool/images
 cdmirror_resources:
   - name: ubuntu/kubuntu/24.04
     uri: rsync://cdimage.ubuntu.com/kubuntu/releases/24.04/
-  - name: ubuntu/kubuntu/23.04
+  - name: ubuntu/kubuntu/22.04
     uri: rsync://cdimage.ubuntu.com/kubuntu/releases/22.04/
   - name: ubuntu/ubuntu/22.04
     uri: rsync://mirror.kkg.berlin/ubuntu-releases/22.04/
