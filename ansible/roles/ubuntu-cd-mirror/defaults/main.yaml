@@ -21,10 +21,10 @@ cdmirror_resources:
   - name: ubuntu/lubuntu/22.04 
     uri: rsync://cdimage.ubuntu.com/lubuntu/releases/22.04/release/
   # Xubuntu
-  - name: ubuntu/xubuntu/24.04 
-    uri: rsync://cdimage.ubuntu.com/xubuntu/releases/24.04/release/
-  - name: ubuntu/xubuntu/22.04 
-    uri: rsync://cdimage.ubuntu.com/xubuntu/releases/22.04/release/
+  # - name: ubuntu/xubuntu/24.04 
+  #   uri: rsync://cdimage.ubuntu.com/xubuntu/releases/24.04/release/
+  # - name: ubuntu/xubuntu/22.04 
+  #   uri: rsync://cdimage.ubuntu.com/xubuntu/releases/22.04/release/
   # # RaspiOS
   # - name: raspios/2024-03-15
   #   uri: https://downloads.raspberrypi.org/raspios_arm64/images/raspios_arm64-2024-03-15/
