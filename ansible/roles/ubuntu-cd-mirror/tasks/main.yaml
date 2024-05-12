@@ -1,9 +1,10 @@
 
-- name: Synchronization without --archive options enabled except use --links
+- name: Get all 
   ansible.posix.synchronize:
-    src: rsync://mirror.kkg.berlin/ubuntu-releases/24.04/
-    dest: /slowpool/images/ubuntu/ubuntu/temp
+    src: "{{ item.uri }}"
+    dest: "/slowpool/images/{{ item.name }}"
     archive: true
     links: true
     delay_updates: false
     partial: true
+  loop: "{{ resources }}"
