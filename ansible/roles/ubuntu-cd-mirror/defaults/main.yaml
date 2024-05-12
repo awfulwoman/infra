@@ -1,14 +1,27 @@
 cdmirror_base: /slowpool/images
 cdmirror_resources:
+  # Kubuntu
   - name: ubuntu/kubuntu/24.04
     uri: rsync://cdimage.ubuntu.com/kubuntu/releases/24.04/
   - name: ubuntu/kubuntu/22.04
     uri: rsync://cdimage.ubuntu.com/kubuntu/releases/22.04/
+  # Ubuntu
   - name: ubuntu/ubuntu/22.04
     uri: rsync://mirror.kkg.berlin/ubuntu-releases/22.04/
   - name: ubuntu/ubuntu/24.04 
     uri: rsync://mirror.kkg.berlin/ubuntu-releases/24.04/
+  # Debian
   - name: debian/netinst/12.5
     uri: rsync://rsync.uni-bayreuth.de/debian-cd/12.5.0/amd64/iso-cd/
   - name: debian/live/12.5
     uri: rsync://rsync.uni-bayreuth.de/debian-cd/12.5.0-live/amd64/iso-hybrid/
+  # Lubuntu
+  - name: ubuntu/lubuntu/24.04 
+    uri: rsync://cdimage.ubuntu.com/lubuntu/releases/24.04/release/
+  - name: ubuntu/lubuntu/22.04 
+    uri: rsync://cdimage.ubuntu.com/lubuntu/releases/22.04/release/
+  # Xubuntu
+  - name: ubuntu/xubuntu/24.04 
+    uri: rsync://cdimage.ubuntu.com/xubuntu/releases/24.04/release/
+  - name: ubuntu/xubuntu/22.04 
+    uri: rsync://cdimage.ubuntu.com/xubuntu/releases/22.04/release/
