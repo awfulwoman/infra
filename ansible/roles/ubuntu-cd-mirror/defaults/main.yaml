@@ -10,5 +10,5 @@ cdmirror_resources:
     uri: rsync://mirror.kkg.berlin/ubuntu-releases/24.04/
   - name: debian/netinst/12.5
     uri: rsync://rsync.uni-bayreuth.de/debian-cd/12.5.0/amd64/iso-cd/
-  - name: devian/live/12.5
+  - name: debian/live/12.5
     uri: rsync://rsync.uni-bayreuth.de/debian-cd/12.5.0-live/amd64/iso-hybrid/
