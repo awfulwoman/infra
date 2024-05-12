@@ -5,3 +5,4 @@
     dest: /slowpool/images/ubuntu/ubuntu/temp
     archive: true
     links: true
+    delay_updates: false
