@@ -3,5 +3,4 @@
   ansible.posix.synchronize:
     src: rsync://mirror.kkg.berlin/ubuntu-releases/24.04/
     dest: /slowpool/images/ubuntu/ubuntu/temp
-    archive: false
-    links: true
+ 
