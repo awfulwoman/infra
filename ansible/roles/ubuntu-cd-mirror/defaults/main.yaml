@@ -1,13 +1,13 @@
 resources:
   - name: ubuntu/kubuntu/24.04
-    uri: http://se.cdimage.ubuntu.com/kubuntu/releases/24.04/
+    uri: rsync://cdimage.ubuntu.com/kubuntu/releases/24.04/
   - name: ubuntu/kubuntu/23.04
-    uri: http://se.cdimage.ubuntu.com/kubuntu/releases/22.04/
+    uri: rsync://cdimage.ubuntu.com/kubuntu/releases/22.04/
   - name: ubuntu/ubuntu/22.04
-    uri: https://mirror.kkg.berlin/ubuntu-releases/22.04/
+    uri: rsync://mirror.kkg.berlin/ubuntu-releases/22.04/
   - name: ubuntu/ubuntu/24.04 
-    uri: https://mirror.kkg.berlin/ubuntu-releases/24.04/
+    uri: rsync://mirror.kkg.berlin/ubuntu-releases/24.04/
   - name: debian/netinst/12.5
-    uri: http://debian-cd.repulsive.eu/12.5.0/amd64/iso-cd/
+    uri: rsync://rsync.uni-bayreuth.de/debian-cd/12.5.0/amd64/iso-cd/
   - name: devian/live/12.5
-    uri: http://ftp.fau.de/debian-cd/12.5.0-live/amd64/iso-hybrid/
+    uri: rsync://rsync.uni-bayreuth.de/debian-cd/12.5.0-live/amd64/iso-hybrid/
