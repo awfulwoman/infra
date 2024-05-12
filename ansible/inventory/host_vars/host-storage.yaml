@@ -35,6 +35,23 @@ zfs_pools:
   - slowpool
   - fastpool
 
+# fastpool
+#   mirror-0
+#     scsi-SATA_CT1000BX500SSD1_2216E629AC18
+#     scsi-SATA_SanDisk_SDSSDH3_22087N455301
+
+# slowpool
+#   mirror-0 
+#     scsi-SATA_ST4000VN008-2DR1_ZDHAMGT1 
+#     scsi-SATA_WDC_WD40EFZX-68A_WD-WX12DA08KR45 
+#   mirror-1 
+#     scsi-SATA_WDC_WD40EFZX-68A_WD-WX12DA0R1V78 
+#     scsi-SATA_WDC_WD40EFZX-68A_WD-WX82DA1RHH08 
+#   mirror-2  
+#     scsi-SATA_ST4000VN008-2DR1_ZDHB6E35 
+#     scsi-SATA_ST4000VN008-2DR1_ZDHB880S
+
+
 # Named ZFS datasets
 container_config_zfs_id: fastpool/containers
 restic_zfs_id: slowpool/backups/restic
