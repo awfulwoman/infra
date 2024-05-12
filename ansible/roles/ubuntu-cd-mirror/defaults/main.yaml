@@ -28,3 +28,6 @@ cdmirror_resources:
   # RaspiOS
   - name: raspios/2024-03-15
     uri: https://downloads.raspberrypi.org/raspios_arm64/images/raspios_arm64-2024-03-15/
+  # PiKVM
+  - name: pikvm/pi4/hdmi-csi
+    uri: https://files.pikvm.org/images/v2-hdmi-rpi4-latest.img.xz
