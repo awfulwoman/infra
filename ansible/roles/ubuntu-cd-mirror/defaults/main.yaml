@@ -1,4 +1,5 @@
-resources:
+cdmirror_base: /slowpool/images
+cdmirror_resources:
   - name: ubuntu/kubuntu/24.04
     uri: rsync://cdimage.ubuntu.com/kubuntu/releases/24.04/
   - name: ubuntu/kubuntu/23.04

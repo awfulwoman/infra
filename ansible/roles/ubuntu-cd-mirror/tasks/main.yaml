@@ -1,10 +1,17 @@
 
-- name: Get all 
+- name: Ensure directories exist
+  ansible.builtin.file:
+    path: "{{ cdmirror_base }}/{{ item.name }}"
+    state: directory
+  loop: "{{ cdmirror_resources }}"
+    
+
+- name: Rsync all repos
   ansible.posix.synchronize:
     src: "{{ item.uri }}"
-    dest: "/slowpool/images/{{ item.name }}"
+    dest: "{{ cdmirror_base }}/{{ item.name }}"
     archive: true
     links: true
     delay_updates: false
     partial: true
-  loop: "{{ resources }}"
+  loop: "{{ cdmirror_resources }}"
