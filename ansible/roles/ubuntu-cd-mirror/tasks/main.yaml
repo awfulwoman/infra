@@ -6,3 +6,4 @@
     archive: true
     links: true
     delay_updates: false
+    partial: true
