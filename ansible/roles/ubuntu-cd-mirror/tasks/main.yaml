@@ -11,7 +11,7 @@
     src: "{{ item.uri }}"
     dest: "{{ cdmirror_base }}/{{ item.name }}"
     archive: true
-    links: true
+    copy_links: true
     delay_updates: false
     partial: true
   loop: "{{ cdmirror_resources }}"
