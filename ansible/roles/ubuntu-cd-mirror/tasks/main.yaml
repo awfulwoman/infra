@@ -10,8 +10,6 @@
   ansible.posix.synchronize:
     src: "{{ item.uri }}"
     dest: "{{ cdmirror_base }}/{{ item.name }}"
-    archive: true
-    copy_links: true
-    delay_updates: false
-    partial: true
+    copy_links: true # Resolves symlinks
+    partial: true # Allows restarting of transfer quickly
   loop: "{{ cdmirror_resources }}"
