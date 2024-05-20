@@ -31,7 +31,7 @@
 - name: "Create .env file"
   ansible.builtin.template:
     src: .env.j2
-    dest: "{{ container_config_dir }}/{{ container_name }}/.env"
+    dest: "{{ compose_config_dir }}/{{ container_name }}/.env"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
 
