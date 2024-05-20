@@ -15,7 +15,7 @@ services:
       - ${UPLOAD_LOCATION}:/usr/src/app/upload
       - /etc/localtime:/etc/localtime:ro
     env_file:
-      - .env
+      - "{{ container_config_dir }}/{{ container_name }}/.env"
     ports:
       - 2283:3001
     depends_on:
@@ -41,7 +41,7 @@ services:
       - ${UPLOAD_LOCATION}:/usr/src/app/upload
       - /etc/localtime:/etc/localtime:ro
     env_file:
-      - .env
+      - "{{ container_config_dir }}/{{ container_name }}/.env"
     depends_on:
       - immich-redis
       - immich-database
@@ -60,7 +60,7 @@ services:
     volumes:
       - model-cache:/cache
     env_file:
-      - .env
+      - "{{ container_config_dir }}/{{ container_name }}/.env"
     restart: always
     networks:
       - "{{ docker_default_network }}"
