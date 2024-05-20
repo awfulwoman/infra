@@ -33,7 +33,7 @@
     - role: virtualisation-tools
     - role: motd
     - role: powertop
-    - role: ubuntu-cd-mirror
+    # - role: ubuntu-cd-mirror
     - role: containers-config
     - role: container-watchtower
     # - role: container-concourse
