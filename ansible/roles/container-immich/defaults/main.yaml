@@ -1,0 +1,2 @@
+container_name: immich
+container_image: ghcr.io/immich-app/immich-server
