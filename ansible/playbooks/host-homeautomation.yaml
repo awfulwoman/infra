@@ -13,6 +13,7 @@
       become: true
       no_log: true
     - role: artis3n.tailscale
+      state: absent
     - role: geerlingguy.pip
     - role: geerlingguy.ansible
       become: true
