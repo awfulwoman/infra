@@ -7,7 +7,7 @@
     mode: 0774
 
 - name: Project path
-  vars: 
+  set_fact: 
     project_path: "{{ projects_config_dir }}/{{ project_name }}"
 
 # Allows use of USB serial devices
