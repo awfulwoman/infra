@@ -21,11 +21,11 @@ services:
       - "traefik.http.routers.zigbee2mqtt.tls.certresolver=letsencrypt"
       - "homepage.group=Home Automation"
       - "homepage.name=zigbee2mqtt"
-      - "homepage.href=https://zigbee2mqtt.{{ domain_name }}"
+      - "homepage.href=https://z2m.{{ 2domain_name }}"
       - "homepage.description=Zigbee controller"
     networks:
       - zigbee
     volumes:
-      - "{{ project_path }}:/app/data"
+      - "{{ project_config }}:/app/data"
       - "/run/udev:/run/udev:ro"
       - /etc/localtime:/etc/localtime:ro
