@@ -17,7 +17,6 @@
     - role: zfs-backup-client
     - role: cron-reboot
     - role: artis3n.tailscale
-      state: absent
     - role: geerlingguy.pip
     - role: geerlingguy.ansible
       become: true

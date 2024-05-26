@@ -39,7 +39,7 @@ zfs_backup_datasets:
 # container_config_dir: /home/ubuntu/
 container_config_dir: "/{{ container_config_zfs_id }}"
 syncthing_data_path: "/{{ syncthing_data_path_zfs_id }}"
-
+compose_config_dir: "/{{ container_config_zfs_id }}/composefiles"
 
 # --- RESTIC -------------
 # Container names to backup via autorestic

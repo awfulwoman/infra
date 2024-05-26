@@ -64,6 +64,7 @@ container_config_dir: "/{{ container_config_zfs_id }}"
 restic_server_path: "/{{ restic_zfs_id }}"
 syncthing_data_path: "/{{ charlie_syncthing_data_path_zfs_id }}"
 wifey_data_path: "/{{ wifey_data_path_zfs_id }}"
+compose_config_dir: "/{{ container_config_zfs_id }}/composefiles"
 
 # Datasets present 
 zfs_datasets:
