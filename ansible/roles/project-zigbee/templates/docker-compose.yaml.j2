@@ -25,6 +25,7 @@ services:
       - "homepage.description=Zigbee controller"
     networks:
       "{{ project_name }}":
+        name: "{{ project_name }}"
         external: true
     volumes:
       - "{{ project_config }}:/app/data"
