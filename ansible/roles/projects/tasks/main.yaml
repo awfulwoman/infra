@@ -9,7 +9,7 @@
   loop: "{{ projects }}"
   when: projects
 
-- name: Ensure dataset roots are owned by user
+- name: Ensure datasets are owned by user
   become: true
   ansible.builtin.file:
     path: "/{{ container_projects_zfs_id }}/{{ item }}"
@@ -20,7 +20,7 @@
   loop: "{{ projects }}"
   when: projects
 
-- name: Loop over projects and create dirs
+- name: Ensure project config dirs exist
   ansible.builtin.file:
     path: "{{ projects_config_dir }}/{{ item }}/config"
     state: directory
@@ -35,7 +35,7 @@
     name: homeautomation
     state: present
 
-- name: Loop over projects and include the relevant project
+- name: Ensure project roles are run
   ansible.builtin.include_role:
     name: "project-{{ item }}"
   vars:
@@ -45,7 +45,7 @@
   loop: "{{ projects }}"
   when: projects
 
-- name: Loop over projects and ensure containers are started
+- name: Ensure all containers are started
   community.docker.docker_compose_v2: 
     project_src: "{{ projects_config_dir }}/{{ item }}"
     state: present
