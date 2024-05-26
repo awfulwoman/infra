@@ -45,13 +45,7 @@
   loop: "{{ projects }}"
   when: projects
 
-- name: Loop over projects and DEBUG
-  debug: 
-    msg: "{{ projects_config_dir }}/{{ item }}"
-  loop: "{{ projects }}"
-  when: projects
-
-- name: Loop over projects and run
+- name: Loop over projects and ensure containers are started
   community.docker.docker_compose_v2: 
     project_src: "{{ projects_config_dir }}/{{ item }}"
     state: present
