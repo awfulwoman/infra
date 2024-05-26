@@ -13,11 +13,11 @@
       no_log: true
     - role: docker-install
     - role: docker
+    - role: zfs-core-new
     - role: ansible-install
     - role: ansible-pull
     - role: artis3n.tailscale
       no_log: false
-    - role: zfs-core-new
     - role: container-sanoid-builder  
     - role: zfs-backup-client
     - role: hifis.unattended_upgrades
