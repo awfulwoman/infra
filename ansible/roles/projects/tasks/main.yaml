@@ -32,7 +32,7 @@
 
 - name: Loop over projects and create network
   community.docker.docker_network: 
-    name: "{ item }}"
+    name: "{{ item }}"
     state: present
   loop: "{{ projects }}"
   when: projects
