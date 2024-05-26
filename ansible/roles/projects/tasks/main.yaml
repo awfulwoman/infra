@@ -41,6 +41,8 @@
   when: projects
 
 - name: Loop over projects and run
-  ansible.builtin.command: "docker-compose -f {{ projects_config_dir }}/{{ item }}/docker-compose.yaml up -d"
+  community.docker.docker_compose_v2: 
+    project_src: "{{ projects_config_dir }}/{{ item }}"
+    state: present
   loop: "{{ projects }}"
   when: projects
