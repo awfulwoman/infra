@@ -14,12 +14,14 @@ zfs_pools:
   - fastpool
 
 # Named ZFS datasets
+container_config_zfs_id: fastpool/containers
 container_projects_zfs_id: fastpool/projects
 syncthing_data_path_zfs_id: fastpool/misc/syncthing
 
 # Datasets present
 zfs_datasets:
   - "{{ container_projects_zfs_id }}"
+  - "{{ container_config_zfs_id }}"
   - fastpool/misc
   - "{{ syncthing_data_path_zfs_id }}"
 
