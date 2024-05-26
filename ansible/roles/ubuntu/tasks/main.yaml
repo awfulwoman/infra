@@ -61,19 +61,19 @@
     update_cache: true
 
 
-- name: Include locale role
+- name: Include env role
   ansible.builtin.include_role:
     name: weareinteractive.environment
+  become: true
   vars:
-    become: true
     no_log: true
 
-- name: Include locale role
+- name: Include security role
   ansible.builtin.include_role:
     name: geerlingguy.security
-  vars:
-    become: true
+  become: true
 
-- name: Include locale role
+- name: Include motd role
+  become: true
   ansible.builtin.include_role:
     name: motd
