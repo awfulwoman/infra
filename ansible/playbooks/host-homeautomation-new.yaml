@@ -6,11 +6,7 @@
        compose_list: []
 
   roles:
-    - role: bootstrap
-    - role: bootstrap-host
-    - role: weareinteractive.environment
-      become: true
-      no_log: true
+    - role: ubuntu
     - role: docker-install
     - role: docker
     - role: zfs-core-new
@@ -19,9 +15,6 @@
     - role: artis3n.tailscale
     - role: container-sanoid-builder  
     - role: zfs-backup-client
-    - role: hifis.unattended_upgrades
-      become: true
-    - role: motd
     - role: beep
     - role: shoutrrr
       become: true

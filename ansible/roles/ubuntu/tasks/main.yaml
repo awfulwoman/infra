@@ -73,3 +73,7 @@
     name: geerlingguy.security
   vars:
     become: true
+
+- name: Include locale role
+  ansible.builtin.include_role:
+    name: motd
