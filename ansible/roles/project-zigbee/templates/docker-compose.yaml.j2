@@ -24,13 +24,8 @@ services:
       - "homepage.href=https://z2m.{{ domain_name }}"
       - "homepage.description=Zigbee controller"
     networks:
-      - "{{ project_name }}"
-      # - homeautomation
+      - homeautomation
     volumes:
       - "{{ project_config }}:/app/data"
       - "/run/udev:/run/udev:ro"
       - /etc/localtime:/etc/localtime:ro
-
-networks:
-  network:
-    name: "{{ project_name }}"
