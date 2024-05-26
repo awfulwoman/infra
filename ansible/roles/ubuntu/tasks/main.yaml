@@ -1,0 +1,75 @@
+# Provisions an Ubuntu machine
+- name: Ensure Github ssh keys are present
+  become: true
+  ansible.posix.authorized_key:
+    user: "{{ ansible_user }}"
+    key: https://github.com/whalecoiner.keys
+    state: present
+
+- name: Ensure timezone is for Berlin
+  become: true
+  community.general.timezone:
+    name: Europe/Berlin
+
+- name: Include locale role
+  ansible.builtin.include_role:
+    name: "ubuntu-locale"
+
+- name: Ensure hostname is correct
+  become: true
+  ansible.builtin.hostname:
+    name: "{{ inventory_hostname }}"
+
+- name: Ensure 127.0.1.1 is correct
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/hosts
+    regexp: '^127\.0\.1\.1'
+    line: "127.0.1.1 {{ inventory_hostname }}"
+  
+- name: Install apt packages
+  become: true
+  ansible.builtin.apt:
+    name:
+      - vim
+      - curl
+      - wget
+      - git
+      - zsh
+      - iptables
+      - restic
+      - python3
+      - python3-pip
+      - python3-docker
+      - neofetch
+      - htop
+      - lm-sensors
+      - tmux
+      - pipx
+      - uptimed
+      - htop
+      - tmux
+      - unzip
+      - mosh
+      - dirmngr
+      - lm-sensors
+      - smartmontools
+      - sqlite3
+      - python-is-python3
+      - ffmpeg
+    state: present
+    update_cache: true
+
+
+- name: Include locale role
+  ansible.builtin.include_role:
+    name: weareinteractive.environment
+  vars:
+    become: true
+    no_log: true
+
+- name: Include locale role
+  ansible.builtin.include_role:
+    name: geerlingguy.security
+  vars:
+    become: true
