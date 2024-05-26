@@ -22,8 +22,7 @@
     name: "project-{{ item }}"
   vars:
     project_name: "{{ item }}"
-  loop:
-    - "{{ projects }}"
+  loop: "{{ projects }}"
   when: projects
 
 # - name: Ensure all projects are running
