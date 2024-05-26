@@ -30,14 +30,6 @@
   loop: "{{ projects }}"
   when: projects
 
-- name: Ensure homeautomation network exists
-  community.docker.docker_network: 
-    name: homeautomation
-    state: present
-    connected: "{{ item }}"
-  loop: "{{ projects }}"
-  when: projects   
-
 - name: Ensure project roles are run
   ansible.builtin.include_role:
     name: "project-{{ item }}"
