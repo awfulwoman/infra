@@ -51,7 +51,7 @@ all:
       hosts:
         host-storage:
         host-homeautomation:
-        host-homeautomation-new:
+        # host-homeautomation-new:
 
     # Autorestic source
     autorestic:
