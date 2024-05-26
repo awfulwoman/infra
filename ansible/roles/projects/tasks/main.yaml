@@ -16,6 +16,7 @@
       xattr: sa
   loop:
     - "{{ projects }}"
+  when: projects
 
 - name: Loop over projects and include them
   ansible.builtin.include_role:
@@ -24,6 +25,7 @@
     project_name: "{{ item }}"
   loop:
     - "{{ projects }}"
+  when: projects
 
 # - name: Ensure all projects are running
  # loop over each project directory and execute docker-compose.yaml
