@@ -1,0 +1,31 @@
+name: "{{ project_name }}
+services:
+  zigbee2mqtt:
+    container_name: zigbee2mqtt
+    ports:
+      - "127.0.0.1:9091:9091"
+    privileged: true
+    user: "{{ container_user_id }}:{{ container_user_id }}"
+    group_add:
+      - dialout
+    devices:
+      - "{{ zigbee_usb_device }}"
+    environment:
+      - "TZ="
+    image: koenkk/zigbee2mqtt
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.zigbee2mqtt.rule=Host(`z2m.{{ domain_name }}`)"
+      - "traefik.http.routers.zigbee2mqtt.tls=true"
+      - "traefik.http.routers.zigbee2mqtt.tls.certresolver=letsencrypt"
+      - "homepage.group=Home Automation"
+      - "homepage.name=zigbee2mqtt"
+      - "homepage.href=https://zigbee2mqtt.{{ domain_name }}"
+      - "homepage.description=Zigbee controller"
+    networks:
+      - zigbee
+    volumes:
+      - "{{ project_path }}:/app/data"
+      - "/run/udev:/run/udev:ro"
+      - /etc/localtime:/etc/localtime:ro

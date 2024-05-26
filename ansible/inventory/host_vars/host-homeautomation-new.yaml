@@ -37,3 +37,9 @@ container_config_dir: "/{{ container_config_zfs_id }}"
 compose_config_dir: "/{{ container_compose_zfs_id }}"
 projects_config_dir: "/{{ container_projects_zfs_id }}"
 syncthing_data_path: "/{{ syncthing_data_path_zfs_id }}"
+
+projects:
+  - arr
+  - homeassistant
+  - zigbee
+  - mqtt
