@@ -40,6 +40,12 @@
   loop: "{{ projects }}"
   when: projects
 
+- name: Loop over projects 
+  debug: 
+    msg: "{{ projects_config_dir }}/{{ item }}"
+  loop: "{{ projects }}"
+  when: projects
+
 - name: Loop over projects and run
   community.docker.docker_compose_v2: 
     project_src: "{{ projects_config_dir }}/{{ item }}"
