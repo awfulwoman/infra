@@ -24,7 +24,8 @@ services:
       - "homepage.href=https://z2m.{{ domain_name }}"
       - "homepage.description=Zigbee controller"
     networks:
-      - "{{ project_name }}"
+      "{{ project_name }}"
+        external: true
     volumes:
       - "{{ project_config }}:/app/data"
       - "/run/udev:/run/udev:ro"
