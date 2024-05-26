@@ -15,11 +15,14 @@ zfs_pools:
 
 # Named ZFS datasets
 container_config_zfs_id: fastpool/containers
+container_compose_zfs_id: fastpool/compose
+container_projects_zfs_id: fastpool/projects
 syncthing_data_path_zfs_id: fastpool/misc/syncthing
 
 # Datasets present
 zfs_datasets:
   - "{{ container_config_zfs_id }}"
+  - "{{ container_compose_zfs_id }}"
   - fastpool/misc
   - "{{ syncthing_data_path_zfs_id }}"
 
@@ -31,4 +34,6 @@ zfs_backup_datasets:
 # Define useful paths from ZFS datasets
 # container_config_dir: /home/ubuntu/
 container_config_dir: "/{{ container_config_zfs_id }}"
+compose_config_dir: "/{{ container_compose_zfs_id }}"
+projects_config_dir: "/{{ container_projects_zfs_id }}"
 syncthing_data_path: "/{{ syncthing_data_path_zfs_id }}"
