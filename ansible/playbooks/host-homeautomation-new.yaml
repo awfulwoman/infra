@@ -25,21 +25,10 @@
     - role: beep
     - role: shoutrrr
       become: true
-    - role: containers-config
-    - role: container-traefik
-      traefik_providers: true
-    - role: container-mosquitto
-    - role: container-zigbee2mqtt
-    - role: container-wyoming-whisper
-    - role: container-wyoming-piper
-    - role: container-homeassistant
-    - role: container-esphome
-    - role: container-syncthing
-    - role: containers-end
-    - role: docker-cleanup
     - role: ironicbadger.figurine
       become: true
     - role: apt-upgrade
+    - role: projects
 
   handlers:
     - name: Reboot host
