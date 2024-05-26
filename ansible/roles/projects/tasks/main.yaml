@@ -7,7 +7,6 @@
 # - the containers in the project should autorun
 
 - name: Ensure a ZFS dataset for each project is present 
-  become: true
   community.general.zfs:
     name: "{{ container_projects_zfs_id }}/{{ item }}"
     state: present
@@ -17,14 +16,28 @@
   loop: "{{ projects }}"
   when: projects
 
+- name: Ensure dataset roots are owned by user
+  become: true
+  ansible.builtin.file:
+    path: "/{{ container_projects_zfs_id }}/{{ item }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0774
+  loop: "{{ projects }}"
+  when: projects
+
 - name: Loop over projects and create dirs
   ansible.builtin.file:
     path: "{{ projects_config_dir }}/{{ item }}/config"
     state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0774
   loop: "{{ projects }}"
   when: projects
 
-- name: Loop over projects and include them
+- name: Loop over projects and include the relevant role
   ansible.builtin.include_role:
     name: "project-{{ item }}"
   vars:
