@@ -21,7 +21,7 @@
 
 - name: Check for ZFS pools
     ansible.builtin.command:
-      cmd: "zpool status {{ item.name }}"
+      cmd: zpool status {{ item.name }}
     loop: "{{ zfs_pools }}"
     tags: ['zfs']
     when: zfs_pools is defined
