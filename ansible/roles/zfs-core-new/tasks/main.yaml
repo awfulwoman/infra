@@ -30,7 +30,7 @@
 - name: Ensure ZFS datasets are present 
   become: true
   community.general.zfs:
-    name: "{{ item }}DDDD"
+    name: "{{ item }}"
     state: present
     extra_zfs_properties:
       acltype: posix
