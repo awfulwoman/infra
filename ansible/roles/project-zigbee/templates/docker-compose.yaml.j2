@@ -11,7 +11,7 @@ services:
     devices:
       - "{{ zigbee_usb_device }}"
     environment:
-      - "TZ="
+      - "TZ=${TZ}"
     image: koenkk/zigbee2mqtt
     restart: unless-stopped
     labels:
