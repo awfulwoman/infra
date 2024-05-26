@@ -17,7 +17,6 @@
     - role: ansible-install
     - role: ansible-pull
     - role: artis3n.tailscale
-      state: absent
     - role: container-sanoid-builder  
     - role: zfs-backup-client
     - role: hifis.unattended_upgrades
