@@ -23,6 +23,7 @@
     cmd: "zpool status {{ item }}"
   loop: "{{ zfs_pools }}"
   when: zfs_pools is defined
+  changed_when: false
   tags: ['zfs']
 
 - name: Ensure ZFS datasets are present 
@@ -35,7 +36,6 @@
       xattr: sa
   loop: "{{ zfs_datasets }}"
   when: zfs_datasets is defined
-  changed_when: false
   tags: ['zfs']
 
 - name: Ensure ZFS datasets for containers are present 
