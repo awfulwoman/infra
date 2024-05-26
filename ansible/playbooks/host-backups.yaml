@@ -5,6 +5,7 @@
     - role: bootstrap
     - role: bootstrap-host
     - role: artis3n.tailscale
+      state: absent
     - role: weareinteractive.environment
       become: true
       no_log: true
