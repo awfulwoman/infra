@@ -37,7 +37,7 @@
   loop: "{{ projects }}"
   when: projects
 
-- name: Loop over projects and include the relevant role
+- name: Loop over projects and include the relevant project
   ansible.builtin.include_role:
     name: "project-{{ item }}"
   vars:
