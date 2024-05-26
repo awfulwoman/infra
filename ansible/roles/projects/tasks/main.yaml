@@ -7,6 +7,7 @@
 # - the containers in the project should autorun
 
 - name: Ensure a ZFS dataset for each project is present 
+  become: true
   community.general.zfs:
     name: "{{ container_projects_zfs_id }}/{{ item }}"
     state: present
