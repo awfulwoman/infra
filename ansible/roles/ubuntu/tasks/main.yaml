@@ -73,6 +73,7 @@
     name: geerlingguy.security
   vars:
     ansible_become: true
+    security_fail2ban_enabled: false
 
 - name: Include motd role
   ansible.builtin.include_role:
