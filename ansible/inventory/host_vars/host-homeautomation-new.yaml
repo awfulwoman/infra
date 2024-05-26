@@ -11,9 +11,7 @@ use_zigbee_hardware: true
 
 # ZFS pools
 zfs_pools:
-  - name: fastpool
-    members: >-
-      /dev/disk/by-id/scsi-SATA_INTENSO_SSD_AA000000000000001079-part3
+  - fastpool
 
 # Named ZFS datasets
 container_config_zfs_id: fastpool/containers
