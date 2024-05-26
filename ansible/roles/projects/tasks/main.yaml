@@ -30,6 +30,13 @@
   loop: "{{ projects }}"
   when: projects
 
+- name: Loop over projects and create network
+  community.docker.docker_network: 
+    name: "{ item }}"
+    state: present
+  loop: "{{ projects }}"
+  when: projects
+
 - name: Loop over projects and include the relevant role
   ansible.builtin.include_role:
     name: "project-{{ item }}"
@@ -40,7 +47,7 @@
   loop: "{{ projects }}"
   when: projects
 
-- name: Loop over projects 
+- name: Loop over projects and DEBUG
   debug: 
     msg: "{{ projects_config_dir }}/{{ item }}"
   loop: "{{ projects }}"
