@@ -1,7 +1,3 @@
-- name: Project path
-  set_fact: 
-    project_path: "{{ projects_config_dir }}/{{ project_name }}"
-
 # Allows use of USB serial devices
 - name: "Add user to dialout group for {{ ansible_user }}"
   become: true
@@ -10,18 +6,9 @@
     groups: dialout
     append: true
 
-- name: "Create compose config dir"
-  ansible.builtin.file:
-    path: "{{ compose_config_dir }}/{{ container_name }}"
-    state: directory
-
 - name: "Create compose file"
   ansible.builtin.template:
     src: docker-compose.yaml.j2
-    dest: "{{ compose_config_dir }}/{{ container_name }}/docker-compose.yaml"
+    dest: "{{ project_path }}/docker-compose.yaml"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-
-- name: append to compose_list
-  ansible.builtin.set_fact:
-    compose_list: "{{ compose_list + [ container_name ] }}"
