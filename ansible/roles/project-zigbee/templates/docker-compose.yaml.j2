@@ -21,7 +21,7 @@ services:
       - "traefik.http.routers.zigbee2mqtt.tls.certresolver=letsencrypt"
       - "homepage.group=Home Automation"
       - "homepage.name=zigbee2mqtt"
-      - "homepage.href=https://z2m.{{ 2domain_name }}"
+      - "homepage.href=https://z2m.{{ domain_name }}"
       - "homepage.description=Zigbee controller"
     networks:
       - zigbee
