@@ -35,6 +35,7 @@
       xattr: sa
   loop: "{{ zfs_datasets }}"
   when: zfs_datasets is defined
+  changed_when: false
   tags: ['zfs']
 
 - name: Ensure ZFS datasets for containers are present 
