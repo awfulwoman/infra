@@ -19,9 +19,9 @@
 # Check for necessary zpools. Fail if not present. 
 # (I don't think it's safe to automate the creation of zpools)
 
-- name: Check for ZFS pools
+- name: Ensure ZFS pools are present
   ansible.builtin.command:
-    cmd: "zpool status {{ item.name }}"
+    cmd: "zpool status {{ item }}"
   loop: "{{ zfs_pools }}"
   tags: ['zfs']
   when: zfs_pools is defined
