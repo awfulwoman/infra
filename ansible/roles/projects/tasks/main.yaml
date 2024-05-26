@@ -14,8 +14,7 @@
     extra_zfs_properties:
       acltype: posix
       xattr: sa
-  loop:
-    - "{{ projects }}"
+  loop: "{{ projects }}"
   when: projects
 
 - name: Loop over projects and include them

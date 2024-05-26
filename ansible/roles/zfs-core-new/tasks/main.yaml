@@ -38,17 +38,6 @@
   when: zfs_datasets is defined
   tags: ['zfs']
 
-# - name: Ensure ZFS datasets for containers are present 
-#   become: true
-#   community.general.zfs:
-#     name: "{{ container_config_zfs_id }}/{{ item }}"
-#     state: present
-#     extra_zfs_properties:
-#       acltype: posix
-#       xattr: sa
-#   loop: "{{ compose_list }}"
-#   when: compose_list is defined
-#   tags: ['zfs']
  
 - name: Ensure dataset roots are owned by user
   become: true
