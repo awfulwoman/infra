@@ -1,11 +1,3 @@
-# go throught the projects list from the inventory or playbook
-
-# - create a dataset for each project in the projects dataset (check it exists)
-  # - project-{{ item }}
-# - create any necessary external networks 
-# - include the project role
-# - the containers in the project should autorun
-
 - name: Ensure a ZFS dataset for each project is present 
   become: true
   community.general.zfs:
@@ -48,7 +40,8 @@
   loop: "{{ projects }}"
   when: projects
 
-
-
-# - name: Ensure all projects are running
- # loop over each project directory and execute docker-compose.yaml
+- name: Loop over projects and run
+  ansible.builtin.file:
+    cmd: "docker-compose up -f {{ projects_config_dir }}/{{ item }}/docker-compose.yaml"
+  loop: "{{ projects }}"
+  when: projects
