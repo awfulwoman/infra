@@ -1,14 +1,3 @@
-- name: Set config path
-  ansible.builtin.set_fact:
-    # container_config_dir: "/opt/containers"
-    container_config_dir: "{{ ansible_env.HOME }}"
-  when: container_config_dir is undefined
-
-- name: Set compose path
-  ansible.builtin.set_fact:
-    compose_config_dir: "{{ container_config_dir }}/composefiles"
-  when: compose_config_dir is undefined
-
 # Create dirs
 - name: Ensure container_config_dir exists
   become: true
