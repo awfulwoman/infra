@@ -5,7 +5,7 @@ services:
     ports:
       - "127.0.0.1:9091:9091"
     privileged: true
-    user: "{{ container_user_id }}:{{ container_user_id }}"
+    user: "1000:1000"
     group_add:
       - dialout
     devices:
