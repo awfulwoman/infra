@@ -36,8 +36,8 @@
     # - role: nfs-client
     - role: autorestic
     - role: containers-config
-    - role: container-watchtower
-    # - role: container-scripts-site
+    # - role: container-watchtower
+    - role: container-scripts-site
     - role: container-traefik
       traefik_providers: true
     # - role: container-whoami

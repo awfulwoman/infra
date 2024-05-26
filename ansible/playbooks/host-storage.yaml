@@ -35,7 +35,7 @@
     - role: powertop
     # - role: ubuntu-cd-mirror
     - role: containers-config
-    - role: container-watchtower
+    # - role: container-watchtower
     # - role: container-concourse
     - role: container-traefik
     - role: container-jellyfin
