@@ -26,8 +26,14 @@
     path: /etc/hosts
     regexp: '^127\.0\.1\.1'
     line: "127.0.1.1 {{ inventory_hostname }}"
-  
-- name: Install apt packages
+
+- name: Upgrade apt packages
+  become: true
+  ansible.builtin.apt:
+    upgrade: full
+    update_cache: true
+
+- name: Install necessary apt packages
   become: true
   ansible.builtin.apt:
     name:
@@ -58,8 +64,11 @@
       - python-is-python3
       - ffmpeg
     state: present
-    update_cache: true
 
+- name: Autoremove apt packages
+  become: true
+  ansible.builtin.apt:
+    autoremove: true
 
 - name: Include env role
   ansible.builtin.include_role:

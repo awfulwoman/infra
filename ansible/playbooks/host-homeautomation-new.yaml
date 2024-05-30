@@ -20,7 +20,6 @@
       become: true
     - role: ironicbadger.figurine
       become: true
-    - role: apt-upgrade
     - role: projects
 
   handlers:
