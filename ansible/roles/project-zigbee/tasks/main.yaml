@@ -1,3 +1,5 @@
+# code: language=ansible
+
 # Allows use of USB serial devices
 - name: "Add user to dialout group for {{ ansible_user }}"
   become: true

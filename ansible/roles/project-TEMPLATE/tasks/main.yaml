@@ -1,3 +1,4 @@
+# code: language=ansible
 - name: "Create compose file"
   ansible.builtin.template:
     src: docker-compose.yaml.j2
