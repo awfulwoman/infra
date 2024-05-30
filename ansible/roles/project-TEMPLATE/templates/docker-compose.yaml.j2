@@ -1,0 +1,22 @@
+name: "{{ project_name }}"
+services:
+  zigbee2mqtt:
+    container_name: CONTAINERNAME
+    ports:
+      - "127.0.0.1:OUTSIDE:INSIDE"
+    environment:
+      - "TZ=${TZ}"
+    image: IMAGENAME
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.SUBDOMAIN.rule=Host(`SUBDOMAIN.{{ domain_name }}`)"
+      - "traefik.http.routers.SUBDOMAIN.tls=true"
+      - "traefik.http.routers.SUBDOMAIN.tls.certresolver=letsencrypt"
+      # - "homepage.group=GROUP"
+      # - "homepage.name=SUBDOMAIN"
+      # - "homepage.href=https://SUBDOMAIN.{{ domain_name }}"
+      # - "homepage.description=whatever"
+    volumes:
+      - "{{ project_config }}:/INSIDEPATH"
+      - /etc/localtime:/etc/localtime:ro
