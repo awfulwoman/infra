@@ -1,10 +1,6 @@
 ---
 - name: Home Automation Server NEW
   hosts: host-homeautomation-new
-  pre_tasks:
-    - set_fact:
-       compose_list: []
-
   roles:
     - role: ubuntu
     - role: docker-install
