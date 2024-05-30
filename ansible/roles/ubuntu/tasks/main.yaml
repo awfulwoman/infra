@@ -89,3 +89,12 @@
     name: motd
   vars:
     ansible_become: true
+
+- name: "Allow the {{ ansible_user }} user to sudo rsync with no password"
+  become: true
+  community.general.sudoers:
+    name: allow-sudo-rsync-no-password
+    state: present
+    user: "{{ ansible_user }}"
+    nopassword: true
+    commands: sudo rsync
