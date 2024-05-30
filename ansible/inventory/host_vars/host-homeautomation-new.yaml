@@ -39,5 +39,5 @@ syncthing_data_path: "/{{ syncthing_data_path_zfs_id }}"
 projects:
   # - arr
   # - homeassistant
-  - zigbee
-  # - mqtt
+  # - zigbee
+  - mqtt

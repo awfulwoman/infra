@@ -1,0 +1,19 @@
+name: "{{ project_name }}"
+services:
+  mosquitto:
+    container_name: mosquitto
+    ports:
+      - "127.0.0.1:1883:1883"
+    image: eclipse-mosquitto:latest
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mosquitto.rule=Host(`mqtt.{{ domain_name }}`)"
+      - "homepage.group=Home Automation"
+      - "homepage.name=Mosquitto"
+      - "homepage.description=MQTT Broker"
+    volumes:
+      - "{{ project_config }}/config:/mosquitto/config"
+      - "{{ project_config }}/data:/mosquitto/data"
+      - "{{ project_config }}/log:/mosquitto/log"
+      - /etc/localtime:/etc/localtime:ro
