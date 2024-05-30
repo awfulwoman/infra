@@ -1,12 +1,12 @@
 - name: Create compose file
   ansible.builtin.template:
     src: docker-compose.yaml.j2
-    dest: "{{ project_path }}/docker-compose.yaml"
+    dest: "{{ project_root }}/docker-compose.yaml"
 
 - name: Create .env files
   ansible.builtin.template:
     src: .env.j2
-    dest: "{{ project_path }}/.env"
+    dest: "{{ project_root }}/.env"
 
 - name: Create backup directories
   file:
