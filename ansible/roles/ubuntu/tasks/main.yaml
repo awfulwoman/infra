@@ -97,4 +97,4 @@
     state: present
     user: "{{ ansible_user }}"
     nopassword: true
-    commands: sudo rsync
+    commands: /usr/bin/rsync
