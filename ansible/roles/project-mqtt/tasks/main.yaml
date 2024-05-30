@@ -10,8 +10,10 @@
 
 - name: Create backup directories
   file:
-    path: "{{ project_config }}/{{ item }}"
+    path: "{{ project_config }}/{{ backup_item }}"
     state: directory
+  loop_control:
+    loop_var: backup_item
   loop:
     - config
     - log
