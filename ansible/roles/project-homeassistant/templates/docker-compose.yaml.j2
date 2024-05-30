@@ -1,0 +1,25 @@
+# code: language=ansible
+name: "{{ project_name }}"
+services:
+  SERVICENAME:
+    container_name: homeassistant
+    privileged: true
+    network_mode: host
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN
+    image: ghcr.io/home-assistant/home-assistant:latest
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.homeassistant.rule=Host(`homeassistant.{{ domain_name }}`)"
+      - "traefik.http.routers.homeassistant.tls=true"
+      - "traefik.http.routers.homeassistant.tls.certresolver=letsencrypt"
+      - "homepage.group=Home Automation"
+      - "homepage.name=Home Assistant"
+      - "homepage.href=https://homeassistant.{{ domain_name }}"
+      - "homepage.description=The brains of the home"
+    volumes:
+      - "{{ project_config }}:/config"
+      - "{{ project_config }}/media:/media"
+      - /etc/localtime:/etc/localtime:ro
