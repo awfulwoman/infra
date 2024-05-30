@@ -1,13 +1,24 @@
-- name: "Create compose file"
+- name: Create compose file
   ansible.builtin.template:
     src: docker-compose.yaml.j2
     dest: "{{ project_path }}/docker-compose.yaml"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
 
-- name: "Create .env file"
+- name: Create .env files
   ansible.builtin.template:
     src: .env.j2
     dest: "{{ project_path }}/.env"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+
+- name: Create backup directories
+  file:
+    path: "{{ project_config }}/{{ item }}"
+    state: directory
+  loop:
+    - config
+    - log
+    - data
+
+- name: Copy over config file
+  become: true
+  ansible.builtin.copy:
+    src: mosquitto.conf
+    dest: "{{ project_config }}/config/mosquitto.conf"
