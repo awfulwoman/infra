@@ -35,10 +35,9 @@ services:
     container_name: whoami
     ports:
       - "8888:80"
-    environment:
-      - "TZ=${TZ}"
     image: traefik/whoami
     restart: unless-stopped
+    env_file: .environment_vars
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.whoami.rule=Host(`whoami.{{ ansible_hostname }}.{{ domain_name }}`)"
