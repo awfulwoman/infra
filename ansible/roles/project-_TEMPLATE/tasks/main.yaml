@@ -1,4 +1,9 @@
 # code: language=ansible
+
+# ----------------------------
+# Core tasks
+# ----------------------------
+
 - name: "Create compose file"
   ansible.builtin.template:
     src: docker-compose.yaml.j2
@@ -12,6 +17,10 @@
     dest: "{{ project_root }}/.env"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
+
+# ----------------------------
+# Specific tasks
+# ----------------------------
 
 # - name: Create directories
 #   file:
