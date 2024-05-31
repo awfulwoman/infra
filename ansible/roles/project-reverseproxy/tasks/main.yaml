@@ -1,0 +1,67 @@
+# code: language=ansible
+
+# ----------------------------
+# Core tasks
+# ----------------------------
+
+- name: "Create compose file"
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ project_root }}/docker-compose.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
+- name: "Create .env file"
+  ansible.builtin.template:
+    src: .env.j2
+    dest: "{{ project_root }}/.env"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
+# ----------------------------
+# Specific tasks
+# ----------------------------
+
+- name: "Template out config file"
+  ansible.builtin.template:
+    src: config.yaml
+    dest: "{{ project_config }}/traefik.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0774
+
+- name: "Create providers dir"
+  ansible.builtin.file:
+    dest: "{{ project_config }}/providers"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+  when: traefik_providers
+
+- name: "Template out providers file"
+  ansible.builtin.template:
+    src: providers/homeassistant.yaml
+    dest: "{{ project_config }}/providers/homeassistant.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0774
+  when: traefik_providers
+
+- name: "Create letsencrypt dir"
+  become: true
+  ansible.builtin.file:
+    dest: "{{ project_config }}/letsencrypt"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0700'
+
+- name: "Touch letsencrypt file"
+  become: true
+  ansible.builtin.copy:
+    content: ""
+    dest: "{{ project_config }}/letsencrypt/acme.json"
+    force: false
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0600'

@@ -1,0 +1,34 @@
+log:
+  level: DEBUG
+api:
+  dashboard: true
+acme:
+  acmeLogging: true
+entryPoints:
+  web:
+    address: ":80"
+    http:
+      redirections:
+        entrypoint:
+          to: websecure
+          scheme: https
+  websecure:
+    address: ":443"
+providers:
+  docker:
+    exposedbydefault: false
+    endpoint: "unix:///var/run/docker.sock"
+  file:
+    directory: /etc/traefik/providers
+    watch: true
+
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: certs@whalecoiner.com
+      storage: /letsencrypt/acme.json
+      # caserver: https://acme-staging-v02.api.letsencrypt.org/directory" # Enable this to use the Letsencrypt staging server
+      dnschallenge:
+        provider: digitalocean
+        delaybeforecheck: 0
+        DisablePropagationCheck: true
