@@ -7,7 +7,7 @@ services:
       - "80:80"
       - "443:443"
     image: traefik:v2.11
-    restart: unless-stoppeds
+    restart: unless-stopped
     labels:
       # Traefik-ception so that Traefik is provided via Traefik
       - "traefik.enable=true"
