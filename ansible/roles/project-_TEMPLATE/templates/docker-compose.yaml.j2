@@ -9,6 +9,7 @@ services:
       - "TZ=${TZ}"
     image: IMAGENAME
     restart: unless-stopped
+    env_file: .env
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.SUBDOMAIN.rule=Host(`SUBDOMAIN.{{ domain_name }}`)"

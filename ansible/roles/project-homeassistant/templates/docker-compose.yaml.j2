@@ -7,6 +7,7 @@ services:
     network_mode: host
     image: ghcr.io/home-assistant/home-assistant:latest
     restart: unless-stopped
+    env_file: .env
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.homeassistant.rule=Host(`homeassistant.{{ domain_name }}`)"
