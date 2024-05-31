@@ -38,7 +38,8 @@
     src: "templates/providers/{{ item }}.yaml"
     dest: "{{ project_config }}/providers/{{ provider }}.yaml"
   loop: "{{ traefik_providers }}"
-  loop_var: provider
+  loop_control:
+    loop_var: provider
   when: traefik_providers is defined
 
 - name: "Create letsencrypt dir"
