@@ -26,25 +26,17 @@
   ansible.builtin.template:
     src: traefik-config.yaml.j2
     dest: "{{ project_config }}/traefik.yaml"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    mode: 0774
 
 - name: "Create providers dir"
   ansible.builtin.file:
     dest: "{{ project_config }}/providers"
     state: directory
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
   when: traefik_providers is defined
 
 - name: "Template out providers file"
   ansible.builtin.template:
     src: "providers/{{ item }}.yaml"
     dest: "{{ project_config }}/providers/{{ item }}.yaml"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    mode: 0774
   loop: "{{ traefik_providers }}"
   when: traefik_providers is defined
 
