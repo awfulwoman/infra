@@ -35,9 +35,10 @@
 
 - name: "Template out providers file"
   ansible.builtin.template:
-    src: "providers/{{ item }}.yaml"
-    dest: "{{ project_config }}/providers/{{ item }}.yaml"
+    src: "templates/providers/{{ item }}.yaml"
+    dest: "{{ project_config }}/providers/{{ provider }}.yaml"
   loop: "{{ traefik_providers }}"
+  loop_var: provider
   when: traefik_providers is defined
 
 - name: "Create letsencrypt dir"
