@@ -36,7 +36,7 @@
     state: directory
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-  when: traefik_providers
+  when: traefik_providers|bool == true
 
 - name: "Template out providers file"
   ansible.builtin.template:
@@ -45,7 +45,7 @@
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: 0774
-  when: traefik_providers
+  when: traefik_providers|bool == true
 
 - name: "Create letsencrypt dir"
   become: true
