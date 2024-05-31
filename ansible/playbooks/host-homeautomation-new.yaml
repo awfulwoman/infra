@@ -7,7 +7,6 @@
     - role: zfs-core-new
     - role: ansible-install
     - role: ansible-pull
-    - role: artis3n.tailscale
     - role: container-sanoid-builder  
     - role: zfs-backup-client
     - role: beep

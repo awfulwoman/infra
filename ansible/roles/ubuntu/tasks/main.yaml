@@ -70,25 +70,25 @@
   ansible.builtin.apt:
     autoremove: true
 
-- name: Include env role
-  ansible.builtin.include_role:
+- ansible.builtin.include_role:
     name: weareinteractive.environment
   vars:
     ansible_become: true
     no_log: true
 
-- name: Include security role
-  ansible.builtin.include_role:
+- ansible.builtin.include_role:
     name: geerlingguy.security
   vars:
     ansible_become: true
     security_fail2ban_enabled: false
 
-- name: Include motd role
-  ansible.builtin.include_role:
+- ansible.builtin.include_role:
     name: motd
   vars:
     ansible_become: true
+
+- ansible.builtin.include_role:
+    name: artis3n.tailscale
 
 - name: "Allow the {{ ansible_user }} user to sudo rsync with no password"
   become: true
