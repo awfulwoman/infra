@@ -24,7 +24,7 @@
 
 - name: "Template out config file"
   ansible.builtin.template:
-    src: config.yaml
+    src: traefik-config.yaml.j2
     dest: "{{ project_config }}/traefik.yaml"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
