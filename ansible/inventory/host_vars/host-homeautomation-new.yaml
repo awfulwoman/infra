@@ -42,3 +42,6 @@ projects:
   # - zigbee
   - mqtt
   - reverseproxy
+
+traefik_providers:
+  - homeassistant

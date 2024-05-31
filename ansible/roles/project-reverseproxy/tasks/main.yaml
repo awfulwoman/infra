@@ -36,16 +36,17 @@
     state: directory
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-  when: traefik_providers is defined and traefik_providers is true 
+  when: traefik_providers is defined
 
 - name: "Template out providers file"
   ansible.builtin.template:
     src: providers/homeassistant.yaml
-    dest: "{{ project_config }}/providers/homeassistant.yaml"
+    dest: "{{ project_config }}/providers/{{ item }}.yaml"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: 0774
-  when: traefik_providers is defined and traefik_providers is true 
+  loop: "{{ traefik_providers }}"
+  when: traefik_providers is defined
 
 - name: "Create letsencrypt dir"
   become: true
