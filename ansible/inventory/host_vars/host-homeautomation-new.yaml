@@ -41,3 +41,4 @@ projects:
   - homeassistant
   # - zigbee
   - mqtt
+  - whoami
