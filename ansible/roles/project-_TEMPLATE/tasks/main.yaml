@@ -13,8 +13,8 @@
 
 - name: "Create .env file"
   ansible.builtin.template:
-    src: .env.j2
-    dest: "{{ project_root }}/.env"
+    src: environment_vars.j2
+    dest: "{{ project_root }}/.environment_vars"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
 

@@ -7,7 +7,7 @@ services:
       - "1883:1883"
     image: eclipse-mosquitto:latest
     restart: unless-stopped
-    env_file: .env
+    env_file: .environment_vars
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.mosquitto.rule=Host(`mqtt.{{ domain_name }}`)"

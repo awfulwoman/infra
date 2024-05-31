@@ -5,11 +5,9 @@ services:
     container_name: CONTAINERNAME
     ports:
       - "127.0.0.1:OUTSIDE:INSIDE"
-    environment:
-      - "TZ=${TZ}"
     image: IMAGENAME
     restart: unless-stopped
-    env_file: .env
+    env_file: .environment_vars
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.SUBDOMAIN.rule=Host(`SUBDOMAIN.{{ domain_name }}`)"
