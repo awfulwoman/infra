@@ -11,7 +11,7 @@ services:
       - dialout
     devices:
       - "{{ zigbee_usb_device }}"
-    env_file: .env
+    env_file: .environment_vars
     image: koenkk/zigbee2mqtt
     restart: unless-stopped
     labels:
