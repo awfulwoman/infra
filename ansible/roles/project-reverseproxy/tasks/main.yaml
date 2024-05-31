@@ -40,7 +40,7 @@
 
 - name: "Template out providers file"
   ansible.builtin.template:
-    src: providers/homeassistant.yaml
+    src: "providers/{{ item }}.yaml"
     dest: "{{ project_config }}/providers/{{ item }}.yaml"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
