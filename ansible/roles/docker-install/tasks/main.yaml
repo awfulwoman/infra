@@ -21,3 +21,13 @@
     update_cache: true
     state: present
 
+- name: Add to docker group - "{{ ansible_user }}"
+  become: true
+  ansible.builtin.user:
+    user: "{{ ansible_user }}"
+    groups: docker
+    append: true
+
+- name: Reset connection so shell is picked up.
+  become: true
+  ansible.builtin.meta: reset_connection

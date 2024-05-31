@@ -4,7 +4,6 @@
   roles:
     - role: ubuntu
     - role: docker-install
-    - role: docker
     - role: zfs-core-new
     - role: ansible-install
     - role: ansible-pull
