@@ -24,8 +24,6 @@
   loop: 
     - "{{ sanoid_tmp_path }}"
 
-    - "{{ sanoid_tmp_path }}/source/debian"
-
 - name: Clone Sanoid repo
   ansible.builtin.git:
     repo: 'https://github.com/jimsalterjrs/sanoid.git'
