@@ -61,6 +61,6 @@
 - name: Install Sanoid deb file
   become: true
   ansible.builtin.apt:
-    deb: "{{ sanoid_tmp_path }}/sanoid_*_all.deb"
+    deb: "{{ sanoid_tmp_path }}/sanoid_{{ sanoid_version | regex_replace('v') }}_all.deb"
 
 
