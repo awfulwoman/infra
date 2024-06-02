@@ -28,7 +28,7 @@
     dest: "{{ sanoid_tmp_path }}/source"
     version: "{{ sanoid_version }}"
 
-- name: Copy Debian dir
+- name: Link Debian dir
   ansible.builtin.file:
     src: "{{ sanoid_tmp_path }}/source/packages/debian"
     dest: "{{ sanoid_tmp_path }}/source/debian"
