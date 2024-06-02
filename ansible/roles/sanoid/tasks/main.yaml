@@ -35,7 +35,7 @@
 - name: Create a symbolic link
   ansible.builtin.file:
     src: "{{ sanoid_tmp_path }}/source/packages/debian"
-    dest: "{{ sanoid_tmp_path }}/source/"
+    dest: "{{ sanoid_tmp_path }}/build"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     state: link
@@ -43,7 +43,7 @@
 - name: Build package using dpkg-buildpackage
   ansible.builtin.command:
     cmd: dpkg-buildpackage -uc -us
-    chdir: "{{ sanoid_tmp_path }}/source"
+    chdir: "{{ sanoid_tmp_path }}/build"
 
 - name: Install Sanoid deb file
   become: true
