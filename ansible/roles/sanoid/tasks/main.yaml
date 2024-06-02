@@ -44,13 +44,11 @@
     group: "{{ ansible_user }}"
 
 - name: Create a symbolic link
-  ansible.builtin.file:
+  ansible.builtin.copy:
     src: "{{ sanoid_tmp_path }}/source/packages/debian/{{ item }}"
-    dest: "{{ sanoid_tmp_path }}/source/debian/{{ item }}"
+    dest: "{{ sanoid_tmp_path }}/source/{{ item }}"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    state: link
-    force: true
   loop: "{{ dir_out.stdout_lines }}"
 
 - name: Build package using dpkg-buildpackage
