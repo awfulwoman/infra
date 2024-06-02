@@ -31,19 +31,7 @@
     single_branch: true
     version: "{{ sanoid_version }}"
 
-- name: list
-  command: "ls {{ sanoid_tmp_path }}/source/packages/debian"
-  register: dir_out
-
-- name: Create paths
-  become: true
-  ansible.builtin.file:
-    state: directory
-    path: "{{ sanoid_tmp_path }}/source/debian"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-
-- name: Create a symbolic link
+- name: Dopy
   ansible.builtin.copy:
     src: "{{ sanoid_tmp_path }}/source/packages/debian/"
     dest: "{{ sanoid_tmp_path }}/source"
