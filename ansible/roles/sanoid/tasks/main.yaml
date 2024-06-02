@@ -43,7 +43,7 @@
 - name: Create a symbolic link
   ansible.builtin.file:
     src: "{{ sanoid_tmp_path }}/source/packages/debian/{{ item }}"
-    dest: "{{ sanoid_tmp_path }}/source/{{ item }}"
+    dest: "{{ sanoid_tmp_path }}/source/debian/{{ item }}"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     state: link
