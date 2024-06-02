@@ -45,11 +45,10 @@
 
 - name: Create a symbolic link
   ansible.builtin.copy:
-    src: "{{ sanoid_tmp_path }}/source/packages/debian/{{ item }}"
-    dest: "{{ sanoid_tmp_path }}/source/{{ item }}"
+    src: "{{ sanoid_tmp_path }}/source/packages/debian/"
+    dest: "{{ sanoid_tmp_path }}/source"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-  loop: "{{ dir_out.stdout_lines }}"
 
 - name: Build package using dpkg-buildpackage
   ansible.builtin.command:
@@ -60,5 +59,3 @@
   become: true
   ansible.builtin.apt:
     deb: "{{ sanoid_tmp_path }}/sanoid_{{ sanoid_version | regex_replace('v') }}_all.deb"
-
-
