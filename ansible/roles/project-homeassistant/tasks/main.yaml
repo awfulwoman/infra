@@ -14,7 +14,7 @@
     group: "{{ ansible_user }}"
 
 - name: Create directories
-  file:
+  ansible.builtin.file:
     path: "{{ project_config }}/{{ dir_item }}"
     state: directory
   loop_control:
