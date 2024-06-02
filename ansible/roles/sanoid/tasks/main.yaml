@@ -30,7 +30,7 @@
     repo: 'https://github.com/jimsalterjrs/sanoid.git'
     dest: "{{ sanoid_tmp_path }}/source"
     single_branch: true
-    version: v2.2.0
+    version: "{{ sanoid_version }}"
 
 - name: Create a symbolic link
   ansible.builtin.file:
