@@ -3,11 +3,11 @@
   hosts: host-homeautomation-new
   roles:
     - role: ubuntu
+    - role: sanoid
     - role: docker-install
     - role: zfs-core-new
     - role: ansible-install
     - role: ansible-pull
-    - role: sanoid
     - role: zfs-backup-client
     - role: beep
     - role: shoutrrr
