@@ -18,20 +18,17 @@
   become: true
   ansible.builtin.file:
     state: directory
-    path: "{{ item }}"
+    path: "{{ sanoid_tmp_path }}"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-  loop: 
-    - "{{ sanoid_tmp_path }}"
 
 - name: Clone Sanoid repo
   ansible.builtin.git:
     repo: 'https://github.com/jimsalterjrs/sanoid.git'
     dest: "{{ sanoid_tmp_path }}/source"
-    single_branch: true
     version: "{{ sanoid_version }}"
 
-- name: Copy debian
+- name: Copy Debian dir
   ansible.builtin.copy:
     src: "{{ sanoid_tmp_path }}/source/packages/debian"
     dest: "{{ sanoid_tmp_path }}/source"
