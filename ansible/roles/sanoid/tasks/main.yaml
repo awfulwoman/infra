@@ -23,7 +23,7 @@
     group: "{{ ansible_user }}"
   loop: 
     - "{{ sanoid_tmp_path }}"
-    - "{{ sanoid_tmp_path }}/source"
+
     - "{{ sanoid_tmp_path }}/source/debian"
 
 - name: Clone Sanoid repo
@@ -37,9 +37,13 @@
   command: "ls {{ sanoid_tmp_path }}/source/packages/debian"
   register: dir_out
 
-- name: debug
-  debug: 
-    var: dir_out.stdout_lines
+- name: Create paths
+  become: true
+  ansible.builtin.file:
+    state: directory
+    path: "{{ sanoid_tmp_path }}/source/debian"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
 
 - name: Create a symbolic link
   ansible.builtin.file:
@@ -60,3 +64,5 @@
   become: true
   ansible.builtin.apt:
     deb: "{{ sanoid_tmp_path }}/sanoid_*_all.deb"
+
+
