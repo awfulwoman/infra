@@ -38,8 +38,7 @@
 
 - name: debug
   debug: 
-    var: item
-    with_items: dir_out.stdout_lines
+    var: dir_out.stdout_lines
 
 - name: Create a symbolic link
   ansible.builtin.file:
