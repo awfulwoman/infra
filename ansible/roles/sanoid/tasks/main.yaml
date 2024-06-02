@@ -1,6 +1,7 @@
 # https://github.com/jimsalterjrs/sanoid/blob/master/INSTALL.md#debianubuntu
 
 - name: Ensure dependencies are installed
+  become: true
   ansible.builtin.apt:
     name:
       - debhelper 
@@ -14,9 +15,12 @@
       - xz-utils
 
 - name: Create paths
+  become: true
   ansible.builtin.file:
     state: directory
     path: "{{ item }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
   loop: 
     - "{{ sanoid_tmp_path }}"
     - "{{ sanoid_tmp_path }}/source"
