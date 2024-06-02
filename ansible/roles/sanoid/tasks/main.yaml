@@ -32,9 +32,18 @@
     single_branch: true
     version: "{{ sanoid_version }}"
 
+- name: list
+  command: "ls {{ sanoid_tmp_path }}/source/packages/debian"
+  register: dir_out
+
+- name: debug
+  debug: 
+    var: item
+    with_items: dir_out.stdout_lines
+
 - name: Create a symbolic link
   ansible.builtin.file:
-    src: "{{ sanoid_tmp_path }}/source/packages/debian/"
+    src: "{{ sanoid_tmp_path }}/source/packages/debian"
     dest: "{{ sanoid_tmp_path }}/source"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
