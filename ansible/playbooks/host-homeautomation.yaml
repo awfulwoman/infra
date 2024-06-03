@@ -53,6 +53,16 @@
     - role: ironicbadger.figurine
       become: true
 
+  tasks:
+    - name: "Allow the {{ ansible_user }} user to sudo rsync with no password"
+      become: true
+      community.general.sudoers:
+        name: allow-sudo-rsync-no-password
+        state: present
+        user: "{{ ansible_user }}"
+        nopassword: true
+        commands: /usr/bin/rsync
+      
   handlers:
     - name: Reboot host
       become: true
