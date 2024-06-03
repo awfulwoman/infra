@@ -1,3 +1,0 @@
-container_name: nagios
-container_user_id: 1000
-container_user: ubuntu

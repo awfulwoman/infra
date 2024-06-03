@@ -1,3 +1,0 @@
-# container-concourse
-
-CI/CD.

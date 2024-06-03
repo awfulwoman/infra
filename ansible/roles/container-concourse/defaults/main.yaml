@@ -1,3 +1,0 @@
-container_name: concourse
-container_image: CONTAINERIMAGE
-app_name: concourse

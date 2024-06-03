@@ -1,3 +1,0 @@
-container_name: copyparty
-container_image: copyparty/ac
-copyparty_filepath: "{{ shared_media_path }}"

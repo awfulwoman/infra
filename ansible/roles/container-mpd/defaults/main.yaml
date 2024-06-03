@@ -1,4 +1,0 @@
-container_name: mpd
-container_image: tobi312/rpi-mpd:debian
-music_path: "{{ shared_media_path }}/music"
-playlist_path: "{{ shared_media_path }}/music-playlists"

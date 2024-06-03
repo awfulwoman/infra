@@ -1,2 +1,0 @@
-container_name: podgrab
-container_image: akhilrex/podgrab:latest

@@ -1,3 +1,0 @@
-container_name: smtp
-container_image: ixdotai/smtp:latest
-
