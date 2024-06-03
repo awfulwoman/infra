@@ -3,7 +3,7 @@
   hosts: host-homeautomation-new
   roles:
     - role: ubuntu
-    - role: sanoid
+    # - role: sanoid
     - role: docker-install
     - role: zfs-core-new
     - role: ansible-install
