@@ -24,4 +24,4 @@
   become: true
   ansible.builtin.copy:
     src: mosquitto.conf
-    dest: "{{ project_config }}/config/mosquitto.conf"
+    dest: "{{ project_config }}/mosquitto.conf"
