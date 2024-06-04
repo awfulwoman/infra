@@ -1,6 +1,6 @@
 ---
 - name: Home Automation Server NEW
-  hosts: host-homeautomation-new
+  hosts: host-homeautomation
   roles:
     - role: ubuntu
     # - role: sanoid
