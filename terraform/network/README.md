@@ -12,10 +12,10 @@ export TF_VAR_domain_name=WHATEVER
 
 Log in to Terraform Cloud if you have not done so.
 ```
-terraform init
+terraform login
 ```
 
-Initialise Terraform and downlaod dependencies.
+Initialise Terraform and download dependencies.
 ```
 terraform init
 ```
