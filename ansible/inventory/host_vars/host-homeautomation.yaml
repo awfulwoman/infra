@@ -1,12 +1,6 @@
 ansible_host: "192.168.1.130"
 ansible_user: "{{ vault_server_username }}"
 
-# --- NETWORK -------------
-tailscale_address: "100.66.127.130"
-
-# Whether to initialise Zigbee2MQTT and the MQTT broker
-use_zigbee_hardware: true
-
 # --- ZFS -------------
 
 # ZFS pools

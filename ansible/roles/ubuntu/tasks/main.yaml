@@ -6,6 +6,18 @@
     key: https://github.com/whalecoiner.keys
     state: present
 
+- name: Change hostname
+  become: true
+  ansible.builtin.hostname:
+    name: "{{ inventory_hostname }}"
+
+- name: Replace 127.0.1.1 on Debian systems
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/hosts
+    regexp: '^127\.0\.1\.1'
+    line: "127.0.1.1 {{ inventory_hostname }}"
+
 - name: Ensure timezone is for Berlin
   become: true
   community.general.timezone:
