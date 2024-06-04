@@ -11,9 +11,6 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.mosquitto.rule=Host(`mqtt.{{ domain_name }}`)"
-      - "homepage.group=Home Automation"
-      - "homepage.name=Mosquitto"
-      - "homepage.description=MQTT Broker"
     volumes:
       - "{{ project_config }}/mosquitto.conf:/mosquitto/config/mosquitto.conf"
       - "{{ project_config }}/data:/mosquitto/data"
