@@ -1,4 +1,4 @@
-ansible_host: host-homeautomation.i.affordablepotatoes.com
+ansible_host: 192.168.1.103
 ansible_user: ubuntu
 
 # --- NETWORK -------------

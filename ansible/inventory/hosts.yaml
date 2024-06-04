@@ -6,7 +6,7 @@ all:
     # vm-*           A virtual machine used to perform tasks. Has an OS that can be managed via SSH.
     # workstation-*  A machine used directly by a person. Has an OS that can be managed via SSH.
     host-homeautomation-old:                  # Home Automation - Home Assistant, Zigbee, MQTT, etc
-    host-homeautomation:              # Home Automation - new apartment
+    host-homeautomation-new:              # Home Automation - new apartment
     host-backups:                         # Backups
     host-storage:                         # NAS
     host-pihole:                          # DHCP + DNS
