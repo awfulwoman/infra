@@ -7,6 +7,7 @@ all:
     # workstation-*  A machine used directly by a person. Has an OS that can be managed via SSH.
     host-homeautomation:                  # Home Automation - Home Assistant, Zigbee, MQTT, etc
     host-homeautomation-new:              # Home Automation - new apartment
+    host-mqtt:
     host-backups:                         # Backups
     host-storage:                         # NAS
     host-pihole:                          # DHCP + DNS
@@ -26,6 +27,7 @@ all:
         host-backups:
         host-storage:
         host-pihole:
+        host-mqtt:
 
     # Group: Home Automation
     homeautomation:
@@ -40,6 +42,7 @@ all:
         host-backups:
         host-homeautomation:
         host-homeautomation-new:
+        host-mqtt:
 
     # ZFS Backup Server
     zfs-backup-server:
@@ -51,6 +54,7 @@ all:
       hosts:
         host-storage:
         host-homeautomation:
+        host-mqtt:
         # host-homeautomation-new:
 
     # Autorestic source

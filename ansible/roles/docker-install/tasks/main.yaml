@@ -1,12 +1,12 @@
 - name: Add repo using key from URL
   become: true
   ansible.builtin.deb822_repository:
-    name: example
+    name: docker
     types: deb
     uris: https://download.docker.com/linux/ubuntu
-    suites: '{{ ansible_distribution_release }}'
+    suites: "{{ ansible_distribution_release }}"
     components: stable
-    architectures: amd64
+    architectures: "{{ 'amd64' if ansible_architecture == 'x86_64' else 'arm64' if ansible_architecture == 'aarch64' else ansible_architecture }}"
     signed_by: https://download.docker.com/linux/ubuntu/gpg
 
 - name: Install Docker from Docker repository
@@ -21,7 +21,7 @@
     update_cache: true
     state: present
 
-- name: Add to docker group - "{{ ansible_user }}"
+- name: "Add {{ ansible_user }} user to docker group"
   become: true
   ansible.builtin.user:
     user: "{{ ansible_user }}"
