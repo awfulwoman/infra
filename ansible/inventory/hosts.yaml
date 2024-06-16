@@ -6,9 +6,9 @@ all:
     # vm-*           A virtual machine used to perform tasks. Has an OS that can be managed via SSH.
     # workstation-*  A machine used directly by a person. Has an OS that can be managed via SSH.
     host-homeautomation:                  # Home Automation - Home Assistant, Zigbee, MQTT, etc
-    host-homeautomation-new:              # Home Automation - new apartment
-    host-mqtt:
-    host-radio:
+    host-homeassistant:                   # Home Assistant
+    host-mqtt:                            # MQTT Broker
+    host-radio:                           # Radio Systems
     host-backups:                         # Backups
     host-storage:                         # NAS
     host-pihole:                          # DHCP + DNS
@@ -24,7 +24,7 @@ all:
     ansiblepull:
       hosts:
         host-homeautomation:
-        host-homeautomation-new:
+        host-homeassistant:
         host-backups:
         host-storage:
         host-pihole:
@@ -35,7 +35,7 @@ all:
     homeautomation:
       hosts:
         host-homeautomation:
-        host-homeautomation-new:
+        # host-homeassistant:
 
     # Hosts that use ZFS
     zfs:
@@ -43,7 +43,7 @@ all:
         host-storage:
         host-backups:
         host-homeautomation:
-        host-homeautomation-new:
+        host-homeassistant:
         host-mqtt:
         host-radio:
 
@@ -59,7 +59,7 @@ all:
         host-homeautomation:
         host-mqtt:
         host-radio:
-        # host-homeautomation-new:
+        # host-homeassistant:
 
     # Autorestic source
     autorestic:

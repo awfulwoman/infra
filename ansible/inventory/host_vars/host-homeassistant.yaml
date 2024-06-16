@@ -32,9 +32,6 @@ syncthing_data_path: "/{{ syncthing_data_path_zfs_id }}"
 
 projects:
   - homeassistant
-  - zigbee
-  - mqtt
-  - reverseproxy
 
 traefik_providers:
   - homeassistant
