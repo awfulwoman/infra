@@ -1,6 +1,6 @@
 ---
-- name: Home Automation Server NEW
-  hosts: host-homeautomation-new
+- name: Home Radio Systems
+  hosts: host-radio
   roles:
     - role: ubuntu
     - role: sanoid
@@ -9,11 +9,6 @@
     - role: ansible-install
     - role: ansible-pull
     - role: zfs-backup-client
-    - role: beep
-    - role: shoutrrr
-      become: true
-    - role: ironicbadger.figurine
-      become: true
     - role: projects
 
   handlers:

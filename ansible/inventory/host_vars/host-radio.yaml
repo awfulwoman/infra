@@ -1,0 +1,32 @@
+
+ansible_host: host-radio
+ansible_user: "{{ vault_server_username }}"
+
+
+# --- ZFS -------------
+
+# ZFS pools
+zfs_pools:
+  - fastpool
+
+# Named ZFS datasets
+container_config_zfs_id: fastpool/containers
+container_projects_zfs_id: fastpool/projects
+
+# Datasets present
+zfs_datasets:
+  - "{{ container_projects_zfs_id }}"
+  - "{{ container_config_zfs_id }}"
+
+# Datasets to be backed-up
+# These datasets will be pulled to a backup server
+zfs_backup_datasets:
+  - "{{ container_config_zfs_id }}"
+  - "{{ container_projects_zfs_id }}"
+
+# Define useful paths from ZFS datasets
+container_config_dir: "/{{ container_config_zfs_id }}"
+projects_config_dir: "/{{ container_projects_zfs_id }}"
+
+projects:
+  - zigbee

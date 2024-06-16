@@ -8,6 +8,7 @@ all:
     host-homeautomation:                  # Home Automation - Home Assistant, Zigbee, MQTT, etc
     host-homeautomation-new:              # Home Automation - new apartment
     host-mqtt:
+    host-radio:
     host-backups:                         # Backups
     host-storage:                         # NAS
     host-pihole:                          # DHCP + DNS
@@ -28,6 +29,7 @@ all:
         host-storage:
         host-pihole:
         host-mqtt:
+        host-radio:
 
     # Group: Home Automation
     homeautomation:
@@ -43,6 +45,7 @@ all:
         host-homeautomation:
         host-homeautomation-new:
         host-mqtt:
+        host-radio:
 
     # ZFS Backup Server
     zfs-backup-server:
@@ -55,6 +58,7 @@ all:
         host-storage:
         host-homeautomation:
         host-mqtt:
+        host-radio:
         # host-homeautomation-new:
 
     # Autorestic source

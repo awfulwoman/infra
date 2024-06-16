@@ -1,47 +1,5 @@
-# https://github.com/jimsalterjrs/sanoid/blob/master/INSTALL.md#debianubuntu
-
 - name: Ensure dependencies are installed
   become: true
   ansible.builtin.apt:
     name:
-      - debhelper 
-      - libcapture-tiny-perl 
-      - libconfig-inifiles-perl 
-      - pv 
-      - lzop 
-      - mbuffer 
-      - build-essential 
-      - git
-      - xz-utils
-
-- name: Create paths
-  become: true
-  ansible.builtin.file:
-    state: directory
-    path: "{{ sanoid_tmp_path }}"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-
-- name: Clone Sanoid repo
-  ansible.builtin.git:
-    repo: 'https://github.com/jimsalterjrs/sanoid.git'
-    dest: "{{ sanoid_tmp_path }}/source"
-    version: "{{ sanoid_version }}"
-
-- name: Link Debian dir
-  ansible.builtin.file:
-    src: "{{ sanoid_tmp_path }}/source/packages/debian"
-    dest: "{{ sanoid_tmp_path }}/source/debian"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    state: link
-
-- name: Build package using dpkg-buildpackage
-  ansible.builtin.command:
-    cmd: dpkg-buildpackage -uc -us
-    chdir: "{{ sanoid_tmp_path }}/source"
-
-- name: Install Sanoid deb file
-  become: true
-  ansible.builtin.apt:
-    deb: "{{ sanoid_tmp_path }}/sanoid_{{ sanoid_version | regex_replace('v') }}_all.deb"
+      - sanoid
