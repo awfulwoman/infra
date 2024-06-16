@@ -3,7 +3,7 @@
   hosts: host-mqtt
   roles:
     - role: ubuntu
-    - role: sanoid
+    - role: sanoid-install
     - role: docker-install
     - role: zfs-core-new
     - role: ansible-install
