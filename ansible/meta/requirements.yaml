@@ -18,6 +18,7 @@ roles:
   - name: dmotte.disable_ipv6
   - name: nginxinc.nginx
   - name: ironicbadger.figurine
+  - name: exterrestris.sanoid
 
 collections:
   - name: community.docker
