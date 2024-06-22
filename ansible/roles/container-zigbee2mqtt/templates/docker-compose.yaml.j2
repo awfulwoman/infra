@@ -2,7 +2,7 @@ services:
   zigbee2mqtt:
     container_name: "{{ container_name }}"
     ports:
-      - "{{ container_port }}:9091"
+      - "0.0.0.0:{{ container_port }}:9091"
     privileged: true
     user: "{{ container_user_id }}:{{ container_user_id }}"
     group_add:

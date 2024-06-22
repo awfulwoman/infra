@@ -2,7 +2,7 @@ services:
   esphome:
     container_name: "{{ container_name }}"
     ports:
-      - "6052:6052"
+      - "0.0.0.0:6052:6052"
       # - "6123:6123"
     privileged: true
     environment:

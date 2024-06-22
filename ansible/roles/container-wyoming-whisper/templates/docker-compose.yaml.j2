@@ -2,7 +2,7 @@ services:
   wyomingwhisper:
     container_name: "{{ container_name }}"
     ports:
-      - 10300:10300
+      - 0.0.0.0:10300:10300
     environment:
       - "TZ=Europe/Berlin"
     image: "{{ container_image }}"
