@@ -2,10 +2,10 @@ services:
   "{{ container_name }}":
     container_name: "{{ container_name }}"
     ports:
-      - 8384:8384 # Web UI
-      - 22000:22000/tcp # TCP file transfers
-      - 22000:22000/udp # QUIC file transfers
-      - 21027:21027/udp # Receive local discovery broadcasts
+      - 0.0.0.0:8384:8384 # Web UI
+      - 0.0.0.0:22000:22000/tcp # TCP file transfers
+      - 0.0.0.0:22000:22000/udp # QUIC file transfers
+      - 0.0.0.0:21027:21027/udp # Receive local discovery broadcasts
     environment:
       - "TZ=Europe/Berlin"
     image: "{{ container_image }}"
