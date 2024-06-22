@@ -14,7 +14,7 @@
       become: true
     - role: ironicbadger.figurine
       become: true
-    - role: projects
+    - role: compositions
 
   handlers:
     - name: Reboot host

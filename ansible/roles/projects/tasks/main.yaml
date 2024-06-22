@@ -1,48 +1,48 @@
-- name: Ensure a ZFS dataset for each project is present 
+- name: Ensure a ZFS dataset for each composition is present 
   become: true
   community.general.zfs:
-    name: "{{ container_projects_zfs_id }}/{{ item }}"
+    name: "{{ container_compositions_zfs_id }}/{{ item }}"
     state: present
     extra_zfs_properties:
       acltype: posix
       xattr: sa
-  loop: "{{ projects }}"
-  when: projects
+  loop: "{{ compositions }}"
+  when: compositions
 
 - name: Ensure datasets are owned by user
   become: true
   ansible.builtin.file:
-    path: "/{{ container_projects_zfs_id }}/{{ item }}"
+    path: "/{{ container_compositions_zfs_id }}/{{ item }}"
     state: directory
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: 0774
-  loop: "{{ projects }}"
-  when: projects
+  loop: "{{ compositions }}"
+  when: compositions
 
-- name: Ensure project config dirs exist
+- name: Ensure composition config dirs exist
   ansible.builtin.file:
-    path: "{{ projects_config_dir }}/{{ item }}/config"
+    path: "{{ compositions_config_dir }}/{{ item }}/config"
     state: directory
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: 0774
-  loop: "{{ projects }}"
-  when: projects
+  loop: "{{ compositions }}"
+  when: compositions
 
-- name: Ensure project roles are run
+- name: Ensure composition roles are run
   ansible.builtin.include_role:
     name: "project-{{ item }}"
   vars:
     project_name: "{{ item }}"
-    project_root: "{{ projects_config_dir }}/{{ item }}"
-    project_config: "{{ projects_config_dir }}/{{ item }}/config"
-  loop: "{{ projects }}"
-  when: projects
+    project_root: "{{ compositions_config_dir }}/{{ item }}"
+    project_config: "{{ compositions_config_dir }}/{{ item }}/config"
+  loop: "{{ compositions }}"
+  when: compositions
 
-- name: Ensure all containers are started
+- name: Ensure all composition containers are started
   community.docker.docker_compose_v2: 
-    project_src: "{{ projects_config_dir }}/{{ item }}"
+    project_src: "{{ compositions_config_dir }}/{{ item }}"
     state: present
-  loop: "{{ projects }}"
-  when: projects
+  loop: "{{ compositions }}"
+  when: compositions

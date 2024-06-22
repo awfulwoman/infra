@@ -9,7 +9,7 @@
     - role: ansible-install
     - role: ansible-pull
     - role: zfs-backup-client
-    - role: projects
+    - role: compositions
 
   handlers:
     - name: Reboot host

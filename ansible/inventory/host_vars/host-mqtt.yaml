@@ -11,22 +11,22 @@ zfs_pools:
 
 # Named ZFS datasets
 container_config_zfs_id: fastpool/containers
-container_projects_zfs_id: fastpool/projects
+container_compositions_zfs_id: fastpool/compositions
 
 # Datasets present
 zfs_datasets:
-  - "{{ container_projects_zfs_id }}"
+  - "{{ container_compositions_zfs_id }}"
   - "{{ container_config_zfs_id }}"
 
 # Datasets to be backed-up
 # These datasets will be pulled to a backup server
 zfs_backup_datasets:
   - "{{ container_config_zfs_id }}"
-  - "{{ container_projects_zfs_id }}"
+  - "{{ container_compositions_zfs_id }}"
 
 # Define useful paths from ZFS datasets
 container_config_dir: "/{{ container_config_zfs_id }}"
-projects_config_dir: "/{{ container_projects_zfs_id }}"
+compositions_config_dir: "/{{ container_compositions_zfs_id }}"
 
-projects:
+compositions:
   - mqtt
