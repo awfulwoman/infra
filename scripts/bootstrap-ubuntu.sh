@@ -2,6 +2,7 @@
 BOOTSTRAP_USER_ID=$(id -un)
 BOOTSTRAP_GROUP_ID=$(id -gn)
 ANSIBLEPULL_REPO_URL=https://github.com/whalecoiner/home.git
+# ANSIBLE_VAULT_PASSWORD=""
 
 read -sp "Playbook: " ANSIBLEPULL_PLAYBOOK
 
@@ -54,26 +55,26 @@ if [[ $? == 0 ]]; then
     git clone $ANSIBLEPULL_REPO_URL $HOME_REPO_DIR
 else
 # Update repo
-    echo "Update repo."
+    echo "Updating repo."
     git -C "$HOME_REPO_DIR" pull
 fi
 
-
-
-# echo " "
-# echo "ENSURE ANSIBLE PASSWORD FILE EXISTS"
-# echo "************************************"
-# if [ ! -f "$ANSIBLE_PATH/.vaultpassword" ]; then
-# 	if [[ -z "${ANSIBLE_VAULT_PASSWORD}" ]]; then
-#   	read -sp "Vault password: " ANSIBLE_VAULT_PASSWORD
-# 	fi
-#   if [[ $(< $ANSIBLE_PATH/.vaultpassword) != "$ANSIBLE_VAULT_PASSWORD" ]]; then
-#     echo $ANSIBLE_VAULT_PASSWORD > $ANSIBLE_PATH/.vaultpassword
-#   fi
-# 	echo "File created."
-# else
-# 	echo "File exists."
-# fi
+# Ensure ansible vault password is present
+echo " "
+echo "ENSURE ANSIBLE PASSWORD FILE EXISTS"
+echo "************************************"
+if [ ! -f "$ANSIBLE_PATH/.vaultpassword" ]; then
+	if [[ -z "${ANSIBLE_VAULT_PASSWORD}" ]]; then
+  	    read -sp "Vault password: " ANSIBLE_VAULT_PASSWORD
+        echo "Password file created."
+	fi
+  if [[ $(< $ANSIBLE_PATH/.vaultpassword) != "$ANSIBLE_VAULT_PASSWORD" ]]; then
+    echo $ANSIBLE_VAULT_PASSWORD > $ANSIBLE_PATH/.vaultpassword
+    echo "Password file updated."
+  fi
+else
+	echo "Password file already exists."
+fi
 
 cd $HOME_REPO_DIR
 
