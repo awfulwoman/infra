@@ -32,11 +32,11 @@
 
 - name: Ensure composition roles are run
   ansible.builtin.include_role:
-    name: "project-{{ item }}"
+    name: "composition-{{ item }}"
   vars:
-    project_name: "{{ item }}"
-    project_root: "{{ compositions_config_dir }}/{{ item }}"
-    project_config: "{{ compositions_config_dir }}/{{ item }}/config"
+    composition_name: "{{ item }}"
+    composition_root: "{{ compositions_config_dir }}/{{ item }}"
+    composition_config: "{{ compositions_config_dir }}/{{ item }}/config"
   loop: "{{ compositions }}"
   when: compositions
 
