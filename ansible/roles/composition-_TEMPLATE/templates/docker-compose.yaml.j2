@@ -18,5 +18,5 @@ services:
       # - "homepage.href=https://SUBDOMAIN.{{ domain_name }}"
       # - "homepage.description=whatever"
     volumes:
-      - "{{ project_config }}:/INSIDEPATH"
+      - "{{ composition_config }}:/INSIDEPATH"
       - /etc/localtime:/etc/localtime:ro

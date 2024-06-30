@@ -24,7 +24,7 @@
 
 # - name: Create directories
 #   file:
-#     path: "{{ project_config }}/{{ dir_item }}"
+#     path: "{{ composition_config }}/{{ dir_item }}"
 #     state: directory
 #   loop_control:
 #     loop_var: dir_item
@@ -37,4 +37,4 @@
 #   become: true
 #   ansible.builtin.copy:
 #     src: filename.txt
-#     dest: "{{ project_config }}/filename.txt
+#     dest: "{{ composition_config }}/filename.txt

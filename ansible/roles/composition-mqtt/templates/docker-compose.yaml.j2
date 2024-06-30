@@ -12,7 +12,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.mosquitto.rule=Host(`mqtt.{{ domain_name }}`)"
     volumes:
-      - "{{ project_config }}/mosquitto.conf:/mosquitto/config/mosquitto.conf"
-      - "{{ project_config }}/data:/mosquitto/data"
-      - "{{ project_config }}/log:/mosquitto/log"
+      - "{{ composition_config }}/mosquitto.conf:/mosquitto/config/mosquitto.conf"
+      - "{{ composition_config }}/data:/mosquitto/data"
+      - "{{ composition_config }}/log:/mosquitto/log"
       - /etc/localtime:/etc/localtime:ro

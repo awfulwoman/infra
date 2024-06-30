@@ -20,6 +20,6 @@ services:
       - "traefik.http.routers.zigbee2mqtt.tls=true"
       - "traefik.http.routers.zigbee2mqtt.tls.certresolver=letsencrypt"
     volumes:
-      - "{{ project_config }}:/app/data"
+      - "{{ composition_config }}:/app/data"
       - "/run/udev:/run/udev:ro"
       - /etc/localtime:/etc/localtime:ro

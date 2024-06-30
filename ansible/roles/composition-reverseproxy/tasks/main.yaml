@@ -25,18 +25,18 @@
 - name: "Template out config file"
   ansible.builtin.template:
     src: traefik-config.yaml.j2
-    dest: "{{ project_config }}/traefik.yaml"
+    dest: "{{ composition_config }}/traefik.yaml"
 
 - name: "Create providers dir"
   ansible.builtin.file:
-    dest: "{{ project_config }}/providers"
+    dest: "{{ composition_config }}/providers"
     state: directory
   when: traefik_providers is defined
 
 - name: "Template out providers file"
   ansible.builtin.template:
     src: "templates/providers/{{ traefik_provider }}.yaml"
-    dest: "{{ project_config }}/providers/{{ traefik_provider }}.yaml"
+    dest: "{{ composition_config }}/providers/{{ traefik_provider }}.yaml"
   loop: "{{ traefik_providers }}"
   loop_control:
     loop_var: traefik_provider
@@ -45,7 +45,7 @@
 - name: "Create letsencrypt dir"
   become: true
   ansible.builtin.file:
-    dest: "{{ project_config }}/letsencrypt"
+    dest: "{{ composition_config }}/letsencrypt"
     state: directory
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
@@ -55,7 +55,7 @@
   become: true
   ansible.builtin.copy:
     content: ""
-    dest: "{{ project_config }}/letsencrypt/acme.json"
+    dest: "{{ composition_config }}/letsencrypt/acme.json"
     force: false
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"

@@ -15,7 +15,7 @@
 
 - name: Create directories
   ansible.builtin.file:
-    path: "{{ project_config }}/{{ dir_item }}"
+    path: "{{ composition_config }}/{{ dir_item }}"
     state: directory
   loop_control:
     loop_var: dir_item

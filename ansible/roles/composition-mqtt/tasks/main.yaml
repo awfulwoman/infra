@@ -11,7 +11,7 @@
 
 - name: Create backup directories
   ansible.builtin.file:
-    path: "{{ project_config }}/{{ backup_item }}"
+    path: "{{ composition_config }}/{{ backup_item }}"
     state: directory
   loop_control:
     loop_var: backup_item
@@ -24,4 +24,4 @@
   become: true
   ansible.builtin.copy:
     src: mosquitto.conf
-    dest: "{{ project_config }}/mosquitto.conf"
+    dest: "{{ composition_config }}/mosquitto.conf"

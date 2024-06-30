@@ -18,6 +18,6 @@ services:
       - "homepage.href=https://homeassistant.{{ domain_name }}"
       - "homepage.description=The brains of the home"
     volumes:
-      - "{{ project_config }}:/config"
-      - "{{ project_config }}/media:/media"
+      - "{{ composition_config }}:/config"
+      - "{{ composition_config }}/media:/media"
       - /etc/localtime:/etc/localtime:ro
