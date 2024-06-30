@@ -25,21 +25,13 @@ fi
 # Import keys
 ssh-import-id-gh whalecoiner
 
-# Install PIP
-sudo apt update
-
-which pip3
-if [[ $? != 0 ]] ; then
-    sudo apt install python3-pip -y
-fi
-
 # Install Ansible
 which ansible
 if [[ $? != 0 ]] ; then
-  echo " "
-  echo "INSTALL ANSIBLE"
-  echo "************************************"
-  sudo pip3 install ansible
+    sudo apt update
+    sudo apt install software-properties-common
+    sudo add-apt-repository --yes --update ppa:ansible/ansible
+    sudo apt install ansible
 fi
 
 # Ensure repo location exists
@@ -58,8 +50,8 @@ fi
 find "$HOME_REPO_DIR" -maxdepth 0 -empty -exec echo {} is empty. \;
 # Clone repo
 if [[ $? == 0 ]]; then
-    echo "No repo present in $HOME_REPO_DIR. Cloning."
-    git clone https://github.com/whalecoiner/home.git $HOME_REPO_DIR
+    echo "No repo present in $HOME_REPO_DIR. Cloning $ANSIBLEPULL_REPO_URL"
+    git clone $ANSIBLEPULL_REPO_URL $HOME_REPO_DIR
 else
 # Update repo
     echo "Update repo."
