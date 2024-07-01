@@ -6,6 +6,7 @@
 
 # Wifi hardware status
 - name: Disable wifi hardware
+  become: true
   ansible.builtin.lineinfile:
     dest: "{{ raspberry_pi_boot_config_location }}"
     line: 'dtoverlay=disable-wifi'
@@ -13,6 +14,7 @@
   when: raspberry_pi_disable_wifi is true
 
 - name: Enable wifi hardware
+  become: true
   ansible.builtin.lineinfile:
     dest: "{{ raspberry_pi_boot_config_location }}"
     line: 'dtoverlay=disable-wifi'
@@ -21,6 +23,7 @@
 
 # Bluetooth hardware status
 - name: Disable Bluetooth hardware
+  become: true
   ansible.builtin.lineinfile:
     dest: "{{ raspberry_pi_boot_config_location }}"
     line: 'dtoverlay=disable-bt'
@@ -28,6 +31,7 @@
   when: raspberry_pi_disable_bluetooth is true
 
 - name: Enable Bluetooth hardware
+  become: true
   ansible.builtin.lineinfile:
     dest: "{{ raspberry_pi_boot_config_location }}"
     line: 'dtoverlay=disable-bt'
