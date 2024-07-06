@@ -1,0 +1,13 @@
+[Unit]
+Description=Run zfs-backup-pull after wake from suspend or hibernate
+After=basic.target suspend.target hibernate.target
+
+[Service]
+User=root
+Type=oneshot
+Environment=DISPLAY=:0
+ExecStart={{ zfsbackup_script_path }}
+
+[Install]
+WantedBy=basic.target suspend.target hibernate.target
+
