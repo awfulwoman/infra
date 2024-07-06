@@ -185,4 +185,5 @@
     state: started
     name: pull-zfs-backups-after-wake
     enabled: true
+    no_block: true
   when: zfsbackup_run_after_wake
