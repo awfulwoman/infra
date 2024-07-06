@@ -4,7 +4,6 @@ After=suspend.target
 
 [Service]
 User=root
-Type=oneshot
 Environment=DISPLAY=:0
 ExecStart={{ zfsbackup_script_path }}
 
