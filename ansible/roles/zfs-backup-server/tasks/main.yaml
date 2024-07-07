@@ -176,5 +176,5 @@
     dest: /lib/systemd/system-sleep/execute-zfs-backup.sh
     owner: root
     group: root
-    mode: 0754
+    mode: 0774
   when: zfsbackup_run_after_wake
