@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# /lib/systemd/system-sleep/
+
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+
+case "$1" in
+    pre)
+            #code execution BEFORE sleeping/hibernating/suspending
+    ;;
+    post)
+            #code execution AFTER resuming
+    ;;
+esac
+
+exit 0
