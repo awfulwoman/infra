@@ -1,7 +1,5 @@
 #!/bin/sh
 
-# /lib/systemd/system-sleep/
-
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
 
 case "$1" in
@@ -10,6 +8,7 @@ case "$1" in
     ;;
     post)
             #code execution AFTER resuming
+            source {{ zfsbackup_script_path }}
     ;;
 esac
 
