@@ -1,13 +1,13 @@
 [Unit]
 Description="Run zfs-backup-pull after wake from suspend or hibernate"
-After=sleep.target hybrid-sleep.target 
+After=sleep.target hibernate.target suspend-then-hibernate.target hybrid-sleep.target 
 
 [Service]
-User=root
+# User=root
 Type=oneshot
 ExecStart=su -s /bin/bash -c "{{ zfsbackup_script_path }}" -g {{ ansible_user }} {{ ansible_user }} 
 TimeoutSec=0
 
 [Install]
-WantedBy=sleep.target hybrid-sleep.target 
+WantedBy=sleep.target hibernate.target suspend-then-hibernate.target hybrid-sleep.target 
 
