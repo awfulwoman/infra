@@ -5,7 +5,7 @@ After=suspend.target
 [Service]
 User=root
 Type=oneshot
-ExecStart=/opt/zfsbackup
+ExecStart={{ zfsbackup_script_path }}
 TimeoutSec=0
 
 [Install]
