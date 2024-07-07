@@ -5,6 +5,9 @@ After=sleep.target hibernate.target suspend-then-hibernate.target hybrid-sleep.t
 [Service]
 User={{ ansible_user }}
 Group={{ ansible_user }}
+{% for env_item in environment_config|dict2items %}
+Environment="{{ env_item.key }}={{ env_item.value }}"
+{% endfor %}
 Type=oneshot
 ExecStart={{ ansiblepull_workdir }}/{{ ansiblepull_script_name }} 
 TimeoutSec=0
