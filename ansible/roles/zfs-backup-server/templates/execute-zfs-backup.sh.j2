@@ -5,9 +5,11 @@ PATH=/sbin:/usr/sbin:/bin:/usr/bin
 case "$1" in
     pre)
             #code execution BEFORE sleeping/hibernating/suspending
+            wall "Going to sleep..."
     ;;
     post)
             #code execution AFTER resuming
+            wall "waking up!"
             su -s /bin/bash -c "{{ zfsbackup_script_path }}" -g {{ ansible_user }} {{ ansible_user }}
     ;;
 esac
