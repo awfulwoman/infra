@@ -5,7 +5,7 @@ After=sleep.target hybrid-sleep.target
 [Service]
 User=root
 Type=oneshot
-ExecStart="/opt/zfsbackup/pull-zfs-backups"
+ExecStart=su -s /bin/bash -c {{ zfsbackup_script_path }} -g {{ ansible_user }} {{ ansible_user }} 
 TimeoutSec=0
 
 [Install]

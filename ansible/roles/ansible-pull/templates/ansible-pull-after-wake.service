@@ -5,7 +5,7 @@ After=sleep.target hybrid-sleep.target
 [Service]
 Type=simple
 RemainAfterExit=yes
-ExecStart="{{ ansiblepull_workdir }}/{{ ansiblepull_script_name }}"
+ExecStart=su -s /bin/bash -c "{{ ansiblepull_workdir }}/{{ ansiblepull_script_name }}" -g {{ ansible_user }} {{ ansible_user }} 
 TimeoutSec=0
 
 [Install]
