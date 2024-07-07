@@ -114,7 +114,7 @@
     owner: root
     group: root
     mode: 0664
-  when: zfsbackup_run_after_wake
+  when: ansiblepull_run_after_wake
 
 - name: Make sure ansible-pull-after-wake.service service is running
   become: true
@@ -123,4 +123,4 @@
     name: ansible-pull-after-wake.service
     enabled: true
     no_block: true
-  when: zfsbackup_run_after_wake
+  when: ansiblepull_run_after_wake
