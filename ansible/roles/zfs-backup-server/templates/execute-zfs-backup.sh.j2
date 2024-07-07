@@ -8,7 +8,7 @@ case "$1" in
     ;;
     post)
             #code execution AFTER resuming
-            source {{ zfsbackup_script_path }}
+            su -s /bin/bash -c "{{ zfsbackup_script_path }}" -g {{ ansible_user }} {{ ansible_user }}
     ;;
 esac
 

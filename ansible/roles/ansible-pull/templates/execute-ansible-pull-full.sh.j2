@@ -8,7 +8,7 @@ case "$1" in
     ;;
     post)
             #code execution AFTER resuming
-            source {{ ansiblepull_workdir }}/{{ ansiblepull_script_name }}
+            su -s /bin/bash -c "{{ ansiblepull_workdir }}/{{ ansiblepull_script_name }}" -g {{ ansible_user }} {{ ansible_user }}
     ;;
 esac
 
