@@ -106,15 +106,15 @@
     dest: /etc/profile.d/custom-path-zfs-backup.sh
     content: 'PATH=$PATH:{{ zfsbackup_script_path | dirname }}'
 
-- name: Cron to run zfs-backup
-  # Runs at a specified time to catch reboots and previous backup failures
-  become: true
-  ansible.builtin.cron:
-    name: "backup.sh"
-    job: "{{ zfsbackup_script_path }}"
-    state: present
-    minute: "{{ zfsbackup_cron_minute }}"
-    hour: "{{ zfsbackup_cron_hour }}"
+# - name: Cron to run zfs-backup
+#   # Runs at a specified time to catch reboots and previous backup failures
+#   become: true
+#   ansible.builtin.cron:
+#     name: "backup.sh"
+#     job: "{{ zfsbackup_script_path }}"
+#     state: present
+#     minute: "{{ zfsbackup_cron_minute }}"
+#     hour: "{{ zfsbackup_cron_hour }}"
 
 - name: "Allow the {{ ansible_user }} user to sudo {{ zfsbackup_script_path }} with no password"
   become: true
