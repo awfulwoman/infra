@@ -1,0 +1,13 @@
+[Unit]
+Description=Run zfs-backup-pull after wake from suspend or hibernate
+After=hybrid-sleep.target 
+
+[Service]
+User=root
+Type=oneshot
+ExecStop=/opt/zfsbackup/pull-zfs-backups
+TimeoutSec=0
+
+[Install]
+WantedBy=hybrid-sleep.target 
+

@@ -105,12 +105,22 @@
   when: ansiblepull_install_pull_cron
 
 
-- name: Ensure wake script is installed
+
+- name: Create ansible-pull-after-wake.service
   become: true
   ansible.builtin.template:
-    src: execute-ansible-pull-full.sh.j2
-    dest: /lib/systemd/system-sleep/execute-ansible-pull-full.sh.j2
+    src: ansible-pull-after-wake.service
+    dest: /etc/systemd/system/ansible-pull-after-wake.service
     owner: root
     group: root
-    mode: 0755
-  when: ansiblepull_run_after_wake
+    mode: 0664
+  when: zfsbackup_run_after_wake
+
+- name: Make sure ansible-pull-after-wake.service service is running
+  become: true
+  ansible.builtin.systemd_service:
+    state: started
+    name: ansible-pull-after-wake.service
+    enabled: true
+    no_block: true
+  when: zfsbackup_run_after_wake

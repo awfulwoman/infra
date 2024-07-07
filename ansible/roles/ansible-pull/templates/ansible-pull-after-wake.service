@@ -1,0 +1,13 @@
+[Unit]
+Description="Run ansible-pull after wake from suspend or hibernate"
+After=hybrid-sleep.target 
+
+[Service]
+User=root
+Type=oneshot
+ExecStop="{{ ansiblepull_workdir }}/{{ ansiblepull_script_name }}"
+TimeoutSec=0
+
+[Install]
+WantedBy=hybrid-sleep.target 
+
