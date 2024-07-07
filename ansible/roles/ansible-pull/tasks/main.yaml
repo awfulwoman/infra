@@ -103,3 +103,14 @@
     minute: "{{ ansiblepull_cron_minute }}"
     hour: "{{ ansiblepull_cron_hour }}"
   when: ansiblepull_install_pull_cron
+
+
+- name: Ensure wake script is installed
+  become: true
+  ansible.builtin.template:
+    src: execute-ansible-pull-full.sh.j2
+    dest: /lib/systemd/system-sleep/execute-ansible-pull-full.sh.j2
+    owner: root
+    group: root
+    mode: 0755
+  when: ansiblepull_run_after_wake

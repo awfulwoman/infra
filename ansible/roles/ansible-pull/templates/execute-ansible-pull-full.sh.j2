@@ -1,0 +1,15 @@
+#!/bin/sh
+
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+
+case "$1" in
+    pre)
+            #code execution BEFORE sleeping/hibernating/suspending
+    ;;
+    post)
+            #code execution AFTER resuming
+            source {{ ansiblepull_workdir }}/{{ ansiblepull_script_name }}
+    ;;
+esac
+
+exit 0
