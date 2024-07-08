@@ -11,7 +11,7 @@ terraform {
   required_providers {
     digitalocean = {
       source = "digitalocean/digitalocean"
-      version = "2.34.1"
+      version = "~> 2.0"
     }
   }
 }
@@ -103,7 +103,7 @@ resource "digitalocean_record" "mqtt" {
   domain = digitalocean_domain.default.id
   type   = "A"
   name   = "mqtt"
-  value  = var.tailscale_ip_host_homeautomation
+  value  = var.tailscale_ip_host_mqtt
 }
 
 resource "digitalocean_record" "zigbee2mqtt" {
