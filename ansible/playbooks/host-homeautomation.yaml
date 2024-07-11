@@ -40,6 +40,7 @@
     - role: container-traefik
       traefik_providers: true
     - role: container-mosquitto
+    - role: container-watchtower
     - role: container-zigbee2mqtt
     - role: container-wyoming-whisper
     - role: container-wyoming-piper
