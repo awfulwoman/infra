@@ -93,6 +93,7 @@
       - tmux
       - pipx
       - uptimed
+      - timg
     state: present
     update_cache: true
 
