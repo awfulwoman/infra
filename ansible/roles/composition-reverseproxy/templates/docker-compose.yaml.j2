@@ -6,7 +6,7 @@ services:
     ports:
       - "80:80"
       - "443:443"
-    image: traefik:v3
+    image: traefik:v3.1
     restart: unless-stopped
     env_file: .environment_vars
     labels:
