@@ -31,6 +31,7 @@ compositions_config_dir: "/{{ container_compositions_zfs_id }}"
 syncthing_data_path: "/{{ syncthing_data_path_zfs_id }}"
 
 compositions:
+  - reverseproxy
   - homeassistant
 
 traefik_providers:
