@@ -4,7 +4,6 @@ services:
     ports:
       - "8083:8083"
     environment:
-      - "TZ=Europe/Berlin"
       - "OTR_HOST=mqtt.{{ domain_name }}"
     image: "{{ container_image }}"
     restart: unless-stopped
