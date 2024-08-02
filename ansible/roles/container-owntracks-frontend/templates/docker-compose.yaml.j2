@@ -1,0 +1,21 @@
+services:
+  "{{ container_name }}":
+    container_name: "{{ container_name }}"
+    ports:
+      - "8056:80"
+    environment:
+      - "SERVER_HOST=owntrack-recorder.{{ domain_name }}"
+      - "SEVER_PORT=8083"
+    image: "{{ container_image }}"
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.{{ container_name }}.rule=Host(`{{ container_name }}.{{ domain_name }}`)"
+      - "traefik.http.routers.{{ container_name }}.tls=true"
+      - "traefik.http.routers.{{ container_name }}.tls.certresolver=letsencrypt"
+    volumes:
+      - "{{ container_config_dir }}/{{ container_name }}/config:/config"
+      - "{{ container_config_dir }}/{{ container_name }}/store:/store"
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ docker_default_network }}"

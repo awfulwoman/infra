@@ -99,6 +99,20 @@ resource "digitalocean_record" "esphome" {
   value  = var.tailscale_ip_host_homeautomation
 }
 
+resource "digitalocean_record" "owntrack-recorder" {
+  domain = digitalocean_domain.default.id
+  type   = "A"
+  name   = "owntrack-recorder"
+  value  = var.tailscale_ip_host_homeautomation
+}
+
+resource "digitalocean_record" "owntrack-frontend" {
+  domain = digitalocean_domain.default.id
+  type   = "A"
+  name   = "owntrack-frontend"
+  value  = var.tailscale_ip_host_homeautomation
+}
+
 resource "digitalocean_record" "mqtt" {
   domain = digitalocean_domain.default.id
   type   = "A"

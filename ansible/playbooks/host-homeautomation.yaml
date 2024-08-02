@@ -46,6 +46,7 @@
     - role: container-wyoming-piper
     - role: container-homeassistant
     - role: container-owntracks-recorder
+    - role: container-owntracks-frontend    
     - role: container-esphome
     - role: container-syncthing
     - role: containers-end
