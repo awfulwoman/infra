@@ -124,14 +124,7 @@ resource "digitalocean_record" "zigbee2mqtt" {
   domain = digitalocean_domain.default.id
   type   = "A"
   name   = "zigbee2mqtt"
-  value  = var.tailscale_ip_host_homeautomation
-}
-
-resource "digitalocean_record" "zigbee2mqtt-aqara" {
-  domain = digitalocean_domain.default.id
-  type   = "A"
-  name   = "zigbee2mqtt-aqara"
-  value  = var.tailscale_ip_host_homeautomation
+  value  = var.tailscale_ip_host_radio
 }
 
 resource "digitalocean_record" "uptimekuma" {
