@@ -82,7 +82,7 @@ resource "digitalocean_record" "homeassistant" {
   domain = digitalocean_domain.default.id
   type   = "A"
   name   = "homeassistant"
-  value  = var.tailscale_ip_host_homeautomation
+  value  = var.tailscale_ip_host_homeassistant
 }
 
 resource "digitalocean_record" "homeautomation" {

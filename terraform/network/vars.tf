@@ -35,3 +35,9 @@ variable "tailscale_ip_host_radio" {
   type = string
   default = "100.105.190.86"
 }
+
+variable "tailscale_ip_host_homeassistant" {
+  description = "The IP address for the Home Assistant server on Tailscale"
+  type = string
+  default = "100.117.216.124"
+}
