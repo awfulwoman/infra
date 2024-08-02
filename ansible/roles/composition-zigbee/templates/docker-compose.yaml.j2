@@ -10,7 +10,7 @@ services:
     group_add:
       - dialout
     devices:
-      - "{{ zigbee_usb_device }}"
+      - "{{ zigbee_usb_device }}:/dev/ttyACM0"
     env_file: .environment_vars
     image: koenkk/zigbee2mqtt
     restart: unless-stopped
