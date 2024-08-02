@@ -3,8 +3,8 @@ services:
     container_name: "{{ container_name }}"
     ports:
       - "8083:8083"
-    environment:
-      - "OTR_HOST=mqtt.{{ domain_name }}"
+    # environment:
+    #   - "OTR_HOST=mqtt.{{ domain_name }}"
     image: "{{ container_image }}"
     restart: unless-stopped
     labels:
