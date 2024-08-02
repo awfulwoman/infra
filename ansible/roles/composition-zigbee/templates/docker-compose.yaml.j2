@@ -3,8 +3,6 @@ name: "{{ composition_name }}"
 services:
   zigbee2mqtt:
     container_name: zigbee2mqtt
-    ports:
-      - "9091:9091"
     privileged: true
     user: "1000:1000"
     group_add:
