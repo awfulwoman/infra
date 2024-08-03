@@ -24,4 +24,10 @@ services:
       - "/run/udev:/run/udev:ro"
       - /etc/localtime:/etc/localtime:ro
     networks:
-      "{{ default_docker_network }}"
+      - "{{ default_docker_network }}"
+
+
+
+networks:
+  "{{ default_docker_network }}":
+    external: true
