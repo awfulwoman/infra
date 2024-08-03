@@ -31,7 +31,7 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - /etc/localtime:/etc/localtime:ro
     networks:
-      - "{{ default_docker_network }}"s
+      - "{{ default_docker_network }}"
 
   whoami:
     container_name: whoami
