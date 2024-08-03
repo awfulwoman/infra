@@ -1,3 +1,8 @@
+- name: Create a docker bridge network
+  community.docker.docker_network:
+    name: "{{ default_docker_network }}"
+  when: compositions
+
 - name: Ensure a ZFS dataset for each composition is present 
   become: true
   community.general.zfs:
