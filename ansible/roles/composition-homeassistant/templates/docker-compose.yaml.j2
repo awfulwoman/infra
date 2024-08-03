@@ -22,5 +22,4 @@ services:
       - "{{ composition_config }}/media:/media"
       - /etc/localtime:/etc/localtime:ro
     networks:
-      "{{ default_docker_network }}":
-        external: true
+      "{{ default_docker_network }}"

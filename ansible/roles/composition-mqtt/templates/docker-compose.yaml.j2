@@ -17,5 +17,4 @@ services:
       - "{{ composition_config }}/log:/mosquitto/log"
       - /etc/localtime:/etc/localtime:ro
     networks:
-      "{{ default_docker_network }}":
-        external: true
+      "{{ default_docker_network }}"

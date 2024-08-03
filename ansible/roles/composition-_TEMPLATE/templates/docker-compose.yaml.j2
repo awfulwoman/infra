@@ -21,5 +21,4 @@ services:
       - "{{ composition_config }}:/INSIDEPATH"
       - /etc/localtime:/etc/localtime:ro
     networks:
-      "{{ default_docker_network }}":
-        external: true
+      "{{ default_docker_network }}"

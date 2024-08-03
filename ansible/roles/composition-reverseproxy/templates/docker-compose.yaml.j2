@@ -31,8 +31,7 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - /etc/localtime:/etc/localtime:ro
     networks:
-      "{{ default_docker_network }}":
-        external: true
+      "{{ default_docker_network }}"
 
   whoami:
     container_name: whoami
@@ -53,5 +52,4 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
     networks:
-      "{{ default_docker_network }}":
-        external: true
+      "{{ default_docker_network }}"
