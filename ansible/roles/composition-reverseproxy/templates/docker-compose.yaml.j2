@@ -30,6 +30,9 @@ services:
       - "{{ composition_config }}/letsencrypt:/letsencrypt"
       - "/var/run/docker.sock:/var/run/docker.sock"
       - /etc/localtime:/etc/localtime:ro
+    networks:
+      "{{ default_docker_network }}":
+        external: true
 
   whoami:
     container_name: whoami
@@ -49,3 +52,6 @@ services:
       # - "homepage.description=whatever"
     volumes:
       - /etc/localtime:/etc/localtime:ro
+    networks:
+      "{{ default_docker_network }}":
+        external: true
