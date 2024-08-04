@@ -1,0 +1,38 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+
+services:
+  dockage:
+    container_name: dockage
+    ports:
+      - "127.0.0.1:5001:5001"
+    image: louislam/dockge:1
+    restart: unless-stopped
+    env_file: .environment_vars
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dockage.rule=Host(`dockage.{{ ansible_host }}.{{ domain_name }}`)"
+      - "traefik.http.routers.dockage.tls=true"
+      - "traefik.http.routers.dockage.tls.certresolver=letsencrypt"
+    volumes:
+      - "{{ composition_config }}:/INSIDEPATH"
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - "{{ default_docker_network }}"
+
+  watchtower:
+    container_name: watchtower
+    image: containrrr/watchtower
+    restart: unless-stopped
+    env_file: .environment_vars
+    volumes:
+      - "{{ composition_config }}/config.json:/config.json"
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - "{{ default_docker_network }}"
+
+networks:
+  "{{ default_docker_network }}":
+    external: true

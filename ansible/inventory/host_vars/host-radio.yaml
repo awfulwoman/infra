@@ -30,4 +30,5 @@ compositions_config_dir: "/{{ container_compositions_zfs_id }}"
 
 compositions:
   - reverseproxy
+  - container-management
   - zigbee
