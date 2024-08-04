@@ -63,6 +63,7 @@
       - sqlite3
       - python-is-python3
       - ffmpeg
+      - timg
     state: present
 
 - name: Autoremove apt packages
