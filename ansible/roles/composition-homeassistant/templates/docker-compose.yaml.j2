@@ -21,9 +21,6 @@ services:
       - "{{ composition_config }}:/config"
       - "{{ composition_config }}/media:/media"
       - /etc/localtime:/etc/localtime:ro
-    networks:
-      - "{{ default_docker_network }}"
-
 
 networks:
   "{{ default_docker_network }}":
