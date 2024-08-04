@@ -71,6 +71,12 @@
   ansible.builtin.apt:
     autoremove: true
 
+- name: Install pip packages via pipx
+  community.general.pipx:
+    name: "{{ item }}"
+  loop: 
+    - terminaltexteffects
+
 - ansible.builtin.include_role:
     name: weareinteractive.environment
   vars:
