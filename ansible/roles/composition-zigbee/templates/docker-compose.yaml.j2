@@ -13,7 +13,7 @@ services:
       - "{{ zigbee_usb_device }}:/dev/ttyACM0"
     env_file: .environment_vars
     image: koenkk/zigbee2mqtt
-    restart: unless-stopped
+    restart: on-failure
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.zigbee2mqtt.rule=Host(`zigbee2mqtt.{{ domain_name }}`)"
