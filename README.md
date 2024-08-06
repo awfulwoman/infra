@@ -4,8 +4,6 @@
 
 Let me show you my home network setup. 
 
-![Backups]( https://healthchecks.io/badge/37a7ad4c-57bd-4cea-9118-f2c5df/NqTeGVVP-2/host-backups.svg )
-![Home Automation](https://healthchecks.io/badge/37a7ad4c-57bd-4cea-9118-f2c5df/n4SwgVdV/host-homeautomation.svg)
 ![Storage](https://healthchecks.io/badge/37a7ad4c-57bd-4cea-9118-f2c5df/1bQ__A5n/host-storage.svg)
 
 
