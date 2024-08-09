@@ -1,7 +1,8 @@
 # NOTE
-# This needs to be run intially from a remote controller, due to
-# installing passwords and dependencies. After the initial run
-# ansible-pull will function as expected.
+# If the machine has not been bootstrapped then this needs to be 
+# run intially from a remote controller, due to installing 
+# passwords and dependencies. After the initial run ansible-pull 
+# will function as expected.
 
 - name: Ansible project dir
   ansible.builtin.debug:
