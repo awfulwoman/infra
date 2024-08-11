@@ -34,7 +34,7 @@
     - role: hardware-rtl-433
     - role: powertop
     # - role: nfs-client
-    - role: autorestic
+    - role: install-autorestic
     - role: containers-config
     - role: container-scripts-site
     - role: container-traefik
