@@ -39,7 +39,7 @@
     - role: hifis.unattended_upgrades
       become: true
     - role: apt-upgrade
-    - role: ansible-pull
+    - role: install-ansible-pull
     - role: nginxinc.nginx
 
   

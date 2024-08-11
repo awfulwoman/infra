@@ -10,7 +10,7 @@
     - role: docker-install
     - role: zfs-core-new
     - role: install-ansible
-    - role: ansible-pull
+    - role: install-ansible-pull
     - role: zfs-backup-client
     - role: compositions
     - role: hardware-rtl-433

@@ -52,7 +52,7 @@
     - role: containers-end
     - role: docker-cleanup
     - role: apt-upgrade
-    - role: ansible-pull
+    - role: install-ansible-pull
     - role: ironicbadger.figurine
       become: true
 

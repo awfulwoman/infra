@@ -29,7 +29,7 @@
       ansible_install_method: pip
       ansible_pip_executable: '/usr/bin/pip3'
     - role: wakeonlan
-    - role: ansible-pull
+    - role: install-ansible-pull
       ansiblepull_install_pull_cron: false
       ansiblepull_run_after_wake: true
     - role: mqtt2cmd
