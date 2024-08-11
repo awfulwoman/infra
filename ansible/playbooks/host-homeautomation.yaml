@@ -27,7 +27,7 @@
     - role: hifis.unattended_upgrades
       become: true
     - role: motd
-    - role: beep
+    - role: install-beep
     - role: shoutrrr
       become: true
     # - role: hardware-wyse-5070

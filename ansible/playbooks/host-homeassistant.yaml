@@ -9,7 +9,7 @@
     - role: install-ansible
     - role: ansible-pull
     - role: zfs-backup-client
-    - role: beep
+    - role: install-beep
     - role: shoutrrr
       become: true
     - role: ironicbadger.figurine
