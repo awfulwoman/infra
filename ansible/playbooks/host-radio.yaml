@@ -2,7 +2,7 @@
 - name: Home Radio Systems
   hosts: host-radio
   roles:
-    - role: ubuntu
+    - role: bootstrap-ubuntu
     - role: hardware-raspberry-pi
       raspberry_pi_disable_wifi: true
       raspberry_pi_boot_config_location: /boot/firmware/config.txt
