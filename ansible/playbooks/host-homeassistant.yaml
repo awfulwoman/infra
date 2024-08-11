@@ -6,7 +6,7 @@
     - role: sanoid-install
     - role: docker-install
     - role: zfs-core-new
-    - role: ansible-install
+    - role: install-ansible
     - role: ansible-pull
     - role: zfs-backup-client
     - role: beep
