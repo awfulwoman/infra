@@ -134,13 +134,6 @@ resource "digitalocean_record" "uptimekuma" {
   value  = var.tailscale_ip_host_homeautomation
 }
 
-resource "digitalocean_record" "traefik-host-homeautomation" {
-  domain = digitalocean_domain.default.id
-  type   = "A"
-  name   = "traefik.host-homeautomation"
-  value  = var.tailscale_ip_host_homeautomation
-}
-
 
 # Storage
 resource "digitalocean_record" "jellyfin" {

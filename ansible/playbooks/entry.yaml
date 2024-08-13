@@ -1,5 +1,3 @@
-- name: Include Home Automation Server
-  ansible.builtin.import_playbook: host-homeautomation.yaml
 - name: Include Storage Server
   ansible.builtin.import_playbook: host-storage.yaml
 - name: Include Backup Server
