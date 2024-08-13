@@ -12,9 +12,10 @@
     - role: hardware-host-bus-adapter
     - role: mqtt2cmd
     - role: nfs-server
+    - role: zfs-backup-client
+    - role: compositions    
     # - role: sleepuntil
     #   become: true
-    # - role: zfs-backup-client
     # - role: cron-reboot
     # - role: artis3n.tailscale
     # - role: ip-address-forwarding
