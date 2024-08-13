@@ -16,8 +16,10 @@
       zfsbackup_pushover: false
       zfsbackup_run_after_wake: true
       zfsbackup_clients:
-        - host-homeautomation
+        - host-homeaassistant
         - host-storage
+        - host-zigbee
+        - host-radio
     - role: hifis.unattended_upgrades
       become: true
     - role: motd
