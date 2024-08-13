@@ -11,33 +11,18 @@
     - role: install-ansible-pull
     - role: hardware-host-bus-adapter
     - role: mqtt2cmd
-    # - role: bootstrap
-    # - role: bootstrap-host
-    # - role: weareinteractive.environment
-      # become: true
-      # no_log: true
-    # - role: generate-sshkey
-    # - role: zfs-core
+    - role: nfs-server
+    # - role: sleepuntil
+    #   become: true
     # - role: zfs-backup-client
     # - role: cron-reboot
     # - role: artis3n.tailscale
-    # - role: geerlingguy.pip
-    # - role: geerlingguy.ansible
-    #   become: true
-    #   ansible_install_method: pip
-    #   ansible_pip_executable: '/usr/bin/pip3'
-    # - role: geerlingguy.docker
-    #   become: true
-    # - role: docker
-    # - role: hifis.unattended_upgrades
-    #   become: true
     # - role: ip-address-forwarding
-    - role: nfs-server
     # - role: vm-host
-    # - role: motd
     # - role: powertop
     # - role: ubuntu-cd-mirror
-    # - role: containers-config
+  
+
     # - role: container-watchtower
     # - role: container-concourse
     # - role: container-traefik
@@ -76,15 +61,8 @@
     # - role: container-tubearchivist
     # - role: container-nextcloud
     # - role: container-sanoid-builder
-    # - role: containers-end
-    # - role: docker-cleanup
-    # - role: apt-upgrade
-    # - role: diodonfrost.terraform
-    #   become: true
-    # - role: sleepuntil
-    # - role: install-ansible-pull
-    # - role: ironicbadger.figurine
-    #   become: true
+
+
 
   handlers:
     - name: Reboot host
