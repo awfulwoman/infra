@@ -3,6 +3,26 @@
     name: "{{ default_docker_network }}"
   when: compositions
 
+- name: Ensure composition dataset is present 
+  become: true
+  community.general.zfs:
+    name: "{{ container_compositions_zfs_id }}"
+    state: present
+    extra_zfs_properties:
+      acltype: posix
+      xattr: sa
+  when: compositions
+
+- name: Ensure composition dataset is owned by user
+  become: true
+  ansible.builtin.file:
+    path: "/{{ container_compositions_zfs_id }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0774
+  when: compositions
+
 - name: Ensure a ZFS dataset for each composition is present 
   become: true
   community.general.zfs:
