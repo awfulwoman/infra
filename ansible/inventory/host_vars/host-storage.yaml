@@ -7,29 +7,10 @@ tailscale_address: "100.83.127.33"
 
 # --- ZFS -------------
 
-zfs_debug: "{{ zfs.tank1.media.shows | zfs_path }}"
-
-# ZFS pool
+# ZFS pools that should be present
 zfs_pools:
   - slowpool
   - fastpool
-
-# fastpool
-#   mirror-0
-#     scsi-SATA_CT1000BX500SSD1_2216E629AC18
-#     scsi-SATA_SanDisk_SDSSDH3_22087N455301
-
-# slowpool
-#   mirror-0 
-#     scsi-SATA_ST4000VN008-2DR1_ZDHAMGT1 
-#     scsi-SATA_WDC_WD40EFZX-68A_WD-WX12DA08KR45 
-#   mirror-1 
-#     scsi-SATA_WDC_WD40EFZX-68A_WD-WX12DA0R1V78 
-#     scsi-SATA_WDC_WD40EFZX-68A_WD-WX82DA1RHH08 
-#   mirror-2  
-#     scsi-SATA_ST4000VN008-2DR1_ZDHB6E35 
-#     scsi-SATA_ST4000VN008-2DR1_ZDHB880S
-
 
 # Named ZFS datasets
 container_config_zfs_id: fastpool/containers
@@ -39,13 +20,13 @@ charlie_syncthing_data_path_zfs_id: slowpool/charlie/syncthing
 wifey_data_path_zfs_id: "slowpool/{{vault_wifey_name}}"
 
 # Define useful paths from ZFS datasets
-container_config_dir: "/{{ container_config_zfs_id }}"
 restic_server_path: "/{{ restic_zfs_id }}"
 syncthing_data_path: "/{{ charlie_syncthing_data_path_zfs_id }}"
 wifey_data_path: "/{{ wifey_data_path_zfs_id }}"
-compose_config_dir: "/{{ container_config_zfs_id }}/composefiles"
+container_config_dir: "/{{ container_config_zfs_id }}"
+compositions_config_dir: "/{{ container_compositions_zfs_id }}"
 
-# Datasets present 
+# Datasets that should be present 
 zfs_datasets:
   - "{{ container_config_zfs_id }}"
   - "{{ restic_zfs_id }}"
@@ -61,10 +42,11 @@ zfs_datasets:
 # Datasets to be backed-up
 zfs_backup_datasets:
   - "{{ container_config_zfs_id }}"
+  - "{{ container_compositions_zfs_id }}"
   - slowpool/pools
   - slowpool/images
-  - slowpool/shared
   - slowpool/media/music
+  - slowpool/shared
   - "{{ charlie_syncthing_data_path_zfs_id }}"
   - "{{ wifey_data_path_zfs_id }}"
 
@@ -76,10 +58,6 @@ nfs_exports:
   - "{{ restic_server_path }} *(rw,all_squash,anonuid=1000,anongid=1000)"
 
 
-# --- RESTIC --------------
-backup_restic_destination: "{{ restic_server_path }}" # Restic snapshot location
-
-
 # --- HEALTHCHECKS --------------
 healthcheck_reboot_id: !vault |
           $ANSIBLE_VAULT;1.2;AES256;beanpod
@@ -89,3 +67,7 @@ healthcheck_reboot_id: !vault |
           3233396133653561310a656531303330646133303166646464323936373535613935636236383561
           61316664346365363331316236373063633164663335643837383465643337643634646535616133
           3134386264386231643866303138643266316131636536656436
+
+compositions:
+  - reverseproxy
+  - container-management
