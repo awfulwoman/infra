@@ -1,32 +1,11 @@
-ansible_user: ubuntu
+ansible_user: awful
 ansible_host: host-storage.i.affordablepotatoes.com
 
 # --- NETWORK -------------
-wireguard_address: "10.8.0.116/24"
 wakeonlan_mac_address: "34:60:f9:bb:3d:16"
 tailscale_address: "100.83.127.33"
 
-
-# --- PACKAGES -------------
-pip_install_packages:
-  - name: docker
-  - name: docker-compose
-
-
 # --- ZFS -------------
-
-# DO NOT USE! EXPERIMENTAL! 
-zfs:
-  slowpool:
-    misc:
-    media:
-      shows:
-      movies:
-      music:
-    charlie:
-      syncthing:
-  fastpool:
-    containers:
 
 zfs_debug: "{{ zfs.tank1.media.shows | zfs_path }}"
 

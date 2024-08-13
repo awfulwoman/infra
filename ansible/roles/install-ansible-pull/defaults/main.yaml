@@ -1,3 +1,4 @@
+ansiblepull_present: true
 ansiblepull_cron_minute: "0"
 ansiblepull_cron_hour: "*"
 ansiblepull_workdir: "{{ ansible_path }}"
