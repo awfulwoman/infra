@@ -26,10 +26,7 @@
     - role: motd
     - role: hifis.unattended_upgrades
       become: true
-    - role: containers-config
     - role: container-pihole
-    - role: containers-end
-    - role: docker-cleanup
     - role: apt-upgrade
   handlers:
     - name: Reboot host

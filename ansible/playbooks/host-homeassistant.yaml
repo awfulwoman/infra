@@ -4,7 +4,7 @@
   roles:
     - role: bootstrap-ubuntu
     - role: sanoid-install
-    - role: docker-install
+    - role: install-docker
     - role: zfs-core-new
     - role: install-ansible
     - role: install-ansible-pull
