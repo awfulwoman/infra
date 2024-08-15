@@ -39,11 +39,14 @@
 #     dest: "{{ composition_config }}/filename.txt
 
 - name: Register subdomain(s)
-  community.digitalocean.digital_ocean_domain:
-    name: "{{ domain_item }}.{{ domain_name }}"
-    ip: "{{ tailscale_address }}"
+  community.digitalocean.digital_ocean_domain_record:
     state: present
-    api_token: "{{ vault_digitalocean_domain_token }}"
+    oauth_token: "{{ vault_digitalocean_domain_token }}"
+    domain: "{{ domain_name }}"
+    type: A
+    name: "{{ domain_item }}"
+    data: "{{ tailscale_address }}"
+    force_update: true
   loop_control:
     loop_var: domain_item
   loop: 
