@@ -40,9 +40,12 @@
 
 - name: Register subdomain(s)
   community.digitalocean.digital_ocean_domain:
-    name: "{{ item }}.{{ domain_name }}"
+    name: "{{ domain_item }}.{{ domain_name }}"
     ip: "{{ tailscale_address }}"
     state: present
+    api_token: "{{ vault_digitalocean_domain_token }}"
+  loop_control:
+    loop_var: domain_item
   loop: 
     - jellyfin
     - jellyfin-vue

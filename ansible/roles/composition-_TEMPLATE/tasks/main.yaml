@@ -41,10 +41,12 @@
 
 # - name: Register subdomain(s)
 #   community.digitalocean.digital_ocean_domain:
-#     name: "{{ item }}.{{ domain_name }}"
+#     name: "{{ domain_item }}.{{ domain_name }}"
 #     ip: "{{ tailscale_address }}"
 #     state: present
+#   loop_control:
+#     loop_var: domain_item
 #   loop: 
-#     - test1
-#     - test2
+#     - jellyfin
+#     - jellyfin-vue
 #   when: tailscale_address
