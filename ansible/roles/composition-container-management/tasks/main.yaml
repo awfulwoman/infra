@@ -18,6 +18,29 @@
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
 
+- name: Copy watchtower config.json script
+  become: true
+  ansible.builtin.template:
+    src: templates/watchtower-config.json.j2
+    dest: "{{ composition_config }}/config.json"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
+- name: Register subdomain(s)
+  community.digitalocean.digital_ocean_domain_record:
+    state: present
+    oauth_token: "{{ vault_digitalocean_domain_token }}"
+    domain: "{{ domain_name }}"
+    type: A
+    name: "{{ domain_item }}"
+    data: "{{ ansible_tailscale0.ipv4.address }}"
+    force_update: true
+  loop_control:
+    loop_var: domain_item
+  loop: 
+    - "dockage.{{ ansible_hostname }}"
+  when: ansible_tailscale0.ipv4.address
+
 # ----------------------------
 # Specific tasks
 # ----------------------------
@@ -38,11 +61,3 @@
 #   ansible.builtin.copy:
 #     src: filename.txt
 #     dest: "{{ composition_config }}/filename.txt
-
-- name: Copy watchtower config.json script
-  become: true
-  ansible.builtin.template:
-    src: templates/watchtower-config.json.j2
-    dest: "{{ composition_config }}/config.json"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"

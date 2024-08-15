@@ -45,11 +45,11 @@
     domain: "{{ domain_name }}"
     type: A
     name: "{{ domain_item }}"
-    data: "{{ tailscale_address }}"
+    data: "{{ ansible_tailscale0.ipv4.address }}"
     force_update: true
   loop_control:
     loop_var: domain_item
   loop: 
     - jellyfin
     - jellyfin-vue
-  when: tailscale_address
+  when: ansible_tailscale0.ipv4.address

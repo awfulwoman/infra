@@ -21,3 +21,18 @@
     loop_var: dir_item
   loop:
     - media
+
+- name: Register subdomain(s)
+  community.digitalocean.digital_ocean_domain_record:
+    state: present
+    oauth_token: "{{ vault_digitalocean_domain_token }}"
+    domain: "{{ domain_name }}"
+    type: A
+    name: "{{ domain_item }}"
+    data: "{{ ansible_tailscale0.ipv4.address }}"
+    force_update: true
+  loop_control:
+    loop_var: domain_item
+  loop: 
+    - homeassistant
+  when: ansible_tailscale0.ipv4.address
