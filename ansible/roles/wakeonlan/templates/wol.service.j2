@@ -3,6 +3,7 @@ Description=Enable Wake On Lan
 
 [Service]
 Type=oneshot
+RemainAfterExit=yes
 ExecStart = /sbin/ethtool -s {{wakeonlan_interface}} wol g
 
 [Install]
