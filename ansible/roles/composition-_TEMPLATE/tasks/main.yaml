@@ -38,3 +38,13 @@
 #   ansible.builtin.copy:
 #     src: filename.txt
 #     dest: "{{ composition_config }}/filename.txt
+
+# - name: Register subdomain(s)
+#   community.digitalocean.digital_ocean_domain:
+#     name: "{{ item }}.{{ domain_name }}"
+#     ip: "{{ tailscale_address }}"
+#     state: present
+#   loop: 
+#     - test1
+#     - test2
+#   when: tailscale_address
