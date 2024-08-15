@@ -16,7 +16,6 @@
     - role: compositions    
     # - role: sleepuntil
     #   become: true
-    # - role: cron-reboot
     # - role: artis3n.tailscale
     # - role: ip-address-forwarding
     # - role: vm-host
