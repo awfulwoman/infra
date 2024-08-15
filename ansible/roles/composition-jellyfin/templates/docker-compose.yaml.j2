@@ -1,0 +1,43 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  jellyfin:
+    container_name: jellyfin
+    ports:
+      - "127.0.0.1:8096:8096"
+    image: jellyfin/jellyfin:latest
+    restart: unless-stopped
+    env_file: .environment_vars
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jellyfin.rule=Host(`jellyfin.{{ domain_name }}`)"
+      - "traefik.http.routers.jellyfin.tls=true"
+      - "traefik.http.routers.jellyfin.tls.certresolver=letsencrypt"
+    volumes:
+      - "{{ composition_config }}/config:/config"
+      - "{{ composition_config }}/cache:/cache"
+      - "{{ shared_media_path }}:/data"
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+
+  jellyfin-vue:
+    container_name: jellyfin-vue
+    ports:
+      - "127.0.0.1:8734:80"
+    image: jellyfin/jellyfin-vue:unstable
+    restart: unless-stopped
+    env_file: .environment_vars
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jellyfin-vue.rule=Host(`jellyfin-vue.{{ domain_name }}`)"
+      - "traefik.http.routers.jellyfin-vue.tls=true"
+      - "traefik.http.routers.jellyfin-vue.tls.certresolver=letsencrypt"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+
+networks:
+  "{{ default_docker_network }}":
+    external: true
