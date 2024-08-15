@@ -1,4 +1,3 @@
-
 ansible_host: host-mqtt
 ansible_user: "{{ vault_server_username }}"
 

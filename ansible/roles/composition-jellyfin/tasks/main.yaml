@@ -38,7 +38,7 @@
 #     src: filename.txt
 #     dest: "{{ composition_config }}/filename.txt
 
-- name: Register subdomain(s)
+- name: Register tailscale subdomain(s)
   community.digitalocean.digital_ocean_domain_record:
     state: present
     oauth_token: "{{ vault_digitalocean_domain_token }}"
