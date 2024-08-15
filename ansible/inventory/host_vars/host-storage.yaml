@@ -3,7 +3,6 @@ ansible_user: "{{ vault_server_username }}"
 
 # --- NETWORK -------------
 wakeonlan_mac_address: "34:60:f9:bb:3d:16"
-tailscale_address: "100.106.129.23"
 
 # --- ZFS -------------
 
