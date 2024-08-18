@@ -61,18 +61,10 @@
     group: "{{ ansible_user }}"
     mode: '0600'
 
-- name: Register tailscale subdomain(s)
-  community.digitalocean.digital_ocean_domain_record:
-    state: present
-    oauth_token: "{{ vault_digitalocean_domain_token }}"
-    domain: "{{ domain_name }}"
-    type: A
-    name: "{{ domain_item }}"
-    data: "{{ ansible_tailscale0.ipv4.address }}"
-    force_update: true
-  loop_control:
-    loop_var: domain_item
-  loop: 
-    - "whoami.{{ ansible_hostname }}"
-    - "traefik.{{ ansible_hostname }}"
-  when: ansible_tailscale0.ipv4.address
+- name: Run Configure DNS role
+  ansible.builtin.include_role:
+    name: "configure-dns"
+  vars:
+    configure_dns_subdomains:
+      - "whoami.{{ ansible_hostname }}"
+      - "traefik.{{ ansible_hostname }}"
