@@ -28,3 +28,4 @@
   vars:
     configure_dns_subdomains:
       - homeassistant
+      - ha
