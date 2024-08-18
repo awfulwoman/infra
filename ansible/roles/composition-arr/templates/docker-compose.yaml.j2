@@ -78,8 +78,6 @@ services:
 
   qbittorrent:
     container_name: qbittorrent
-    ports:
-      - "127.0.0.1:OUTSIDE:INSIDE"
     image: lscr.io/linuxserver/qbittorrent:latest
     restart: unless-stopped
     env_file: .environment_vars
