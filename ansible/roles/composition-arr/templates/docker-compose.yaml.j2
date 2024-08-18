@@ -89,6 +89,7 @@ services:
     volumes:
       - "{{ composition_config }}/qbittorrent:/config"
       # - "{{ composition_config }}/vuetorrent:/vuetorrent"
+      - "{{ shared_media_path }}/downloads/torrents:/data/downloads/torrents"
       - /etc/localtime:/etc/localtime:ro
     network_mode: "service:gluetun"
     depends_on:
