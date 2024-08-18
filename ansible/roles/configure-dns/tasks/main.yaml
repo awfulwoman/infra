@@ -1,0 +1,13 @@
+- name: Register tailscale subdomain(s)
+  community.digitalocean.digital_ocean_domain_record:
+    state: present
+    oauth_token: "{{ vault_digitalocean_domain_token }}"
+    domain: "{{ domain_name }}"
+    type: A
+    name: "{{ item }}"
+    data: "{{ ansible_tailscale0.ipv4.address }}"
+    force_update: true
+  loop: "{{ configure_dns_subdomains }}"
+  when: ansible_tailscale0.ipv4.address
+
+# - name: Register PiHole subdomain(s)
