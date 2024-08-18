@@ -86,9 +86,10 @@ services:
       - PGID=1000
       - "TZ=Europe/Berlin"
       - WEBUI_PORT=8080
+      - TORRENTING_PORT=6881
     volumes:
       - "{{ composition_config }}/qbittorrent:/config"
-      - "{{ composition_config }}/vuetorrent:/vuetorrent"
+      - "{{ composition_config }}/qbittorrent/vuetorrent:/vuetorrent"
       - "{{ shared_media_path }}/downloads/torrents:/data/downloads/torrents"
       - /etc/localtime:/etc/localtime:ro
     network_mode: "service:gluetun"
