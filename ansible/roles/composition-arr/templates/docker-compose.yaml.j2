@@ -1,0 +1,144 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  prowlarr:
+    container_name: prowlarr
+    ports:
+      - "127.0.0.1:9696:9696"
+    image: lscr.io/linuxserver/prowlarr:latest
+    restart: unless-stopped
+    env_file: .environment_vars
+    environment:
+      - "TZ=Europe/Berlin"      
+      - PUID=1000
+      - PGID=1000
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.{{ domain_name }}`)"
+      - "traefik.http.routers.prowlarr.tls=true"
+      - "traefik.http.routers.prowlarr.tls.certresolver=letsencrypt"
+    volumes:
+      - "{{ composition_config }}/prowlarr:/config"
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+
+  radarr:
+    container_name: radarr
+    ports:
+      - "127.0.0.1:7878:7878"
+    image: lscr.io/linuxserver/radarr:latest
+    restart: unless-stopped
+    env_file: .environment_vars
+    environment:
+      - "TZ=Europe/Berlin"      
+      - "PUID=1000"
+      - "PGID=1000"
+      - "UMASK=002"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.radarr.rule=Host(`radarr.{{ domain_name }}`)"
+      - "traefik.http.routers.radarr.tls=true"
+      - "traefik.http.routers.radarr.tls.certresolver=letsencrypt"
+    volumes:
+      - "{{ composition_config }}/radarr:/config"
+      - "{{ shared_media_path }}:/data"
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+    depends_on:
+      - prowlarr
+      - gluetun
+
+  sonarr:
+    container_name: sonarr
+    ports:
+      - "127.0.0.1:8989:8989"
+    image: lscr.io/linuxserver/sonarr:latest
+    restart: unless-stopped
+    env_file: .environment_vars
+    environment:
+      - "TZ=Europe/Berlin"      
+      - PUID=1000
+      - PGID=1000
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.sonarr.rule=Host(`sonarr.{{ domain_name }}`)"
+      - "traefik.http.routers.sonarr.tls=true"
+      - "traefik.http.routers.sonarr.tls.certresolver=letsencrypt"
+    volumes:
+      - "{{ composition_config }}/sonarr:/config"
+      - "{{ shared_media_path }}:/data"
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+    depends_on:
+      - prowlarr
+      - gluetun
+
+  qbittorrent:
+    container_name: qbittorrent
+    ports:
+      - "127.0.0.1:OUTSIDE:INSIDE"
+    image: lscr.io/linuxserver/qbittorrent:latest
+    restart: unless-stopped
+    env_file: .environment_vars
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - "TZ=Europe/Berlin"
+      - WEBUI_PORT=8080
+    volumes:
+      - "{{ composition_config }}/qbittorrent:/config"
+      # - "{{ composition_config }}/vuetorrent:/vuetorrent"
+      - /etc/localtime:/etc/localtime:ro
+    network_mode: "service:gluetun"
+    depends_on:
+      - gluetun 
+  
+  gluetun:
+    container_name: gluetun
+    ports:
+      # - "127.0.0.1:OUTSIDE:INSIDE"
+      # Gluetun Control server
+      - 8000:8000/tcp
+      # Qbittorrent
+      - "0.0.0.0:8080:8080/tcp"
+      - 6881:6881/tcp
+      - 6881:6881/udp
+    cap_add:
+      - NET_ADMIN
+    image: qmcgaw/gluetun
+    restart: unless-stopped
+    env_file: .environment_vars
+    environment:
+      - VPN_SERVICE_PROVIDER=mullvad
+      - VPN_TYPE=wireguard
+      - WIREGUARD_PRIVATE_KEY="{{ vault_mullvad_wireguard_private_key }}"
+      - WIREGUARD_ADDRESSES="{{ vault_mullvad_wireguard_ipaddress }}" # IPv4 only!
+      - SERVER_CITIES=zurich
+      - SERVER_COUNTRIES=switzerland
+      - LOG_LEVEL=info
+    labels:
+      - "traefik.enable=true"
+      # Gluetun Built-in HTTP control server
+      - "traefik.http.routers.gluetun.rule=Host(`gluetun.{{ domain_name }}`)"
+      - "traefik.http.routers.gluetun.service=gluetun"
+      - "traefik.http.services.gluetun.loadbalancer.server.port=8000"
+      - "traefik.http.routers.gluetun.tls=true"
+      - "traefik.http.routers.gluetun.tls.certresolver=letsencrypt"
+      # Qbittorrent
+      - "traefik.http.routers.qbittorrent.rule=Host(`qbittorrent.{{ domain_name }}`)"
+      - "traefik.http.routers.qbittorrent.service=qbittorrent"
+      - "traefik.http.services.qbittorrent.loadbalancer.server.port=8080"
+      - "traefik.http.routers.qbittorrent.tls=true"
+      - "traefik.http.routers.qbittorrent.tls.certresolver=letsencrypt"
+    volumes:
+      - "{{ composition_config }}/gluetun:/gluetun"
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+
+networks:
+  "{{ default_docker_network }}":
+    external: true
