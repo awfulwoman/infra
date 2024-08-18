@@ -39,6 +39,13 @@
 #     src: filename.txt
 #     dest: "{{ composition_config }}/filename.txt
 
+- name: Git checkout VueTorrent
+  ansible.builtin.git:
+    repo: "https://github.com/WDaan/VueTorrent.git"
+    dest: "{{ composition_config }}/qbittorrent/vuetorrent"
+    single_branch: true
+    version: "latest-release"
+
 - name: Run Configure DNS role
   ansible.builtin.include_role:
     name: "configure-dns"
