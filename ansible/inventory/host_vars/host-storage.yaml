@@ -74,3 +74,4 @@ compositions:
   - reverseproxy
   - container-management
   - jellyfin
+  - arr
