@@ -1,0 +1,62 @@
+# code: language=ansible
+
+# ----------------------------
+# Core tasks
+# ----------------------------
+
+- name: "Create compose file"
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ composition_root }}/docker-compose.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
+- name: "Create .env file"
+  ansible.builtin.template:
+    src: environment_vars.j2
+    dest: "{{ composition_root }}/.environment_vars"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
+# ----------------------------
+# Specific tasks
+# ----------------------------
+
+- name: Create directories
+  file:
+    path: "{{ composition_config }}/{{ dir_item }}"
+    state: directory
+  loop_control:
+    loop_var: dir_item
+  loop:
+    - shared
+    - etc
+
+# - name: Copy over files
+#   become: true
+#   ansible.builtin.copy:
+#     src: filename.txt
+#     dest: "{{ composition_config }}/filename.txt
+
+- name: Register tailscale subdomain(s)
+  community.digitalocean.digital_ocean_domain_record:
+    state: present
+    oauth_token: "{{ vault_digitalocean_domain_token }}"
+    domain: "{{ domain_name }}"
+    type: A
+    name: "{{ domain_item }}"
+    data: "{{ ansible_tailscale0.ipv4.address }}"
+    force_update: true
+  loop_control:
+    loop_var: domain_item
+  loop: 
+    - "guineacam-ir.{{ ansible_hostname }}"
+  when: ansible_tailscale0.ipv4.address
+
+- name: Enact ZFS drive
+  ansible.builtin.command: "zpool create fastpool /dev/disk/by-id/usb-USB_SanDisk_3.2Gen1_0501a15490cd8570a3ee0b097c73ec5d86b16253330bc66bea1cd0f129af314bb88b000000000000000000004ef5ad6800090c10915581071f2f575d-0:0"
+  args:
+    creates: /fastpool
+  become: true
+  
+

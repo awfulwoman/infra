@@ -1,0 +1,34 @@
+ansible_host: 192.168.1.184
+ansible_user: "{{ vault_server_username }}"
+
+# --- NETWORK -------------
+configure_dns_linkdevice_physical: "eth0" 
+
+# --- ZFS -------------
+
+# ZFS pools
+zfs_pools:
+  - fastpool
+
+# Named ZFS datasets
+container_config_zfs_id: fastpool/containers
+container_compositions_zfs_id: fastpool/compositions
+
+# Datasets present
+zfs_datasets:
+  - "{{ container_compositions_zfs_id }}"
+  - "{{ container_config_zfs_id }}"
+
+# Datasets to be backed-up
+# These datasets will be pulled to a backup server
+zfs_backup_datasets:
+  - "{{ container_config_zfs_id }}"
+  - "{{ container_compositions_zfs_id }}"
+
+# Define useful paths from ZFS datasets
+container_config_dir: "/{{ container_config_zfs_id }}"
+compositions_config_dir: "/{{ container_compositions_zfs_id }}"
+
+compositions:
+  - motioneye
+  - container-management

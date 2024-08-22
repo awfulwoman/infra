@@ -1,0 +1,26 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  motioneye:
+    container_name: motioneye
+    ports:
+      - "127.0.0.1:8765:8765"
+    image: ccrisan/motioneye:master-armhf
+    privileged: true
+    restart: unless-stopped
+    env_file: .environment_vars
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.guineacam-ir.rule=Host(`guineacam-ir.{{ domain_name }}`)"
+      - "traefik.http.routers.guineacam-ir.tls=true"
+      - "traefik.http.routers.guineacam-ir.tls.certresolver=letsencrypt"
+    volumes:
+      -  "{{ composition_config }}/shared:/shared"
+      -  "{{ composition_config }}/etc:/etc/motioneye"
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+
+networks:
+  "{{ default_docker_network }}":
+    external: true

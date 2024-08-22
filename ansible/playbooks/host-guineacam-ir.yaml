@@ -1,0 +1,19 @@
+---
+- name: Guineacam IR
+  hosts: host-guineacam-ir
+  roles:
+    - role: bootstrap-ubuntu
+    - role: hardware-raspberry-pi
+      raspberry_pi_boot_config_location: /boot/firmware/config.txt
+    - role: sanoid-install
+    - role: install-docker
+    - role: zfs-core-new
+    - role: install-ansible
+    - role: install-ansible-pull
+    - role: zfs-backup-client
+    - role: compositions
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:
