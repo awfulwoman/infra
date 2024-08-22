@@ -38,6 +38,13 @@
     state: absent
   when: raspberry_pi_disable_bluetooth is false
 
+- name: Insstall pi-specific packages
+  become: true
+  ansible.builtin.apt:
+    name:
+      - raspi-config
+    state: present
+
 # Ensure cgroups options for k8s are in place
 # ONLY FOR RASPBERRY PI
 # - name: Configure cmdline.txt options
