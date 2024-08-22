@@ -50,7 +50,7 @@
   loop_control:
     loop_var: domain_item
   loop: 
-    - "guineacam-ir.{{ ansible_hostname }}"
+    - "guineacam-ir"
   when: ansible_tailscale0.ipv4.address
 
 - name: Enact ZFS drive
