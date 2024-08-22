@@ -31,4 +31,5 @@ compositions_config_dir: "/{{ container_compositions_zfs_id }}"
 
 compositions:
   - motioneye
+  - reverseproxy
   - container-management
