@@ -75,3 +75,4 @@ compositions:
   - container-management
   - jellyfin
   - arr
+  - finances

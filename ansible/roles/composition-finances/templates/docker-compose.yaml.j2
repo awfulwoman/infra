@@ -1,0 +1,43 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  firefly_iii_core:
+    container_name: firefly_iii_core
+    hostname: app
+    depends_on:
+      - db
+    ports:
+      - "127.0.0.1:8983:8080"
+    image: fireflyiii/core:latest
+    restart: unless-stopped
+    env_file: .environment_vars
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.SUBDOMAIN.rule=Host(`SUBDOMAIN.{{ domain_name }}`)"
+      - "traefik.http.routers.SUBDOMAIN.tls=true"
+      - "traefik.http.routers.SUBDOMAIN.tls.certresolver=letsencrypt"
+    volumes:
+      - "{{ composition_config }}/firefly-upload:/var/www/html/storage/upload"
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+
+  firefly_iii_db:
+    container_name: firefly_iii_db
+    image: mariadb:lts
+    hostname: db
+    restart: unless-stopped
+    env_file: .environment_vars
+    volumes:
+      - "{{ composition_config }}/firefly-db:/var/lib/mysql"
+      - /etc/localtime:/etc/localtime:ro
+
+  cron:
+    container_name: firefly_iii_cron
+    image: alpine
+    restart: always
+    command: sh -c "echo \"0 3 * * * wget -qO- http://app:8983/api/v1/cron/{{ firefly_cron_token }}\" | crontab - && crond -f -L /dev/stdout"
+
+networks:
+  "{{ default_docker_network }}":
+    external: true
