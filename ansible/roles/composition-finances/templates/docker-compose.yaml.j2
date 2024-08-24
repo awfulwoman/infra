@@ -31,12 +31,16 @@ services:
     volumes:
       - "{{ composition_config }}/firefly-db:/var/lib/mysql"
       - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
 
   cron:
     container_name: firefly_iii_cron
     image: alpine
     restart: always
     command: sh -c "echo \"0 3 * * * wget -qO- http://app:8983/api/v1/cron/{{ firefly_cron_token }}\" | crontab - && crond -f -L /dev/stdout"
+    networks:
+      - "{{ default_docker_network }}"
 
 networks:
   "{{ default_docker_network }}":
