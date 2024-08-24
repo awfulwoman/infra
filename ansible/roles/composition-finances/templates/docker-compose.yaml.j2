@@ -4,13 +4,11 @@ services:
   firefly_iii_core:
     container_name: firefly_iii_core
     hostname: app
-    depends_on:
-      - firefly_iii_db
-    ports:
-      - "127.0.0.1:8983:8080"
     image: fireflyiii/core:latest
     restart: unless-stopped
-    env_file: .environment_vars
+    env_file: .environment_vars_core
+    ports:
+      - "127.0.0.1:8983:8080"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.firefly.rule=Host(`firefly.{{ domain_name }}`)"
@@ -21,13 +19,15 @@ services:
       - /etc/localtime:/etc/localtime:ro
     networks:
       - "{{ default_docker_network }}"
+    depends_on:
+      - firefly_iii_db
 
   firefly_iii_db:
     container_name: firefly_iii_db
-    image: mariadb:lts
     hostname: db
+    image: mariadb:lts
     restart: unless-stopped
-    env_file: .environment_vars
+    env_file: .environment_vars_db
     volumes:
       - "{{ composition_config }}/firefly-db:/var/lib/mysql"
       - /etc/localtime:/etc/localtime:ro
@@ -37,11 +37,29 @@ services:
   cron:
     container_name: firefly_iii_cron
     image: alpine
-    restart: always
+    restart: unless-stopped
     command: sh -c "echo \"0 3 * * * wget -qO- http://app:8983/api/v1/cron/{{ firefly_cron_token }}\" | crontab - && crond -f -L /dev/stdout"
     networks:
       - "{{ default_docker_network }}"
 
+  importer:
+    container_name: firefly_iii_importer
+    hostname: importer
+    image: fireflyiii/data-importer:latest
+    restart: unless-stopped
+    env_file: .environment_vars_importer
+    ports:
+      - '8111:8080'
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.firefly-importer.rule=Host(`firefly-importer.{{ domain_name }}`)"
+      - "traefik.http.routers.firefly-importer.tls=true"
+      - "traefik.http.routers.firefly-importer.tls.certresolver=letsencrypt"
+    networks:
+      - "{{ default_docker_network }}"
+    depends_on:
+      - firefly_iii_core
+    
 networks:
   "{{ default_docker_network }}":
     external: true
