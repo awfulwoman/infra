@@ -13,9 +13,9 @@ services:
     env_file: .environment_vars
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.SUBDOMAIN.rule=Host(`SUBDOMAIN.{{ domain_name }}`)"
-      - "traefik.http.routers.SUBDOMAIN.tls=true"
-      - "traefik.http.routers.SUBDOMAIN.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.firefly.rule=Host(`firefly.{{ domain_name }}`)"
+      - "traefik.http.routers.firefly.tls=true"
+      - "traefik.http.routers.firefly.tls.certresolver=letsencrypt"
     volumes:
       - "{{ composition_config }}/firefly-upload:/var/www/html/storage/upload"
       - /etc/localtime:/etc/localtime:ro
@@ -37,6 +37,24 @@ services:
     image: alpine
     restart: always
     command: sh -c "echo \"0 3 * * * wget -qO- http://app:8983/api/v1/cron/{{ firefly_cron_token }}\" | crontab - && crond -f -L /dev/stdout"
+
+  importer:
+    image: fireflyiii/data-importer:latest
+    hostname: importer
+    restart: always
+    container_name: firefly_iii_importer
+    networks:
+      - "{{ default_docker_network }}"
+    ports:
+      - '8117:8080'
+    depends_on:
+      - app
+    env_file: .importer.env
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.firefly-importer.rule=Host(`firefly-importer.{{ domain_name }}`)"
+      - "traefik.http.routers.firefly-importer.tls=true"
+      - "traefik.http.routers.firefly-importer.tls.certresolver=letsencrypt"
 
 networks:
   "{{ default_docker_network }}":
