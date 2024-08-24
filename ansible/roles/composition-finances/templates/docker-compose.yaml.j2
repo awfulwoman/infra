@@ -5,7 +5,7 @@ services:
     container_name: firefly_iii_core
     hostname: app
     depends_on:
-      - db
+      - firefly_iii_db
     ports:
       - "127.0.0.1:8983:8080"
     image: fireflyiii/core:latest
