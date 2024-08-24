@@ -22,16 +22,15 @@
 # Specific tasks
 # ----------------------------
 
-# - name: Create directories
-#   file:
-#     path: "{{ composition_config }}/{{ dir_item }}"
-#     state: directory
-#   loop_control:
-#     loop_var: dir_item
-#   loop:
-#     - whatever1
-#     - whatever2
-#     - whatever3
+- name: Create directories
+  ansible.builtin.file:
+    path: "{{ composition_config }}/{{ dir_item }}"
+    state: directory
+  loop_control:
+    loop_var: dir_item
+  loop:
+    - firefly-db
+    - firefly-upload
 
 # - name: Copy over files
 #   become: true
@@ -39,17 +38,17 @@
 #     src: filename.txt
 #     dest: "{{ composition_config }}/filename.txt
 
-# - name: Register tailscale subdomain(s)
-#   community.digitalocean.digital_ocean_domain_record:
-#     state: present
-#     oauth_token: "{{ vault_digitalocean_domain_token }}"
-#     domain: "{{ domain_name }}"
-#     type: A
-#     name: "{{ domain_item }}"
-#     data: "{{ ansible_tailscale0.ipv4.address }}"
-#     force_update: true
-#   loop_control:
-#     loop_var: domain_item
-#   loop: 
-#     - "EXAMPLE.{{ ansible_hostname }}"
-#   when: ansible_tailscale0.ipv4.address
+- name: Register tailscale subdomain(s)
+  community.digitalocean.digital_ocean_domain_record:
+    state: present
+    oauth_token: "{{ vault_digitalocean_domain_token }}"
+    domain: "{{ domain_name }}"
+    type: A
+    name: "{{ domain_item }}"
+    data: "{{ ansible_tailscale0.ipv4.address }}"
+    force_update: true
+  loop_control:
+    loop_var: domain_item
+  loop:
+    - "firefly"
+  when: ansible_tailscale0.ipv4.address
