@@ -37,6 +37,7 @@ compositions:
   - reverseproxy
   - container-management
   - homeassistant
+  - motioneye
 
 traefik_providers:
   - homeassistant
