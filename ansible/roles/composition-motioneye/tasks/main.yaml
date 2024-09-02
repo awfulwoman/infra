@@ -50,7 +50,7 @@
   loop_control:
     loop_var: domain_item
   loop:
-    - "guineacam-ir"
+    - "motioneye.{{ ansible_hostname }}.{{ domain_name }}"
   when: ansible_tailscale0.ipv4.address
 
 - name: Enact ZFS drive
@@ -58,4 +58,3 @@
   args:
     creates: /fastpool
   become: true
-  

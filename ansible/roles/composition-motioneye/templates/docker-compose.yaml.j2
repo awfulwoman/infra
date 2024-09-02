@@ -13,10 +13,10 @@ services:
     env_file: .environment_vars
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.guineacam-ir.rule=Host(`guineacam-ir.{{ domain_name }}`)"
-      - "traefik.http.routers.guineacam-ir.tls=true"
-      - "traefik.http.routers.guineacam-ir.tls.certresolver=letsencrypt"
-      - "traefik.http.services.guineacam-ir.loadbalancer.server.port=8765"
+      - "traefik.http.routers.motioneye.rule=Host(`motioneye.{{ ansible_hostname }}.{{ domain_name }}`)"
+      - "traefik.http.routers.motioneye.tls=true"
+      - "traefik.http.routers.motioneye.tls.certresolver=letsencrypt"
+      - "traefik.http.services.motioneye.loadbalancer.server.port=8765"
     volumes:
       -  "{{ composition_config }}/shared:/shared"
       -  "{{ composition_config }}/etc:/etc/motioneye"
