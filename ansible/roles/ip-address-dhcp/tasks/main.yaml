@@ -6,6 +6,7 @@
     state: present
 
 - name: Add an Ethernet connection with dynamic IP configuration
+  become: true
   community.general.nmcli:
     conn_name: "{{ dhcpip_conn_name | default('dhcp_ethernet') }}"
     ifname: "{{ dhcpip_ifname | default('eth0') }}"
