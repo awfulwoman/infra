@@ -5,6 +5,7 @@ services:
     container_name: motioneye
     ports:
       - "127.0.0.1:8765:8765"
+      - 8081:8081
     image: ccrisan/motioneye:master-armhf
     privileged: true
     restart: unless-stopped
