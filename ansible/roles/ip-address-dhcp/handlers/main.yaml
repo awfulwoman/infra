@@ -1,0 +1,3 @@
+- name: Restart dhcpcd
+  become: true
+  ansible.builtin.command: sudo service dhcpcd restart
