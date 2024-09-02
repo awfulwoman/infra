@@ -50,7 +50,7 @@
   loop_control:
     loop_var: domain_item
   loop:
-    - "motioneye.{{ ansible_hostname }}.{{ domain_name }}"
+    - "motioneye.{{ ansible_hostname }}"
   when: ansible_tailscale0.ipv4.address
 
 - name: Enact ZFS drive
