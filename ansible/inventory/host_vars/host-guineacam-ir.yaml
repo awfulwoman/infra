@@ -29,6 +29,8 @@ zfs_backup_datasets:
 container_config_dir: "/{{ container_config_zfs_id }}"
 compositions_config_dir: "/{{ container_compositions_zfs_id }}"
 
+composition_motioneye_usbdevice: /dev/video0
+
 compositions:
   - motioneye
   - reverseproxy
