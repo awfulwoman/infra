@@ -23,10 +23,10 @@ services:
       - /etc/localtime:/etc/localtime:ro
     networks:
       - "{{ default_docker_network }}"
-    {% if composition_motioneye_usbdevice %}
+{% if composition_motioneye_usbdevice %}
     devices:
       - "{{ composition_motioneye_usbdevice }}"
-    {% endif %}
+{% endif %}
 
 networks:
   "{{ default_docker_network }}":
