@@ -3,6 +3,8 @@
   hosts: host-guineacam-ir
   roles:
     - role: bootstrap-ubuntu
+    - role: ip-address-dhcp
+      dhcpip_ifname: eth0
     - role: hardware-raspberry-pi
       raspberry_pi_boot_config_location: /boot/firmware/config.txt
     - role: sanoid-install
