@@ -1,3 +1,10 @@
+- name: Install apt packages
+  become: true
+  ansible.builtin.apt:
+    name:
+      - network-manager
+    state: present
+
 - name: Add an Ethernet connection with dynamic IP configuration
   community.general.nmcli:
     conn_name: "{{ dhcpip_conn_name | default('dhcp_ethernet') }}"
