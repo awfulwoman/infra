@@ -3,6 +3,7 @@ name: "{{ composition_name }}"
 services:
   motioneye:
     container_name: motioneye
+    hostname: motioneye
     ports:
       - 8081:8081
       - "127.0.0.1:8765:8765"
