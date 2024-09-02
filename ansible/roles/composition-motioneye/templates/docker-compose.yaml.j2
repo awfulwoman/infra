@@ -15,6 +15,7 @@ services:
       - "traefik.http.routers.guineacam-ir.rule=Host(`guineacam-ir.{{ domain_name }}`)"
       - "traefik.http.routers.guineacam-ir.tls=true"
       - "traefik.http.routers.guineacam-ir.tls.certresolver=letsencrypt"
+      - "traefik.http.services.guineacam-ir.loadbalancer.server.port=8765"
     volumes:
       -  "{{ composition_config }}/shared:/shared"
       -  "{{ composition_config }}/etc:/etc/motioneye"
