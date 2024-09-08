@@ -114,5 +114,5 @@
 #   become: true
 #   ansible.posix.authorized_key:
 #     user: "{{ workhorse_user }}"
-#     key: https://github.com/whalecoiner.keys
+#     key: https://github.com/awfulwoman.keys
 #     exclusive: true
