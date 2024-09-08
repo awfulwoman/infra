@@ -21,7 +21,7 @@ The majority of this repo is configuration code. But in `docs` there's a lot abo
 
 ```
 # Clone repo
-git clone git@github.com:whalecoiner/home.git /opt/ansible/home/
+git clone git@github.com:awfulwoman/home.git /opt/ansible/home/
 
 # Bootstrap Ubuntu
 /opt/ansible/home/scripts/bootstrap-ubuntu.sh
