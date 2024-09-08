@@ -14,7 +14,7 @@ Let me show you my home network setup.
 
 I started out writing this as a series of notes but it's growing into a mini-opera composed of weird sentence structures and addressing a constantly switching audience. I shall one day address this issue.
 
-The majority of this repo is configuration code. But in `docs` there's a lot about the hardware and the reasons for my decisions. [View the docs directly in this repo](docs/) or [view the docs via a rendered site](https://whalecoiner.github.io/home/).
+The majority of this repo is configuration code. But in `docs` there's a lot about the hardware and the reasons for my decisions. [View the docs directly in this repo](docs/) or [view the docs via a rendered site](https://awfulwoman.github.io/home/).
 
 
 # Installation
