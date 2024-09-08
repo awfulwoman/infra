@@ -10,9 +10,6 @@ services:
     env_file: .environment_vars
     labels:
       - "traefik.enable=true"
-      # - "traefik.http.routers.homeassistant.rule=Host(`homeassistant.{{ domain_name }}`)"
-      # - "traefik.http.routers.homeassistant.tls=true"
-      # - "traefik.http.routers.homeassistant.tls.certresolver=letsencrypt"
       - "homepage.group=Home Automation"
       - "homepage.name=Home Assistant"
       - "homepage.href=https://homeassistant.{{ domain_name }}"
