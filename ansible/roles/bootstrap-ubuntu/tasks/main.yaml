@@ -3,7 +3,7 @@
   become: true
   ansible.posix.authorized_key:
     user: "{{ ansible_user }}"
-    key: https://github.com/whalecoiner.keys
+    key: https://github.com/awfulwoman.keys
     state: present
 
 - name: Ensure timezone is for Berlin

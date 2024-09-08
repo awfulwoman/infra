@@ -263,7 +263,7 @@ unattended_mail: unattended@whalecoiner.com
 unattended_automatic_reboot: true
 unattended_automatic_reboot_time: 03:00
 
-repo_url: https://github.com/whalecoiner/home
+repo_url: https://github.com/awfulwoman/home
 repo_name: home
 
 vault_domain_name: !vault |

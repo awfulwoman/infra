@@ -4,7 +4,7 @@ After my cluster has been built with Ansible I can bootstrap it using the follow
 
 ```
 flux bootstrap github \
-  --owner=whalecoiner \
+  --owner=awfulwoman \
   --repository=home \
   --branch=main \
   --personal=true \

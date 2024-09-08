@@ -54,7 +54,7 @@ echo "Hostname: $(hostname)"
 echo " "
 echo "IMPORT PUBLIC KEYS"
 echo "************************************"
-ssh-import-id-gh whalecoiner
+ssh-import-id-gh awfulwoman
 
 echo " "
 echo "UPDATE APT"

@@ -16,7 +16,7 @@
 
 - name: Git checkout
   ansible.builtin.git:
-    repo: "https://github.com/whalecoiner/docker-sanoid-builder"
+    repo: "https://github.com/awfulwoman/docker-sanoid-builder"
     dest: "{{ container_config_dir }}/sanoid-image-builder"
 
 - name: Check for sanoid bin

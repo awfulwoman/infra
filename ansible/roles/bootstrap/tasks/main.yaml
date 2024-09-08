@@ -13,14 +13,7 @@
   become: true
   ansible.posix.authorized_key:
     user: "{{ ansible_user }}"
-    key: https://github.com/whalecoiner.keys
-    state: present
-
-- name: Set ansible_user's authorized keys (from url)
-  become: true
-  ansible.posix.authorized_key:
-    user: "{{ ansible_user }}"
-    key: https://github.com/sonniesedge.keys
+    key: https://github.com/awfulwoman.keys
     state: present
 
 - name: Add Berlin timezone

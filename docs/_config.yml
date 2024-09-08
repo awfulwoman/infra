@@ -3,12 +3,11 @@ baseurl: /home
 title: At Home with the GitOps
 description: A repo for learning things.
 author:
-  name: Chazza
+  name: Charface
   email: spam@whalecoiner.com
 minima:
   social_links:
-    twitter: whalecoiner
-    github:  whalecoiner
+    github:  awfulwoman
 header_pages:
    - bootstrapping/README.md
    - hardware/README.md

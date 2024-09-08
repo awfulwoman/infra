@@ -7,13 +7,13 @@
       community.digitalocean.digital_ocean_droplet:
         state: present
         oauth_token: "{{ vault_ddns_digitalocean_token }}"
-        name: whalecoiner-site
+        name: awfulwoman-site
         size: s-1vcpu-1gb
         unique_name: true
         region: ams3
         image: ubuntu-22-04-x64
         wait_timeout: 500
-        # ssh_keys: "{{ lookup('ansible.builtin.url', 'https://github.com/whalecoiner.keys', wantlist=True) }}"
+        # ssh_keys: "{{ lookup('ansible.builtin.url', 'https://github.com/awfulwomanx.keys', wantlist=True) }}"
       register: droplet_info
 
     - name: Debug Droplet
@@ -23,7 +23,7 @@
     - name: SSH keys 
       ansible.builtin.debug:
         msg: "{{item}}"
-      loop: "{{ lookup('ansible.builtin.url', 'https://github.com/whalecoiner.keys', wantlist=True) }}"
+      loop: "{{ lookup('ansible.builtin.url', 'https://github.com/awfulwoman.keys', wantlist=True) }}"
 
 - name: Website host
   hosts: site
