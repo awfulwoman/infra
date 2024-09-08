@@ -29,6 +29,10 @@ zfs_backup_datasets:
 container_config_dir: "/{{ container_config_zfs_id }}"
 compositions_config_dir: "/{{ container_compositions_zfs_id }}"
 
+# Composition vars
+composition_motioneye_zfsdriveid: "/dev/disk/by-id/usb-USB_SanDisk_3.2Gen1_0501a15490cd8570a3ee0b097c73ec5d86b16253330bc66bea1cd0f129af314bb88b000000000000000000004ef5ad6800090c10915581071f2f575d-0:0"
+
+# Compositions to run
 compositions:
   - motioneye
   - reverseproxy

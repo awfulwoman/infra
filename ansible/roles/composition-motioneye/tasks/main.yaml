@@ -54,7 +54,8 @@
   when: ansible_tailscale0.ipv4.address
 
 - name: Enact ZFS drive
-  ansible.builtin.command: "zpool create fastpool /dev/disk/by-id/usb-USB_SanDisk_3.2Gen1_0501a15490cd8570a3ee0b097c73ec5d86b16253330bc66bea1cd0f129af314bb88b000000000000000000004ef5ad6800090c10915581071f2f575d-0:0"
+  ansible.builtin.command: "zpool create fastpool {{ composition_motioneye_zfsdriveid }}"
   args:
     creates: /fastpool
   become: true
+  when: composition_motioneye_zfsdriveid
