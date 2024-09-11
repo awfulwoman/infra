@@ -10,6 +10,7 @@ services:
     env_file: .environment_vars
     environment:
       - OTR_HOST="mqtt.{{ domain_name }}"
+      - OTR_TOPICS="owntracks/#"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.owntracks-recorder.rule=Host(`owntracks-recorder.{{ domain_name }}`)"
