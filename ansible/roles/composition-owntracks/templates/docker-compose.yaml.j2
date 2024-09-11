@@ -26,7 +26,7 @@ services:
   frontend:
     container_name: owntracks-frontend
     ports:
-      - "127.0.0.1:80:9754"
+      - "127.0.0.1:9754:80"
     image: owntracks/frontend
     restart: unless-stopped
     env_file: .environment_vars
