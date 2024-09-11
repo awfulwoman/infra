@@ -39,7 +39,6 @@ compositions:
   - reverseproxy
   - container-management
   - homeassistant
-  - motioneye
   - owntracks
 
 traefik_providers:
