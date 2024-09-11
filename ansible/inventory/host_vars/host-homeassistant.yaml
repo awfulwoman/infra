@@ -40,6 +40,7 @@ compositions:
   - container-management
   - homeassistant
   - motioneye
+  - owntracks
 
 traefik_providers:
   - homeassistant

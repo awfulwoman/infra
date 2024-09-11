@@ -1,0 +1,48 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  recorder:
+    container_name: owntracks-recorder
+    ports:
+      - "127.0.0.1:8083:8083"
+    image: owntracks/recorder
+    restart: unless-stopped
+    env_file: .environment_vars
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.owntracks-recorder.rule=Host(`owntracks-recorder.{{ domain_name }}`)"
+      - "traefik.http.routers.owntracks-recorder.tls=true"
+      - "traefik.http.routers.owntracks-recorder.tls.certresolver=letsencrypt"
+    volumes:
+      - "{{ composition_config }}/config:/config"
+      - "{{ composition_config }}/store:/store"
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+
+
+  frontend:
+    container_name: owntracks-frontend
+    ports:
+      - "127.0.0.1:80:8754"
+    image: owntracks/frontend
+    restart: unless-stopped
+    env_file: .environment_vars
+    environment:
+      - SERVER_HOST=recorder
+      - SERVER_PORT=8083
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.owntracks-frontend.rule=Host(`owntracks.{{ domain_name }}`)"
+      - "traefik.http.routers.owntracks-frontend.tls=true"
+      - "traefik.http.routers.owntracks-frontend.tls.certresolver=letsencrypt"
+    volumes:
+      - "{{ composition_config }}/config:/config"
+      - "{{ composition_config }}/store:/store"
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+
+networks:
+  "{{ default_docker_network }}":
+    external: true
