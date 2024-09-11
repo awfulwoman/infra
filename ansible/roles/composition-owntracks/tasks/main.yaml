@@ -22,6 +22,13 @@
 # Specific tasks
 # ----------------------------
 
+- name: "Create config file"
+  ansible.builtin.template:
+    src: recorder.conf.j2
+    dest: "{{ composition_root }}/config/recorder.conf"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
 # - name: Create directories
 #   file:
 #     path: "{{ composition_config }}/{{ dir_item }}"
