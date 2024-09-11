@@ -66,8 +66,15 @@
   when: compositions
 
 - name: Ensure all composition containers are started
-  community.docker.docker_compose_v2: 
+  community.docker.docker_compose_v2:
     project_src: "{{ compositions_config_dir }}/{{ item }}"
     state: present
   loop: "{{ compositions }}"
   when: compositions
+
+# install a script on the machine that allows just the compositions to be run
+# /opt/ansible/compositions-update.sh
+# /opt/ansible/compositions-restart.sh
+
+
+# Move subdomain registrations to default of each composition
