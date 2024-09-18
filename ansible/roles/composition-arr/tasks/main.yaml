@@ -44,6 +44,7 @@
     repo: "https://github.com/WDaan/VueTorrent.git"
     dest: "{{ composition_config }}/qbittorrent/vuetorrent"
     single_branch: true
+    force: true
     version: "latest-release"
 
 - name: Run Configure DNS role
