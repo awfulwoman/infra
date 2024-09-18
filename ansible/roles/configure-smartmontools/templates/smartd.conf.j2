@@ -1,6 +1,7 @@
 
 {% for drive in smartmontools_drives %}
 {{ drive }}{% if smartmontools_scantype -%} {{ smartmontools_scantype }}{% endif %}{% if smartmontools_email -%} -m {{ smartmontools_email }}{% endif %}{% if smartmontools_ntfy -%} -M exec /usr/bin/curl -H "Title: Disk error detected on {{ ansible_host }}" -H "Priority: urgent" -H "Tags: warning,skull" -d "" ntfy.sh/{{ vault_ntfy_topic_systemhealth }}{% endif %}{% if smartmontools_schedule -%} -s {{ smartmontools_schedule }}{% endif %}
+
 {% endfor %}
 
 
