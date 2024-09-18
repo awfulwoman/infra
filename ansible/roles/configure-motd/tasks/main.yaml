@@ -3,7 +3,7 @@
   become: true
   ansible.builtin.file:
     path: "{{ item }}"
-    mode: 0664
+    mode: "0664"
     modification_time: preserve
     access_time: preserve
   loop: "{{ motd_targets }}"
@@ -13,6 +13,6 @@
   ansible.builtin.copy:
     owner: root
     group: root
-    mode: 0775
+    mode: "0775"
     src: 99-zfspool
     dest: /etc/update-motd.d/99-zfspool

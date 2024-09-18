@@ -22,7 +22,7 @@
         - host-radio
     - role: hifis.unattended_upgrades
       become: true
-    - role: motd
+    - role: configure-motd
     - role: apt-upgrade
     - role: sleepuntil
     - role: geerlingguy.pip

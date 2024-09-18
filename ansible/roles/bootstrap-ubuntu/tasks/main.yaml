@@ -119,7 +119,7 @@
     security_fail2ban_enabled: false
 
 - ansible.builtin.include_role:
-    name: motd
+    name: configure-motd
   vars:
     ansible_become: true
 

@@ -23,7 +23,7 @@
       become: true
       when: ansible_architecture == "aarch64"
     - role: docker
-    - role: motd
+    - role: configure-motd
     - role: hifis.unattended_upgrades
       become: true
     - role: container-pihole
