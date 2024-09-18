@@ -13,7 +13,8 @@
     - role: mqtt2cmd
     - role: nfs-server
     - role: zfs-backup-client
-    - role: compositions    
+    - role: compositions
+    - role: configure-smartmontools
     # - role: sleepuntil
     #   become: true
     # - role: artis3n.tailscale

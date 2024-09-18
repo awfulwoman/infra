@@ -1,0 +1,18 @@
+- name: "Ensure /etc/smartd.conf exists"
+  become: true
+  ansible.builtin.template:
+    src: smartd.conf.j2
+    dest: /etc/smartd.conf
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  when: smartmontools_drives
+
+- name: Ensure drive database is updated daily
+  become: true
+  ansible.builtin.cron:
+    name: "update-smart-drivedb"
+    minute: "0"
+    hour: "5"
+    job: "/usr/sbin/update-smart-drivedb"
+    state: present
