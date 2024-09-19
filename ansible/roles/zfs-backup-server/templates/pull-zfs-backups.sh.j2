@@ -196,7 +196,7 @@ then
 # Loop over client datasets
 # **************************
   {% for zfs_backup_dataset in hostvars[zfsbackup_client]['zfs_backup_datasets'] %}
-  SYNCOID_COMMAND="sudo /usr/sbin/syncoid --sendoptions=Rw --no-privilege-elevation --no-sync-snap --quiet {{ vault_zfsbackups_user }}@{{ zfsbackup_client }}$SEARCHDOMAIN:{{zfs_backup_dataset}} {{ zfsbackup_poolname }}/{{ zfsbackup_client }}/{{zfs_backup_dataset}}"
+  SYNCOID_COMMAND="sudo /usr/sbin/syncoid --sendoptions=Rw --no-privilege-elevation --no-sync-snap --quiet --recursive {{ vault_zfsbackups_user }}@{{ zfsbackup_client }}$SEARCHDOMAIN:{{zfs_backup_dataset}} {{ zfsbackup_poolname }}/{{ zfsbackup_client }}/{{zfs_backup_dataset}}"
   SYNCOID_OUTPUT=$( $SYNCOID_COMMAND 2>&1 )
 
   if [[ "$LOGLEVEL" =~ ^(DEBUG)$ ]]; then
