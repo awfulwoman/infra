@@ -195,31 +195,34 @@ then
 
 # Loop over client datasets
 # **************************
-  {% for zfs_backup_dataset in hostvars[zfsbackup_client]['zfs_backup_datasets'] %}
-  SYNCOID_COMMAND="sudo /usr/sbin/syncoid --sendoptions=Rw --no-privilege-elevation --no-sync-snap --quiet --recursive {{ vault_zfsbackups_user }}@{{ zfsbackup_client }}$SEARCHDOMAIN:{{zfs_backup_dataset}} {{ zfsbackup_poolname }}/{{ zfsbackup_client }}/{{zfs_backup_dataset}}"
-  SYNCOID_OUTPUT=$( $SYNCOID_COMMAND 2>&1 )
+{% for zfs_backup_dataset in hostvars[zfsbackup_client]['zfs_backup_datasets'] %}
 
-  if [[ "$LOGLEVEL" =~ ^(DEBUG)$ ]]; then
-  echo $SYNCOID_COMMAND
-  echo $SYNCOID_OUTPUT
-  fi
+SYNCOID_COMMAND="sudo /usr/sbin/syncoid --no-privilege-elevation --no-sync-snap --quiet --recursive {{ vault_zfsbackups_user }}@{{ zfsbackup_client }}$SEARCHDOMAIN:{{zfs_backup_dataset}} {{ zfsbackup_poolname }}/{{ zfsbackup_client }}/{{zfs_backup_dataset}}"
+SYNCOID_OUTPUT=$( $SYNCOID_COMMAND 2>&1 )
 
-	log_info "{{zfs_backup_dataset}}..."
-  if [ $? -eq 0 ]
-  then
-      log_info "Success!"
-  else
-      FAILURE=1
-      log_error "Failure!" 
-      log_error $SYNCOID_OUTPUT
-  fi
-  {% endfor %} # End dataset loop
+if [[ "$LOGLEVEL" =~ ^(DEBUG)$ ]]; then
+echo $SYNCOID_COMMAND
+echo $SYNCOID_OUTPUT
+fi
 
+log_info "{{zfs_backup_dataset}}..."
+if [ $? -eq 0 ]
+then
+		log_info "Success!"
+else
+		FAILURE=1
+		log_error "Failure!" 
+		log_error $SYNCOID_OUTPUT
+fi
+{% endfor %} # End dataset loop
 
-  log_info "{{ zfsbackup_client }} backup finished."
+log_info "{{ zfsbackup_client }} backup finished."
+
 else 
-  log_warn "{{ zfsbackup_client }} was not online."
-  failure
+
+log_warn "{{ zfsbackup_client }} was not online."
+failure
+
 fi # End online status check
 echo " "
 # ------------------------------------------------
