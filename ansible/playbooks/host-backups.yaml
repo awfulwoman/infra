@@ -18,7 +18,7 @@
       zfsbackup_clients:
         - host-homeassistant
         - host-storage
-        - host-zigbee
+        - host-mqtt
         - host-radio
     - role: hifis.unattended_upgrades
       become: true
