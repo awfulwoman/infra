@@ -16,7 +16,7 @@
       zfsbackup_pushover: false
       zfsbackup_run_after_wake: true
       zfsbackup_clients:
-        - host-homeaassistant
+        - host-homeassistant
         - host-storage
         - host-zigbee
         - host-radio
