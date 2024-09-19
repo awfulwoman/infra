@@ -25,7 +25,7 @@ echo "RUN ANSIBLE PLAYBOOKS"
 echo "************************************"
 ansible-pull -U {{ ansiblepull_repo_url }} ansible/playbooks/{{ ansiblepull_playbook }}-compositions.yaml
 
-# if [ $? -eq 0 ]
+if [ $? -eq 0 ]
 then
   echo "ansible-pull success"
 	# Tell healthchecks.io that all is okay
