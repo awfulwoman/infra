@@ -33,8 +33,8 @@
     path: "{{ created_user.home }}/.ssh"
     state: directory
     owner: "{{ vault_zfsbackups_user }}"
-    group: "{{ vault_zfsbackups_user  }}"
-    mode: 0664
+    group: "{{ vault_zfsbackups_user }}"
+    mode: "0664"
   when: not ssh_path.stat.exists
 
 - name: Ensure restrict_commands.sh exists
@@ -44,7 +44,7 @@
     dest: /usr/local/bin/restrict_commands.sh
     owner: root
     group: root
-    mode: 0777
+    mode: "0777"
 
 - name: Make sure destination dir exists
   become: true
@@ -53,7 +53,7 @@
     state: directory
     owner: root
     group: root
-    mode: 0664
+    mode: "0664"
 
 - name: Create Sanoid config file
   become: true
@@ -62,7 +62,7 @@
     dest: "/etc/sanoid/sanoid.conf"
     owner: root
     group: root
-    mode: 0664
+    mode: "0664"
 
 - name: Apply Sanoid cronjob
   become: true
@@ -82,7 +82,7 @@
     msg: "{{ item }}"
   loop: "{{ zfs_backup_datasets }}"
 
-- name: Allow "{{ vault_zfsbackups_user }}" user to send backups of listed datasets
+- name: "Ensure backups of listed datasets can be sent via {{ vault_zfsbackups_user }}"
   become: true
   community.general.zfs_delegate_admin:
     name: "{{ item }}"
