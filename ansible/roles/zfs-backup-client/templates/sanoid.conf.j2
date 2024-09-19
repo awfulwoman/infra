@@ -1,6 +1,7 @@
 {% for zfs_dataset in zfs_datasets %}
 [{{ zfs_dataset }}]
 	use_template = production
+	recursive = yes
 {% endfor %}
 
 #############################
