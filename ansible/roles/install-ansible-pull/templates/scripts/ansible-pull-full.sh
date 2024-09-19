@@ -20,15 +20,15 @@ echo "UPDATE GIT"
 echo "************************************"
 git -C {{ ansiblepull_workdir }}/home/ pull
 
-echo " "
-echo "UPDATE ANSIBLE GALAXY ROLES"
-echo "************************************"
-ansible-galaxy install -r {{ ansiblepull_workdir }}/{{ repo_name }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/galaxy-roles
+# echo " "
+# echo "UPDATE ANSIBLE GALAXY ROLES"
+# echo "************************************"
+# ansible-galaxy install -r {{ ansiblepull_workdir }}/{{ repo_name }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/galaxy-roles
 
-echo " "
-echo "UPDATE ANSIBLE GALAXY COLLECTIONS"
-echo "************************************"
-ansible-galaxy collection install -r {{ ansiblepull_workdir }}/{{ repo_name }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/collections
+# echo " "
+# echo "UPDATE ANSIBLE GALAXY COLLECTIONS"
+# echo "************************************"
+# ansible-galaxy collection install -r {{ ansiblepull_workdir }}/{{ repo_name }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/collections
 
 echo " "
 echo "RUN ANSIBLE PLAYBOOKS"
@@ -39,7 +39,7 @@ if [ $? -eq 0 ]
 then
   echo "ansible-pull success"
 	# Tell healthchecks.io that all is okay
-  /usr/bin/curl -fsSL https://hc-ping.com/{{ vault_autorestic_ping_key }}/{{ inventory_hostname }}-ansible-pull > /dev/null
+  /usr/bin/curl -fsSL https://hc-ping.com/{{ vault_autorestic_ping_key }}/{{ inventory_hostname }}-ansible-pull-full > /dev/null
 else
   echo "ansible-pull failure"
 	# Report error via Pushover

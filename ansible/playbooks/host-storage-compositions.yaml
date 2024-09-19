@@ -1,0 +1,5 @@
+---
+- name: Storage NAS compositions
+  hosts: host-storage
+  roles:
+    - role: compositions

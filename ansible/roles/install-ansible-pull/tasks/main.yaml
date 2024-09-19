@@ -4,16 +4,16 @@
 # passwords and dependencies. After the initial run ansible-pull 
 # will function as expected.
 
-- name: Ansible project dir
-  ansible.builtin.debug:
-    msg: "{{ ansiblepull_workdir }}"
+# - name: Ansible project dir
+#   ansible.builtin.debug:
+#     msg: "{{ ansiblepull_workdir }}"
 
 - name: Add ansible password
   become: true
   ansible.builtin.lineinfile:
     name: "{{ ansiblepull_workdir }}/.vaultpassword"
     line: "{{ vault_ansible_password }}"
-    mode: 0644
+    mode: "0644"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     state: present
@@ -26,7 +26,7 @@
     path: "{{ ansiblepull_workdir }}"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: 0744
+    mode: "0744"
 
 - name: Make project in /opt/ansible/galaxy-roles
   become: true
@@ -35,7 +35,7 @@
     path: "{{ ansiblepull_workdir }}/galaxy-roles"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: 0744
+    mode: "0744"
 
 - name: Clone initial copy of repo
   ansible.builtin.git:
@@ -77,7 +77,7 @@
     path: "{{ ansiblepull_workdir }}/{{ ansiblepull_initial_installer_lockfile_name }}"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: 0744
+    mode: "0744"
   when: not installed
 
 - name: Cron to run ansible-galaxy update weekly
@@ -87,14 +87,15 @@
     state: absent
     special_time: weekly
 
-- name: Copy ansible-pull-full.sh script
-  become: true
+- name: Ensure scripts are populated from templates
   ansible.builtin.template:
-    src: ansible-pull-full.sh.j2
-    dest: "{{ ansiblepull_workdir }}/{{ ansiblepull_script_name }}"
+    src: '{{ item.src }}'
+    dest: '{{ ansiblepull_workdir }}/{{ item.path }}'
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: 0755
+    mode: "0755"
+  with_community.general.filetree: templates/scripts/
+  when: item.state == 'file'
 
 - name: Cron to run ansible-pull frequently
   ansible.builtin.cron:
@@ -105,8 +106,6 @@
     hour: "{{ ansiblepull_cron_hour }}"
   when: ansiblepull_install_pull_cron
 
-
-
 - name: Create ansible-pull-after-wake.service
   become: true
   ansible.builtin.template:
@@ -114,7 +113,7 @@
     dest: /etc/systemd/system/ansible-pull-after-wake.service
     owner: root
     group: root
-    mode: 0664
+    mode: "0664"
   when: ansiblepull_run_after_wake
 
 - name: Make sure ansible-pull-after-wake.service service is running
