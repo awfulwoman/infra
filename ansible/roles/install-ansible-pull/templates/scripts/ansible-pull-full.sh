@@ -37,11 +37,11 @@ ansible-pull -U {{ ansiblepull_repo_url }} ansible/playbooks/{{ ansiblepull_play
 
 if [ $? -eq 0 ]
 then
-  echo "ansible-pull success"
+  echo "ansible-pull-full success"
 	# Tell healthchecks.io that all is okay
   /usr/bin/curl -fsSL https://hc-ping.com/{{ vault_autorestic_ping_key }}/{{ inventory_hostname }}-ansible-pull-full > /dev/null
 else
-  echo "ansible-pull failure"
+  echo "ansible-pull-full failure"
 	# Report error via Pushover
 	# /usr/bin/curl -s --form-string token="{{ vault_pushover_home_automation_key }}" --form-string user="{{ vault_pushover_user_key }}" --form-string message="{{ inventory_hostname }} ansible-pull failed - $(date --iso-8601=seconds)" https://api.pushover.net/1/messages.json > /dev/null
 fi
