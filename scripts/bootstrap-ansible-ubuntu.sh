@@ -21,7 +21,7 @@ if [[ -z "${ANSIBLE_COLLECTIONS_PATH}" ]]; then
     ANSIBLE_COLLECTIONS_PATH="$ANSIBLE_PATH/collections"
 fi
 if [[ -z "${ANSIBLE_ROLES_PATH}" ]]; then
-    ANSIBLE_ROLES_PATH="$ANSIBLE_PATH/galaxy-roles"
+    ANSIBLE_ROLES_PATH="$HOME_REPO_DIR/ansible/roles;$ANSIBLE_PATH/galaxy-roles"
 fi
 
 echo "DEBUG VARS"
