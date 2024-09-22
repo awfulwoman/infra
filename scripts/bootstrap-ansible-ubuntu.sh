@@ -60,7 +60,6 @@ else
     echo "$HOME_REPO_DIR exists. Destroying and recreating."
 		sudo rm -rf $HOME_REPO_DIR
 		git clone $ANSIBLEPULL_REPO_URL $HOME_REPO_DIR
-
 fi
 
 # Ensure ansible vault password is present
