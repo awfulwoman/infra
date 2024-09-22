@@ -1,0 +1,17 @@
+---
+- name: Workloads server
+  hosts: host-workloads
+  roles:
+    - role: bootstrap-ubuntu
+    - role: sanoid-install
+    - role: install-docker
+    - role: zfs-core-new
+    - role: install-ansible
+    - role: install-ansible-pull
+    - role: zfs-backup-client
+    - role: compositions
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:
