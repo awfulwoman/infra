@@ -70,6 +70,7 @@ echo "************************************"
 if [ ! -f "$ANSIBLE_PATH/.vaultpassword" ]; then
 	if [[ -z "${ANSIBLE_VAULT_PASSWORD}" ]]; then
   	    read -sp "Vault password: " ANSIBLE_VAULT_PASSWORD
+				echo $ANSIBLE_VAULT_PASSWORD > $ANSIBLE_PATH/.vaultpassword
         echo "Password file created."
 	fi
   if [[ $(< $ANSIBLE_PATH/.vaultpassword) != "$ANSIBLE_VAULT_PASSWORD" ]]; then
