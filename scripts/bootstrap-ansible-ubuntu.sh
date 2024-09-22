@@ -57,19 +57,10 @@ if [ ! -d "$HOME_REPO_DIR" ]; then
     sudo mkdir -p $HOME_REPO_DIR
     sudo chown -R $BOOTSTRAP_USER_ID:$BOOTSTRAP_GROUP_ID $HOME_REPO_DIR
 else
-    echo "$HOME_REPO_DIR exists."
-fi
+    echo "$HOME_REPO_DIR exists. Destroying and recreating."
+		sudo rm -rf $HOME_REPO_DIR
+		git clone $ANSIBLEPULL_REPO_URL $HOME_REPO_DIR
 
-# If home repo is empty...
-find "$HOME_REPO_DIR" -maxdepth 0 -empty -exec echo {} is empty. \;
-# Clone repo
-if [[ $? == 0 ]]; then
-    echo "No repo present in $HOME_REPO_DIR. Cloning $ANSIBLEPULL_REPO_URL"
-    git clone $ANSIBLEPULL_REPO_URL $HOME_REPO_DIR
-else
-# Update repo
-    echo "Updating repo."
-    git -C "$HOME_REPO_DIR" pull
 fi
 
 # Ensure ansible vault password is present
