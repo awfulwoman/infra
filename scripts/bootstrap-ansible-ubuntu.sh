@@ -80,11 +80,11 @@ if [ ! -f "$ANSIBLE_PATH/.vaultpassword" ]; then
     echo $ANSIBLE_VAULT_PASSWORD > $ANSIBLE_PATH/.vaultpassword
     echo "Password file updated."
   fi
-	ANSIBLE_VAULT_PASSWORD_FILE=$ANSIBLE_PATH/.vaultpassword
 else
-	ANSIBLE_VAULT_PASSWORD_FILE=$ANSIBLE_PATH/.vaultpassword
 	echo "Password file already exists."
 fi
+
+ANSIBLE_VAULT_PASSWORD_FILE=$ANSIBLE_PATH/.vaultpassword
 
 cd $HOME_REPO_DIR
 
