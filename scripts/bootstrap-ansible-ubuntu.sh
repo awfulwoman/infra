@@ -5,7 +5,6 @@ ANSIBLEPULL_REPO_URL=https://github.com/awfulwoman/home.git
 ANSIBLE_VAULT_PASSWORD=""
 
 read -sp "Playbook to use: " ANSIBLEPULL_PLAYBOOK
-read -sp "Vault password: " ANSIBLE_VAULT_PASSWORD
 
 # Check for defined paths
 if [[ -z "${ANSIBLE_PATH}" ]]; then
