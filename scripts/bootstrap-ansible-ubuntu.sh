@@ -2,9 +2,10 @@
 BOOTSTRAP_USER_ID=$(id -un)
 BOOTSTRAP_GROUP_ID=$(id -gn)
 ANSIBLEPULL_REPO_URL=https://github.com/awfulwoman/home.git
-# ANSIBLE_VAULT_PASSWORD=""
+ANSIBLE_VAULT_PASSWORD=""
 
-read -sp "Playbook: " ANSIBLEPULL_PLAYBOOK
+read -sp "Playbook to use: " ANSIBLEPULL_PLAYBOOK
+read -sp "Vault password: " ANSIBLE_VAULT_PASSWORD
 
 # Check for defined paths
 if [[ -z "${ANSIBLE_PATH}" ]]; then
