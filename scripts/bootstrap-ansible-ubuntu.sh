@@ -7,6 +7,12 @@ ANSIBLE_VAULT_PASSWORD=""
 read -sp "Playbook to use: " ANSIBLEPULL_PLAYBOOK
 
 # Check for defined paths
+
+if [[ -z "${HOME_REPO_DIR}" ]]; then
+#   HOME_REPO_DIR="$ANSIBLE_PATH/home"
+  HOME_REPO_DIR="/opt/home.git"
+fi
+
 if [[ -z "${ANSIBLE_PATH}" ]]; then
   ANSIBLE_PATH="/opt/ansible"
 fi
@@ -18,11 +24,8 @@ if [[ -z "${ANSIBLE_ROLES_PATH}" ]]; then
     ANSIBLE_ROLES_PATH="$ANSIBLE_PATH/galaxy-roles"
 fi
 
-if [[ -z "${HOME_REPO_DIR}" ]]; then
-#   HOME_REPO_DIR="$ANSIBLE_PATH/home"
-  HOME_REPO_DIR="/opt/home.git"
-fi
-
+echo "DEBUG VARS"
+echo "-----------"
 echo "ANSIBLE_PATH = $ANSIBLE_PATH"
 echo "BOOTSTRAP_USER_ID = $BOOTSTRAP_USER_ID"
 echo "BOOTSTRAP_GROUP_ID = $BOOTSTRAP_GROUP_ID"
@@ -105,4 +108,4 @@ ansible-galaxy collection install -r $HOME_REPO_DIR/ansible/meta/requirements.ya
 
 
 # Run Ansible Pull
-ansible-pull -U $ANSIBLEPULL_REPO_URL "ansible/playbooks/$ANSIBLEPULL_PLAYBOOK.yaml"
+ansible-pull -U $ANSIBLEPULL_REPO_URL "ansible/playbooks/$ANSIBLEPULL_PLAYBOOK.yaml" --vault-password-file $ANSIBLE_PATH/.vaultpassword
