@@ -80,7 +80,9 @@ if [ ! -f "$ANSIBLE_PATH/.vaultpassword" ]; then
     echo $ANSIBLE_VAULT_PASSWORD > $ANSIBLE_PATH/.vaultpassword
     echo "Password file updated."
   fi
+	ANSIBLE_VAULT_PASSWORD_FILE=$ANSIBLE_PATH/.vaultpassword
 else
+	ANSIBLE_VAULT_PASSWORD_FILE=$ANSIBLE_PATH/.vaultpassword
 	echo "Password file already exists."
 fi
 
@@ -103,4 +105,4 @@ ansible-galaxy collection install -r $HOME_REPO_DIR/ansible/meta/requirements.ya
 
 
 # Run Ansible Pull
-ansible-pull -U $ANSIBLEPULL_REPO_URL "ansible/playbooks/$ANSIBLEPULL_PLAYBOOK.yaml" --vault-password-file $ANSIBLE_PATH/.vaultpassword
+ansible-pull -U $ANSIBLEPULL_REPO_URL "ansible/playbooks/$ANSIBLEPULL_PLAYBOOK.yaml" 
