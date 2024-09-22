@@ -25,7 +25,7 @@ if [[ -z "${ANSIBLE_ROLES_PATH}" ]]; then
     ANSIBLE_ROLES_PATH="$HOME_REPO_DIR/ansible/roles;$ANSIBLE_PATH/galaxy-roles"
 fi
 
-DEFAULT_VAULT_PASSWORD_FILE=$ANSIBLE_PATH/.vaultpassword
+ANSIBLE_VAULT_PASSWORD_FILE=$ANSIBLE_PATH/.vaultpassword
 
 echo "DEBUG VARS"
 echo "-----------"
@@ -37,7 +37,7 @@ echo "ANSIBLE_VAULT_PASSWORD = $ANSIBLE_VAULT_PASSWORD"
 echo "ANSIBLE_COLLECTIONS_PATH = $ANSIBLE_COLLECTIONS_PATH"
 echo "ANSIBLE_ROLES_PATH = $ANSIBLE_ROLES_PATH"
 echo "HOME_REPO_DIR = $HOME_REPO_DIR"
-echo "DEFAULT_VAULT_PASSWORD_FILE = $ANSIBLE_VAULT_PASSWORD_FILE"
+echo "ANSIBLE_VAULT_PASSWORD_FILE = $ANSIBLE_VAULT_PASSWORD_FILE"
 
 # Import keys
 ssh-import-id-gh awfulwoman
@@ -108,4 +108,4 @@ ansible-galaxy collection install -r $HOME_REPO_DIR/ansible/meta/requirements.ya
 
 
 # Run Ansible Pull
-ansible-pull -U $ANSIBLEPULL_REPO_URL "ansible/playbooks/$ANSIBLEPULL_PLAYBOOK.yaml" 
+ansible-pull -U $ANSIBLEPULL_REPO_URL "ansible/playbooks/$ANSIBLEPULL_PLAYBOOK.yaml" --vault-password-file ANSIBLE_VAULT_PASSWORD_FILE
