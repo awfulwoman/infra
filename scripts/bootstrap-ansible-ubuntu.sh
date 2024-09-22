@@ -71,10 +71,12 @@ echo "************************************"
 if [ ! -f "$ANSIBLE_PATH/.vaultpassword" ]; then
 	if [[ -z "${ANSIBLE_VAULT_PASSWORD}" ]]; then
   	    read -sp "Vault password: " ANSIBLE_VAULT_PASSWORD
+				sudo chown -R $BOOTSTRAP_USER_ID:$BOOTSTRAP_GROUP_ID $ANSIBLE_PATH
 				echo $ANSIBLE_VAULT_PASSWORD > $ANSIBLE_PATH/.vaultpassword
         echo "Password file created."
 	fi
   if [[ $(< $ANSIBLE_PATH/.vaultpassword) != "$ANSIBLE_VAULT_PASSWORD" ]]; then
+		sudo chown -R $BOOTSTRAP_USER_ID:$BOOTSTRAP_GROUP_ID $ANSIBLE_PATH
     echo $ANSIBLE_VAULT_PASSWORD > $ANSIBLE_PATH/.vaultpassword
     echo "Password file updated."
   fi
