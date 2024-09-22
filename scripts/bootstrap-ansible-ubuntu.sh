@@ -4,6 +4,7 @@ BOOTSTRAP_GROUP_ID=$(id -gn)
 ANSIBLEPULL_REPO_URL=https://github.com/awfulwoman/home.git
 ANSIBLE_VAULT_PASSWORD=""
 
+
 read -sp "Playbook to use: " ANSIBLEPULL_PLAYBOOK
 
 # Check for defined paths
@@ -23,6 +24,8 @@ fi
 if [[ -z "${ANSIBLE_ROLES_PATH}" ]]; then
     ANSIBLE_ROLES_PATH="$HOME_REPO_DIR/ansible/roles;$ANSIBLE_PATH/galaxy-roles"
 fi
+
+ANSIBLE_VAULT_PASSWORD_FILE=$ANSIBLE_PATH/.vaultpassword
 
 echo "DEBUG VARS"
 echo "-----------"
@@ -84,7 +87,7 @@ else
 	echo "Password file already exists."
 fi
 
-ANSIBLE_VAULT_PASSWORD_FILE=$ANSIBLE_PATH/.vaultpassword
+
 
 cd $HOME_REPO_DIR
 
