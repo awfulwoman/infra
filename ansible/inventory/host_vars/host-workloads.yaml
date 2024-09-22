@@ -1,0 +1,36 @@
+ansible_host: host-workloads
+ansible_user: "{{ vault_server_username }}"
+
+configure_dns_linkdevice_physical: "enp1s0"
+
+smartmontools_drives:
+  - /dev/disk/by-id/scsi-SATA_SPCC_Solid_State_30086025723
+  - /dev/disk/by-id/scsi-SATA_SPCC_Solid_State_30086025743
+
+# --- ZFS -------------
+
+# These ZFS pools that should be present
+zfs_pools:
+  - fastpool
+
+# Named ZFS datasets
+container_compositions_zfs_id: fastpool/compositions
+wifey_data_path_zfs_id: "fastpool/{{vault_wifey_name}}"
+
+# Define useful paths from ZFS datasets
+wifey_data_path: "/{{ wifey_data_path_zfs_id }}"
+
+# Datasets that should be present 
+zfs_datasets:
+  - "{{ container_compositions_zfs_id }}"
+  - fastpool/shared
+  - fastpool/charlie
+  - "{{ wifey_data_path_zfs_id }}"
+
+# --- NFS -------------
+nfs_exports:
+  - /fastpool/shared
+
+compositions:
+  - reverseproxy
+  - container-management
