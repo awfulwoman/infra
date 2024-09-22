@@ -83,14 +83,14 @@ echo " "
 echo "UPDATE ANSIBLE GALAXY ROLES"
 echo "************************************"
 sudo mkdir -p $ANSIBLE_ROLES_PATH
-sudo chown -R ubuntu:ubuntu $ANSIBLE_ROLES_PATH
+sudo chown -R awful:awful $ANSIBLE_ROLES_PATH
 ansible-galaxy install -r $HOME_REPO_DIR/ansible/meta/requirements.yaml -p $ANSIBLE_ROLES_PATH
 
 echo " "
 echo "UPDATE ANSIBLE GALAXY COLLECTIONS"
 echo "************************************"
 sudo mkdir -p $ANSIBLE_COLLECTIONS_PATH
-sudo chown -R ubuntu:ubuntu $ANSIBLE_COLLECTIONS_PATH
+sudo chown -R awful:awful $ANSIBLE_COLLECTIONS_PATH
 ansible-galaxy collection install -r $HOME_REPO_DIR/ansible/meta/requirements.yaml -p $ANSIBLE_COLLECTIONS_PATH
 
 
