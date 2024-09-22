@@ -24,7 +24,7 @@ if [[ -z "${HOME_REPO_DIR}" ]]; then
 fi
 
 # Import keys
-ssh-import-id-gh whalecoiner
+ssh-import-id-gh awfulwoman
 
 # Install Ansible
 which ansible
