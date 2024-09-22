@@ -58,6 +58,7 @@ if [ ! -d "$HOME_REPO_DIR" ]; then
     sudo chown -R $BOOTSTRAP_USER_ID:$BOOTSTRAP_GROUP_ID $HOME_REPO_DIR
 else
     echo "$HOME_REPO_DIR exists. Destroying and recreating."
+		sudo rm -rf $HOME_REPO_DIR
 		sudo mkdir -p $HOME_REPO_DIR
     sudo chown -R $BOOTSTRAP_USER_ID:$BOOTSTRAP_GROUP_ID $HOME_REPO_DIR
 		git clone $ANSIBLEPULL_REPO_URL $HOME_REPO_DIR
