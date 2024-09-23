@@ -12,6 +12,7 @@ all:
     host-storage:                         # NAS
     host-pihole:                          # DHCP + DNS
     host-guineacam-ir:
+    host-workloads:
 
   # Groupings of servers that allow them to be administered collectively.
   children:
@@ -30,6 +31,7 @@ all:
         host-mqtt:
         host-radio:
         host-guineacam-ir:
+        host-workloads:
 
     # Group: Home Automation
     homeautomation:
@@ -45,6 +47,7 @@ all:
         host-mqtt:
         host-radio:
         host-guineacam-ir:
+        host-workloads:
 
     # ZFS Backup Server
     zfs-backup-server:
