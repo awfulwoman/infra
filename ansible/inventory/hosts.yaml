@@ -12,7 +12,7 @@ all:
     host-storage:                         # NAS
     host-pihole:                          # DHCP + DNS
     host-guineacam-ir:
-    host-workloads:
+    host-workloads:                       # Misc workloads
 
   # Groupings of servers that allow them to be administered collectively.
   children:

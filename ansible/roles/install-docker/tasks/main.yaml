@@ -13,10 +13,10 @@
   become: true
   ansible.builtin.apt:
     name:
-      - docker-ce 
-      - docker-ce-cli 
-      - containerd.io 
-      - docker-buildx-plugin 
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-buildx-plugin
       - docker-compose-plugin
     update_cache: true
     state: present

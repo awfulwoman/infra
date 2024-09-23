@@ -1,5 +1,4 @@
 - name: Create a docker bridge network
-  become: true
   community.docker.docker_network:
     name: "{{ default_docker_network }}"
   when: compositions

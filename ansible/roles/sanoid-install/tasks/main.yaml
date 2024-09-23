@@ -1,5 +1,0 @@
-- name: Ensure dependencies are installed
-  become: true
-  ansible.builtin.apt:
-    name:
-      - sanoid
