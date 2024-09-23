@@ -1,9 +1,10 @@
 - name: Create a docker bridge network
+  become: true
   community.docker.docker_network:
     name: "{{ default_docker_network }}"
   when: compositions
 
-- name: Ensure composition dataset is present 
+- name: Ensure composition dataset is present
   become: true
   community.general.zfs:
     name: "{{ container_compositions_zfs_id }}"
@@ -20,10 +21,10 @@
     state: directory
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: 0774
+    mode: "0774"
   when: compositions
 
-- name: Ensure a ZFS dataset for each composition is present 
+- name: Ensure a ZFS dataset for each composition is present
   become: true
   community.general.zfs:
     name: "{{ container_compositions_zfs_id }}/{{ item }}"
@@ -41,7 +42,7 @@
     state: directory
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: 0774
+    mode: "0774"
   loop: "{{ compositions }}"
   when: compositions
 
@@ -51,7 +52,7 @@
     state: directory
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: 0774
+    mode: "0774"
   loop: "{{ compositions }}"
   when: compositions
 
