@@ -108,4 +108,4 @@ ansible-galaxy collection install -r $HOME_REPO_DIR/ansible/meta/requirements.ya
 
 
 # Run Ansible Pull
-ansible-pull -U $ANSIBLEPULL_REPO_URL "ansible/playbooks/$ANSIBLEPULL_PLAYBOOK.yaml" --vault-password-file ANSIBLE_VAULT_PASSWORD_FILE
+ansible-pull -U $ANSIBLEPULL_REPO_URL "ansible/playbooks/$ANSIBLEPULL_PLAYBOOK.yaml" --vault-password-file $ANSIBLE_VAULT_PASSWORD_FILE
