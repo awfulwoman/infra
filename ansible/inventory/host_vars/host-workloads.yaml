@@ -37,6 +37,8 @@ zfs_backup_datasets:
 nfs_exports:
   - /fastpool/shared
 
+compositions_config_dir: "/{{ container_compositions_zfs_id }}"
+
 compositions:
   - reverseproxy
   - container-management
