@@ -36,7 +36,7 @@ services:
       - "traefik.http.routers.esphome.tls.certresolver=letsencrypt"
       - "com.centurylinklabs.watchtower.enable=false"
     volumes:
-      - "{{ composition_config }}:/esphome"
+      - "{{ composition_config }}/esphome:/config"
       - "/etc/localtime:/etc/localtime:ro"
 networks:
   "{{ default_docker_network }}":
