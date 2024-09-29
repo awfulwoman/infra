@@ -66,33 +66,31 @@
   become: true
   ansible.builtin.apt:
     name:
-      - vim
       - curl
-      - wget
-      - git
-      - zsh
-      - iptables
-      - restic
-      - python3
-      - python3-pip
-      - python3-docker
-      - neofetch
-      - htop
-      - lm-sensors
-      - tmux
-      - pipx
-      - uptimed
-      - htop
-      - tmux
-      - unzip
-      - mosh
       - dirmngr
+      - ffmpeg
+      - git
+      - htop
+      - iptables
       - lm-sensors
+      - mosh
+      - neofetch
+      - pipx
+      - python-is-python3
+      - python3
+      - python3-docker
+      - python3-pip
+      - restic
+      - retry
       - smartmontools
       - sqlite3
-      - python-is-python3
-      - ffmpeg
       - timg
+      - tmux
+      - unzip
+      - uptimed
+      - vim
+      - wget
+      - zsh
     state: present
 
 - name: Autoremove apt packages
