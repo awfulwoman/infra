@@ -19,6 +19,25 @@ services:
       - "{{ composition_config }}/media:/media"
       - /etc/localtime:/etc/localtime:ro
 
+  esphome:
+    container_name: esphome
+    ports:
+      - "0.0.0.0:6052:6052"
+    privileged: true
+    environment:
+      - "TZ=Europe/Berlin"
+      - "ESPHOME_DASHBOARD_USE_PING=true"
+    image: esphome/esphome
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.esphome.rule=Host(`esphome.{{ domain_name }}`)"
+      - "traefik.http.routers.esphome.tls=true"
+      - "traefik.http.routers.esphome.tls.certresolver=letsencrypt"
+      - "com.centurylinklabs.watchtower.enable=false"
+    volumes:
+      - "{{ composition_config }}:/esphome"
+      - "/etc/localtime:/etc/localtime:ro"
 networks:
   "{{ default_docker_network }}":
     external: true
