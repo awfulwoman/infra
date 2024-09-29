@@ -1,0 +1,5 @@
+---
+- name: Run compositions
+  hosts: localhost
+  roles:
+    - role: compositions
