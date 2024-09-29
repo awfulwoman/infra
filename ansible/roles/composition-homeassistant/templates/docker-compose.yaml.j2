@@ -18,7 +18,7 @@ services:
   esphome:
     container_name: esphome
     ports:
-      - "0.0.0.0:6052:6052"
+      - "6052:6052"
     privileged: true
     environment:
       - "ESPHOME_DASHBOARD_USE_PING=true"
