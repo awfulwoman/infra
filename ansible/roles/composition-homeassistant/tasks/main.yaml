@@ -21,6 +21,7 @@
     loop_var: dir_item
   loop:
     - media
+    - esphome
 
 - name: Run Configure DNS role
   ansible.builtin.include_role:
