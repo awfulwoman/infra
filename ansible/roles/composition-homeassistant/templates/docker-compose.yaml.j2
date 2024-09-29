@@ -10,10 +10,6 @@ services:
     env_file: .environment_vars
     labels:
       - "traefik.enable=true"
-      - "homepage.group=Home Automation"
-      - "homepage.name=Home Assistant"
-      - "homepage.href=https://homeassistant.{{ domain_name }}"
-      - "homepage.description=The brains of the home"
     volumes:
       - "{{ composition_config }}:/config"
       - "{{ composition_config }}/media:/media"
@@ -25,8 +21,8 @@ services:
       - "0.0.0.0:6052:6052"
     privileged: true
     environment:
-      - "TZ=Europe/Berlin"
       - "ESPHOME_DASHBOARD_USE_PING=true"
+    env_file: .environment_vars 
     image: esphome/esphome
     restart: unless-stopped
     labels:
@@ -34,7 +30,6 @@ services:
       - "traefik.http.routers.esphome.rule=Host(`esphome.{{ domain_name }}`)"
       - "traefik.http.routers.esphome.tls=true"
       - "traefik.http.routers.esphome.tls.certresolver=letsencrypt"
-      - "com.centurylinklabs.watchtower.enable=false"
     volumes:
       - "{{ composition_config }}/esphome:/config"
       - "/etc/localtime:/etc/localtime:ro"
