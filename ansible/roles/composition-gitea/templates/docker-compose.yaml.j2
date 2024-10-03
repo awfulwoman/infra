@@ -37,7 +37,7 @@ services:
         condition: service_healthy 
         restart: true
     volumes:
-      - ./data/act_runner:/data
+      - "{{ composition_config }}/runners":/data
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - GITEA_INSTANCE_URL="gitea.{{ domain_name }}"

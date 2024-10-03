@@ -30,6 +30,7 @@
     loop_var: dir_item
   loop:
     - gitea
+    - runners
 
 # - name: Copy over files
 #   become: true
