@@ -1,3 +1,4 @@
-# DEFAULT PROJECT
+# Home Assistant
 
-This is the readme for the template project.
+Home Assistant and ESPhome.
+
