@@ -2,11 +2,11 @@
 name: "{{ composition_name }}"
 services:
   SERVICENAME:
-    container_name: CONTAINERNAME
+    container_name: gitea
     ports:
       - "3000:3000"
       - "222:22"
-    image: IMAGENAME
+    image: gitea/gitea:latest
     restart: unless-stopped
     env_file: .environment_vars
     labels:
