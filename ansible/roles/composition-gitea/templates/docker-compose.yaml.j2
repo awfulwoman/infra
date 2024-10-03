@@ -28,9 +28,9 @@ services:
     networks:
       - "{{ default_docker_network }}"
 
-  runner:
+  runner01:
     image: gitea/act_runner:latest
-    container_name: gitea_runner
+    container_name: runner01
     restart: unless-stopped
     privileged: true
     depends_on:
@@ -46,7 +46,6 @@ services:
       - CONFIG_FILE=/config.yaml
       - GITEA_INSTANCE_URL="https://gitea.{{ domain_name }}/"
       - GITEA_RUNNER_REGISTRATION_TOKEN="{{ gitea_runner_registration }}"
-      - GITEA_RUNNER_NAME="gitea_runner"
     networks:
       - "{{ default_docker_network }}"
 
