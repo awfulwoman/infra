@@ -11,7 +11,7 @@ services:
     labels:
       - "traefik.enable=true"
     volumes:
-      - "{{ composition_config }}:/config"
+      - "{{ composition_config }}/homeassistant:/config"
       - "{{ composition_config }}/media:/media"
       - /etc/localtime:/etc/localtime:ro
 
