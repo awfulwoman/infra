@@ -44,7 +44,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - CONFIG_FILE=/config.yaml
-      - GITEA_INSTANCE_URL="http://gitea:3000"
+      - GITEA_INSTANCE_URL="https://gitea.{{ domain_name }}/"
       - GITEA_RUNNER_REGISTRATION_TOKEN="{{ gitea_runner_registration }}"
       - GITEA_RUNNER_NAME="henry"
     networks:
