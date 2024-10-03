@@ -30,6 +30,7 @@ services:
 
   runner:
     image: gitea/act_runner:nightly
+    container_name: gita_runner
     restart: unless-stopped
     depends_on:
       gitea:
