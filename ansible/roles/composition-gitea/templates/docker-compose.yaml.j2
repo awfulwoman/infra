@@ -43,6 +43,8 @@ services:
     environment:
       - GITEA_INSTANCE_URL="https://gitea.{{ domain_name }}"
       - GITEA_RUNNER_REGISTRATION_TOKEN="{{ gitea_runner_registration }}"
+    networks:
+      - "{{ default_docker_network }}"
 
 networks:
   "{{ default_docker_network }}":
