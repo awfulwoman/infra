@@ -32,6 +32,7 @@ services:
     image: gitea/act_runner:latest
     container_name: gita_runner
     restart: unless-stopped
+    privileged: true
     depends_on:
       gitea:
         # required so runner can attach to gitea, see "healthcheck"
@@ -42,6 +43,7 @@ services:
       - "{{ composition_config }}/runners/config.yaml:/config.yaml"
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
+      - CONFIG_FILE=/config.yaml
       - GITEA_INSTANCE_URL="http://gitea:3000"
       - GITEA_RUNNER_REGISTRATION_TOKEN="{{ gitea_runner_registration }}"
       - GITEA_RUNNER_NAME="henry"
