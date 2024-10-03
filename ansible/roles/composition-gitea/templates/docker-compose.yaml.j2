@@ -11,7 +11,7 @@ services:
     env_file: .environment_vars
     healthcheck:
       # checks availability of Gitea's front-end with curl
-      test: ["CMD", "curl", "-f", "gitea.{{ domain_name }}"]
+      test: ["CMD", "curl", "-f", "https://gitea.{{ domain_name }}"]
       interval: 10s
       retries: 3
       start_period: 30s
@@ -41,7 +41,7 @@ services:
       - "{{ composition_config }}/runners:/data"
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
-      - GITEA_INSTANCE_URL="gitea.{{ domain_name }}"
+      - GITEA_INSTANCE_URL="https://gitea.{{ domain_name }}"
       - GITEA_RUNNER_REGISTRATION_TOKEN="{{ gitea_runner_registration }}"
 
 networks:
