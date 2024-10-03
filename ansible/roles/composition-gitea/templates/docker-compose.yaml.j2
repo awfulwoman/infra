@@ -28,20 +28,20 @@ services:
     networks:
       - "{{ default_docker_network }}"
 
-  runner:
-    image: gitea/act_runner:nightly
-    restart: unless-stopped
-    depends_on:
-      gitea:
-        # required so runner can attach to gitea, see "healthcheck"
-        condition: service_healthy 
-        restart: true
-    volumes:
-      - ./data/act_runner:/data
-      - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-      - GITEA_INSTANCE_URL="gitea.{{ domain_name }}"
-      - GITEA_RUNNER_REGISTRATION_TOKEN="{{ gitea_runner_registration }}"
+  # runner:
+  #   image: gitea/act_runner:nightly
+  #   restart: unless-stopped
+  #   depends_on:
+  #     gitea:
+  #       # required so runner can attach to gitea, see "healthcheck"
+  #       condition: service_healthy 
+  #       restart: true
+  #   volumes:
+  #     - ./data/act_runner:/data
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #   environment:
+  #     - GITEA_INSTANCE_URL="gitea.{{ domain_name }}"
+  #     - GITEA_RUNNER_REGISTRATION_TOKEN="{{ gitea_runner_registration }}"
 
 networks:
   "{{ default_docker_network }}":
