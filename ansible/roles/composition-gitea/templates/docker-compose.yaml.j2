@@ -39,10 +39,12 @@ services:
         restart: true
     volumes:
       - "{{ composition_config }}/runners:/data"
+      - "{{ composition_config }}/runners/config.yaml:/config.yaml"
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - GITEA_INSTANCE_URL="http://gitea:3000"
       - GITEA_RUNNER_REGISTRATION_TOKEN="{{ gitea_runner_registration }}"
+      - GITEA_RUNNER_NAME="henry"
     networks:
       - "{{ default_docker_network }}"
 

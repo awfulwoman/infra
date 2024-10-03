@@ -32,11 +32,13 @@
     - gitea
     - runners
 
-# - name: Copy over files
-#   become: true
-#   ansible.builtin.copy:
-#     src: filename.txt
-#     dest: "{{ composition_config }}/filename.txt
+- name: Copy over files
+  become: true
+  ansible.builtin.template:
+    src: config.yaml
+    dest: "{{ composition_config }}/runners/config.yaml
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
 
 - name: Register tailscale subdomain(s)
   community.digitalocean.digital_ocean_domain_record:
