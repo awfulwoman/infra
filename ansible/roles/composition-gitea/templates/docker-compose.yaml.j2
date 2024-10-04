@@ -54,31 +54,6 @@ services:
     networks:
       - "{{ default_docker_network }}"
 
-
-  # runner02:
-  #   image: gitea/act_runner:latest
-  #   container_name: runner02
-  #   restart: unless-stopped
-  #   privileged: true
-  #   depends_on:
-  #     gitea:
-  #       # required so runner can attach to gitea, see "healthcheck"
-  #       condition: service_healthy 
-  #       restart: true
-  #   volumes:
-  #     - "{{ composition_config }}/runners:/data"
-  #     - "{{ composition_config }}/runners/config.yaml:/config.yaml"
-  #     - /var/run/docker.sock:/var/run/docker.sock:rw
-  #   environment:
-  #     - CONFIG_FILE=/config.yaml
-  #     - GITEA_RUNNER_LOG_LEVEL="trace"
-  #     - GITEA_INSTANCE_URL="https://gitea.{{ domain_name }}"
-  #     - GITEA_RUNNER_REGISTRATION_TOKEN="{{ gitea_runner_registration }}"
-  #     - GITEA_RUNNER_JOB_CONTAINER_NETWORK="{{ default_docker_network }}"
-  #     # - GITEA_INSTANCE_INSECURE="true"
-  #   networks:
-  #     - "{{ default_docker_network }}"
-
 networks:
   "{{ default_docker_network }}":
-    external: false
+    external: true
