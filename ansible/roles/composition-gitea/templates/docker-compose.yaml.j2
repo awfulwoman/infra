@@ -44,6 +44,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:rw
     environment:
       - CONFIG_FILE=/config.yaml
+      - GITEA_RUNNER_LOG_LEVEL="debug"
       - GITEA_INSTANCE_URL="https://gitea.{{ domain_name }}"
       - GITEA_RUNNER_REGISTRATION_TOKEN="{{ gitea_runner_registration }}"
       - GITEA_RUNNER_JOB_CONTAINER_NETWORK="{{ default_docker_network }}"
@@ -68,6 +69,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:rw
     environment:
       - CONFIG_FILE=/config.yaml
+      - GITEA_RUNNER_LOG_LEVEL="debug"
       - GITEA_INSTANCE_URL="https://gitea.{{ domain_name }}"
       - GITEA_RUNNER_REGISTRATION_TOKEN="{{ gitea_runner_registration }}"
       - GITEA_RUNNER_JOB_CONTAINER_NETWORK="{{ default_docker_network }}"
