@@ -46,6 +46,7 @@ services:
       - CONFIG_FILE=/config.yaml
       - GITEA_INSTANCE_URL="https://gitea.{{ domain_name }}"
       - GITEA_RUNNER_REGISTRATION_TOKEN="{{ gitea_runner_registration }}"
+      - GITEA_RUNNER_JOB_CONTAINER_NETWORK="{{ default_docker_network }}"
       # - GITEA_INSTANCE_INSECURE="true"
     networks:
       - "{{ default_docker_network }}"
@@ -69,6 +70,7 @@ services:
       - CONFIG_FILE=/config.yaml
       - GITEA_INSTANCE_URL="https://gitea.{{ domain_name }}"
       - GITEA_RUNNER_REGISTRATION_TOKEN="{{ gitea_runner_registration }}"
+      - GITEA_RUNNER_JOB_CONTAINER_NETWORK="{{ default_docker_network }}"
       # - GITEA_INSTANCE_INSECURE="true"
     networks:
       - "{{ default_docker_network }}"
