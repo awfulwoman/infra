@@ -43,7 +43,7 @@ services:
       - "{{ composition_config }}/runners/config.yaml:/config.yaml"
       - /var/run/docker.sock:/var/run/docker.sock:rw
     environment:
-      - CONFIG_FILE=/config.yaml
+      # - CONFIG_FILE=/config.yaml
       - GITEA_RUNNER_LOG_LEVEL="trace"
       - GITEA_INSTANCE_URL="https://gitea.{{ domain_name }}"
       - GITEA_RUNNER_REGISTRATION_TOKEN="{{ gitea_runner_registration }}"
