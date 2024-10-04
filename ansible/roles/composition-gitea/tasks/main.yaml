@@ -52,5 +52,5 @@
   loop_control:
     loop_var: domain_item
   loop:
-    - "gitea"
+    - "git"
   when: ansible_tailscale0.ipv4.address

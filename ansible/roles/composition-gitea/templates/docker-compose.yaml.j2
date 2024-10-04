@@ -20,7 +20,7 @@ services:
       timeout: 10s
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.gitea.rule=Host(`gitea.{{ domain_name }}`)"
+      - "traefik.http.routers.gitea.rule=Host(`git.{{ domain_name }}`)"
       - "traefik.http.routers.gitea.tls=true"
       - "traefik.http.routers.gitea.tls.certresolver=letsencrypt"
       - "traefik.http.services.gitea.loadbalancer.server.port=3000"
