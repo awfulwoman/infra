@@ -1,0 +1,25 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  runner:
+    image: gitea/act_runner:latest
+    container_name: runner01
+    restart: unless-stopped
+    privileged: true
+    volumes:
+      - "{{ composition_config }}/runners:/data"
+      - "{{ composition_config }}/runners/config.yaml:/config.yaml"
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      # - CONFIG_FILE=/config.yaml
+      - GITEA_RUNNER_LOG_LEVEL="trace"
+      - GITEA_INSTANCE_URL="https://git.{{ domain_name }}"
+      - GITEA_RUNNER_REGISTRATION_TOKEN="{{ gitea_runner_registration }}"
+      - GITEA_RUNNER_JOB_CONTAINER_NETWORK="{{ default_docker_network }}"
+      # - GITEA_INSTANCE_INSECURE="true"
+    networks:
+      - "{{ default_docker_network }}"
+
+networks:
+  "{{ default_docker_network }}":
+    external: true
