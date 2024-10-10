@@ -10,6 +10,6 @@
   loop: "{{ configure_dns_subdomains }}"
   loop_control:
     loop_var: domain_item
-  when: ansible_tailscale0.ipv4.address
+  when: ansible_tailscale0.ipv4.address is defined
 
 # - name: Register PiHole subdomain(s)
