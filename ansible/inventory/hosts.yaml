@@ -11,7 +11,7 @@ all:
     host-backups:                         # Backups
     host-storage:                         # NAS
     host-pihole:                          # DHCP + DNS
-    host-guineacam-ir:
+    host-ha-demo:
     host-workloads:                       # Misc workloads
 
   # Groupings of servers that allow them to be administered collectively.
@@ -30,7 +30,6 @@ all:
         host-pihole:
         host-mqtt:
         host-radio:
-        host-guineacam-ir:
         host-workloads:
 
     # Group: Home Automation
@@ -46,7 +45,6 @@ all:
         host-homeassistant:
         host-mqtt:
         host-radio:
-        host-guineacam-ir:
         host-workloads:
 
     # ZFS Backup Server

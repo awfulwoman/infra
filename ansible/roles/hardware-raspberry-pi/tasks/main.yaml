@@ -5,88 +5,88 @@
 # Ubuntu = /boot/firmware/usercfg.txt
 
 # Wifi hardware status
-- name: Disable wifi hardware
+- name: Ensure wifi hardware is disabled
   become: true
   ansible.builtin.lineinfile:
     dest: "{{ raspberry_pi_boot_config_location }}"
     line: 'dtoverlay=disable-wifi'
     state: present
-  when: raspberry_pi_disable_wifi is true
+  when: raspberry_pi_wifi is false
 
-- name: Enable wifi hardware
+- name: Ensure wifi hardware is enabled
   become: true
   ansible.builtin.lineinfile:
     dest: "{{ raspberry_pi_boot_config_location }}"
     line: 'dtoverlay=disable-wifi'
     state: absent
-  when: raspberry_pi_disable_wifi is false
+  when: raspberry_pi_wifi is true
 
 # Bluetooth hardware status
-- name: Disable Bluetooth hardware
+- name: Ensure Bluetooth hardware is disabled
   become: true
   ansible.builtin.lineinfile:
     dest: "{{ raspberry_pi_boot_config_location }}"
     line: 'dtoverlay=disable-bt'
     state: present
-  when: raspberry_pi_disable_bluetooth is true
+  when: raspberry_pi_bluetooth is false
 
-- name: Enable Bluetooth hardware
+- name: Ensure Bluetooth hardware is enabled
   become: true
   ansible.builtin.lineinfile:
     dest: "{{ raspberry_pi_boot_config_location }}"
     line: 'dtoverlay=disable-bt'
     state: absent
-  when: raspberry_pi_disable_bluetooth is false
+  when: raspberry_pi_bluetooth is true
 
-- name: Insstall pi-specific packages
+
+- name: Ensure Raspi-config exists
   become: true
   ansible.builtin.apt:
     name:
       - raspi-config
+      - build-essential
     state: present
 
-# Ensure cgroups options for k8s are in place
-# ONLY FOR RASPBERRY PI
-# - name: Configure cmdline.txt options
-#   block:
-#     - name: Read cmdline.txt content
-#       ansible.builtin.command:
-#         cmd: "cat {{ raspberry_pi_cmdline_txt }}"
-#       register: _cmdline_file
-#       changed_when: false
 
-#     - name: Convert cmdline.txt options to dict object
-#       ansible.builtin.set_fact:
-#         _cmdline_dict: |
-#           {% set d={} -%}
-#           {% for item in _cmdline_file.stdout.split(' ') -%}
-#           {% set k = item.split('=', 1)[0] -%}
-#           {% set v = "".join(item.split('=', 1)[1:]) -%}
-#           {% set _ = d.update({k: v}) -%}
-#           {% endfor -%}
-#           {{ d }}
+- name: Ensure I2C apt packages are installed
+  become: true
+  ansible.builtin.apt:
+    name:
+      - python3-rpi.gpio
+      - python3-luma.oled
+      - python3-pil
+      - i2c-tools
+    state: present
+  when: raspberry_pi_i2c and raspberry_pi_oled
 
-#     - name: Combine cmdline.txt options with cmdline_options
-#       ansible.builtin.set_fact:
-#         _cmdline_comb: "{{ _cmdline_dict | combine(raspberry_pi_cmdline_options) }}"
+- name: Get I2C status
+  ansible.builtin.shell: "raspi-config nonint get_i2c"
+  register: i2c_status 
+  changed_when: false
 
-#     - name: Create new cmdline.txt options string
-#       ansible.builtin.set_fact:
-#         _cmdline: |
-#           {% for k, v in _cmdline_comb.items() %}
-#           {% if v | string | length > 0 %}
-#            {{ k }}={{ v }}
-#           {%- else %}
-#            {{ k }}
-#           {%- endif %}
-#           {% endfor %}
+- name: Enable I2C
+  become: true
+  ansible.builtin.shell: "raspi-config nonint do_i2c 0"
+  when: (raspberry_pi_i2c == true) and (i2c_status.stdout != '0')
+  # Get status and compare it against what should be done to prevent unnecessary changes
 
-#     - name: Ensure cmdline.txt is updated
-#       ansible.builtin.copy:
-#         content: "{{ _cmdline | trim }}"
-#         dest: "{{ raspberry_pi_cmdline_txt }}"
-#         owner: root
-#         group: root
-#         mode: 0755
-#       notify: Reboot host
-#   when: raspberry_pi_cmdline_txt is defined
+- name: Disable I2C
+  become: true
+  ansible.builtin.shell: "raspi-config nonint do_i2c 1"
+  when: (raspberry_pi_i2c == false) and (i2c_status.stdout != '1')
+  # Yes, "1" means "not endabled" in raspi-config
+
+- name: Get SPI status
+  ansible.builtin.shell: "raspi-config nonint get_spi"
+  register: spi_status
+  changed_when: false
+
+- name: Enable SPI
+  become: true
+  ansible.builtin.shell: "raspi-config nonint do_spi 0"
+  when: (raspberry_pi_spi == true) and (spi_status.stdout != '0')
+
+- name: Disable SPI
+  become: true
+  ansible.builtin.shell: "raspi-config nonint do_spi 1"
+  when: (raspberry_pi_spi == false) and (spi_status.stdout != '1')

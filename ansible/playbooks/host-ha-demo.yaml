@@ -1,16 +1,15 @@
 ---
-- name: Home MQTT Broker
-  hosts: host-mqtt
+- name: Home Automation Demo
+  hosts: host-ha-demo
   roles:
     - role: bootstrap-ubuntu
     - role: hardware-raspberry-pi
-      raspberry_pi_wifi: false
       raspberry_pi_boot_config_location: /boot/firmware/config.txt
+      raspberry_pi_bluetooth: true
+      raspberry_pi_i2c: true
+      raspberry_pi_oled: true
     - role: install-docker
-    - role: zfs-core-new
     - role: install-ansible
-    - role: install-ansible-pull
-    - role: zfs-backup-client
     - role: compositions
 
   handlers:
