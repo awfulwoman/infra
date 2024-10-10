@@ -4,7 +4,7 @@ services:
   web:
     image: nginx
     ports:
-      - "8080:80"
+      - "127.0.0.1:8080:80"
     env_file: .environment_vars
     environment:
       - NGINX_HOST=foobar.com
