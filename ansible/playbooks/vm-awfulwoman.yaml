@@ -1,0 +1,13 @@
+- name: Workloads server
+  hosts: vm-awfulwoman
+  roles:
+    - role: bootstrap-ubuntu
+    - role: install-docker
+    - role: install-ansible
+    - role: install-ansible-pull
+    # - role: compositions
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:

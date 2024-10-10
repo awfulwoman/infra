@@ -13,6 +13,7 @@ all:
     host-pihole:                          # DHCP + DNS
     host-ha-demo:
     host-workloads:                       # Misc workloads
+    vm-awfulwoman:
 
   # Groupings of servers that allow them to be administered collectively.
   children:
@@ -31,6 +32,7 @@ all:
         host-mqtt:
         host-radio:
         host-workloads:
+        vm-awfulwoman:
 
     # Group: Home Automation
     homeautomation:
