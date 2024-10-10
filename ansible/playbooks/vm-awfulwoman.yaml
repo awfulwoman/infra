@@ -5,7 +5,7 @@
     - role: install-docker
     - role: install-ansible
     - role: install-ansible-pull
-    # - role: compositions
+    - role: compositions
 
   handlers:
     - name: Reboot host
