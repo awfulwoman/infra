@@ -45,7 +45,7 @@ services:
     restart: unless-stopped
     volumes:
       - "{{ composition_config }}/zigbee:/app/data"
-      - "/run/udev:/run/udev:ro"
+      # - "/run/udev:/run/udev:ro"
       - /etc/localtime:/etc/localtime:ro
     networks:
       - "{{ default_docker_network }}"
