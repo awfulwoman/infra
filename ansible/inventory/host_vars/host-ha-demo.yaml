@@ -1,4 +1,4 @@
-ansible_host: 192.168.1.246
+ansible_host: 192.168.8.175
 ansible_user: "{{ vault_server_username }}"
 
 # --- NETWORK -------------
@@ -11,5 +11,5 @@ compositions_config_dir: "/home/{{ vault_server_username }}/compositions"
 compositions:
   - reverseproxy
   - container-management
-  - homeassistan-demo
+  - homeassistant-demo
   - zigbee2mqtt-demo
