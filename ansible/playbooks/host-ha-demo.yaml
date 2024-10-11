@@ -3,6 +3,7 @@
   hosts: host-ha-demo
   roles:
     - role: bootstrap-ubuntu
+      bootstrap_ubuntu_timezone: "Europe/London"
     - role: hardware-raspberry-pi
       raspberry_pi_boot_config_location: /boot/firmware/config.txt
       raspberry_pi_bluetooth: true

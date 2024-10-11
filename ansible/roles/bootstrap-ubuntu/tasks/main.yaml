@@ -9,7 +9,7 @@
 - name: Ensure timezone is for Berlin
   become: true
   community.general.timezone:
-    name: Europe/Berlin
+    name: "{{ bootstrap_ubuntu_timezone }}"
 
 - name: Ensure localisation files for '{{ config_system_locale }}' are available
   become: true
