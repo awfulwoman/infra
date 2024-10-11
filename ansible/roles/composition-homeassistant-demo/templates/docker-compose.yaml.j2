@@ -31,6 +31,27 @@ services:
       - "/etc/localtime:/etc/localtime:ro"
     networks:
       - "{{ default_docker_network }}"
+
+  zigbee:
+    container_name: zigbee2mqtt
+    ports:
+      - "9091:9091"
+    privileged: true
+    user: "1000:1000"
+    group_add:
+      - dialout
+    devices:
+      - "{{ zigbee_usb_device }}:/dev/ttyACM0"
+    env_file: .environment_vars
+    image: koenkk/zigbee2mqtt
+    restart: unless-stopped
+    volumes:
+      - "{{ composition_config }}:/app/data"
+      - "/run/udev:/run/udev:ro"
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+
 networks:
   "{{ default_docker_network }}":
     external: true

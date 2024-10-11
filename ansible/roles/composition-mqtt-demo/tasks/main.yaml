@@ -25,10 +25,3 @@
   ansible.builtin.copy:
     src: mosquitto.conf
     dest: "{{ composition_config }}/mosquitto.conf"
-
-- name: Run Configure DNS role
-  ansible.builtin.include_role:
-    name: "configure-dns"
-  vars:
-    configure_dns_subdomains:
-      - mqtt
