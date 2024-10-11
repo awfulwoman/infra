@@ -1,4 +1,11 @@
 # code: language=ansible
+- name: Install bluetooth things
+  become: true 
+  ansible.builtin.apt:
+    name:
+      - bluez
+    state: present
+
 - name: "Create compose file"
   ansible.builtin.template:
     src: docker-compose.yaml.j2

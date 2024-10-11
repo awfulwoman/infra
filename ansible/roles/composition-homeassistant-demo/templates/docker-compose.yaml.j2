@@ -8,10 +8,12 @@ services:
     image: ghcr.io/home-assistant/home-assistant:2024.10
     restart: unless-stopped
     env_file: .environment_vars
+    devices:
+      - "{{ zigbee_usb_device }}:/dev/ttyACM0"
     volumes:
       - "{{ composition_config }}/homeassistant:/config"
       - "{{ composition_config }}/media:/media"
-      - "/dev/dbus:/run/dbus:ro"
+      - "/run/dbus:/run/dbus:ro"
       - /etc/localtime:/etc/localtime:ro
 
   esphome:
