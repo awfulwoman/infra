@@ -12,4 +12,5 @@ compositions:
   - reverseproxy
   - container-management
   - homeassistant-demo
-  # - zigbee-demo
+  - zigbee-demo
+  - mqtt-demo
