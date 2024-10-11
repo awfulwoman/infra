@@ -11,6 +11,7 @@ services:
     volumes:
       - "{{ composition_config }}/homeassistant:/config"
       - "{{ composition_config }}/media:/media"
+      - "/dev/dbus:/run/dbus:ro"
       - /etc/localtime:/etc/localtime:ro
 
   esphome:
