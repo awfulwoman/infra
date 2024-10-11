@@ -8,8 +8,6 @@ services:
     image: ghcr.io/home-assistant/home-assistant:2024.10
     restart: unless-stopped
     env_file: .environment_vars
-    # devices:
-    #   - "{{ zigbee_usb_device }}:/dev/ttyACM0"
     volumes:
       - "{{ composition_config }}/homeassistant:/config"
       - "{{ composition_config }}/media:/media"
@@ -46,7 +44,7 @@ services:
     image: koenkk/zigbee2mqtt
     restart: unless-stopped
     volumes:
-      - "{{ composition_config }}:/app/data"
+      - "{{ composition_config }}/zigbee:/app/data"
       - "/run/udev:/run/udev:ro"
       - /etc/localtime:/etc/localtime:ro
     networks:

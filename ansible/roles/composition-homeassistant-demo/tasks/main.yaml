@@ -1,6 +1,6 @@
 # code: language=ansible
 - name: Install bluetooth things
-  become: true 
+  become: true
   ansible.builtin.apt:
     name:
       - bluez
@@ -30,4 +30,5 @@
     - media
     - esphome
     - homeassistant
+    - zigbee
 
