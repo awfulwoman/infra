@@ -11,4 +11,5 @@ compositions_config_dir: "/home/{{ vault_server_username }}/compositions"
 compositions:
   - reverseproxy
   - container-management
-  # - homeassistant
+  - homeassistan-demo
+  - zigbee2mqtt-demo

@@ -1,0 +1,33 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  homeassistant:
+    container_name: homeassistant
+    privileged: true
+    network_mode: host
+    image: ghcr.io/home-assistant/home-assistant:2024.10
+    restart: unless-stopped
+    env_file: .environment_vars
+    volumes:
+      - "{{ composition_config }}/homeassistant:/config"
+      - "{{ composition_config }}/media:/media"
+      - /etc/localtime:/etc/localtime:ro
+
+  esphome:
+    container_name: esphome
+    ports:
+      - "6052:6052"
+    privileged: true
+    environment:
+      - "ESPHOME_DASHBOARD_USE_PING=true"
+    env_file: .environment_vars 
+    image: esphome/esphome
+    restart: unless-stopped
+    volumes:
+      - "{{ composition_config }}/esphome:/config"
+      - "/etc/localtime:/etc/localtime:ro"
+    networks:
+      - "{{ default_docker_network }}"
+networks:
+  "{{ default_docker_network }}":
+    external: true
