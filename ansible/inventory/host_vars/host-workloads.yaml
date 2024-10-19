@@ -43,3 +43,4 @@ compositions:
   - reverseproxy
   - container-management
   - gitea
+  - gitea-runners
