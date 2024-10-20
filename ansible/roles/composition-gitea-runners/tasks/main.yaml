@@ -23,6 +23,7 @@
 # ----------------------------
 
 - name: Create directories
+  become: true
   ansible.builtin.file:
     path: "{{ composition_config }}/{{ dir_item }}"
     state: directory
