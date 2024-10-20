@@ -136,7 +136,7 @@
     tailscale_args: "set --advertise-exit-node"
   when: tailscale_exit_node is defined and tailscale_exit_node is true
 
-- name: "Allow the {{ ansible_user }} user to sudo rsync with no password"
+- name: "Allow the user to sudo rsync with no password"
   become: true
   community.general.sudoers:
     name: allow-sudo-rsync-no-password
