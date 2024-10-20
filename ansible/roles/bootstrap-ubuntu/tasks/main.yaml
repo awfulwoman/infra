@@ -133,7 +133,7 @@
   ansible.builtin.include_role:
     name: artis3n.tailscale
   vars:
-    tailscale_args: "set --advertise-exit-node"
+    tailscale_args: "--advertise-exit-node"
   when: tailscale_exit_node is defined and tailscale_exit_node is true
 
 - name: "Allow the user to sudo rsync with no password"
