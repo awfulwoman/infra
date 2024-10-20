@@ -2,8 +2,9 @@
 name: "{{ composition_name }}"
 services:
   runner01:
+    container_name: runner01
+    hostname: "{{ ansible_hostname }}-runner01"
     image: gitea/act_runner:latest
-    container_name: "{{ ansible_hostname }}-runner01"
     restart: unless-stopped
     privileged: true
     volumes:
