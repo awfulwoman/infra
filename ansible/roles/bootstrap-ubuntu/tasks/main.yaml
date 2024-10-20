@@ -134,7 +134,7 @@
     name: artis3n.tailscale
   vars:
     tailscale_args: "set --advertise-exit-node"
-  when: tailscale_exit_node
+  when: tailscale_exit_node is undefined or false
 
 - name: "Allow the {{ ansible_user }} user to sudo rsync with no password"
   become: true
