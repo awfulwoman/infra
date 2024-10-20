@@ -12,6 +12,7 @@
       acltype: posix
       xattr: sa
   # when: compositions and (zfs_pools is defined) and (zfs_pools is true)
+  when: compositions
 
 - name: Ensure composition dataset is owned by user
   become: true
@@ -22,6 +23,7 @@
     group: "{{ ansible_user }}"
     mode: "0774"
   # when: compositions and (zfs_pools is defined) and (zfs_pools is true)
+  when: compositions
 
 - name: Ensure a ZFS dataset for each composition is present
   become: true
@@ -33,6 +35,7 @@
       xattr: sa
   loop: "{{ compositions }}"
   # when: compositions and (zfs_pools is defined) and (zfs_pools is true)
+  when: compositions
 
 - name: Ensure datasets are owned by user
   become: true
@@ -44,6 +47,7 @@
     mode: "0774"
   loop: "{{ compositions }}"
   # when: compositions and (zfs_pools is defined) and (zfs_pools is true)
+  when: compositions
 
 - name: Ensure composition config dirs exist
   ansible.builtin.file:
