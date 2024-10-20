@@ -61,3 +61,4 @@ all:
         host-mqtt:
         host-radio:
         host-homeassistant:
+        host-workloads:
