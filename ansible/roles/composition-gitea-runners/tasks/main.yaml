@@ -30,13 +30,13 @@
   loop_control:
     loop_var: dir_item
   loop:
-    - runners
+    - runner01
 
 - name: Copy over files
   become: true
   ansible.builtin.template:
     src: config.yaml
-    dest: "{{ composition_config }}/runners/config.yaml"
+    dest: "{{ composition_config }}/runner01/config.yaml"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
 
