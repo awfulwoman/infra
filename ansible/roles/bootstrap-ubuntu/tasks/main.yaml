@@ -104,25 +104,37 @@
   loop: 
     - terminaltexteffects
 
-- ansible.builtin.include_role:
+- name: Env vars
+  ansible.builtin.include_role:
     name: weareinteractive.environment
   vars:
     ansible_become: true
     no_log: true
 
-- ansible.builtin.include_role:
+- name: Awful guy geerling 
+  ansible.builtin.include_role:
     name: geerlingguy.security
   vars:
     ansible_become: true
     security_fail2ban_enabled: false
 
-- ansible.builtin.include_role:
+- name: MOTD
+  ansible.builtin.include_role:
     name: configure-motd
   vars:
     ansible_become: true
 
-- ansible.builtin.include_role:
+- name: Tailscale
+  ansible.builtin.include_role:
     name: artis3n.tailscale
+  when: not tailscale_exit_node
+
+- name: Tailscale - with exit node
+  ansible.builtin.include_role:
+    name: artis3n.tailscale
+    vars:
+      tailscale_args: "---advertise-exit-node"
+  when: tailscale_exit_node
 
 - name: "Allow the {{ ansible_user }} user to sudo rsync with no password"
   become: true
