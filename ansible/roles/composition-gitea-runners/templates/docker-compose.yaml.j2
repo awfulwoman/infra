@@ -12,8 +12,8 @@ services:
       - "GITEA_RUNNER_REGISTRATION_TOKEN={{ gitea_runner_registration }}"
       - "GITEA_RUNNER_JOB_CONTAINER_NETWORK={{ default_docker_network }}"
     volumes:
-      - "{{ composition_config }}/runner02:/data"
-      - "{{ composition_config }}/runner/config.yaml:/config.yaml"
+      - "{{ composition_config }}/runner01:/data"
+      - "{{ composition_config }}/runners/config.yaml:/config.yaml"
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - "{{ default_docker_network }}"
@@ -30,7 +30,7 @@ services:
       - "GITEA_RUNNER_JOB_CONTAINER_NETWORK={{ default_docker_network }}"
     volumes:
       - "{{ composition_config }}/runner02:/data"
-      - "{{ composition_config }}/runner/config.yaml:/config.yaml"
+      - "{{ composition_config }}/runners/config.yaml:/config.yaml"
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - "{{ default_docker_network }}"
