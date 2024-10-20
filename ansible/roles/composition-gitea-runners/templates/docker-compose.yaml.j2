@@ -3,7 +3,6 @@ name: "{{ composition_name }}"
 services:
   runner01:
     container_name: runner01
-    hostname: "{{ ansible_hostname }}-runner01"
     image: gitea/act_runner:latest
     restart: unless-stopped
     privileged: true
@@ -12,6 +11,7 @@ services:
       - "GITEA_INSTANCE_URL=https://gitea.{{ domain_name }}"
       - "GITEA_RUNNER_REGISTRATION_TOKEN={{ gitea_runner_registration }}"
       - "GITEA_RUNNER_JOB_CONTAINER_NETWORK={{ default_docker_network }}"
+      - "GITEA_RUNNER_NAME={{ ansible_hostname }}-runner01"
     volumes:
       - "{{ composition_config }}/runner01:/data"
       - "{{ composition_config }}/runners/config.yaml:/config.yaml"
@@ -21,7 +21,6 @@ services:
 
   runner02:
     container_name: runner02
-    hostname: "{{ ansible_hostname }}-runner02"
     image: gitea/act_runner:latest
     restart: unless-stopped
     privileged: true
@@ -30,6 +29,7 @@ services:
       - "GITEA_INSTANCE_URL=https://gitea.{{ domain_name }}"
       - "GITEA_RUNNER_REGISTRATION_TOKEN={{ gitea_runner_registration }}"
       - "GITEA_RUNNER_JOB_CONTAINER_NETWORK={{ default_docker_network }}"
+      - "GITEA_RUNNER_NAME={{ ansible_hostname }}-runner02"
     volumes:
       - "{{ composition_config }}/runner02:/data"
       - "{{ composition_config }}/runners/config.yaml:/config.yaml"
