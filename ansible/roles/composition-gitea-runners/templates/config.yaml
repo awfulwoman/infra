@@ -3,15 +3,15 @@
 # # You don't have to copy this file to your instance,
 # # just run `./act_runner generate-config > config.yaml` to generate a config file.
 
-# log:
-#   # The level of logging, can be trace, debug, info, warn, error, fatal
-#   level: debug
+log:
+  # The level of logging, can be trace, debug, info, warn, error, fatal
+  level: info
 
-# runner:
-#   # Where to store the registration result.
-#   file: .runner
-#   # Execute how many tasks concurrently at the same time.
-#   capacity: 1
+runner:
+  # Where to store the registration result.
+  file: .runner
+  # Execute how many tasks concurrently at the same time.
+  capacity: 1
 #   # Extra environment variables to run jobs.
 #   envs:
 #     A_TEST_ENV_NAME_1: a_test_env_value_1
@@ -37,10 +37,10 @@
 #   # Find more images provided by Gitea at https://gitea.com/gitea/runner-images .
 #   # If it's empty when registering, it will ask for inputting labels.
 #   # If it's empty when execute `daemon`, will use labels in `.runner` file.
-#   labels:
-#     - "ubuntu-latest:docker://gitea/runner-images:ubuntu-latest"
-#     - "ubuntu-22.04:docker://gitea/runner-images:ubuntu-22.04"
-#     - "ubuntu-20.04:docker://gitea/runner-images:ubuntu-20.04"
+  labels:
+    - "ubuntu-latest:docker://gitea/runner-images:ubuntu-latest"
+    - "ubuntu-22.04:docker://gitea/runner-images:ubuntu-22.04"
+    - "ubuntu-20.04:docker://gitea/runner-images:ubuntu-20.04"
 
 # # cache:
 # #   # Enable cache server to use actions/cache.
