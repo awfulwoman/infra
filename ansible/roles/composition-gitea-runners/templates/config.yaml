@@ -40,7 +40,9 @@ runner:
   labels:
     - "ubuntu-latest:docker://gitea/runner-images:ubuntu-latest"
     - "ubuntu-22.04:docker://gitea/runner-images:ubuntu-22.04"
-    - "ubuntu-20.04:docker://gitea/runner-images:ubuntu-20.04"
+    - "ubuntu-latest-slim:docker://gitea/runner-images:ubuntu-latest-slim"
+    - "ubuntu-22.04-slim:docker://gitea/runner-images:ubuntu-22.04-slim"
+    
 
 # # cache:
 # #   # Enable cache server to use actions/cache.
