@@ -46,3 +46,7 @@ compositions:
   - container-management
   - gitea
   - gitea-runners
+  - immich
+
+traefik_providers:
+  - immich
