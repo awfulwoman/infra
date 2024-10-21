@@ -29,7 +29,8 @@
   loop_control:
     loop_var: dir_item
   loop:
-    - immich
+    - postgres
+    - library
 
 # - name: Copy over files
 #   become: true
