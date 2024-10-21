@@ -34,6 +34,7 @@
   when: traefik_providers is defined
 
 - name: "Template out providers file"
+  become: true
   ansible.builtin.template:
     src: "templates/providers/{{ traefik_provider }}.yaml"
     dest: "{{ composition_config }}/providers/{{ traefik_provider }}.yaml"
