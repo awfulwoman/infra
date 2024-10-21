@@ -12,8 +12,13 @@ http:
       tls:
         certresolver: letsencrypt
       entrypoints:
-        - web
-        - websecure
+        websecure:
+          address: :443
+          transport:
+            respondingTimeouts:
+              readTimeout: 600s
+              idleTimeout: 600s
+              writeTimeout: 600s
       middlewares:
         - secHeaders
         - https-redirect
