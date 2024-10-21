@@ -6,8 +6,7 @@
 # The compose file on main may not be compatible with the latest release.
 #
 
-name: immich
-
+name: "{{ composition_name }}"
 services:
   immich-server:
     container_name: immich_server
@@ -27,6 +26,11 @@ services:
       - redis
       - database
     restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.immich.rule=Host(`immich.{{ domain_name }}`)"
+      - "traefik.http.routers.immich.tls=true"
+      - "traefik.http.routers.immich.tls.certresolver=letsencrypt"
     healthcheck:
       disable: false
 

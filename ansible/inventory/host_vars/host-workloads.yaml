@@ -51,5 +51,5 @@ compositions:
   - gitea-runners
   - immich
 
-traefik_providers:
-  - immich
+# traefik_providers:
+#   - immich
