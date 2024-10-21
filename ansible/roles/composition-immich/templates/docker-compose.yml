@@ -93,3 +93,8 @@ services:
 
 volumes:
   model-cache:
+
+
+networks:
+  "{{ default_docker_network }}":
+    external: true
