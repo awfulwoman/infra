@@ -33,7 +33,7 @@ services:
       - "traefik.http.routers.immich.tls.certresolver=letsencrypt"
     healthcheck:
       disable: false
-		networks:
+    networks:
       - "{{ default_docker_network }}"
 
 
@@ -52,7 +52,7 @@ services:
     restart: always
     healthcheck:
       disable: false
-		networks:
+    networks:
       - "{{ default_docker_network }}"
 
 
@@ -62,7 +62,7 @@ services:
     healthcheck:
       test: redis-cli ping || exit 1
     restart: always
-		networks:
+    networks:
       - "{{ default_docker_network }}"
 
 
@@ -99,7 +99,7 @@ services:
         'wal_compression=on',
       ]
     restart: always
-		networks:
+    networks:
       - "{{ default_docker_network }}"
 
 volumes:
