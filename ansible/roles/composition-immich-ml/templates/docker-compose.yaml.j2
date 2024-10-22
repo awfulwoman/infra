@@ -1,0 +1,23 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  SERVICENAME:
+    container_name: immich_machine_learning
+    # For hardware acceleration, add one of -[armnn, cuda, openvino] to the image tag.
+    # Example tag: ${IMMICH_VERSION:-release}-cuda
+    image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-release}
+    ports:
+      - 3003:3003
+    restart: unless-stopped
+    env_file: .environment_vars
+    volumes:
+      - model-cache:/cache
+    networks:
+      - "{{ default_docker_network }}"
+
+networks:
+  "{{ default_docker_network }}":
+    external: true
+
+volumes:
+  model-cache:
