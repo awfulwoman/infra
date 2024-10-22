@@ -33,6 +33,9 @@ services:
       - "traefik.http.routers.immich.tls.certresolver=letsencrypt"
     healthcheck:
       disable: false
+		networks:
+      - "{{ default_docker_network }}"
+
 
   immich-machine-learning:
     container_name: immich_machine_learning
@@ -49,6 +52,9 @@ services:
     restart: always
     healthcheck:
       disable: false
+		networks:
+      - "{{ default_docker_network }}"
+
 
   redis:
     container_name: immich_redis
@@ -56,6 +62,9 @@ services:
     healthcheck:
       test: redis-cli ping || exit 1
     restart: always
+		networks:
+      - "{{ default_docker_network }}"
+
 
   database:
     container_name: immich_postgres
@@ -90,6 +99,8 @@ services:
         'wal_compression=on',
       ]
     restart: always
+		networks:
+      - "{{ default_docker_network }}"
 
 volumes:
   model-cache:
