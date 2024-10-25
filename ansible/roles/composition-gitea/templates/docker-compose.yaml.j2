@@ -11,6 +11,7 @@ services:
     env_file: .environment_vars
     environment:
       - GITEA__actions__ENABLED="true"
+      - GITEA__indexer__REPO_INDEXER_ENABLED="true"
     healthcheck:
       # checks availability of Gitea's front-end with curl
       test: ["CMD", "curl", "-f", "gitea.{{ domain_name }}"]
