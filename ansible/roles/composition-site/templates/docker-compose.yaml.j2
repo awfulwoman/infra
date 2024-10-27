@@ -1,0 +1,23 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  site:
+    container_name: awfulwoman
+    ports:
+      - "8080:80"
+    image: gitea.ewwww.eu/awfulwoman/site:latest
+    restart: unless-stopped
+    env_file: .environment_vars
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.site.rule=Host(`awfulwoman.com`) || Host(`www.awfulwoman.com`)"
+      - "traefik.http.routers.site.tls=true"
+      - "traefik.http.routers.site.tls.certresolver=letsencrypt"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+
+networks:
+  "{{ default_docker_network }}":
+    external: true
