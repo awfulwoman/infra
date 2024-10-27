@@ -25,7 +25,6 @@ zfs_datasets:
 # Datasets to be backed-up
 # These datasets will be pulled to a backup server
 zfs_backup_datasets:
-  - "{{ container_config_zfs_id }}"
   - "{{ container_compositions_zfs_id }}"
 
 # Define useful paths from ZFS datasets
