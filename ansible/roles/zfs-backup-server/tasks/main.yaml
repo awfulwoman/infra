@@ -47,8 +47,12 @@
 
 - name: Construct a list of datasets to create
   ansible.builtin.set_fact:
-    datasets: "{{ datasets }} + [ '{{ item }}/{{ hostvars[item].zfs_backup_datasets | flatten }}' ]"
+    datasets: "{{ datasets + _result }}"
   loop: "{{ query('inventory_hostnames', 'zfs-backup-clients') }}"
+  vars:
+    _host_datasets: "{{ hostvars[item].zfs_backup_datasets }}"
+    _result: "{{ [item + '/'] | product(_host_datasets) | map('join') | list }}"
+
 
 - name: Show value of dataset_names
   ansible.builtin.debug:
