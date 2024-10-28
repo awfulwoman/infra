@@ -37,14 +37,6 @@
   ansible.builtin.set_fact:
     datasets: []
 
-# - name: Construct a list of datasets to create
-#   set_fact:
-#     datasets: "{{ datasets + _result }}"
-#   loop: "{{ zfsbackup_clients }}"
-#   vars:
-#     _host_datasets: "{{ hostvars[item].zfs_pools }}"
-#     _result: "{{ [item + '/'] | product(_host_datasets) | map('join') | list }}"
-
 - name: Construct a list of datasets to create
   ansible.builtin.set_fact:
     datasets: "{{ datasets + _result }}"
@@ -52,7 +44,6 @@
   vars:
     _host_datasets: "{{ hostvars[item].zfs_backup_datasets }}"
     _result: "{{ [item + '/'] | product(_host_datasets) | map('join') | list }}"
-
 
 - name: Show value of dataset_names
   ansible.builtin.debug:
