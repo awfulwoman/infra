@@ -47,7 +47,7 @@
 
 - name: Construct a list of datasets to create
   ansible.builtin.set_fact:
-    datasets: "{{ datasets }} + [ '{{ item.zfs_backup_datasets }}' ]"
+    datasets: "{{ datasets }} + [ '{{ item.hostname }}' ]"
   with_items: "{{  hostvars }}"
 
 - name: Show value of dataset_names
