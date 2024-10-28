@@ -11,19 +11,19 @@
   register: ping_result
   ignore_errors: yes
 
-- name: Attempt to mount remote NFS backup
-  block:
-    - name: Mount remote NFS volumes
-      become: true
-      ansible.posix.mount:
-        src: "{{ nfsclient_remote_server }}:{{ restic_server_path }}" # TODO: Make this a look-up from inventory data
-        path: "{{ restic_client_path }}"
-        state: mounted
-        opts: "{{ nfsclient_mount_options }}"
-        fstype: nfs
-        boot: true
-      when: not ping_result.failed
-  rescue:
-    - name: Debug remote mount failure
-      ansible.builtin.debug:
-        msg: "Could not mount {{ nfsclient_remote_server }}:{{ restic_server_path }}. Non-fatal. Proceeding."
+# - name: Attempt to mount remote NFS backup
+#   block:
+#     - name: Mount remote NFS volumes
+#       become: true
+#       ansible.posix.mount:
+#         src: "{{ nfsclient_remote_server }}:{{ restic_server_path }}" # TODO: Make this a look-up from inventory data
+#         path: "{{ restic_client_path }}"
+#         state: mounted
+#         opts: "{{ nfsclient_mount_options }}"
+#         fstype: nfs
+#         boot: true
+#       when: not ping_result.failed
+#   rescue:
+#     - name: Debug remote mount failure
+#       ansible.builtin.debug:
+#         msg: "Could not mount {{ nfsclient_remote_server }}:{{ restic_server_path }}. Non-fatal. Proceeding."
