@@ -197,7 +197,7 @@ then
 # **************************
 {% for zfs_backup_dataset in hostvars[zfsbackup_client]['zfs_backup_datasets'] %}
 
-{% if hostvars[zfsbackup_client]['zfs_backup_datasets_exclude'] %}{% for zfs_backup_dataset_to_exclude in hostvars[zfsbackup_client]['zfs_backup_datasets_exclude'] %} --exclude-datasets={{zfs_backup_dataset_to_exclude}} {% endfor %}{% endif %}
+{% if hostvars[zfsbackup_client]['zfs_backup_datasets_exclude'] is defined %}{% for zfs_backup_dataset_to_exclude in hostvars[zfsbackup_client]['zfs_backup_datasets_exclude'] %} --exclude-datasets={{zfs_backup_dataset_to_exclude}} {% endfor %}{% endif %}
 
 log_info "{{zfs_backup_dataset}}..."
 SYNCOID_COMMAND="sudo /usr/sbin/syncoid --no-privilege-elevation --no-sync-snap --quiet --recursive --skip-parent {{ vault_zfsbackups_user }}@{{ zfsbackup_client }}$SEARCHDOMAIN:{{zfs_backup_dataset}} {{ zfsbackup_poolname }}/{{ zfsbackup_client }}/{{zfs_backup_dataset}}"
