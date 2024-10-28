@@ -15,13 +15,11 @@ zfs_pools:
 # Named ZFS datasets
 container_config_zfs_id: fastpool/containers
 container_compositions_zfs_id: fastpool/compositions
-restic_zfs_id: slowpool/backups/restic
 charlie_data_path_zfs_id: slowpool/charlie
 charlie_syncthing_data_path_zfs_id: slowpool/charlie/syncthing
 zfs_dataset_wifey: "slowpool/{{vault_wifey_name}}"
 
 # Define useful paths from ZFS datasets
-restic_server_path: "/{{ restic_zfs_id }}"
 syncthing_data_path: "/{{ charlie_syncthing_data_path_zfs_id }}"
 wifey_data_path: "/{{ zfs_dataset_wifey }}"
 container_config_dir: "/{{ container_config_zfs_id }}"
@@ -31,7 +29,6 @@ compositions_config_dir: "/{{ container_compositions_zfs_id }}"
 zfs_datasets:
   - "{{ container_config_zfs_id }}"
   - "{{ container_compositions_zfs_id }}"
-  - "{{ restic_zfs_id }}"
   - slowpool/images
   - slowpool/media
   - slowpool/media/music
@@ -58,7 +55,7 @@ zfs_backup_datasets_exclude:
 nfs_exports:
   - "/fastpool *(rw,all_squash,anonuid=1000,anongid=1000)"
   - "{{ shared_media_path }} *(rw,all_squash,anonuid=1000,anongid=1000)"
-  - "{{ restic_server_path }} *(rw,all_squash,anonuid=1000,anongid=1000)"
+
 
 # --- Smartmontools -------------
 smartmontools_drives:
