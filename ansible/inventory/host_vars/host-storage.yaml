@@ -50,6 +50,9 @@ zfs_backup_datasets:
   - slowpool/shared
   - "{{ wifey_data_path_zfs_id }}"
 
+zfs_backup_datasets_exclude:
+  - slowpool/media/shows
+  - slowpool/media/movies
 
 # --- NFS -------------
 nfs_exports:
