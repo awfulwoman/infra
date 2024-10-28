@@ -24,9 +24,9 @@ wifey_data_path: "/{{ wifey_data_path_zfs_id }}"
 # Datasets that should be present 
 zfs_datasets:
   - "{{ container_compositions_zfs_id }}"
-  # - fastpool/shared
+  - fastpool/shared
   - "{{ charlie_photos_data_path_zfs_id }}"
-  # - fastpool/charlie
+  - fastpool/charlie
   - "{{ wifey_data_path_zfs_id }}"
 
 zfs_backup_datasets:
