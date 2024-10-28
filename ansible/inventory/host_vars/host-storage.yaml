@@ -32,7 +32,6 @@ zfs_datasets:
   - "{{ container_config_zfs_id }}"
   - "{{ container_compositions_zfs_id }}"
   - "{{ restic_zfs_id }}"
-  - slowpool/pools
   - slowpool/images
   - slowpool/media
   - slowpool/media/music
@@ -47,7 +46,6 @@ zfs_datasets:
 # Datasets to be backed-up
 zfs_backup_datasets:
   - "{{ container_compositions_zfs_id }}"
-  # - slowpool/pools
   # - slowpool/images
   - slowpool/media
   # - "{{ zfs_dataset_wifey }}"
