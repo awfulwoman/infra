@@ -33,7 +33,6 @@ zfs_datasets:
   - "{{ restic_zfs_id }}"
   - slowpool/pools
   - slowpool/images
-  - slowpool/shared
   - slowpool/media
   - slowpool/media/music
   - "{{ wifey_data_path_zfs_id }}"
@@ -47,7 +46,6 @@ zfs_backup_datasets:
   # - slowpool/pools
   # - slowpool/images
   - slowpool/media
-  - slowpool/shared
   - "{{ wifey_data_path_zfs_id }}"
 
 zfs_backup_datasets_exclude:
