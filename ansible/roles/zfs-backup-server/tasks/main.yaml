@@ -46,15 +46,12 @@
 #     _result: "{{ [item + '/'] | product(_host_datasets) | map('join') | list }}"
 
 - name: Construct a list of datasets to create
-  set_fact:
-    datasets: "{{ datasets + _result }}"
-  loop: "{{ zfsbackup_clients }}"
-  vars:
-    _host_datasets: "{{ hostvars[item].zfs_backup_datasets }}"
-    # _result: "{{ [item + '/'] | product(_host_datasets) | map('join') | list }}"
+  ansible.builtin.set_fact:
+    datasets: "{{ datasets }} + [ '{{ item }}' ]"
+  with_items: "{{  hostvars[item].zfs_backup_datasets }}"
 
 - name: Show value of dataset_names
-  ansible.builtin.debug: 
+  ansible.builtin.debug:
     var: datasets
 
 - name: Ensure a dataset for each dataset of each backup client is present
