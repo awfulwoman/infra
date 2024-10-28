@@ -36,6 +36,10 @@ zfs_datasets:
   - slowpool/images
   - slowpool/media
   - slowpool/media/music
+  # - slowpool/media/shows
+  # - slowpool/media/movies
+  # - slowpool/media/audiobooks
+  # - slowpool/media/podcasts
   - "{{ zfs_dataset_wifey }}"
   - slowpool/charlie
   - "{{ charlie_syncthing_data_path_zfs_id }}"
