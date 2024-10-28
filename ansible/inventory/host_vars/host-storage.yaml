@@ -46,9 +46,8 @@ zfs_backup_datasets:
   - "{{ container_compositions_zfs_id }}"
   - slowpool/pools
   - slowpool/images
-  - slowpool/media/music
+  # - slowpool/media/music
   - slowpool/shared
-  - "{{ charlie_syncthing_data_path_zfs_id }}"
   - "{{ wifey_data_path_zfs_id }}"
 
 
