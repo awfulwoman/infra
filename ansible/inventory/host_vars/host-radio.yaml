@@ -17,7 +17,6 @@ container_compositions_zfs_id: fastpool/compositions
 
 # Datasets that should be present 
 zfs_datasets:
-  - "{{ container_compositions_zfs_id }}"
   - "{{ container_config_zfs_id }}"
 
 # Datasets to be backed-up
