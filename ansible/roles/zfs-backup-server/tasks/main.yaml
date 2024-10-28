@@ -47,7 +47,7 @@
 
 - name: Construct a list of datasets to create
   ansible.builtin.set_fact:
-    datasets: "{{ datasets }} + [ '{{ hostvars[item].ansible_user }}' ]"
+    datasets: "{{ datasets }} + [ '{{ hostvars[item].zfs_backup_datasets | flatten }}' ]"
   loop: "{{ query('inventory_hostnames', 'zfs-backup-clients') }}"
 
 - name: Show value of dataset_names
