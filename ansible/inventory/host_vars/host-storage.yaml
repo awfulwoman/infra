@@ -30,6 +30,7 @@ compositions_config_dir: "/{{ container_compositions_zfs_id }}"
 # Datasets that should be present 
 zfs_datasets:
   - "{{ container_config_zfs_id }}"
+  - "{{ container_compositions_zfs_id }}"
   - "{{ restic_zfs_id }}"
   - slowpool/pools
   - slowpool/images
@@ -37,7 +38,7 @@ zfs_datasets:
   - slowpool/media/music
   - "{{ wifey_data_path_zfs_id }}"
   - slowpool/charlie
-  - "{{ container_compositions_zfs_id }}"
+  
   - "{{ charlie_syncthing_data_path_zfs_id }}"
 
 # Datasets to be backed-up
