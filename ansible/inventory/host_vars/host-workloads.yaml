@@ -25,15 +25,15 @@ wifey_data_path: "/{{ wifey_data_path_zfs_id }}"
 zfs_datasets:
   - "{{ container_compositions_zfs_id }}"
   - fastpool/shared
-  - "{{ charlie_photos_data_path_zfs_id }}"
   - fastpool/charlie
+  - "{{ charlie_photos_data_path_zfs_id }}"
   - "{{ wifey_data_path_zfs_id }}"
 
 zfs_backup_datasets:
   - "{{ container_compositions_zfs_id }}"
-  - fastpool/shared
-  - fastpool/charlie
-  # - "{{ charlie_photos_data_path_zfs_id }}"
+  # - fastpool/shared
+  # - fastpool/charlie
+  - "{{ charlie_photos_data_path_zfs_id }}"
   - "{{ wifey_data_path_zfs_id }}"
 
 # --- NFS -------------
