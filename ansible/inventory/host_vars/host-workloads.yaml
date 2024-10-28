@@ -33,7 +33,7 @@ zfs_backup_datasets:
   - "{{ container_compositions_zfs_id }}"
   - fastpool/shared
   - fastpool/charlie
-  - "{{ charlie_photos_data_path_zfs_id }}"
+  # - "{{ charlie_photos_data_path_zfs_id }}"
   - "{{ wifey_data_path_zfs_id }}"
 
 # --- NFS -------------

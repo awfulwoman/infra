@@ -181,7 +181,7 @@ touch $LOGDIR/$LOGFILE
 
 # Loop over clients
 # *******************
-{% for zfsbackup_client in zfsbackup_clients %}
+{% for zfsbackup_client in query('inventory_hostnames', 'zfs-backup-clients')  %}
 
 # log_info "Backing up {{ zfsbackup_client }}."
 

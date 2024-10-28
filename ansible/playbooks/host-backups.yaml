@@ -15,12 +15,12 @@
     - role: zfs-backup-server
       zfsbackup_pushover: false
       zfsbackup_run_after_wake: true
-      zfsbackup_clients: # TODO: define this better
-        - host-homeassistant
-        - host-storage
-        - host-mqtt
-        - host-radio
-        - host-workloads
+      # zfsbackup_clients: # TODO: define this better
+      #   - host-homeassistant
+      #   - host-storage
+      #   - host-mqtt
+      #   - host-radio
+      #   - host-workloads
     - role: hifis.unattended_upgrades
       become: true
     - role: configure-motd
