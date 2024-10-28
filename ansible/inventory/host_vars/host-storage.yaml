@@ -38,7 +38,6 @@ zfs_datasets:
   - slowpool/media/music
   - "{{ wifey_data_path_zfs_id }}"
   - slowpool/charlie
-  
   - "{{ charlie_syncthing_data_path_zfs_id }}"
 
 # Datasets to be backed-up
