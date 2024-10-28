@@ -34,7 +34,7 @@
 #     permissions: compression,mountpoint,create,mount,receive,rollback,snapshot,hold,release,destroy,xattr,acltype,rename
 
 - name: Create dataset list
-  set_fact:
+  ansible.builtin.set_fact:
     datasets: []
 
 # - name: Construct a list of datasets to create
@@ -47,8 +47,8 @@
 
 - name: Construct a list of datasets to create
   ansible.builtin.set_fact:
-    datasets: "{{ datasets }} + [ '{{ item }}' ]"
-  with_items: "{{  hostvars[item].zfs_backup_datasets }}"
+    datasets: "{{ datasets }} + [ '{{ item.zfs_backup_datasets }}' ]"
+  with_items: "{{  hostvars }}"
 
 - name: Show value of dataset_names
   ansible.builtin.debug:
