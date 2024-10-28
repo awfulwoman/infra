@@ -46,7 +46,7 @@ zfs_backup_datasets:
   # - slowpool/pools
   # - slowpool/images
   - slowpool/media
-  - "{{ zfs_dataset_wifey }}"
+  # - "{{ zfs_dataset_wifey }}"
 
 zfs_backup_datasets_exclude:
   - slowpool/media/shows
