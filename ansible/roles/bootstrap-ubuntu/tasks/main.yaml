@@ -68,6 +68,7 @@
     name:
       - curl
       - dirmngr
+      - e2fsprogs
       - ffmpeg
       - git
       - htop
