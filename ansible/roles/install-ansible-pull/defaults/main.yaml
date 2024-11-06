@@ -1,6 +1,6 @@
 ansiblepull_present: true
 ansiblepull_cron_minute: "0"
-ansiblepull_cron_hour: "*"
+ansiblepull_cron_hour: "5,17"
 ansiblepull_workdir: "{{ ansible_path }}"
 ansiblepull_script_name: ansible-pull-full.sh
 ansiblepull_lockfile_name: ansible-pull.lock
