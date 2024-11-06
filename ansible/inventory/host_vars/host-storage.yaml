@@ -39,6 +39,11 @@ zfs_datasets:
   - "{{ zfs_dataset_wifey }}"
   - slowpool/charlie
   - "{{ charlie_syncthing_data_path_zfs_id }}"
+  - slowpool/shared
+  - slowpool/shared/media
+  - slowpool/shared/media/movies
+  - slowpool/shared/media/shows
+  - slowpool/shared/media/music
 
 # Datasets to be backed-up
 zfs_backup_datasets:
