@@ -56,6 +56,9 @@ zfs_backup_datasets_exclude:
   - slowpool/media/shows
   - slowpool/media/movies
 
+# Media storage
+shared_media_path: "/slowpool/shared/media"
+
 # --- NFS -------------
 nfs_exports:
   - "/fastpool *(rw,all_squash,anonuid=1000,anongid=1000)"
