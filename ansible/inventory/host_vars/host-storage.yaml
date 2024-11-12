@@ -30,7 +30,7 @@ zfs_datasets:
   - "{{ container_config_zfs_id }}"
   - "{{ container_compositions_zfs_id }}"
   - slowpool/images
-  - slowpool/media
+  # - slowpool/media
   - slowpool/media/music
   # - slowpool/media/shows
   # - slowpool/media/movies
@@ -55,13 +55,13 @@ zfs_datasets:
 zfs_backup_datasets:
   - "{{ container_compositions_zfs_id }}"
   # - slowpool/images
-  - slowpool/media
+  - slowpool/shared/media
   # - "{{ zfs_dataset_wifey }}"
 
 zfs_backup_datasets_exclude:
-  - slowpool/media/shows
-  - slowpool/media/movies
-  - slowpool/media/youtube
+  - slowpool/shared/media/shows
+  - slowpool/shared/media/movies
+  - slowpool/shared/media/youtube
 
 # Media storage
 shared_media_path: "/slowpool/shared/media"
