@@ -236,7 +236,7 @@ vault_wifey_name: !vault |
           6233363463373837320a346438633862633262653662303439346363356431373135356432356538
           6134
 
-shared_media_path: "/slowpool/media"
+shared_media_path: "/slowpool/shared/media"
 
 # NFS Client
 nfs_backups_client_path: /mnt/backups
