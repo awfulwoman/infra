@@ -41,11 +41,15 @@ zfs_datasets:
   - "{{ charlie_syncthing_data_path_zfs_id }}"
   - slowpool/shared
   - slowpool/shared/media
-  - slowpool/shared/media/movies
-  - slowpool/shared/media/shows
-  - slowpool/shared/media/music
+  - slowpool/shared/media/audiobooks
+  - slowpool/shared/media/books
   - slowpool/shared/media/downloads # Has to be this to allow arr stack to work
   - slowpool/shared/media/downloads/torrents # Has to be this to allow arr stack to work
+  - slowpool/shared/media/movies
+  - slowpool/shared/media/music
+  - slowpool/shared/media/podcasts
+  - slowpool/shared/media/shows
+  - slowpool/shared/media/youtube
 
 # Datasets to be backed-up
 zfs_backup_datasets:
