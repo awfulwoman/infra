@@ -44,7 +44,8 @@ zfs_datasets:
   - slowpool/shared/media/movies
   - slowpool/shared/media/shows
   - slowpool/shared/media/music
-  - slowpool/shared/media/torrents
+  - slowpool/shared/media/downloads
+  - slowpool/shared/media/downloads/torrents
 
 # Datasets to be backed-up
 zfs_backup_datasets:
