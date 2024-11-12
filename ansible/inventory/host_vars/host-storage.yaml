@@ -61,6 +61,7 @@ zfs_backup_datasets:
 zfs_backup_datasets_exclude:
   - slowpool/media/shows
   - slowpool/media/movies
+  - slowpool/media/youtube
 
 # Media storage
 shared_media_path: "/slowpool/shared/media"
