@@ -1,3 +1,0 @@
-container_name: syncthing
-container_image: syncthing/syncthing
-syncthing_data_path: /home/ubuntu/sync

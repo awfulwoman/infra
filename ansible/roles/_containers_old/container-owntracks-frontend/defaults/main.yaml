@@ -1,2 +1,0 @@
-container_name: owntracks-frontend
-container_image: owntracks/frontend

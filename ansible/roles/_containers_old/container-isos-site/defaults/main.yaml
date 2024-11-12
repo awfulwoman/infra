@@ -1,2 +1,0 @@
-container_name: isos
-container_image: halverneus/static-file-server:latest

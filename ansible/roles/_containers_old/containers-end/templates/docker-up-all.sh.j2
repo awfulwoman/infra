@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-docker-compose {% for item in compose_list %} -f {{ compose_config_dir }}/{{ item }}/docker-compose.yaml{% endfor %} up -d

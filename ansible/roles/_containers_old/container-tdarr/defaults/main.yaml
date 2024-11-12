@@ -1,4 +1,0 @@
-container_name: tdarr
-container_image: ghcr.io/haveagitgat/tdarr:latest
-container_user_id: 1000
-container_user: ubuntu

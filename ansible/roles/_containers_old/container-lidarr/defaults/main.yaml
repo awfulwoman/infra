@@ -1,2 +1,0 @@
-container_name: lidarr
-container_image: lscr.io/linuxserver/lidarr:latest

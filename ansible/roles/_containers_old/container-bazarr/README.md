@@ -1,3 +1,0 @@
-# container-bazarr
-
-Subtitles.

@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-docker kill $(docker ps -q)  && docker rm $(docker ps -a -q) && docker system prune -f && {{ compose_config_dir }}/docker-up-all.sh 

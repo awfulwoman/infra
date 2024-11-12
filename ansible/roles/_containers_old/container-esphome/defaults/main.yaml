@@ -1,4 +1,0 @@
-container_name: esphome
-container_image: esphome/esphome
-container_user_id: 1000
-container_user: ubuntu

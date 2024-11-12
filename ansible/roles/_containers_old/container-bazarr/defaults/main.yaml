@@ -1,4 +1,0 @@
-container_name: bazarr
-container_image: lscr.io/linuxserver/bazarr:latest
-container_user_id: 1000
-container_user: ubuntu

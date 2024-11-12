@@ -1,3 +1,0 @@
-container_name: traefik
-container_image: traefik:v2.11
-traefik_providers: false

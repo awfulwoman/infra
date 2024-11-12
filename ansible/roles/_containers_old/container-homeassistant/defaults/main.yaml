@@ -1,2 +1,0 @@
-container_name: homeassistant
-container_image: ghcr.io/home-assistant/home-assistant:2024.7

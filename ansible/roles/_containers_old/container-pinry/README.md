@@ -1,3 +1,0 @@
-# container-pinry
-
-Pinry.

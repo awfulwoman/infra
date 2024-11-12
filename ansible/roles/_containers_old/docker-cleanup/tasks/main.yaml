@@ -1,6 +1,0 @@
-- name: Prune everything
-  community.docker.docker_prune:
-    images: yes
-    # networks: yes
-    # volumes: yes
-    builder_cache: yes

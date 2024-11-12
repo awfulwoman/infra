@@ -1,2 +1,0 @@
-container_name: jellyfin
-container_image: jellyfin/jellyfin:latest

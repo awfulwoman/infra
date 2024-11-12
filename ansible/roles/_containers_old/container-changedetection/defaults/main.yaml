@@ -1,4 +1,0 @@
-container_name: changedetection
-container_image: dgtlmoon/changedetection.io
-changedetection_subdomain: changedetection
-container_address: "{{ container_name }}.{{ domain_name }}"

@@ -1,5 +1,0 @@
-{% for item in static_dhcp_group %}
-{% if (hostvars[item].mac_address is defined) and (hostvars[item].ansible_host is defined) and (hostvars[item].inventory_hostname_short is defined) %}
-dhcp-host={{hostvars[item].mac_address}},{{hostvars[item].ansible_host}},{{hostvars[item].inventory_hostname_short}}
-{% endif %}
-{% endfor %}

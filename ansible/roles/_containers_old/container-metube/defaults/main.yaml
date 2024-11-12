@@ -1,3 +1,0 @@
-container_name: metube
-container_image: alexta69/metube:latest
-metube_downloads_dir: "{{ shared_media_path }}/youtube"

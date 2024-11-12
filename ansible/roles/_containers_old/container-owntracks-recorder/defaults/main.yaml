@@ -1,2 +1,0 @@
-container_name: owntracks-recorder
-container_image: owntracks/recorder

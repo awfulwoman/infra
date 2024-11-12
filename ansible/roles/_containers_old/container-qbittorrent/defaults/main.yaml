@@ -1,5 +1,0 @@
-container_name: qbittorrent
-container_image: lscr.io/linuxserver/qbittorrent:latest
-container_user_id: 1000
-container_user: ubuntu
-torrent_path: "{{ shared_media_path }}/downloads/torrents"

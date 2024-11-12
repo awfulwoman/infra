@@ -1,3 +1,0 @@
-static_dhcp_group: "{{ groups['all'] }}"
-container_image: pihole/pihole
-container_name: pihole
