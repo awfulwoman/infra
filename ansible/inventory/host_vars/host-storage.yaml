@@ -44,8 +44,8 @@ zfs_datasets:
   - slowpool/shared/media/movies
   - slowpool/shared/media/shows
   - slowpool/shared/media/music
-  - slowpool/shared/media/downloads
-  - slowpool/shared/media/downloads/torrents
+  - slowpool/shared/media/downloads # Has to be this to allow arr stack to work
+  - slowpool/shared/media/downloads/torrents # Has to be this to allow arr stack to work
 
 # Datasets to be backed-up
 zfs_backup_datasets:
