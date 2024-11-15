@@ -11,4 +11,4 @@ compositions:
   - reverseproxy
   - container-management
   - personal-site
-  - static-site-server
+  # - static-site-server
