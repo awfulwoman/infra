@@ -9,7 +9,6 @@
   register: created_user
   when: vault_sitedeployer_user
 
-
 - name: Set authorized key taken from file
   become: true
   ansible.posix.authorized_key:

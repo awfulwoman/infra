@@ -34,6 +34,7 @@
 - name: Create html directory
   become: true
   ansible.builtin.file:
+    state: directory
     path: "{{ static_site_server_path }}"
     owner: "{{ ansible_user }}"
     group: "{{ vault_sitedeployer_user }}"
