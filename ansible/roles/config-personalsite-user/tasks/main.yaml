@@ -4,12 +4,14 @@
     name: "{{ vault_sitedeployer_user }}"
     comment: Deployment user
     uid: 1100 # just forcing a higher ID in case we need it later
+    create_home: true
     state: present
   register: created_user
   when: vault_sitedeployer_user
 
 
 - name: Set authorized key taken from file
+  become: true
   ansible.posix.authorized_key:
     user: "{{ vault_sitedeployer_user }}"
     state: present
