@@ -3,6 +3,7 @@ name: "{{ composition_name }}"
 services:
   web:
     image: nginx
+    container_name: static-site
     ports:
       - "127.0.0.1:8080:80"
     env_file: .environment_vars
