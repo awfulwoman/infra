@@ -11,5 +11,5 @@ static_site_server_path: /opt/sites/awfulwoman.com
 compositions:
   - reverseproxy
   - container-management
-  - personal-site
-  # - static-site-server
+  # - personal-site
+  - static-site-server

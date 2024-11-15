@@ -15,7 +15,7 @@ services:
       - "traefik.http.routers.web.tls=true"
       - "traefik.http.routers.web.tls.certresolver=letsencrypt"
     volumes:
-      - "{{ static_site_server_awfulwoman_path }}:/usr/share/nginx/html:ro"
+      - "{{ static_site_server_path }}:/usr/share/nginx/html:ro"
       - /etc/localtime:/etc/localtime:ro
     networks:
       - "{{ default_docker_network }}"
