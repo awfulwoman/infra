@@ -1,0 +1,18 @@
+- name: Add the user "{{ vault_sitedeployer_user }}"
+  become: true
+  ansible.builtin.user:
+    name: "{{ vault_sitedeployer_user }}"
+    comment: Deployment user
+    uid: 1100 # just forcing a higher ID in case we need it later
+    state: present
+  register: created_user
+  when: vault_sitedeployer_user
+
+
+- name: Set authorized key taken from file
+  ansible.posix.authorized_key:
+    user: "{{ vault_sitedeployer_user }}"
+    state: present
+    key: "{{ vault_sitedeployer_publickey }}"
+    # key_options: 'restrict,command="rsync"'
+  when: vault_sitedeployer_user and vault_sitedeployer_publickey

@@ -21,6 +21,10 @@ all:
     # Host that run Terraform
     terraform:
       host-storage:
+    
+    sitedeployment:
+      hosts:
+        host-workloads:
 
     # Hosts that utilise ansible-pull
     ansiblepull:
