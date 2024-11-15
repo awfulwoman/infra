@@ -31,6 +31,13 @@
   loop:
     - awfulwoman.com
 
+- name: Create html directory
+  become: true
+  ansible.builtin.file:
+    path: "{{ static_site_server_awfulwoman_path }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
 # - name: Copy over files
 #   become: true
 #   ansible.builtin.copy:
