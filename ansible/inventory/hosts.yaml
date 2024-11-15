@@ -24,7 +24,7 @@ all:
     
     sitedeployment:
       hosts:
-        host-workloads:
+       vm-workloads:
 
     # Hosts that utilise ansible-pull
     ansiblepull:
