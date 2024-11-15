@@ -17,15 +17,17 @@
     dest: "{{ composition_root }}/.environment_vars"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
+    mode: "0774"
 
 # ----------------------------
 # Specific tasks
 # ----------------------------
 
 - name: Create directories
-  file:
+  ansible.builtin.file:
     path: "{{ composition_config }}/{{ dir_item }}"
     state: directory
+    mode: "0774"
   loop_control:
     loop_var: dir_item
   loop:
@@ -38,6 +40,7 @@
     path: "{{ static_site_server_path }}"
     owner: "{{ ansible_user }}"
     group: "{{ vault_sitedeployer_user }}"
+    mode: "0774"
 
 # - name: Copy over files
 #   become: true

@@ -88,7 +88,7 @@
     state: directory
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: 0774
+    mode: "0774"
 
 - name: Generate and deploy backup script
   become: true
@@ -97,8 +97,8 @@
     dest: "{{ zfsbackup_script_path }}"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: 0774
-    
+    mode: "0774"
+
 # uh oh now doesn't work. see https://unix.stackexchange.com/questions/374093/why-doesnt-sudo-sh-source-profile-d-scripts
 - name: Add script to system-wide $PATH
   become: true
