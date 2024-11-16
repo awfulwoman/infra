@@ -303,3 +303,5 @@ vault_gitea_runner_registration: !vault |
 #   first-example-script-name.sh:
 #     minute: "0"
 #     hour: "1"
+
+static_site_test: false
