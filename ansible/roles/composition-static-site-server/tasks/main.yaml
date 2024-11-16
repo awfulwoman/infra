@@ -41,29 +41,4 @@
     path: "{{ static_site_server_path }}"
     owner: "{{ ansible_user }}"
     group: "{{ vault_sitedeployer_user }}"
-    mode: "0777" # this is stupid
-
-- name: Test dir
-  become: true
-  ansible.builtin.copy:
-    src: index.html
-    dest: "{{ composition_config }}/{{ static_site_server_url }}/index.html"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    mode: "0774"
-
-# just a test thing
-- name: Register tailscale subdomain(s)
-  community.digitalocean.digital_ocean_domain_record:
-    state: present
-    oauth_token: "{{ vault_digitalocean_domain_token }}"
-    domain: "{{ domain_name }}"
-    type: A
-    name: "{{ domain_item }}"
-    data: "{{ ansible_tailscale0.ipv4.address }}"
-    force_update: true
-  loop_control:
-    loop_var: domain_item
-  loop:
-    - "static"
-  when: ansible_tailscale0.ipv4.address and static_site_test
+    mode: "0755" # this is stupid

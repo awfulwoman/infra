@@ -25,7 +25,6 @@ all:
     sitedeployment:
       hosts:
        vm-awfulwoman:
-       host-workloads:
 
     # Hosts that utilise ansible-pull
     ansiblepull:
