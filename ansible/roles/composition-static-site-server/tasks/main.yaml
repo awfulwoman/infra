@@ -10,6 +10,7 @@
     dest: "{{ composition_root }}/docker-compose.yaml"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
+    mode: "0774"
 
 - name: "Create .env file"
   ansible.builtin.template:
@@ -42,9 +43,12 @@
     group: "{{ vault_sitedeployer_user }}"
     mode: "0774"
 
-# - name: Copy over files
-#   become: true
-#   ansible.builtin.copy:
-#     src: filename.txt
-#     dest: "{{ composition_config }}/filename.txt
+- name: Copy over files
+  become: true
+  ansible.builtin.copy:
+    src: index.html
+    dest: "{{ composition_config }}/awfulwoman.com/index.html"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"
 
