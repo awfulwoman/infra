@@ -17,7 +17,6 @@ services:
       - "traefik.http.routers.web.tls=true"
       - "traefik.http.routers.web.tls.certresolver=letsencrypt"
     volumes:
-      # - "{{ composition_config }}/{{ static_site_server_url }}:/usr/share/nginx/html"
       - "{{ static_site_server_path }}:/usr/share/nginx/html"
       - /etc/localtime:/etc/localtime:ro
     networks:
