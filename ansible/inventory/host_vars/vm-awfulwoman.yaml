@@ -6,7 +6,6 @@ configure_dns_linkdevice_physical: "eth0"
 
 # --- COMPOSITIONS -------------
 compositions_config_dir: "/home/{{ vault_server_username }}/compositions"
-static_site_server_path: /opt/sites/awfulwoman.com
 
 compositions:
   - reverseproxy

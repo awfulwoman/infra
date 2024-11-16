@@ -32,9 +32,9 @@
   loop_control:
     loop_var: dir_item
   loop:
-    - awfulwoman.com
+    - "{{ static_site_server_url }}"
 
-- name: Create html directory
+- name: Create static site directory
   become: true
   ansible.builtin.file:
     state: directory
@@ -43,11 +43,11 @@
     group: "{{ vault_sitedeployer_user }}"
     mode: "0774"
 
-- name: Copy over files
+- name: Test dir
   become: true
   ansible.builtin.copy:
     src: index.html
-    dest: "{{ composition_config }}/awfulwoman.com/index.html"
+    dest: "{{ composition_config }}/{{ static_site_server_url }}/index.html"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0774"

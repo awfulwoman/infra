@@ -44,6 +44,7 @@ nfs_exports:
 compositions_config_dir: "/{{ container_compositions_zfs_id }}"
 
 tailscale_exit_node: true
+static_site_server_url: "static.{{ domain_name }}"
 
 compositions:
   - reverseproxy
