@@ -41,7 +41,7 @@
     path: "{{ static_site_server_path }}"
     owner: "{{ ansible_user }}"
     group: "{{ vault_sitedeployer_user }}"
-    mode: "0774"
+    mode: "0777" # this is stupid
 
 - name: Test dir
   become: true
