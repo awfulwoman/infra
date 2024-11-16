@@ -2,6 +2,7 @@
   hosts: host-workloads
   roles:
     - role: bootstrap-ubuntu
+    - role: config-personalsite-user
     - role: install-docker
     - role: zfs-core-new
     - role: install-ansible
