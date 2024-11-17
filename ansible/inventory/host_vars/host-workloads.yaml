@@ -51,7 +51,6 @@ compositions:
   - gitea
   - gitea-runners
   - immich
-  - static-site-server
 
 # traefik_providers:
 #   - immich
