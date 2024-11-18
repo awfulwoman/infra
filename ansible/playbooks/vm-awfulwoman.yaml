@@ -1,4 +1,4 @@
-- name: Workloads server
+- name: Out on the internet server
   hosts: vm-awfulwoman
   roles:
     - role: bootstrap-ubuntu
