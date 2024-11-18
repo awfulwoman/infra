@@ -46,7 +46,7 @@
 - name: "Copy nginx.conf file"
   ansible.builtin.template:
     src: nginx.conf
-    dest: "{{ composition_root }}/nginx.conf"
+    dest: "{{ config_root }}/nginx.conf"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0774"
