@@ -22,7 +22,7 @@
 # Specific tasks
 # ----------------------------
 
-- name: Create directories
+- name: Create sub directories
   become: true
   ansible.builtin.file:
     path: "{{ composition_config }}/{{ dir_item }}"
@@ -33,6 +33,20 @@
     - runners
     - runner01
     - runner02
+
+- name: Create tmp directories
+  become: true
+  ansible.builtin.file:
+    path: "/tmp/{{ dir_item }}"
+    state: directory
+    mode: "0775"
+  loop_control:
+    loop_var: dir_item
+  loop:
+    - gitea-runner01
+    - gitea-runner02
+
+/tmp/gitea-runner02/
 
 - name: Copy over files
   become: true
