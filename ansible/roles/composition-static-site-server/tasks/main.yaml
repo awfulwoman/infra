@@ -24,7 +24,7 @@
 # Specific tasks
 # ----------------------------
 
-- name: Create directories
+- name: Create simple directories
   ansible.builtin.file:
     path: "{{ composition_config }}/{{ dir_item }}"
     state: directory
@@ -32,7 +32,7 @@
   loop_control:
     loop_var: dir_item
   loop:
-    - "{{ static_site_server_url }}"
+    - logs
 
 - name: Create static site directory
   become: true
@@ -42,3 +42,11 @@
     owner: "{{ vault_sitedeployer_user }}"
     group: "{{ vault_sitedeployer_user }}"
     mode: "0775"
+
+- name: "Copy nginx.conf file"
+  ansible.builtin.template:
+    src: nginx.conf
+    dest: "{{ composition_root }}/nginx.conf"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"
