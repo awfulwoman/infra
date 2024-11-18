@@ -46,8 +46,6 @@
     - gitea-runner01
     - gitea-runner02
 
-/tmp/gitea-runner02/
-
 - name: Copy over files
   become: true
   ansible.builtin.template:
