@@ -25,14 +25,16 @@
 # ----------------------------
 
 - name: Create simple directories
+  become: true
   ansible.builtin.file:
     path: "{{ composition_config }}/{{ dir_item }}"
     state: directory
-    mode: "0774"
+    mode: "0775"
   loop_control:
     loop_var: dir_item
   loop:
-    - logs
+    - "{{ static_site_server_url }}"
+    - "{{ static_site_server_url }}/logs"
 
 - name: Create static site directory
   become: true
@@ -44,9 +46,10 @@
     mode: "0775"
 
 - name: "Copy nginx.conf file"
+  become: true
   ansible.builtin.template:
     src: nginx.conf
     dest: "{{ composition_config }}/nginx.conf"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: "0774"
+    mode: "0775"
