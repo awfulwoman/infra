@@ -1,11 +1,11 @@
 - name: Workloads server
   hosts: vm-awfulwoman
   roles:
-    # - role: bootstrap-ubuntu
-    # - role: config-personalsite-user
-    # - role: install-docker
-    # - role: install-ansible
-    # - role: install-ansible-pull
+    - role: bootstrap-ubuntu
+    - role: config-personalsite-user
+    - role: install-docker
+    - role: install-ansible
+    - role: install-ansible-pull
     - role: compositions
 
   handlers:
