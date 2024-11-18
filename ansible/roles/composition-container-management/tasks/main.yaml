@@ -32,6 +32,7 @@
   vars:
     configure_dns_subdomains:
       - "dockage.{{ ansible_hostname }}"
+      - "dozzle.{{ ansible_hostname }}"
 
 # ----------------------------
 # Specific tasks
