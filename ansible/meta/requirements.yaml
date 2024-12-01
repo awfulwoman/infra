@@ -14,7 +14,7 @@ roles:
   - name: geerlingguy.security
   - name: githubixx.ansible_role_wireguard
   - name: githubixx.harden_linux
-  - name: hifis.unattended_upgrades
+  # - name: hifis.unattended_upgrades
   - name: ironicbadger.figurine
   - name: mrlesmithjr.netplan
   - name: nginxinc.nginx
