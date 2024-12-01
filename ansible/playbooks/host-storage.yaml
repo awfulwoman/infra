@@ -23,45 +23,6 @@
     # - role: ubuntu-cd-mirror
   
 
-    # - role: container-watchtower
-    # - role: container-concourse
-    # - role: container-traefik
-    # - role: container-jellyfin
-    # - role: container-jellyfin-vue
-    # - role: container-bazarr
-    # - role: container-gluetun
-    # - role: container-firefly-iii
-    # - role: container-immich
-    # - role: container-gluetun-uk
-    # - role: container-getiplayer
-    # - role: container-qbittorrent
-    # - role: container-gitea
-    # - role: container-changedetection
-    # - role: container-isos-site
-    # - role: container-audiobookshelf
-    # - role: container-dockcheck
-    # - role: container-wallabag
-    # - role: container-pinry
-    # - role: container-freshrss
-    # - role: container-podgrab
-    # - role: container-metube
-    # - role: container-wyoming-whisper
-    # - role: container-wyoming-piper
-    # - role: container-prowlarr
-    # - role: container-sonarr
-    # - role: container-lidarr
-    # - role: container-radarr
-    # - role: container-readarr
-    # - role: container-tdarr
-    # - role: container-mpd
-    # - role: container-snapcast
-    # - role: container-syncthing
-    # - role: container-tubearchivist
-    # - role: container-nextcloud
-    # - role: container-sanoid-builder
-
-
-
   handlers:
     - name: Reboot host
       become: true
