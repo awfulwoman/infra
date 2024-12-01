@@ -116,6 +116,8 @@ services:
       - SERVER_CITIES=zurich
       - SERVER_COUNTRIES=switzerland
       - LOG_LEVEL=info
+    devices:
+      - /dev/net/tun
     labels:
       - "traefik.enable=true"
       # Gluetun Built-in HTTP control server
