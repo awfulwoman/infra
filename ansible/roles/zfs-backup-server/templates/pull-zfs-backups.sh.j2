@@ -141,7 +141,7 @@ sleepnow() {
 				{% if sleepuntil_sleep_time is defined %}
         log_info "Going to sleep in 5 mins. {{ ansible_hostname }} will wake up at {{ sleepuntil_sleep_time }}."
 				{% else %}
-				log_info "Going to sleep in 5 mins.
+				log_info "Going to sleep in 5 mins."
 				{% endif %}
         secs=$((5 * 60))
         while [ $secs -gt 0 ]; do
