@@ -1,37 +1,16 @@
----
 - name: Backup Server
   hosts: host-backups
   roles:
-    - role: bootstrap
-    - role: bootstrap-host
-    - role: artis3n.tailscale
-      state: absent
-    - role: weareinteractive.environment
-      become: true
-      no_log: true
-    - role: generate-sshkey
-      become: true
-    - role: zfs-core
+    - role: bootstrap-ubuntu
+    - role: wakeonlan
+    - role: install-docker
+    - role: zfs-core-new
+    - role: install-ansible
+    - role: install-ansible-pull
+    - role: mqtt2cmd
     - role: zfs-backup-server
       zfsbackup_pushover: false
       zfsbackup_run_after_wake: true
-    - role: hifis.unattended_upgrades
-      become: true
-    - role: configure-motd
-    - role: apt-upgrade
-    - role: sleepuntil
-    - role: geerlingguy.pip
-    - role: geerlingguy.ansible
-      become: true
-      ansible_install_method: pip
-      ansible_pip_executable: '/usr/bin/pip3'
-    - role: wakeonlan
-    - role: install-ansible-pull
-      ansiblepull_install_pull_cron: false
-      ansiblepull_run_after_wake: true
-    - role: mqtt2cmd
-    - role: ironicbadger.figurine
-      become: true
 
   handlers:
     - name: Reboot host

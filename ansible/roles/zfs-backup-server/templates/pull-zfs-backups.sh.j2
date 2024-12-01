@@ -138,7 +138,11 @@ sleepnow() {
     command -v sleepuntil &> /dev/null
     if [ $? -eq 0 ]; 
     then 
+				{% if sleepuntil_sleep_time is defined %}
         log_info "Going to sleep in 5 mins. {{ ansible_hostname }} will wake up at {{ sleepuntil_sleep_time }}."
+				{% else %}
+				log_info "Going to sleep in 5 mins.
+				{% endif %}
         secs=$((5 * 60))
         while [ $secs -gt 0 ]; do
             echo -ne "🕗 $secs\033[0K\r"
@@ -148,7 +152,10 @@ sleepnow() {
 				sleep 5
 				echo " "
         # log_info "Calling sleepuntil"
+
+				{% if sleepuntil_sleep_time is defined %}
         sleepuntil --time {{ sleepuntil_sleep_time }}
+				{% endif %}
     fi 
 }
 
