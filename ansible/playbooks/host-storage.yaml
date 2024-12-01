@@ -21,7 +21,6 @@
     # - role: vm-host
     # - role: powertop
     # - role: ubuntu-cd-mirror
-  
 
   handlers:
     - name: Reboot host
