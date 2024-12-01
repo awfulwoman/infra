@@ -4,7 +4,6 @@
   roles:
     - role: bootstrap-ubuntu
     - role: wakeonlan
-      wakeonlan_interface: enp3s0
     - role: install-docker
     - role: zfs-core-new
     - role: install-ansible
