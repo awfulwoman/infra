@@ -11,16 +11,38 @@ all:
     host-backups:                         # Backups
     host-storage:                         # NAS
     host-pihole:                          # DHCP + DNS
-    host-ha-demo:
     host-workloads:                       # Misc workloads
-    vm-awfulwoman:
+    vm-awfulwoman:                        # Hosting for my personal website
+    host-k8s-01:                          # Kubernetes node
+    host-k8s-02:                          # Kubernetes node
+    host-k8s-03:                          # Kubernetes node
 
   # Groupings of servers that allow them to be administered collectively.
   children:
 
+    k8s:
+      hosts:
+        host-k8s-01:
+        host-k8s-02:
+        host-k8s-03:
+
+    # k8s-controllers:
+    #   hosts:
+    #     host-k8s-01:
+    #     host-k8s-02:
+    #     host-k8s-03:
+
+    # k8s-workers:
+    #   hosts:
+    #     host-k8s-01:
+    #     host-k8s-02:
+    #     host-k8s-03:
+
+
     # Host that run Terraform
     terraform:
-      host-storage:
+      hosts:
+        host-storage:
     
     sitedeployment:
       hosts:
@@ -37,6 +59,9 @@ all:
         host-radio:
         host-workloads:
         vm-awfulwoman:
+        host-k8s-01:
+        host-k8s-02:
+        host-k8s-03:
 
     # Group: Home Automation
     homeautomation:

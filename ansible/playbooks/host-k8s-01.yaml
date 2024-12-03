@@ -1,0 +1,14 @@
+- name: Kubernetes Node 01
+  hosts: host-k8s-01
+  roles:
+    - role: bootstrap-ubuntu
+    - role: install-ansible
+    - role: install-ansible-pull
+    - role: ironicbadger.figurine
+      become: true
+    - role: xanmanning.k3s
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:
