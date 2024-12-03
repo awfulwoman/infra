@@ -32,7 +32,7 @@ zfs_datasets:
   - "{{ container_compositions_zfs_id }}"
   - slowpool/images
   # - slowpool/media
-  - slowpool/media/music
+  # - slowpool/media/music
   # - slowpool/media/shows
   # - slowpool/media/movies
   # - slowpool/media/audiobooks
