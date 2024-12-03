@@ -26,7 +26,6 @@ zfs_backup_datasets:
   - "{{ container_compositions_zfs_id }}"
 
 # Define useful paths from ZFS datasets
-container_config_dir: "/{{ container_config_zfs_id }}"
 compositions_config_dir: "/{{ container_compositions_zfs_id }}"
 
 compositions:

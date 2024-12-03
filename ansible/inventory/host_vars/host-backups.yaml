@@ -5,9 +5,6 @@ wakeonlan_mac_address: "60:a4:4c:40:52:57"
 configure_dns_linkdevice_physical: "enp3s0"
 wakeonlan_interface: enp3s0
 
-# Base for all container dirs. Normally on an SSD.
-container_config_dir: /opt/containers
-
 zfs_pools:
   - backuppool
 
