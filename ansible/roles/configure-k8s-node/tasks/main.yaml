@@ -1,4 +1,4 @@
-- name: Allow everything and enable UFW
+- name: Disable UFW on nodes
   become: true
   community.general.ufw:
     state: disabled

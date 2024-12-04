@@ -1,4 +1,4 @@
-- name: Kubernetes Node 01
+- name: Kubernetes Node Katzenjammer
   hosts: host-katzenjammer
   roles:
     - role: bootstrap-ubuntu

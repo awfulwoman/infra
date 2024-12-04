@@ -1,4 +1,4 @@
-- name: Kubernetes Node 01
+- name: Kubernetes Node Khanivore
   hosts: host-khanivore
   roles:
     - role: bootstrap-ubuntu
