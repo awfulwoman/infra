@@ -4,10 +4,10 @@
     - role: bootstrap-ubuntu
     - role: install-ansible
     - role: install-ansible-pull
+    - role: configure-k8s-node
     - role: ironicbadger.figurine
       become: true
     - role: xanmanning.k3s
-      
 
   handlers:
     - name: Reboot host

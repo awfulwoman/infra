@@ -1,0 +1,4 @@
+- name: Allow everything and enable UFW
+  become: true
+  community.general.ufw:
+    state: disabled
