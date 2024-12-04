@@ -1,0 +1,6 @@
+# --- BASIC -------------
+ansible_host: host-katzenjammer
+ansible_user: "{{ vault_server_username }}"
+
+# --- NETWORK -------------
+configure_dns_linkdevice_physical: "eth0" 

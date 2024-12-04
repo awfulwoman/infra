@@ -13,30 +13,30 @@ all:
     host-pihole:                          # DHCP + DNS
     host-workloads:                       # Misc workloads
     vm-awfulwoman:                        # Hosting for my personal website
-    host-k8s-01:                          # Kubernetes node
-    host-k8s-02:                          # Kubernetes node
-    host-k8s-03:                          # Kubernetes node
+    host-khanivore:                       # Kubernetes node
+    host-katzenjammer:                    # Kubernetes node
+    host-knucklehead:                     # Kubernetes node
 
   # Groupings of servers that allow them to be administered collectively.
   children:
 
     k8s:
       hosts:
-        host-k8s-01:
-        host-k8s-02:
-        host-k8s-03:
+        host-khanivore:
+        host-katzenjammer:
+        host-knucklehead:   
 
     # k8s-controllers:
     #   hosts:
-    #     host-k8s-01:
-    #     host-k8s-02:
-    #     host-k8s-03:
+    #     host-khanivore:
+    #     host-katzenjammer:
+    #     host-knucklehead: 
 
     # k8s-workers:
     #   hosts:
-    #     host-k8s-01:
-    #     host-k8s-02:
-    #     host-k8s-03:
+    #     host-khanivore:
+    #     host-katzenjammer:
+    #     host-knucklehead: 
 
 
     # Host that run Terraform
@@ -59,9 +59,9 @@ all:
         host-radio:
         host-workloads:
         vm-awfulwoman:
-        host-k8s-01:
-        host-k8s-02:
-        host-k8s-03:
+        host-khanivore:
+        host-katzenjammer:
+        host-knucklehead: 
 
     # Group: Home Automation
     homeautomation:
