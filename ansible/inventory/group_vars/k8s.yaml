@@ -1,1 +1,3 @@
-k3s_become: true 
+k3s_become: true
+k3s_etcd_datastore: true
+# k3s_state: uninstalled 

@@ -26,6 +26,19 @@ all:
         host-katzenjammer:
         host-knucklehead:   
 
+    k8s-controllers:
+      hosts:
+        host-khanivore:
+        host-katzenjammer:
+        host-knucklehead: 
+
+    # k8s-workers:
+    #   hosts:
+    #     host-khanivore:
+    #     host-katzenjammer:
+    #     host-knucklehead: 
+
+
     # Host that run Terraform
     terraform:
       hosts:

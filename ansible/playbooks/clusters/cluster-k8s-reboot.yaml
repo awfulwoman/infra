@@ -1,11 +1,7 @@
 - name: Kubernetes cluster
   hosts: k8s
-  roles:
-    - role: xanmanning.k3s
 
-
-
-  handlers:
-    - name: Reboot host
+  tasks:
+    - name: Reboot all nodes
       become: true
       ansible.builtin.reboot:
