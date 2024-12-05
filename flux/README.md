@@ -1,6 +1,6 @@
 # Flux CD
 
-A GitOps way of managing Kubernetes clusters. Everything running in the cluster is defined in this section of the repo.
+[Flux](https://fluxcd.io/flux/) is a GitOps tool for managing Kubernetes clusters. Everything running in the cluster is defined in this section of the repo.
 
 ## Structure
 
@@ -31,6 +31,8 @@ Then export completions to your shell.
 ```
 
 ### Kubernetes Secrets
+
+[Kubeseal](https://github.com/bitnami-labs/sealed-secrets) allows secrets to be stored in a public git repo.
 
 ```bash
 brew install kubeseal
