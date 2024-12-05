@@ -5,6 +5,7 @@ metadata:
   name: longhorn-release
   namespace: longhorn-system
 spec:
+  targetNamespace: longhorn-system
   chart:
     spec:
       chart: longhorn
