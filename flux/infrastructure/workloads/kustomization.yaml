@@ -4,4 +4,4 @@ resources:
   - namespaces
   - sources
   - releases
-  - secrets
+  # - secrets
