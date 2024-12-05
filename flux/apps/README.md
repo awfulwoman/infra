@@ -1,3 +1,3 @@
-# Apps
+# Apps
 
 Configuration for applications themselves.
