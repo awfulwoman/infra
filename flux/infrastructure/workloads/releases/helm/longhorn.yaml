@@ -14,4 +14,4 @@ spec:
         kind: HelmRepository
         name: longhorn-helmrepo
       version: v1.7.2
-  interval: 1m0s
+  interval: 1m2s
