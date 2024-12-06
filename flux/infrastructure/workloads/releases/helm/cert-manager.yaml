@@ -19,6 +19,5 @@ spec:
     ingressShim:
       defaultIssuerName: "letsencrypt-prod"
       defaultIssuerKind: "ClusterIssuer"
-    installCRDs: true
     crds:
       enabled: true
