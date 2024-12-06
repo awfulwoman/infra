@@ -1,7 +1,7 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: HelmRepository
 metadata:
-  name: cert-manager-helmrepo
+  name: cert-manager
   namespace: flux-system
 spec:
   interval: 1h
