@@ -14,7 +14,12 @@ metadata:
     nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required '
     # custom max body size for file uploading like backing image uploading
     nginx.ingress.kubernetes.io/proxy-body-size: 10000m
+    cert-manager.io/cluster-issuer: cert-manager
 spec:
+  tls:
+  - hosts:
+    - longhorn.ewwww.eu
+    secretName: longhorn-cert
   rules:
   - host: longhorn.ewwww.eu
     http:
