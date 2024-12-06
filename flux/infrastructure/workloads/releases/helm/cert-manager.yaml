@@ -15,6 +15,9 @@ spec:
         name: cert-manager
       version: 1.16.2
   interval: 1m0s
-  values: 
+  values:
+    ingressShim:
+      defaultIssuerName: "letsencrypt-prod"
+      defaultIssuerKind: "ClusterIssuer"
     crds:
       enabled: true

@@ -5,11 +5,12 @@ metadata:
   namespace: flux-system
   annotations:
     spec.ingressClassName: traefik
-    cert-manager.io/cluster-issuer: letsencrypt-staging
+    kubernetes.io/tls-acme: "true"
+    # cert-manager.io/cluster-issuer: letsencrypt-staging
     traefik.ingress.kubernetes.io/router.middlewares: default-redirect-https@kubernetescrd
 spec:
   tls:
-    - secretName: longhorn-cert
+    - secretName: tls-longhorn
       hosts:
         - longhorn.ewwww.eu
   rules:
