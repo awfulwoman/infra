@@ -2,7 +2,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: cert-manager
+  name: jetstack
   namespace: flux-system
 spec:
   targetNamespace: cert-manager
