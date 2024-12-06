@@ -24,6 +24,6 @@ metadata:
 spec:
   postBuild:
     substituteFrom:
-      - kind: SealedSecret
+      - kind: Secret
         name: cert-secrets
       

@@ -34,5 +34,5 @@ metadata:
 spec:
   postBuild:
     substituteFrom:
-      - kind: SealedSecret
+      - kind: Secret
         name: longhorn-secrets
