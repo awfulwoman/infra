@@ -3,9 +3,9 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: longhorn-release
-  namespace: longhorn-system
+  namespace: flux-system
 spec:
-  targetNamespace: longhorn-system
+  targetNamespace: flux-system
   chart:
     spec:
       chart: longhorn

@@ -2,7 +2,7 @@ apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
   name: redirect-https
-  namespace: longhorn-system
+  namespace: flux-system
 spec:
   redirectScheme:
     scheme: https

@@ -2,7 +2,7 @@ apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
   name: letsencrypt-prod
-  namespace: longhorn-system
+  namespace: flux-system
 spec:
   acme:
     email: charlie@ewwww.eu

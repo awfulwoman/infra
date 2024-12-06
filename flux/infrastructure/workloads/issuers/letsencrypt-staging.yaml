@@ -2,7 +2,7 @@ apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
   name: letsencrypt-staging
-  namespace: cert-manager
+  namespace: flux-system
 spec:
   acme:
     email: charlie@ewwww.eu
