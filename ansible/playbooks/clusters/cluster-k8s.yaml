@@ -2,6 +2,9 @@
   hosts: k8s
   roles:
     - role: xanmanning.k3s
+    - role: weareinteractive.environment
+      ansible_become: true
+      no_log: true
 
   handlers:
     - name: Reboot host
