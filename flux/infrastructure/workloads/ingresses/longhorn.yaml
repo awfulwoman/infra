@@ -11,9 +11,9 @@ spec:
   tls:
     - secretName: longhorn-cert
       hosts:
-        - longhorn.${CLUSTER_DOMAIN}
+        - "longhorn.${CLUSTER_DOMAIN}"
   rules:
-    - host: longhorn.${CLUSTER_DOMAIN}
+    - host: "longhorn.${CLUSTER_DOMAIN}"
       http:
         paths:
         - pathType: Prefix
