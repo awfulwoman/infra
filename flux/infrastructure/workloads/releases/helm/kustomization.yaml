@@ -4,3 +4,4 @@ namespace: flux-system
 resources:
   - longhorn.yaml
   - sealed-secrets.yaml
+  - cert-manager.yaml
