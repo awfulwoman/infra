@@ -6,7 +6,7 @@ metadata:
   annotations:
     spec.ingressClassName: traefik
     kubernetes.io/tls-acme: "true"
-    # cert-manager.io/cluster-issuer: letsencrypt-staging
+    cert-manager.io/cluster-issuer: letsencrypt-prod
     traefik.ingress.kubernetes.io/router.middlewares: default-redirect-https@kubernetescrd
 spec:
   tls:
