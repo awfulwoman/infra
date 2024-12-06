@@ -14,20 +14,20 @@ metadata:
     nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required '
     # custom max body size for file uploading like backing image uploading
     nginx.ingress.kubernetes.io/proxy-body-size: 10000m
-    cert-manager.io/cluster-issuer: cert-manager
+    cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
   tls:
-  - hosts:
-    - longhorn.ewwww.eu
-    secretName: longhorn-cert
+    - secretName: longhorn-cert
+      hosts:
+        - longhorn.${ CLUSTER_DOMAIN }
   rules:
-  - host: longhorn.ewwww.eu
-    http:
-      paths:
-      - pathType: Prefix
-        path: "/"
-        backend:
-          service:
-            name: longhorn-frontend
-            port:
-              number: 80
+    - host: longhorn.${ CLUSTER_DOMAIN }
+      http:
+        paths:
+        - pathType: Prefix
+          path: "/"
+          backend:
+            service:
+              name: longhorn-frontend
+              port:
+                number: 80
