@@ -9,7 +9,7 @@ metadata:
     traefik.ingress.kubernetes.io/router.middlewares: default-redirect-https@kubernetescrd
 spec:
   tls:
-    - secretName: longhorn-cert
+    - secretName: longhorn-cert-staging
       hosts:
         - longhorn.ewwww.eu
   rules:
