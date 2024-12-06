@@ -29,7 +29,7 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: letsencrypt-prod
+  name: longhorn-ingress
 spec:
   postBuild:
     substituteFrom:
