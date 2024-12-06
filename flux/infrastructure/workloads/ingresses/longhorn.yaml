@@ -2,7 +2,6 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: longhorn-ingress
-  namespace: longhorn-system
   annotations:
     spec.ingressClassName: traefik
     cert-manager.io/cluster-issuer: letsencrypt-prod
@@ -11,9 +10,9 @@ spec:
   tls:
     - secretName: longhorn-cert
       hosts:
-        - "longhorn.${infra_domain}"
+        - longhorn.ewwww.eu
   rules:
-    - host: "longhorn.${infra_domain}"
+    - host: longhorn.ewwww.eu
       http:
         paths:
         - pathType: Prefix
@@ -24,15 +23,4 @@ spec:
               port:
                 number: 80
 
----
 
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: longhorn-ingress
-  namespace: longhorn-system
-spec:
-  postBuild:
-    substituteFrom:
-      - kind: Secret
-        name: longhorn-secrets

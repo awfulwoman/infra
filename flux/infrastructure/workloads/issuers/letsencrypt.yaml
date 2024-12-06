@@ -2,10 +2,9 @@ apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
   name: letsencrypt-prod
-  namespace: cert-manager
 spec:
   acme:
-    email: ${infra_cert_email}
+    email: charlie@ewwww.eu
     server: https://acme-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
       name: letsencrypt-prod
@@ -14,16 +13,3 @@ spec:
         ingress:
           class: traefik
 
----
-
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: letsencrypt-prod
-  namespace: cert-manager
-spec:
-  postBuild:
-    substituteFrom:
-      - kind: Secret
-        name: cert-secrets
-      
