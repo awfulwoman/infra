@@ -5,7 +5,7 @@ metadata:
   namespace: longhorn-system
   annotations:
     spec.ingressClassName: traefik
-    cert-manager.io/clusterissuer: letsencrypt-prod
+    cert-manager.io/cluster-issuer: letsencrypt-prod
     traefik.ingress.kubernetes.io/router.middlewares: default-redirect-https@kubernetescrd
 spec:
   tls:
