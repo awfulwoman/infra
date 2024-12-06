@@ -6,3 +6,4 @@ resources:
   - releases
   - secrets
   - ingresses
+  - middlewares
