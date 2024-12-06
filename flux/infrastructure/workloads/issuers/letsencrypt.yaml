@@ -5,7 +5,7 @@ metadata:
   namespace: cert-manager
 spec:
   acme:
-    email: ${CLUSTER_CERTS_EMAIL}
+    email: ${infra_cert_email}
     server: https://acme-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
       name: letsencrypt-prod
@@ -13,3 +13,16 @@ spec:
     - http01:
         ingress:
           class: traefik
+
+---
+
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: letsencrypt-prod
+spec:
+  postBuild:
+    substituteFrom:
+      - kind: SealedSecret
+        name: infra_cert_email
+      

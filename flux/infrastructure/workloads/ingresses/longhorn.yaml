@@ -11,9 +11,9 @@ spec:
   tls:
     - secretName: longhorn-cert
       hosts:
-        - "longhorn.${CLUSTER_DOMAIN}"
+        - "longhorn.${infra_domain}"
   rules:
-    - host: "longhorn.${CLUSTER_DOMAIN}"
+    - host: "longhorn.${infra_domain}"
       http:
         paths:
         - pathType: Prefix
@@ -23,3 +23,15 @@ spec:
               name: longhorn-frontend
               port:
                 number: 80
+
+---
+
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: letsencrypt-prod
+spec:
+  postBuild:
+    substituteFrom:
+      - kind: SealedSecret
+        name: infra
