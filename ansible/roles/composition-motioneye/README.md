@@ -1,3 +1,3 @@
-# Guinea Cam IE
+# MotionEye
 
-IR camera for watching the piggos at night. 
+Allows webcams to be connected to a host and used.
