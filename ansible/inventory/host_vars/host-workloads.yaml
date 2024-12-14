@@ -54,6 +54,7 @@ compositions:
   - gitea-runners
   - immich
   - motioneye
+  - mjpg-streamer
 
 # traefik_providers:
 #   - immich
