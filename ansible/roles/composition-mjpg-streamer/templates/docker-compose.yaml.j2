@@ -15,7 +15,7 @@ services:
     networks:
       - "{{ default_docker_network }}"
     devices:
-      - /dev/v4l/by-id/usb-SMI_PC_Cam-video-index0
+      - /dev/v4l/by-id/usb-SMI_PC_Cam-video-index0:/dev/video0
       - /dev/v4l/by-id/usb-USB_Camera_USB_Camera_USB_Camera-video-index0
 
 networks:
