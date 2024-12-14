@@ -45,8 +45,6 @@ compositions_config_dir: "/{{ container_compositions_zfs_id }}"
 
 tailscale_exit_node: true
 
-composition_motioneye_usbdevice: /dev/video0
-
 compositions:
   - reverseproxy
   - container-management
@@ -54,6 +52,3 @@ compositions:
   - gitea-runners
   - immich
   - guineacams
-
-# traefik_providers:
-#   - immich
