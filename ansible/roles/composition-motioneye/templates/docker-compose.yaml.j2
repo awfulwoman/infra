@@ -6,7 +6,7 @@ services:
     hostname: motioneye
     ports:
       - 8081:8081
-      - "127.0.0.1:8765:8765"
+      - 8765:8765
     image: ghcr.io/motioneye-project/motioneye:edge
     privileged: true
     restart: unless-stopped
