@@ -53,7 +53,7 @@ compositions:
   - gitea
   - gitea-runners
   - immich
-  - mjpg-streamer
+  - guineacams
 
 # traefik_providers:
 #   - immich
