@@ -5,6 +5,7 @@ services:
     container_name: mjpg-streamer
     ports:
       - 8080:8080
+    user: 1000:1000
     image: patsoffice/mjpg-streamer
     restart: unless-stopped
     env_file: .environment_vars
