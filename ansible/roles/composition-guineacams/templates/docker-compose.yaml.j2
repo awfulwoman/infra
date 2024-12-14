@@ -1,0 +1,40 @@
+# code: language=ansible-jinja
+name: "{{ composition_name }}"
+services:
+  guineacam01:
+    ports:
+      - 18001:8080
+    image: mkuf/ustreamer:latest
+    restart: unless-stopped
+    env_file: .environment_vars
+    labels:
+      - "traefik.enable=true"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+    devices:
+      # - /dev/v4l/by-id/usb-SMI_PC_Cam-video-index0:/dev/video0
+      - /dev/v4l/by-id/usb-USB_Camera_USB_Camera_USB_Camera-video-index0:/dev/video0
+      # - /dev/video0
+  guineacam02:
+    ports:
+      - 18002:8080
+    image: mkuf/ustreamer:latest
+    restart: unless-stopped
+    env_file: .environment_vars
+    labels:
+      - "traefik.enable=true"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+    devices:
+      - /dev/v4l/by-id/usb-SMI_PC_Cam-video-index0:/dev/video0
+      # - /dev/v4l/by-id/usb-USB_Camera_USB_Camera_USB_Camera-video-index0:/dev/video0
+      # - /dev/video0
+      
+
+networks:
+  "{{ default_docker_network }}":
+    external: true

@@ -39,11 +39,9 @@
 #     src: filename.txt
 #     dest: "{{ composition_config }}/filename.txt
 
-# - name: Run Configure DNS role
-#   ansible.builtin.include_role:
-#     name: "configure-dns"
-#   vars:
-#     configure_dns_subdomains:
-#       - homeassistant
-#       - ha
-#       - esphome
+- name: Run Configure DNS role
+  ansible.builtin.include_role:
+    name: "configure-dns"
+  vars:
+    configure_dns_subdomains:
+      - mjpg
