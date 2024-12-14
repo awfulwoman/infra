@@ -1,3 +1,3 @@
 # Guinea Cameras
 
-The Guinea Cameras. Very important. 
+The Guinea Cameras. Very important.
