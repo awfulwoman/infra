@@ -6,11 +6,8 @@ services:
       - 18001:8080
     image: mkuf/ustreamer:latest
     restart: unless-stopped
-    env_file: .environment_vars
     labels:
       - "traefik.enable=true"
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
     networks:
       - "{{ default_docker_network }}"
     devices:
@@ -22,11 +19,6 @@ services:
       - 18002:8080
     image: mkuf/ustreamer:latest
     restart: unless-stopped
-    env_file: .environment_vars
-    labels:
-      - "traefik.enable=true"
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
     networks:
       - "{{ default_docker_network }}"
     devices:
