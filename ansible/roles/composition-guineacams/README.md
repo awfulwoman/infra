@@ -1,3 +1,3 @@
-# DEFAULT PROJECT
+# Guinea Cameras
 
-This is the readme for the template project.
+The Guinea Cameras. Very important. 
