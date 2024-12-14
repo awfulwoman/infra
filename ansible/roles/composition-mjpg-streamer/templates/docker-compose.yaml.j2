@@ -1,13 +1,11 @@
-# code: language=ansible
+# code: language=ansible-jinja
 name: "{{ composition_name }}"
 services:
   mjpg-streamer:
     container_name: mjpg-streamer
     ports:
-      - "8080:8080"
+      - 8080:8080
     image: patsoffice/mjpg-streamer
-    devices:
-      - /dev/video0
     restart: unless-stopped
     env_file: .environment_vars
     labels:
@@ -16,6 +14,10 @@ services:
       - /etc/localtime:/etc/localtime:ro
     networks:
       - "{{ default_docker_network }}"
+  {% if composition_motioneye_usbdevice %}
+    devices:
+      - "{{ composition_motioneye_usbdevice }}"
+  {% endif %}
 
 networks:
   "{{ default_docker_network }}":
