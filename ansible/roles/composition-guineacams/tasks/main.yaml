@@ -44,4 +44,4 @@
     name: "configure-dns"
   vars:
     configure_dns_subdomains:
-      - mjpg
+      - guineacams
