@@ -3,11 +3,7 @@ name: "{{ composition_name }}"
 services:
   syncthing:
     container_name: syncthing
-    ports:
-      - 8384:8384 # Web UI
-      - 22000:22000/tcp # TCP file transfers
-      - 22000:22000/udp # QUIC file transfers
-      - 21027:21027/udp # Receive local discovery broadcasts
+    network_mode: host
     image: syncthing/syncthing
     restart: unless-stopped
     env_file: .environment_vars
@@ -17,7 +13,7 @@ services:
       - "traefik.http.routers.syncthing.tls=true"
       - "traefik.http.routers.syncthing.tls.certresolver=letsencrypt"
     volumes:
-      - "{{ composition_config }}:/INSIDEPATH"
+      - "{{ syncthing_path }}:/var/syncthing"
       - /etc/localtime:/etc/localtime:ro
     networks:
       - "{{ default_docker_network }}"
