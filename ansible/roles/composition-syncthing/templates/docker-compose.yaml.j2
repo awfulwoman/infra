@@ -3,6 +3,7 @@ name: "{{ composition_name }}"
 services:
   syncthing:
     container_name: syncthing
+    hostname: syncthing
     ports:
       - 8384:8384
       - 22000:22000/tcp
