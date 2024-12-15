@@ -15,7 +15,6 @@ services:
       - "traefik.http.routers.syncthing.rule=Host(`syncthing.{{ ansible_host }}.{{ domain_name }}`)"
       - "traefik.http.routers.syncthing.tls=true"
       - "traefik.http.routers.syncthing.tls.certresolver=letsencrypt"
-      # - "traefik.http.services.syncthing.loadbalancer.server.port=8384"
     restart: unless-stopped
     networks:
       - "{{ default_docker_network }}"
@@ -24,11 +23,11 @@ services:
     - "{{ value }}:/{{ key }}"
     {% endfor %}
 
-    # healthcheck:
-    #   test: curl -fkLsS -m 2 127.0.0.1:8384/rest/noauth/health | grep -o --color=never OK || exit 1
-    #   interval: 1m
-    #   timeout: 10s
-    #   retries: 3
+    healthcheck:
+      test: curl -fkLsS -m 2 127.0.0.1:8384/rest/noauth/health | grep -o --color=never OK || exit 1
+      interval: 1m
+      timeout: 10s
+      retries: 3
 
 networks:
   "{{ default_docker_network }}":
