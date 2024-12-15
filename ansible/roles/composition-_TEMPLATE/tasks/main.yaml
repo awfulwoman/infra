@@ -44,6 +44,5 @@
 #     name: "configure-dns"
 #   vars:
 #     configure_dns_subdomains:
-#       - homeassistant
-#       - ha
-#       - esphome
+#       - homeassistant 
+#       - whoami.{{ ansible_hostname }}
