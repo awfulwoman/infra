@@ -11,6 +11,7 @@ services:
       - "traefik.http.routers.syncthing.rule=Host(`syncthing.{{ ansible_host }}.{{ domain_name }}`)"
       - "traefik.http.routers.syncthing.tls=true"
       - "traefik.http.routers.syncthing.tls.certresolver=letsencrypt"
+      - "traefik.http.services.gluetun.loadbalancer.server.port=8384"
     restart: unless-stopped
     volumes:
     {% for key, value in syncthing_paths.items() %}
