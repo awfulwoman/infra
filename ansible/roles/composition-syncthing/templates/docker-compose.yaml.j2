@@ -8,7 +8,7 @@ services:
       - 22000:22000/tcp
       - 22000:22000/udp
       - 21027:21027/udp
-    image: syncthing/syncthing
+    image: lscr.io/linuxserver/syncthing:latest
     env_file: .environment_vars
     labels:
       - "traefik.enable=true"
