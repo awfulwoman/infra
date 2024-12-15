@@ -5,16 +5,18 @@ services:
     container_name: syncthing
     network_mode: host
     image: syncthing/syncthing
-    restart: unless-stopped
     env_file: .environment_vars
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.syncthing.rule=Host(`syncthing.{{ ansible_host }}.{{ domain_name }}`)"
       - "traefik.http.routers.syncthing.tls=true"
       - "traefik.http.routers.syncthing.tls.certresolver=letsencrypt"
+    restart: unless-stopped
     volumes:
-      - "{{ syncthing_path }}:/var/syncthing"
-      - /etc/localtime:/etc/localtime:ro
+    {% for key, value in syncthing_paths.items() %}
+    - "{{ value }}:/{{ key }}"
+    {% endfor %}
+
     healthcheck:
       test: curl -fkLsS -m 2 127.0.0.1:8384/rest/noauth/health | grep -o --color=never OK || exit 1
       interval: 1m

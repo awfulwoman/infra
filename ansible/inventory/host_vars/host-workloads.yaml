@@ -46,7 +46,8 @@ nfs_exports:
 compositions_config_dir: "/{{ container_compositions_zfs_id }}"
 
 tailscale_exit_node: true
-syncthing_path: "{{ zfs_dataset_charlie_syncthing }}"
+syncthing_paths: 
+  data_charlie: "/{{ zfs_dataset_charlie_syncthing }}"
 
 compositions:
   - reverseproxy
