@@ -12,4 +12,12 @@
     loop_var: domain_item
   when: ansible_tailscale0.ipv4.address is defined
 
+
+- name: Confirm DNS
+  ansible.builtin.debug:
+    msg: "Tailscale domain: {{ domain_item }}.{{ domain_name }}"
+  loop: "{{ configure_dns_subdomains }}"
+  loop_control:
+    loop_var: domain_item
+  when: ansible_tailscale0.ipv4.address is defined
 # - name: Register PiHole subdomain(s)
