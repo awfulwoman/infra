@@ -48,6 +48,7 @@ tailscale_exit_node: true
 compositions:
   - reverseproxy
   - container-management
+  - syncthing
   - gitea
   - gitea-runners
   - immich
