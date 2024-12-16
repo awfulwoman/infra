@@ -26,6 +26,7 @@ wifey_data_path: "/{{ zfs_dataset_wifey }}"
 zfs_datasets:
   - "{{ container_compositions_zfs_id }}"
   - fastpool/shared
+  - fastpool/shared/syncthing
   - fastpool/shared/photos
   - fastpool/charlie
   - "{{ zfs_dataset_charlie_syncthing }}"
@@ -46,7 +47,8 @@ nfs_exports:
 compositions_config_dir: "/{{ container_compositions_zfs_id }}"
 
 tailscale_exit_node: true
-syncthing_paths: 
+syncthing_paths:
+  data_default: "/fastpool/shared/syncthing"
   data_charlie: "/{{ zfs_dataset_charlie_syncthing }}"
 
 compositions:

@@ -32,6 +32,7 @@ zfs_datasets:
   - slowpool/charlie
   - "{{ charlie_syncthing_data_path_zfs_id }}"
   - slowpool/shared
+  - slowpool/shared/syncthing
   - slowpool/shared/media
   - slowpool/shared/media/audiobooks
   - slowpool/shared/media/books
@@ -57,6 +58,10 @@ zfs_backup_datasets_exclude:
 
 # Media storage
 shared_media_path: "/slowpool/shared/media"
+
+syncthing_paths:
+  data_default: "/slowpool/shared/syncthing"
+  data_charlie: "{{ syncthing_data_path }}"
 
 # --- NFS -------------
 nfs_exports:
@@ -142,3 +147,4 @@ compositions:
   - finances
   - gitea-runners
   - immich-ml
+  - syncthing
