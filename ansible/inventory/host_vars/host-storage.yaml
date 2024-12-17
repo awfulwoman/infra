@@ -46,6 +46,7 @@ zfs_datasets:
 
 # Datasets to be backed-up
 zfs_backup_datasets:
+  - slowpool/charlie
   - "{{ container_compositions_zfs_id }}"
   # - slowpool/images
   - slowpool/shared/media
