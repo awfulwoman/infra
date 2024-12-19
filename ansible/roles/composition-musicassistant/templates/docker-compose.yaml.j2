@@ -24,8 +24,6 @@ services:
       - "traefik.http.routers.musicassistant.tls=true"
       - "traefik.http.routers.musicassistant.tls.certresolver=letsencrypt"
       - "traefik.http.services.motioneye.loadbalancer.server.port=8095"
-    networks:
-      - "{{ default_docker_network }}"
     volumes:
       - "{{ composition_config }}:/data"
       - /etc/localtime:/etc/localtime:ro
