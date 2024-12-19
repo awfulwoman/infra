@@ -149,3 +149,4 @@ compositions:
   - gitea-runners
   - immich-ml
   - syncthing
+  - musicassistant
