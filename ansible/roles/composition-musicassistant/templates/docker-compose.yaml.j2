@@ -26,6 +26,7 @@ services:
       - "traefik.http.services.motioneye.loadbalancer.server.port=8095"
     volumes:
       - "{{ composition_config }}:/data"
+      - "/slowpool/shared/media/music:/media"
       - /etc/localtime:/etc/localtime:ro
 
 networks:
