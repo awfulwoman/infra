@@ -8,8 +8,8 @@
   become: true
   ansible.builtin.apt_repository:
     repo: 'ppa:ansible/ansible'
-    update_cache: true
-  when: ansible_facts['os_family'] == "Ubuntu"
+    # update_cache: true
+
 
 - name: Install Ansible from Ansible repository
   become: true
@@ -17,4 +17,3 @@
     name:
       - ansible
     state: present
-  when: ansible_facts['os_family'] == "Ubuntu"
