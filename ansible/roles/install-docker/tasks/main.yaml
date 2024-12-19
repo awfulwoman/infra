@@ -3,7 +3,7 @@
   ansible.builtin.deb822_repository:
     name: docker
     types: deb
-    uris: "https://download.docker.com/linux/{{ ansible_distribution }}"
+    uris: "https://download.docker.com/linux/{{ ansible_distribution | lower }}"
     suites: "{{ ansible_distribution_release }}"
     components: stable
     architectures: "{{ 'amd64' if ansible_architecture == 'x86_64' else 'arm64' if ansible_architecture == 'aarch64' else ansible_architecture }}"
