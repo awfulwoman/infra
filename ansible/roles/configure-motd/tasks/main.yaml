@@ -7,6 +7,7 @@
     modification_time: preserve
     access_time: preserve
   loop: "{{ motd_targets }}"
+  when: ansible_facts['distribution'] == "Ubuntu"
 
 - name: Ensure ZFS login message exists
   become: true
