@@ -1,0 +1,18 @@
+# code: language=ansible-jinja
+name: "{{ composition_name }}"
+services:
+  guineacam01:
+    ports:
+      - 18001:8080
+    image: mkuf/ustreamer:latest
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+    networks:
+      - "{{ default_docker_network }}"
+    devices:
+      - /dev/video0
+
+networks:
+  "{{ default_docker_network }}":
+    external: true
