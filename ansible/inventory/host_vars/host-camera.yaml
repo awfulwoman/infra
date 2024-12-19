@@ -1,4 +1,4 @@
-ansible_host: host-camera
+ansible_host: 192.168.1.219
 ansible_user: "{{ vault_server_username }}"
 
 # --- NETWORK -------------

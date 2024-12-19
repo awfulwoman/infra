@@ -16,6 +16,7 @@ all:
     host-khanivore:                       # Kubernetes node
     host-katzenjammer:                    # Kubernetes node
     host-knucklehead:                     # Kubernetes node
+    host-camera:
 
   # Groupings of servers that allow them to be administered collectively.
   children:
@@ -61,7 +62,8 @@ all:
         vm-awfulwoman:
         host-khanivore:
         host-katzenjammer:
-        host-knucklehead: 
+        host-knucklehead:
+        host-camera:
 
     # Group: Home Automation
     homeautomation:
