@@ -1,6 +1,6 @@
 - name: Ansible facts 
   ansible.builtin.debug:
-    var: ansible_facts
+    msg: "{{ ansible_facts['os_family'] }} + {{ ansible_distribution_release }}"
 
 - name: Add repo using key from URL (Debian)
   become: true
