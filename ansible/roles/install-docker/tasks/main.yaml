@@ -16,7 +16,7 @@
     name:
       - python3-debian
     state: present
-  when: ansible_facts['os_family'] == "Debian"
+  when: ansible_distribution == "Debian"
 
 - name: Add repo using key from URL (Debian)
   become: true
@@ -28,7 +28,7 @@
     components: stable
     architectures: "{{ 'amd64' if ansible_architecture == 'x86_64' else 'arm64' if ansible_architecture == 'aarch64' else ansible_architecture }}"
     signed_by: "https://download.docker.com/linux/debian/gpg"
-  when: ansible_facts['os_family'] == "Debian"
+  when: ansible_distribution == "Debian"
 
 - name: Add repo using key from URL (Ubuntu)
   become: true
@@ -40,7 +40,7 @@
     components: stable
     architectures: "{{ 'amd64' if ansible_architecture == 'x86_64' else 'arm64' if ansible_architecture == 'aarch64' else ansible_architecture }}"
     signed_by: "https://download.docker.com/linux/ubuntu/gpg"
-  when: ansible_facts['os_family'] == "Ubuntu"
+  when: ansible_distribution == "Ubuntu"
 
 - name: Install Docker from Docker repository
   become: true
