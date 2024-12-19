@@ -8,6 +8,7 @@
   become: true
   ansible.builtin.apt_repository:
     repo: 'ppa:ansible/ansible'
+    codename: bookworm
     # update_cache: true
 
 
