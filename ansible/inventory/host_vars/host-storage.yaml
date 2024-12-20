@@ -150,3 +150,6 @@ compositions:
   - immich-ml
   - syncthing
   - musicassistant
+
+traefik_providers:
+  - musicassistant

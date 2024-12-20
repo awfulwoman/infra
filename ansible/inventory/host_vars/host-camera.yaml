@@ -9,7 +9,7 @@ configure_dns_linkdevice_physical: "eth0"
 compositions_config_dir: "/home/{{ vault_server_username }}/compositions"
 
 compositions:
-  - reverseproxy
-  - container-management
+  # - reverseproxy
+  # - container-management
   - testcam
 
