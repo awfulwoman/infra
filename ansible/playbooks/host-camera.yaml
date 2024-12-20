@@ -3,8 +3,6 @@
   roles:
     - role: bootstrap-ubuntu
     - role: install-docker
-    - role: install-ansible
-    - role: install-ansible-pull
     - role: compositions
 
   handlers:
