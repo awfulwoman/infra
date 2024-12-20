@@ -16,4 +16,4 @@
     name: "configure-dns"
   vars:
     configure_dns_subdomains:
-      - guineacams
+      - testcam
