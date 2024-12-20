@@ -45,4 +45,3 @@
   vars:
     configure_dns_subdomains:
       - musicassistant
-#       - whoami.{{ ansible_hostname }}
