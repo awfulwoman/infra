@@ -23,7 +23,7 @@ services:
       - "traefik.http.routers.musicassistant.rule=Host(`musicassistant.{{ domain_name }}`)"
       - "traefik.http.routers.musicassistant.tls=true"
       - "traefik.http.routers.musicassistant.tls.certresolver=letsencrypt"
-      - "traefik.http.services.motioneye.loadbalancer.server.port=8095"
+      - "traefik.http.services.musicassistant.loadbalancer.server.port=8095"
     volumes:
       - "{{ composition_config }}:/data"
       - "/slowpool/shared/media/music:/media"
