@@ -11,7 +11,7 @@ services:
     networks:
       - "{{ default_docker_network }}"
     devices:
-      - /dev/media0:/dev/video0
+      - /dev/v4l/by-id/usb-SMI_PC_Cam-video-index0:/dev/video0
 
   guineacam02:
     ports:
@@ -21,7 +21,7 @@ services:
     networks:
       - "{{ default_docker_network }}"
     devices:
-      - /dev/media1:/dev/video0
+      - /dev/v4l/by-id/usb-USB_Camera_USB_Camera_USB_Camera-video-index0:/dev/video0
 
   guineacam03:
     ports:
@@ -31,17 +31,9 @@ services:
     networks:
       - "{{ default_docker_network }}"
     devices:
-      - /dev/media2:/dev/video0
+      - /dev/v4l/by-id/usb-Microsoft_Microsoft®_LifeCam_Cinema_TM_-video-index0:/dev/video0
 
-  guineacam04:
-    ports:
-      - 18004:8080
-    image: mkuf/ustreamer:latest
-    restart: unless-stopped
-    networks:
-      - "{{ default_docker_network }}"
-    devices:
-      - /dev/media3:/dev/video0
+
 
 networks:
   "{{ default_docker_network }}":
