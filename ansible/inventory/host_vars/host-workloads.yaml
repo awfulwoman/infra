@@ -58,4 +58,4 @@ compositions:
   - gitea
   - gitea-runners
   - immich
-  # - guineacams
+  - guineacams
