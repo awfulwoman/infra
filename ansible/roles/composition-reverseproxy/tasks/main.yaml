@@ -50,7 +50,7 @@
     state: directory
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: '0700' 
+    mode: '0700'
 
 - name: "Touch letsencrypt file"
   become: true
