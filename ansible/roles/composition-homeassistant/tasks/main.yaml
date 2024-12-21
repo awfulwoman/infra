@@ -1,4 +1,10 @@
 # code: language=ansible
+- name: Install apt packages
+  become: true
+  ansible.builtin.apt:
+    name:
+      - bluez
+
 - name: "Create compose file"
   ansible.builtin.template:
     src: docker-compose.yaml.j2
