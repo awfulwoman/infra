@@ -1,0 +1,25 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  ladder:
+    container_name: ladder
+    ports:
+      - "127.0.0.1:8134:8080"
+    image: ghcr.io/everywall/ladder:latest
+    restart: unless-stopped
+    env_file: .environment_vars
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ladder.rule=Host(`ladder.{{ domain_name }}`)"
+      - "traefik.http.routers.ladder.tls=true"
+      - "traefik.http.routers.ladder.tls.certresolver=letsencrypt"
+    volumes:
+      - "{{ composition_config }}/ruleset.yaml:/app/ruleset.yaml"
+      # - "{{ composition_config }}/handlers/form.html:/app/form.html"
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+
+networks:
+  "{{ default_docker_network }}":
+    external: true
