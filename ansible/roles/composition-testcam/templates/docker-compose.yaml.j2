@@ -6,6 +6,8 @@ services:
       - 18001:8080
     image: mkuf/ustreamer:latest
     restart: unless-stopped
+    cap_add:
+      - SYS_ADMIN
     labels:
       - "traefik.enable=true"
     networks:
@@ -18,6 +20,8 @@ services:
       - 18002:8080
     image: mkuf/ustreamer:latest
     restart: unless-stopped
+    cap_add:
+      - SYS_ADMIN
     labels:
       - "traefik.enable=true"
     networks:
@@ -30,6 +34,8 @@ services:
       - 18003:8080
     image: mkuf/ustreamer:latest
     restart: unless-stopped
+    cap_add:
+      - SYS_ADMIN
     labels:
       - "traefik.enable=true"
     networks:
@@ -42,6 +48,8 @@ services:
       - 18004:8080
     image: mkuf/ustreamer:latest
     restart: unless-stopped
+    cap_add:
+      - SYS_ADMIN
     labels:
       - "traefik.enable=true"
     networks:
