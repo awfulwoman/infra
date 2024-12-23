@@ -5,7 +5,7 @@
   loop: "{{ cdmirror_resources }}"
     
 - name: Rsync all repos
-  ansible.builin.get_url:
+  ansible.builtin.get_url:
     url: "{{ item.uri }}"
     dest: "{{ cdmirror_base }}/{{ item.name }}"
   loop: "{{ cdmirror_resources }}"
