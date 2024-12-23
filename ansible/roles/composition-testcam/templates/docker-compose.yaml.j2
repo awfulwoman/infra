@@ -11,7 +11,7 @@ services:
     networks:
       - "{{ default_docker_network }}"
     devices:
-      - /dev/v4l/by-path/pci-0000:00:15.0-usb-0:4.1:1.0-video-index0:/dev/video0
+      - "/dev/v4l/by-path/pci-0000:00:15.0-usb-0:4.1:1.0-video-index0:/dev/video0"
 
   guineacam02:
     ports:
@@ -23,7 +23,7 @@ services:
     networks:
       - "{{ default_docker_network }}"
     devices:
-      - /dev/v4l/by-path/pci-0000:00:15.0-usb-0:4.2:1.0-video-index0:/dev/video0
+      - "/dev/v4l/by-path/pci-0000:00:15.0-usb-0:4.2:1.0-video-index0:/dev/video0"
 
   guineacam03:
     ports:
@@ -35,7 +35,7 @@ services:
     networks:
       - "{{ default_docker_network }}"
     devices:
-      - /dev/v4l/by-path/pci-0000:00:15.0-usb-0:4.3:1.0-video-index0:/dev/video0
+      - "/dev/v4l/by-path/pci-0000:00:15.0-usb-0:4.3:1.0-video-index0:/dev/video0"
 
   guineacam04:
     ports:
@@ -47,7 +47,7 @@ services:
     networks:
       - "{{ default_docker_network }}"
     devices:
-      - /dev/v4l/by-path/pci-0000:00:15.0-usb-0:4.4:1.0-video-index0:/dev/video0
+      - "/dev/v4l/by-path/pci-0000:00:15.0-usb-0:4.4:1.0-video-index0:/dev/video0"
 
 networks:
   "{{ default_docker_network }}":
