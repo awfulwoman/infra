@@ -5,12 +5,12 @@
   loop: "{{ cdmirror_resources }}"
     
 - name: Rsync all repos
-  ansible.posix.get_url:
-    url: "{{ item.uri }}"
+  ansible.posix.synchronize:
+    src: "{{ item.uri }}"
     dest: "{{ cdmirror_base }}/{{ item.name }}"
     copy_links: true # Resolves symlinks
     partial: true # Allows restarting of transfer quickly
   loop: "{{ cdmirror_resources }}"
 
 
-  # wget -r -np -nH --cut-dirs=3 https://mirror.kkg.berlin/ubuntu-releases/22.04/
+  
