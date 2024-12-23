@@ -13,7 +13,7 @@ services:
     networks:
       - "{{ default_docker_network }}"
     devices:
-      - /dev/media0:/dev/video0
+      - /dev/video0:/dev/video0
 
   guineacam02:
     ports:
@@ -27,7 +27,7 @@ services:
     networks:
       - "{{ default_docker_network }}"
     devices:
-      - /dev/media1:/dev/video0
+      - /dev/video2:/dev/video0
 
   guineacam03:
     ports:
@@ -41,7 +41,7 @@ services:
     networks:
       - "{{ default_docker_network }}"
     devices:
-      - /dev/media2:/dev/video0
+      - /dev/video4:/dev/video0
 
   guineacam04:
     ports:
@@ -55,7 +55,7 @@ services:
     networks:
       - "{{ default_docker_network }}"
     devices:
-      - /dev/media3:/dev/video0
+      - /dev/video6:/dev/video0
 
 networks:
   "{{ default_docker_network }}":
