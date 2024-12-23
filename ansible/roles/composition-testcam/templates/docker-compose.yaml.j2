@@ -11,7 +11,43 @@ services:
     networks:
       - "{{ default_docker_network }}"
     devices:
-      - /dev/video0
+      - /dev/v4l/by-path/pci-0000:00:15.0-usb-0:4.1:1.0-video-index0:/dev/video0
+
+  guineacam02:
+    ports:
+      - 18002:8080
+    image: mkuf/ustreamer:latest
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+    networks:
+      - "{{ default_docker_network }}"
+    devices:
+      - /dev/v4l/by-path/pci-0000:00:15.0-usb-0:4.2:1.0-video-index0:/dev/video0
+
+  guineacam03:
+    ports:
+      - 18003:8080
+    image: mkuf/ustreamer:latest
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+    networks:
+      - "{{ default_docker_network }}"
+    devices:
+      - /dev/v4l/by-path/pci-0000:00:15.0-usb-0:4.3:1.0-video-index0:/dev/video0
+
+  guineacam04:
+    ports:
+      - 18004:8080
+    image: mkuf/ustreamer:latest
+    restart: unless-stoppedc
+    labels:
+      - "traefik.enable=true"
+    networks:
+      - "{{ default_docker_network }}"
+    devices:
+      - /dev/v4l/by-path/pci-0000:00:15.0-usb-0:4.4:1.0-video-index0:/dev/video0
 
 networks:
   "{{ default_docker_network }}":
