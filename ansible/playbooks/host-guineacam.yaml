@@ -1,5 +1,5 @@
 - name: Camera test
-  hosts: host-camera
+  hosts: host-guineacam
   roles:
     - role: bootstrap-ubuntu
     - role: install-docker
