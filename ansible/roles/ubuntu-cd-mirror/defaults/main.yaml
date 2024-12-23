@@ -2,26 +2,15 @@ cdmirror_base: /slowpool/images
 cdmirror_resources:
   # Ubuntu
   - name: ubuntu/ubuntu/24.04
-    uri: rsync://rsync.releases.ubuntu.com/24.04/
+    uri: rsync://releases.ubuntu.com/releases/24.04/
   - name: ubuntu/ubuntu/22.04
-    uri: rsync://rsync.releases.ubuntu.com/22.04/
-  # # Kubuntu
-  # - name: ubuntu/kubuntu/24.04
-  #   uri: rsync://cdimage.ubuntu.com/kubuntu/releases/24.04/
-  # # Lubuntu
-  # - name: ubuntu/lubuntu/24.04
-  #   uri: rsync://se.archive.ubuntu.com/mirror/cdimage.ubuntu.com/lubuntu/noble/daily-live/current/
-  # # Xubuntu
-  # - name: ubuntu/xubuntu/24.04
-  #   uri: rsync://se.archive.ubuntu.com/mirror/cdimage.ubuntu.com/xubuntu/noble/daily-live/current/
-  # # Debian
-  # - name: debian/netinst/12.5
-  #   uri: rsync://rsync.uni-bayreuth.de/debian-cd/12.5.0/amd64/iso-cd/
-  # - name: debian/live/12.5
-  #   uri: rsync://rsync.uni-bayreuth.de/debian-cd/12.5.0-live/amd64/iso-hybrid/
-  # # RaspiOS
-  # - name: raspios/2024-03-15
-  #   uri: https://downloads.raspberrypi.org/raspios_arm64/images/raspios_arm64-2024-03-15/
+    uri: rsync://releases.ubuntu.com/releases/22.04/
+  # Debian
+  - name: debian/live/12.5
+    uri: rsync://debian.inf.tu-dresden.de/debian-cd/
+  # RaspiOS
+  - name: raspios/stable
+    uri: rsync://ftp.halifax.rwth-aachen.de/raspbian/raspbian/dists/stable/main/
   # # PiKVM
   # - name: pikvm/pi4/hdmi-csi
   #   uri: https://files.pikvm.org/images/v2-hdmi-rpi4-latest.img.xz
