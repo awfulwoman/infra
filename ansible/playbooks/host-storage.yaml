@@ -20,7 +20,7 @@
     # - role: ip-address-forwarding
     # - role: vm-host
     # - role: powertop
-    # - role: ubuntu-cd-mirror
+    - role: ubuntu-cd-mirror
 
   handlers:
     - name: Reboot host
