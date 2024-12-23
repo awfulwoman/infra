@@ -11,9 +11,23 @@
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
 
+- name: "Add {{ ansible_user }} user to docker group"
+  become: true
+  ansible.builtin.user:
+    user: "{{ ansible_user }}"
+    groups: docker
+    append: true
+
+- name: "Add {{ ansible_user }} user to docker group"
+  become: true
+  ansible.builtin.user:
+    user: "{{ ansible_user }}"
+    groups: video
+    append: true
+
 - name: Run Configure DNS role
   ansible.builtin.include_role:
     name: "configure-dns"
   vars:
     configure_dns_subdomains:
-      - testcam
+      - guineacams
