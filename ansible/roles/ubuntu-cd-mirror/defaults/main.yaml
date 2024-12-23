@@ -11,6 +11,6 @@ cdmirror_resources:
   # RaspiOS
   - name: raspios/stable
     uri: rsync://ftp.halifax.rwth-aachen.de/raspbian/raspbian/dists/stable/main/
-  # # PiKVM
-  # - name: pikvm/pi4/hdmi-csi
-  #   uri: https://files.pikvm.org/images/v2-hdmi-rpi4-latest.img.xz
+  # PiKVM
+  - name: pikvm/pi4/hdmi-csi
+    uri: https://files.pikvm.org/images/v2-hdmi-rpi4-latest.img.xz
