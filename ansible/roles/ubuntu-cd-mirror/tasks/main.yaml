@@ -3,7 +3,7 @@
     path: "{{ cdmirror_base }}/{{ item.name }}"
     state: directory
   loop: "{{ cdmirror_resources }}"
-    
+
 - name: Rsync all repos
   ansible.builtin.get_url:
     url: "{{ item.uri }}"
