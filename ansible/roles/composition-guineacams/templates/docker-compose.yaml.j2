@@ -23,15 +23,15 @@ services:
     devices:
       - /dev/v4l/by-id/usb-USB_Camera_USB_Camera_USB_Camera-video-index0:/dev/video0
 
-  guineacam03:
-    ports:
-      - 18003:8080
-    image: mkuf/ustreamer:latest
-    restart: unless-stopped
-    networks:
-      - "{{ default_docker_network }}"
-    devices:
-      - /dev/v4l/by-id/usb-Microsoft_Microsoft®_LifeCam_Cinema_TM_-video-index0:/dev/video0
+  # guineacam03:
+  #   ports:
+  #     - 18003:8080
+  #   image: mkuf/ustreamer:latest
+  #   restart: unless-stopped
+  #   networks:
+  #     - "{{ default_docker_network }}"
+  #   devices:
+  #     - /dev/v4l/by-id/usb-Microsoft_Microsoft®_LifeCam_Cinema_TM_-video-index0:/dev/video0
 
 
 
