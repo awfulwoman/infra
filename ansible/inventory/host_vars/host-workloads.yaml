@@ -59,7 +59,7 @@ compositions:
   - gitea
   - gitea-runners
   - immich
-  - guineacams
+  # - guineacams
   - ladder
   - libation
   - hoarder
