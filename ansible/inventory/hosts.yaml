@@ -39,7 +39,6 @@ all:
     #     host-katzenjammer:
     #     host-knucklehead: 
 
-
     # Host that run Terraform
     terraform:
       hosts:
@@ -79,6 +78,7 @@ all:
         host-mqtt:
         host-radio:
         host-workloads:
+        # host-pihole:
 
     # ZFS Backup Server
     zfs-backup-server:
@@ -93,3 +93,4 @@ all:
         host-radio:
         host-homeassistant:
         host-workloads:
+        # host-pihole:

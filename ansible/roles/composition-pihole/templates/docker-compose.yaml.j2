@@ -1,0 +1,25 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  SERVICENAME:
+    container_name: pihole
+    network_mode: host
+    image: pihole/pihole:latest
+    cap_add:
+      - NET_ADMIN
+    restart: unless-stopped
+    env_file: .environment_vars
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.pihole.rule=Host(`pihole.{{ domain_name }}`)"
+      - "traefik.http.routers.pihole.tls=true"
+      - "traefik.http.routers.pihole.tls.certresolver=letsencrypt"
+      - "traefik.http.services.pihole.loadbalancer.server.port=80"
+    volumes:
+      - "{{ composition_config }}/etc-pihole:/etc/pihole"
+      - "{{ composition_config }}/etc-dnsmasq.d:/etc/dnsmasq.d"
+      - /etc/localtime:/etc/localtime:ro
+
+networks:
+  "{{ default_docker_network }}":
+    external: true
