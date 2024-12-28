@@ -1,0 +1,25 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  podgrab:
+    container_name: podgrab
+    ports:
+      - "127.0.0.1:8567:8080"
+    image: akhilrex/podgrab
+    restart: unless-stopped
+    env_file: .environment_vars
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.podgrab.rule=Host(`podgrab.{{ domain_name }}`)"
+      - "traefik.http.routers.podgrab.tls=true"
+      - "traefik.http.routers.podgrab.tls.certresolver=letsencrypt"
+    volumes:
+      - "{{ composition_config }}:/config"
+      - "/slowpool/shared/media/podcasts:/assets"
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+
+networks:
+  "{{ default_docker_network }}":
+    external: true

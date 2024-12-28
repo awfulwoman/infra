@@ -150,6 +150,7 @@ compositions:
   - immich-ml
   - syncthing
   - musicassistant
+  - podgrab
 
 traefik_providers:
   - musicassistant
