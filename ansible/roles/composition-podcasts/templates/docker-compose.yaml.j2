@@ -1,25 +1,73 @@
 # code: language=ansible
 name: "{{ composition_name }}"
 services:
-  podcasts:
-    container_name: podfetch
-    user: 1000:1000
-    ports:
-      - "127.0.0.1:8567:8000"
-    image: samuel19982/podfetch:latest
-    restart: unless-stopped
+  db:
+    image: postgres:latest
     env_file: .environment_vars
+    environment:
+      POSTGRES_DB: pinepods_database
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "{{ vault_pinepods_pg_password }}"
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - "{{ composition_config }}/pgdata:/var/lib/postgresql/data"
+    ports:
+      - "5432:5432"
+    restart: always
+    networks:
+      - "{{ default_docker_network }}"
+
+  valkey:
+    image: valkey/valkey:8-alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - "{{ default_docker_network }}"
+
+  pinepods:
+    image: madeofpendletonwool/pinepods:latest
+    ports:
+      - "8567:8040"
+    env_file: .environment_vars
+    environment:
+      # Default Admin User Information
+      USERNAME: admin
+      PASSWORD: "{{ vault_pinepods_admin_password }}"
+      FULLNAME: Admin User
+
+      # Basic Server Info
+      SEARCH_API_URL: 'https://search.pinepods.online/api/search'
+      PEOPLE_API_URL: 'https://people.pinepods.online'
+
+      EMAIL: user@pinepods.online
+      # Database Vars
+      DB_TYPE: postgresql
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: "{{ vault_pinepods_pg_password }}"
+      DB_NAME: pinepods_database
+
+      # Valkey Settings
+      VALKEY_HOST: valkey
+      VALKEY_PORT: 6379
+
+      # Enable or Disable Debug Mode for additional Printing
+      DEBUG_MODE: false
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.podfetch.rule=Host(`podcasts.{{ domain_name }}`)"
-      - "traefik.http.routers.podfetch.tls=true"
-      - "traefik.http.routers.podfetch.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.pinepods.rule=Host(`podcasts.{{ domain_name }}`)"
+      - "traefik.http.routers.pinepods.tls=true"
+      - "traefik.http.routers.pinepods.tls.certresolver=letsencrypt"
     volumes:
-      - "{{ composition_config }}:/app/db"
-      - "/slowpool/shared/media/podcasts:/app/podcasts"
+      - "{{ composition_config }}/backups:/opt/pinepods/backups"
+      - "/slowpool/shared/media/podcasts:/opt/pinepods/downloads"
       - /etc/localtime:/etc/localtime:ro
     networks:
       - "{{ default_docker_network }}"
+    depends_on:
+      - db
+      - valkey
 
 networks:
   "{{ default_docker_network }}":

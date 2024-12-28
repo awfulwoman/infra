@@ -22,15 +22,15 @@
 # Specific tasks
 # ----------------------------
 
-# - name: Create directories
-#   file:
-#     path: "{{ composition_config }}/{{ dir_item }}"
-#     state: directory
-#   loop_control:
-#     loop_var: dir_item
-#   loop:
-#     - whatever1
-#     - whatever2
+- name: Create directories
+  file:
+    path: "{{ composition_config }}/{{ dir_item }}"
+    state: directory
+  loop_control:
+    loop_var: dir_item
+  loop:
+    - backups
+    - pgdata
 #     - whatever3
 
 # - name: Copy over files
