@@ -26,6 +26,7 @@ services:
 
   pinepods:
     image: madeofpendletonwool/pinepods:latest
+    user: 1000:1000
     ports:
       - "8567:8040"
     env_file: .environment_vars
