@@ -1,0 +1,12 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  libation:
+    container_name: libation
+    image: rmcrackan/libation
+    restart: unless-stopped
+    env_file: .environment_vars
+    volumes:
+      - "{{ composition_config }}:/config"
+      - "/fastpool/charlie/libation:/data"
+      - /etc/localtime:/etc/localtime:ro

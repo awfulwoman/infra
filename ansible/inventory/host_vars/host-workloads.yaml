@@ -29,6 +29,7 @@ zfs_datasets:
   - fastpool/shared/syncthing
   - fastpool/shared/photos
   - fastpool/charlie
+  - fastpool/charlie/libation
   - "{{ zfs_dataset_charlie_syncthing }}"
   - "{{ charlie_photos_data_path_zfs_id }}"
   - "{{ zfs_dataset_wifey }}"
@@ -60,3 +61,4 @@ compositions:
   - immich
   - guineacams
   - ladder
+  - libation
