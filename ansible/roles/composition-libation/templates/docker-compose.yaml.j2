@@ -6,6 +6,7 @@ services:
     image: rmcrackan/libation
     restart: unless-stopped
     env_file: .environment_vars
+    user: 1000:1000
     volumes:
       - "{{ composition_config }}:/config"
       - "/fastpool/charlie/libation:/data"
