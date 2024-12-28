@@ -3,7 +3,7 @@ name: "{{ composition_name }}"
 services:
   libation:
     container_name: libation
-    image: rmcrackan/libation
+    image: rmcrackan/libation:latest
     restart: unless-stopped
     env_file: .environment_vars
     user: 1000:1000
