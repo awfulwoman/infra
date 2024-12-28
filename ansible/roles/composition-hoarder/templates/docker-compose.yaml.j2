@@ -7,7 +7,7 @@ services:
     volumes:
       - "{{ composition_config }}/hoarder:/data"
     ports:
-      - 3000:3000
+      - 8714:3000
     env_file:
       - .environment_vars
     labels:
