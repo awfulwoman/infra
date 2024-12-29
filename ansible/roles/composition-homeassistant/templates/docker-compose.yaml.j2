@@ -23,7 +23,7 @@ services:
     environment:
       - "ESPHOME_DASHBOARD_USE_PING=true"
     env_file: .environment_vars 
-    image: esphome/esphome
+    image: ghcr.io/esphome/esphome
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
