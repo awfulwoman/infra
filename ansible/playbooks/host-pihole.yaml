@@ -1,33 +1,17 @@
----
-# DNS + DHCP server
-
 - name: PiHole DNS + DHCP server
   hosts: host-pihole
-  pre_tasks:
-    - set_fact:
-       compose_list: []
-
   roles:
-    - role: bootstrap
-    - role: weareinteractive.environment
-      no_log: true
-      become: true
-    - role: artis3n.tailscale
-    - role: mrlesmithjr.netplan
-      become: true
-    - role: geerlingguy.pip
-    - role: geerlingguy.docker
-      become: true
-      when: ansible_architecture == "x86_64"
-    - role: geerlingguy.docker_arm
-      become: true
-      when: ansible_architecture == "aarch64"
-    - role: docker
-    - role: configure-motd
-    - role: hifis.unattended_upgrades
-      become: true
-    - role: container-pihole
-    - role: apt-upgrade
+    - role: bootstrap-ubuntu
+    - role: hardware-raspberry-pi
+      raspberry_pi_wifi: false
+      raspberry_pi_boot_config_location: /boot/firmware/config.txt
+    - role: install-docker
+    - role: zfs-core-new
+    - role: install-ansible
+    - role: install-ansible-pull
+    - role: zfs-backup-client
+    - role: compositions
+
   handlers:
     - name: Reboot host
       become: true
