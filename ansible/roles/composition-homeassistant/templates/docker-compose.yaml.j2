@@ -18,8 +18,7 @@ services:
 
   esphome:
     container_name: esphome
-    ports:
-      - "6052:6052"
+    network_mode: host
     privileged: true
     environment:
       - "ESPHOME_DASHBOARD_USE_PING=true"
@@ -31,11 +30,11 @@ services:
       - "traefik.http.routers.esphome.rule=Host(`esphome.{{ domain_name }}`)"
       - "traefik.http.routers.esphome.tls=true"
       - "traefik.http.routers.esphome.tls.certresolver=letsencrypt"
+      - "traefik.http.services.esphome.loadbalancer.server.port=6052"
     volumes:
       - "{{ composition_config }}/esphome:/config"
       - "/etc/localtime:/etc/localtime:ro"
-    networks:
-      - "{{ default_docker_network }}"
+
 networks:
   "{{ default_docker_network }}":
     external: true
