@@ -1,5 +1,5 @@
 - name: PiHole DNS + DHCP server
-  hosts: host-pihole
+  hosts: 192.168.1.2
   roles:
     - role: bootstrap-ubuntu
     - role: hardware-raspberry-pi
