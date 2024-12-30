@@ -69,7 +69,7 @@ services:
       - "traefik.http.routers.lidarr.tls.certresolver=letsencrypt"
     volumes:
       - "{{ composition_config }}/lidarr:/config"
-      - "{{ shared_media_path }}:/music"
+      - "{{ shared_media_path }}:/data"
       - /etc/localtime:/etc/localtime:ro
     networks:
       - "{{ default_docker_network }}"
