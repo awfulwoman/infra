@@ -23,14 +23,10 @@ services:
     image: ghcr.io/esphome/esphome
     restart: unless-stopped
     env_file: .environment_vars 
-    environment:
-      - "ESPHOME_DASHBOARD_USE_PING=true"
+    # environment:
+    #   - "ESPHOME_DASHBOARD_USE_PING=true"
     labels:
       - "traefik.enable=true"
-      # - "traefik.http.routers.esphome.rule=Host(`esphome.{{ domain_name }}`)"
-      # - "traefik.http.routers.esphome.tls=true"
-      # - "traefik.http.routers.esphome.tls.certresolver=letsencrypt"
-      # - "traefik.http.services.esphome.loadbalancer.server.port=6052"
     volumes:
       - "{{ composition_config }}/esphome:/config"
       - "/etc/localtime:/etc/localtime:ro"
