@@ -50,6 +50,33 @@ services:
       - prowlarr
       - gluetun
 
+  lidarr:
+    container_name: lidarr
+    ports:
+      - "127.0.0.1:8686:8686"
+    image: lscr.io/linuxserver/lidarr:latest
+    restart: unless-stopped
+    env_file: .environment_vars
+    environment:
+      - "TZ=Europe/Berlin"      
+      - "PUID=1000"
+      - "PGID=1000"
+      - "UMASK=002"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.lidarr.rule=Host(`lidarr.{{ domain_name }}`)"
+      - "traefik.http.routers.lidarr.tls=true"
+      - "traefik.http.routers.lidarr.tls.certresolver=letsencrypt"
+    volumes:
+      - "{{ composition_config }}/lidarr:/config"
+      - "{{ shared_media_path }}:/music"
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+    depends_on:
+      - prowlarr
+      - gluetun
+
   sonarr:
     container_name: sonarr
     ports:
