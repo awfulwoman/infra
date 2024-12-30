@@ -34,7 +34,7 @@ http:
         scheme: https
 
   services:
-    homeassistant:
+    musicassistant:
       loadBalancer:
         passHostHeader: true
         servers:
