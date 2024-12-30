@@ -2,11 +2,15 @@
 name: "{{ composition_name }}"
 services:
   pihole:
+    cap_add:
+      - NET_ADMIN
+      - NET_BIND_SERVICE
+      - NET_RAW
+      - SYS_NICE
+      - CHOWN
     container_name: pihole
     network_mode: host
     image: pihole/pihole:latest
-    cap_add:
-      - NET_ADMIN
     restart: unless-stopped
     env_file: .environment_vars
     labels:

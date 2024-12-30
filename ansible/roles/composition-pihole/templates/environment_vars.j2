@@ -1,1 +1,12 @@
 TZ="Europe/Berlin"
+
+
+- "TZ=Europe/Berlin"
+      - "WEBPASSWORD={{ vault_pihole_password }}"
+      - "DHCP_ACTIVE=false"
+      - "DHCP_START=192.168.1.150"
+      - "DHCP_END=192.168.1.199"
+      - "DHCP_ROUTER=192.168.1.1"
+      - "PIHOLE_DOMAIN=i.affordablepotatoes.com"
+      - "ADMIN_EMAIL=pihole@{{ domain_name }}"
+      - "DNS_FQDN_REQUIRED=true"
