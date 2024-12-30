@@ -18,19 +18,19 @@ services:
 
   esphome:
     container_name: esphome
-    network_mode: host
     privileged: true
-    environment:
-      - "ESPHOME_DASHBOARD_USE_PING=true"
-    env_file: .environment_vars 
+    network_mode: host
     image: ghcr.io/esphome/esphome
     restart: unless-stopped
+    env_file: .environment_vars 
+    environment:
+      - "ESPHOME_DASHBOARD_USE_PING=true"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.esphome.rule=Host(`esphome.{{ domain_name }}`)"
-      - "traefik.http.routers.esphome.tls=true"
-      - "traefik.http.routers.esphome.tls.certresolver=letsencrypt"
-      - "traefik.http.services.esphome.loadbalancer.server.port=6052"
+      # - "traefik.http.routers.esphome.rule=Host(`esphome.{{ domain_name }}`)"
+      # - "traefik.http.routers.esphome.tls=true"
+      # - "traefik.http.routers.esphome.tls.certresolver=letsencrypt"
+      # - "traefik.http.services.esphome.loadbalancer.server.port=6052"
     volumes:
       - "{{ composition_config }}/esphome:/config"
       - "/etc/localtime:/etc/localtime:ro"

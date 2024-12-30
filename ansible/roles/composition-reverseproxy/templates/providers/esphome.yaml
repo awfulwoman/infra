@@ -1,0 +1,41 @@
+tls:
+  options:
+    default:
+      minVersion: VersionTLS13
+      sniStrict: true
+
+http:
+  routers:
+    esphome:
+      service: esphome
+      rule: "Host(`esphome.{{ domain_name }}`)"
+      tls:
+        certresolver: letsencrypt
+      entrypoints:
+        - web
+        - websecure
+      middlewares:
+        - secHeaders
+        - https-redirect
+  
+  middlewares:
+    secHeaders:
+      headers:
+        browserXssFilter: true
+        contentTypeNosniff: true
+        frameDeny: true
+        sslRedirect: true
+        stsIncludeSubdomains: true
+        stsPreload: true
+        stsSeconds: 31536000
+        customFrameOptionsValue: SAMEORIGIN
+    https-redirect:
+      redirectScheme:
+        scheme: https
+
+  services:
+    esphome:
+      loadBalancer:
+        passHostHeader: true
+        servers:
+          - url: "http://192.168.1.130:6052"
