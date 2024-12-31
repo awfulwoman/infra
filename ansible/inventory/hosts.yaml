@@ -78,7 +78,7 @@ all:
         host-mqtt:
         host-radio:
         host-workloads:
-        # host-pihole:
+        host-pihole:
 
     # ZFS Backup Server
     zfs-backup-server:
