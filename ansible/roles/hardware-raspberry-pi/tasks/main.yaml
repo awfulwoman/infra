@@ -3,6 +3,14 @@
 # Determine boot config file location
 # Raspbian = /boot/config.txt
 # Ubuntu = /boot/firmware/usercfg.txt
+- name: Ensure boot config file exists
+  ansible.builtin.copy:
+    content: ""
+    dest: "{{ raspberry_pi_boot_config_location }}"
+    force: false
+    group: root
+    owner: root
+    mode: "0644"
 
 # Wifi hardware status
 - name: Ensure wifi hardware is disabled
