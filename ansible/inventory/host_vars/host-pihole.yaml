@@ -9,13 +9,14 @@ configure_dns_linkdevice_physical: "eth0"
 zfs_pools:
   - fastpool
 
+container_compositions_zfs_id: fastpool/compositions
 
 # Datasets present
 zfs_datasets:
   - "{{ container_compositions_zfs_id }}"
 
 # Named ZFS datasets
-container_compositions_zfs_id: fastpool/compositions
+compositions_config_dir: "/{{ container_compositions_zfs_id }}"
 
 zfs_backup_datasets:
   - "{{ container_compositions_zfs_id }}"
