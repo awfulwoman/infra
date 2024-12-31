@@ -29,8 +29,8 @@
   loop_control:
     loop_var: dir_item
   loop:
-    - pihole
-    - dns
+    - etc-pihole
+    - etc-dnsmasq.d
 
 # - name: Copy over files
 #   become: true
