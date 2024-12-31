@@ -4,6 +4,7 @@
 # Raspbian = /boot/config.txt
 # Ubuntu = /boot/firmware/usercfg.txt
 - name: Ensure boot config file exists
+  become: true
   ansible.builtin.copy:
     content: ""
     dest: "{{ raspberry_pi_boot_config_location }}"
