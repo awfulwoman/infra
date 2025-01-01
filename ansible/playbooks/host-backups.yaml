@@ -7,7 +7,7 @@
     - role: zfs-core
     - role: install-ansible
     - role: install-ansible-pull
-    - role: mqtt2cmd
+    - role: install-mqtt2cmd
     - role: zfs-backup-server
       zfsbackup_pushover: false
       zfsbackup_run_after_wake: true

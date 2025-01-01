@@ -9,7 +9,7 @@
     - role: install-ansible
     - role: install-ansible-pull
     - role: hardware-host-bus-adapter
-    - role: mqtt2cmd
+    - role: install-mqtt2cmd
     - role: nfs-server
     - role: zfs-backup-client
     - role: compositions
