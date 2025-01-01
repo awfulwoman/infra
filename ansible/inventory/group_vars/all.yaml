@@ -389,3 +389,9 @@ vault_pihole_password: !vault |
           3962
 
 default_bin_path: /usr/local/bin
+pip_basepath: /opt/ansible/pip/
+pip_requirements: /opt/ansible/pip/requirements.txt
+pip_virtualenv: /opt/ansible/pip/venv
+pip_virtualenv_python: python3
+pip_virtualenv_bin: "{{ /opt/ansible/pip/venv}}/bin"
+systemd_service_path: /etc/systemd/system
