@@ -1,0 +1,12 @@
+[Unit]
+Description=linux2mqtt
+
+[Service]
+Type=simple
+Environment="TERM=dumb"
+RemainAfterExit=true
+ExecStart="{{ linux2mqtt_executable_path }}
+
+[Install]
+WantedBy=multi-user.target
+

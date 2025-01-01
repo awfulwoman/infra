@@ -14,6 +14,7 @@
     - role: zfs-backup-client
     - role: compositions
     - role: configure-smartmontools
+    - role: install-linux2mqtt
     # - role: sleepuntil
     #   become: true
     # - role: artis3n.tailscale

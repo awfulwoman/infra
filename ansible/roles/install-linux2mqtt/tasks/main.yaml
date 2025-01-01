@@ -1,0 +1,29 @@
+- name: Ensure pip packages are installed
+  community.general.pipx:
+    name: "{{ item }}"
+  loop:
+    - linux2mqtt
+
+- name: Ensure script exists
+  ansible.builtin.template:
+    src: linux2mqtt.py
+    dest: "{{ linux2mqtt_executable_path }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"
+
+- name: Ensure service file exists
+  become: true
+  ansible.builtin.copy:
+    src: linux2mqtt.service
+    dest: "{{ linux2mqtt_service_path }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0664"
+
+- name: Ensure service is started
+  become: true
+  ansible.builtin.systemd:
+    name: linux2mqtt
+    state: started
+    daemon_reload: true

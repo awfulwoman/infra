@@ -1,0 +1,2 @@
+linux2mqtt_executable_path: "{{ default_bin_path }}/linux2mqtt"
+linux2mqtt_service_path: "/etc/systemd/system/linux2mqtt.service"
