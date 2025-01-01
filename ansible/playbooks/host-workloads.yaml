@@ -3,7 +3,7 @@
   roles:
     - role: bootstrap-ubuntu
     - role: install-docker
-    - role: zfs-core-new
+    - role: zfs-core
     - role: install-ansible
     - role: install-ansible-pull
     - role: zfs-backup-client

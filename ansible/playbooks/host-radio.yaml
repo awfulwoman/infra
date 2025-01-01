@@ -7,7 +7,7 @@
       raspberry_pi_wifi: false
       raspberry_pi_boot_config_location: /boot/firmware/config.txt
     - role: install-docker
-    - role: zfs-core-new
+    - role: zfs-core
     - role: install-ansible
     - role: install-ansible-pull
     - role: zfs-backup-client

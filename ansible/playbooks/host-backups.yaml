@@ -4,7 +4,7 @@
     - role: bootstrap-ubuntu
     - role: wakeonlan
     - role: install-docker
-    - role: zfs-core-new
+    - role: zfs-core
     - role: install-ansible
     - role: install-ansible-pull
     - role: mqtt2cmd
