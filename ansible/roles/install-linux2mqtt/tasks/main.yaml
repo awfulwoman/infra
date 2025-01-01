@@ -15,7 +15,7 @@
 
 - name: Ensure service file exists
   become: true
-  ansible.builtin.copy:
+  ansible.builtin.template:
     src: linux2mqtt.service
     dest: "{{ linux2mqtt_service_path }}"
     owner: "{{ ansible_user }}"
