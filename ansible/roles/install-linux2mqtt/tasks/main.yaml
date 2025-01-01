@@ -5,6 +5,7 @@
     - linux2mqtt
 
 - name: Ensure script exists
+  become: true
   ansible.builtin.template:
     src: linux2mqtt.py
     dest: "{{ linux2mqtt_executable_path }}"
