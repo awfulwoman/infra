@@ -5,7 +5,7 @@ Description=linux2mqtt
 Type=simple
 Environment="TERM=dumb"
 RemainAfterExit=true
-ExecStart="{{ linux2mqtt_executable_path }}
+ExecStart="{{ linux2mqtt_executable_path }} {{ linux2mqtt_params }}
 
 [Install]
 WantedBy=multi-user.target
