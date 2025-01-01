@@ -102,7 +102,7 @@
 - name: Install pip packages via pipx
   community.general.pipx:
     name: "{{ item }}"
-  loop: 
+  loop:
     - terminaltexteffects
 
 - name: Env vars
