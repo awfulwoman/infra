@@ -2,7 +2,7 @@ from linux2mqtt import Linux2Mqtt, DEFAULT_CONFIG
 
 cfg = Linux2MqttConfig({ 
   **DEFAULT_CONFIG,
-  "host": "mqtt.{{ domain_name }}",
+  "host": "mosquitto",
 })
 
 try:
@@ -12,4 +12,3 @@ try:
 
 except Exception as ex:
   # Do something
-  
