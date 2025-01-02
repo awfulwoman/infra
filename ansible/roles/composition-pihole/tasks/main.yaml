@@ -71,15 +71,15 @@
 # https://www.reddit.com/r/pihole/comments/rvattc/dnsmasq_warning_ignoring_domain/
 - name: Create domains
   ansible.builtin.template:
-    src: domains.conf.j2
-    dest: "{{ composition_config }}/etc-dnsmasq.d/07-domains.conf"
+    src: work-domains
+    dest: "{{ composition_config }}/etc-dnsmasq.d/07-work.conf"
   notify:
     - RESTART PIHOLE
 
 # Map cnames to A records
 - name: "Create cnames"
   ansible.builtin.template:
-    src: cnames.conf.j2
+    src: cnames
     dest: "{{ composition_config }}/etc-dnsmasq.d/05-cnames.list"
   notify:
     - RESTART PIHOLE
