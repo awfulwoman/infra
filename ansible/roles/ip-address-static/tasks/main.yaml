@@ -14,4 +14,4 @@
     gw4: "{{ ip_address_static_gw4 }}"
     state: "{{ ip_address_static_state }}"
   notify:
-    - Restart DHCP service
+    - Restart NetworkManager service

@@ -14,4 +14,4 @@
     method4: "auto"
     state: "{{ ip_address_dhcp_state }}"
   notify:
-    - Restart DHCP service
+    - Restart NetworkManager service
