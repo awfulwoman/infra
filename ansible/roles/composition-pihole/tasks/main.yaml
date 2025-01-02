@@ -64,22 +64,46 @@
   ansible.builtin.template:
     src: 04-pihole-static-dhcp.conf
     dest: "{{ composition_config }}/etc-dnsmasq.d/04-pihole-static-dhcp.conf" # must be this file name
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0664"
+  notify:
+    - RESTART PIHOLE
 
 # Add a custom domain for certain hosts.
 # Solves corporate computers trying to claim a domain
 # and generating very annoying errors in pihole
 # https://www.reddit.com/r/pihole/comments/rvattc/dnsmasq_warning_ignoring_domain/
-- name: Create domains
+- name: Create work domains
   ansible.builtin.template:
     src: 07-work.conf
     dest: "{{ composition_config }}/etc-dnsmasq.d/07-work.conf"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0664"
   notify:
     - RESTART PIHOLE
 
-# Map cnames to A records
+
+# Map IP addresses to domain names
+# Most of this is handled automatically by DHCP host name reservations
+- name: "Create A records"
+  ansible.builtin.template:
+    src: custom.list
+    dest: "{{ composition_config }}/etc-dnsmasq.d/custom.list"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0664"
+  notify:
+    - RESTART PIHOLE
+
+# Map vanity domains to host domains
 - name: "Create cnames"
   ansible.builtin.template:
     src: 05-cnames.conf
     dest: "{{ composition_config }}/etc-dnsmasq.d/05-cnames.conf"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0664"
   notify:
     - RESTART PIHOLE
