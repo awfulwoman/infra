@@ -1,2 +1,1 @@
-static_dhcp_group: "{{ groups['all'] }}"
-
+host_group: "{{ groups['all'] }}"

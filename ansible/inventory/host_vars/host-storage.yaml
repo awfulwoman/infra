@@ -154,3 +154,14 @@ compositions:
 
 traefik_providers:
   - musicassistant
+
+cnames:
+  - jellyfin.{{ domain_name }}
+  - lidarr.{{ domain_name }}
+  - prowlarr.{{ domain_name }}
+  - sonarr.{{ domain_name }}
+  - radarr.{{ domain_name }}
+  - musicassistant.{{ domain_name }}
+  - podcasts.{{ domain_name }}
+  - traefik.host-storage.{{ domain_name }}
+  - syncthing.{{ domain_name }}

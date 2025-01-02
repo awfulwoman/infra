@@ -32,18 +32,6 @@
     - etc-pihole
     - etc-dnsmasq.d
 
-# - name: Copy over files
-#   become: true
-#   ansible.builtin.copy:
-#     src: filename.txt
-#     dest: "{{ composition_config }}/filename.txt
-
-# - name: Run Configure DNS role
-#   ansible.builtin.include_role:
-#     name: "configure-dns"
-#   vars:
-#     configure_dns_subdomains:
-#       - pihole 
 
 
 # - name: Disable Ubuntu Host's caching DNS resolver on port 53
@@ -72,25 +60,26 @@
 #   when: resolv_conf.changed
 
 # # Add static DHCP leases
-# - name: "Create static DHCP leases"
-#   ansible.builtin.template:
-#     src: static-dhcp.conf.j2
-#     dest: "{{ container_config_dir }}/{{ container_name }}/dns/04-pihole-static-dhcp.conf" # must be this file name
+- name: Create static DHCP leases
+  ansible.builtin.template:
+    src: static-dhcp
+    dest: "{{ composition_config }}/etc-dnsmasq.d/04-pihole-static-dhcp.conf" # must be this file name
 
-# # Add a custom domain for certain hosts.
-# # Solves corporate computers trying to claim a domain
-# # and generating very annoying errors in pihole
-# # https://www.reddit.com/r/pihole/comments/rvattc/dnsmasq_warning_ignoring_domain/
-# - name: "Create domains"
-#   ansible.builtin.template:
-#     src: domains.conf.j2
-#     dest: "{{ container_config_dir }}/{{ container_name }}/dns/07-domains.conf"
-#   notify:
-#     - RESTART PIHOLE
+# Add a custom domain for certain hosts.
+# Solves corporate computers trying to claim a domain
+# and generating very annoying errors in pihole
+# https://www.reddit.com/r/pihole/comments/rvattc/dnsmasq_warning_ignoring_domain/
+- name: Create domains
+  ansible.builtin.template:
+    src: domains.conf.j2
+    dest: "{{ composition_config }}/etc-dnsmasq.d/07-domains.conf"
+  notify:
+    - RESTART PIHOLE
 
-# - name: "Create cnames"
-#   ansible.builtin.template:
-#     src: cnames.conf.j2
-#     dest: "{{ container_config_dir }}/{{ container_name }}/dns/05-cnames.list"
-#   notify:
-#     - RESTART PIHOLE
+# Map cnames to A records
+- name: "Create cnames"
+  ansible.builtin.template:
+    src: cnames.conf.j2
+    dest: "{{ composition_config }}/etc-dnsmasq.d/05-cnames.list"
+  notify:
+    - RESTART PIHOLE

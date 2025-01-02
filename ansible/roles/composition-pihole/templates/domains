@@ -1,4 +1,4 @@
-{% for item in static_dhcp_group %}
+{% for item in host_group %}
 {% if (hostvars[item].custom_domain is defined) and (hostvars[item].ansible_host is defined) %}
 domain={{hostvars[item].custom_domain}},{{hostvars[item].ansible_host}}
 {% endif %}
