@@ -8,6 +8,7 @@
     - role: install-ansible-pull
     - role: zfs-backup-client
     - role: compositions
+    - role: install-linux2mqtt
 
   handlers:
     - name: Reboot host

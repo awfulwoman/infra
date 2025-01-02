@@ -13,6 +13,7 @@
     - role: zfs-backup-client
     - role: compositions
     - role: hardware-rtl-433
+    - role: install-linux2mqtt
 
   handlers:
     - name: Reboot host
