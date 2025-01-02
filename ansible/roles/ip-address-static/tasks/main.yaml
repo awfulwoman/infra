@@ -1,3 +1,9 @@
+- name: Ensure packages are installed
+  become: true
+  ansible.builtin.apt:
+    name:
+      - network-manager
+
 - name: Add an Ethernet connection with static IP configuration
   community.general.nmcli:
     conn_name: "{{ ip_address_static_conn_name }}"
