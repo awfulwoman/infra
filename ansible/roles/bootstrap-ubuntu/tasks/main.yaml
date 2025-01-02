@@ -127,7 +127,6 @@
 - name: Ensure Python requirements file exists
   ansible.builtin.copy:
     content: ""
-    state: present
     force: false
     dest: "{{ pip_requirements_path }}"
     owner: "{{ ansible_user }}"
