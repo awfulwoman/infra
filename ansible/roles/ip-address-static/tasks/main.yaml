@@ -5,6 +5,7 @@
       - network-manager
 
 - name: Add an Ethernet connection with static IP configuration
+  become: true
   community.general.nmcli:
     conn_name: "{{ ip_address_static_conn_name }}"
     ifname: "{{ ip_address_static_if_name }}"
