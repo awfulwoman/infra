@@ -140,7 +140,7 @@
     ansible_become: true
     no_log: true
 
-- name: Awful guy geerling 
+- name: That awful guy geerling
   ansible.builtin.include_role:
     name: geerlingguy.security
   vars:
