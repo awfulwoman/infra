@@ -62,7 +62,7 @@
 # # Add static DHCP leases
 - name: Create static DHCP leases
   ansible.builtin.template:
-    src: static-dhcp
+    src: 04-pihole-static-dhcp.conf
     dest: "{{ composition_config }}/etc-dnsmasq.d/04-pihole-static-dhcp.conf" # must be this file name
 
 # Add a custom domain for certain hosts.
@@ -71,7 +71,7 @@
 # https://www.reddit.com/r/pihole/comments/rvattc/dnsmasq_warning_ignoring_domain/
 - name: Create domains
   ansible.builtin.template:
-    src: work-domains
+    src: 07-work.conf
     dest: "{{ composition_config }}/etc-dnsmasq.d/07-work.conf"
   notify:
     - RESTART PIHOLE
@@ -79,7 +79,7 @@
 # Map cnames to A records
 - name: "Create cnames"
   ansible.builtin.template:
-    src: cnames
-    dest: "{{ composition_config }}/etc-dnsmasq.d/05-cnames.list"
+    src: 05-cnames.conf
+    dest: "{{ composition_config }}/etc-dnsmasq.d/05-cnames.conf"
   notify:
     - RESTART PIHOLE
