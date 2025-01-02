@@ -3,17 +3,18 @@
   hosts: host-storage
   roles:
     - role: bootstrap-ubuntu
+    - role: hardware-host-bus-adapter
     - role: wakeonlan
     - role: install-docker
     - role: zfs-core
     - role: install-ansible
     - role: install-ansible-pull
-    - role: hardware-host-bus-adapter
     - role: install-mqtt2cmd
     - role: nfs-server
     - role: zfs-backup-client
     - role: compositions
     - role: configure-smartmontools
+    - role: install-ubuntu-cd-mirror
     - role: install-linux2mqtt
     # - role: sleepuntil
     #   become: true
@@ -21,7 +22,6 @@
     # - role: ip-address-forwarding
     # - role: vm-host
     # - role: powertop
-    - role: install-ubuntu-cd-mirror
 
   handlers:
     - name: Reboot host

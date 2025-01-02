@@ -1,22 +1,20 @@
-- name: Ensure pip packages are installed
-  community.general.pipx:
-    name: "{{ item }}"
+- name: Ensure package is in global requirements file
+  ansible.builtin.lineinfile:
+    path: "{{ pip_requirements_path }}"
+    line: "{{ item }}"
   loop:
     - linux2mqtt
 
-- name: Ensure script exists
-  become: true
-  ansible.builtin.template:
-    src: linux2mqtt.py
-    dest: "{{ linux2mqtt_executable_path }}"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    mode: "0774"
+- name: Ensure pip packages are installed
+  ansible.builtin.pip:
+    requirements: "{{ pip_requirements_path }}"
+    virtualenv: "{{ pip_virtualenv_path }}"
+    virtualenv_python: "{{ pip_virtualenv_python }}"
 
-- name: Ensure service file exists
+- name: Ensure service file exists in {{ linux2mqtt_service_path }}
   become: true
   ansible.builtin.template:
-    src: linux2mqtt.service
+    src: l2m.service
     dest: "{{ linux2mqtt_service_path }}"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
@@ -25,6 +23,6 @@
 - name: Ensure service is started
   become: true
   ansible.builtin.systemd:
-    name: linux2mqtt
+    name: l2m
     state: started
     daemon_reload: true

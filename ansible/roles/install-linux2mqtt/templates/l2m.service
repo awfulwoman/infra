@@ -1,0 +1,11 @@
+[Unit]
+Description=Log system information via MQTT
+DefaultDependencies=no
+
+[Service]
+User={{ ansible_user }}
+Group={{ ansible_user }}
+ExecStart={{ linux2mqtt_executable_path }} {{ linux2mqtt_params }}
+
+[Install]
+WantedBy=multi-user.target

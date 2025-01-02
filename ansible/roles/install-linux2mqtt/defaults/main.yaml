@@ -1,3 +1,3 @@
-linux2mqtt_executable_path: "{{ default_bin_path }}/linux2mqtt"
-linux2mqtt_service_path: "/etc/systemd/system/linux2mqtt.service"
-linux2mqtt_params: "--host=mqtt.{{ domain_name  }} --cpu=60"
+linux2mqtt_executable_path: "{{ pip_virtualenv_bin_path }}/linux2mqtt"
+linux2mqtt_service_path: "{{ systemd_service_path }}/l2m.service"
+linux2mqtt_params: "--host=mqtt.{{ domain_name  }} --cpu=15 --vm --temp --fan --du='/' --net={{ configure_dns_linkdevice_physical }},15"

@@ -81,6 +81,7 @@
       - python3
       - python3-docker
       - python3-pip
+      - python3-virtualenv
       - restic
       - retry
       - smartmontools
@@ -104,6 +105,32 @@
     name: "{{ item }}"
   loop:
     - terminaltexteffects
+
+- name: Ensure Python dir exists
+  become: true
+  ansible.builtin.file:
+    state: directory
+    path: "{{ pip_basepath }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0775"
+
+- name: Ensure Python venv dir exists
+  become: true
+  ansible.builtin.file:
+    state: directory
+    path: "{{ pip_virtualenv_path }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0775"
+
+- name: Ensure Python requirements file exists
+  ansible.builtin.file:
+    state: touch
+    path: "{{ pip_requirements_path }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0744"
 
 - name: Env vars
   ansible.builtin.include_role:
