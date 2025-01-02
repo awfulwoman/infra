@@ -125,8 +125,10 @@
     mode: "0775"
 
 - name: Ensure Python requirements file exists
-  ansible.builtin.file:
-    state: touch
+  ansible.builtin.copy:
+    content: ""
+    state: present
+    force: false
     path: "{{ pip_requirements_path }}"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
