@@ -1,0 +1,4 @@
+ip_address_dhcp_conn_name: dhcp_ethernet
+ip_address_dhcp_ifname: eth0
+ip_address_dhcp_type: ethernet
+ip_address_dhcp_state: present
