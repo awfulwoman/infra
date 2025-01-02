@@ -1,4 +1,4 @@
-ansible_user: awful
+ansible_user: "{{ vault_server_username }}"
 ansible_host: host-backups
 
 wakeonlan_mac_address: "60:a4:4c:40:52:57"
