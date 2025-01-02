@@ -23,7 +23,8 @@
 # ----------------------------
 
 - name: Create directories
-  file:
+  become: true
+  ansible.builtin.file:
     path: "{{ composition_config }}/{{ dir_item }}"
     state: directory
     owner: "{{ ansible_user }}"
@@ -34,8 +35,6 @@
   loop:
     - etc-pihole
     - etc-dnsmasq.d
-
-
 
 # - name: Disable Ubuntu Host's caching DNS resolver on port 53
 #   become: true
@@ -64,6 +63,7 @@
 
 # # Add static DHCP leases
 - name: Create static DHCP leases
+  become: true
   ansible.builtin.template:
     src: 04-pihole-static-dhcp.conf
     dest: "{{ composition_config }}/etc-dnsmasq.d/04-pihole-static-dhcp.conf" # must be this file name
@@ -78,6 +78,7 @@
 # and generating very annoying errors in pihole
 # https://www.reddit.com/r/pihole/comments/rvattc/dnsmasq_warning_ignoring_domain/
 - name: Create work domains
+  become: true
   ansible.builtin.template:
     src: 07-work.conf
     dest: "{{ composition_config }}/etc-dnsmasq.d/07-work.conf"
@@ -91,6 +92,7 @@
 # Map IP addresses to domain names
 # Most of this is handled automatically by DHCP host name reservations
 - name: "Create A records"
+  become: true
   ansible.builtin.template:
     src: custom.list
     dest: "{{ composition_config }}/etc-dnsmasq.d/custom.list"
@@ -102,6 +104,7 @@
 
 # Map vanity domains to host domains
 - name: "Create cnames"
+  become: true
   ansible.builtin.template:
     src: 05-cnames.conf
     dest: "{{ composition_config }}/etc-dnsmasq.d/05-cnames.conf"
