@@ -3,4 +3,4 @@
     name: pihole
     image: pihole/pihole
     state: started
-    restart: yes
+    restart: true

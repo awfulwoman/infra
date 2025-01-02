@@ -78,7 +78,7 @@
 #     dest: "{{ container_config_dir }}/{{ container_name }}/dns/04-pihole-static-dhcp.conf" # must be this file name
 
 # # Add a custom domain for certain hosts.
-# # Solves corporate computers trying to claim a domain 
+# # Solves corporate computers trying to claim a domain
 # # and generating very annoying errors in pihole
 # # https://www.reddit.com/r/pihole/comments/rvattc/dnsmasq_warning_ignoring_domain/
 # - name: "Create domains"
