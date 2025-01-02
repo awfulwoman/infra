@@ -129,7 +129,7 @@
     content: ""
     state: present
     force: false
-    path: "{{ pip_requirements_path }}"
+    dest: "{{ pip_requirements_path }}"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0744"
