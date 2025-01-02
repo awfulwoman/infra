@@ -36,13 +36,13 @@
     - etc-pihole
     - etc-dnsmasq.d
 
-# - name: Disable Ubuntu Host's caching DNS resolver on port 53
-#   become: true
-#   ansible.builtin.lineinfile:
-#     dest: /etc/systemd/resolved.conf
-#     line: "DNSStubListener=no"
-#     regexp: "#?DNSStubListener=yes"
-#     state: present
+- name: Disable Ubuntu Host's caching DNS resolver on port 53
+  become: true
+  ansible.builtin.lineinfile:
+    dest: /etc/systemd/resolved.conf
+    line: "DNSStubListener=no"
+    regexp: "#?DNSStubListener=yes"
+    state: present
 
 # - name: Create a symlink to resolv.conf
 #   become: true
