@@ -4,12 +4,16 @@ services:
   pihole:
     cap_add:
       - NET_ADMIN
-      - NET_BIND_SERVICE
-      - NET_RAW
-      - SYS_NICE
-      - CHOWN
+      # - NET_BIND_SERVICE
+      # - NET_RAW
+      # - SYS_NICE
+      # - CHOWN
     container_name: pihole
-    network_mode: host
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "67:67/udp" # Only required if you are using Pi-hole as your DHCP server
+      - "80:80/tcp"
     image: pihole/pihole:latest
     restart: unless-stopped
     env_file: .environment_vars
@@ -23,6 +27,8 @@ services:
       - "{{ composition_config }}/etc-pihole:/etc/pihole"
       - "{{ composition_config }}/etc-dnsmasq.d:/etc/dnsmasq.d"
       - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
 
 networks:
   "{{ default_docker_network }}":

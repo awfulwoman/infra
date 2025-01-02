@@ -21,4 +21,6 @@ compositions_config_dir: "/{{ container_compositions_zfs_id }}"
 zfs_backup_datasets:
   - "{{ container_compositions_zfs_id }}"
 
-
+compositions:
+  - container-management
+  - pihole
