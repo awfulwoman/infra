@@ -37,14 +37,14 @@
 - name: Create tmp directories
   become: true
   ansible.builtin.file:
-    path: "/opt/gitea/cache"
+    path: "/opt/gitea/{{ item }}"
     state: directory
     mode: "0775"
-  # loop_control:
-  #   loop_var: dir_item
-  # loop:
-  #   - gitea-runner01
-  #   - gitea-runner02
+  loop_control:
+    loop_var: dir_item
+  loop:
+    - cache
+    - hostedtoolcache
 
 - name: Copy over files
   become: true
