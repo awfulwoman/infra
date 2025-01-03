@@ -43,7 +43,7 @@ runner:
     - "ubuntu-latest-slim:docker://gitea/runner-images:ubuntu-latest-slim"
     - "ubuntu-22.04-slim:docker://gitea/runner-images:ubuntu-22.04-slim"
 
-# cache:
+cache:
 #   # Enable cache server to use actions/cache.
   enabled: true
 #   # The directory to store the cache data.
