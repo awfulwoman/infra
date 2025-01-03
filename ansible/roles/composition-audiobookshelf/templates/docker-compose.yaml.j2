@@ -1,0 +1,27 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  audiobookshelf:
+    container_name: audiobookshelf
+    ports:
+      - "127.0.0.1:13378:80"
+    image: ghcr.io/advplyr/audiobookshelf:latest
+    restart: unless-stopped
+    env_file: .environment_vars
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.audiobookshelf.rule=Host(`audiobookshelf.{{ domain_name }}`)"
+      - "traefik.http.routers.audiobookshelf.tls=true"
+      - "traefik.http.routers.audiobookshelf.tls.certresolver=letsencrypt"
+    volumes:
+      - "{{ composition_config }}:/audiobooks"
+      - "{{ composition_config }}:/podcasts"
+      - "{{ composition_config }}/config:/config"
+      - "{{ composition_config }}/metadata:/metadata"
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+
+networks:
+  "{{ default_docker_network }}":
+    external: true
