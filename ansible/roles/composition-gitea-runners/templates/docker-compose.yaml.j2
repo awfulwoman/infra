@@ -14,7 +14,7 @@ services:
       - "GITEA_RUNNER_NAME={{ ansible_hostname }}-runner01"
     volumes:
       - "{{ composition_config }}/runner01:/data"
-      - "/tmp/gitea-runner01/:/tmp"
+      - "/opt/gitea/cache:/cache"
       - "{{ composition_config }}/runners/config.yaml:/config.yaml"
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
@@ -33,7 +33,7 @@ services:
       - "GITEA_RUNNER_NAME={{ ansible_hostname }}-runner02"
     volumes:
       - "{{ composition_config }}/runner02:/data"
-      - "/tmp/gitea-runner02/:/tmp"
+      - "/opt/gitea/cache:/cache"
       - "{{ composition_config }}/runners/config.yaml:/config.yaml"
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
