@@ -96,7 +96,7 @@ cache:
 #   # # Rebuild docker image(s) even if already present
 #   # force_rebuild: false
 
-# # host:
-# #   # The parent directory of a job's working directory.
-# #   # If it's empty, $HOME/.cache/act/ will be used.
-# #   workdir_parent:
+# host:
+#   # The parent directory of a job's working directory.
+#   # If it's empty, $HOME/.cache/act/ will be used.
+#   workdir_parent:
