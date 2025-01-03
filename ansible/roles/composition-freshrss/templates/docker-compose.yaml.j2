@@ -1,0 +1,24 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  freshrss:
+    container_name: freshrss
+    ports:
+      - "127.0.0.1:8274:80"
+    image: lscr.io/linuxserver/freshrss:latest
+    restart: unless-stopped
+    env_file: .environment_vars
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.freshrss.rule=Host(`freshrss.{{ domain_name }}`)"
+      - "traefik.http.routers.freshrss.tls=true"
+      - "traefik.http.routers.freshrss.tls.certresolver=letsencrypt"
+    volumes:
+      - "{{ composition_config }}:/config"
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+
+networks:
+  "{{ default_docker_network }}":
+    external: true

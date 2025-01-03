@@ -44,22 +44,22 @@
     regexp: "#?DNSStubListener=yes"
     state: present
 
-# - name: Create a symlink to resolv.conf
-#   become: true
-#   ansible.builtin.file:
-#     src: /run/systemd/resolve/resolv.conf
-#     dest: /etc/resolv.conf
-#     owner: root
-#     group: root
-#     state: link
-#   register: resolv_conf
+- name: Create a symlink to resolv.conf
+  become: true
+  ansible.builtin.file:
+    src: /run/systemd/resolve/resolv.conf
+    dest: /etc/resolv.conf
+    owner: root
+    group: root
+    state: link
+  register: resolv_conf
 
-# - name: Restart systemd-resolved
-#   become: true
-#   ansible.builtin.service:
-#     name: systemd-resolved
-#     state: restarted
-#   when: resolv_conf.changed
+- name: Restart systemd-resolved
+  become: true
+  ansible.builtin.service:
+    name: systemd-resolved
+    state: restarted
+  when: resolv_conf.changed
 
 # # Add static DHCP leases
 - name: Create static DHCP leases
