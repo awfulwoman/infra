@@ -43,19 +43,19 @@ runner:
     - "ubuntu-latest-slim:docker://gitea/runner-images:ubuntu-latest-slim"
     - "ubuntu-22.04-slim:docker://gitea/runner-images:ubuntu-22.04-slim"
 
-# # cache:
-# #   # Enable cache server to use actions/cache.
-# #   enabled: true
-# #   # The directory to store the cache data.
-# #   # If it's empty, the cache data will be stored in $HOME/.cache/actcache.
-# #   dir: ""
+# cache:
+#   # Enable cache server to use actions/cache.
+  enabled: true
+#   # The directory to store the cache data.
+#   # If it's empty, the cache data will be stored in $HOME/.cache/actcache.
+  dir: "/cache"
 # #   # The host of the cache server.
 # #   # It's not for the address to listen, but the address to connect from job containers.
 # #   # So 0.0.0.0 is a bad choice, leave it empty to detect automatically.
-# #   host: ""
+  host: ""
 # #   # The port of the cache server.
 # #   # 0 means to use a random available port.
-# #   port: 0
+  port: 0
 # #   # The external cache server URL. Valid only when enable is true.
 # #   # If it's specified, act_runner will use this URL as the ACTIONS_CACHE_URL rather than start a server by itself.
 # #   # The URL should generally end with "/".
