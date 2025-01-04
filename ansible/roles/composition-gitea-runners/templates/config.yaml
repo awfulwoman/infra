@@ -48,7 +48,7 @@ cache:
   enabled: true
 #   # The directory to store the cache data.
 #   # If it's empty, the cache data will be stored in $HOME/.cache/actcache.
-  dir: "/cache"
+  dir: ""
 # #   # The host of the cache server.
 # #   # It's not for the address to listen, but the address to connect from job containers.
 # #   # So 0.0.0.0 is a bad choice, leave it empty to detect automatically.
