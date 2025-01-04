@@ -6,6 +6,8 @@ services:
     image: gitea/act_runner:latest
     restart: unless-stopped
     privileged: true
+    ports:
+      - "{{ gitea_runner_port }}:{{ gitea_runner_port }}"
     environment:
       - "CONFIG_FILE=/config.yaml"
       - "GITEA_INSTANCE_URL=https://gitea.{{ domain_name }}"
@@ -26,6 +28,8 @@ services:
     image: gitea/act_runner:latest
     restart: unless-stopped
     privileged: true
+    ports:
+      - "{{ gitea_runner_port }}:{{ gitea_runner_port }}"
     environment:
       - "CONFIG_FILE=/config.yaml"
       - "GITEA_INSTANCE_URL=https://gitea.{{ domain_name }}"

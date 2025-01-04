@@ -1,1 +1,2 @@
 gitea_runner_registration: "{{ vault_gitea_runner_registration }}"
+gitea_runner_port: 8999
