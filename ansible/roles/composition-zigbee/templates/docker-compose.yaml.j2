@@ -12,7 +12,7 @@ services:
     devices:
       - "{{ zigbee_usb_device }}:/dev/ttyACM0"
     env_file: .environment_vars
-    image: koenkk/zigbee2mqtt
+    image: "koenkk/zigbee2mqtt:1.42.0"
     restart: always
     labels:
       - "traefik.enable=true"
