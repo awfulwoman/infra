@@ -8,6 +8,7 @@ services:
       - NET_RAW
       - SYS_NICE
       - CHOWN
+    hostname: pihole
     container_name: pihole
     ports:
       - "53:53/tcp"
