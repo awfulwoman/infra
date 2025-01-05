@@ -4,10 +4,10 @@ services:
   pihole:
     cap_add:
       - NET_ADMIN
-      # - NET_BIND_SERVICE
-      # - NET_RAW
-      # - SYS_NICE
-      # - CHOWN
+      - NET_BIND_SERVICE
+      - NET_RAW
+      - SYS_NICE
+      - CHOWN
     container_name: pihole
     ports:
       - "53:53/tcp"
