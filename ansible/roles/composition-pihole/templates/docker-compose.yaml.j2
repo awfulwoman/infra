@@ -25,8 +25,8 @@ services:
       - "traefik.http.routers.pihole.tls.certresolver=letsencrypt"
       - "traefik.http.services.pihole.loadbalancer.server.port=80"
     volumes:
-      # - "{{ composition_config }}/etc-pihole:/etc/pihole"
-      # - "{{ composition_config }}/etc-dnsmasq.d:/etc/dnsmasq.d"
+      - "{{ composition_config }}/etc-pihole:/etc/pihole"
+      - "{{ composition_config }}/etc-dnsmasq.d:/etc/dnsmasq.d"
       - /etc/localtime:/etc/localtime:ro
     networks:
       - "{{ default_docker_network }}"
