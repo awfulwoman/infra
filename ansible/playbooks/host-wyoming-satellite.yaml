@@ -2,8 +2,6 @@
   hosts: host-wyoming-satellite
   roles:
     - role: bootstrap-ubuntu
-    - role: install-ansible
-    - role: install-ansible-pull
     - role: install-wyoming-satellite
 
   handlers:
