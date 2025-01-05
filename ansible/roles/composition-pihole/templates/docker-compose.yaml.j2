@@ -10,6 +10,8 @@ services:
       - CHOWN
     hostname: pihole
     container_name: pihole
+    dns:
+      - 1.1.1.1
     ports:
       - "53:53/tcp"
       - "53:53/udp"
