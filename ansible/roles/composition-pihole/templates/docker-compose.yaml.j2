@@ -8,9 +8,10 @@ services:
       - NET_RAW
       - SYS_NICE
       - CHOWN
-    hostname: pihole
+    hostname: pi.hole
     container_name: pihole
     dns:
+      - 127.0.0.1
       - 1.1.1.1
     ports:
       - "53:53/tcp"
