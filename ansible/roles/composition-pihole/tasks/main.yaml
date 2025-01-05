@@ -67,8 +67,8 @@
 #   ansible.builtin.template:
 #     src: 04-pihole-static-dhcp.conf
 #     dest: "{{ composition_config }}/etc-dnsmasq.d/04-pihole-static-dhcp.conf" # must be this file name
-#     owner: "{{ ansible_user }}"
-#     group: "{{ ansible_user }}"
+#     owner: root
+#     group: root
 #     mode: "0664"
 #   notify:
 #     - RESTART PIHOLE
@@ -82,8 +82,8 @@
 #   ansible.builtin.template:
 #     src: 07-work.conf
 #     dest: "{{ composition_config }}/etc-dnsmasq.d/07-work.conf"
-#     owner: "{{ ansible_user }}"
-#     group: "{{ ansible_user }}"
+#     owner: root
+#     group: root
 #     mode: "0664"
 #   notify:
 #     - RESTART PIHOLE
@@ -96,8 +96,8 @@
 #   ansible.builtin.template:
 #     src: custom.list
 #     dest: "{{ composition_config }}/etc-dnsmasq.d/custom.list"
-#     owner: "{{ ansible_user }}"
-#     group: "{{ ansible_user }}"
+#     owner: root
+#     group: root
 #     mode: "0664"
 #   notify:
 #     - RESTART PIHOLE
@@ -108,8 +108,8 @@
 #   ansible.builtin.template:
 #     src: 05-cnames.conf
 #     dest: "{{ composition_config }}/etc-dnsmasq.d/05-cnames.conf"
-#     owner: "{{ ansible_user }}"
-#     group: "{{ ansible_user }}"
+#     owner: root
+#     group: root
 #     mode: "0664"
 #   notify:
 #     - RESTART PIHOLE
