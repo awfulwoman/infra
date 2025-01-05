@@ -21,7 +21,7 @@ roles:
   - name: weareinteractive.environment
   - name: xanmanning.k3s
   - name: pihole
-    src: https://codeberg.org/ansible/pihole.git
+    src: https://gitea.ewwww.eu/awfulwoman/pihole
     version: main
     scm: git
 
