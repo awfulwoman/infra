@@ -1,0 +1,29 @@
+[Unit]
+Description=Wyoming Satellite
+Wants=network-online.target
+After=network-online.target
+Requires=wyoming-openwakeword.service
+Requires=2mic_leds.service
+
+[Service]
+Type=simple
+ExecStart={{ wyoming_satellite_dir }}/script/run --name '{{ satellite_name }}' \
+  --uri 'tcp://0.0.0.0:10700' \
+  --mic-command '{{ mic_command }}' \
+  --mic-auto-gain {{ mic_auto_gain }} \
+  --mic-noise-suppression {{ mic_noise_suppression }} \
+  --mic-volume-multiplier {{ mic_volume_multiplier }} \
+  --snd-command '{{ snd_command }}' \
+  --wake-uri 'tcp://127.0.0.1:10400' \
+  --wake-word-name '{{ wake_word }}' \
+  --event-uri 'tcp://127.0.0.1:10500' \
+  --awake-wav {{ wyoming_satellite_dir }}/sounds/awake.wav \
+  --done-wav {{ wyoming_satellite_dir }}/sounds/done.wav \
+  --timer-finished-wav {{ wyoming_satellite_dir }}/sounds/timer_finished.wav
+
+WorkingDirectory={{ wyoming_satellite_dir }}
+Restart=always
+RestartSec=1
+
+[Install]
+WantedBy=default.target

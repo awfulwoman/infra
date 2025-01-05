@@ -1,0 +1,25 @@
+---
+- name: Restart wyoming satellite
+  become: true
+  ansible.builtin.systemd_service:
+    name: wyoming-satellite
+    daemon_reload: true
+    enabled: true
+    state: restarted
+- name: Restart wyoming openwakeword
+  become: true
+  ansible.builtin.systemd_service:
+    name: wyoming-openwakeword
+    daemon_reload: true
+    enabled: true
+    state: restarted
+- name: Restart led service
+  become: true
+  ansible.builtin.systemd_service:
+    name: 2mic_leds
+    daemon_reload: true
+    enabled: true
+    state: restarted
+- name: Reboot
+  become: true
+  reboot:

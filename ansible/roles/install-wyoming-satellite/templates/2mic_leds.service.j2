@@ -1,0 +1,12 @@
+[Unit]
+Description=2Mic LEDs
+
+[Service]
+Type=simple
+ExecStart={{ wyoming_satellite_dir }}/examples/.venv/bin/python3 2mic_service.py --uri 'tcp://127.0.0.1:10500'
+WorkingDirectory={{ wyoming_satellite_dir }}/examples
+Restart=always
+RestartSec=1
+
+[Install]
+WantedBy=default.target

@@ -17,6 +17,7 @@ all:
     host-katzenjammer:                    # Kubernetes node
     host-knucklehead:                     # Kubernetes node
     host-guineacam:
+    host-wyoming-satellite:
 
   # Groupings of servers that allow them to be administered collectively.
   children:
@@ -63,6 +64,7 @@ all:
         host-katzenjammer:
         host-knucklehead:
         host-guineacam:
+        host-wyoming-satellite:
 
     # Group: Home Automation
     homeautomation:
