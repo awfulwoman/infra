@@ -20,6 +20,10 @@ roles:
   - name: nginxinc.nginx
   - name: weareinteractive.environment
   - name: xanmanning.k3s
+  - name: pihole
+    src: https://codeberg.org/ansible/pihole.git
+    version: main
+    scm: git
 
 collections:
   - name: ansible.netcommon

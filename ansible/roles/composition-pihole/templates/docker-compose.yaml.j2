@@ -4,10 +4,10 @@ services:
   pihole:
     cap_add:
       - NET_ADMIN
-      - NET_BIND_SERVICE
-      - NET_RAW
-      - SYS_NICE
-      - CHOWN
+      # - NET_BIND_SERVICE
+      # - NET_RAW
+      # - SYS_NICE
+      # - CHOWN
     hostname: pi.hole
     container_name: pihole
     dns:
