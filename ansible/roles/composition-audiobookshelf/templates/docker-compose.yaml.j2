@@ -14,8 +14,8 @@ services:
       - "traefik.http.routers.audiobookshelf.tls=true"
       - "traefik.http.routers.audiobookshelf.tls.certresolver=letsencrypt"
     volumes:
-      - "{{ composition_config }}:/audiobooks"
-      - "{{ composition_config }}:/podcasts"
+      - "/fastpool/charlie/libation:/audiobooks"
+      - "/fastpool/charlie/podcasts:/podcasts"
       - "{{ composition_config }}/config:/config"
       - "{{ composition_config }}/metadata:/metadata"
       - /etc/localtime:/etc/localtime:ro

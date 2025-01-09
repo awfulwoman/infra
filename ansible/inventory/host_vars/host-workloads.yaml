@@ -30,6 +30,7 @@ zfs_datasets:
   - fastpool/shared/photos
   - fastpool/charlie
   - fastpool/charlie/libation
+  - fastpool/charlie/podcasts
   - "{{ zfs_dataset_charlie_syncthing }}"
   - "{{ charlie_photos_data_path_zfs_id }}"
   - "{{ zfs_dataset_wifey }}"
