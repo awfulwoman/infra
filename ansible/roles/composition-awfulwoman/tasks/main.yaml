@@ -28,6 +28,14 @@
     group: "{{ ansible_user }}"
     mode: "0774"
 
+# - name: "Ensure nginx.conf exists"
+#   ansible.builtin.template:
+#     src: nginx.conf
+#     dest: "{{ composition_root }}/nginx.conf"
+#     owner: "{{ ansible_user }}"
+#     group: "{{ ansible_user }}"
+#     mode: "0774"
+
 # ----------------------------
 # Specific tasks
 # ----------------------------
@@ -50,7 +58,7 @@
     path: "{{ static_site_server_path }}"
     owner: "{{ vault_sitedeployer_user }}"
     group: "{{ vault_sitedeployer_user }}"
-    mode: "0775"
+    mode: "0664"
 
 # - name: "Copy nginx.conf file"
 #   become: true
