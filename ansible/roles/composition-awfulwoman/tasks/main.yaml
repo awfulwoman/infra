@@ -56,10 +56,10 @@
   ansible.builtin.file:
     state: directory
     path: "{{ static_site_server_path }}"
-    # owner: "{{ vault_sitedeployer_user }}"
-    # group: "{{ vault_sitedeployer_user }}"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    owner: "{{ vault_sitedeployer_user }}"
+    group: "{{ vault_sitedeployer_user }}"
+    # owner: "{{ ansible_user }}"
+    # group: "{{ ansible_user }}"
     mode: "0774"
 
 
