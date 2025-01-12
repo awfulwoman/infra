@@ -65,4 +65,4 @@ compositions:
   - libation
   - hoarder
   - freshrss
-  - audiobookshelf
+  # - audiobookshelf
