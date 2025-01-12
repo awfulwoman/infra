@@ -61,7 +61,7 @@
     mode: "0664"
 
 
-docker build -t nginx-awfulwoman .
+# docker build -t nginx-awfulwoman .
 
 # - name: "Copy nginx.conf file"
 #   become: true
