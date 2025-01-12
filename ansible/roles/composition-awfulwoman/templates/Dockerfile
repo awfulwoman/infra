@@ -1,2 +1,2 @@
 FROM nginx
-COPY {{ static_site_server_path }} /usr/share/nginx/html
+COPY {{ static_site_server_path }}/ /usr/share/nginx/html
