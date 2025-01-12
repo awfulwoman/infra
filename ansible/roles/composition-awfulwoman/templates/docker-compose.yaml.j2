@@ -2,13 +2,13 @@
 name: "{{ composition_name }}"
 services:
   web:
-    # image: nginx
-    image: lipanski/docker-static-website:latest
+    image: nginx
+    # image: lipanski/docker-static-website:latest
     container_name: awfulwoman
     # build: ./
     ports:
-      # - "127.0.0.1:8080:80"
-      - "3000:3000"
+      - "127.0.0.1:8080:80"
+      # - "3000:3000"
     env_file: .environment_vars
     environment:
       - NGINX_HOST="{{ static_site_server_url }}"
@@ -19,9 +19,9 @@ services:
       - "traefik.http.routers.web.tls=true"
       - "traefik.http.routers.web.tls.certresolver=letsencrypt"
     volumes:
-      # - "{{ static_site_server_path }}:/usr/share/nginx/html:ro"
-      # - "{{ composition_config }}/logs:/var/log/nginx"
-      - "{{ static_site_server_path }}:/home/static"
+      - "{{ static_site_server_path }}:/usr/share/nginx/html:ro"
+      - "{{ composition_config }}/logs:/var/log/nginx"
+      # - "{{ static_site_server_path }}:/home/static"
       # - {{ composition_config }}/httpd.conf:/home/static/httpd.conf:ro
       - /etc/localtime:/etc/localtime:ro
     networks:
