@@ -58,7 +58,7 @@
     path: "{{ static_site_server_path }}"
     owner: "{{ vault_sitedeployer_user }}"
     group: "{{ vault_sitedeployer_user }}"
-    mode: "0664"
+    mode: "0774"
 
 
 # docker build -t nginx-awfulwoman .
