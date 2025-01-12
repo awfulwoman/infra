@@ -9,7 +9,7 @@ services:
       - "127.0.0.1:8080:80"
     env_file: .environment_vars
     environment:
-      - "NGINX_HOST={{ static_site_server_url }}"
+      - NGINX_HOST="{{ static_site_server_url }}"
       - NGINX_PORT=80
     labels:
       - "traefik.enable=true"

@@ -60,7 +60,7 @@
     group: "{{ vault_sitedeployer_user }}"
     # owner: "{{ ansible_user }}"
     # group: "{{ ansible_user }}"
-    mode: "0774"
+    mode: "0744"
 
 
 # docker build -t nginx-awfulwoman .
