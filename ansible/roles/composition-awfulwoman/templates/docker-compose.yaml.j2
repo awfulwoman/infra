@@ -2,9 +2,9 @@
 name: "{{ composition_name }}"
 services:
   web:
-    # image: nginx-awfulwoman
+    image: nginx
     container_name: awfulwoman
-    build: ./
+    # build: ./
     ports:
       - "127.0.0.1:8080:80"
     env_file: .environment_vars

@@ -20,13 +20,13 @@
     group: "{{ ansible_user }}"
     mode: "0774"
 
-- name: "Ensure Dockerfile exists"
-  ansible.builtin.template:
-    src: Dockerfile
-    dest: "{{ composition_root }}/Dockerfile"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    mode: "0664"
+# - name: "Ensure Dockerfile exists"
+#   ansible.builtin.template:
+#     src: Dockerfile
+#     dest: "{{ composition_root }}/Dockerfile"
+#     owner: "{{ ansible_user }}"
+#     group: "{{ ansible_user }}"
+#     mode: "0664"
 
 # - name: "Ensure nginx.conf exists"
 #   ansible.builtin.template:
