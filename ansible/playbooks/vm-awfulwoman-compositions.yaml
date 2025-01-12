@@ -1,0 +1,9 @@
+- name: Out on the internet server
+  hosts: vm-awfulwoman
+  roles:
+    - role: compositions
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:
