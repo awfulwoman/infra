@@ -37,6 +37,13 @@
     name: nginx
     state: present
 
+- name: Ensure user "nginx" exists
+  become: true
+  ansible.builtin.user:
+    name: nginx
+    create_home: false
+    state: present
+
 - name: Create simple directories
   become: true
   ansible.builtin.file:
