@@ -11,3 +11,4 @@ compositions:
   - reverseproxy
   - container-management
   - awfulwoman
+  - awfulwoman-beta

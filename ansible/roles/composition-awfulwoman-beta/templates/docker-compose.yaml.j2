@@ -1,0 +1,31 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  web:
+    image: nginx
+    # image: lipanski/docker-static-website:latest
+    container_name: awfulwoman_beta
+    # build: ./
+    ports:
+      - "127.0.0.1:8080:80"
+      # - "3000:3000"
+    env_file: .environment_vars
+    environment:
+      - NGINX_HOST="{{ static_site_server_url }}"
+      - NGINX_PORT=80
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.web.rule=Host(`beta.awfulwoman.com`)"
+      - "traefik.http.routers.web.tls=true"
+      - "traefik.http.routers.web.tls.certresolver=letsencrypt"
+    volumes:
+      - "{{ composition_config }}/site:/usr/share/nginx/html"
+      - "{{ composition_config }}/nginx.conf:/etc/nginx/conf.d/default.conf
+      - "{{ composition_config }}/logs:/var/log/nginx"
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+
+networks:
+  "{{ default_docker_network }}":
+    external: true

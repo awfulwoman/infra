@@ -1,0 +1,73 @@
+# code: language=ansible
+
+# ----------------------------
+# Core tasks
+# ----------------------------
+
+- name: "Create compose file"
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ composition_root }}/docker-compose.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"
+
+- name: "Create .env file"
+  ansible.builtin.template:
+    src: environment_vars.j2
+    dest: "{{ composition_root }}/.environment_vars"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"
+
+- name: "Ensure user is in nginx group"
+  become: true
+  ansible.builtin.user:
+    user: "{{ ansible_user }}"
+    groups: nginx
+    append: true
+
+# ----------------------------
+# Specific tasks
+# ----------------------------
+
+- name: Create simple directories
+  become: true
+  ansible.builtin.file:
+    path: "{{ composition_config }}/{{ dir_item }}"
+    state: directory
+    mode: "0775"
+    owner: "{{ vault_sitedeployer_user }}"
+    group: "{{ vault_sitedeployer_user }}"
+  loop_control:
+    loop_var: dir_item
+  loop:
+    - logs
+    - site
+
+- name: Create static site directory
+  become: true
+  ansible.builtin.file:
+    state: directory
+    path: "{{ static_site_server_path }}"
+    owner: "{{ vault_sitedeployer_user }}"
+    group: "{{ vault_sitedeployer_user }}"
+    mode: "0774"
+
+- name: "Copy nginx.conf file"
+  become: true
+  ansible.builtin.template:
+    src: nginx.conf
+    dest: "{{ composition_config }}/nginx.conf"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"
+
+- name: "Copy test index.html file"
+  become: true
+  ansible.builtin.template:
+    src: index.html
+    dest: "{{ composition_config }}/site/index.html"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"
