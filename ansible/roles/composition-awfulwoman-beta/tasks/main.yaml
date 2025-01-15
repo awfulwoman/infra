@@ -31,6 +31,12 @@
 # Specific tasks
 # ----------------------------
 
+- name: Ensure group "nginx" exists
+  become: true
+  ansible.builtin.group:
+    name: nginx
+    state: present
+
 - name: Create simple directories
   become: true
   ansible.builtin.file:
