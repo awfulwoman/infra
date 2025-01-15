@@ -64,14 +64,14 @@
   loop:
     - logs
 
-  - name: Create simple directories
-    become: true
-    ansible.builtin.file:
-      path: /site
-      state: directory
-      mode: "0774"
-      owner: "{{ ansible_user }}"
-      group: nginx
+- name: Create simple directories
+  become: true
+  ansible.builtin.file:
+    path: /site
+    state: directory
+    mode: "0774"
+    owner: "{{ ansible_user }}"
+    group: nginx
 
 - name: "Copy nginx.conf file"
   become: true
