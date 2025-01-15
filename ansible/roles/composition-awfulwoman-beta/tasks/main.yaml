@@ -63,7 +63,15 @@
     loop_var: dir_item
   loop:
     - logs
-    - site
+
+  - name: Create simple directories
+    become: true
+    ansible.builtin.file:
+      path: /site
+      state: directory
+      mode: "0774"
+      owner: "{{ ansible_user }}"
+      group: nginx
 
 - name: "Copy nginx.conf file"
   become: true
@@ -78,7 +86,7 @@
   become: true
   ansible.builtin.template:
     src: index.html
-    dest: "{{ composition_config }}/site/index.html"
+    dest: "/site/index.html"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0774"
