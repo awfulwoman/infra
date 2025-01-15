@@ -70,7 +70,8 @@
   ansible.builtin.file:
     path: /site
     state: directory
-    mode: "01775"
+    # mode: "01775"
+    mode: "0775"
     owner: "{{ ansible_user }}"
     group: nginx
 
