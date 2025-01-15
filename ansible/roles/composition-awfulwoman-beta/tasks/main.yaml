@@ -44,6 +44,13 @@
     groups: nginx
     append: true
 
+- name: Set authorized key
+  become: true
+  ansible.posix.authorized_key:
+    user: nginx
+    state: present
+    key: "{{ vault_sitedeployer_publickey }}"
+
 - name: Create simple directories
   become: true
   ansible.builtin.file:
