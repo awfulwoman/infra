@@ -3,18 +3,16 @@ name: "{{ composition_name }}"
 services:
   web:
     image: nginx
-    # image: lipanski/docker-static-website:latest
     container_name: awfulwoman_beta
-    # build: ./
     ports:
       - "8081:80"
     env_file: .environment_vars
     environment:
-      - NGINX_HOST="beta.awfulwoman.com"
+      - NGINX_HOST="awfulwoman.com"
       - NGINX_PORT=80
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.beta.rule=Host(`beta.awfulwoman.com`)"
+      - "traefik.http.routers.beta.rule=Host(`awfulwoman.com`)"
       - "traefik.http.routers.beta.tls=true"
       - "traefik.http.routers.beta.tls.certresolver=letsencrypt"
     volumes:

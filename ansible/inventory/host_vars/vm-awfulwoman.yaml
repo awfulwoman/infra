@@ -10,5 +10,4 @@ compositions_config_dir: "/home/{{ vault_server_username }}/compositions"
 compositions:
   - reverseproxy
   - container-management
-  - awfulwoman
   - awfulwoman-beta
