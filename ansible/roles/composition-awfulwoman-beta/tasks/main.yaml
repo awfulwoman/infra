@@ -34,7 +34,7 @@
   become: true
   ansible.builtin.user:
     name: nginx
-    create_home: false
+    create_home: true
     state: present
 
 - name: "Ensure user is in nginx group"
