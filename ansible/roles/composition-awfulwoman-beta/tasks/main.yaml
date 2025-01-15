@@ -20,13 +20,6 @@
     group: "{{ ansible_user }}"
     mode: "0774"
 
-- name: "Ensure user is in nginx group"
-  become: true
-  ansible.builtin.user:
-    user: "{{ ansible_user }}"
-    groups: nginx
-    append: true
-
 # ----------------------------
 # Specific tasks
 # ----------------------------
@@ -43,6 +36,13 @@
     name: nginx
     create_home: false
     state: present
+
+- name: "Ensure user is in nginx group"
+  become: true
+  ansible.builtin.user:
+    user: "{{ ansible_user }}"
+    groups: nginx
+    append: true
 
 - name: Create simple directories
   become: true
