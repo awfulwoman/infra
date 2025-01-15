@@ -89,4 +89,4 @@
     dest: "/site/index.html"
     owner: "{{ ansible_user }}"
     group: nginx
-    mode: "0774"
+    mode: "0775"
