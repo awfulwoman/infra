@@ -50,8 +50,8 @@
     path: "{{ composition_config }}/{{ dir_item }}"
     state: directory
     mode: "0775"
-    owner: "{{ vault_sitedeployer_user }}"
-    group: "{{ vault_sitedeployer_user }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
   loop_control:
     loop_var: dir_item
   loop:
