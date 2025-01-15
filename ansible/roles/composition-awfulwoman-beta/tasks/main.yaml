@@ -70,7 +70,7 @@
   ansible.builtin.file:
     path: /site
     state: directory
-    mode: "0775"
+    mode: "01775"
     owner: "{{ ansible_user }}"
     group: nginx
 
@@ -82,12 +82,3 @@
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0774"
-
-- name: "Copy test index.html file"
-  become: true
-  ansible.builtin.template:
-    src: index.html
-    dest: "/site/index.html"
-    owner: "{{ ansible_user }}"
-    group: nginx
-    mode: "0775"
