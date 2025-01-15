@@ -20,7 +20,7 @@ services:
       - "traefik.http.routers.web.tls.certresolver=letsencrypt"
     volumes:
       - "{{ composition_config }}/site:/usr/share/nginx/html"
-      - "{{ composition_config }}/nginx.conf:/etc/nginx/conf.d/awfulwoman.conf"
+      - "{{ composition_config }}/nginx.conf:/etc/nginx/nginx.conf"
       - "{{ composition_config }}/logs:/var/log/nginx"
       - /etc/localtime:/etc/localtime:ro
     networks:
