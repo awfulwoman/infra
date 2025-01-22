@@ -2,24 +2,24 @@
 name: "{{ composition_name }}"
 
 services:
-  dockage:
-    container_name: dockage
-    ports:
-      - "127.0.0.1:5001:5001"
-    image: louislam/dockge:1
-    restart: unless-stopped
-    env_file: .environment_vars
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.dockage.rule=Host(`dockage.{{ ansible_hostname }}.{{ domain_name }}`)"
-      - "traefik.http.routers.dockage.tls=true"
-      - "traefik.http.routers.dockage.tls.certresolver=letsencrypt"
-    volumes:
-      - "{{ composition_config }}:/INSIDEPATH"
-      - /etc/localtime:/etc/localtime:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    networks:
-      - "{{ default_docker_network }}"
+  # dockage:
+  #   container_name: dockage
+  #   ports:
+  #     - "127.0.0.1:5001:5001"
+  #   image: louislam/dockge:1
+  #   restart: unless-stopped
+  #   env_file: .environment_vars
+  #   labels:
+  #     - "traefik.enable=true"
+  #     - "traefik.http.routers.dockage.rule=Host(`dockage.{{ ansible_hostname }}.{{ domain_name }}`)"
+  #     - "traefik.http.routers.dockage.tls=true"
+  #     - "traefik.http.routers.dockage.tls.certresolver=letsencrypt"
+  #   volumes:
+  #     - "{{ composition_config }}:/INSIDEPATH"
+  #     - /etc/localtime:/etc/localtime:ro
+  #     - /var/run/docker.sock:/var/run/docker.sock:ro
+  #   networks:
+  #     - "{{ default_docker_network }}"
 
   watchtower:
     container_name: watchtower
@@ -33,21 +33,21 @@ services:
     networks:
       - "{{ default_docker_network }}"
 
-  dozzle:
-    container_name: dozzle
-    image: amir20/dozzle:latest
-    restart: unless-stopped
-    env_file: .environment_vars
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.dozzle.rule=Host(`dozzle.{{ ansible_hostname }}.{{ domain_name }}`)"
-      - "traefik.http.routers.dozzle.tls=true"
-      - "traefik.http.routers.dozzle.tls.certresolver=letsencrypt"
-    networks:
-      - "{{ default_docker_network }}"
+  # dozzle:
+  #   container_name: dozzle
+  #   image: amir20/dozzle:latest
+  #   restart: unless-stopped
+  #   env_file: .environment_vars
+  #   volumes:
+  #     - /etc/localtime:/etc/localtime:ro
+  #     - /var/run/docker.sock:/var/run/docker.sock:ro
+  #   labels:
+  #     - "traefik.enable=true"
+  #     - "traefik.http.routers.dozzle.rule=Host(`dozzle.{{ ansible_hostname }}.{{ domain_name }}`)"
+  #     - "traefik.http.routers.dozzle.tls=true"
+  #     - "traefik.http.routers.dozzle.tls.certresolver=letsencrypt"
+  #   networks:
+  #     - "{{ default_docker_network }}"
 
 
 
