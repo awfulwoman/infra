@@ -1,2 +1,0 @@
-static_site_server_url: "awfulwoman.com"
-static_site_server_path: "/opt/sites/{{ static_site_server_url }}"
