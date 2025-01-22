@@ -12,16 +12,16 @@ entryPoints:
         entrypoint:
           to: websecure
           scheme: https
-    forwardedHeaders:
-      trustedIPs:
-        - "127.0.0.1/32"
-        - "172.18.0.0/24"
+    # forwardedHeaders:
+    #   trustedIPs:
+    #     - "127.0.0.1/32"
+    #     - "172.18.0.0/24"
   websecure:
     address: ":443"
-    forwardedHeaders:
-      trustedIPs:
-        - "127.0.0.1/32"
-        - "172.18.0.0/24"
+    # forwardedHeaders:
+    #   trustedIPs:
+    #     - "127.0.0.1/32"
+    #     - "172.18.0.0/24"
 providers:
   docker:
     exposedbydefault: false
