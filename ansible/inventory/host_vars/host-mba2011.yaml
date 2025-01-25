@@ -1,0 +1,7 @@
+
+ansible_host: host-mba2011
+ansible_user: charlie
+
+# --- NETWORK -------------
+configure_dns_linkdevice_physical: "wlp1s0" 
+
