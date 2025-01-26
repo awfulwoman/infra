@@ -1,0 +1,12 @@
+---
+- name: Laptop
+  hosts: localhost
+  roles:
+    - role: bootstrap-ubuntu
+    - role: install-ansible
+    - role: install-ansible-pull
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:
