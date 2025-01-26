@@ -2,6 +2,7 @@
 - name: Laptop
   hosts: host-mba2011
   roles:
+    - role: bootstrap-intel-macbook
     - role: bootstrap-ubuntu
     - role: install-ansible
     - role: install-ansible-pull

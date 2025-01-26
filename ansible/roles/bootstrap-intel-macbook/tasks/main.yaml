@@ -1,0 +1,95 @@
+- name: Install apt packages
+  become: true
+  ansible.builtin.apt:
+    name:
+      - bcmwl-kernel-source
+      - acpi
+
+- name: Remove conflicting wifi modules
+  become: true
+  community.general.modprobe:
+    name: 
+      - b43 
+      - ssb 
+      - brcmfmac 
+      - brcmsmac
+      - bcma
+    state: absent
+
+- name: Add WL module
+  become: true
+  community.general.modprobe:
+    name: wl # array not allowed
+    state: present
+    persistent: present
+
+
+
+
+# ----------------------------- 
+
+# Update grub
+# /etc/default/grub
+# ------------
+# GRUB_CMDLINE_LINUX_DEFAULT="quiet intel_iommu=on"
+# - name: Ensure Grub has intel_iommu
+#   become: true
+#   ansible.builtin.lineinfile:
+#     path: /etc/default/grub
+#     regexp: '^GRUB_CMDLINE_LINUX_DEFAULT='
+#     line: GRUB_CMDLINE_LINUX_DEFAULT="acpi_backlight=native"
+#   register: grub
+
+#   - name: Rebuild grub
+#     become: true
+#     ansible.builtin.command: update-grub
+#     when: grub.changed
+
+
+
+
+# tmux plugins
+
+# git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+
+
+
+
+
+
+
+# # ttyscheme
+# git clone git@github.com:awfulwoman/ttyscheme
+# make install
+# # .bashrc
+# if [ "$TERM" = linux ] && command -v ttyscheme >/dev/null; then
+#         ttyscheme "slate"
+# fi
+
+
+
+# # Use .bash_profile to run commands that should run only once, such as customizing the $PATH environment variable .
+# # Put the commands that should run every time you launch a new shell in the .bashrc file. This include your aliases and functions , custom prompts, history customizations , and so on.
+
+
+# # Persist SSH-agent
+# https://junyonglee.me/ssh/How-to-permanently-add-private-key-passphrase-to-ssh-agent/
+# sudo apt-get install keychain
+
+# # .bash_profile
+# if [[ `uname` == Linux ]] then
+#     /usr/bin/keychain $HOME/.ssh/id_ed25519
+#     source $HOME/.keychain/$HOST-sh
+# fi
+
+
+
+# # https://superuser.com/questions/1152833/save-identities-added-by-ssh-add-so-they-persist
+# # .bashrc
+# # [ -z "$SSH_AUTH_SOCK" ] && eval "$(ssh-agent -s)"
+
+# # .ssh/config
+# Host *
+#     IgnoreUnknown UseKeychain
+#     UseKeychain yes
+#     AddKeysToAgent yes
