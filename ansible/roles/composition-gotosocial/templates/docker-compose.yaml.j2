@@ -9,14 +9,14 @@ services:
     user: 1000:1000
     ports:
       - "8085:8080"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.SUBDOMAIN.rule=Host(`SUBDOMAIN.{{ domain_name }}`)"
-      - "traefik.http.routers.SUBDOMAIN.tls=true"
-      - "traefik.http.routers.SUBDOMAIN.tls.certresolver=letsencrypt"
+    # labels:
+    #   - "traefik.enable=true"
+    #   - "traefik.http.routers.SUBDOMAIN.rule=Host(`SUBDOMAIN.{{ domain_name }}`)"
+    #   - "traefik.http.routers.SUBDOMAIN.tls=true"
+    #   - "traefik.http.routers.SUBDOMAIN.tls.certresolver=letsencrypt"
     volumes:
       - {{ composition_config }}/data:/gotosocial/storage
-      - {{ composition_config }}/.cache:/gotosocial/.cache
+      # - {{ composition_config }}/.cache:/gotosocial/.cache
       - /etc/localtime:/etc/localtime:ro
     networks:
       - "{{ default_docker_network }}"
