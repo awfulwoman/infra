@@ -30,7 +30,7 @@
     state: directory
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: "0664"
+    mode: "0755"
   loop_control:
     loop_var: dir_item
   loop:
