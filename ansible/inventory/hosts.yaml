@@ -66,6 +66,7 @@ all:
         host-knucklehead:
         host-guineacam:
         host-wyoming-satellite:
+        host-mba2011:
 
     # Group: Home Automation
     homeautomation:

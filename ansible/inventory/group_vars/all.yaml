@@ -21,6 +21,13 @@ vault_password: !vault |
 vault_password_salted: "{{ vault_password | string | password_hash('sha256', vault_password_salting_phrase | string) }}"
 
 ansible_become_password: "{{ vault_password }}"
+vault_personal_password: !vault |
+          $ANSIBLE_VAULT;1.2;AES256;beanpod
+          63376237623839633361383132366461383331396264633161343330633632383439333530396262
+          6463663461333131343133333335316661353333336433630a643664396131313137626235336662
+          38373939303866373364333038363264396661616163333436613733613961316135366262613438
+          3439326666613461300a643762393936343436613632356433303132663232313663353038333866
+          3561
 
 login_user_password: "{{ vault_password }}"
 login_user_password_salted: "{{ vault_password_salted }}"

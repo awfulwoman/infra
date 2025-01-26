@@ -1,6 +1,6 @@
 ---
 - name: Laptop
-  hosts: localhost
+  hosts: host-mba2011
   roles:
     - role: bootstrap-ubuntu
     - role: install-ansible

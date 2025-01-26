@@ -1,6 +1,6 @@
-
-ansible_host: host-mba2011
+ansible_host: 192.168.1.202
 ansible_user: charlie
+ansible_become_password: "{{ vault_personal_password }}"
 
 # --- NETWORK -------------
 configure_dns_linkdevice_physical: "wlp1s0" 
