@@ -7,8 +7,6 @@ services:
     restart: unless-stopped
     env_file: .environment_vars
     user: 1000:1000
-    networks:
-      - gotosocial
     ports:
       - "8085:8080"
     labels:
