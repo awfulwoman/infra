@@ -1,0 +1,3 @@
+# Goto Social
+
+Fediverse server.

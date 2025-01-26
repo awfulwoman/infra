@@ -1,0 +1,18 @@
+TZ="Europe/Berlin"
+# Change this to your actual host value.
+GTS_HOST="feditest.awfulwoman.com"
+GTS_DB_TYPE="sqlite"
+# Path in the GtS Docker container where
+# the sqlite.db file will be stored.
+GTS_DB_ADDRESS: "/gotosocial/storage/sqlite.db"
+# Change this to true if you're not running
+# GoToSocial behind a reverse proxy.
+GTS_LETSENCRYPT_ENABLED: "false"
+# Set your email address here if you
+# want to receive letsencrypt notices.
+GTS_LETSENCRYPT_EMAIL_ADDRESS: ""
+# Path in the GtS Docker container where the
+# Wazero compilation cache will be stored.
+GTS_WAZERO_COMPILATION_CACHE: "/gotosocial/.cache"
+## For reverse proxy setups:
+GTS_TRUSTED_PROXIES: "172.18.0.1/16"

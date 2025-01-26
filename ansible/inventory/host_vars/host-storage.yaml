@@ -152,6 +152,7 @@ compositions:
   - syncthing
   - musicassistant
   - podcasts
+  - gotosocial
 
 traefik_providers:
   - musicassistant
