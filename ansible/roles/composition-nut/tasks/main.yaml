@@ -38,6 +38,7 @@
     - webui
 
 - name: Copy upsd files
+  become: true
   ansible.builtin.template:
     src: "nut-upsd/{{ upsd_item }}"
     dest: "{{ composition_config }}/upsd/{{ upsd_item }}"
@@ -52,6 +53,7 @@
     - upsd.users
 
 - name: Copy webui files
+  become: true
   ansible.builtin.template:
     src: "nut-webui/{{ webui_item }}"
     dest: "{{ composition_config }}/webui/{{ webui_item }}"
