@@ -63,8 +63,8 @@
   loop:
     - hosts.conf
     - upsset.conf
-    - upstats-single.html
-    - upstats.html
+    - upsstats-single.html
+    - upsstats.html
 
 - name: Run Configure DNS role
   ansible.builtin.include_role:
