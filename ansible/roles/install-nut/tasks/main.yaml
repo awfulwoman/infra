@@ -12,11 +12,11 @@
     mode: "0755"
   when: not nut_status.stat.exists
 
-- name: DOwnload and unarchive nut
+- name: Download and unarchive nut
   ansible.builtin.unarchive:
     src: https://github.com/networkupstools/nut/releases/download/v2.8.2/nut-2.8.2.tar.gz
-    dest: /tmp/nutbuild
-    remote_src: yes
+    dest: /tmp/nutbuild/nut-2.8.2
+    remote_src: true
   when: not nut_status.stat.exists
 
 - name: Run 'install' target as root
