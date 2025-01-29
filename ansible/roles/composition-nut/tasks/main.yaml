@@ -39,7 +39,7 @@
 
 - name: Copy upsd files
   ansible.builtin.template:
-    src: "{{ upsd_item }}"
+    src: "nut-upsd/{{ upsd_item }}"
     dest: "{{ composition_config }}/upsd/{{ upsd_item }}"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
@@ -53,7 +53,7 @@
 
 - name: Copy webui files
   ansible.builtin.template:
-    src: "{{ webui_item }}"
+    src: "nut-webui/{{ webui_item }}"
     dest: "{{ composition_config }}/upsd/{{ webui_item }}"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
