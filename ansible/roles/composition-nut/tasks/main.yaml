@@ -37,11 +37,34 @@
     - upsd
     - webui
 
-# - name: Copy over files
-#   become: true
-#   ansible.builtin.copy:
-#     src: filename.txt
-#     dest: "{{ composition_config }}/filename.txt
+- name: Copy upsd files
+  ansible.builtin.template:
+    src: "{{ upsd_item }}"
+    dest: "{{ composition_config }}/upsd/{{ upsd_item }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"
+  loop_control:
+    loop_var: upsd_item
+  loop:
+    - ups.conf
+    - upsd.conf
+    - upsd.users
+
+- name: Copy webui files
+  ansible.builtin.template:
+    src: "{{ webui_item }}"
+    dest: "{{ composition_config }}/upsd/{{ webui_item }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"
+  loop_control:
+    loop_var: webui_item
+  loop:
+    - hosts.conf
+    - upsset.conf
+    - upstats-single.html
+    - upstats.html
 
 - name: Run Configure DNS role
   ansible.builtin.include_role:
