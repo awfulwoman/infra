@@ -30,7 +30,7 @@
     state: directory
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: "0774"
+    mode: "0440"
   loop_control:
     loop_var: dir_item
   loop:
@@ -57,7 +57,7 @@
     dest: "{{ composition_config }}/upsd/{{ webui_item }}"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: "0774"
+    mode: "0440"
   loop_control:
     loop_var: webui_item
   loop:
