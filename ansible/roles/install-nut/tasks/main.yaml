@@ -7,8 +7,8 @@
   ansible.builtin.file:
     path: /tmp/nutbuild
     state: directory
-    owner: {{ ansible_user }}
-    group: {{ ansible_user }}
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
     mode: "0755"
   when: not nut_status.stat.exists
 
