@@ -54,7 +54,7 @@
 - name: Copy webui files
   ansible.builtin.template:
     src: "nut-webui/{{ webui_item }}"
-    dest: "{{ composition_config }}/upsd/{{ webui_item }}"
+    dest: "{{ composition_config }}/webui/{{ webui_item }}"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0440"
