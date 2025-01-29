@@ -21,6 +21,8 @@
 
 - name: Configure nut
   ansible.builtin.command: ./configure --with-user="{{ ansible_user }}" --with-group="{{ ansible_user }}" --with-usb --with-snmp --with-cgi
+  args:
+    chdir: /tmp/nutbuild/nut-2.8.2
 
 - name: Build nut
   community.general.make:
