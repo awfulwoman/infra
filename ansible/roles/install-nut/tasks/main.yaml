@@ -19,7 +19,10 @@
     remote_src: true
   when: not nut_status.stat.exists
 
-- name: Run 'install' target as root
+- name: Configure nut
+  ansible.builtin.command: ./configure --with-user="{{ ansible_user }}" --with-group="{{ ansible_user }}" --with-usb --with-snmp --with-cgi
+
+- name: Build nut
   community.general.make:
     chdir: /tmp/nutbuild
   become: true
