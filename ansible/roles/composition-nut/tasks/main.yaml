@@ -1,0 +1,51 @@
+# code: language=ansible
+
+# ----------------------------
+# Core tasks
+# ----------------------------
+
+- name: "Create compose file"
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ composition_root }}/docker-compose.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"
+
+- name: "Create .env file"
+  ansible.builtin.template:
+    src: environment_vars.j2
+    dest: "{{ composition_root }}/.environment_vars"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"
+
+# ----------------------------
+# Specific tasks
+# ----------------------------
+
+- name: Create directories
+  file:
+    path: "{{ composition_config }}/{{ dir_item }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"
+  loop_control:
+    loop_var: dir_item
+  loop:
+    - upsd
+    - webui
+
+# - name: Copy over files
+#   become: true
+#   ansible.builtin.copy:
+#     src: filename.txt
+#     dest: "{{ composition_config }}/filename.txt
+
+- name: Run Configure DNS role
+  ansible.builtin.include_role:
+    name: "configure-dns"
+  vars:
+    configure_dns_subdomains:
+      - ups

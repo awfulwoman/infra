@@ -1,0 +1,41 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  nut-upsd:
+    privileged: true
+    container_name: nut-upsd
+    ports:
+      - "3493:3493"
+    image: gpdm/nut-upsd
+    restart: unless-stopped
+    env_file: .environment_vars
+    volumes:
+      - "{{ composition_config }}/upsd:/etc/nut"
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+
+
+  nut-webui:
+    container_name: nut-webui
+    ports:
+      - "8023:80"
+    image: gpdm/nut-webui
+    restart: unless-stopped
+    env_file: .environment_vars
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nut.rule=Host(`ups.{{ domain_name }}`)"
+      - "traefik.http.routers.nut.tls=true"
+      - "traefik.http.routers.nut.tls.certresolver=letsencrypt"
+    volumes:
+      - "{{ composition_config }}/webui:/etc/nut"
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+
+
+
+networks:
+  "{{ default_docker_network }}":
+    external: true

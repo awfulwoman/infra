@@ -42,3 +42,4 @@ compositions:
 traefik_providers:
   - homeassistant
   - esphome
+  - nut
