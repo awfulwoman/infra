@@ -1,0 +1,26 @@
+- name: Check if a file exists
+  ansible.builtin.stat:
+    path: /path/to/file
+  register: nut_status
+
+- name: Create a directory if it does not exist
+  ansible.builtin.file:
+    path: /tmp/nutbuild
+    state: directory
+    owner: {{ ansible_user }}
+    group: {{ ansible_user }}
+    mode: "0755"
+  when: not nut_status.stat.exists
+
+- name: DOwnload and unarchive nut
+  ansible.builtin.unarchive:
+    src: https://github.com/networkupstools/nut/releases/download/v2.8.2/nut-2.8.2.tar.gz
+    dest: /tmp/nutbuild
+    remote_src: yes
+  when: not nut_status.stat.exists
+
+- name: Run 'install' target as root
+  community.general.make:
+    chdir: /tmp/nutbuild
+  become: true
+  when: not nut_status.stat.exists
