@@ -38,8 +38,8 @@ compositions:
   - container-management
   - homeassistant
   - owntracks
+  - nut
 
 traefik_providers:
   - homeassistant
   - esphome
-  - nut
