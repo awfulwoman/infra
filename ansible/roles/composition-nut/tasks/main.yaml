@@ -43,7 +43,7 @@
     dest: "{{ composition_config }}/upsd/{{ upsd_item }}"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: "0774"
+    mode: "0440" # yes, 0440. 
   loop_control:
     loop_var: upsd_item
   loop:
