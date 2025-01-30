@@ -5,7 +5,6 @@
       - nut
       - nut-client
 
-
 - name: "Create conf files"
   become: true
   ansible.builtin.template:

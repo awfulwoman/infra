@@ -1,3 +1,3 @@
-[monuser]
+[admin]
   password = {{ nut_user_password }}
-  admin master
+  upsmon primary
