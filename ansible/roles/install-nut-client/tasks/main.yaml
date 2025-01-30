@@ -3,3 +3,16 @@
   ansible.builtin.apt:
     name:
       - nut-client
+
+
+- name: "Create conf files"
+  become: true
+  ansible.builtin.template:
+    src: "etc/{{ item }}"
+    dest: "/etc/nut/{{ item }}"
+    owner: root
+    group: root
+    mode: "0664"
+  loop:
+    - nut.conf
+    - upsmon.conf
