@@ -11,7 +11,8 @@ services:
     restart: unless-stopped
     env_file: .environment_vars
     volumes:
-      - "{{ composition_config }}/upsd:/etc/nut"
+      - "{{ composition_config }}/upsd/config:/etc/nut"
+      - "{{ composition_config }}/upsd/var:/var/run/nut/"
       - /etc/localtime:/etc/localtime:ro
     networks:
       - "{{ default_docker_network }}"

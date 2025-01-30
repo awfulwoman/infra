@@ -34,14 +34,15 @@
   loop_control:
     loop_var: dir_item
   loop:
-    - upsd
+    - upsd/config
+    - upsd/var
     - webui
 
 - name: Copy upsd files
   become: true
   ansible.builtin.template:
     src: "nut-upsd/{{ upsd_item }}"
-    dest: "{{ composition_config }}/upsd/{{ upsd_item }}"
+    dest: "{{ composition_config }}/upsd/config/{{ upsd_item }}"
     owner: 100
     group: 101
     mode: "0440" # yes, 0440. 
