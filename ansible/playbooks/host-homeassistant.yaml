@@ -3,6 +3,7 @@
   hosts: host-homeassistant
   roles:
     - role: bootstrap-ubuntu
+    - role: install-nut
     - role: install-docker
     - role: zfs-core
     - role: install-ansible

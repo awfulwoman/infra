@@ -1,0 +1,15 @@
+- name: Install apt packages
+  become: true
+  ansible.builtin.apt:
+    name:
+      - nut
+      - nut-client
+      - nut-server
+
+- name: "Create conf file"
+  ansible.builtin.template:
+    src: etc/
+    dest: /etc/nut
+    owner: root
+    group: root
+    mode: "0664"
