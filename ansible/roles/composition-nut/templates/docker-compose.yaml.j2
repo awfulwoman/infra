@@ -6,7 +6,8 @@ services:
     container_name: nut-upsd
     ports:
       - "3493:3493"
-    image: gpdm/nut-upsd
+    # image: gpdm/nut-upsd
+    image: upsd-test
     restart: unless-stopped
     env_file: .environment_vars
     volumes:
