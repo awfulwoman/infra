@@ -7,6 +7,7 @@
       - nut-server
 
 - name: "Create conf file"
+  become: true
   ansible.builtin.template:
     src: "etc/{{ item }}"
     dest: "/etc/nut/(( item ))"
