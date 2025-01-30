@@ -2,7 +2,7 @@
 - name: Home Automation Server NEW
   hosts: host-homeassistant
   roles:
-    - role: install-nut
+    - role: install-nut-server
     # - role: ntd.nut
     #   nut_ups:
     #     - name: eaton

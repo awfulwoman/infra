@@ -1,0 +1,5 @@
+- name: Install apt packages
+  become: true
+  ansible.builtin.apt:
+    name:
+      - nut-client

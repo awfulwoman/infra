@@ -6,6 +6,7 @@
     - role: hardware-host-bus-adapter
     - role: wakeonlan
     - role: install-docker
+    - role: install-nut-client
     - role: zfs-core
     - role: install-ansible
     - role: install-ansible-pull
