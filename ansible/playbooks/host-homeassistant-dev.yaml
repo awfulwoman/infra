@@ -1,0 +1,17 @@
+---
+- name: Home Automation Server NEW
+  hosts: host-homeassistant
+  roles:
+    - role: install-nut
+    # - role: ntd.nut
+    #   nut_ups:
+    #     - name: eaton
+    #       driver: usbhid-ups
+    #       device: /dev/ttyUSB0
+    #       description: iPlug 800
+
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:
