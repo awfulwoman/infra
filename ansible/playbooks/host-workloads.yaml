@@ -2,6 +2,7 @@
   hosts: host-workloads
   roles:
     - role: bootstrap-ubuntu
+    - role: install-nut-client
     - role: install-docker
     - role: zfs-core
     - role: install-ansible

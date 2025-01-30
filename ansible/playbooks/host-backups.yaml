@@ -2,6 +2,7 @@
   hosts: host-backups
   roles:
     - role: bootstrap-ubuntu
+    - role: install-nut-client
     - role: wakeonlan
     - role: install-docker
     - role: zfs-core

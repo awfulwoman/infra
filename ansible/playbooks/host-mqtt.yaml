@@ -3,6 +3,7 @@
   hosts: host-mqtt
   roles:
     - role: bootstrap-ubuntu
+    - role: install-nut-client
     - role: hardware-raspberry-pi
       raspberry_pi_wifi: false
       raspberry_pi_boot_config_location: /boot/firmware/config.txt
