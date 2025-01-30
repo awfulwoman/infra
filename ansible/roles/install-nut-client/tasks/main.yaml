@@ -9,7 +9,7 @@
 - name: "Create conf files"
   become: true
   ansible.builtin.template:
-    src: "etc/{{ item }}"
+    src: "{{ item }}"
     dest: "/etc/nut/{{ item }}"
     owner: root
     group: root
