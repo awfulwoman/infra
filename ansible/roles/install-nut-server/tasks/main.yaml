@@ -24,10 +24,10 @@
 
 - name: "Create ufw file"
   become: true
-    ansible.builtin.copy:
-      src: "nut.ufw.profile"
-      dest: "/etc/ufw/applications.d/nut.ufw.profile"
-      owner: root
-      group: root
-      mode: "0664"
+  ansible.builtin.copy:
+    src: "nut.ufw.profile"
+    dest: "/etc/ufw/applications.d/nut.ufw.profile"
+    owner: root
+    group: root
+    mode: "0664"
   notify: Restart ufw
