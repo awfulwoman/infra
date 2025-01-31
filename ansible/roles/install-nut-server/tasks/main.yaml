@@ -6,7 +6,7 @@
       - nut-client
       - nut-server
 
-- name: "Create conf file"
+- name: "Create conf files"
   become: true
   ansible.builtin.template:
     src: "etc/{{ item }}"
@@ -21,3 +21,13 @@
     - upsd.users
     - upsmon.conf
     - upssched.conf
+
+- name: "Create ufw file"
+  become: true
+    ansible.builtin.copy:
+      src: "nut.ufw.profile"
+      dest: "/etc/ufw/applications.d/nut.ufw.profile"
+      owner: root
+      group: root
+      mode: "0664"
+  notify: Restart ufw
