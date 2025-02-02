@@ -7,7 +7,6 @@ all:
     # workstation-*  A machine used directly by a person. Has an OS that can be managed via SSH.
     host-homeassistant:                   # Home Assistant
     host-mqtt:                            # MQTT Broker
-    host-radio:                           # Radio Systems
     host-backups:                         # Backups
     host-storage:                         # NAS
     host-pihole:                          # DHCP + DNS
@@ -58,7 +57,6 @@ all:
         host-storage:
         host-pihole:
         host-mqtt:
-        host-radio:
         host-workloads:
         vm-awfulwoman:
         host-khanivore:
@@ -80,7 +78,6 @@ all:
         host-backups:
         host-homeassistant:
         host-mqtt:
-        host-radio:
         host-workloads:
         host-pihole:
 
@@ -94,7 +91,6 @@ all:
       hosts:
         host-storage:
         host-mqtt:
-        host-radio:
         host-homeassistant:
         host-workloads:
         # host-pihole:

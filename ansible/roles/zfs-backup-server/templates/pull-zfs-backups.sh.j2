@@ -202,6 +202,8 @@ if [ $? -eq 0 ];
 then 
   log_info "{{ zfsbackup_client }} is online. Proceeding."
 
+  # MQTT announce backup
+
 # Loop over client datasets
 # **************************
 {% for zfs_backup_dataset in hostvars[zfsbackup_client]['zfs_backup_datasets'] %}
