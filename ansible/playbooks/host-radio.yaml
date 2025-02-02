@@ -3,6 +3,7 @@
   hosts: host-radio
   roles:
     - role: bootstrap-ubuntu
+    - role: configure-sshkey
     - role: install-nut-client
     - role: hardware-raspberry-pi
       raspberry_pi_wifi: false
