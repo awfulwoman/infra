@@ -59,4 +59,6 @@
     state: present
     user: "{{ ansible_user }}"
     nopassword: true
-    commands: "/usr/sbin/zfs send, /usr/sbin/zfs receive, "
+    commands:
+      - "/usr/sbin/zfs send"
+      - "/usr/sbin/zfs receive"
