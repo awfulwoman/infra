@@ -73,3 +73,4 @@
     permissions: mount,receive,hold,snapshot,create,mountpoint
     local: true
     descendents: true
+  when: zfs_datasets is defined
