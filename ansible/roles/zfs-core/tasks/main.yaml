@@ -50,3 +50,13 @@
   loop: "{{ zfs_datasets }}"
   when: zfs_datasets is defined
   tags: ['zfs']
+
+
+- name: "Allow the user to sudo zfs commands with no password"
+  become: true
+  community.general.sudoers:
+    name: allow-sudo-zfs-commands-no-password
+    state: present
+    user: "{{ ansible_user }}"
+    nopassword: true
+    commands: "/usr/sbin/zfs send, /usr/sbin/zfs receive, "
