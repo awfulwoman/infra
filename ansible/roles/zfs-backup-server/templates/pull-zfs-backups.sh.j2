@@ -168,7 +168,7 @@ success () {
     {% endif %}
 
     # MQTT announce backup
-    mosquitto_pub -h mqtt.{{ domain_name }} -t servers/backup -m finished
+    mosquitto_pub -h mqtt.{{ domain_name }} -t servers/backup -m Finished
     # sleepnow
 }
 
@@ -179,7 +179,7 @@ failure () {
     {% endif %}
 
     # MQTT announce backup
-    mosquitto_pub -h mqtt.{{ domain_name }} -t servers/backup -m failed
+    mosquitto_pub -h mqtt.{{ domain_name }} -t servers/backup -m Failed
     # sleepnow
 }
 
@@ -209,7 +209,7 @@ then
   log_info "{{ zfsbackup_client }} is online. Proceeding."
 
   # MQTT announce backup
-  mosquitto_pub -h mqtt.{{ domain_name }} -t servers/backup -m running
+  mosquitto_pub -h mqtt.{{ domain_name }} -t servers/backup -m "In Progress"
 
 # Loop over client datasets
 # **************************
