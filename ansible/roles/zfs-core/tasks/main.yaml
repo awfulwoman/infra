@@ -51,7 +51,6 @@
   when: zfs_datasets is defined
   tags: ['zfs']
 
-
 - name: "Allow the user to sudo zfs commands with no password"
   become: true
   community.general.sudoers:
@@ -62,3 +61,15 @@
     commands:
       - "/usr/sbin/zfs send"
       - "/usr/sbin/zfs receive"
+      - "/usr/sbin/zfs mount"
+      - "/usr/sbin/zfs unmount"
+      - "/sbin/mount"
+
+- name: "Ensure receiving of datasets for {{ ansible_user }}"
+  become: true
+  community.general.zfs_delegate_admin:
+    name: fastpool/compositions
+    users: "{{ ansible_user }}"
+    permissions: mount,receive,hold,snapshot,create,mountpoint
+    local: true
+    descendents: true

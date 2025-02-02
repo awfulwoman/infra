@@ -38,6 +38,7 @@ compositions:
   - container-management
   - homeassistant
   - owntracks
+  - zigbee2matt
 
 traefik_providers:
   - homeassistant
