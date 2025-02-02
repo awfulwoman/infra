@@ -9,6 +9,7 @@
       - moreutils # for ts (timestamp) util
       - lzop
       - mbuffer
+      - mosquitto-clients
     state: present
 
 - name: Publish backup server public key as fact
