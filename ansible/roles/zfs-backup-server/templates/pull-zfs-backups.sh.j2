@@ -190,9 +190,14 @@ touch $LOGDIR/$LOGFILE
 # Perform Ansible pull while the machine is awake
 {% if (zfsbackup_ansiblepull_workdir) and (zfsbackup_ansiblepull_script_name) %}
 if [ $SKIP_ANSIBLE_PULL -eq 0 ]; then
+  # MQTT announce backup
+  mosquitto_pub -h mqtt.{{ domain_name }} -t servers/backup -m "Running Ansible Pull"
   {{ zfsbackup_ansiblepull_workdir }}/{{ zfsbackup_ansiblepull_script_name }}
 fi
 {% endif %}
+
+# MQTT announce backup
+mosquitto_pub -h mqtt.{{ domain_name }} -t servers/backup -m "In Progress"
 
 # Loop over clients
 # *******************
@@ -207,9 +212,6 @@ ping "{{ zfsbackup_client }}$SEARCHDOMAIN" -c2 > /dev/null 2>&1
 if [ $? -eq 0 ]; 
 then 
   log_info "{{ zfsbackup_client }} is online. Proceeding."
-
-  # MQTT announce backup
-  mosquitto_pub -h mqtt.{{ domain_name }} -t servers/backup -m "In Progress"
 
 # Loop over client datasets
 # **************************
