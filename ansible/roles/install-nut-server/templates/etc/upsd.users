@@ -1,3 +1,4 @@
 [admin]
   password = {{ nut_user_password }}
+  instcmds = ALL
   upsmon primary
