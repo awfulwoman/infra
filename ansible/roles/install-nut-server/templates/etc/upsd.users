@@ -1,4 +1,5 @@
 [admin]
   password = {{ nut_user_password }}
+  actions = SET
   instcmds = ALL
   upsmon primary
