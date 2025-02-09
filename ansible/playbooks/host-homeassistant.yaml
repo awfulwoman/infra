@@ -6,6 +6,7 @@
     - role: install-docker
     - role: zfs-core
     - role: install-ansible
+    - role: install-nut-server
     - role: install-ansible-pull
     - role: zfs-backup-client
     - role: install-beep
