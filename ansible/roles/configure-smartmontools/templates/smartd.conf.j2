@@ -1,3 +1,7 @@
-DEVICESCAN {% if smartmontools_scantype -%} {{ smartmontools_scantype }}{% endif %}
+{% if smartmontools_drives %}
+{% for drive in smartmontools_drives %}
+{{ drive }} {% if smartmontools_scantype -%} {{ smartmontools_scantype }}{% endif %}
 {%- if smartmontools_email %} -m {{ smartmontools_email }}{% endif %}
 {%- if smartmontools_schedule %} -s {{ smartmontools_schedule }}{% endif %}
+{% endfor %}
+{% endif %}

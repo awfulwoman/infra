@@ -1,4 +1,5 @@
-# smartmontools_drives: false
+smartmontools_drives:
+  - DEVICESCAN
 smartmontools_email: "charlie@{{ vault_personal_domain }}"
 # smartmontools_ntfy: true
 smartmontools_scantype: "-a -o on -S on -n standby,q"
