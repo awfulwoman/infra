@@ -1,0 +1,16 @@
+- name: Install dependencies
+  become: true
+  ansible.builtin.apt:
+    name:
+      - msmtp
+      - msmtp-mta
+    state: present
+
+- name: Ensure config file exists
+  become: true
+  ansible.builtin.template:
+    src: msmtprc
+    dest: /etc/msmtprc
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0664"
