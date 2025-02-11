@@ -1,1 +1,3 @@
-DEVICESCAN {% if smartmontools_email -%} -m {{ smartmontools_email }} {% endif %}
+
+DEVICESCAN {% if smartmontools_email -%} -m {{ smartmontools_email }} {% endif %} {% if smartmontools_schedule -%}-s {{ smartmontools_schedule }} {% endif %}
+
