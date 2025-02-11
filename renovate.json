@@ -5,5 +5,12 @@
     ],
     "dependencyDashboard": true,
     "dependencyDashboardTitle": "Renovate Dashboard",
-    "labels": ["renovatebot"]
+    "labels": [
+        "renovatebot"
+    ],
+    "docker-compose": {
+        "fileMatch": [
+            "docker-compose.yaml.j2"
+        ]
+    }
 }
