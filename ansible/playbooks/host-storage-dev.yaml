@@ -2,7 +2,7 @@
 - name: Storage NAS
   hosts: host-storage
   roles:
-    - role: install-nut-client
+    - role: configure-smartmontools
 
   handlers:
     - name: Reboot host

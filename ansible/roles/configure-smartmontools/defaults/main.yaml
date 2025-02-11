@@ -1,5 +1,5 @@
 smartmontools_drives: false
 smartmontools_email: "{{ vault_admin_email }}"
 smartmontools_ntfy: true
-smartmontools_scantype: "-a"
+smartmontools_scantype: "-a -o on -S on -n standby,q"
 smartmontools_schedule: (S/../.././02|L/../../6/03)
