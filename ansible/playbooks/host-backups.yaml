@@ -8,6 +8,7 @@
     - role: zfs-core
     - role: install-ansible
     - role: install-ansible-pull
+    - role: install-msmtp
     - role: install-mqtt2cmd
     - role: zfs-backup-server
       zfsbackup_pushover: false

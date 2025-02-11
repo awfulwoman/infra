@@ -3,7 +3,6 @@
   hosts: host-storage
   roles:
     - role: bootstrap-ubuntu
-    - role: install-msmtp
     - role: hardware-host-bus-adapter
     - role: wakeonlan
     - role: install-docker
@@ -12,6 +11,7 @@
     - role: install-ansible
     - role: install-ansible-pull
     - role: install-mqtt2cmd
+    - role: install-msmtp
     - role: nfs-server
     - role: zfs-backup-client
     - role: compositions
