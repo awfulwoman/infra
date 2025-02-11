@@ -3,6 +3,7 @@
   hosts: host-storage
   roles:
     - role: bootstrap-ubuntu
+    - role: install-msmtp
     - role: hardware-host-bus-adapter
     - role: wakeonlan
     - role: install-docker
