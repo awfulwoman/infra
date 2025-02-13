@@ -2,24 +2,43 @@
 # https://www.jeffgeerling.com/blog/2020/ansible-best-practices-using-project-local-collections-and-roles
 roles:
   - name: artis3n.tailscale
+    version: v4.6.0
   - name: diodonfrost.terraform
+    version: 1.6.1
   - name: dmotte.disable_ipv6
+    version: 2.0.0
   - name: exterrestris.sanoid
+    version: v0.4.0
   - name: geerlingguy.ansible
+    version: 2.3.0
   - name: geerlingguy.docker
+    version: 7.4.5
   - name: geerlingguy.docker_arm
+    version: 5.0.0
   - name: geerlingguy.nfs
+    version: 2.1.0
   - name: geerlingguy.pip
+    version: 3.1.0
   - name: geerlingguy.sanoid
+    version: 1.0.0
   - name: geerlingguy.security
+    version: 2.4.0
   - name: githubixx.ansible_role_wireguard
+    version: 17.1.0
   - name: githubixx.harden_linux
+    version: v8.2.0
   # - name: hifis.unattended_upgrades
+    # version: 
   - name: ironicbadger.figurine
+    version: 1.0.3
   - name: mrlesmithjr.netplan
+    version: v0.4.2
   - name: nginxinc.nginx
+    version: 0.25.0
   - name: weareinteractive.environment
+    version: 1.5.0
   - name: xanmanning.k3s
+    version: v3.4.4
   - name: pihole
     src: https://gitea.ewwww.eu/awfulwoman/pihole
     version: main
