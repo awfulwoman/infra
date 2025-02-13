@@ -39,10 +39,10 @@ roles:
     version: 1.5.0
   - name: xanmanning.k3s
     version: v3.4.4
-  - name: pihole
-    src: https://gitea.ewwww.eu/awfulwoman/pihole
-    version: main
-    scm: git
+  # - name: pihole
+  #   src: https://gitea.ewwww.eu/awfulwoman/pihole
+  #   version: main
+  #   scm: git
 
 collections:
   - name: ansible.netcommon
