@@ -2,7 +2,7 @@
 name: "{{ composition_name }}"
 services:
   web:
-    image: ghcr.io/hoarder-app/hoarder:release
+    image: ghcr.io/hoarder-app/hoarder:0.22.0
     restart: unless-stopped
     volumes:
       - "{{ composition_config }}/hoarder:/data"
