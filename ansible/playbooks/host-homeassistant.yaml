@@ -7,6 +7,7 @@
     - role: zfs-core
     - role: install-ansible
     - role: install-nut-server
+    - role: hardware-rtl-433
     - role: install-ansible-pull
     - role: zfs-backup-client
     - role: install-beep
