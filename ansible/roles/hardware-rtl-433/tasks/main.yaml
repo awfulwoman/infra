@@ -4,3 +4,12 @@
     name:
       - rtl-433
     state: present
+
+- name: Ensure udev rules exist
+  become: true
+  ansible.builtin.copy:
+    src: 99-rtl_sdr.rules
+    owner: root
+    group: root
+    mode: "0666"
+    dest: /etc/udev/rules.d/99-rtl_sdr.rules
