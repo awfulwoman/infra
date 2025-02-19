@@ -56,6 +56,13 @@
     regexp: '^127\.0\.1\.1'
     line: "127.0.1.1 {{ inventory_hostname }}"
 
+- name: Add Ansible repo from PPA
+  become: true
+  ansible.builtin.apt_repository:
+    repo: "ppa:tomtomtom/yt-dlp"
+    codename: "{{ ansible_distribution_release }}"
+    update_cache: true
+
 - name: Upgrade apt packages
   become: true
   ansible.builtin.apt:
