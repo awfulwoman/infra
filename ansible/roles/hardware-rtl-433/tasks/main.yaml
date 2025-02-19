@@ -13,3 +13,19 @@
     group: root
     mode: "0666"
     dest: /etc/udev/rules.d/99-rtl_sdr.rules
+
+- name: Ensure service file exists
+  become: true
+  ansible.builtin.template:
+    src: rtl_433.service
+    dest: /etc/systemd/system/rtl_433.service
+    owner: root
+    group: root
+    mode: "0664"
+
+- name: Ensure service is started
+  become: true
+  ansible.builtin.systemd:
+    name: rtl_433
+    state: started
+    daemon_reload: true
