@@ -16,6 +16,15 @@
 
 - name: Ensure service file exists
   become: true
+  ansible.builtin.template:
+    src: service.conf
+    dest: /etc/rtl_433/service.conf
+    owner: root
+    group: root
+    mode: "0664"
+
+- name: Ensure service file exists
+  become: true
   ansible.builtin.copy:
     src: rtl_433.service
     dest: /etc/systemd/system/rtl_433.service
@@ -29,12 +38,3 @@
     name: rtl_433
     state: started
     daemon_reload: true
-
-- name: Ensure service file exists
-  become: true
-  ansible.builtin.template:
-    src: service.conf
-    dest: /etc/rtl_433/service.conf
-    owner: root
-    group: root
-    mode: "0664"
