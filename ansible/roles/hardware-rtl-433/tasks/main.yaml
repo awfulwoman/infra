@@ -14,6 +14,15 @@
     mode: "0666"
     dest: /etc/udev/rules.d/99-rtl_sdr.rules
 
+- name: Ensure config dir exists
+  become: true
+  ansible.builtin.file:
+    path: /etc/rtl_433
+    state: directory
+    owner: root
+    group: root
+    mode: "0664"
+
 - name: Ensure service file exists
   become: true
   ansible.builtin.template:

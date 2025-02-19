@@ -6,7 +6,7 @@ After=syslog.target network.target
 
 [Service]
 Type=exec
-ExecStart=/usr/local/bin/rtl_433 -c /etc/rtl_433/service.conf
+ExecStart=/usr/bin/rtl_433 -c /etc/rtl_433/service.conf
 
 # Restart script if stopped
 Restart=always
