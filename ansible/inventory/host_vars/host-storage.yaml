@@ -18,11 +18,13 @@ container_compositions_zfs_id: fastpool/compositions
 charlie_data_path_zfs_id: slowpool/charlie
 charlie_syncthing_data_path_zfs_id: slowpool/charlie/syncthing
 zfs_dataset_wifey: "slowpool/{{vault_wifey_name}}"
+charlie_photos_zfs_id: slowpool/charlie/photos
 
 # Define useful paths from ZFS datasets
 syncthing_data_path: "/{{ charlie_syncthing_data_path_zfs_id }}"
 wifey_data_path: "/{{ zfs_dataset_wifey }}"
 compositions_config_dir: "/{{ container_compositions_zfs_id }}"
+charlie_photos_data_path_zfs_id: "/{{ charlie_photos_zfs_id }}"
 
 # Datasets that should be present 
 zfs_datasets:
@@ -30,6 +32,7 @@ zfs_datasets:
   - slowpool/images
   - "{{ zfs_dataset_wifey }}"
   - slowpool/charlie
+  - "{{ charlie_photos_data_path_zfs_id }}"
   - "{{ charlie_syncthing_data_path_zfs_id }}"
   - slowpool/shared
   - slowpool/shared/syncthing
