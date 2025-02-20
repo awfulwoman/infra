@@ -32,7 +32,7 @@ zfs_datasets:
   - slowpool/images
   - "{{ zfs_dataset_wifey }}"
   - slowpool/charlie
-  - "{{ charlie_photos_zfs_id }}"
+  - "{{ charlie_photos_data_path_zfs_id }}"
   - "{{ charlie_syncthing_data_path_zfs_id }}"
   - slowpool/shared
   - slowpool/shared/syncthing
