@@ -1,0 +1,24 @@
+- name: PiHole DNS + DHCP server
+  hosts: host-pihole
+  roles:
+    # - role: bootstrap-ubuntu
+    # - role: hardware-raspberry-pi
+    #   raspberry_pi_wifi: false
+    #   raspberry_pi_bluetooth: false
+    #   raspberry_pi_boot_config_location: /boot/firmware/config.txt
+    # - role: ip-address-static
+    #   ip_address_static_ip4: "192.168.1.2/24"
+    #   ip_address_static_gw4: "192.168.1.1"
+    # # - role: install-docker
+    # - role: zfs-core
+    # - role: install-ansible
+    # - role: install-ansible-pull
+    # - role: zfs-backup-client
+    - role: pihole
+    # - role: compositions
+    # - role: install-linux2mqtt
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:
