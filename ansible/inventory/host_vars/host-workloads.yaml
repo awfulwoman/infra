@@ -62,7 +62,7 @@ compositions:
   # - immich
   # - guineacams
   - ladder
-  - libation
+  # - libation
   - hoarder
   - freshrss
   # - audiobookshelf

@@ -155,6 +155,7 @@ compositions:
   - syncthing
   - musicassistant
   - podcasts
+  - libation
   - gotosocial
 
 traefik_providers:
@@ -166,6 +167,8 @@ cnames:
   - prowlarr.{{ domain_name }}
   - sonarr.{{ domain_name }}
   - radarr.{{ domain_name }}
+  - libation.{{ domain_name }}
+  - immich.{{ domain_name }}
   - musicassistant.{{ domain_name }}
   - podcasts.{{ domain_name }}
   - traefik.host-storage.{{ domain_name }}
