@@ -6,10 +6,11 @@
 
 - name: "Create compose file"
   ansible.builtin.template:
-    src: docker-compose.yml
+    src: docker-compose.yaml.j2
     dest: "{{ composition_root }}/docker-compose.yaml"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
+    mode: "0774"
 
 - name: "Create .env file"
   ansible.builtin.template:
@@ -17,6 +18,7 @@
     dest: "{{ composition_root }}/.env"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
+    mode: "0774"
 
 # ----------------------------
 # Specific tasks
