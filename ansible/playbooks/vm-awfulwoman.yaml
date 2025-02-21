@@ -2,6 +2,7 @@
   hosts: vm-awfulwoman
   roles:
     - role: bootstrap-ubuntu
+    - role: robertdebock.digitalocean_agent
     - role: config-deployment-user
     - role: install-docker
     - role: install-ansible
