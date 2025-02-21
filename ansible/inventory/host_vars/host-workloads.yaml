@@ -64,5 +64,5 @@ compositions:
   - ladder
   # - libation
   # - hoarder
-  - freshrss
+  # - freshrss
   # - audiobookshelf

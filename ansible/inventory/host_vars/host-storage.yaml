@@ -157,6 +157,7 @@ compositions:
   - podcasts
   - libation
   - hoarder
+  - freshrss
   - gotosocial
 
 traefik_providers:
@@ -176,3 +177,4 @@ cnames:
   - podcasts.{{ domain_name }}
   - traefik.host-storage.{{ domain_name }}
   - syncthing.{{ domain_name }}
+  - freshrss.{{ domain_name }}
