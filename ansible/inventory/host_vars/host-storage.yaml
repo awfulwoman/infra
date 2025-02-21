@@ -152,7 +152,6 @@ compositions:
   - arr
   - finances
   - gitea-runners
-  - immich-ml
   - syncthing
   - musicassistant
   - podcasts
