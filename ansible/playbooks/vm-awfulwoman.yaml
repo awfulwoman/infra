@@ -3,6 +3,7 @@
   roles:
     - role: bootstrap-ubuntu
     - role: robertdebock.digitalocean_agent
+      become: true
     - role: config-deployment-user
     - role: install-docker
     - role: install-ansible
