@@ -9,5 +9,5 @@ services:
     user: 1000:1000
     volumes:
       - "{{ composition_config }}:/config"
-      - "/fastpool/charlie/libation:/data"
+      - "/slowpool/shared/media/audiobooks:/data"
       - /etc/localtime:/etc/localtime:ro
