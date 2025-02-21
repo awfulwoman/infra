@@ -148,6 +148,7 @@ compositions:
   - reverseproxy
   - container-management
   - jellyfin
+  - immich
   - arr
   - finances
   - gitea-runners
