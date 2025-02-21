@@ -57,9 +57,9 @@ compositions:
   - reverseproxy
   - container-management
   - syncthing
-  - gitea
+  # - gitea
   # - gitea-runners
-  # - immich
+  - immich
   # - guineacams
   - ladder
   # - libation

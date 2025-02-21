@@ -151,7 +151,7 @@ compositions:
   - immich
   - arr
   - finances
-  - gitea-runners
+  - gitea
   - syncthing
   - musicassistant
   - podcasts
@@ -169,6 +169,7 @@ cnames:
   - radarr.{{ domain_name }}
   - libation.{{ domain_name }}
   - immich.{{ domain_name }}
+  - gitea.{{ domain_name }}
   - musicassistant.{{ domain_name }}
   - podcasts.{{ domain_name }}
   - traefik.host-storage.{{ domain_name }}
