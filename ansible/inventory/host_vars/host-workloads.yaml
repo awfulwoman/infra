@@ -58,8 +58,8 @@ compositions:
   - container-management
   - syncthing
   - gitea
-  - gitea-runners
-  - immich
+  # - gitea-runners
+  # - immich
   # - guineacams
   - ladder
   - libation
