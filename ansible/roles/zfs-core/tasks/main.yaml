@@ -62,12 +62,12 @@
     descendents: true
   when: zfs_datasets is defined
 
-- name: "Ensure delegated permissions exist for {{ ansible_user }}"
-  become: true
-  community.general.zfs_delegate_admin:
-    name: slowpool/charlie
-    users: "{{ ansible_user }}"
-    permissions: mount,receive,hold,snapshot,create,mountpoint
-    local: true
-    descendents: true
-  when: zfs_datasets is defined
+# - name: "Ensure delegated permissions exist for {{ ansible_user }}"
+#   become: true
+#   community.general.zfs_delegate_admin:
+#     name: slowpool/charlie
+#     users: "{{ ansible_user }}"
+#     permissions: mount,receive,hold,snapshot,create,mountpoint
+#     local: true
+#     descendents: true
+#   when: zfs_datasets is defined
