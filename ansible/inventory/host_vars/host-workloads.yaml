@@ -63,6 +63,6 @@ compositions:
   # - guineacams
   - ladder
   # - libation
-  - hoarder
+  # - hoarder
   - freshrss
   # - audiobookshelf

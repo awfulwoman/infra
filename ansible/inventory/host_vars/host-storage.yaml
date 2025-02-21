@@ -156,6 +156,7 @@ compositions:
   - musicassistant
   - podcasts
   - libation
+  - hoarder
   - gotosocial
 
 traefik_providers:
@@ -164,6 +165,7 @@ traefik_providers:
 cnames:
   - jellyfin.{{ domain_name }}
   - lidarr.{{ domain_name }}
+  - hoarder.{{ domain_name }}
   - prowlarr.{{ domain_name }}
   - sonarr.{{ domain_name }}
   - radarr.{{ domain_name }}
