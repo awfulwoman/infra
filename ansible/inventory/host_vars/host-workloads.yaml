@@ -59,7 +59,7 @@ compositions:
   - syncthing
   # - gitea
   # - gitea-runners
-  - immich
+  # - immich
   # - guineacams
   - ladder
   # - libation
