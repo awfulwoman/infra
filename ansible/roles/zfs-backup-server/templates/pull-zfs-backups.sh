@@ -11,7 +11,8 @@ SKIPAUSE=0
 LOGDIR={{zfsbackup_logging_dir}}
 LOGFILE={{zfsbackup_logging_successfile}}
 FAILURE=0 # default is success
-SEARCHDOMAIN=.{{ domain_name }}
+# SEARCHDOMAIN=.{{ domain_name }}
+SEARCHDOMAIN=""
 
 #################################
 # Functions
