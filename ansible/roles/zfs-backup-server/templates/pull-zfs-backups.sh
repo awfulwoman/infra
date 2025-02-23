@@ -28,25 +28,25 @@ function log_output {
 
 function log_debug {
   if [[ "$LOGLEVEL" =~ ^(DEBUG)$ ]]; then
-    log_output "🐞 DEBUG $1"
+    log_output "[DEBUG] $1"
   fi
 }
 
 function log_info {
   if [[ "$LOGLEVEL" =~ ^(DEBUG|INFO)$ ]]; then
-    log_output "👉 INFO $1"
+    log_output "[INFO] $1"
   fi
 }
 
 function log_warn {
   if [[ "$LOGLEVEL" =~ ^(DEBUG|INFO|WARN)$ ]]; then
-    log_output "⚠️ WARN $1"
+    log_output "[WARN] $1"
   fi
 }
 
 function log_error {
   if [[ "$LOGLEVEL" =~ ^(DEBUG|INFO|WARN|ERROR)$ ]]; then
-    log_output "⛔️ ERROR $1"
+    log_output "[ERROR] $1"
   fi
 }
 
@@ -164,7 +164,7 @@ sleepnow() {
 }
 
 success () {
-  log_info "✅ Backup success!"
+  log_info "✅✅✅ Backup success!"
   {% if zfsbackup_healthcheck_send %}
   curl -fsSL https://hc-ping.com/{{ vault_autorestic_ping_key }}/host-backups-daily-zfs-backup-pull &> /dev/null
   {% endif %}
@@ -175,7 +175,7 @@ success () {
 }
 
 failure () {
-  log_error "❌ Backup failure."
+  log_error "❌❌❌ Backup failure!"
   {% if zfsbackup_pushover %}
   /usr/bin/curl -s --form-string token="{{vault_pushover_home_automation_key}}" --form-string user="{{vault_pushover_user_key}}" --form-string message="Backup failed - $(date --iso-8601=seconds)" https://api.pushover.net/1/messages.json
   {% endif %}
@@ -185,11 +185,15 @@ failure () {
   # sleepnow
 }
 
-# Log to file
+prepbackup () {
+  # TODO: offer option of logging to stdout or file
+  mkdir -p $LOGDIR
+  touch $LOGDIR/$LOGFILE
+}
+
+# Prepare for backup
 # *******************
-# TODO: offer option of logging to stdout or file
-mkdir -p $LOGDIR
-touch $LOGDIR/$LOGFILE
+prepbackup
 
 # Perform Ansible pull while the machine is awake
 # *******************
@@ -218,33 +222,35 @@ if [ $? -eq 0 ];
 then 
   log_info "{{ zfsbackup_client }} is online. Proceeding."
 
-# Loop over client datasets
-# **************************
-{% for zfs_backup_dataset in hostvars[zfsbackup_client]['zfs_backup_datasets'] %}
+  # Loop over client datasets
+  # **************************
+  {% for zfs_backup_dataset in hostvars[zfsbackup_client]['zfs_backup_datasets'] %}
 
-log_info "Starting {{zfs_backup_dataset}}..."
+  log_info "Starting {{zfs_backup_dataset}}..."
 
-SYNCOID_COMMAND="sudo /usr/sbin/syncoid --no-privilege-elevation --no-sync-snap --quiet --recursive --skip-parent {% if hostvars[zfsbackup_client]['zfs_backup_datasets_exclude'] is defined %}{% for zfs_backup_dataset_to_exclude in hostvars[zfsbackup_client]['zfs_backup_datasets_exclude'] %}--exclude={{zfs_backup_dataset_to_exclude}} {% endfor %}{% endif %} {{ vault_zfsbackups_user }}@{{ zfsbackup_client }}$SEARCHDOMAIN:{{zfs_backup_dataset}} {{ zfsbackup_poolname }}/{{ zfsbackup_client }}/{{zfs_backup_dataset}}"
+  SYNCOID_COMMAND="sudo /usr/sbin/syncoid --no-privilege-elevation --no-sync-snap --quiet --recursive --skip-parent {% if hostvars[zfsbackup_client]['zfs_backup_datasets_exclude'] is defined %}{% for zfs_backup_dataset_to_exclude in hostvars[zfsbackup_client]['zfs_backup_datasets_exclude'] %}--exclude={{zfs_backup_dataset_to_exclude}} {% endfor %}{% endif %} {{ vault_zfsbackups_user }}@{{ zfsbackup_client }}$SEARCHDOMAIN:{{zfs_backup_dataset}} {{ zfsbackup_poolname }}/{{ zfsbackup_client }}/{{zfs_backup_dataset}}"
 
-# SYNCOID_OUTPUT=$( $SYNCOID_COMMAND 2>&1 )
+  # SYNCOID_OUTPUT=$( $SYNCOID_COMMAND 2>&1 )
 
-# if [ $? -eq 0 ]
-if $SYNCOID_COMMAND; then
-  log_info "Success!"
-else
-  FAILURE=1
-  log_error "Failure!" 
-  # log_error $SYNCOID_OUTPUT
-fi
+  # if [ $? -eq 0 ]
+  if $SYNCOID_COMMAND; then
+    log_info "Success!"
+    # mosquitto_pub -h mqtt.{{ domain_name }} -t servers/backup -m "Backup Success"
+  else
+    FAILURE=1
+    log_error "Failure!" 
+    # log_error $SYNCOID_OUTPUT
+    # mosquitto_pub -h mqtt.{{ domain_name }} -t servers/backup -m "Backup Failure"
+  fi
 
-if [[ "$LOGLEVEL" =~ ^(DEBUG)$ ]]; then
-  echo $SYNCOID_COMMAND
-  # echo $SYNCOID_OUTPUT
-fi
+  if [[ "$LOGLEVEL" =~ ^(DEBUG)$ ]]; then
+    echo $SYNCOID_COMMAND
+    # echo $SYNCOID_OUTPUT
+  fi
 
-{% endfor %} # End dataset loop
+  {% endfor %} # End dataset loop
 
-log_info "{{ zfsbackup_client }} backup finished."
+  log_info "{{ zfsbackup_client }} backup finished."
 
 else 
   log_warn "{{ zfsbackup_client }} was not online."
