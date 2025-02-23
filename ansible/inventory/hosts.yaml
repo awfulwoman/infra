@@ -78,7 +78,7 @@ all:
         host-backups:
         host-homeassistant:
         host-mqtt:
-        host-workloads:
+        # host-workloads:
         host-pihole:
 
     # ZFS Backup Server
@@ -92,5 +92,5 @@ all:
         host-storage:
         host-mqtt:
         host-homeassistant:
-        host-workloads:
+        # host-workloads:
         # host-pihole:
