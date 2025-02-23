@@ -12,6 +12,7 @@ LOGDIR={{zfsbackup_logging_dir}}
 LOGFILE={{zfsbackup_logging_successfile}}
 FAILURE=0 # default is success
 SEARCHDOMAIN=.{{ domain_name }}
+
 #################################
 # Functions
 #################################
@@ -84,26 +85,26 @@ function usage {
 # Get input parameters
 while [[ "$1" != "" ]]; do
   case $1 in
-      -l | --logfile )        shift
-                              LOGFILE=$1
-                              ;;
-      -L | --loglevel )       shift
-                              LOGLEVEL=$1
-                              ;;
-      -S | --skip-ansible-pull )       shift
-                              SKIP_ANSIBLE_PULL=1
-                              ;;
-      -Q | --quiet )          shift
-                              QUIET=1
-                              ;;
-      -p | --skip-pause )     shift
-                              SKIPAUSE=1
-                              ;;
-      -h | --help )           usage
-                              exit
-                              ;;
-      * )                     usage
-                              exit 1
+    -l | --logfile )        shift
+                            LOGFILE=$1
+                            ;;
+    -L | --loglevel )       shift
+                            LOGLEVEL=$1
+                            ;;
+    -S | --skip-ansible-pull )       shift
+                            SKIP_ANSIBLE_PULL=1
+                            ;;
+    -Q | --quiet )          shift
+                            QUIET=1
+                            ;;
+    -p | --skip-pause )     shift
+                            SKIPAUSE=1
+                            ;;
+    -h | --help )           usage
+                            exit
+                            ;;
+    * )                     usage
+                            exit 1
   esac
   shift
 done
@@ -128,66 +129,69 @@ echo " "
 # fi
 
 if [[ "$LOGLEVEL" =~ ^(DEBUG)$ ]]; then
-echo "DEBUG INFO"
-echo "***********"
-echo "Logging to: $LOGDIR/$LOGFILE"
-echo "Search domain: $SEARCHDOMAIN"
-echo " "
+  echo "DEBUG INFO"
+  echo "***********"
+  echo "Logging to: $LOGDIR/$LOGFILE"
+  echo "Search domain: $SEARCHDOMAIN"
+  echo " "
 fi
 
 sleepnow() {
-    # Sleep if script is present
-    command -v sleepuntil &> /dev/null
-    if [ $? -eq 0 ]; 
-    then 
-				{% if sleepuntil_sleep_time is defined %}
-        log_info "Going to sleep in 5 mins. {{ ansible_hostname }} will wake up at {{ sleepuntil_sleep_time }}."
-				{% else %}
-				log_info "Going to sleep in 5 mins."
-				{% endif %}
-        secs=$((5 * 60))
-        while [ $secs -gt 0 ]; do
-            echo -ne "🕗 $secs\033[0K\r"
-            sleep 1
-            : $((secs--))
-        done
-				sleep 5
-				echo " "
-        # log_info "Calling sleepuntil"
+  # Sleep if script is present
+  command -v sleepuntil &> /dev/null
+  if [ $? -eq 0 ]; 
+  then 
+    {% if sleepuntil_sleep_time is defined %}
+    log_info "Going to sleep in 5 mins. {{ ansible_hostname }} will wake up at {{ sleepuntil_sleep_time }}."
+    {% else %}
+    log_info "Going to sleep in 5 mins."
+    {% endif %}
+    secs=$((5 * 60))
+    while [ $secs -gt 0 ]; do
+        echo -ne "🕗 $secs\033[0K\r"
+        sleep 1
+        : $((secs--))
+    done
+    sleep 5
+    echo " "
+    # log_info "Calling sleepuntil"
 
-				{% if sleepuntil_sleep_time is defined %}
-        sleepuntil --time {{ sleepuntil_sleep_time }}
-				{% endif %}
-    fi 
+    {% if sleepuntil_sleep_time is defined %}
+    sleepuntil --time {{ sleepuntil_sleep_time }}
+    {% endif %}
+  fi 
 }
 
 success () {
-    log_info "✅ Backup success!"
-    {% if zfsbackup_healthcheck_send %}
-    curl -fsSL https://hc-ping.com/{{ vault_autorestic_ping_key }}/host-backups-daily-zfs-backup-pull &> /dev/null
-    {% endif %}
+  log_info "✅ Backup success!"
+  {% if zfsbackup_healthcheck_send %}
+  curl -fsSL https://hc-ping.com/{{ vault_autorestic_ping_key }}/host-backups-daily-zfs-backup-pull &> /dev/null
+  {% endif %}
 
-    # MQTT announce backup
-    mosquitto_pub -h mqtt.{{ domain_name }} -t servers/backup -m Finished
-    # sleepnow
+  # MQTT announce backup
+  mosquitto_pub -h mqtt.{{ domain_name }} -t servers/backup -m Finished
+  # sleepnow
 }
 
 failure () {
-    log_error "❌ Backup failure."
-    {% if zfsbackup_pushover %}
-    /usr/bin/curl -s --form-string token="{{vault_pushover_home_automation_key}}" --form-string user="{{vault_pushover_user_key}}" --form-string message="Backup failed - $(date --iso-8601=seconds)" https://api.pushover.net/1/messages.json
-    {% endif %}
+  log_error "❌ Backup failure."
+  {% if zfsbackup_pushover %}
+  /usr/bin/curl -s --form-string token="{{vault_pushover_home_automation_key}}" --form-string user="{{vault_pushover_user_key}}" --form-string message="Backup failed - $(date --iso-8601=seconds)" https://api.pushover.net/1/messages.json
+  {% endif %}
 
-    # MQTT announce backup
-    mosquitto_pub -h mqtt.{{ domain_name }} -t servers/backup -m Failed
-    # sleepnow
+  # MQTT announce backup
+  mosquitto_pub -h mqtt.{{ domain_name }} -t servers/backup -m Failed
+  # sleepnow
 }
 
-
+# Log to file
+# *******************
+# TODO: offer option of logging to stdout or file
 mkdir -p $LOGDIR
 touch $LOGDIR/$LOGFILE
 
 # Perform Ansible pull while the machine is awake
+# *******************
 {% if (zfsbackup_ansiblepull_workdir) and (zfsbackup_ansiblepull_script_name) %}
 if [ $SKIP_ANSIBLE_PULL -eq 0 ]; then
   # MQTT announce backup
@@ -197,6 +201,7 @@ fi
 {% endif %}
 
 # MQTT announce backup
+# *******************
 mosquitto_pub -h mqtt.{{ domain_name }} -t servers/backup -m "In Progress"
 
 # Loop over clients
@@ -208,7 +213,6 @@ mosquitto_pub -h mqtt.{{ domain_name }} -t servers/backup -m "In Progress"
 ## Is the client host up?
 # log_info "Pinging {{ zfsbackup_client }}$SEARCHDOMAIN..."
 ping "{{ zfsbackup_client }}$SEARCHDOMAIN" -c2 > /dev/null 2>&1
-
 if [ $? -eq 0 ]; 
 then 
   log_info "{{ zfsbackup_client }} is online. Proceeding."
@@ -225,28 +229,25 @@ SYNCOID_COMMAND="sudo /usr/sbin/syncoid --no-privilege-elevation --no-sync-snap 
 
 # if [ $? -eq 0 ]
 if $SYNCOID_COMMAND; then
-		log_info "Success!"
+  log_info "Success!"
 else
-		FAILURE=1
-		log_error "Failure!" 
-		# log_error $SYNCOID_OUTPUT
+  FAILURE=1
+  log_error "Failure!" 
+  # log_error $SYNCOID_OUTPUT
 fi
 
 if [[ "$LOGLEVEL" =~ ^(DEBUG)$ ]]; then
-echo $SYNCOID_COMMAND
-# echo $SYNCOID_OUTPUT
+  echo $SYNCOID_COMMAND
+  # echo $SYNCOID_OUTPUT
 fi
-
 
 {% endfor %} # End dataset loop
 
 log_info "{{ zfsbackup_client }} backup finished."
 
 else 
-
-log_warn "{{ zfsbackup_client }} was not online."
-failure
-
+  log_warn "{{ zfsbackup_client }} was not online."
+  failure
 fi # End online status check
 echo " "
 # ------------------------------------------------
@@ -255,9 +256,9 @@ echo " "
 # Notify of outcome
 if [ $FAILURE -eq 1 ]
 then
-    failure
+  failure
 else
-    success
+  success
 fi
 
 # END PUBLISH ON BACKING_UP TOPIC
