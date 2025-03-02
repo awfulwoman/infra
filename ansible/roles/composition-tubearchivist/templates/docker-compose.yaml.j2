@@ -39,6 +39,9 @@ services:
       - redis:/data
     depends_on:
       - archivist-es
+    networks:
+      - "{{ default_docker_network }}"
+
   archivist-es:
     image: bbilly1/tubearchivist-es         # only for amd64, or use official es 8.16.0
     container_name: archivist-es
@@ -57,6 +60,8 @@ services:
       - es:/usr/share/elasticsearch/data    # check for permission error when using bind mount, see readme
     expose:
       - "9200"
+    networks:
+      - "{{ default_docker_network }}"
 
 volumes:
   redis:
