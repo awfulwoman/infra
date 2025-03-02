@@ -1,0 +1,67 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  tubearchivist:
+    container_name: tubearchivist
+    ports:
+      - "127.0.0.1:8000:8000"
+    image: bbilly1/tubearchivist
+    restart: unless-stopped
+    env_file: .environment_vars
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.tubearchivist.rule=Host(`tubearchivist.{{ domain_name }}`)"
+      - "traefik.http.routers.tubearchivist.tls=true"
+      - "traefik.http.routers.tubearchivist.tls.certresolver=letsencrypt"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 2m
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    depends_on:
+      - archivist-es
+      - archivist-redis
+    volumes:
+      - "{{ tubeachivist_youtube_path }}:/youtube"
+      - "{{ composition_config }}/cache:/cache"
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+
+  archivist-redis:
+    image: redis/redis-stack-server
+    container_name: archivist-redis
+    restart: unless-stopped
+    expose:
+      - "6379"
+    volumes:
+      - redis:/data
+    depends_on:
+      - archivist-es
+  archivist-es:
+    image: bbilly1/tubearchivist-es         # only for amd64, or use official es 8.16.0
+    container_name: archivist-es
+    restart: unless-stopped
+    environment:
+      - "ELASTIC_PASSWORD=verysecret"       # matching Elasticsearch password
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+      - "xpack.security.enabled=true"
+      - "discovery.type=single-node"
+      - "path.repo=/usr/share/elasticsearch/data/snapshot"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - es:/usr/share/elasticsearch/data    # check for permission error when using bind mount, see readme
+    expose:
+      - "9200"
+
+volumes:
+  redis:
+  es:
+
+networks:
+  "{{ default_docker_network }}":
+    external: true

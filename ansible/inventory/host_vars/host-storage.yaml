@@ -64,6 +64,8 @@ zfs_backup_datasets_exclude:
 # Media storage
 shared_media_path: "/slowpool/shared/media"
 
+tubeachivist_youtube_path: "{{ shared_media_path }}/youtube"
+
 syncthing_paths:
   data_default: "/slowpool/shared/syncthing"
   data_charlie: "{{ syncthing_data_path }}"
@@ -159,6 +161,7 @@ compositions:
   - hoarder
   - freshrss
   - gotosocial
+  - tubearchivist
 
 traefik_providers:
   - musicassistant
@@ -178,3 +181,4 @@ cnames:
   - traefik.host-storage.{{ domain_name }}
   - syncthing.{{ domain_name }}
   - freshrss.{{ domain_name }}
+  - tubearchivist.{{ domain_name }}
