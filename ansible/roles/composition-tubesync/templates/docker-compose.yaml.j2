@@ -1,0 +1,25 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  tubesync:
+    image: ghcr.io/meeb/tubesync:latest
+    container_name: tubesync
+    restart: unless-stopped
+    env_file: .environment_vars
+    ports:
+      - "127.0.0.1:4848:4848"
+    volumes:
+      - "{{ composition_config }}:/config"
+      - "{{ tubeachivist_youtube_path }}:/downloads"
+      - /etc/localtime:/etc/localtime:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.tubesync.rule=Host(`tubesync.{{ domain_name }}`)"
+      - "traefik.http.routers.tubesync.tls=true"
+      - "traefik.http.routers.tubesync.tls.certresolver=letsencrypt"
+    networks:
+      - "{{ default_docker_network }}"
+
+networks:
+  "{{ default_docker_network }}":
+    external: true

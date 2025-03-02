@@ -162,6 +162,7 @@ compositions:
   - freshrss
   - gotosocial
   - tubearchivist
+  - tubesync
 
 traefik_providers:
   - musicassistant
@@ -182,3 +183,4 @@ cnames:
   - syncthing.{{ domain_name }}
   - freshrss.{{ domain_name }}
   - tubearchivist.{{ domain_name }}
+  - tubesync.{{ domain_name }}
