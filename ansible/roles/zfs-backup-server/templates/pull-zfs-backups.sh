@@ -191,6 +191,10 @@ prepbackup () {
   touch $LOGDIR/$LOGFILE
 }
 
+publish () {
+  mosquitto_pub -h mqtt.{{ domain_name }} -t servers/backup -m $1
+}
+
 # Prepare for backup
 # *******************
 prepbackup
