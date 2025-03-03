@@ -161,7 +161,6 @@ compositions:
   - hoarder
   - freshrss
   - gotosocial
-  - tubearchivist
   - tubesync
 
 traefik_providers:
@@ -182,5 +181,4 @@ cnames:
   - traefik.host-storage.{{ domain_name }}
   - syncthing.{{ domain_name }}
   - freshrss.{{ domain_name }}
-  - tubearchivist.{{ domain_name }}
   - tubesync.{{ domain_name }}
