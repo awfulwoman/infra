@@ -22,7 +22,7 @@ roles:
   - name: geerlingguy.sanoid
     version: 1.0.0
   - name: geerlingguy.security
-    version: 2.4.0
+    version: 3.0.0
   - name: githubixx.ansible_role_wireguard
     version: 17.1.0
   - name: githubixx.harden_linux
