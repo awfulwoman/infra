@@ -162,6 +162,7 @@ compositions:
   - freshrss
   - gotosocial
   - tubesync
+  - audiobookshelf
 
 traefik_providers:
   - musicassistant
@@ -182,3 +183,4 @@ cnames:
   - syncthing.{{ domain_name }}
   - freshrss.{{ domain_name }}
   - tubesync.{{ domain_name }}
+  - audiobookshelf.{{ domain_name }}
