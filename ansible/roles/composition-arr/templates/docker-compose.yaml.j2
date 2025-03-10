@@ -23,6 +23,23 @@ services:
     networks:
       - "{{ default_docker_network }}"
 
+  bazarr:
+    image: lscr.io/linuxserver/bazarr:latest
+    container_name: bazarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - "TZ=Europe/Berlin"   
+    volumes:
+      - "{{ composition_config }}/bazarr:/config"
+      - "{{ shared_media_path }}/movies:/movies"
+      - "{{ shared_media_path }}/shows:/tv"
+    ports:
+      - "127.0.0.1:6767:6767"
+    networks:
+      - "{{ default_docker_network }}"
+    restart: unless-stopped
+
   radarr:
     container_name: radarr
     ports:

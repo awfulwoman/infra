@@ -22,16 +22,20 @@
 # Specific tasks
 # ----------------------------
 
-# - name: Create directories
-#   file:
-#     path: "{{ composition_config }}/{{ dir_item }}"
-#     state: directory
-#   loop_control:
-#     loop_var: dir_item
-#   loop:
-#     - whatever1
-#     - whatever2
-#     - whatever3
+- name: Create directories
+  file:
+    path: "{{ composition_config }}/{{ dir_item }}"
+    state: directory
+  loop_control:
+    loop_var: dir_item
+  loop:
+    - bazarr
+    - gluetun
+    - lidarr
+    - prowlarr
+    - qbittorrent
+    - radarr
+    - sonarr
 
 # - name: Copy over files
 #   become: true
@@ -58,3 +62,4 @@
       - radarr
       - gluetun
       - lidarr
+      - bazarr
