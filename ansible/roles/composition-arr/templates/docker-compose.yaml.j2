@@ -40,8 +40,7 @@ services:
       - "traefik.http.routers.bazarr.tls.certresolver=letsencrypt"
     volumes:
       - "{{ composition_config }}/bazarr:/config"
-      - "{{ shared_media_path }}/movies:/movies"
-      - "{{ shared_media_path }}/shows:/tv"
+      - "{{ shared_media_path }}:/data"
     networks:
       - "{{ default_docker_network }}"
 
