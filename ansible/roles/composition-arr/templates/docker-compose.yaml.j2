@@ -26,19 +26,24 @@ services:
   bazarr:
     image: lscr.io/linuxserver/bazarr:latest
     container_name: bazarr
+    ports:
+      - "127.0.0.1:6767:6767"
+    restart: unless-stopped
     environment:
       - PUID=1000
       - PGID=1000
-      - "TZ=Europe/Berlin"   
+      - "TZ=Europe/Berlin"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bazarr.rule=Host(`bazarr.{{ domain_name }}`)"
+      - "traefik.http.routers.bazarr.tls=true"
+      - "traefik.http.routers.bazarr.tls.certresolver=letsencrypt"
     volumes:
       - "{{ composition_config }}/bazarr:/config"
       - "{{ shared_media_path }}/movies:/movies"
       - "{{ shared_media_path }}/shows:/tv"
-    ports:
-      - "127.0.0.1:6767:6767"
     networks:
       - "{{ default_docker_network }}"
-    restart: unless-stopped
 
   radarr:
     container_name: radarr
