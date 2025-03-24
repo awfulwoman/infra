@@ -12,7 +12,7 @@ roles:
   - name: geerlingguy.ansible
     version: 2.3.0
   - name: geerlingguy.docker
-    version: 7.4.5
+    version: 7.4.7
   - name: geerlingguy.docker_arm
     version: 5.0.0
   - name: geerlingguy.nfs
