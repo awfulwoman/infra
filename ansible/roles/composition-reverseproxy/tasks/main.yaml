@@ -75,10 +75,10 @@
 
 - name: Create directories
   ansible.builtin.file:
-    path: "{{ composition_config }}/{{ dir_item }}"
+    path: "{{ composition_config }}/{{ create_items }}"
     state: directory
   loop_control:
-    loop_var: dir_item
+    loop_var: create_items
   loop:
     - nginx
     - www-catch-all
@@ -89,7 +89,7 @@
     src: "files/{{ dir_item }}/"
     dest: "{{ composition_config }}/{{ dir_item }}/"
   loop_control:
-    loop_var: dir_item2
+    loop_var: dir_item
   loop:
     - nginx
     - www-catch-all
