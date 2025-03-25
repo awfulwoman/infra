@@ -69,3 +69,28 @@
     configure_dns_subdomains:
       - "whoami.{{ ansible_hostname }}"
       - "traefik.{{ ansible_hostname }}"
+
+
+# Custom http responses
+
+- name: Create directories
+  ansible.builtin.file:
+    path: "{{ composition_config }}/{{ dir_item }}"
+    state: directory
+  loop_control:
+    loop_var: dir_item
+  loop:
+    - nginx
+    - www-catch-all
+    - www-status-pages
+
+- name: Copy content of directory 'files'
+  ansible.builtin.copy:
+    src: "files/{{ dir_item }}/"
+    dest: "{{ composition_config }}/{{ dir_item }}/"
+  loop_control:
+    loop_var: dir_item2
+  loop:
+    - nginx
+    - www-catch-all
+    - www-status-pages

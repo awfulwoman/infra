@@ -33,6 +33,34 @@ services:
     networks:
       - "{{ default_docker_network }}"
 
+  catch-all:
+    image: nginx:1.21-alpine
+    volumes:
+      - ./nginx/catch-all.conf:/etc/nginx/nginx.conf:ro
+      - ./www-catch-all:/usr/share/nginx/html:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.catch-all-service.loadbalancer.server.port=80"
+      # Use as "fallback" for any unknown URL (with lowest possible priority).
+      - "traefik.http.routers.catch-all-router.rule=HostRegexp(`{host:.+}`)"
+      - "traefik.http.routers.catch-all-router.priority=1"
+      - "traefik.http.routers.catch-all-router.entryPoints=web"
+
+  status-pages:
+    image: nginx:1.21-alpine
+    volumes:
+      - "{{ composition_config }}/nginx/status-pages.conf:/etc/nginx/nginx.conf:ro"
+      - "{{ composition_config }}/www-status-pages:/usr/share/nginx/html:ro"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.status-pages-service.loadbalancer.server.port=80"
+      - "traefik.http.routers.status-pages-router.rule=Host(`error.localhost`)"
+      - "traefik.http.routers.status-pages-router.entryPoints=web"
+      # Configure the error middleware for specific status codes.
+      - "traefik.http.middlewares.status-pages-middleware.errors.status=400,401,403-405,407-413,416,418,429,500,502-505"
+      - "traefik.http.middlewares.status-pages-middleware.errors.service=status-pages-service"
+      - "traefik.http.middlewares.status-pages-middleware.errors.query=/{status}.html"
+
   whoami:
     container_name: whoami
     ports:
@@ -45,10 +73,6 @@ services:
       - "traefik.http.routers.whoami.rule=Host(`whoami.{{ ansible_hostname }}.{{ domain_name }}`)"
       - "traefik.http.routers.whoami.tls=true"
       - "traefik.http.routers.whoami.tls.certresolver=letsencrypt"
-      # - "homepage.group=GROUP"
-      # - "homepage.name=SUBDOMAIN"
-      # - "homepage.href=https://SUBDOMAIN.{{ domain_name }}"
-      # - "homepage.description=whatever"
     volumes:
       - /etc/localtime:/etc/localtime:ro
     networks:
