@@ -49,7 +49,7 @@ services:
     restart: unless-stopped
     env_file: .environment_vars_importer
     ports:
-      - '8111:8080'
+      - '127.0.0.1:8111:8080'
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.firefly-importer.rule=Host(`firefly-importer.{{ domain_name }}`)"

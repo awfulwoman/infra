@@ -5,7 +5,7 @@ services:
     image: nginx
     container_name: awfulwoman
     ports:
-      - "8081:80"
+      - "127.0.0.1:8081:80"
     env_file: .environment_vars
     environment:
       - NGINX_HOST="awfulwoman.com"
