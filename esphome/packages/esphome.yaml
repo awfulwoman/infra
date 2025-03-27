@@ -3,7 +3,7 @@ substitutions:
   friendly_name: "A PROJECT"
   comment: "A COMMENT"
   area: "Living Room"
-  platform: ESP32
+  platform: esp32
   board: esp32dev
   owner: awfulwowman
   version: "1.0.0"
