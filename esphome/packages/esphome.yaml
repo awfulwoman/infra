@@ -12,8 +12,6 @@ esphome:
   name: "${name}"
   friendly_name: "${friendly_name}"
   comment: "${comment}"
-  platform: "${platform}"
-  board: "${board}"
   area: "${area}"
   project:
     name: ${owner}.${name}
