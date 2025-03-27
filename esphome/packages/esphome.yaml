@@ -19,6 +19,9 @@ esphome:
     name: ${owner}.${name}
     version: ${version}
 
+${platform}:
+  board: "${board}"
+
 text_sensor:
   - platform: version
     name: ESPHome Version
