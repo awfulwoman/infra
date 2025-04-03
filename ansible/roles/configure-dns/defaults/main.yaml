@@ -1,4 +1,4 @@
 configure_dns_domain: "{{ domain_name }}"
 configure_dns_linkdevice_tailscale: "tailscale0"
-configure_dns_linkdevice_physical: "eth0" 
+configure_dns_linkdevice_physical: "eth0"
 configure_dns_subdomains: []

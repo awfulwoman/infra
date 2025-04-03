@@ -77,6 +77,8 @@
   ansible.builtin.file:
     path: "{{ composition_config }}/{{ create_items }}"
     state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
   loop_control:
     loop_var: create_items
   loop:
@@ -88,6 +90,8 @@
   ansible.builtin.copy:
     src: "files/{{ dir_item }}/"
     dest: "{{ composition_config }}/{{ dir_item }}/"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
   loop_control:
     loop_var: dir_item
   loop:
