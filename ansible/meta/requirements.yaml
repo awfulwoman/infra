@@ -2,7 +2,7 @@
 # https://www.jeffgeerling.com/blog/2020/ansible-best-practices-using-project-local-collections-and-roles
 roles:
   - name: artis3n.tailscale
-    version: v4.6.0
+    version: v5.0.1
   - name: diodonfrost.terraform
     version: 1.6.1
   - name: dmotte.disable_ipv6
