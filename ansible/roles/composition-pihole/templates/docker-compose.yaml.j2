@@ -14,7 +14,7 @@ services:
       - "53:53/udp"
       # - "67:67/udp" # Only required if you are using Pi-hole as your DHCP server
       - "80:80/tcp"
-    image: pihole/pihole:2025.03.0
+    image: pihole/pihole:2025.04.0
     restart: unless-stopped
     env_file: .environment_vars
     # labels:
