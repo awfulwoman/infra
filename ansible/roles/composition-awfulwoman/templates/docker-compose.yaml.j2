@@ -16,7 +16,7 @@ services:
       - "traefik.http.routers.beta.tls=true"
       - "traefik.http.routers.beta.tls.certresolver=letsencrypt"
     volumes:
-      - "{{ container_compositions_zfs_id }}/awfulwoman.com:/usr/share/nginx/html"
+      - "{{ compositions_config_dir }}/awfulwoman.com:/usr/share/nginx/html"
       - "{{ composition_config }}/nginx.conf:/etc/nginx/nginx.conf"
       - /etc/localtime:/etc/localtime:ro
     networks:
