@@ -19,12 +19,14 @@ awfulwoman_sites_zfs_id: fastpool/sites/awfulwoman
 
 # Define useful paths from ZFS datasets
 compositions_config_dir: "/{{ container_compositions_zfs_id }}"
+sites_zfs_path: "/{{ sites_zfs_id }}"
+awfulwoman_sites_zfs_path: "/{{ awfulwoman_sites_zfs_id }}"
 
 # Datasets that should be present 
 zfs_datasets:
   - "{{ container_compositions_zfs_id }}"
-  - "{{ sites_zfs_id }}"
-  - "{{ awfulwoman_sites_zfs_id}}"
+  - "{{ sites_zfs_path }}"
+  - "{{ awfulwoman_sites_zfs_path}}"
 
 
 compositions:
