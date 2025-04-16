@@ -25,8 +25,8 @@ awfulwoman_sites_zfs_path: "/{{ awfulwoman_sites_zfs_id }}"
 # Datasets that should be present 
 zfs_datasets:
   - "{{ container_compositions_zfs_id }}"
-  - "{{ sites_zfs_path }}"
-  - "{{ awfulwoman_sites_zfs_path}}"
+  - "{{ sites_zfs_id }}"
+  - "{{ awfulwoman_sites_zfs_id}}"
 
 
 compositions:
