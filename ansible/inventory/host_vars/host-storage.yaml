@@ -154,6 +154,7 @@ compositions:
   - arr
   - finances
   - gitea
+  - gitea-runners
   - syncthing
   - musicassistant
   - podcasts
