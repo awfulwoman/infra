@@ -68,8 +68,9 @@
 - name: Create simple directories
   become: true
   ansible.builtin.file:
-    path: /site
+    path: /fastppool/compositions/awfulwoman
     state: directory
+    recurse: true
     # mode: "01775"
     mode: "0775"
     owner: nginx
