@@ -164,6 +164,7 @@ compositions:
   - gotosocial
   - tubesync
   - audiobookshelf
+  - homepage
 
 traefik_providers:
   - musicassistant

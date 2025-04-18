@@ -1,0 +1,28 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  homepage:
+    container_name: homepage
+    ports:
+      - "127.0.0.1:3000:3000"
+    image: ghcr.io/gethomepage/homepage:latest
+    restart: unless-stopped
+    env_file: .environment_vars
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.homepage.rule=Host(`home.{{ domain_name }}`)"
+      - "traefik.http.routers.homepage.tls=true"
+      - "traefik.http.routers.homepage.tls.certresolver=letsencrypt"
+      # - "homepage.group=GROUP"
+      # - "homepage.name=SUBDOMAIN"
+      # - "homepage.href=https://SUBDOMAIN.{{ domain_name }}"
+      # - "homepage.description=whatever"
+    volumes:
+      - "{{ composition_config }}:/app/config"
+      - /var/run/docker.sock:/var/run/docker.sock 
+    networks:
+      - "{{ default_docker_network }}"
+
+networks:
+  "{{ default_docker_network }}":
+    external: true
