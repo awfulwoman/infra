@@ -186,3 +186,4 @@ cnames:
   - freshrss.{{ domain_name }}
   - tubesync.{{ domain_name }}
   - audiobookshelf.{{ domain_name }}
+  - home.{{ domain_name }}
