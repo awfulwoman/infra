@@ -44,6 +44,39 @@
 #     src: filename.txt
 #     dest: "{{ composition_config }}/filename.txt
 
+- name: "Copy over templates"
+  ansible.builtin.template:
+    src: "{{ yaml_item }}.yaml"
+    dest: "{{ composition_config }}/{{ yaml_item }}.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"
+  loop_control:
+    loop_var: yaml_item
+  loop:
+    - bookmarks
+    - services
+    - settings
+    - widgets
+    - docker
+    - kubernetes
+
+- name: "Copy over CSS"
+  ansible.builtin.template:
+    src: custom.css
+    dest: "{{ composition_config }}/custom.css"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"
+
+- name: "Copy over JS"
+  ansible.builtin.template:
+    src: custom.js
+    dest: "{{ composition_config }}/custom.js"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"
+
 - name: Run Configure DNS role
   ansible.builtin.include_role:
     name: "configure-dns"
