@@ -163,7 +163,7 @@ compositions:
   - freshrss
   - gotosocial
   - tubesync
-  - audiobookshelf
+  - audio
   - homepage
 
 traefik_providers:

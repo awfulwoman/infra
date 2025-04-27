@@ -2,7 +2,7 @@
 - name: Home Automation Server NEW
   hosts: host-homeassistant
   roles:
-    - role: hardware-rtl-433
+    - role: install-mqtt2cmd
 
 
   handlers:
