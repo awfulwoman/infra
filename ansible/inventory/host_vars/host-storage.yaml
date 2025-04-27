@@ -149,6 +149,7 @@ firefly_app_key: !vault |
 compositions:
   - reverseproxy
   - container-management
+  - audio
   - jellyfin
   - immich
   - arr
@@ -157,13 +158,10 @@ compositions:
   - gitea-runners
   - syncthing
   - musicassistant
-  - podcasts
-  - libation
   - hoarder
   - freshrss
   - gotosocial
   - tubesync
-  - audio
   - homepage
 
 traefik_providers:
