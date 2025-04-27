@@ -152,7 +152,7 @@ compositions:
   - audio
   - jellyfin
   - immich
-  - arr
+  - downloads
   - finances
   - gitea
   - gitea-runners
