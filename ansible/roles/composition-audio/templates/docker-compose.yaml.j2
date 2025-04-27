@@ -51,6 +51,8 @@ services:
     volumes:
       - "{{ shared_media_path }}/audiobooks:/data"
       - "{{ composition_config }}/libation:/config"
+    networks:
+      - "{{ default_docker_network }}"
 
 networks:
   "{{ default_docker_network }}":
