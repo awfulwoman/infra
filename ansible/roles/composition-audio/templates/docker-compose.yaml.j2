@@ -16,9 +16,8 @@ services:
     volumes:
       - "{{ shared_media_path }}/podcasts:/podcasts"
       - "{{ shared_media_path }}/audiobooks:/audiobooks"
-      - "{{ composition_config }}/config:/config"
-      - "{{ composition_config }}/metadata:/metadata"
-      - /etc/localtime:/etc/localtime:ro
+      - "{{ composition_config }}/audiobookshelf/config:/config"
+      - "{{ composition_config }}/audiobookshelf/metadata:/metadata"
     networks:
       - "{{ default_docker_network }}"
 
@@ -37,6 +36,21 @@ services:
       - SYNC_INTERVAL="d"
       - FORMAT=M4B
       - AUDIO_QUALITY=128k
+    volumes:
+      - "{{ shared_media_path }}/audiobooks:/audiobooks"
+      - "{{ composition_config }}/librofm/config:/data"
+    networks:
+      - "{{ default_docker_network }}"
+
+  libation:
+    container_name: libation
+    image: rmcrackan/libation:latest
+    restart: unless-stopped
+    env_file: .environment_vars
+    user: 1000:1000
+    volumes:
+      - "{{ shared_media_path }}/audiobooks:/data"
+      - "{{ composition_config }}/libation:/config"
 
 networks:
   "{{ default_docker_network }}":
