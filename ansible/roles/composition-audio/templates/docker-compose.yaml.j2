@@ -22,6 +22,22 @@ services:
     networks:
       - "{{ default_docker_network }}"
 
+  librofm-downloader:
+    container_name: librofm-downloader
+    ports:
+      - "127.0.0.1:13377:8080"
+    image: ghcr.io/burntcookie90/librofm-downloader:latest
+    restart: unless-stopped
+    env_file: .environment_vars
+    environment:
+      - LIBRO_FM_USERNAME={{ vault_librofm_username }}
+      - LIBRO_FM_PASSWORD={{ vault_librofm_password }}
+      # extra optional: setting these enables them, dont add them if you dont want them. 
+      - VERBOSE=true
+      - SYNC_INTERVAL="d"
+      - FORMAT=M4B
+      - AUDIO_QUALITY=128k
+
 networks:
   "{{ default_docker_network }}":
     external: true
