@@ -160,7 +160,6 @@ compositions:
   - musicassistant
   - hoarder
   - freshrss
-  - gotosocial
   - tubesync
   - homepage
 
