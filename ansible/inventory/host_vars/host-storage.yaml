@@ -174,14 +174,14 @@ cnames:
   - prowlarr.{{ domain_name }}
   - sonarr.{{ domain_name }}
   - radarr.{{ domain_name }}
-  - libation.{{ domain_name }}
   - immich.{{ domain_name }}
   - gitea.{{ domain_name }}
   - musicassistant.{{ domain_name }}
-  - podcasts.{{ domain_name }}
   - traefik.host-storage.{{ domain_name }}
   - syncthing.{{ domain_name }}
   - freshrss.{{ domain_name }}
   - tubesync.{{ domain_name }}
   - audiobookshelf.{{ domain_name }}
+  - libation.{{ domain_name }}
+  - librofm.{{ domain_name }}
   - home.{{ domain_name }}
