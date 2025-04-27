@@ -38,7 +38,7 @@ services:
       - AUDIO_QUALITY=128k
     volumes:
       - "{{ shared_media_path }}/audiobooks:/audiobooks"
-      - "{{ composition_config }}/librofm/config:/data"
+      - "{{ composition_config }}/librofm:/data"
     networks:
       - "{{ default_docker_network }}"
 

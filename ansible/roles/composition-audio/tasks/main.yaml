@@ -25,20 +25,16 @@
 # ----------------------------
 
 - name: Create directories
-  file:
+  ansible.builtin.file:
     path: "{{ composition_config }}/{{ dir_item }}"
     state: directory
   loop_control:
     loop_var: dir_item
   loop:
-    - config
-    - metadata
-
-# - name: Copy over files
-#   become: true
-#   ansible.builtin.copy:
-#     src: filename.txt
-#     dest: "{{ composition_config }}/filename.txt
+    - audiobookshelf/config
+    - audiobookshelf/metadata
+    - libation
+    - librofm
 
 - name: Run Configure DNS role
   ansible.builtin.include_role:
@@ -46,3 +42,5 @@
   vars:
     configure_dns_subdomains:
       - audiobookshelf
+      - librofm
+      - libation
