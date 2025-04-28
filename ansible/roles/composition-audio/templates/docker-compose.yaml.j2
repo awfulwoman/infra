@@ -36,6 +36,11 @@ services:
       - SYNC_INTERVAL=d
       - FORMAT=M4B
       - AUDIO_QUALITY=128k
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.librofm.rule=Host(`librofm.{{ domain_name }}`)"
+      - "traefik.http.routers.librofm.tls=true"
+      - "traefik.http.routers.librofm.tls.certresolver=letsencrypt"
     volumes:
       - "{{ shared_media_path }}/audiobooks:/media"
       - "{{ composition_config }}/librofm:/data"
