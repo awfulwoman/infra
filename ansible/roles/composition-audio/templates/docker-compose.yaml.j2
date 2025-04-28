@@ -37,7 +37,7 @@ services:
       - FORMAT=M4B
       - AUDIO_QUALITY=128k
     volumes:
-      - "{{ shared_media_path }}/audiobooks:/audiobooks"
+      - "{{ shared_media_path }}/audiobooks:/media"
       - "{{ composition_config }}/librofm:/data"
     networks:
       - "{{ default_docker_network }}"
