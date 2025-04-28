@@ -49,7 +49,7 @@ services:
     env_file: .environment_vars
     user: 1000:1000
     environment:
-      - SLEEP_TIME="360m"
+      - SLEEP_TIME=360m
     volumes:
       - "{{ shared_media_path }}/audiobooks:/data"
       - "{{ composition_config }}/libation:/config"
