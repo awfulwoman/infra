@@ -36,6 +36,8 @@
     - qbittorrent
     - radarr
     - sonarr
+    - librofm
+    - libation
 
 # - name: Copy over files
 #   become: true
@@ -63,3 +65,5 @@
       - gluetun
       - lidarr
       - bazarr
+      - librofm
+      - libation

@@ -33,8 +33,6 @@
   loop:
     - audiobookshelf/config
     - audiobookshelf/metadata
-    - libation
-    - librofm
 
 - name: Run Configure DNS role
   ansible.builtin.include_role:
@@ -42,5 +40,4 @@
   vars:
     configure_dns_subdomains:
       - audiobookshelf
-      - librofm
-      - libation
+
