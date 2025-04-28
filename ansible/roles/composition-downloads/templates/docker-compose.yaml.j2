@@ -186,6 +186,47 @@ services:
     networks:
       - "{{ default_docker_network }}"
 
+  librofm-downloader:
+    container_name: librofm-downloader
+    ports:
+      - "127.0.0.1:13377:8080"
+    image: ghcr.io/burntcookie90/librofm-downloader:latest
+    restart: unless-stopped
+    env_file: .environment_vars
+    environment:
+      - LIBRO_FM_USERNAME={{ vault_librofm_username }}
+      - LIBRO_FM_PASSWORD={{ vault_librofm_password }}
+      # extra optional: setting these enables them, dont add them if you dont want them. 
+      - LOG_LEVEL=INFO
+      - SYNC_INTERVAL=d
+      - FORMAT=M4B_CONVERT_FALLBACK
+      - AUDIO_QUALITY=128k
+      - PATH_PATTERN=BOOK_TITLE
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.librofm.rule=Host(`librofm.{{ domain_name }}`)"
+      - "traefik.http.routers.librofm.tls=true"
+      - "traefik.http.routers.librofm.tls.certresolver=letsencrypt"
+    volumes:
+      - "{{ shared_media_path }}/audiobooks:/media"
+      - "{{ composition_config }}/librofm:/data"
+    networks:
+      - "{{ default_docker_network }}"
+
+  libation:
+    container_name: libation
+    image: rmcrackan/libation:latest
+    restart: unless-stopped
+    env_file: .environment_vars
+    user: 1000:1000
+    environment:
+      - SLEEP_TIME=360m
+    volumes:
+      - "{{ shared_media_path }}/audiobooks:/data"
+      - "{{ composition_config }}/libation:/config"
+    networks:
+      - "{{ default_docker_network }}"
+
 networks:
   "{{ default_docker_network }}":
     external: true
