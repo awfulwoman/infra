@@ -36,6 +36,7 @@ services:
       - SYNC_INTERVAL=d
       - FORMAT=M4B_CONVERT_FALLBACK
       - AUDIO_QUALITY=128k
+      - PATH_PATTERN=BOOK_TITLE [ISBN]
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.librofm.rule=Host(`librofm.{{ domain_name }}`)"
