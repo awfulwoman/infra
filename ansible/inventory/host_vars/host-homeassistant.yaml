@@ -33,6 +33,8 @@ syncthing_data_path: "/{{ syncthing_data_path_zfs_id }}"
 
 composition_motioneye_usbdevice: /dev/video0
 
+docker_port_open: true
+
 compositions:
   - reverseproxy
   - container-management

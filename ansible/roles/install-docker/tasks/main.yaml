@@ -88,7 +88,7 @@
 - name: Copy override.conf
   become: true
   ansible.builtin.template:
-    src: override.conf
+    src: docker.conf
     dest: /etc/systemd/system/docker.service.d/docker.conf
     owner: root
     group: root
@@ -96,3 +96,12 @@
     force: true
   notify:
     - Restart Docker
+
+- name: Ensure ufw port is open
+  become: true
+  ansible.builtin.ufw:
+    rule: allow
+    name: "{{ item }}"
+  loop:
+    - 2375/tcp
+  when: docker_port_open | default(false) | bool
