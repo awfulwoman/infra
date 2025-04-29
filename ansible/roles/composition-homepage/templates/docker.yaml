@@ -1,5 +1,5 @@
 storage-docker:
   socket: /var/run/docker.sock
 homeautomation-docker:
-  host: host-homeautomation
+  host: 192.168.1.130
   port: 2375
