@@ -23,9 +23,6 @@
       description: Video Streaming
       server: storage-docker
       container: jellyfin
-      widget:
-        type: gluetun
-        url: http://192.168.1.116:8000
 
   - Audiobookshelf:
       icon: sh-audiobookshelf.png
@@ -33,3 +30,42 @@
       description: Audiobook Streaming
       server: storage-docker
       container: audiobookshelf
+
+- Downloaders:
+  - Gluetun:
+      icon: sh-gluetun.png
+      href: "https://gluetun.{{ domain_name }}"
+      description: VPN
+      server: storage-docker
+      container: gluetun
+      widget:
+        type: gluetun
+        url: http://192.168.1.116:8000
+
+  - Prowlarr:
+      icon: sh-prowlarr.png
+      href: "https://prowlarr.{{ domain_name }}"
+      description: Indexer Manager
+      server: storage-docker
+      container: prowlarr
+
+  - Lidarr:
+      icon: sh-lidarr.png
+      href: "https://lidarr.{{ domain_name }}"
+      description: Music Streaming
+      server: storage-docker
+      container: lidarr
+
+  - Sonarr:
+      icon: sh-sonarr.png
+      href: "https://sonarr.{{ domain_name }}"
+      description: TV Series Streaming
+      server: storage-docker
+      container: sonarr
+
+  - Radarr:
+      icon: sh-radarr.png
+      href: "https://radarr.{{ domain_name }}"
+      description: Movie Streaming
+      server: storage-docker
+      container: radarr
