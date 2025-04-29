@@ -69,3 +69,15 @@
       description: Movie Streaming
       server: storage-docker
       container: radarr
+
+  - Qbittorrent:
+      icon: sh-qbittorrent.png
+      href: "https://qbittorrent.{{ domain_name }}"
+      description: Torrent Client
+      server: storage-docker
+      container: qbittorrent
+      widget:
+        type: qbittorrent
+        url: "https://qbittorrent.{{ domain_name }}"
+        username: {{ vault_qbittorrent_username}}
+        password: {{ vault_qbittorrent_password }}
