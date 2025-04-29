@@ -99,8 +99,11 @@
 
 - name: Ensure ufw port is open
   become: true
-  community.general.ufw:
-    rule: allow
-    port: 2375
-    proto: tcp
+  ansible.builtin.copy:
+    src: "docker.ufw.profile"
+    dest: "/etc/ufw/applications.d/docker.ufw.profile"
+    owner: root
+    group: root
+    mode: "0664"
+  notify: Restart ufw
   when: docker_port_open | default(false) | bool
