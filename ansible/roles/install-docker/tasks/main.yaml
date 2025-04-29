@@ -65,6 +65,15 @@
   become: true
   ansible.builtin.meta: reset_connection
 
+- name: Ensure /etc/systemd/system/docker.service.d/ exists
+  become: true
+  ansible.builtin.file:
+    path: /etc/systemd/system/docker.service.d/
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
 - name: Copy daemon.json
   become: true
   ansible.builtin.template:
@@ -76,13 +85,14 @@
   notify:
     - Restart Docker
 
-- name: Ensure /etc/systemd/system/docker.service.d/ exists
+- name: Copy override.conf
   become: true
-  ansible.builtin.file:
-    path: /etc/systemd/system/docker.service.d/docker.service
-    state: directory
+  ansible.builtin.template:
+    src: override.conf
+    dest: /etc/systemd/system/docker.service.d/docker.conf
     owner: root
     group: root
-    mode: '0755'
+    mode: '0644'
+    force: true
   notify:
     - Restart Docker
