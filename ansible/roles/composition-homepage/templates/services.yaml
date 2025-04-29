@@ -1,10 +1,13 @@
 # For configuration options and examples, please see:
 # https://gethomepage.dev/configs/services/
 
-- My First Group:
-    - My First Service:
-        href: http://localhost/
-        description: Homepage is awesome
+- Video:
+    - Jellyfin:
+        href: https://jellyfin.{{ domain_name}}
+        description: Video server
+    - Jellfin Vue:
+        href: https://jellyfin-vue.{{ domain_name}}
+        description: Video server beta
 
 - My Second Group:
     - My Second Service:
