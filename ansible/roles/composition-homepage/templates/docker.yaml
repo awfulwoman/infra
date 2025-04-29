@@ -1,2 +1,2 @@
-docker:
+storage-docker:
   socket: /var/run/docker.sock

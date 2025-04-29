@@ -1,20 +1,18 @@
 # For configuration options and examples, please see:
 # https://gethomepage.dev/configs/services/
 
+- Home Automation:
+  - Home Assistant:
+    icon: homeassistant.png
+    href: "https://homeassistant.{{ domain_name }}"
+    description: Home Orchestration
+    server: homeautomation-docker
+    container: homeassistant 
+
 - Video:
-    - Jellyfin:
-        href: https://jellyfin.{{ domain_name}}
-        description: Video server
-    - Jellfin Vue:
-        href: https://jellyfin-vue.{{ domain_name}}
-        description: Video server beta
-
-- My Second Group:
-    - My Second Service:
-        href: http://localhost/
-        description: Homepage is the best
-
-- My Third Group:
-    - My Third Service:
-        href: http://localhost/
-        description: Homepage is 😎
+  - Jellyfin:
+    icon: jellyfin.png
+    href: "https://jellyfin.{{ domain_name }}"
+    description: Video Streaming
+    server: storage-docker
+    container: jellyfin 

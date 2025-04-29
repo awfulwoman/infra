@@ -54,7 +54,7 @@
     update_cache: true
     state: present
 
-- name: "Add {{ ansible_user }} user to docker group"
+- name: "Ensure user is in docker group"
   become: true
   ansible.builtin.user:
     user: "{{ ansible_user }}"
@@ -64,3 +64,25 @@
 - name: Reset connection so shell is picked up.
   become: true
   ansible.builtin.meta: reset_connection
+
+- name: Copy daemon.json
+  become: true
+  ansible.builtin.template:
+    src: daemon.json
+    dest: /etc/docker/daemon.json
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - Restart Docker
+
+- name: Copy override.conf
+  become: true
+  ansible.builtin.template:
+    src: override.conf
+    dest: /etc/systemd/system/docker.service.d/override.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - Restart Docker

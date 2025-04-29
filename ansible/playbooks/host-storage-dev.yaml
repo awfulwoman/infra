@@ -1,8 +1,11 @@
 ---
 - name: Storage NAS
   hosts: host-storage
+  vars:
+    compositions:
+      - homepage
   roles:
-    - role: configure-smartmontools
+    - role: compositions
 
   handlers:
     - name: Reboot host
