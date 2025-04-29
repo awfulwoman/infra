@@ -99,7 +99,7 @@
 
 - name: Ensure ufw port is open
   become: true
-  ansible.builtin.ufw:
+  community.general.ufw:
     rule: allow
     name: "{{ item }}"
   loop:
