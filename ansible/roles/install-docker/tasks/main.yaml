@@ -76,6 +76,15 @@
   notify:
     - Restart Docker
 
+- name: Ensure /etc/systemd/system/docker.service.d/ exists
+  become: true
+  ansible.builtin.file:
+    src: /etc/systemd/system/docker.service.d/
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
 - name: Copy override.conf
   become: true
   ansible.builtin.template:
