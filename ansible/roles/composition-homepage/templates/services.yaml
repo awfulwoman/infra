@@ -9,10 +9,17 @@
       server: homeautomation-docker
       container: homeassistant 
 
-- Video:
+- Media:
   - Jellyfin:
       icon: sh-jellyfin.png
       href: "https://jellyfin.{{ domain_name }}"
       description: Video Streaming
       server: storage-docker
       container: jellyfin
+
+  - Audiobookshelf:
+      icon: sh-audiobookshelf.png
+      href: "https://audiobookshelf.{{ domain_name }}"
+      description: Audiobook Streaming
+      server: storage-docker
+      container: audiobookshelf
