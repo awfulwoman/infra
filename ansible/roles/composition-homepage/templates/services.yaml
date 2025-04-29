@@ -9,6 +9,13 @@
       server: homeautomation-docker
       container: homeassistant 
 
+  - Zigbee2MQTT:
+      icon: sh-zigbee2mqtt.png
+      href: "https://zigbee2mqtt.{{ domain_name }}"
+      description: Zigbee coordinator
+      server: homeautomation-docker
+      container: zigbee2mqtt
+
 - Media:
   - Jellyfin:
       icon: sh-jellyfin.png

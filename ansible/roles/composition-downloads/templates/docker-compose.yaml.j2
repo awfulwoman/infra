@@ -147,7 +147,7 @@ services:
   gluetun:
     container_name: gluetun
     ports:
-      - 127.0.0.1:8000:8000/tcp # Gluetun Control server
+      - 8000:8000/tcp # Gluetun Control server
       - 127.0.0.1:8080:8080/tcp # Qbittorrent
       - 127.0.0.1:6881:6881/tcp # Qbittorrent
       - 127.0.0.1:6881:6881/udp # Qbittorrent
