@@ -79,5 +79,5 @@
       widget:
         type: qbittorrent
         url: "https://qbittorrent.{{ domain_name }}"
-        username: {{ vault_qbittorrent_username}}
+        username: {{ vault_qbittorrent_username }}
         password: {{ vault_qbittorrent_password }}
