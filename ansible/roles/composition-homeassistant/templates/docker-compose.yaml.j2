@@ -15,6 +15,12 @@ services:
       - "{{ composition_config }}/media:/media"
       - /var/run/dbus:/run/dbus:ro
       - /etc/localtime:/etc/localtime:ro
+    health:
+      test: ["CMD", "curl", "-f", "http://localhost:8123"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
 
   esphome:
     container_name: esphome
