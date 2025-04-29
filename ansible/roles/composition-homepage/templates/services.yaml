@@ -16,6 +16,13 @@
       server: homeautomation-docker
       container: zigbee2mqtt
 
+  - ESPhome:
+      icon: sh-esphome.png
+      href: "https://esphome.{{ domain_name }}"
+      description: ESPhome controller
+      server: homeautomation-docker
+      container: esphome
+
 - Media:
   - Jellyfin:
       icon: sh-jellyfin.png
