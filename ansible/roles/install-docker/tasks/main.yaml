@@ -101,7 +101,6 @@
   become: true
   community.general.ufw:
     rule: allow
-    name: "{{ item }}"
-  loop:
-    - 2375/tcp
+    port: 2375
+    proto: tcp
   when: docker_port_open | default(false) | bool
