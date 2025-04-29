@@ -84,14 +84,5 @@
     owner: root
     group: root
     mode: '0755'
-
-- name: Copy override.conf
-  become: true
-  ansible.builtin.template:
-    src: override.conf
-    dest: /etc/systemd/system/docker.service.d/override.conf
-    owner: root
-    group: root
-    mode: '0644'
   notify:
     - Restart Docker
