@@ -1,16 +1,25 @@
 # For configuration options and examples, please see:
 # https://gethomepage.dev/configs/info-widgets/
 
-- resources:
-    cpu: true
-    memory: true
-    disk: /slowpool
-
-- search:
-    provider: duckduckgo
-    target: _blank
-
 - datetime:
     text_size: xl
     format:
       timeStyle: short
+
+- openmeteo:
+    label: Berlin  # optional
+    latitude: 52.5200
+    longitude: 13.4050
+    timezone: Europe/Berlin # optional
+    units: metric # or imperial
+    cache: 15 
+
+- resources:
+    label: Storage
+    memory: true
+    disk:
+      - /
+    cputemp: true
+    tempmin: 0 # optional, minimum cpu temp
+    tempmax: 100 # optional, maximum cpu temp
+    uptime: true

@@ -23,7 +23,7 @@
 # ----------------------------
 
 - name: Create directories
-  file:
+  ansible.builtin.file:
     path: "{{ composition_config }}/{{ dir_item }}"
     state: directory
   loop_control:
@@ -39,11 +39,14 @@
     - librofm
     - libation
 
-# - name: Copy over files
-#   become: true
-#   ansible.builtin.copy:
-#     src: filename.txt
-#     dest: "{{ composition_config }}/filename.txt
+- name: Copy over files
+  become: true
+  ansible.builtin.template:
+    src: gluetun-config.toml
+    dest: "{{ composition_config }}/gluetun/config.toml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0644"
 
 - name: Git checkout VueTorrent
   ansible.builtin.git:

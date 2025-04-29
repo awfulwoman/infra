@@ -16,6 +16,9 @@
       description: Video Streaming
       server: storage-docker
       container: jellyfin
+      widget:
+        type: gluetun
+        url: http://192.168.1.116:8000
 
   - Audiobookshelf:
       icon: sh-audiobookshelf.png

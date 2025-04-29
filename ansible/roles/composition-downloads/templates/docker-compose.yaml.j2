@@ -182,6 +182,7 @@ services:
       - "traefik.http.routers.qbittorrent.tls.certresolver=letsencrypt"
     volumes:
       - "{{ composition_config }}/gluetun:/gluetun"
+      - "{{ composition_config }}/gluetun/config.toml:/gluetun/auth/config.toml"
       - /etc/localtime:/etc/localtime:ro
     networks:
       - "{{ default_docker_network }}"

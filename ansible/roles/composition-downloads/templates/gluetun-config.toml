@@ -1,0 +1,5 @@
+[[roles]]
+name = "homepage"
+# Define a list of routes with the syntax "Http-Method /path"
+routes = ["GET /v1/publicip/ip"]
+auth = "none"
