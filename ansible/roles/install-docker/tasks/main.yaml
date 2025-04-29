@@ -79,7 +79,7 @@
 - name: Ensure /etc/systemd/system/docker.service.d/ exists
   become: true
   ansible.builtin.file:
-    src: /etc/systemd/system/docker.service.d/
+    path: /etc/systemd/system/docker.service.d/
     state: directory
     owner: root
     group: root
