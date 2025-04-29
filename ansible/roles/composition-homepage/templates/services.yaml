@@ -3,7 +3,7 @@
 
 - Home Automation:
   - Home Assistant:
-      icon: sh-homeassistant.png
+      icon: sh-home-assistant.png
       href: "https://homeassistant.{{ domain_name }}"
       description: Home Orchestration
       server: homeautomation-docker
