@@ -202,7 +202,7 @@ prepbackup
 # Perform Ansible pull while the machine is awake
 # *******************
 {% if (zfsbackup_ansiblepull_workdir) and (zfsbackup_ansiblepull_script_name) %}
-if [ $SKIP_ANSIBLE_PULL -eq 0 ]; then
+if [ $SKIP_ANSIBLE_PULL -eq 1 ]; then
   # MQTT announce backup
   mosquitto_pub -h mqtt.{{ domain_name }} -t servers/backup -m "Running Ansible Pull"
   {{ zfsbackup_ansiblepull_workdir }}/{{ zfsbackup_ansiblepull_script_name }}
