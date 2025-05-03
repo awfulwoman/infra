@@ -32,6 +32,11 @@ do
             wall "zigbee2mqtt is being restarted via mqtt2cmd"
             docker restart zigbee2mqtt
         fi
+
+        if [ "$payload" == "restart torrents" ]; then
+            wall "torrent service is being restarted via mqtt2cmd"
+            docker restart qbittorrent
+        fi
     done
     sleep 10 
 done
