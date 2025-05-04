@@ -142,7 +142,22 @@ services:
       - /etc/localtime:/etc/localtime:ro
     network_mode: "service:gluetun"
     depends_on:
-      - gluetun 
+      - gluetun
+
+  transmission:
+    image: lscr.io/linuxserver/transmission:latest
+    container_name: transmission
+    restart: unless-stopped
+    env_file: .environment_vars
+    environment:
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - "{{ composition_config }}/transmission:/config"
+      - "{{ shared_media_path }}/downloads/torrents:/downloads"
+    network_mode: "service:gluetun"
+    depends_on:
+      - gluetun
   
   gluetun:
     container_name: gluetun
@@ -151,6 +166,9 @@ services:
       - 127.0.0.1:8080:8080/tcp # Qbittorrent
       - 127.0.0.1:6881:6881/tcp # Qbittorrent
       - 127.0.0.1:6881:6881/udp # Qbittorrent
+      - 127.0.0.1:9091:9091 # Transmission 
+      - 127.0.0.1:51413:51413 # Transmission 
+      - 127.0.0.1:51413:51413/udp # Transmission 
     cap_add:
       - NET_ADMIN
     image: qmcgaw/gluetun
@@ -180,6 +198,12 @@ services:
       - "traefik.http.services.qbittorrent.loadbalancer.server.port=8080"
       - "traefik.http.routers.qbittorrent.tls=true"
       - "traefik.http.routers.qbittorrent.tls.certresolver=letsencrypt"
+      # Transmission
+      - "traefik.http.routers.transmission.rule=Host(`transmission.{{ domain_name }}`)"
+      - "traefik.http.routers.transmission.service=qbittorrent"
+      - "traefik.http.services.transmission.loadbalancer.server.port=9091"
+      - "traefik.http.routers.transmission.tls=true"
+      - "traefik.http.routers.transmission.tls.certresolver=letsencrypt"
     volumes:
       - "{{ composition_config }}/gluetun:/gluetun"
       - "{{ composition_config }}/gluetun/config.toml:/gluetun/auth/config.toml"
