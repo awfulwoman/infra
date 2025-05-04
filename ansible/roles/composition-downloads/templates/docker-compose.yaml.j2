@@ -200,7 +200,7 @@ services:
       - "traefik.http.routers.qbittorrent.tls.certresolver=letsencrypt"
       # Transmission
       - "traefik.http.routers.transmission.rule=Host(`transmission.{{ domain_name }}`)"
-      - "traefik.http.routers.transmission.service=qbittorrent"
+      - "traefik.http.routers.transmission.service=transmission"
       - "traefik.http.services.transmission.loadbalancer.server.port=9091"
       - "traefik.http.routers.transmission.tls=true"
       - "traefik.http.routers.transmission.tls.certresolver=letsencrypt"
