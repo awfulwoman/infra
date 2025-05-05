@@ -22,7 +22,7 @@
 # Specific tasks
 # ----------------------------
 
-- name: Create directories
+- name: Create config directories
   ansible.builtin.file:
     path: "{{ composition_config }}/{{ dir_item }}"
     state: directory
@@ -39,7 +39,7 @@
     - librofm
     - libation
 
-- name: Create more directories
+- name: Create torrent directories
   ansible.builtin.file:
     path: "/{{ more_item }}"
     state: directory
