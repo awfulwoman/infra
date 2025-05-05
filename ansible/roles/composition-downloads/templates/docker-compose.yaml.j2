@@ -155,7 +155,7 @@ services:
     volumes:
       - "{{ composition_config }}/transmission:/config"
       - "{{ shared_media_path }}/downloads/torrents:/downloads"
-      - "{{ shared_media_path }}/downloads/torrents/watch:/downloads"
+      - "{{ shared_media_path }}/downloads/torrents/watch:/watch"
     network_mode: "service:gluetun"
     depends_on:
       - gluetun
