@@ -12,7 +12,7 @@ services:
       - NGINX_PORT=80
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.beta.rule=Host(`awfulwoman.com`) || Host(`whalecoiner.com`)"
+      - "traefik.http.routers.beta.rule=Host(`awfulwoman.com`) || Host(`whalecoiner.com`) || Host(`sonniesedge.co.uk`)"
       - "traefik.http.routers.beta.tls=true"
       - "traefik.http.routers.beta.tls.certresolver=letsencrypt"
     volumes:
