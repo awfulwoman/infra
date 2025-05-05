@@ -177,7 +177,7 @@
     dest: /etc/systemd/system/pull-zfs-backups-after-wake.service
     owner: root
     group: root
-    mode: 0664
+    mode: "0664"
   when: zfsbackup_run_after_wake
 
 - name: Make sure pull-zfs-backups-after-wake service is running
