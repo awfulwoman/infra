@@ -41,7 +41,7 @@
 
 - name: Create more directories
   ansible.builtin.file:
-    path: "{{ composition_config }}/{{ more_item }}"
+    path: "/{{ more_item }}"
     state: directory
   loop_control:
     loop_var: more_item
