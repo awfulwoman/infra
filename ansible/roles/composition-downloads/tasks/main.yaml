@@ -46,10 +46,10 @@
   loop_control:
     loop_var: more_item
   loop:
-    - slowpool/shared/media/torrents
-    - slowpool/shared/media/torrents/complete
-    - slowpool/shared/media/torrents/incomplete
-    - slowpool/shared/media/torrents/watch
+    - slowpool/shared/media/downloads/torrents
+    - slowpool/shared/media/downloads/torrents/complete
+    - slowpool/shared/media/downloads/torrents/incomplete
+    - slowpool/shared/media/downloads/torrents/watch
 
 - name: Copy over files
   become: true
