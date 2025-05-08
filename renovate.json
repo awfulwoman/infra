@@ -9,8 +9,8 @@
         "renovatebot"
     ],
     "docker-compose": {
-        "fileMatch": [
-            "docker-compose.yaml.j2"
+        "managerFilePatterns": [
+            "/docker-compose.yaml.j2/"
         ]
     }
 }
