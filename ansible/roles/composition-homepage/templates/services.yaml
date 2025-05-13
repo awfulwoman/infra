@@ -38,6 +38,13 @@
       server: storage-docker
       container: audiobookshelf
 
+  - Immich:
+      icon: sh-immich.png
+      href: "https://immich.{{ domain_name }}"
+      description: Photo Backup
+      server: storage-docker
+      container: immich
+
 - Downloaders:
   - Gluetun:
       icon: sh-gluetun.png
