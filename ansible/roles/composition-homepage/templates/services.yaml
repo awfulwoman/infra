@@ -45,6 +45,28 @@
       server: storage-docker
       container: immich
 
+- Reading:
+  - FreshRSS:
+      icon: sh-freshrss.png
+      href: "https://freshrss.{{ domain_name }}"
+      description: RSS Reader
+      server: storage-docker
+      container: freshrss
+  - Hoarder:
+      icon: sh-hoarder.png
+      href: "https://hoarder.{{ domain_name }}"
+      description: Bookmarks
+      server: storage-docker
+      container: hoarder
+
+- Version Control:
+  - Gitea:
+      icon: sh-gitea.png
+      href: "https://gitea.{{ domain_name }}"
+      description: Git Repository
+      server: storage-docker
+      container: gitea
+
 - Downloaders:
   - Gluetun:
       icon: sh-gluetun.png
