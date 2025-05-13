@@ -4,8 +4,6 @@ services:
   karakeep:
     image: ghcr.io/karakeep-app/karakeep:0.24.1
     restart: unless-stopped
-    volumes:
-      - "{{ composition_config }}/karakeep:/data"
     ports:
       - "127.0.0.1:8714:3000"
     env_file:
@@ -20,6 +18,8 @@ services:
       BROWSER_WEB_URL: http://chrome:9222
       # OPENAI_API_KEY: ...
       DATA_DIR: /data
+    volumes:
+      - "{{ composition_config }}/karakeep:/data"
     networks:
       - "{{ default_docker_network }}"
 
