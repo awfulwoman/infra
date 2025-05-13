@@ -95,3 +95,10 @@
         url: "https://qbittorrent.{{ domain_name }}"
         username: {{ vault_qbittorrent_username }}
         password: {{ vault_qbittorrent_password }}
+
+  - TubeSync:
+      icon: sh-tubesync.png
+      href: "https://tubesync.{{ domain_name }}"
+      description: YouTube Sync
+      server: storage-docker
+      container: tubesync
