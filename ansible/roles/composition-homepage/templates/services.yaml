@@ -52,12 +52,12 @@
       description: RSS Reader
       server: storage-docker
       container: freshrss
-  - Hoarder:
-      icon: sh-hoarder.png
+  - Karakeep:
+      icon: sh-karakeep.png
       href: "https://hoarder.{{ domain_name }}"
       description: Bookmarks
       server: storage-docker
-      container: hoarder
+      container: hoarder-web
 
 - Version Control:
   - Gitea:

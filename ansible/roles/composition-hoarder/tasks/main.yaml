@@ -45,3 +45,4 @@
   vars:
     configure_dns_subdomains:
       - hoarder
+      - karakeep
