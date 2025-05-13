@@ -54,10 +54,10 @@
       container: freshrss
   - Karakeep:
       icon: sh-karakeep.png
-      href: "https://hoarder.{{ domain_name }}"
+      href: "https://karakeep.{{ domain_name }}"
       description: Bookmarks
       server: storage-docker
-      container: hoarder-web
+      container: karakeep
 
 - Version Control:
   - Gitea:

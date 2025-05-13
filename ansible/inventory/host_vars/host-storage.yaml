@@ -158,7 +158,7 @@ compositions:
   - gitea-runners
   - syncthing
   - musicassistant
-  - hoarder
+  - karakeep
   - freshrss
   - tubesync
   - homepage
@@ -169,7 +169,7 @@ traefik_providers:
 cnames:
   - jellyfin.{{ domain_name }}
   - lidarr.{{ domain_name }}
-  - hoarder.{{ domain_name }}
+  - karakeep.{{ domain_name }}
   - prowlarr.{{ domain_name }}
   - sonarr.{{ domain_name }}
   - radarr.{{ domain_name }}

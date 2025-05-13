@@ -29,7 +29,7 @@
   loop_control:
     loop_var: dir_item
   loop:
-    - hoarder
+    - karakeep
     - meilisearch
 
 
@@ -44,5 +44,4 @@
     name: "configure-dns"
   vars:
     configure_dns_subdomains:
-      - hoarder
       - karakeep

@@ -5,16 +5,16 @@ services:
     image: ghcr.io/karakeep-app/karakeep:0.24.1
     restart: unless-stopped
     volumes:
-      - "{{ composition_config }}/hoarder:/data"
+      - "{{ composition_config }}/karakeep:/data"
     ports:
       - "127.0.0.1:8714:3000"
     env_file:
       - .environment_vars
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.hoarder.rule=Host(`hoarder.{{ domain_name }}`)"
-      - "traefik.http.routers.hoarder.tls=true"
-      - "traefik.http.routers.hoarder.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.karakeep.rule=Host(`karakeep.{{ domain_name }}`)"
+      - "traefik.http.routers.karakeep.tls=true"
+      - "traefik.http.routers.karakeep.tls.certresolver=letsencrypt"
     environment:
       MEILI_ADDR: http://meilisearch:7700
       BROWSER_WEB_URL: http://chrome:9222
