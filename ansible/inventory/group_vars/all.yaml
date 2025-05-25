@@ -1,3 +1,4 @@
+# code: language=ansible
 # ansible-vault encrypt_string 'supersecretstring' --name 'vault_xyz'
 
 public_keys:
