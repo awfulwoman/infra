@@ -43,7 +43,7 @@
       href: "https://immich.{{ domain_name }}"
       description: Photo Backup
       server: storage-docker
-      container: immich
+      container: immich_server
 
 - Reading:
   - FreshRSS:
