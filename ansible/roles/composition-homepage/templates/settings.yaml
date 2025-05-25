@@ -1,3 +1,23 @@
 title: Home
 description: Just some stuff.
 target: _blank
+color: slate
+background: https://images.unsplash.com/photo-1502790671504-542ad42d5189?auto=format&fit=crop&w=2560&q=80
+cardBlur: xs
+
+layout:
+  Home Automation:
+    style: row
+    columns: 4
+  Downloaders:
+    style: column
+    columns: 1
+  Media:
+    style: column
+    columns: 1
+  Reading:
+    style: column
+    columns: 1
+  Version Control:
+    style: column
+    columns: 1

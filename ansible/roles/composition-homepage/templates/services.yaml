@@ -23,6 +23,12 @@
       server: homeautomation-docker
       container: esphome
 
+  - MQTT:
+      icon: sh-mqtt.png
+      description: MQTT Broker
+      server: mqtt-docker
+      container: mosquitto
+
 - Media:
   - Jellyfin:
       icon: sh-jellyfin.png
