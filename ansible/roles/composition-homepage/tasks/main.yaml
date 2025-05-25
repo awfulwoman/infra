@@ -43,8 +43,19 @@
 #     src: filename.txt
 #     dest: "{{ composition_config }}/filename.txt
 
-- name: "Copy over templates"
+- name: Download images
+  ansible.builtin.get_url:
+    url: "{{ image_item.url }}"
+    dest: "{{ composition_config }}/images/{{ image_item.dest }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"
+  loop_control:
+    loop_var: image_item
+  loop:
+    - { url: "https://images.unsplash.com/photo-1502790671504-542ad42d5189?auto=format&fit=crop&w=2560&q=80", dest: "mountains.jpg" }
 
+- name: "Copy over templates"
   ansible.builtin.template:
     src: "{{ yaml_item }}.yaml"
     dest: "{{ composition_config }}/homepage/{{ yaml_item }}.yaml"

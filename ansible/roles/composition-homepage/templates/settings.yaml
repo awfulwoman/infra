@@ -2,7 +2,7 @@ title: Home
 description: Just some stuff.
 target: _blank
 # color: slate
-background: https://images.unsplash.com/photo-1747277832101-bdba36d527b0?q=80&w=2924&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
+background: /images/mountains.jpg
 cardBlur: xs
 
 layout:
