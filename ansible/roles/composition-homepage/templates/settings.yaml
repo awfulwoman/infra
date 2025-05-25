@@ -1,7 +1,7 @@
 title: Home
 description: Just some stuff.
 target: _blank
-# color: slate
+color: slate
 background: 
   image: /images/mountains.jpg
   blur: sm # sm, "", md, xl... see https://tailwindcss.com/docs/backdrop-blur
