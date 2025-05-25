@@ -54,6 +54,7 @@
     loop_var: image_item
   loop:
     - { url: "https://images.unsplash.com/photo-1502790671504-542ad42d5189?auto=format&fit=crop&w=2560&q=80", dest: "mountains.jpg" }
+    - { url: "https://images.unsplash.com/photo-1605398109173-09cd76b1a363?auto=format&fit=crop&w=2560&q=80", dest: "meteor.jpg" }
 
 - name: "Copy over templates"
   ansible.builtin.template:
