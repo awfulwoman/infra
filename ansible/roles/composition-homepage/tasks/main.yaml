@@ -24,19 +24,18 @@
 # Specific tasks
 # ----------------------------
 
-# - name: Create directories
-#   file:
-#     path: "{{ composition_config }}/{{ dir_item }}"
-#     state: directory
-#     owner: "{{ ansible_user }}"
-#     group: "{{ ansible_user }}"
-#     mode: "0664"
-#   loop_control:
-#     loop_var: dir_item
-#   loop:
-#     - whatever1
-#     - whatever2
-#     - whatever3
+- name: Create directories
+  file:
+    path: "{{ composition_config }}/{{ dir_item }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0664"
+  loop_control:
+    loop_var: dir_item
+  loop:
+    - homepage
+    - images
 
 # - name: Copy over files
 #   become: true
