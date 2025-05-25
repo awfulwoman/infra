@@ -57,7 +57,7 @@
       href: "https://karakeep.{{ domain_name }}"
       description: Bookmarks
       server: storage-docker
-      container: karakeep-karakeep
+      container: karakeep-karakeep-1
 
 - Version Control:
   - Gitea:
