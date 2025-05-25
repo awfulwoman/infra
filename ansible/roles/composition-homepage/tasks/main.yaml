@@ -25,7 +25,7 @@
 # ----------------------------
 
 - name: Create directories
-  file:
+  ansible.builtin.file:
     path: "{{ composition_config }}/{{ dir_item }}"
     state: directory
     owner: "{{ ansible_user }}"
@@ -46,7 +46,7 @@
 - name: "Copy over templates"
   ansible.builtin.template:
     src: "{{ yaml_item }}.yaml"
-    dest: "{{ composition_config }}/{{ yaml_item }}.yaml"
+    dest: "{{ composition_config }}/homepage/{{ yaml_item }}.yaml"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0774"
