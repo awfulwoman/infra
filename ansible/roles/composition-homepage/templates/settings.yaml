@@ -2,6 +2,7 @@ title: Home
 description: Just some stuff.
 target: _blank
 color: slate
+useEqualHeights: true
 background: 
   image: /images/meteor.jpg
   blur: sm # sm, "", md, xl... see https://tailwindcss.com/docs/backdrop-blur
@@ -14,14 +15,14 @@ layout:
     style: row
     columns: 4
   Downloaders:
-    style: column
-    columns: 1
+    style: row
+    columns: 4
   Media:
-    style: column
-    columns: 1
+    style: row
+    columns: 4
   Reading:
-    style: column
-    columns: 1
+    style: row
+    columns: 4
   Version Control:
-    style: column
-    columns: 1
+    style: row
+    columns: 4

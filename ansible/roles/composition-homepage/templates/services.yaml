@@ -90,6 +90,10 @@
       description: Indexer Manager
       server: storage-docker
       container: prowlarr
+      widget:
+        type: prowlarr
+        url: https://prowlarr.{{ domain_name }}
+        key: {{ vault_prowlarr_api_key }}
 
   - Lidarr:
       icon: sh-lidarr.png
@@ -104,6 +108,11 @@
       description: TV Series Streaming
       server: storage-docker
       container: sonarr
+      widget:
+        type: sonarr
+        url: https://sonarr.{{ domain_name }}
+        key: {{ vault_sonarr_api_key }}
+        enableQueue: true
 
   - Radarr:
       icon: sh-radarr.png
@@ -111,6 +120,11 @@
       description: Movie Streaming
       server: storage-docker
       container: radarr
+      widget:
+        type: radarr
+        url: https://radarr.{{ domain_name }}
+        key: {{ vault_radarr_api_key }}
+        enableQueue: true
 
   - Qbittorrent:
       icon: sh-qbittorrent.png
