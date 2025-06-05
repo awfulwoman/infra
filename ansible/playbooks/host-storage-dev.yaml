@@ -3,7 +3,7 @@
   hosts: host-storage
   vars:
     compositions:
-      - homepage
+      - bookmarks
   roles:
     - role: compositions
 

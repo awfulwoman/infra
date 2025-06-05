@@ -40,11 +40,11 @@ services:
     volumes:
       - "{{ composition_config }}/linkwarden/data:/data/data"
     depends_on:
-      - postgres
+      - linkwarden-postgres
       - meilisearch
     networks:
       - "{{ default_docker_network }}"
-  postgres:
+  linkwarden-postgres:
     container_name: linkwarden-postgres
     image: postgres:16-alpine
     env_file: .environment_vars
