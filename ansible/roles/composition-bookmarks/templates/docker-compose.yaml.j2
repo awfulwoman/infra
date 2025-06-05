@@ -26,7 +26,7 @@ services:
   linkwarden:
     env_file: .env
     environment:
-      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/postgres
+      - DATABASE_URL=postgresql://postgres:{{vault_linkwarden_POSTGRES_PASSWORD}}@postgres:5432/postgres
     restart: always
     image: ghcr.io/linkwarden/linkwarden:latest # comment to build from source
     ports:
