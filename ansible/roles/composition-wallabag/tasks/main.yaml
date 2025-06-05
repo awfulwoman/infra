@@ -25,7 +25,8 @@
 # ----------------------------
 
 - name: Create directories
-  file:
+  become: true
+  ansible.builtin.file:
     path: "{{ composition_config }}/{{ dir_item }}"
     state: directory
     owner: "{{ ansible_user }}"
