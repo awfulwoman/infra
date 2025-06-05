@@ -49,6 +49,8 @@ services:
     image: postgres:16-alpine
     env_file: .environment_vars
     restart: always
+    environment:
+      - POSTGRES_PASSWORD="{{vault_linkwarden_POSTGRES_PASSWORD}}"
     volumes:
       - "{{ composition_config }}/linkwarden/pgdata:/var/lib/postgresql/data"
     networks:
