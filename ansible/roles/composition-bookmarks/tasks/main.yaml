@@ -38,6 +38,10 @@
     - wallabag
     - wallabag/data
     - wallabag/images
+    - linkwarden
+    - linkwarden/meili_data
+    - linkwarden/pgdata
+    - linkwarden/data
 
 # - name: Copy over files
 #   become: true
