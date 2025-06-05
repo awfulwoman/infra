@@ -162,6 +162,7 @@ compositions:
   - freshrss
   - tubesync
   - homepage
+  - wallabag
 
 traefik_providers:
   - musicassistant
@@ -184,3 +185,4 @@ cnames:
   - libation.{{ domain_name }}
   - librofm.{{ domain_name }}
   - home.{{ domain_name }}
+  - wallabag.{{ domain_name }}

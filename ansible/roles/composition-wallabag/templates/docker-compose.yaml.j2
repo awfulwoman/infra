@@ -1,0 +1,25 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  wallabag:
+    container_name: wallabag
+    ports:
+      - "127.0.0.1:8163:80"
+    image: wallabag/wallabag
+    restart: unless-stopped
+    env_file: .environment_vars
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.wallabag.rule=Host(`wallabag.{{ domain_name }}`)"
+      - "traefik.http.routers.wallabag.tls=true"
+      - "traefik.http.routers.wallabag.tls.certresolver=letsencrypt"
+    volumes:
+      - "{{ composition_config }}/wallabag/data:/var/www/wallabag/data"
+      - "{{ composition_config }}/wallabag/images:/var/www/wallabag/web/assets/images"
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+
+networks:
+  "{{ default_docker_network }}":
+    external: true
