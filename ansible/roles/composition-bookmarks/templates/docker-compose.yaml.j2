@@ -51,6 +51,8 @@ services:
     restart: always
     volumes:
       - "{{ composition_config }}/linkwarden/pgdata:/var/lib/postgresql/data"
+    networks:
+      - "{{ default_docker_network }}"      
   meilisearch:
     container_name: linkwarden-meilisearch
     image: getmeili/meilisearch:v1.12.8
@@ -58,6 +60,8 @@ services:
     env_file: .environment_vars
     volumes:
       - "{{ composition_config }}/linkwarden/meili_data:/meili_data"
+    networks:
+      - "{{ default_docker_network }}"
 
 networks:
   "{{ default_docker_network }}":
