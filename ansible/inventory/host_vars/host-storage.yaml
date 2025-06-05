@@ -162,7 +162,7 @@ compositions:
   - freshrss
   - tubesync
   - homepage
-  - wallabag
+  - bookmarks
 
 traefik_providers:
   - musicassistant
