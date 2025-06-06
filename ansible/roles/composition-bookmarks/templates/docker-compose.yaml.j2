@@ -27,9 +27,7 @@ services:
     container_name: linkwarden
     restart: unless-stopped
     env_file: .environment_vars
-    environment:
-      - DATABASE_URL=postgresql://postgres:{{vault_linkwarden_POSTGRES_PASSWORD}}@postgres:5432/postgres
-    image: ghcr.io/linkwarden/linkwarden:latest # comment to build from source
+    image: ghcr.io/linkwarden/linkwarden:latest
     ports:
       - "127.0.0.1:3033:3000"
     labels:
@@ -40,23 +38,21 @@ services:
     volumes:
       - "{{ composition_config }}/linkwarden/data:/data/data"
     depends_on:
-      - postgres
-      - meilisearch
+      - linkwarden-postgres
+      - linkwarden-meilisearch
     networks:
       - "{{ default_docker_network }}"
-  postgres:
-    container_name: postgres
+  linkwarden-postgres:
+    container_name: linkwarden-postgres
     image: postgres:16-alpine
     env_file: .environment_vars
     restart: always
-    environment:
-      - POSTGRES_PASSWORD={{vault_linkwarden_POSTGRES_PASSWORD}}
     volumes:
       - "{{ composition_config }}/linkwarden/pgdata:/var/lib/postgresql/data"
     networks:
       - "{{ default_docker_network }}"      
-  meilisearch:
-    container_name: meilisearch
+  linkwarden-meilisearch:
+    container_name: linkwarden-meilisearch
     image: getmeili/meilisearch:v1.12.8
     restart: always
     env_file: .environment_vars
