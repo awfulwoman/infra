@@ -37,7 +37,7 @@ services:
       - "{{ default_docker_network }}"
 
   meilisearch:
-    image: getmeili/meilisearch:v1.13.3
+    image: getmeili/meilisearch:v1.14.0
     restart: unless-stopped
     env_file:
       - .environment_vars
