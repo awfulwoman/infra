@@ -40,7 +40,7 @@ services:
     volumes:
       - "{{ composition_config }}/linkwarden/data:/data/data"
     depends_on:
-      - linkwarden-postgres
+      - postgres
       - meilisearch
     networks:
       - "{{ default_docker_network }}"
@@ -50,7 +50,7 @@ services:
     env_file: .environment_vars
     restart: always
     environment:
-      - POSTGRES_PASSWORD="{{vault_linkwarden_POSTGRES_PASSWORD}}"
+      - POSTGRES_PASSWORD={{vault_linkwarden_POSTGRES_PASSWORD}}
     volumes:
       - "{{ composition_config }}/linkwarden/pgdata:/var/lib/postgresql/data"
     networks:
