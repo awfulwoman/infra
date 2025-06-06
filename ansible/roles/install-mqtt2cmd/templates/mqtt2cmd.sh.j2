@@ -37,6 +37,11 @@ do
             wall "torrent service is being restarted via mqtt2cmd"
             docker restart qbittorrent
         fi
+
+        if [ "$payload" == "restart downloads" ]; then
+            wall "Downloads are being restarted via mqtt2cmd"
+            docker compose --file /fastpool/compositions/downloads/docker-compose.yaml restart
+        fi
     done
     sleep 10 
 done
