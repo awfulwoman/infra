@@ -163,6 +163,7 @@ compositions:
   - tubesync
   - homepage
   - bookmarks
+  - piper
 
 traefik_providers:
   - musicassistant

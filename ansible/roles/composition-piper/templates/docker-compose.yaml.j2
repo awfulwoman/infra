@@ -1,0 +1,23 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  piper:
+    container_name: piper
+    ports:
+      - "127.0.0.1:10200:10200"
+    image: rhasspy/wyoming-piper 
+    restart: unless-stopped
+    env_file: .environment_vars
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.piper.rule=Host(`piper.{{ domain_name }}`)"
+    volumes:
+      - "{{ composition_config }}/piper:/data"
+      - "{{ composition_config }}/voices:/share/piper"
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+
+networks:
+  "{{ default_docker_network }}":
+    external: true
