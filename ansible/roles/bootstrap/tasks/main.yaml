@@ -1,13 +1,10 @@
 # Provisions a generic Debian/Ubuntu/Raspbian machine
-- name: Debug - ansible_ssh_host
+- name: Debug
   ansible.builtin.debug:
-    msg: "{{ ansible_ssh_host }}"
-- name: Debug - inventory_hostname
-  ansible.builtin.debug:
-    msg: "{{ inventory_hostname }}"
-- name: Debug - ansible_hostname
-  ansible.builtin.debug:
-    msg: "{{ ansible_fqdn }}"
+    msg: |
+      SSH Host: {{ ansible_ssh_host }}
+      Inventory Hostname: {{ inventory_hostname }}
+      FQDN: {{ ansible_fqdn }}
 
 - name: Set ansible_user's authorized keys (from url)
   become: true
@@ -23,13 +20,13 @@
 
 - name: Ensure localisation files for '{{ config_system_locale }}' are available
   become: true
-  locale_gen:
+  community.general.locale_gen:
     name: "{{ config_system_locale }}"
     state: present
 
 - name: Ensure localisation files for '{{ config_system_language }}' are available
   become: true
-  locale_gen:
+  community.general.locale_gen:
     name: "{{ config_system_language }}"
     state: present
 
