@@ -6,6 +6,8 @@
       SSH Host: {{ ansible_ssh_host }}
       Inventory Hostname: {{ inventory_hostname }}
       FQDN: {{ ansible_fqdn }}
+      Locale: {{ config_system_locale }}
+      Language: {{ config_system_language }}
 
 - name: Ensure Github ssh keys are present
   become: true
@@ -19,15 +21,15 @@
   community.general.timezone:
     name: "{{ bootstrap_ubuntu_timezone }}"
 
-- name: Ensure localisation files for '{{ config_system_locale }}' are available
+- name: Ensure locale files are available
   become: true
-  locale_gen:
+  community.general.locale_gen:
     name: "{{ config_system_locale }}"
     state: present
 
-- name: Ensure localisation files for '{{ config_system_language }}' are available
+- name: Ensure language files are available
   become: true
-  locale_gen:
+  community.general.locale_gen:
     name: "{{ config_system_language }}"
     state: present
 
@@ -47,7 +49,7 @@
   ansible.builtin.set_fact:
     locale_language: "{{ locale_status.stdout | regex_search('LANGUAGE=([^\n]+)', '\\1') | default([locale_lang], true) | first }}"
 
-- name: Configure locale to '{{ config_system_locale }}' and language to '{{ config_system_language }}'
+- name: Configure locale and language
   become: true
   ansible.builtin.command: localectl set-locale LANG={{ config_system_locale }} LANGUAGE={{ config_system_language }}
   changed_when: locale_lang != config_system_locale or locale_language != config_system_language
@@ -64,7 +66,7 @@
     regexp: '^127\.0\.1\.1'
     line: "127.0.1.1 {{ inventory_hostname }}"
 
-- name: Add Ansible repo from PPA
+- name: Add yt-dlp repo from PPA
   become: true
   ansible.builtin.apt_repository:
     repo: "ppa:tomtomtom/yt-dlp"
