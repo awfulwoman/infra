@@ -1,4 +1,12 @@
 # Provisions an Ubuntu machine
+
+- name: Debug
+  ansible.builtin.debug:
+    msg: |
+      SSH Host: {{ ansible_ssh_host }}
+      Inventory Hostname: {{ inventory_hostname }}
+      FQDN: {{ ansible_fqdn }}
+
 - name: Ensure Github ssh keys are present
   become: true
   ansible.posix.authorized_key:
