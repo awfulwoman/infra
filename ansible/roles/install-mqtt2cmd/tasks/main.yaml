@@ -10,11 +10,11 @@
 - name: Copy script
   become: true
   ansible.builtin.template:
-    src: mqtt2cmd.sh.j2
+    src: mqtt2cmd.sh
     dest: "{{ mqtt2cmd_executable_path }}/{{ mqtt2cmd_executable }}"
     owner: root
     group: root
-    mode: 0755
+    mode: "0755"
 
 - name: Ensure shutdown without sudo password
   become: true
@@ -50,7 +50,7 @@
     dest: /etc/systemd/system/mqtt2cmd.service
     owner: root
     group: root
-    mode: 0664
+    mode: "0664"
 
 - name: Make sure mqtt2cmd service is running
   become: true
