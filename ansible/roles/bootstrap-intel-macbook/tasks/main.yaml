@@ -1,3 +1,5 @@
+# Bootstraps an old Intel Mac
+
 - name: Install apt packages
   become: true
   ansible.builtin.apt:
