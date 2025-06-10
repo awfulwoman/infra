@@ -1,7 +1,7 @@
 - name: Kubernetes Node Khanivore
   hosts: host-khanivore
   roles:
-    - role: bootstrap-ubuntu
+    - role: bootstrap-ubuntu-server
     - role: install-ansible
     - role: install-ansible-pull
     - role: configure-k8s-node

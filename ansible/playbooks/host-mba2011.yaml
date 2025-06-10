@@ -3,7 +3,7 @@
   hosts: host-mba2011
   roles:
     - role: bootstrap-intel-macbook
-    - role: bootstrap-ubuntu
+    - role: bootstrap-ubuntu-server
     - role: install-ansible
     - role: install-ansible-pull
 

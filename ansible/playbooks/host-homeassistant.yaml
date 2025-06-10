@@ -2,7 +2,7 @@
 - name: Home Automation Server NEW
   hosts: host-homeassistant
   roles:
-    - role: bootstrap-ubuntu
+    - role: bootstrap-ubuntu-server
     - role: install-docker
     - role: zfs-core
     - role: install-ansible

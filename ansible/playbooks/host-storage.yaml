@@ -2,7 +2,7 @@
 - name: Storage NAS
   hosts: host-storage
   roles:
-    - role: bootstrap-ubuntu
+    - role: bootstrap-ubuntu-server
     - role: hardware-host-bus-adapter
     - role: wakeonlan
     - role: install-docker

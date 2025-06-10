@@ -1,7 +1,7 @@
 - name: Kubernetes Node 01
   hosts: host-knucklehead
   roles:
-    - role: bootstrap-ubuntu
+    - role: bootstrap-ubuntu-server
     - role: install-ansible
     - role: install-ansible-pull
     - role: configure-k8s-node

@@ -1,7 +1,7 @@
 - name: Out on the internet server
   hosts: vm-awfulwoman
   roles:
-    - role: bootstrap-ubuntu
+    - role: bootstrap-ubuntu-server
     - role: robertdebock.digitalocean_agent
       become: true
     - role: config-deployment-user

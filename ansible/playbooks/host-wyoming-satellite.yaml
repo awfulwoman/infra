@@ -1,7 +1,7 @@
 - name: Wyoming Satellites
   hosts: host-wyoming-satellite
   roles:
-    - role: bootstrap-ubuntu
+    - role: bootstrap-ubuntu-server
     - role: install-wyoming-satellite
 
   handlers:

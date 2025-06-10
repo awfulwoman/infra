@@ -1,7 +1,7 @@
 - name: Backup Server
   hosts: host-backups
   roles:
-    - role: bootstrap-ubuntu
+    - role: bootstrap-ubuntu-server
     - role: install-nut-client
     - role: wakeonlan
     - role: install-docker

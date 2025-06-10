@@ -1,4 +1,4 @@
-# Provisions an Ubuntu machine
+# Bootstraps an Ubuntu machine
 
 - name: Debug
   ansible.builtin.debug:
@@ -9,7 +9,7 @@
       Locale: {{ config_system_locale }}
       Language: {{ config_system_language }}
 
-- name: Ensure Github ssh keys are present
+- name: Ensure Github SSH keys are present
   become: true
   ansible.posix.authorized_key:
     user: "{{ ansible_user }}"

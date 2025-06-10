@@ -1,7 +1,7 @@
 - name: PiHole DNS + DHCP server
   hosts: host-pihole
   roles:
-    # - role: bootstrap-ubuntu
+    # - role: bootstrap-ubuntu-server
     # - role: hardware-raspberry-pi
     #   raspberry_pi_wifi: false
     #   raspberry_pi_bluetooth: false

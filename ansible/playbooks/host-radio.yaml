@@ -2,7 +2,7 @@
 - name: Home Radio Systems
   hosts: host-radio
   roles:
-    - role: bootstrap-ubuntu
+    - role: bootstrap-ubuntu-server
     - role: configure-sshkey
     - role: install-nut-client
     - role: hardware-raspberry-pi

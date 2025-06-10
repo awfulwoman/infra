@@ -8,10 +8,10 @@
 - name: Remove conflicting wifi modules
   become: true
   community.general.modprobe:
-    name: 
-      - b43 
-      - ssb 
-      - brcmfmac 
+    name:
+      - b43
+      - ssb
+      - brcmfmac
       - brcmsmac
       - bcma
     state: absent

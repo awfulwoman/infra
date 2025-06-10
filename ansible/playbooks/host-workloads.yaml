@@ -1,7 +1,7 @@
 - name: Workloads server
   hosts: host-workloads
   roles:
-    - role: bootstrap-ubuntu
+    - role: bootstrap-ubuntu-server
     - role: install-nut-client
     - role: configure-sshkey
     - role: install-docker

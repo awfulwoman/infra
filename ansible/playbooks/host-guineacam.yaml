@@ -1,7 +1,7 @@
 - name: Camera test
   hosts: host-guineacam
   roles:
-    - role: bootstrap-ubuntu
+    - role: bootstrap-ubuntu-server
     - role: install-docker
     - role: install-ansible
     - role: install-ansible-pull
