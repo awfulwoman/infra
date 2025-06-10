@@ -17,6 +17,8 @@ services:
       - /etc/localtime:/etc/localtime:ro
     networks:
       - "{{ default_docker_network }}"
+    command: >
+      --voice en_US-lessac-medium
 
 networks:
   "{{ default_docker_network }}":
