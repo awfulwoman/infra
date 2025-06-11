@@ -44,7 +44,7 @@ services:
       - "{{ default_docker_network }}"
   linkwarden-postgres:
     container_name: linkwarden-postgres
-    image: postgres:16-alpine
+    image: postgres:17-alpine
     env_file: .environment_vars
     restart: always
     volumes:
