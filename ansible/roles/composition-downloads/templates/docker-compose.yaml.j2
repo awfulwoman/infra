@@ -258,7 +258,7 @@ services:
     container_name: jellyseerr
     env_file: .environment_vars
     environment:
-      # - LOG_LEVEL=debug
+      - LOG_LEVEL=debug
       - PORT=5055 #optional
     labels:
       - "traefik.enable=true"

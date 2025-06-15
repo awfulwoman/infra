@@ -102,7 +102,7 @@
       server: storage-docker
       container: lidarr
 
-  - jellyseerr:
+  - Jellyseerr:
       icon: sh-jellyseerr.png
       href: "https://jellyseerr.{{ domain_name }}"
       description: Download requests
