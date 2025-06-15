@@ -260,6 +260,11 @@ services:
     environment:
       # - LOG_LEVEL=debug
       - PORT=5055 #optional
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jellyseerr.rule=Host(`jellyseerr.{{ domain_name }}`)"
+      - "traefik.http.routers.jellyseerr.tls=true"
+      - "traefik.http.routers.jellyseerr.tls.certresolver=letsencrypt"
     ports:
       - "127.0.0.1:5055:5055"
     volumes:
