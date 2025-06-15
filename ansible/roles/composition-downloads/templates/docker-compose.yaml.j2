@@ -253,6 +253,19 @@ services:
     networks:
       - "{{ default_docker_network }}"
 
+  jellyseerr:
+    image: fallenbagel/jellyseerr:latest
+    container_name: jellyseerr
+    env_file: .environment_vars
+    environment:
+      # - LOG_LEVEL=debug
+      - PORT=5055 #optional
+    ports:
+      - "127.0.0.1:5055:5055"
+    volumes:
+      - "{{ shared_media_path }}/jellyseerr:/app/config"
+    restart: unless-stopped
+
 networks:
   "{{ default_docker_network }}":
     external: true

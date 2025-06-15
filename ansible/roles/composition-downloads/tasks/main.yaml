@@ -38,6 +38,7 @@
     - sonarr
     - librofm
     - libation
+    - jellyseerr
 
 - name: Create torrent directories
   ansible.builtin.file:
@@ -83,3 +84,4 @@
       - librofm
       - libation
       - transmission
+      - jellyseerr
