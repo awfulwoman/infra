@@ -102,6 +102,13 @@
       server: storage-docker
       container: lidarr
 
+  - jellyseerr:
+      icon: sh-jellyseerr.png
+      href: "https://jellyseerr.{{ domain_name }}"
+      description: Download requests
+      server: storage-docker
+      container: jellyseerr
+
   - Sonarr:
       icon: sh-sonarr.png
       href: "https://sonarr.{{ domain_name }}"

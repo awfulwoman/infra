@@ -187,3 +187,4 @@ cnames:
   - librofm.{{ domain_name }}
   - home.{{ domain_name }}
   - wallabag.{{ domain_name }}
+  - jellyseerr.{{ domain_name }}
