@@ -257,9 +257,6 @@ services:
     image: fallenbagel/jellyseerr:latest
     container_name: jellyseerr
     env_file: .environment_vars
-    environment:
-      - LOG_LEVEL=debug
-      - PORT=5055 #optional
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.jellyseerr.rule=Host(`jellyseerr.{{ domain_name }}`)"
