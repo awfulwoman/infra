@@ -12,6 +12,7 @@ services:
     user: "1000:1000"
     labels:
       - "traefik.enable=true"
+      - "traefik.http.services.zigbee2mqtt.loadbalancer.server.port=9091"
       - "traefik.http.routers.zigbee2mqtt.rule=Host(`zigbee2mqtt.{{ domain_name }}`)"
       - "traefik.http.routers.zigbee2mqtt.tls=true"
       - "traefik.http.routers.zigbee2mqtt.tls.certresolver=letsencrypt"
