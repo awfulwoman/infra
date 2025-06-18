@@ -5,8 +5,8 @@ services:
     container_name: zigbee2mqtt
     image: "koenkk/zigbee2mqtt:2.4.0"
     restart: always
-    ports:
-      - "127.0.0.1:9091:9091"
+    # ports:
+    #   - "127.0.0.1:9091:9091"
     privileged: true
     env_file: .environment_vars
     user: "1000:1000"
