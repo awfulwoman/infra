@@ -3,30 +3,28 @@ name: "{{ composition_name }}"
 services:
   zigbee2mqtt:
     container_name: zigbee2mqtt
+    image: "koenkk/zigbee2mqtt:2.4.0"
+    restart: always
     ports:
       - "127.0.0.1:9091:9091"
     privileged: true
-    user: "1000:1000"
-    group_add:
-      - dialout
-    devices:
-      - "{{ zigbee_usb_device }}:/dev/ttyACM0"
     env_file: .environment_vars
-    image: "koenkk/zigbee2mqtt:2.4.0"
-    restart: always
+    user: "1000:1000"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.zigbee2mqtt.rule=Host(`zigbee2mqtt.{{ domain_name }}`)"
       - "traefik.http.routers.zigbee2mqtt.tls=true"
       - "traefik.http.routers.zigbee2mqtt.tls.certresolver=letsencrypt"
+    group_add:
+      - dialout
+    devices:
+      - "{{ zigbee_usb_device }}:/dev/ttyACM0"
     volumes:
       - "{{ composition_config }}:/app/data"
       - "/run/udev:/run/udev:ro"
       - /etc/localtime:/etc/localtime:ro
     networks:
       - "{{ default_docker_network }}"
-
-
 
 networks:
   "{{ default_docker_network }}":
