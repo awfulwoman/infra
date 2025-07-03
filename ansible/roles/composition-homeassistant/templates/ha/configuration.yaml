@@ -1,10 +1,8 @@
-
-# Loads default set of integrations. Do not remove.
+# Loads default set of integrations. DO. NOT. REMOVE.
 default_config:
 
-# Load frontend themes from the themes folder
-frontend:
-  themes: !include_dir_merge_named themes
+# frontend:
+#   themes: !include_dir_merge_named themes
 
 http:
   use_x_forwarded_for: true
@@ -18,6 +16,8 @@ http:
     - fe00::/64
     - fd00::/64
 
+# Required by integration
+# https://github.com/bramstroker/homeassistant-powercalc
 powercalc:
 
 climate:
@@ -35,7 +35,8 @@ climate:
     target_temp_step: 0.5
     hot_tolerance: 0
 
-
+# Not supported yet in the UI
+# https://www.home-assistant.io/integrations/wake_on_lan/
 switch:
   - platform: wake_on_lan
     name: Server Storage WOL
@@ -60,8 +61,6 @@ switch:
         payload: suspend
         topic: servers/host-backups
 
-
-
 sensor:
   - platform: time_date
     display_options:
@@ -73,7 +72,6 @@ sensor:
       - 'time_date'
       - 'time_utc'
 
-# Logbook
 logbook:
   exclude:
     entities:
@@ -92,7 +90,6 @@ logbook:
     domains:
       - sun
 
-# Recorder
 recorder:
   exclude:
     entities:
@@ -110,26 +107,6 @@ recorder:
       - sensor.weather_*
     domains:
       - sun
-
-# mqtt:
-#   sensor:
-#     - name: "Backup Status"
-#       state_topic: "servers/backup"
-#       unique_id: "server_backup_1234"
-#       device:
-#         name: "Backup Server"
-#         identifiers:
-#           - "backups_2323232"
-
-#     - name: Outside Temperature (Alien Device)
-#       device_class: temperature
-#       unit_of_measurement: '°C'
-#       value_template: {% raw %}'{{ value_json.temperature_C }}'{% endraw %}
-#       state_topic: rtl_433/Acurite-606TX/62
-#       json_attributes_topic: rtl_433/Acurite-606TX/62
-
-
-
 
 # Includes
 automation: !include automations.yaml
