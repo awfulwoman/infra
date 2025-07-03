@@ -1,0 +1,148 @@
+
+# Loads default set of integrations. Do not remove.
+default_config:
+
+# Load frontend themes from the themes folder
+frontend:
+  themes: !include_dir_merge_named themes
+
+http:
+  use_x_forwarded_for: true
+  trusted_proxies:
+    - 192.168.1.0/24
+    - 172.0.0.0/8
+    - 100.64.0.0/10
+    - 127.0.0.0/8
+    - ::1
+    - fe80::/64
+    - fe00::/64
+    - fd00::/64
+
+powercalc:
+
+input_select:
+  washing_machine:
+    name: Washing Machine
+    initial: Idle
+    icon: mdi:washing-machine
+    options:
+      - Idle
+      - Running
+      - Finished
+
+climate:
+  - platform: generic_thermostat
+    unique_id: climate_upstairs
+    name: Upstairs
+    heater: switch.upstairs_radiators
+    target_sensor: sensor.upstairs_temperature
+    target_temp: 19
+    sleep_temp: 17.5
+    away_temp: 15
+    home_temp: 19
+    max_temp: 23
+    min_temp: 15
+    target_temp_step: 0.5
+    hot_tolerance: 0
+
+
+switch:
+  - platform: wake_on_lan
+    name: Server Storage WOL
+    mac: 34:60:f9:bb:3d:16
+    host: host-storage
+    turn_off:
+      service: mqtt.publish
+      data:
+        qos: 0
+        retain: false
+        payload: suspend
+        topic: servers/host-storage
+  - platform: wake_on_lan
+    name: Server Backups WOL
+    mac: 60:a4:4c:40:52:57
+    host: host-backups
+    turn_off:
+      service: mqtt.publish
+      data:
+        qos: 0
+        retain: false
+        payload: suspend
+        topic: servers/host-backups
+
+
+
+sensor:
+  - platform: time_date
+    display_options:
+      - 'time'
+      - 'date'
+      - 'date_time'
+      - 'date_time_utc'
+      - 'date_time_iso'
+      - 'time_date'
+      - 'time_utc'
+
+# Logbook
+logbook:
+  exclude:
+    entities:
+      - sensor.time
+      - sensor.date
+      - sensor.date_time
+      - sensor.date_time_utc
+      - sensor.date_time_iso
+      - sensor.time_date
+      - sensor.time_utc
+      - sensor.beat
+      - sensor.fritz_box_7412_ui_connection_uptime
+      - sensor.fritz_box_7412_ui_last_restart
+    entity_globs:
+      - sensor.weather_*
+    domains:
+      - sun
+
+# Recorder
+recorder:
+  exclude:
+    entities:
+      - sensor.time
+      - sensor.date
+      - sensor.date_time
+      - sensor.date_time_utc
+      - sensor.date_time_iso
+      - sensor.time_date
+      - sensor.time_utc
+      - sensor.beat
+      - sensor.fritz_box_7412_ui_connection_uptime
+      - sensor.fritz_box_7412_ui_last_restart
+    entity_globs:
+      - sensor.weather_*
+    domains:
+      - sun
+
+# mqtt:
+#   sensor:
+#     - name: "Backup Status"
+#       state_topic: "servers/backup"
+#       unique_id: "server_backup_1234"
+#       device:
+#         name: "Backup Server"
+#         identifiers:
+#           - "backups_2323232"
+
+#     - name: Outside Temperature (Alien Device)
+#       device_class: temperature
+#       unit_of_measurement: '°C'
+#       value_template: {% raw %}'{{ value_json.temperature_C }}'{% endraw %}
+#       state_topic: rtl_433/Acurite-606TX/62
+#       json_attributes_topic: rtl_433/Acurite-606TX/62
+
+
+
+
+# Includes
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+template: !include template.yaml

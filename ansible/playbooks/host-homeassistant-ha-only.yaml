@@ -1,4 +1,6 @@
----
+# Run command:
+# ansible-playbook ansible/playbooks/host-homeassistant-ha-only.yaml --vault-password-file ~/.ansible/password
+
 - name: Home Automation Server NEW
   hosts: host-homeassistant
   vars:

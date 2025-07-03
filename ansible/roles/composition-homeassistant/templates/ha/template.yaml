@@ -1,0 +1,78 @@
+# Normally these should be defined in the UI as Helpers.
+# The templates here are more complex and/or make use of icons, 
+# which are not currently supported in the UI.
+# This file is not updated automatically by Home Assistant (hopefully).
+
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# IMPORTANT NOTE! 
+# Because we deploy this file via Ansible we must wrap all states in 
+# {% raw %}...{% endraw %} to prevent Ansible from interpreting them.
+# Yeah, we're templating templates here. Isn't that fun?
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+# Calculate the wet bulb temperature based on the outdoors temperature and humidity.
+- sensor:
+  - name: "Outdoors Wet Bulb Temperature"
+    unique_id: outdoors_wet_bulb_temperature
+    device_class: temperature
+    unit_of_measurement: °C
+    state_class: Measurement
+    state: >
+      {% raw %}
+      {% set t = states('sensor.outdoors_atmosphere_temperature') | float(0) %}
+      {% set rh = states('sensor.outdoors_atmosphere_humidity') | float(0) %}
+      {% set a = t * atan(0.151977 * (rh + 8.313659) ** 0.5) %}
+      {% set b = atan(t + rh) - atan(rh - 1.676331) %}
+      {% set c = 0.00391838 * rh ** (1.5) * atan(0.023101 * rh) %}
+      {% set d = -4.686035 %}
+      {% set tw = a + b + c + d %}
+      {{ tw }}
+      {% endraw %}
+
+# Derive an easy-to-understand wet bulb status based on the calculated wet bulb temperature
+- sensor:
+  - name: "Outdoors Wet Bulb Status"
+    unique_id: outdoors_wet_bulb_status
+    state: >
+      {% raw %}
+      {% set temp = states('sensor.outdoors_wet_bulb_temperature') | float(1) %}
+      {% if temp < 25 %}Extremely Safe
+      {% elif temp >= 25.1 and temp < 27.7 %}Safe
+      {% elif temp >= 27.8 and temp < 29.4 %}Caution
+      {% elif temp >= 29.5 and temp < 31.6 %}Danger
+      {% else %}Extreme Danger
+      {% endif %}
+      {% endraw %}
+    icon: >
+      {% raw %}
+      {% set temp = states('sensor.outdoors_wet_bulb_temperature') | float(1) %}
+      {% if temp < 25 %}mdi:emoticon-excited-outline
+      {% elif temp >= 25.1 and temp < 27.7 %}mdi:emoticon-happy-outline
+      {% elif temp >= 27.8 and temp < 29.4 %}mdi:emoticon-neutral-outline
+      {% elif temp >= 29.5 and temp < 31.6 %}mdi:emoticon-sad-outline
+      {% else %}mdi:emoticon-dead-outline
+      {% endif %}
+      {% endraw %}
+    attributes:
+      wet_bulb_temperature: {% raw %}"{{ states('sensor.outdoors_wet_bulb_temperature') }}"{% endraw %}
+      temperature_unit: {% raw %}"{{ state_attr('sensor.outdoors_wet_bulb_temperature', 'unit_of_measurement') }}"{% endraw %}
+
+# Check the status of an Amazon Locker based on email notifications.
+- trigger:
+    - platform: event
+      event_type: "imap_content"
+      id: "amazon_locker_event_main"
+      event_data:
+        sender: "no-reply@amazon.de"
+        initial: true
+  sensor:
+    - name: "Amazon Locker {{ vault_amazon_locker_name_main | title }} Status"
+      unique_id: amazon_locker_main_status
+      state: >-
+        {% raw %}
+        {% if 'Your parcel is ready for collection from Amazon Locker - {{ vault_amazon_locker_name_main | title }};' in trigger.event.data["subject"] %}
+          Package Waiting
+        {% elif 'Collected: ' in trigger.event.data["subject"] %}
+          No Package
+        {% endif %}
+        {% endraw %}
