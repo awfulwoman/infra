@@ -20,16 +20,6 @@ http:
 
 powercalc:
 
-input_select:
-  washing_machine:
-    name: Washing Machine
-    initial: Idle
-    icon: mdi:washing-machine
-    options:
-      - Idle
-      - Running
-      - Finished
-
 climate:
   - platform: generic_thermostat
     unique_id: climate_upstairs
@@ -145,4 +135,5 @@ recorder:
 automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
+input_select: !include input_select.yaml
 template: !include template.yaml

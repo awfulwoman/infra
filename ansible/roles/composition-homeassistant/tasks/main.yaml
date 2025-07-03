@@ -43,6 +43,7 @@
     - configuration
     - secrets
     - template
+    - input_select
 
 - name: Run Configure DNS role
   ansible.builtin.include_role:

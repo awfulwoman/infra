@@ -1,0 +1,8 @@
+washing_machine:
+  name: Washing Machine
+  initial: Idle
+  icon: mdi:washing-machine
+  options:
+    - Idle
+    - Running
+    - Finished
