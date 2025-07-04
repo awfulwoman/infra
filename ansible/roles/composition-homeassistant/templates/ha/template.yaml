@@ -9,8 +9,8 @@
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 # -------------------------------------------------------------------
-# Wet bulb temperature calculation using Stull formula
-# 
+# WET BULB CALCULATIONS
+# -------------------------------------------------------------------
 # Source: Roland Stull (2011) "Wet-Bulb Temperature from Relative 
 # Humidity and Air Temperature"
 # - Journal of Applied Meteorology and Climatology, Vol. 50, No. 11
@@ -82,16 +82,23 @@
 {% endraw %}
 
 # -------------------------------------------------------------------
-# Area Motion Sensors
+# AREA MOTION SENSORS VIA LABELS
+# -------------------------------------------------------------------
+# If you're looking at this in the repo them remember that Ansible
+# creates the Home Assistant Jinja2 template via a loop.
+# Inception, remember?
+# See the Areas dictionary in defaults/main.yaml for area names.
 # -------------------------------------------------------------------
 
+{% for key, value in areas.items() %}
+
 - binary_sensor:
-  - name: "Kitchen Area Motion"
+  - name: "{{ value }} Area Motion"
     variables:
       target_label_1: "device: Motion Sensor"
       target_label_2: "importance: Primary"
-      target_area: "Kitchen"
-    unique_id: "kitchen_area_motion"
+      target_area: "{{ value }}"
+    unique_id: "{{ key }}_area_motion"
     device_class: "motion"
     state: >
 {%- raw %}
@@ -109,65 +116,6 @@
       labels_used: "{{ target_label_1 }}, {{ target_label_2 }}"
 {% endraw %}
 
-  - name: "Living Room Area Motion"
-    variables:
-      target_label_1: "device: Motion Sensor"
-      target_label_2: "importance: Primary"
-      target_area: "Living Room"
-    unique_id: "living_room_area_motion"
-    device_class: "motion"
-    state: >
-{%- raw %}
-      {% set label_sensors_1 = label_entities(target_label_1) | select('match', 'binary_sensor\.') | list %}
-      {% set label_sensors_2 = label_entities(target_label_2) | select('match', 'binary_sensor\.') | list %}
-      {% set area_sensors = area_entities(target_area) | select('match', 'binary_sensor\.') | list %}
-      {% set combined_sensors = (label_sensors_1 + label_sensors_2 + area_sensors) | unique | list %}
-      {% if combined_sensors | count > 0 %}
-        {% set active_count = combined_sensors | map('states') | select('eq', 'on') | list | count %}
-        {{ true if active_count > 0 else false }}
-      {% else %}
-        false
-      {% endif %}
-{% endraw %}
+{% endfor %}
 
-  - name: "Bedroom Area Motion"
-    variables:
-      target_label_1: "device: Motion Sensor"
-      target_label_2: "importance: Primary"
-      target_area: "Bedroom"
-    unique_id: "bedroom_area_motion"
-    device_class: "motion"
-    state: >
-{%- raw %}
-      {% set label_sensors_1 = label_entities(target_label_1) | select('match', 'binary_sensor\.') | list %}
-      {% set label_sensors_2 = label_entities(target_label_2) | select('match', 'binary_sensor\.') | list %}
-      {% set area_sensors = area_entities(target_area) | select('match', 'binary_sensor\.') | list %}
-      {% set combined_sensors = (label_sensors_1 + label_sensors_2 + area_sensors) | unique | list %}
-      {% if combined_sensors | count > 0 %}
-        {% set active_count = combined_sensors | map('states') | select('eq', 'on') | list | count %}
-        {{ true if active_count > 0 else false }}
-      {% else %}
-        false
-      {% endif %}
-{% endraw %}
 
-  - name: "Entrance Hall Area Motion"
-    variables:
-      target_label_1: "device: Motion Sensor"
-      target_label_2: "importance: Primary"
-      target_area: "Entrance Hall"
-    unique_id: "entrance_hall_area_motion"
-    device_class: "motion"
-    state: >
-{%- raw %}
-      {% set label_sensors_1 = label_entities(target_label_1) | select('match', 'binary_sensor\.') | list %}
-      {% set label_sensors_2 = label_entities(target_label_2) | select('match', 'binary_sensor\.') | list %}
-      {% set area_sensors = area_entities(target_area) | select('match', 'binary_sensor\.') | list %}
-      {% set combined_sensors = (label_sensors_1 + label_sensors_2 + area_sensors) | unique | list %}
-      {% if combined_sensors | count > 0 %}
-        {% set active_count = combined_sensors | map('states') | select('eq', 'on') | list | count %}
-        {{ true if active_count > 0 else false }}
-      {% else %}
-        false
-      {% endif %}
-{% endraw %}
