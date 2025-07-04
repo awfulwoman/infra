@@ -9,7 +9,15 @@
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 # -------------------------------------------------------------------
-# Wet Bulb Temperature and Status Sensors
+# Wet bulb temperature calculation using Stull formula
+# 
+# Source: Roland Stull (2011) "Wet-Bulb Temperature from Relative 
+# Humidity and Air Temperature"
+# - Journal of Applied Meteorology and Climatology, Vol. 50, No. 11
+# Formula: 
+# Tw = T × arctan[0.151977(RH% + 8.313659)^1/2] 
+# + arctan(T + RH%) - arctan(RH% - 1.676331) 
+# + 0.00391838(RH%)^3/2×arctan(0.023101×RH%) - 4.686035
 # -------------------------------------------------------------------
 - sensor:
   - name: "Outdoors Wet Bulb Temperature"
@@ -19,14 +27,19 @@
     state_class: Measurement
     state: >
 {%- raw %}
-      {% set t = states('sensor.outdoors_atmosphere_temperature') | float(0) %}
-      {% set rh = states('sensor.outdoors_atmosphere_humidity') | float(0) %}
-      {% set a = t * atan(0.151977 * (rh + 8.313659) ** 0.5) %}
-      {% set b = atan(t + rh) - atan(rh - 1.676331) %}
-      {% set c = 0.00391838 * rh ** (1.5) * atan(0.023101 * rh) %}
-      {% set d = -4.686035 %}
-      {% set tw = a + b + c + d %}
-      {{ tw }}
+      {% set T = states('sensor.outdoors_atmosphere_temperature') | float %}
+      {% set RH = states('sensor.outdoors_atmosphere_humidity') | float %}
+      {% if T is not none and RH is not none %}
+        {% set pi = 3.14159265359 %}
+        {% set atan = (0.151977 * ((RH + 8.313659) ** 0.5)) | atan %}
+        {% set atan2 = (T + RH) | atan %}
+        {% set atan3 = (RH - 1.676331) | atan %}
+        {% set atan4 = (0.023101 * RH) | atan %}
+        {% set Tw = T * atan + atan2 - atan3 + 0.00391838 * (RH ** 1.5) * atan4 - 4.686035 %}
+        {{ Tw | round(2) }}
+      {% else %}
+        Unavailable
+      {% endif %}
 {% endraw %}
 
 - sensor:
