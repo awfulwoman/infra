@@ -83,6 +83,8 @@
       {% else %}
         false
       {% endif %}
+    attributes:
+      labels_used: "{{ target_label_1 }}, {{ target_label_2 }}"
 {% endraw %}
 
   - name: "Living Room Area Motion"
