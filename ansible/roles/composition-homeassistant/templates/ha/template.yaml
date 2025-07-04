@@ -53,9 +53,8 @@
       {% else %}mdi:emoticon-dead-outline
       {% endif %}
       {% endraw %}
-    {% raw %}
     attributes:
+      {% raw %}
       wet_bulb_temperature: "{{ states('sensor.outdoors_wet_bulb_temperature') }}"
       temperature_unit: "{{ state_attr('sensor.outdoors_wet_bulb_temperature', 'unit_of_measurement') }}"
-    {% endraw %}
-
+      {% endraw %}
