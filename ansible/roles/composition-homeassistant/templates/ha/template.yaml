@@ -114,6 +114,7 @@
         false
       {% endif %}
     attributes:
+      active_sensors: "{{ combined_sensors | join(', ') }}"
       labels_used: "{{ target_label_1 }}, {{ target_label_2 }}"
 {% endraw %}
 
