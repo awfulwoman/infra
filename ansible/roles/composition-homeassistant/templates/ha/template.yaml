@@ -61,3 +61,47 @@
       wet_bulb_temperature: "{{ states('sensor.outdoors_wet_bulb_temperature') }}"
       temperature_unit: "{{ state_attr('sensor.outdoors_wet_bulb_temperature', 'unit_of_measurement') }}"
 {% endraw %}
+
+
+- binary_sensor:
+  - name: "Kitchen Motion"
+    unique_id: "kitchen_motion"
+    device_class: "motion"
+    state: >
+{%- raw %}
+      {%- set target_label = "device: Motion Sensor" -%}
+      {%- set target_area = "Kitchen" -%}
+      {%- set label_sensors = label_entities(target_label) 
+          | select('match', 'binary_sensor\.') 
+          | list -%}
+      {%- set area_sensors = area_entities(target_area) 
+          | select('match', 'binary_sensor\.') 
+          | list -%}
+      {%- set combined_sensors = (label_sensors + area_sensors) | unique | list -%}
+      {%- if combined_sensors | count > 0 -%}
+        {%- set active_count = combined_sensors | map('states') | select('eq', 'on') | list | count -%}
+        {%- if active_count > 0 -%}
+          true
+        {%- else -%}
+          false
+        {%- endif -%}
+      {%- else -%}
+        false
+      {%- endif -%}
+{% endraw %}
+    attributes:
+      label_used: "motion"
+      triggered_sensors: >
+{%- raw %}
+        {%- set target_label = "device: Motion Sensor" -%}
+        {%- set binary_sensors = label_entities(target_label) 
+            | select('match', 'binary_sensor\.') 
+            | list -%}
+        {% for sensor in binary_sensors if is_state(sensor, 'on') %}
+          {%- if not loop.first %}, {% endif -%}
+          {{ state_attr(sensor, 'friendly_name') or sensor }}
+        {%- endfor -%}
+      sensor_count: >
+        {%- set target_label = "device: Motion Sensor" -%}
+        {{ label_entities(target_label) | select('match', 'binary_sensor\.') | list | count }}
+{% endraw %}
