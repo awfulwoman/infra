@@ -114,3 +114,4 @@ script: !include scripts.yaml
 scene: !include scenes.yaml
 input_select: !include input_select.yaml
 template: !include template.yaml
+counter: !include counter.yaml

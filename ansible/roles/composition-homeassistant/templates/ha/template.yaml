@@ -59,24 +59,3 @@
       temperature_unit: "{{ state_attr('sensor.outdoors_wet_bulb_temperature', 'unit_of_measurement') }}"
     {% endraw %}
 
-# Check the status of an Amazon Locker based on email notifications.
-- trigger:
-    - platform: event
-      event_type: "imap_content"
-      id: "amazon_locker_event_main"
-      event_data:
-        # sender: "no-reply@amazon.de"
-        text: "AMAZON TEST"
-        initial: true
-
-  sensor:
-    - name: "Amazon Locker {{ vault_amazon_locker_name_main | title }} Status"
-      unique_id: amazon_locker_main_status
-      state: >-
-        {% raw %}
-        {% if 'Your parcel is ready for collection from Amazon Locker - {{ vault_amazon_locker_name_main | title }};' in trigger.event.data["subject"] %}
-          Package Waiting
-        {% elif 'Collected: ' in trigger.event.data["subject"] %}
-          No Package
-        {% endif %}
-        {% endraw %}

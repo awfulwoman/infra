@@ -44,6 +44,7 @@
     - secrets
     - template
     - input_select
+    - counter
 
 - name: Run Configure DNS role
   ansible.builtin.include_role:
