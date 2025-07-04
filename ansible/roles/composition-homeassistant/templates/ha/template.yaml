@@ -1,13 +1,13 @@
-# Normally these should be defined in the UI as Helpers.
-# The templates here are more complex and/or make use of icons, 
-# which are not currently supported in the UI.
-# This file is not updated automatically by Home Assistant (hopefully).
+# Normally these should be defined in the UI as Helper Templates. But as these 
+# templates are more complex, and/or make use of icons (which are not currently 
+# supported in the UI), they live here.
+
 
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # IMPORTANT NOTE! 
-# Because we deploy this file via Ansible we must wrap all states in 
-# {% raw %}...{% endraw %} to prevent Ansible from interpreting those cute curly brackets.
-# Yeah, we're templating templates here. Isn't that fun?
+# Because we deploy this file via Ansible we must wrap all blocks of Jinja templates in 
+# {% raw %}...{% endraw %} to prevent Ansible from greedily interpreting those cute 
+# curly brackets for itself. Yeah, we're templating templates here. Isn't that fun?
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 # Calculate the wet bulb temperature based on the outdoors temperature and humidity.
