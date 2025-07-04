@@ -1,16 +1,10 @@
-# Normally these should be defined in the UI as Helper Templates. But as these 
-# templates are more complex, and/or make use of icons (which are not currently 
-# supported in the UI), they live here.
-
-
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # IMPORTANT NOTE! 
-# Because we deploy this file via Ansible we must wrap all blocks of Jinja templates in 
-# {% raw %}...{% endraw %} to prevent Ansible from greedily interpreting those cute 
-# curly brackets for itself. Yeah, we're templating templates here. Isn't that fun?
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-# Calculate the wet bulb temperature based on the outdoors temperature and humidity.
+# Because we deploy this file via Ansible we must wrap all blocks of Jinja 
+# templates in raw blocks to prevent Ansible from greedily interpreting those 
+# cute curly brackets for itself. Yeah, we're templating templates here. 
+# *Inception theme plays, disconcertingly*
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 - sensor:
   - name: "Outdoors Wet Bulb Temperature"
     unique_id: outdoors_wet_bulb_temperature
@@ -18,7 +12,7 @@
     unit_of_measurement: °C
     state_class: Measurement
     state: >
-      {% raw %}
+{%- raw %}
       {% set t = states('sensor.outdoors_atmosphere_temperature') | float(0) %}
       {% set rh = states('sensor.outdoors_atmosphere_humidity') | float(0) %}
       {% set a = t * atan(0.151977 * (rh + 8.313659) ** 0.5) %}
@@ -27,34 +21,43 @@
       {% set d = -4.686035 %}
       {% set tw = a + b + c + d %}
       {{ tw }}
-      {% endraw %}
+{% endraw %}
 
-# Derive an easy-to-understand wet bulb status based on the calculated wet bulb temperature
 - sensor:
   - name: "Outdoors Wet Bulb Status"
     unique_id: outdoors_wet_bulb_status
     state: >
-      {% raw %}
+{%- raw %}
       {% set temp = states('sensor.outdoors_wet_bulb_temperature') | float(1) %}
-      {% if temp < 25 %}Extremely Safe
-      {% elif temp >= 25.1 and temp < 27.7 %}Safe
-      {% elif temp >= 27.8 and temp < 29.4 %}Caution
-      {% elif temp >= 29.5 and temp < 31.6 %}Danger
-      {% else %}Extreme Danger
+      {% if temp < 25 %}
+        Extremely Safe
+      {% elif temp >= 25.1 and temp < 27.7 %}
+        Safe
+      {% elif temp >= 27.8 and temp < 29.4 %}
+        Caution
+      {% elif temp >= 29.5 and temp < 31.6 %}
+        Danger
+      {% else %}
+        Extreme Danger
       {% endif %}
-      {% endraw %}
+{% endraw %}
     icon: >
-      {% raw %}
+{%- raw %}
       {% set temp = states('sensor.outdoors_wet_bulb_temperature') | float(1) %}
-      {% if temp < 25 %}mdi:emoticon-excited-outline
-      {% elif temp >= 25.1 and temp < 27.7 %}mdi:emoticon-happy-outline
-      {% elif temp >= 27.8 and temp < 29.4 %}mdi:emoticon-neutral-outline
-      {% elif temp >= 29.5 and temp < 31.6 %}mdi:emoticon-sad-outline
-      {% else %}mdi:emoticon-dead-outline
+      {% if temp < 25 %}
+        mdi:emoticon-excited-outline
+      {% elif temp >= 25.1 and temp < 27.7 %}
+        mdi:emoticon-happy-outline
+      {% elif temp >= 27.8 and temp < 29.4 %}
+        mdi:emoticon-neutral-outline
+      {% elif temp >= 29.5 and temp < 31.6 %}
+        mdi:emoticon-sad-outline
+      {% else %}
+        mdi:emoticon-dead-outline
       {% endif %}
-      {% endraw %}
+{% endraw %}
     attributes:
-      {% raw %}
+{%- raw %}
       wet_bulb_temperature: "{{ states('sensor.outdoors_wet_bulb_temperature') }}"
       temperature_unit: "{{ state_attr('sensor.outdoors_wet_bulb_temperature', 'unit_of_measurement') }}"
-      {% endraw %}
+{% endraw %}
