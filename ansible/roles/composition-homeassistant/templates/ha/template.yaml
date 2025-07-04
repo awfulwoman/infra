@@ -1,10 +1,16 @@
-# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # IMPORTANT NOTE! 
-# Because we deploy this file via Ansible we must wrap all blocks of Jinja 
-# templates in raw blocks to prevent Ansible from greedily interpreting those 
-# cute curly brackets for itself. Yeah, we're templating templates here. 
+# Because we deploy this file via Ansible we must wrap all blocks of 
+# Jinja templates in raw blocks to prevent Ansible from greedily 
+# interpreting those cute curly brackets for itself. Yeah, we're 
+# templating templates here. 
+#
 # *Inception theme plays, disconcertingly*
-# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+# -------------------------------------------------------------------
+# Wet Bulb Temperature and Status Sensors
+# -------------------------------------------------------------------
 - sensor:
   - name: "Outdoors Wet Bulb Temperature"
     unique_id: outdoors_wet_bulb_temperature
@@ -62,6 +68,9 @@
       temperature_unit: "{{ state_attr('sensor.outdoors_wet_bulb_temperature', 'unit_of_measurement') }}"
 {% endraw %}
 
+# -------------------------------------------------------------------
+# Area Motion Sensors
+# -------------------------------------------------------------------
 
 - binary_sensor:
   - name: "Kitchen Area Motion"
