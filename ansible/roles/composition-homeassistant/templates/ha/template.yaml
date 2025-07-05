@@ -102,22 +102,21 @@
     device_class: "motion"
     state: >
 {%- raw %}
-      {% set label_sensors_1 = label_entities(target_label_1) | select('match', 'binary_sensor\.') | list %}
-      {% set label_sensors_2 = label_entities(target_label_2) | select('match', 'binary_sensor\.') | list %}
-      {% set combined_label_sensors = (label_sensors_1 + label_sensors_2 ) | unique | list %}
-      {% set area_sensors = area_entities(target_area) | select('match', 'binary_sensor\.') | list %}
-      {% set combined_sensors = (combined_label_sensors + area_sensors) | unique | list %}
-      {% if combined_sensors | count > 0 %}
-        {% set active_count = combined_sensors | map('states') | select('eq', 'on') | list | count %}
+      {% set devices_in_area = area_devices(target_area) %}
+      {% set devices_label_1 = label_devices(target_label_1) %}
+      {% set devices_label_2 = label_devices(target_label_2) %}
+      {% set device_list = devices_label_1 | select('in',devices_label_2 ) | select('in', devices_in_area) | list %}
+      {% set all_entities = [] %}
+      {% for entity in binary_sensor_entities %}
+        {% if state_attr(entity, 'device_class') == 'occupancy' %}
+          {% set all_entities = all_entities + [entity] %}
+        {% endif %}
+      {% endfor %}
+      {% if all_entities | count > 0 %}
+        {% set active_count = all_entities | map('states') | select('eq', 'on') | list | count %}
         {{ true if active_count > 0 else false }}
       {% else %}
         false
       {% endif %}
-    attributes:
-      active_sensors: "{{ combined_sensors | join(', ') }}"
-      labels_used: "{{ target_label_1 }}, {{ target_label_2 }}"
 {% endraw %}
-
 {% endfor %}
-
-
