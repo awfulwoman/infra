@@ -84,9 +84,9 @@
 # -------------------------------------------------------------------
 # AREA MOTION SENSORS VIA LABELS
 # -------------------------------------------------------------------
-# If you're looking at this in the repo them remember that Ansible
+# If you're looking at this in the repo then remember that Ansible
 # creates the Home Assistant Jinja2 template via a loop.
-# Inception, remember?
+# Inception, innit?
 # See the Areas dictionary in defaults/main.yaml for area names.
 # -------------------------------------------------------------------
 
