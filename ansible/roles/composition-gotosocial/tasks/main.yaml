@@ -37,7 +37,6 @@
     - data
     - .cache
 
-
 - name: Register domain
   community.digitalocean.digital_ocean_domain_record:
     state: present
@@ -47,9 +46,6 @@
     name: gts
     data: "{{ ansible_eth0.ipv4.address }}"
     force_update: true
-  loop: "{{ configure_dns_subdomains }}"
-  loop_control:
-    loop_var: domain_item
   when: ansible_eth0.ipv4.address is defined
 
 # - name: Copy over files
