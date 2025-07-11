@@ -6,8 +6,8 @@ tls:
 
 http:
   routers:
-    homeassistant:
-      service: homeassistant
+    gotosocial:
+      service: gotosocial
       rule: "Host(`gts.awfulwoman.com`)"
       tls:
         certresolver: letsencrypt
@@ -34,7 +34,7 @@ http:
         scheme: https
 
   services:
-    homeassistant:
+    gotosocial:
       loadBalancer:
         passHostHeader: true
         servers:
