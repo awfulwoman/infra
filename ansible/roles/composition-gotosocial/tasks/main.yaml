@@ -51,7 +51,7 @@
 - name: Ensure config exists
   ansible.builtin.template:
     src: config.yaml
-    dest: "{{ composition_root }}/config.yaml"
+    dest: "{{ composition_config }}/config.yaml"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0774"
