@@ -25,7 +25,7 @@
 # ----------------------------
 
 - name: Create directories
-  file:
+  ansible.builtin.file:
     path: "{{ composition_config }}/{{ dir_item }}"
     state: directory
     owner: "{{ ansible_user }}"
@@ -37,6 +37,20 @@
     - data
     - .cache
 
+
+- name: Register domain
+  community.digitalocean.digital_ocean_domain_record:
+    state: present
+    oauth_token: "{{ vault_digitalocean_domain_token }}"
+    domain: awfulwoman.com
+    type: A
+    name: gts
+    data: "{{ ansible_eth0.ipv4.address }}"
+    force_update: true
+  loop: "{{ configure_dns_subdomains }}"
+  loop_control:
+    loop_var: domain_item
+  when: ansible_eth0.ipv4.address is defined
 
 # - name: Copy over files
 #   become: true

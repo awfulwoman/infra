@@ -33,3 +33,4 @@ compositions:
   - reverseproxy
   - container-management
   - awfulwoman
+  - gotosocial
