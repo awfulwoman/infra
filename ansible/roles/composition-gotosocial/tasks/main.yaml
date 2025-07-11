@@ -55,17 +55,3 @@
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0774"
-
-# - name: Copy over files
-#   become: true
-#   ansible.builtin.copy:
-#     src: filename.txt
-#     dest: "{{ composition_config }}/filename.txt
-
-# - name: Run Configure DNS role
-#   ansible.builtin.include_role:
-#     name: "configure-dns"
-#   vars:
-#     configure_dns_subdomains:
-#       - homeassistant
-#       - whoami.{{ ansible_hostname }}
