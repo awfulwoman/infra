@@ -17,6 +17,7 @@ services:
       # - "traefik.http.services.gotosocial.loadbalancer.server.port=8080"
     volumes:
       - "{{ composition_config }}/data:/gotosocial/storage"
+      - "{{ composition_config }}/config.yaml:/gotosocial/config.yaml"
       - "{{ composition_config }}/.cache:/gotosocial/.cache"
       - /etc/localtime:/etc/localtime:ro
     networks:
