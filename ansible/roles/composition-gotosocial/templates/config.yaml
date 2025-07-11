@@ -62,7 +62,7 @@ landing-page-user: ""
 # DO NOT change this after your server has already run once, or you will break things!
 # Examples: ["gts.example.org","some.server.com"]
 # Default: "localhost"
-host: "localhost"
+host: "gts.awfulwoman.com"
 
 # String. Domain to use when federating profiles. This is useful when you want your server to be at
 # eg., "gts.example.org", but you want the domain on accounts to be "example.org" because it looks better
