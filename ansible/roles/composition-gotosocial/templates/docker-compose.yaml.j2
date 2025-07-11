@@ -7,14 +7,14 @@ services:
     restart: unless-stopped
     env_file: .environment_vars
     user: 1000:1000
-    # ports:
-    #   - "8085:8080"
+    ports:
+      - "8085:8080"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.gotosocial.rule=Host(`gts.awfulwoman.com`)"
-      - "traefik.http.routers.gotosocial.tls=true"
-      - "traefik.http.routers.gotosocial.tls.certresolver=letsencrypt"
-      - "traefik.http.services.gotosocial.loadbalancer.server.port=8080"
+      # - "traefik.http.routers.gotosocial.rule=Host(`gts.awfulwoman.com`)"
+      # - "traefik.http.routers.gotosocial.tls=true"
+      # - "traefik.http.routers.gotosocial.tls.certresolver=letsencrypt"
+      # - "traefik.http.services.gotosocial.loadbalancer.server.port=8080"
     volumes:
       - "{{ composition_config }}/data:/gotosocial/storage"
       - "{{ composition_config }}/.cache:/gotosocial/.cache"

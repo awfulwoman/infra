@@ -164,6 +164,7 @@ compositions:
   - homepage
   - bookmarks
   - piper
+  - gotosocial
 
 traefik_providers:
   - musicassistant
@@ -188,3 +189,4 @@ cnames:
   - home.{{ domain_name }}
   - wallabag.{{ domain_name }}
   - jellyseerr.{{ domain_name }}
+  - gts.awfulwoman.com

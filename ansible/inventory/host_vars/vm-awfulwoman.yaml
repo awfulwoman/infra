@@ -28,9 +28,10 @@ zfs_datasets:
   - "{{ sites_zfs_id }}"
   - "{{ awfulwoman_sites_zfs_id}}"
 
+traefik_providers:
+  - gotosocial
 
 compositions:
   - reverseproxy
   - container-management
   - awfulwoman
-  - gotosocial
