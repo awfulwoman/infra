@@ -134,7 +134,6 @@ trusted-proxies:
   - "127.0.0.1/32"
   - "::1"
 
-
 ############################
 ##### DATABASE CONFIG ######
 ############################
@@ -790,13 +789,14 @@ storage-s3-use-ssl: true
 # String. Access key part of the S3 credentials.
 # Consider setting this value using environment variables to avoid leaking it via the config file
 # Only required when running with the s3 storage backend.
+# Examples: ["AKIAJSIE27KKMHXI3BJQ","miniouser"]
 # Default: ""
 storage-s3-access-key: ""
 
 # String. Secret key part of the S3 credentials.
 # Consider setting this value using environment variables to avoid leaking it via the config file
 # Only required when running with the s3 storage backend.
-
+# Examples: ["5bEYu26084qjSFyclM/f2pz4gviSfoOg+mFwBH39","miniopassword"]
 # Default: ""
 storage-s3-secret-key: ""
 
@@ -951,7 +951,7 @@ oidc-client-id: ""
 # String. The secret for this client as registered with the OIDC provider.
 # Examples: ["super-secret-business", "79379cf5-8057-426d-bb83-af504d98a7b0"]
 # Default: ""
-# oidc-client-secret: ""
+oidc-client-secret: ""
 
 # Array of string. Scopes to request from the OIDC provider. The returned values will be used to
 # populate users created in GtS as a result of the authentication flow. 'openid' and 'email' are required.
