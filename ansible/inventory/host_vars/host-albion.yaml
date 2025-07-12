@@ -12,12 +12,11 @@ zfs_pools:
   - fastpool
 
 # Named ZFS datasets
-container_config_zfs_id: fastpool/containers
 container_compositions_zfs_id: fastpool/compositions
 
 # Datasets that should be present 
 zfs_datasets:
-  - "{{ container_config_zfs_id }}"
+  - "{{ container_compositions_zfs_id }}"
 
 # Datasets to be backed-up
 # These datasets will be pulled to a backup server
@@ -28,6 +27,6 @@ zfs_backup_datasets:
 # Define useful paths from ZFS datasets
 compositions_config_dir: "/{{ container_compositions_zfs_id }}"
 
-# compositions:
-#   - reverseproxy
-#   - container-management
+compositions:
+  - reverseproxy
+  - container-management
