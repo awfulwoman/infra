@@ -1,0 +1,23 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  SERVICENAME:
+    container_name: libretranslate
+    image: libretranslate/libretranslate:v1.7.2
+    restart: unless-stopped
+    env_file: .environment_vars
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.libretranslate.rule=Host(`translate.{{ domain_name }}`)"
+      - "traefik.http.routers.libretranslate.tls=true"
+      - "traefik.http.routers.libretranslate.tls.certresolver=letsencrypt"
+      - "traefik.http.services.libretranslate.loadbalancer.server.port=5000"
+    volumes:
+      # - "{{ composition_config }}:/INSIDEPATH"
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+
+networks:
+  "{{ default_docker_network }}":
+    external: true
