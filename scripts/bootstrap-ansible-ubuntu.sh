@@ -1,7 +1,7 @@
 #!/bin/bash
 BOOTSTRAP_USER_ID=$(id -un)
 BOOTSTRAP_GROUP_ID=$(id -gn)
-ANSIBLEPULL_REPO_URL=https://github.com/awfulwoman/home.git
+ANSIBLEPULL_REPO_URL=https://github.com/awfulwoman/infra.git
 ANSIBLE_VAULT_PASSWORD=""
 
 
