@@ -1,3 +1,3 @@
-# DEFAULT PROJECT
+# Libre Translate
 
-This is the readme for the template project.
+Self-hosted translation.
