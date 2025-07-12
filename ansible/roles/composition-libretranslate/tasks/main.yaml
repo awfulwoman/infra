@@ -24,19 +24,22 @@
 # Specific tasks
 # ----------------------------
 
-# - name: Create directories
-#   file:
-#     path: "{{ composition_config }}/{{ dir_item }}"
-#     state: directory
-#     owner: "{{ ansible_user }}"
-#     group: "{{ ansible_user }}"
-#     mode: "0664"
-#   loop_control:
-#     loop_var: dir_item
-#   loop:
-#     - whatever1
-#     - whatever2
-#     - whatever3
+- name: Create directories
+  ansible.builtin.file:
+    path: "{{ composition_config }}/{{ dir_item }}"
+    state: directory
+  loop_control:
+    loop_var: dir_item
+  loop:
+    - src
+    - models
+    - apikeys
+
+- name: Git checkout LibreTranslate
+  ansible.builtin.git:
+    repo: "https://github.com/LibreTranslate/LibreTranslate"
+    dest: "{{ composition_config }}/src"
+    version: main
 
 # - name: Copy over files
 #   become: true

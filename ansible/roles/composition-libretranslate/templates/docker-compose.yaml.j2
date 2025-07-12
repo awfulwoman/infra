@@ -1,9 +1,13 @@
 # code: language=ansible
 name: "{{ composition_name }}"
 services:
-  SERVICENAME:
+  libretranslate:
     container_name: libretranslate
-    image: libretranslate/libretranslate:v1.7.2
+    # user: 1000:1000
+    build:
+      context: "{{ composition_config }}/src"
+      dockerfile: ./docker/Dockerfile
+    tty: true  
     restart: unless-stopped
     env_file: .environment_vars
     labels:
@@ -13,10 +17,18 @@ services:
       - "traefik.http.routers.libretranslate.tls.certresolver=letsencrypt"
       - "traefik.http.services.libretranslate.loadbalancer.server.port=5000"
     volumes:
-      # - "{{ composition_config }}:/INSIDEPATH"
+      - "{{ composition_config }}/models:/home/libretranslate/.local:rw"
+      - "{{ composition_config }}/apikeys:/app/db"
       - /etc/localtime:/etc/localtime:ro
     networks:
       - "{{ default_docker_network }}"
+    healthcheck:
+      test: ['CMD-SHELL', './venv/bin/python scripts/healthcheck.py']
+    post_start:
+      - command: ["sh", "-c", "chown 1032 /home/libretranslate/.local/ && chown 1032 /app/db"]
+        user: root
+    ## Uncomment above command and define your args if necessary
+    # command: --ssl --ga-id MY-GA-ID --req-limit 100 --char-limit 500
 
 networks:
   "{{ default_docker_network }}":
