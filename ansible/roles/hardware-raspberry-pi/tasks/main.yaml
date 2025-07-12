@@ -99,3 +99,14 @@
   become: true
   ansible.builtin.shell: "raspi-config nonint do_spi 1"
   when: (raspberry_pi_spi == false) and (spi_status.stdout != '1')
+
+- name: Ensure Raspberry Pi config overrides are present
+  become: true
+  ansible.builtin.lineinfile:
+    dest: "{{ raspberry_pi_boot_config_location }}"
+    line: "{{ item }}"
+    insertafter: "[all]"
+    firstmatch: false
+    state: present
+  loop: "{{ raspberry_pi_config_overrides | default([]) }}"
+  when: raspberry_pi_config_overrides is defined and raspberry_pi_config_overrides | length > 0

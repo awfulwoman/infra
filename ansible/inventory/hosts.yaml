@@ -18,6 +18,7 @@ all:
     host-guineacam:
     host-wyoming-satellite:
     host-mba2011:
+    host-albion:                          # UK Server
 
   # Groupings of servers that allow them to be administered collectively.
   children:
@@ -65,6 +66,7 @@ all:
         host-guineacam:
         host-wyoming-satellite:
         host-mba2011:
+        host-albion:
 
     # Group: Home Automation
     homeautomation:
@@ -80,6 +82,7 @@ all:
         host-mqtt:
         # host-workloads:
         host-pihole:
+        host-albion:
 
     # ZFS Backup Server
     zfs-backup-server:
@@ -92,5 +95,6 @@ all:
         host-storage:
         host-mqtt:
         host-homeassistant:
+        host-albion:
         # host-workloads:
         # host-pihole:
