@@ -28,7 +28,6 @@ zfs_backup_datasets:
 # Define useful paths from ZFS datasets
 compositions_config_dir: "/{{ container_compositions_zfs_id }}"
 
-compositions:
-  - reverseproxy
-  - container-management
-  - zigbee
+# compositions:
+#   - reverseproxy
+#   - container-management

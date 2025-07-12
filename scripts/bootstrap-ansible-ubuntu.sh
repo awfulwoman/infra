@@ -4,7 +4,6 @@ BOOTSTRAP_GROUP_ID=$(id -gn)
 ANSIBLEPULL_REPO_URL=https://github.com/awfulwoman/infra.git
 ANSIBLE_VAULT_PASSWORD=""
 
-
 read -sp "Playbook to use: " ANSIBLEPULL_PLAYBOOK
 
 # Check for defined paths
