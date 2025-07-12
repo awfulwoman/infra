@@ -310,7 +310,7 @@ web-asset-base-dir: "./web/assets/"
 #
 # Example: ["nl", "en-gb", "fr"]
 # Default: []
-instance-languages: []
+instance-languages: [en-gb]
 
 # String. Federation mode to use for this instance.
 #
@@ -472,7 +472,7 @@ instance-subscriptions-process-from: "23:00"
 # Duration. Period between subscription updates.
 # Examples: ["24h", "72h", "12h"]
 # Default: "24h" (once per day).
-instance-subscriptions-process-every: "24h"
+instance-subscriptions-process-every: "6h"
 
 # String. Allows you to customize if and how stats are served to
 # crawlers at the /api/v1|v2/instance and /nodeinfo endpoints.
