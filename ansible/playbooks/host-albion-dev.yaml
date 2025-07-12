@@ -7,10 +7,10 @@
       raspberry_pi_boot_config_location: /boot/firmware/config.txt
     - role: bootstrap-ubuntu-server
     - role: configure-sshkey
-    - role: install-docker
-    - role: zfs-core
     - role: install-ansible
     - role: install-ansible-pull
+    - role: install-docker
+    - role: zfs-core
     - role: zfs-backup-client
     - role: compositions
 
