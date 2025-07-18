@@ -1,5 +1,9 @@
-ansible_host: host-storage
-ansible_user: "{{ vault_server_username }}"
+ansible_host: host-storage # How to access the host
+ansible_user: "{{ vault_server_username }}" # User to connect as
+
+machine_name: storage # Hostname of the machine
+machine_city: ber # City where the machine is located
+machine_location: xberg # Location of the machine within the city
 
 # --- NETWORK -------------
 wakeonlan_mac_address: "34:60:f9:bb:3d:16"
