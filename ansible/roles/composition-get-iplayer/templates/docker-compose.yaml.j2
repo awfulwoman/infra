@@ -1,0 +1,24 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  get-iplayer:
+    container_name: get-iplayer
+    image: ghcr.io/thespad/get_iplayer
+    restart: unless-stopped
+    env_file: .environment_vars
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.iplayer.rule=Host(`iplayer.{{ domain_name }}`)"
+      - "traefik.http.routers.iplayer.tls=true"
+      - "traefik.http.routers.iplayer.tls.certresolver=letsencrypt"
+      - "traefik.http.services.iplayer.loadbalancer.server.port=1935"
+    volumes:
+      - "{{ composition_config }}:/config"
+      - "{{ zfspath_downloads }}/iplayer:/downloads"
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+
+networks:
+  "{{ default_docker_network }}":
+    external: true
