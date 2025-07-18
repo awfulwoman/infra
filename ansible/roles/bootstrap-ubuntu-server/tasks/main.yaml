@@ -3,11 +3,11 @@
 - name: Naming facts
   ansible.builtin.debug:
     msg: |
-      * inventory_hostname: {{ inventory_hostname }}
+      * inventory_hostname: "{{ inventory_hostname }}"
         Obtained from the Ansible inventory configuration. Can be different than the machine's hostname.
-      * ansible_hostname: {{ ansible_hostname }}
+      * ansible_hostname: "{{ ansible_hostname }}"
         Obtained via gather_facts. Short version of the hostname.
-      * ansible_fqdn: {{ ansible_fqdn }}
+      * ansible_fqdn: "{{ ansible_fqdn }}"
         btained via gather_facts. Long version of the hostname, including the domain.
       * ansible_host: {{ ansible_host }}
         The IP address or hostname used to connect to the machine. Can be different than the machine's hostname.
