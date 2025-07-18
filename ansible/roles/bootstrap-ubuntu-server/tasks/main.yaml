@@ -3,11 +3,12 @@
 - name: Debug
   ansible.builtin.debug:
     msg: |
-      SSH Host: {{ ansible_ssh_host }}
-      Inventory Hostname: {{ inventory_hostname }}
-      FQDN: {{ ansible_fqdn }}
-      Locale: {{ config_system_locale }}
-      Language: {{ config_system_language }}
+      ansible_ssh_host: {{ ansible_ssh_host }}
+      inventory_hostname: {{ inventory_hostname }}
+      ansible_fqdn: {{ ansible_fqdn }}
+      ansible_hostname: {{ ansible_hostname }}
+      config_system_locale: {{ config_system_locale }}
+      config_system_language: {{ config_system_language }}
 
 - name: Ensure Github SSH keys are present
   become: true
