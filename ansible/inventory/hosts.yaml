@@ -12,64 +12,16 @@ all:
     host-pihole:                          # DHCP + DNS
     host-workloads:                       # Misc workloads
     vm-awfulwoman:                        # Hosting for my personal website
-    # host-khanivore:                       # Kubernetes node
-    # host-katzenjammer:                    # Kubernetes node
-    # host-knucklehead:                     # Kubernetes node
-    # host-guineacam:
-    # host-wyoming-satellite:
     host-mba2011:
     host-albion:                          # UK Server
 
   # Groupings of servers that allow them to be administered collectively.
   children:
 
-    # Host that run Terraform
-    # terraform:
-    #   hosts:
-    #     host-storage:
-    
-    # sitedeployment:
-    #   hosts:
-    #    vm-awfulwoman:
-
-    # Hosts that utilise ansible-pull
-    # ansiblepull:
-    #   hosts:
-    #     host-homeassistant:
-    #     host-backups:
-    #     host-storage:
-    #     host-pihole:
-    #     host-mqtt:
-    #     host-workloads:
-    #     vm-awfulwoman:
-    #     host-khanivore:
-    #     host-katzenjammer:
-    #     host-knucklehead:
-    #     host-guineacam:
-    #     host-wyoming-satellite:
-    #     host-mba2011:
-    #     host-albion:
-
     # Group: Home Automation
     homeautomation:
       hosts:
         host-homeassistant:
-
-    # Hosts that use ZFS
-    # zfs:
-    #   hosts:
-    #     host-storage:
-    #     host-backups:
-    #     host-homeassistant:
-    #     host-mqtt:
-    #     # host-workloads:
-    #     host-pihole:
-    #     host-albion:
-
-    # # ZFS Backup Server
-    # zfs-backup-server:
-    #   hosts:
-    #     host-backups:
 
     # ZFS Clients
     zfs-backup-clients:

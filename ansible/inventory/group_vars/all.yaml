@@ -519,3 +519,18 @@ pip_virtualenv_path: /opt/ansible/pip/venv
 pip_virtualenv_python: python3
 pip_virtualenv_bin_path: "/opt/ansible/pip/venv/bin"
 systemd_service_path: /etc/systemd/system
+
+# Ansible-pull config
+ansible_path: "/opt/ansible"
+ansible_log_path: "{{ ansible_path }}/logs"
+ansible_vault_password_file: "{{ ansible_path }}/.vaultpassword"
+ansible_roles_path: "./ansible/roles:{{ ansible_path }}/galaxy-roles:{{ ansible_path }}/home/ansible/roles:{{ ansible_path }}/collections/ansible_collections:{{ ansible_path }}/galaxy-roles"
+home_repo_dir: "/opt/home"
+
+environment_config:
+  ANSIBLE_FORCE_COLOR: true
+  ANSIBLE_PATH: "{{ ansible_path }}"
+  ANSIBLE_LOG_PATH: "{{ ansible_log_path }}"
+  ANSIBLE_VAULT_PASSWORD_FILE: "{{ ansible_vault_password_file }}"
+  ANSIBLE_ROLES_PATH: "{{ ansible_roles_path }}"
+  HOME_REPO_DIR: "{{ home_repo_dir }}"
