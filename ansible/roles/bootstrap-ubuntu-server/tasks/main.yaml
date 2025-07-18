@@ -67,19 +67,17 @@
     regexp: '^127\.0\.1\.1'
     line: "127.0.1.1 {{ inventory_hostname }}"
 
-- name: Add yt-dlp repo from PPA
+- name: Ensure PPAs are present
   become: true
   ansible.builtin.apt_repository:
-    repo: "ppa:tomtomtom/yt-dlp"
+    repo: "{{ ppa_item }}"
     codename: "{{ ansible_distribution_release }}"
     update_cache: true
-
-- name: Add get_iplayer repo from PPA
-  become: true
-  ansible.builtin.apt_repository:
-    repo: "ppa:m-grant-prg/utils"
-    codename: "{{ ansible_distribution_release }}"
-    update_cache: true
+  loop_control:
+    loop_var: ppa_item
+  loop:
+    - ppa:m-grant-prg/utils
+    - ppa:tomtomtom/yt-dlp
 
 - name: Upgrade apt packages
   become: true
