@@ -1,6 +1,6 @@
 # Bootstraps an Ubuntu machine
 
-- name: Debug
+- name: Naming facts
   ansible.builtin.debug:
     msg: |
       ansible_ssh_host: {{ ansible_ssh_host }}
