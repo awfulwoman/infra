@@ -1,5 +1,5 @@
 
-ansible_host: 192.168.1.194
+ansible_host: host-albion
 ansible_user: "{{ vault_server_username }}"
 
 # --- NETWORK -------------
