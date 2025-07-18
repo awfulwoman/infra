@@ -15,6 +15,14 @@ all:
     host-mba2011:
     host-albion:                          # UK Server
 
+    ber.xberg.storage:
+    ber.xberg.backups:
+    ber.xberg.homeautomation:
+    ber.xberg.mqtt:
+    ber.kotti.offsite:
+    ldn.kentishtown.albion:
+    vm.awfulwoman:
+
   # Groupings of servers that allow them to be administered collectively.
   children:
 
