@@ -3,8 +3,8 @@ name: "{{ composition_name }}"
 services:
   SERVICENAME:
     container_name: CONTAINERNAME
-    ports:
-      - "127.0.0.1:OUTSIDE:INSIDE"
+    # ports:
+    #   - "127.0.0.1:OUTSIDE:INSIDE"
     image: IMAGENAME
     restart: unless-stopped
     env_file: .environment_vars
@@ -13,10 +13,7 @@ services:
       - "traefik.http.routers.SUBDOMAIN.rule=Host(`SUBDOMAIN.{{ domain_name }}`)"
       - "traefik.http.routers.SUBDOMAIN.tls=true"
       - "traefik.http.routers.SUBDOMAIN.tls.certresolver=letsencrypt"
-      # - "homepage.group=GROUP"
-      # - "homepage.name=SUBDOMAIN"
-      # - "homepage.href=https://SUBDOMAIN.{{ domain_name }}"
-      # - "homepage.description=whatever"
+      # - "traefik.http.services.SUBDOMAIN.loadbalancer.server.port=PORT"
     volumes:
       - "{{ composition_config }}:/INSIDEPATH"
       - /etc/localtime:/etc/localtime:ro
