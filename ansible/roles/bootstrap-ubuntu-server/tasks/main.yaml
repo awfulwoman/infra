@@ -16,7 +16,7 @@
     key: https://github.com/awfulwoman.keys
     state: present
 
-- name: Ensure timezone is for Berlin
+- name: Ensure timezone is correct
   become: true
   community.general.timezone:
     name: "{{ bootstrap_ubuntu_timezone }}"

@@ -2,6 +2,8 @@
 ansible_host: host-albion
 ansible_user: "{{ vault_server_username }}"
 
+bootstrap_ubuntu_timezone: "Europe/London"
+
 # --- NETWORK -------------
 configure_dns_linkdevice_physical: "eth0" 
 
