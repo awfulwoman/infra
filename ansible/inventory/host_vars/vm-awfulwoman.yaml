@@ -1,6 +1,8 @@
 ansible_host: awfulwoman.com
 ansible_user: "{{ vault_server_username }}"
 
+bootstrap_ubuntu_timezone: "Europe/Amsterdam"
+
 # --- NETWORK -------------
 configure_dns_linkdevice_physical: "eth0" 
 
