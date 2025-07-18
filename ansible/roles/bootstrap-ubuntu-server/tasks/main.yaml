@@ -73,6 +73,13 @@
     codename: "{{ ansible_distribution_release }}"
     update_cache: true
 
+- name: Add get_iplayer repo from PPA
+  become: true
+  ansible.builtin.apt_repository:
+    repo: "ppa:m-grant-prg/utils"
+    codename: "{{ ansible_distribution_release }}"
+    update_cache: true
+
 - name: Upgrade apt packages
   become: true
   ansible.builtin.apt:
@@ -93,6 +100,7 @@
       - lm-sensors
       - mosh
       - neofetch
+      - get-iplayer
       - pipx
       - python-is-python3
       - python3
