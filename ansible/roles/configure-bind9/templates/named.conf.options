@@ -1,0 +1,24 @@
+// Local physical netowrk only - exclude overlay network
+acl LAN {
+192.168.1.0/24;
+};
+options {
+        directory "/var/cache/bind";
+        allow-query { 
+                localhost; 
+                LAN; 
+        };
+        forwarders { 
+                1.1.1.1;
+        };
+        recursion yes;
+};
+
+zone "{{ domain_name }}" IN{
+        type master;
+        file "/etc/bind/zones/db.{{ domain_name }}";
+        allow-transfer { 
+                localhost; 
+                LAN; 
+        };
+};
