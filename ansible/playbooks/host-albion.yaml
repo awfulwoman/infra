@@ -9,6 +9,7 @@
         - "dtoverlay=gpio-fan,gpiopin=14,temp=60000"
     - role: bootstrap-ubuntu-server
     - role: configure-sshkey
+    - role: ip-address-forwarding
     - role: install-docker
     - role: zfs-core
     - role: install-ansible
