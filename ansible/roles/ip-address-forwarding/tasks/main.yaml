@@ -7,11 +7,11 @@
     sysctl_set: true
     reload: true
 
-# - name: Enable and persist IPv6 forwarding
-#   become: true
-#   sysctl:
-#     name: net.ipv6.ip_forward
-#     value: "1"
-#     state: present
-#     sysctl_set: yes
-#     reload: yes
+- name: Enable and persist IPv6 forwarding
+  become: true
+  ansible.posix.sysctl:
+    name: net.ipv6.ip_forward
+    value: "1"
+    state: present
+    sysctl_set: true
+    reload: true
