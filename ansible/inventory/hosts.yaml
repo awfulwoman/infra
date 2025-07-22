@@ -38,3 +38,7 @@ all:
         host-mqtt:
         host-homeassistant:
         host-albion:
+
+    sitedeplyment: # Necessary to handle deployment keys
+      hosts:
+        vm-awfulwoman:
