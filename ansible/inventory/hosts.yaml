@@ -39,6 +39,6 @@ all:
         host-homeassistant:
         host-albion:
 
-    sitedeplyment: # Necessary to handle deployment keys
+    sitedeployment: # Necessary to handle deployment keys
       hosts:
         vm-awfulwoman:
