@@ -1,18 +1,7 @@
----
-- name: UK Server
+- name: UK Server (dev work)
   hosts: host-albion
   roles:
-    - role: hardware-raspberry-pi
-      raspberry_pi_wifi: false
-      raspberry_pi_boot_config_location: /boot/firmware/config.txt
-    - role: bootstrap-ubuntu-server
-    - role: configure-sshkey
-    - role: install-ansible
-    - role: install-ansible-pull
-    - role: install-docker
-    - role: zfs-core
-    - role: zfs-backup-client
-    - role: compositions
+    - role: nfs-client
 
   handlers:
     - name: Reboot host
