@@ -25,7 +25,7 @@
 # ----------------------------
 
 - name: Create directories
-  file:
+  ansible.builtin.file:
     path: "{{ composition_config }}/{{ dir_item }}"
     state: directory
     owner: "{{ ansible_user }}"
@@ -36,13 +36,6 @@
   loop:
     - config
     - cache
-#     - whatever3
-
-# - name: Copy over files
-#   become: true
-#   ansible.builtin.copy:
-#     src: filename.txt
-#     dest: "{{ composition_config }}/filename.txt
 
 - name: Run Configure DNS role
   ansible.builtin.include_role:
