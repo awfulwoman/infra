@@ -13,7 +13,7 @@ services:
       - "traefik.http.routers.iplayarr.tls.certresolver=letsencrypt"
       - "traefik.http.services.iplayarr.loadbalancer.server.port=4404"
     volumes:
-      - "{{ iplayarr_downloads }}:/mnt/media"
+      - "{{ iplayarr_downloads }}:/data"
       - "{{ composition_config }}/cache:/data"
       - "{{ composition_config }}/config:/config"
       - /etc/localtime:/etc/localtime:ro
