@@ -37,7 +37,7 @@
     - config
     - cache
 
-- name: Create directories
+- name: Create download directories
   ansible.builtin.file:
     path: "{{ iplayarr_downloads }}/_incomplete"
     state: directory
