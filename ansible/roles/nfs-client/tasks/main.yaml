@@ -5,25 +5,24 @@
       - nfs-common
     state: present
 
-# - name: Ping storage
-#   command: ping -c1 {{ nfsclient_remote_server }}
-#   delegate_to: localhost
-#   register: ping_result
-#   ignore_errors: true
 
-# - name: Attempt to mount remote NFS backup
-#   block:
-#     - name: Mount remote NFS volumes
-#       become: true
-#       ansible.posix.mount:
-#         src: "{{ nfsclient_remote_server }}:{{ restic_server_path }}" # TODO: Make this a look-up from inventory data
-#         path: "{{ restic_client_path }}"
-#         state: mounted
-#         opts: "{{ nfsclient_mount_options }}"
-#         fstype: nfs
-#         boot: true
-#       when: not ping_result.failed
-#   rescue:
-#     - name: Debug remote mount failure
-#       ansible.builtin.debug:
-#         msg: "Could not mount {{ nfsclient_remote_server }}:{{ restic_server_path }}. Non-fatal. Proceeding."
+- name: Attempt to mount NFS shares
+  block:
+    - name: Mount remote NFS volumes
+      become: true
+      ansible.posix.mount:
+        src: "{{ nfs_mount.remote_server }}:{{ nfs_mount.remote_path }}"
+        path: "{{ nfs_mount.local_path }}"
+        state: mounted
+        opts: "{{ nfs_mount.nfsclient_mount_options | default('defaults,_netdev,x-systemd.after=network-online.target') }}"
+        fstype: nfs
+        boot: true
+      loop: "{{ nfs_mounts }}"
+      loop_control:
+        loop_var: nfs_mount
+      when: nfs_mounts is defined
+
+  rescue:
+    - name: Debug remote mount failure
+      ansible.builtin.debug:
+        msg: "Could not mount {{ nfsclientnfs_mount.remote_server_remote_server }}:{{ nfs_mount.remote_path }}. Non-fatal. Proceeding."

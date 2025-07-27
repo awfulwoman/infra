@@ -32,6 +32,12 @@ zfs_backup_datasets:
 compositions_config_dir: "/{{ container_compositions_zfs_id }}"
 zfspath_downloads: "/{{ zfsid_downloads }}"
 
+nfs_mounts:
+  - remote_server: "host-storage"
+    remote_path: "/slowpool/shared/media"
+    local_path: "/fastpool/storage-share"
+    # mount_options: "defaults,_netdev,x-systemd.after=network-online.target"
+
 compositions:
   - reverseproxy
   - container-management
