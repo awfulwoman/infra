@@ -1,0 +1,26 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  iplayarr:
+    container_name: iplayarr
+    image: "nikorag/iplayarr:latest"
+    restart: unless-stopped
+    env_file: .environment_vars
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.iplayarr.rule=Host(`iplayarr.{{ domain_name }}`)"
+      - "traefik.http.routers.iplayarr.tls=true"
+      - "traefik.http.routers.iplayarr.tls.certresolver=letsencrypt"
+      - "traefik.http.services.iplayarr.loadbalancer.server.port=4404"
+    volumes:
+      - "{{ composition_config }}:/INSIDEPATH"
+      - "/fastpool/downloads/iplayer:/mnt/media"
+      - "{{ composition_config }}/cache:/data"
+      - "{{ composition_config }}/config:/config"
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+
+networks:
+  "{{ default_docker_network }}":
+    external: true

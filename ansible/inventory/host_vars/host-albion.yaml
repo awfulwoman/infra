@@ -35,3 +35,4 @@ zfspath_downloads: "/{{ zfsid_downloads }}"
 compositions:
   - reverseproxy
   - container-management
+  - iplayarr
