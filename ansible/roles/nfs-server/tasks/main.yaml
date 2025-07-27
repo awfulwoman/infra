@@ -1,4 +1,3 @@
----
 - name: Install NFS packages
   become: true
   ansible.builtin.apt:
@@ -7,16 +6,19 @@
       - nfs-kernel-server
     state: present
 
-- name: Gather facts about ZFS dataset
-  ansible.builtin.stat:
-    path: "{{ restic_server_path }}"
-  register: restic_server_path_status
+# - name: Gather facts about ZFS dataset
+#   ansible.builtin.stat:
+#     path: "{{ restic_server_path }}"
+#   register: restic_server_path_status
 
-# - name: Share ZFS datasets via NFS
-#   become: true
-#   community.general.zfs:
-#     name: "{{ restic_zfs_id }}"
-#     state: present
-#     extra_zfs_properties:
-#       sharenfs: rw=@100.64.0.0/10
-#   when: (restic_zfs_id is defined) and (restic_server_path_status.stat.exists)
+- name: Share ZFS datasets via NFS
+  become: true
+  community.general.zfs:
+    name: "{{ nfsshare.dataset }}"
+    state: present
+    extra_zfs_properties:
+      sharenfs: "{{ nfsshare.options }}"
+  loop_control:
+    loop_var: nfsshare
+  loop: "{{ zfs_nfs_exports }}"
+  when: (zfs_nfs_exports is defined) and (zfs_nfs_exports.stat.exists)

@@ -67,6 +67,7 @@ zfs_backup_datasets_exclude:
   - slowpool/shared/media/downloads
 
 # Media storage
+shared_media_path_zfs_id: slowpool/shared/media
 shared_media_path: "/slowpool/shared/media"
 
 tubeachivist_youtube_path: "{{ shared_media_path }}/youtube"
@@ -76,9 +77,13 @@ syncthing_paths:
   data_charlie: "{{ syncthing_data_path }}"
 
 # --- NFS -------------
-nfs_exports:
-  - "/fastpool *(rw,all_squash,anonuid=1000,anongid=1000)"
-  - "{{ shared_media_path }} *(rw,all_squash,anonuid=1000,anongid=1000)"
+# nfs_exports:
+  # - "/fastpool *(rw,all_squash,anonuid=1000,anongid=1000)"
+  # - "{{ shared_media_path }} *(rw,all_squash,anonuid=1000,anongid=1000)"
+
+zfs_nfs_exports:
+  - dataset: "{{ shared_media_path_zfs_id }}"
+    options: "rw=100.64.0.0/10,anonuid=1000,anongid=1000,no_root_squash,all_squash"
 
 
 vault_ironwolfpro_16tb_alpha: !vault |
