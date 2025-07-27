@@ -1,7 +1,7 @@
 - name: UK Server (dev work)
   hosts: host-albion
   roles:
-    - role: nfs-client
+    - role: compositions
 
   handlers:
     - name: Reboot host
