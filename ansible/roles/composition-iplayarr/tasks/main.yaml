@@ -37,6 +37,14 @@
     - config
     - cache
 
+- name: Create directories
+  ansible.builtin.file:
+    path: "{{ iplayarr_downloads }}/_incomplete"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0664"
+
 - name: Run Configure DNS role
   ansible.builtin.include_role:
     name: "configure-dns"
