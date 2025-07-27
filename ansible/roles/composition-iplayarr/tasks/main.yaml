@@ -47,7 +47,6 @@
   loop_control:
     loop_var: dl_item
   loop:
-    - "{{ iplayarr_downloads }}"
     - "{{ iplayarr_downloads }}/_incomplete"
 
 - name: Run Configure DNS role
