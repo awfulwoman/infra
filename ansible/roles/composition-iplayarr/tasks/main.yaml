@@ -24,18 +24,18 @@
 # Specific tasks
 # ----------------------------
 
-# - name: Create directories
-#   file:
-#     path: "{{ composition_config }}/{{ dir_item }}"
-#     state: directory
-#     owner: "{{ ansible_user }}"
-#     group: "{{ ansible_user }}"
-#     mode: "0664"
-#   loop_control:
-#     loop_var: dir_item
-#   loop:
-#     - whatever1
-#     - whatever2
+- name: Create directories
+  file:
+    path: "{{ composition_config }}/{{ dir_item }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0664"
+  loop_control:
+    loop_var: dir_item
+  loop:
+    - config
+    - cache
 #     - whatever3
 
 # - name: Copy over files
@@ -44,10 +44,9 @@
 #     src: filename.txt
 #     dest: "{{ composition_config }}/filename.txt
 
-# - name: Run Configure DNS role
-#   ansible.builtin.include_role:
-#     name: "configure-dns"
-#   vars:
-#     configure_dns_subdomains:
-#       - homeassistant
-#       - whoami.{{ ansible_hostname }}
+- name: Run Configure DNS role
+  ansible.builtin.include_role:
+    name: "configure-dns"
+  vars:
+    configure_dns_subdomains:
+      - iplayarr
