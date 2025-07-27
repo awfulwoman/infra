@@ -13,7 +13,6 @@ services:
       - "traefik.http.routers.iplayarr.tls.certresolver=letsencrypt"
       - "traefik.http.services.iplayarr.loadbalancer.server.port=4404"
     volumes:
-      - "{{ composition_config }}:/INSIDEPATH"
       - "/fastpool/downloads/iplayer:/mnt/media"
       - "{{ composition_config }}/cache:/data"
       - "{{ composition_config }}/config:/config"
