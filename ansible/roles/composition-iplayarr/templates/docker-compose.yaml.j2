@@ -13,10 +13,10 @@ services:
       - "traefik.http.routers.iplayarr.tls.certresolver=letsencrypt"
       - "traefik.http.services.iplayarr.loadbalancer.server.port=4404"
     volumes:
-      - "{{ iplayarr_downloads }}:/data"
+      - "{{ iplayarr_downloads }}/shows:/data/shows"
+      - "/fastpool/downloads/iplayer:/data/_incomplete"
       - "{{ composition_config }}/cache:/data"
       - "{{ composition_config }}/config:/config"
-      - /etc/localtime:/etc/localtime:ro
     networks:
       - "{{ default_docker_network }}"
 

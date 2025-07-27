@@ -37,17 +37,17 @@
     - config
     - cache
 
-- name: Create download directories
-  ansible.builtin.file:
-    path: "{{ dl_item }}"
-    state: directory
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    mode: "0777"
-  loop_control:
-    loop_var: dl_item
-  loop:
-    - "{{ iplayarr_downloads }}/_incomplete"
+# - name: Create download directories
+#   ansible.builtin.file:
+#     path: "{{ dl_item }}"
+#     state: directory
+#     owner: "{{ ansible_user }}"
+#     group: "{{ ansible_user }}"
+#     mode: "0777"
+#   loop_control:
+#     loop_var: dl_item
+#   loop:
+#     - "{{ iplayarr_downloads }}/_incomplete"
 
 - name: Run Configure DNS role
   ansible.builtin.include_role:
