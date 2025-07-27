@@ -1,0 +1,10 @@
+---
+- name: UK Server (compositions only)
+  hosts: host-albion
+  roles:
+    - role: compositions
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:
