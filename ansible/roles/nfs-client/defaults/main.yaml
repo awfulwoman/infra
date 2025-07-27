@@ -1,4 +1,4 @@
-nfsclient_remote_server: "host-storage"
-# nfsclient_remote_path: "{{ restic_server_path }}"
-nfsclient_local_path: "{{ restic_client_path }}"
-nfsclient_mount_options: "defaults,_netdev,x-systemd.after=network-online.target"
+# nfsclient_remote_server: "host-storage"
+# # nfsclient_remote_path: "{{ restic_server_path }}"
+# nfsclient_local_path: "{{ restic_client_path }}"
+# nfsclient_mount_options: "defaults,_netdev,x-systemd.after=network-online.target"

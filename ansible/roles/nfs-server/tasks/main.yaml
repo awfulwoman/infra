@@ -7,16 +7,16 @@
       - nfs-kernel-server
     state: present
 
-# - name: Gather facts about ZFS dataset
-#   ansible.builtin.stat:
-#     path: "{{ restic_server_path }}"
-#   register: restic_server_path_status
+- name: Gather facts about ZFS dataset
+  ansible.builtin.stat:
+    path: "{{ restic_server_path }}"
+  register: restic_server_path_status
 
-# - name: Share any restic ZFS dataset via NFS
+# - name: Share ZFS datasets via NFS
 #   become: true
 #   community.general.zfs:
 #     name: "{{ restic_zfs_id }}"
 #     state: present
 #     extra_zfs_properties:
-#       sharenfs: rw=@192.168.1.0/24
+#       sharenfs: rw=@100.64.0.0/10
 #   when: (restic_zfs_id is defined) and (restic_server_path_status.stat.exists)

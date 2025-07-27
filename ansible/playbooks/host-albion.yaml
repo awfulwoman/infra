@@ -11,6 +11,7 @@
     - role: configure-sshkey
     - role: ip-address-forwarding
     - role: install-docker
+    - role: nfs-client
     - role: zfs-core
     - role: install-ansible
     - role: install-ansible-pull

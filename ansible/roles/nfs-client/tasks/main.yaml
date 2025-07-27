@@ -5,11 +5,11 @@
       - nfs-common
     state: present
 
-- name: Ping storage
-  command: ping -c1 {{ nfsclient_remote_server }}
-  delegate_to: localhost
-  register: ping_result
-  ignore_errors: yes
+# - name: Ping storage
+#   command: ping -c1 {{ nfsclient_remote_server }}
+#   delegate_to: localhost
+#   register: ping_result
+#   ignore_errors: true
 
 # - name: Attempt to mount remote NFS backup
 #   block:
