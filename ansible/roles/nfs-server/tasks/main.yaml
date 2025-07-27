@@ -21,4 +21,4 @@
   loop_control:
     loop_var: nfsshare
   loop: "{{ zfs_nfs_exports }}"
-  when: (zfs_nfs_exports is defined) and (zfs_nfs_exports.stat.exists)
+  when: (zfs_nfs_exports is defined)
