@@ -1,0 +1,51 @@
+# This isn't in use yet.
+
+tls:
+  options:
+    default:
+      minVersion: VersionTLS13
+      sniStrict: true
+
+http:
+  routers:
+    awfulwoman:
+      service: awfulwoman
+      rule: "Host(`awfulwoman.com`)"
+      tls:
+        certresolver: letsencrypt
+      entrypoints:
+        - web
+        - websecure
+      middlewares:
+        - secHeaders
+        - https-redirect
+  
+  middlewares:
+    redirectOldDomains01:
+      redirectRegex:
+        regex: "^http://{{ vault_olddomain_se }}/(.*)"
+        replacement: "https://awfulwoman.com/${1}"
+    redirectOldDomains02:
+      redirectRegex:
+        regex: "^http://{{ vault_olddomain_wc }}/(.*)"
+        replacement: "https://awfulwoman.com/${1}"
+    secHeaders:
+      headers:
+        browserXssFilter: true
+        contentTypeNosniff: true
+        frameDeny: true
+        sslRedirect: true
+        stsIncludeSubdomains: true
+        stsPreload: true
+        stsSeconds: 31536000
+        customFrameOptionsValue: SAMEORIGIN
+    https-redirect:
+      redirectScheme:
+        scheme: https
+
+  services:
+    awfulwoman:
+      loadBalancer:
+        passHostHeader: true
+        servers:
+          - url: "http://100.106.129.23:8085"
