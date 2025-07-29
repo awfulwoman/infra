@@ -1,0 +1,18 @@
+$TTL    604800
+@       IN      SOA     ns1.{{ domain_name }}. admin.{{ domain_name }}. (
+                        {{ now(utc=true,fmt='%Y-%m-%d %H:%M:%S') }}         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+; Nameserver
+{{ domain_name }}.    IN      NS      ns1.{{ domain_name }}.
+
+; A records for name server
+ns1             IN      A       192.1.168.2
+
+; Base domain A record
+@               IN      A       192.1.168.116
+www             IN      A       192.1.168.116
+
+; Records auto-generated from Ansible inventory will appear here...

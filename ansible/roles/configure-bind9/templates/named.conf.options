@@ -1,6 +1,6 @@
-// Local physical netowrk only - exclude overlay network
+// Local physical network only - exclude overlay network
 acl LAN {
-192.168.1.0/24;
+        192.168.1.0/24;
 };
 options {
         directory "/var/cache/bind";
@@ -14,11 +14,16 @@ options {
         recursion yes;
 };
 
-zone "{{ domain_name }}" IN {
+zone "{{ domain_name }}" {
         type master;
         file "/etc/bind/zones/db.lan.{{ domain_name }}.zone";
         allow-transfer { 
                 localhost; 
                 LAN; 
         };
+};
+
+zone "1.168.192.in-addr.arpa" {
+    type master;
+    file "/etc/bind/zones/db.192.168.1";
 };
