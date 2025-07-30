@@ -11,7 +11,7 @@ $TTL       {{ bind_default_ttl }}
           IN       NS    ns1.{{ bind_domain }}.
 
 ; PTR records
-2         IN       PTR    ns1.{{ bind_domain }}.
-116       IN       PTR    www.{{ bind_domain }}.
+0.2         IN       PTR    ns1.{{ bind_domain }}.
+0.116       IN       PTR    www.{{ bind_domain }}.
 
 ; PTR records auto-generated from Ansible inventory will appear here...

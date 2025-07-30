@@ -1,3 +1,14 @@
 bind_domain: "xberg.ber.{{ domain_name }}"
 bind_default_ttl: 604800 # 1 week
 bind_iprange: 172.16.0.0/22 # 172.16.0.0 - 172.16.3.255 # 1024 IPs
+bind_records_a:
+  - name: "@"
+    ip: 172.16.0.4
+  - name: "ns1"
+    ip: 172.16.0.2
+  - name: "ns2"
+    ip: 172.16.0.3
+  - name: "www"
+    ip: 172.16.0.4
+# bind_records_mx:
+# bind_records_txt:

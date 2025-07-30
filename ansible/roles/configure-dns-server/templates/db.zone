@@ -12,13 +12,19 @@ $ORIGIN    {{ bind_domain }}.
 ; Mail servers
 ; MX records can be added here if needed
 
-; A records
-@               IN      A       172.16.0.4
-ns1             IN      A       172.16.0.2
-ns2             IN      A       172.16.0.3
-www             IN      A       172.16.0.4
+; A records from config
+{% if bind_records_a is definded %}
+{% for record in bind_records_a %}
+{{ record.name }}    IN      A       {{ record.ip }}
+{% endfor %}
+{% endif %}
 
 ; A records auto-generated from Ansible inventory will appear here...
+{% for host in hostvars %}
+{% if host.machine_name is defined %}
+{{ host }}    IN      A       {{ host.machine_name }}
+{% endif %}
+{% endfor %}
 
 ; CNAME records auto-generated from Ansible inventory will appear here...
 
