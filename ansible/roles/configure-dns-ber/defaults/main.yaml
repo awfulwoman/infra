@@ -1,1 +1,2 @@
-bind_local_domain: "ber.{{ domain_name }}"
+bind_local_domain: "ber.xberg.{{ domain_name }}"
+bind_default_ttl: 604800

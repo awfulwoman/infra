@@ -1,15 +1,17 @@
-$TTL    604800
-@       IN      SOA     {{ domain_name }}. admin.{{ domain_name }}. (
-                        {{ now(utc=true,fmt='%Y-%m-%d %H:%M:%S') }}         ; Serial
-                         604800         ; Refresh
-                          86400         ; Retry
-                        2419200         ; Expire
-                         604800 )       ; Negative Cache TTL
+$TTL       {{ bind_default_ttl }}
+@          IN       SOA    {{ domain_name }}. admin.{{ domain_name }}. (
+                           {{ now(utc=true,fmt='%Y-%m-%d %H:%M:%S') }}          ; Serial
+                           604800          ; Refresh
+                           86400           ; Retry
+                           2419200         ; Expire
+                           604800 )        ; Negative Cache TTL
 ;
 
 ; Name servers
-          IN      NS      ns1.{{ domain_name }}.
+          IN       NS    ns1.{{ domain_name }}.
 
 ; PTR records
-2         IN      PTR      ns1.{{ domain_name }}.
-116       IN      PTR      www.{{ domain_name }}.
+2         IN       PTR    ns1.{{ domain_name }}.
+116       IN       PTR    www.{{ domain_name }}.
+
+; PTR records auto-generated from Ansible inventory will appear here...
