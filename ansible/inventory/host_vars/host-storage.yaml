@@ -5,7 +5,7 @@ machine_name: storage # Hostname of the machine
 machine_city: ber # City where the machine is located
 machine_location: xberg # Location of the machine within the city
 machine_fqdn: "{{ machine_name }}.{{ machine_location }}.{{ machine_city }}.{{ domain_name }}"
-
+machine_ipv4: 172.16.0.4
 
 
 # --- NETWORK -------------

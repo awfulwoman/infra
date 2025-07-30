@@ -26,12 +26,12 @@ $ORIGIN    {{ bind_domain }}.
 {% for record in bind_records_a %}
 {{ record.name }}{% if record.ttl is defined %}{{ record.ttl }}{% endif %} IN A {{ record.ip }}
 {% endfor %}
-{% endif %}
+{% endif %} 
 
 ; A records auto-generated from Ansible inventory will appear here...
 {% for host in hostvars %}
-{% if host.machine_name is defined %}
-{{ host }} IN A {{ host.machine_name }}
+{% if hostvars[host].machine_fqdn is defined and hostvars[host].machine_ipv4 is defined %}
+{{ hostvars[host].machine_ipv4 }} IN A {{ hostvars[host].machine_fqdn }}
 {% endif %}
 {% endfor %}
 
