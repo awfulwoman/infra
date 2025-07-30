@@ -1,10 +1,10 @@
-$TTL       {{ bind_default_ttl }}
-@          IN       SOA    {{ bind_domain }}. admin.{{ bind_domain }}. (
-                           {{ now(utc=true,fmt='%Y-%m-%d %H:%M:%S') }}          ; Serial
-                           604800          ; Refresh
-                           86400           ; Retry
-                           2419200         ; Expire
-                           604800 )        ; Negative Cache TTL
+$TTL {{ bind_default_ttl }}
+@ IN SOA    {{ bind_domain }}. admin.{{ domain_name }}. (
+  {{ now(utc=true,fmt='%Y%m%d%H%M%S') }}  ; Serial
+  604800   ; Refresh
+  86400    ; Retry
+  2419200  ; Expire
+  604800 ) ; Negative Cache TTL
 ;
 
 ; Name servers

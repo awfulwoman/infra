@@ -202,5 +202,4 @@ cnames:
   - home.{{ domain_name }}
   - wallabag.{{ domain_name }}
   - jellyseerr.{{ domain_name }}
-  - gts.awfulwoman.com
   - translate.{{ domain_name }}
