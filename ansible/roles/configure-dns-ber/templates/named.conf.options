@@ -1,12 +1,12 @@
 // Local physical network only - exclude overlay network
-acl LAN {
+acl BER {
         192.168.1.0/24;
 };
 options {
         directory "/var/cache/bind";
         allow-query { 
                 localhost; 
-                LAN; 
+                BER; 
         };
         forwarders { 
                 1.1.1.1;
@@ -16,14 +16,14 @@ options {
 
 zone "{{ bind_local_domain }}" {
         type master;
-        file "/etc/bind/zones/db.lan.{{ bind_local_domain }}.zone";
+        file "/etc/bind/zones/db.ber.{{ bind_local_domain }}.zone";
         allow-transfer { 
                 localhost; 
-                LAN; 
+                BER; 
         };
 };
 
 zone "1.168.192.in-addr.arpa" {
     type master;
-    file "/etc/bind/zones/db.lan.192.168.1";
+    file "/etc/bind/zones/db.ber.192.168.1";
 };
