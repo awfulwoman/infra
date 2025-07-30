@@ -1,11 +1,10 @@
----
 - name: Storage NAS
   hosts: host-storage
-  vars:
-    compositions:
-      - libretranslate
+  # vars:
+  #   compositions:
+  #     - libretranslate
   roles:
-    - role: compositions
+    - role: configure-dns-server
 
   handlers:
     - name: Reboot host

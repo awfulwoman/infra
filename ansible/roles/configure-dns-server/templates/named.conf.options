@@ -14,9 +14,9 @@ options {
         recursion yes;
 };
 
-zone "{{ bind_local_domain }}" {
+zone "{{ bind_domain }}" {
         type master;
-        file "/etc/bind/zones/db.{{ bind_local_domain }}.zone";
+        file "/etc/bind/zones/db.{{ bind_domain }}.zone";
         allow-transfer {
                 localhost; 
                 BER; 
@@ -25,5 +25,5 @@ zone "{{ bind_local_domain }}" {
 
 zone "16.172.in-addr.arpa" {
     type master;
-    file "/etc/bind/zones/db.{{ bind_local_domain }}.reverse.zone";
+    file "/etc/bind/zones/db.{{ bind_domain }}.reverse.zone";
 };

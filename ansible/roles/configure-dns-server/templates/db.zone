@@ -1,28 +1,37 @@
 $TTL       {{ bind_default_ttl }}
 $ORIGIN    {{ bind_domain }}.
-@       IN      SOA     ns1.{{ bind_domain }}. admin.{{ bind_domain }}. (
-                        {{ now(utc=true,fmt='%Y-%m-%d %H:%M:%S') }}         ; Serial
-                         604800         ; Refresh
-                          86400         ; Retry
-                        2419200         ; Expire
-                         604800 )       ; Negative Cache TTL
+@ IN SOA ns1.{{ bind_domain }}. admin.{{ bind_domain }}. (
+  {{ now(utc=true,fmt='%Y%m%d%H%M%S') }}         ; Serial
+  604800         ; Refresh
+  86400         ; Retry
+  2419200         ; Expire
+  604800 )       ; Negative Cache TTL
 ; Nameservers
-{{ bind_domain }}.    IN      NS      ns1.{{ bind_domain }}.
+{% if bind_records_nameservers is defined %}
+{% for record in bind_records_nameservers %}
+ IN NS {{ record.name }}.{{ bind_domain }}.
+{% endfor %}
+{% endif %}
 
 ; Mail servers
 ; MX records can be added here if needed
 
 ; A records from config
-{% if bind_records_a is definded %}
+{% if bind_records_nameservers is defined %}
+{% for record in bind_records_nameservers %}
+{{ record.name }}{% if record.ttl is defined %}{{ record.ttl }}{% endif %} IN A {{ record.ip }}
+{% endfor %}
+{% endif %}
+{% if bind_records_a is defined %}
 {% for record in bind_records_a %}
-{{ record.name }}    IN      A       {{ record.ip }}
+{{ record.name }}{% if record.ttl is defined %}{{ record.ttl }}{% endif %} IN A {{ record.ip }}
 {% endfor %}
 {% endif %}
 
 ; A records auto-generated from Ansible inventory will appear here...
 {% for host in hostvars %}
 {% if host.machine_name is defined %}
-{{ host }}    IN      A       {{ host.machine_name }}
+{{ host }} IN A {{ host.machine_name }}
 {% endif %}
 {% endfor %}
 
