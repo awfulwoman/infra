@@ -14,9 +14,9 @@ options {
         recursion yes;
 };
 
-zone "{{ domain_name }}" {
+zone "{{ bind_local_domain }}" {
         type master;
-        file "/etc/bind/zones/db.lan.{{ domain_name }}.zone";
+        file "/etc/bind/zones/db.lan.{{ bind_local_domain }}.zone";
         allow-transfer { 
                 localhost; 
                 LAN; 
