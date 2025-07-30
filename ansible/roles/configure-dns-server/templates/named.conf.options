@@ -16,14 +16,14 @@ options {
 
 zone "{{ bind_local_domain }}" {
         type master;
-        file "/etc/bind/zones/db.ber.{{ bind_local_domain }}.zone";
-        allow-transfer { 
+        file "/etc/bind/zones/db.{{ bind_local_domain }}.zone";
+        allow-transfer {
                 localhost; 
                 BER; 
         };
 };
 
-zone "1.168.192.in-addr.arpa" {
+zone "16.172.in-addr.arpa" {
     type master;
-    file "/etc/bind/zones/db.ber.192.168.1";
+    file "/etc/bind/zones/db.{{ bind_local_domain }}.reverse.zone";
 };

@@ -1,5 +1,5 @@
 $TTL       {{ bind_default_ttl }}
-@          IN       SOA    {{ domain_name }}. admin.{{ domain_name }}. (
+@          IN       SOA    {{ bind_domain }}. admin.{{ bind_domain }}. (
                            {{ now(utc=true,fmt='%Y-%m-%d %H:%M:%S') }}          ; Serial
                            604800          ; Refresh
                            86400           ; Retry
@@ -8,10 +8,10 @@ $TTL       {{ bind_default_ttl }}
 ;
 
 ; Name servers
-          IN       NS    ns1.{{ domain_name }}.
+          IN       NS    ns1.{{ bind_domain }}.
 
 ; PTR records
-2         IN       PTR    ns1.{{ domain_name }}.
-116       IN       PTR    www.{{ domain_name }}.
+2         IN       PTR    ns1.{{ bind_domain }}.
+116       IN       PTR    www.{{ bind_domain }}.
 
 ; PTR records auto-generated from Ansible inventory will appear here...
