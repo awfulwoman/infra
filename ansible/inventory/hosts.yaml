@@ -1,37 +1,54 @@
 ---
 all:
   hosts:
-    # device-*       A network-aware device that performs a task. Does not have an OS that can be managed via SSH.
-    # host-*         A physical machine used to perform tasks. Has an OS that can be managed via SSH.
-    # vm-*           A virtual machine used to perform tasks. Has an OS that can be managed via SSH.
-    # workstation-*  A machine used directly by a person. Has an OS that can be managed via SSH.
     host-homeassistant:                   # Home Assistant
     host-mqtt:                            # MQTT Broker
     host-backups:                         # Backups
     host-storage:                         # NAS
-    host-pihole:                          # DHCP + DNS
-    host-workloads:                       # Misc workloads
     vm-awfulwoman:                        # Hosting for my personal website
     host-mba2011:
     host-albion:                          # UK Server
 
-    ber.xberg.storage:
-    ber.xberg.backups:
-    ber.xberg.homeautomation:
-    ber.xberg.mqtt:
-    ber.kotti.offsite:
-    ldn.kentishtown.albion:
-    vm.awfulwoman:
+# START Experimental hosts
+    storage:
+    backups:
+    homeautomation:
+    mqtt:
+    offsite:
+    albion:
+    awfulwoman:
+# END Experimental hosts
 
-  # Groupings of servers that allow them to be administered collectively.
   children:
+# START Experimental groups
+    vps:
+      hosts:
+        vm-awfulwoman:
+    ldn:
+      children:
+        kentishtown:
+          hosts:
+            albion:
+    ber:
+      children:
+        xberg:
+          hosts:
+            storage:
+            backups:
+            homeautomation:
+            mqtt:
+        kotti:
+          hosts:
+            offsite:
+# END Experimental groups
+
 
     # Group: Home Automation
     homeautomation:
       hosts:
         host-homeassistant:
 
-    # ZFS Clients
+    # Replication sources that will be backed up
     zfs-backup-clients:
       hosts:
         host-storage:
@@ -39,6 +56,7 @@ all:
         host-homeassistant:
         host-albion:
 
-    sitedeployment: # Necessary to handle deployment keys
+    # Necessary to handle deployment keys
+    sitedeployment: 
       hosts:
         vm-awfulwoman:
