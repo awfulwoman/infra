@@ -11,7 +11,7 @@
     - role: install-ansible
     - role: install-ansible-pull
     - role: configure-dns-server
-      
+
   handlers:
     - name: Reboot host
       become: true
