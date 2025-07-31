@@ -131,6 +131,7 @@ port: 8080
 # Default: ["127.0.0.1/32", "::1"] (localhost ipv4 + ipv6)
 trusted-proxies:
   - "172.17.0.1/16" # Docker
+  - "172.18.0.1/16" # Docker. Again.
   - "127.0.0.1/32" # Not sure why localhost is here, but it's suggested by the docs.
   - "100.64.0.0/10" # Tailscale
   - "::1"
