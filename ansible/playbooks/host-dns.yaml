@@ -1,0 +1,18 @@
+- name: DNS
+  hosts: host-dns
+  roles:
+    - role: hardware-raspberry-pi
+      raspberry_pi_wifi: false
+      raspberry_pi_boot_config_location: /boot/firmware/config.txt
+      raspberry_pi_config_overrides:
+        - "dtoverlay=gpio-fan,gpiopin=14,temp=60000"
+    - role: bootstrap-ubuntu-server
+    - role: configure-sshkey
+    - role: install-ansible
+    - role: install-ansible-pull
+    - role: configure-dns-server
+      
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:
