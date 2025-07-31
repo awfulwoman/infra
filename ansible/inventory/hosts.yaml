@@ -9,11 +9,10 @@ all:
     host-albion:
 
 # START Experimental hosts
-    storage:
+    nas:
     backups:
-    homeautomation:
-    mqtt:
-    offsite:
+    homebrain:
+    pbj:
     albion:
     awfulwoman:
 # END Experimental hosts
