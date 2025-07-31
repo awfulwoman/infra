@@ -1,53 +1,68 @@
-# Install BIND via apt
-# - name: Install BIND
-#   ansible.builtin.apt:
-#     name: bind9
-#     state: present
+- name: Install BIND
+  become: true
+  ansible.builtin.apt:
+    name:
+      - bind9
+      - bind9-dnsutils
+      - bind9-doc
+      - bind9-host
+      - bind9-libs
+      - bind9-utils
+    state: present
 
-# ensure /tmp/etc/bind/ exists
-- name: Ensure /tmp/etc/bind directory exists
+- name: Ensure /etc/bind directory exists
   become: true
   ansible.builtin.file:
-    dest: /tmp/etc/bind
+    dest: /etc/bind
     state: directory
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: '0755'
+    mode: "0755"
 
-# Copy over templates
 - name: Copy named.conf.options
   become: true
   ansible.builtin.template:
     src: named.conf.options
-    dest: /tmp/etc/bind/named.conf.options
-    owner: "{{ ansible_user }}" # root
-    group: "{{ ansible_user }}" # bind
-    mode: '0644'
+    dest: /etc/bind/named.conf.options
+    # owner: "{{ ansible_user }}" # root
+    # group: "{{ ansible_user }}" # bind
+    owner: root
+    group: bind
+    mode: "0644"
 
 - name: Ensure zone file exists
   become: true
   ansible.builtin.template:
     src: db.zone
-    dest: "/tmp/etc/bind/db.{{ bind_domain }}.zone"
-    owner: "{{ ansible_user }}" # root
-    group: "{{ ansible_user }}" # bind
-    mode: '0644'
+    dest: "/etc/bind/db.{{ bind_domain }}.zone"
+    # owner: "{{ ansible_user }}" # root
+    # group: "{{ ansible_user }}" # bind
+    owner: root
+    group: bind
+    mode: "0644"
 
 - name: Ensure reverse zone file exists
   become: true
   ansible.builtin.template:
     src: db.reverse.zone
-    dest: "/tmp/etc/bind/db.{{ bind_domain }}.reverse.zone"
-    owner: "{{ ansible_user }}" # root
-    group: "{{ ansible_user }}" # bind
-    mode: '0644'
+    dest: "/etc/bind/db.{{ bind_domain }}.reverse.zone"
+    # owner: "{{ ansible_user }}" # root
+    # group: "{{ ansible_user }}" # bind
+    owner: root
+    group: bind
+    mode: "0644"
 
-# Ensure firewall is open for DNS
-# - name: Open DNS port in firewall
-#   community.general.ufw:
-#     rule: allow
-#     name: 'DNS Server'
-#     port: '53'
-#     proto: 'tcp'
+- name: Open DNS port in firewall
+  become: true
+  community.general.ufw:
+    rule: allow
+    port: 53
+    proto: tcp
+    state: enabled
 
-# Start named
+- name: Start BIND service
+  become: true
+  ansible.builtin.systemd:
+    name: named
+    state: started
+    enabled: true
