@@ -1,5 +1,5 @@
 - name: DNS
-  hosts: host-dns
+  hosts: dns
   roles:
     - role: hardware-raspberry-pi
       raspberry_pi_wifi: false
