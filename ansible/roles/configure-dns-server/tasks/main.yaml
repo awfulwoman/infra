@@ -52,13 +52,13 @@
     group: bind
     mode: "0644"
 
-- name: Open DNS port in firewall
-  become: true
-  community.general.ufw:
-    rule: allow
-    port: 53
-    proto: tcp
-    state: enabled
+# - name: Open DNS port in firewall
+#   become: true
+#   community.general.ufw:
+#     rule: allow
+#     port: 53
+#     proto: tcp
+#     state: enabled
 
 - name: Start BIND service
   become: true

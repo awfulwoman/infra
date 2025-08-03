@@ -1,4 +1,3 @@
----
 - name: UK Server
   hosts: host-albion
   roles:
