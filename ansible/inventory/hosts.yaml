@@ -7,7 +7,7 @@ all:
     vm-awfulwoman:
     host-mba2011:
     host-albion:
-    host-dns:
+    dns:
 
 # START Experimental hosts
     nas:
