@@ -10,10 +10,10 @@
       - bind9-utils
     state: present
 
-- name: Ensure /etc/bind directory exists
+- name: Ensure zones dir exists
   become: true
   ansible.builtin.file:
-    dest: /etc/bind
+    dest: /etc/bind/zones
     state: directory
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
@@ -34,7 +34,7 @@
   become: true
   ansible.builtin.template:
     src: db.zone
-    dest: "/etc/bind/db.{{ bind_domain }}.zone"
+    dest: "/etc/bind/zones/db.{{ bind_domain }}.zone"
     # owner: "{{ ansible_user }}" # root
     # group: "{{ ansible_user }}" # bind
     owner: root
@@ -45,7 +45,7 @@
   become: true
   ansible.builtin.template:
     src: db.reverse.zone
-    dest: "/etc/bind/db.{{ bind_domain }}.reverse.zone"
+    dest: "/etc/bind/zones/db.{{ bind_domain }}.reverse.zone"
     # owner: "{{ ansible_user }}" # root
     # group: "{{ ansible_user }}" # bind
     owner: root
