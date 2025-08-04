@@ -1,0 +1,9 @@
+- name: DNS
+  hosts: dns
+  roles:
+    - role: configure-dns-server
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:

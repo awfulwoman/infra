@@ -9,11 +9,11 @@ options {
                 {{ bind_acl_group }}; 
         };
         forwarders { 
-                {% if bind_forwarders is defined %}
-                {% for item in bind_forwarders %}
+{% if bind_forwarders is defined %}
+{%- for item in bind_forwarders %}
                 {{ item }};
-                {% endfor %}
-                {% endif %}
+{% endfor -%}
+{% endif %}
         };
         recursion yes;
 };
@@ -27,7 +27,7 @@ zone "{{ bind_domain }}" {
         };
 };
 
-zone "16.172.in-addr.arpa" {
+zone "{{ bind_iprange_reversed }}.in-addr.arpa" {
     type master;
     file "/etc/bind/zones/db.{{ bind_domain }}.reverse.zone";
 };
