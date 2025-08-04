@@ -1,4 +1,4 @@
-- name: Install BIND
+- name: Install BIND packages
   become: true
   ansible.builtin.apt:
     name:
@@ -15,28 +15,24 @@
   ansible.builtin.file:
     dest: /etc/bind/zones
     state: directory
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    owner: root
+    group: bind
     mode: "0755"
 
-- name: Copy named.conf.options
+- name: Ensure named options exist
   become: true
   ansible.builtin.template:
     src: named.conf.options
     dest: /etc/bind/named.conf.options
-    # owner: "{{ ansible_user }}" # root
-    # group: "{{ ansible_user }}" # bind
     owner: root
     group: bind
     mode: "0644"
 
-- name: Ensure zone file exists
+- name: Ensure main zone file exists
   become: true
   ansible.builtin.template:
     src: db.zone
     dest: "/etc/bind/zones/db.{{ bind_domain }}.zone"
-    # owner: "{{ ansible_user }}" # root
-    # group: "{{ ansible_user }}" # bind
     owner: root
     group: bind
     mode: "0644"
@@ -46,8 +42,6 @@
   ansible.builtin.template:
     src: db.reverse.zone
     dest: "/etc/bind/zones/db.{{ bind_domain }}.reverse.zone"
-    # owner: "{{ ansible_user }}" # root
-    # group: "{{ ansible_user }}" # bind
     owner: root
     group: bind
     mode: "0644"
@@ -68,7 +62,7 @@
 #     regexp: "#?DNSStubListener=yes"
 #     state: present
 
-- name: Start services
+- name: Start named services
   become: true
   ansible.builtin.systemd:
     name: "{{ item }}"
