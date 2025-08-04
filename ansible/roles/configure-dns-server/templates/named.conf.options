@@ -16,6 +16,9 @@ options {
 {% endif %}
         };
         recursion yes;
+        allow-recursion { 
+                {{ bind_acl_group }}; 
+        };
 };
 
 zone "{{ bind_domain }}" {
