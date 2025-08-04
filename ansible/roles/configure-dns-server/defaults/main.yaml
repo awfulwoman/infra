@@ -1,6 +1,7 @@
 bind_domain: "xberg.ber.{{ domain_name }}"
 bind_default_ttl: 604800 # 1 week
-bind_iprange: 172.16.0.0/22 # 172.16.0.0 - 172.16.3.255 # 1024 IPs
+# bind_iprange: 172.16.0.0/22 # 172.16.0.0 - 172.16.3.255 # 1024 IPs
+bind_iprange: 192.168.0.0/22
 bind_iprange_split: "{{ bind_iprange.split('/')[0].split('.') }}"
 bind_iprange_reversed: "{{ bind_iprange_split[1] ~ '.' ~ bind_iprange_split[0] }}"
 bind_acl_group: "BER"
@@ -9,14 +10,17 @@ bind_forwarders:
   - 8.8.8.8
 bind_records_nameservers:
   - name: "dns01"
-    ip: 172.16.0.2
+    # ip: 172.16.0.2
+    ip: 192.168.1.2
   # - name: "dns02"
   #   ip: 172.16.0.3
 
 bind_records_a:
   - name: "@"
-    ip: 172.16.0.4
+    # ip: 172.16.0.4
+    ip: 192.168.1.116
   - name: "www"
-    ip: 172.16.0.4
+    # ip: 172.16.0.4
+    ip: 192.168.1.116
 # bind_records_mx:
 # bind_records_txt:
