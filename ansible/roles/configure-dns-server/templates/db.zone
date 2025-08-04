@@ -1,7 +1,7 @@
 $TTL       {{ bind_default_ttl }}
 $ORIGIN    {{ bind_domain }}.
-@ IN SOA ns1.{{ bind_domain }}. admin.{{ domain_name }}. (
-  {{ now(utc=true,fmt='%Y%m%d%H%M%S') }} ; Serial
+@                                 IN      SOA     dns01.{{ bind_domain }}. admin.{{ domain_name }}. (
+  1 ; Serial
   604800   ; Refresh
   86400    ; Retry
   2419200  ; Expire
@@ -9,7 +9,7 @@ $ORIGIN    {{ bind_domain }}.
 ; Nameservers
 {% if bind_records_nameservers is defined %}
 {% for record in bind_records_nameservers %}
-  IN NS {{ record.name }}.{{ bind_domain }}.
+                                  IN      NS      {{ record.name }}.{{ bind_domain }}.
 {% endfor %}
 {% endif %}
 
@@ -19,19 +19,19 @@ $ORIGIN    {{ bind_domain }}.
 ; A records from config
 {% if bind_records_nameservers is defined %}
 {% for record in bind_records_nameservers %}
-  {{ record.name }}{% if record.ttl is defined %}{{ record.ttl }}{% endif %} IN A {{ record.ip }}
+  {{ '%-30s' | format(record.name) }}{% if record.ttl is defined %}{{ record.ttl }}{% endif %} IN      A      {{ record.ip }}
 {% endfor %}
 {% endif %}
 {% if bind_records_a is defined %}
 {% for record in bind_records_a %}
-  {{ record.name }}{% if record.ttl is defined %}{{ record.ttl }}{% endif %} IN A {{ record.ip }}
+  {{ '%-30s' | format(record.name) }}{% if record.ttl is defined %}{{ record.ttl }}{% endif %} IN      A      {{ record.ip }}
 {% endfor %}
 {% endif %} 
 
 ; A records auto-generated from Ansible inventory will appear here...
 {% for host in hostvars %}
 {% if hostvars[host].machine_fqdn is defined and hostvars[host].machine_ipv4 is defined %}
-  {{ hostvars[host].machine_ipv4 }} IN A {{ hostvars[host].machine_fqdn }}
+  {{ '%-30s' | format(hostvars[host].machine_ipv4) }} IN      A      {{ hostvars[host].machine_fqdn }}
 {% endif %}
 {% endfor %}
 
@@ -39,7 +39,7 @@ $ORIGIN    {{ bind_domain }}.
 {% for host in hostvars %}
 {% if hostvars[host].cnames is defined %}
 {% for cname in hostvars[host].cnames %}
-  {{ cname }} IN CNAME {{ hostvars[host].machine_fqdn }}.
+  {{ '%-30s' | format(cname) }} IN      CNAME      {{ hostvars[host].machine_name }}.
 {% endfor %}
 {% endif %}
 {% endfor %}

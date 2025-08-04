@@ -1,12 +1,21 @@
-// Local physical network only - exclude overlay network
-acl {{ bind_acl_group }} {
-        {{ bind_iprange }};
+{% if bind_acl_groups is defined %}
+{%- for item in bind_acl_groups %}
+acl {{ item.name }} {
+        {{ item.iprange}};
 };
+{% endfor -%}
+{% endif %}
+
+
 options {
         directory "/var/cache/bind";
         allow-query { 
-                localhost; 
-                {{ bind_acl_group }}; 
+                localhost;
+{% if bind_acl_groups is defined %}
+{%- for item in bind_acl_groups %}
+                {{ item.name }};
+{% endfor -%}
+{% endif %}
         };
         forwarders { 
 {% if bind_forwarders is defined %}
@@ -17,7 +26,11 @@ options {
         };
         recursion yes;
         allow-recursion { 
-                {{ bind_acl_group }}; 
+{% if bind_acl_groups is defined %}
+{%- for item in bind_acl_groups %}
+                {{ item.name }};
+{% endfor -%}
+{% endif %}
         };
 };
 
@@ -26,7 +39,11 @@ zone "{{ bind_domain }}" {
         file "/etc/bind/zones/db.{{ bind_domain }}.zone";
         allow-transfer {
                 localhost; 
-                {{ bind_acl_group }}; 
+{% if bind_acl_groups is defined %}
+{%- for item in bind_acl_groups %}
+                {{ item.name }};
+{% endfor -%}
+{% endif %}
         };
 };
 

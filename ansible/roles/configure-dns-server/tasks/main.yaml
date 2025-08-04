@@ -60,7 +60,15 @@
 #     proto: tcp
 #     state: enabled
 
-- name: Start BIND service
+# - name: Disable Ubuntu Host's caching DNS resolver on port 53
+#   become: true
+#   ansible.builtin.lineinfile:
+#     dest: /etc/systemd/resolved.conf
+#     line: "DNSStubListener=no"
+#     regexp: "#?DNSStubListener=yes"
+#     state: present
+
+- name: Start services
   become: true
   ansible.builtin.systemd:
     name: "{{ item }}"
@@ -68,4 +76,3 @@
     enabled: true
   loop:
     - named
-    - named-resolvconf
