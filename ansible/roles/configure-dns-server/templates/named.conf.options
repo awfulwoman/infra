@@ -1,15 +1,19 @@
 // Local physical network only - exclude overlay network
-acl BER {
-        192.168.1.0/24;
+acl {{ bind_acl_group }} {
+        {{ bind_iprange }};
 };
 options {
         directory "/var/cache/bind";
         allow-query { 
                 localhost; 
-                BER; 
+                {{ bind_acl_group }}; 
         };
         forwarders { 
-                1.1.1.1;
+                {% if bind_forwarders is defined %}
+                {% for item in bind_forwarders %}
+                {{ item }};
+                {% endfor %}
+                {% endif %}
         };
         recursion yes;
 };
@@ -19,7 +23,7 @@ zone "{{ bind_domain }}" {
         file "/etc/bind/zones/db.{{ bind_domain }}.zone";
         allow-transfer {
                 localhost; 
-                BER; 
+                {{ bind_acl_group }}; 
         };
 };
 
