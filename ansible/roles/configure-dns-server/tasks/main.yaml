@@ -63,7 +63,7 @@
 - name: Start BIND service
   become: true
   ansible.builtin.systemd:
-    name: {{ item }}
+    name: "{{ item }}"
     state: started
     enabled: true
   loop:
