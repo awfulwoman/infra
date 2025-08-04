@@ -1,15 +1,18 @@
 $TTL {{ bind_default_ttl }}
-@ IN SOA    {{ bind_domain }}. admin.{{ domain_name }}. (
-  ;{{ now(utc=true,fmt='%Y%m%d%H%M%S') }}  ; Serial
-  1 ; Serial
-  604800   ; Refresh
-  86400    ; Retry
-  2419200  ; Expire
-  604800 ) ; Negative Cache TTL
-;
-
-; Name servers
-          IN       NS    dns01.{{ bind_domain }}.
+$ORIGIN {{ bind_iprange_reversed }}.IN-ADDR.ARPA.
+@                               IN      SOA     dns01.{{ bind_domain }}. admin.{{ domain_name }}. (
+  {{ '%-30s' | format(now(utc=true,fmt='%y%m%d%H%M')) }} ; Serial
+  604800                         ; Refresh
+  86400                          ; Retry
+  2419200                        ; Expire
+  604800                         ; Negative Cache TTL
+)
+; Nameservers - from config
+{% if bind_records_nameservers is defined %}
+{% for record in bind_records_nameservers %}
+                               IN      NS      {{ record.name }}.{{ bind_domain }}.
+{% endfor %}
+{% endif %}
 
 ; PTR records
 0.2         IN       PTR    dns01.{{ bind_domain }}.
