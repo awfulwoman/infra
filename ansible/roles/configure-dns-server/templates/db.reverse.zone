@@ -24,11 +24,15 @@ $ORIGIN {{ bind_iprange_reverse_segment }}.IN-ADDR.ARPA.
 {% if bind_records_a is defined %}
 {% for record in bind_records_a %}
 {% set record_ip_split = record.ip.split('.')[0:4] -%}
+{% if record.name == "@" %}
+{{ '%-30s' | format(record_ip_split[3] + '.' + record_ip_split[2])  }} IN      PTR      {{ bind_domain }}.
+{% else -%}
 {{ '%-30s' | format(record_ip_split[3] + '.' + record_ip_split[2])  }} IN      PTR      {{ record.name }}.{{ bind_domain }}.
+{% endif %}
 {% endfor %}
 {% endif %} 
 
-; PTR records - auto-generated from Ansible inventory
+; PTR records - from Ansible inventory
 {% for host in hostvars %}
 {% if hostvars[host].machine_fqdn is defined and hostvars[host].machine_ipv4 is defined %}
 {% set record_ip_split = hostvars[host].machine_ipv4.split('.')[0:4] -%}

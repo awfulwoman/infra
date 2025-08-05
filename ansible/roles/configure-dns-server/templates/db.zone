@@ -26,14 +26,14 @@ $ORIGIN    {{ bind_domain }}.
 {% endfor %}
 {% endif %} 
 
-; A records - auto-generated from Ansible inventory
+; A records - from Ansible inventory
 {% for host in hostvars %}
 {% if hostvars[host].machine_fqdn is defined and hostvars[host].machine_ipv4 is defined %}
 {{ '%-30s' | format(hostvars[host].machine_fqdn) }} IN      A      {{ hostvars[host].machine_ipv4 }}
 {% endif %}
 {% endfor %}
 
-; CNAME records - auto-generated from Ansible inventory
+; CNAME records - from Ansible inventory
 {% for host in hostvars %}
 {% if hostvars[host].cnames is defined %}
 {% for cname in hostvars[host].cnames %}
