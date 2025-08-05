@@ -1,5 +1,7 @@
+{% set bind_iprange_segment_string = bind_iprange_segment | string %}
+{% set bind_iprange_reversed = bind_iprange_segment_string.split('.')[0:2] -%}
 $TTL {{ bind_default_ttl }}
-$ORIGIN {{ bind_iprange_reverse_segment }}.IN-ADDR.ARPA.
+$ORIGIN {{ bind_iprange_reversed[1] }}.{{ bind_iprange_reversed[0]}}.IN-ADDR.ARPA.
 @                                         IN      SOA     {{ bind_records_nameservers[0].name }}.{{ bind_domain }}. admin.{{ domain_name }}. (
   {{ '%-30s' | format(now(utc=true,fmt='%y%m%d%H%M')) }} ; Serial
   604800                         ; Refresh

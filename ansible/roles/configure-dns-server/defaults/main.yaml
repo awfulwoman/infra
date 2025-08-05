@@ -1,19 +1,15 @@
 bind_domain: "{{ domain_name }}"
 bind_default_ttl: 604800 # 1 week
-# bind_iprange: 172.16.0.0/22 # 172.16.0.0 - 172.16.3.255 # 1024 IPs
-# bind_iprange: 192.168.1.0/24
 bind_iprange_segment: 192.168
-bind_iprange_reverse_segment: 168.192
 # Define ACL groups for using this DNS server
 bind_acl_groups:
-  - name: BER
+  - name: LAN
     iprange: 192.168.1.0/24
-  - name: TS
+  - name: Tailscale
     iprange: 100.64.0.0/10
 # Forwarding DNS servers (if any)
 bind_forwarders:
   - 1.1.1.1
-  - 8.8.8.8
 # Manually created NS records
 bind_records_nameservers:
   - name: "dns01"
