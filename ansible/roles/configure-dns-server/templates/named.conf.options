@@ -6,7 +6,6 @@ acl {{ item.name }} {
 {% endfor -%}
 {% endif %}
 
-
 options {
         directory "/var/cache/bind";
         allow-query { 

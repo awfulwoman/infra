@@ -53,14 +53,6 @@
   notify:
     - Restart named
 
-# - name: Open DNS port in firewall
-#   become: true
-#   community.general.ufw:
-#     rule: allow
-#     port: 53
-#     proto: tcp
-#     state: enabled
-
 - name: Start named services
   become: true
   ansible.builtin.systemd:
