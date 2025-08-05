@@ -11,7 +11,7 @@ $ORIGIN    {{ bind_domain }}.
 ; Nameservers - from config
 {% if bind_records_nameservers is defined %}
 {% for record in bind_records_nameservers %}
-                                         IN      NS      {{ record.name }}.{{ bind_domain }}.
+                                         IN      NS     {{ record.name }}.{{ bind_domain }}.
 {% endfor %}
 {% endif %}
 
