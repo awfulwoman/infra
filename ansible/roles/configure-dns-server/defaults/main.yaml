@@ -4,23 +4,29 @@ bind_default_ttl: 604800 # 1 week
 # bind_iprange: 192.168.1.0/24
 bind_iprange_segment: 192.168
 bind_iprange_reverse_segment: 168.192
+# Define ACL groups for using this DNS server
 bind_acl_groups:
   - name: BER
     iprange: 192.168.1.0/24
   - name: TS
     iprange: 100.64.0.0/10
+# Forwarding DNS servers (if any)
 bind_forwarders:
   - 1.1.1.1
   - 8.8.8.8
+# Manually created NS records
 bind_records_nameservers:
   - name: "dns01"
     ip: 192.168.1.2
   - name: "dns02"
     ip: 172.16.0.3
+# Manually created A records
 bind_records_a:
   - name: "@"
     ip: 192.168.1.116
   - name: "www"
     ip: 192.168.1.116
+# Manually created MX records
 # bind_records_mx:
+# Manually created TXT records
 # bind_records_txt:
