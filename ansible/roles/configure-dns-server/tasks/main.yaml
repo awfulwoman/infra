@@ -19,7 +19,7 @@
     group: bind
     mode: "0755"
 
-- name: Ensure named options exist
+- name: Ensure config file exist
   become: true
   ansible.builtin.template:
     src: named.conf.options
@@ -29,7 +29,7 @@
     mode: "0644"
     validate: named-checkconf %s
 
-- name: Ensure main zone file exists
+- name: Ensure zone file exists
   become: true
   ansible.builtin.template:
     src: db.zone
@@ -53,7 +53,7 @@
   notify:
     - Restart named
 
-- name: Start named services
+- name: Start services
   become: true
   ansible.builtin.systemd:
     name: "{{ item }}"
