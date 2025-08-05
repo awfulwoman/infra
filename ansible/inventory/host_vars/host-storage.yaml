@@ -4,6 +4,7 @@ ansible_user: "{{ vault_server_username }}" # User to connect as
 machine_name: storage # Hostname of the machine
 machine_city: ber # City where the machine is located
 machine_location: xberg # Location of the machine within the city
+machine_pfqdn: "{{ machine_name }}.{{ machine_location }}.{{ machine_city }}"
 machine_fqdn: "{{ machine_name }}.{{ machine_location }}.{{ machine_city }}.{{ domain_name }}"
 # machine_ipv4: 172.16.0.4
 machine_ipv4: 192.168.1.116
@@ -193,7 +194,7 @@ cnames:
   - immich.{{ domain_name }}
   - gitea.{{ domain_name }}
   - musicassistant.{{ domain_name }}
-  - traefik.host-storage.{{ domain_name }}
+  - traefik.{{ machine_fqdn }}
   - syncthing.{{ domain_name }}
   - freshrss.{{ domain_name }}
   - tubesync.{{ domain_name }}

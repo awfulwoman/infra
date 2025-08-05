@@ -36,6 +36,8 @@
     owner: root
     group: bind
     mode: "0644"
+  notify:
+    - Restart named
 
 - name: Ensure reverse zone file exists
   become: true
@@ -45,6 +47,8 @@
     owner: root
     group: bind
     mode: "0644"
+  notify:
+    - Restart named
 
 # - name: Open DNS port in firewall
 #   become: true

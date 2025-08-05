@@ -1,6 +1,6 @@
 $TTL {{ bind_default_ttl }}
 $ORIGIN {{ bind_iprange_reverse_segment }}.IN-ADDR.ARPA.
-@                               IN      SOA     dns01.{{ bind_domain }}. admin.{{ domain_name }}. (
+@                                         IN      SOA     {{ bind_records_nameservers[0].name }}.{{ bind_domain }}. admin.{{ domain_name }}. (
   {{ '%-30s' | format(now(utc=true,fmt='%y%m%d%H%M')) }} ; Serial
   604800                         ; Refresh
   86400                          ; Retry
@@ -10,7 +10,7 @@ $ORIGIN {{ bind_iprange_reverse_segment }}.IN-ADDR.ARPA.
 ; Nameservers - from config
 {% if bind_records_nameservers is defined %}
 {% for record in bind_records_nameservers %}
-                               IN      NS      {{ record.name }}.{{ bind_domain }}.
+                                         IN      NS      {{ record.name }}.{{ bind_domain }}.
 {% endfor %}
 {% endif %}
 
@@ -18,16 +18,16 @@ $ORIGIN {{ bind_iprange_reverse_segment }}.IN-ADDR.ARPA.
 {% if bind_records_nameservers is defined %}
 {% for record in bind_records_nameservers %}
 {% set record_ip_split = record.ip.split('.')[0:4] -%}
-{{ '%-30s' | format(record_ip_split[3] + '.' + record_ip_split[2])  }} IN      PTR      {{ record.name }}.{{ bind_domain }}.
+{{ '%-40s' | format(record_ip_split[3] + '.' + record_ip_split[2])  }} IN      PTR      {{ record.name }}.{{ bind_domain }}.
 {% endfor %}
 {% endif %}
 {% if bind_records_a is defined %}
 {% for record in bind_records_a %}
 {% set record_ip_split = record.ip.split('.')[0:4] -%}
 {% if record.name == "@" %}
-{{ '%-30s' | format(record_ip_split[3] + '.' + record_ip_split[2])  }} IN      PTR      {{ bind_domain }}.
+{{ '%-40s' | format(record_ip_split[3] + '.' + record_ip_split[2])  }} IN      PTR      {{ bind_domain }}.
 {% else -%}
-{{ '%-30s' | format(record_ip_split[3] + '.' + record_ip_split[2])  }} IN      PTR      {{ record.name }}.{{ bind_domain }}.
+{{ '%-40s' | format(record_ip_split[3] + '.' + record_ip_split[2])  }} IN      PTR      {{ record.name }}.{{ bind_domain }}.
 {% endif %}
 {% endfor %}
 {% endif %} 
@@ -36,7 +36,16 @@ $ORIGIN {{ bind_iprange_reverse_segment }}.IN-ADDR.ARPA.
 {% for host in hostvars %}
 {% if hostvars[host].machine_fqdn is defined and hostvars[host].machine_ipv4 is defined %}
 {% set record_ip_split = hostvars[host].machine_ipv4.split('.')[0:4] -%}
-{{ '%-30s' | format(record_ip_split[3] + '.' + record_ip_split[2])  }} IN      PTR      {{ hostvars[host].machine_fqdn }}.
+{{ '%-40s' | format(record_ip_split[3] + '.' + record_ip_split[2])  }} IN      PTR      {{ hostvars[host].machine_pfqdn }}.{{ bind_domain}}.
 {% endif %}
 {% endfor %}
 
+; cnames - from Ansible inventory
+{% for host in hostvars %}
+{% if hostvars[host].cnames is defined %}
+{% set record_ip_split = hostvars[host].machine_ipv4.split('.')[0:4] -%}
+{% for cname in hostvars[host].cnames %}
+{{ '%-40s' | format(record_ip_split[3] + '.' + record_ip_split[2])  }} IN      PTR      {{ cname }}.
+{% endfor %}
+{% endif %}
+{% endfor %}
