@@ -3,10 +3,10 @@ $TTL       {{ bind_default_ttl }}
 $ORIGIN    {{ bind_domain }}.
 @                                        IN      SOA       {{ bind_records_nameservers[0].name }}.{{ bind_domain }}. admin.{{ domain_name }}. (
   1234567890 ; Serial
-  604800                         ; Refresh
-  86400                          ; Retry
-  2419200                        ; Expire
-  604800                         ; Negative Cache TTL
+  604800 ; Refresh
+  86400 ; Retry
+  2419200 ; Expire
+  604800 ; Negative Cache TTL
 )
 
 ; Nameservers - from config
