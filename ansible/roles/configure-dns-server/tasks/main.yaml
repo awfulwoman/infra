@@ -27,6 +27,7 @@
     owner: root
     group: bind
     mode: "0644"
+    validate: named-checkconf %s
 
 - name: Ensure main zone file exists
   become: true
@@ -36,6 +37,7 @@
     owner: root
     group: bind
     mode: "0644"
+    validate: named-checkzone {{ bind_domain }} %s
   notify:
     - Restart named
 
@@ -47,6 +49,7 @@
     owner: root
     group: bind
     mode: "0644"
+    validate: "named-checkzone {{ bind_iprange_reversed | join('.') }}.in-addr.arpa %s"
   notify:
     - Restart named
 

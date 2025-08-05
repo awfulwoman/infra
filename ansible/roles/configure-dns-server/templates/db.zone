@@ -1,6 +1,7 @@
+#jinja2: lstrip_blocks:True
 $TTL       {{ bind_default_ttl }}
 $ORIGIN    {{ bind_domain }}.
-@                                        IN      SOA     {{ bind_records_nameservers[0].name }}.{{ bind_domain }}. admin.{{ domain_name }}. (
+@                                        IN      SOA       {{ bind_records_nameservers[0].name }}.{{ bind_domain }}. admin.{{ domain_name }}. (
   {{ '%-30s' | format(now(utc=true,fmt='%y%m%d%H%M')) }} ; Serial
   604800                         ; Refresh
   86400                          ; Retry
@@ -10,37 +11,37 @@ $ORIGIN    {{ bind_domain }}.
 
 ; Nameservers - from config
 {% if bind_records_nameservers is defined %}
-{% for record in bind_records_nameservers %}
-                                         IN      NS     {{ record.name }}.{{ bind_domain }}.
-{% endfor %}
+  {% for record in bind_records_nameservers %}
+                                         IN      NS        {{ record.name }}.{{ bind_domain }}.
+  {% endfor %}
 {% endif %}
 
 ; A records - from config
 {% if bind_records_nameservers is defined %}
-{% for record in bind_records_nameservers %}
-{{ '%-40s' | format(record.name) }}{% if record.ttl is defined %} {{ record.ttl }}{% endif %} IN      A      {{ record.ip }}
-{% endfor %}
-{% endif %}
-{% if bind_records_a is defined %}
-{% for record in bind_records_a %}
-{{ '%-40s' | format(record.name) }}{% if record.ttl is defined %} {{ record.ttl }}{% endif %} IN      A      {{ record.ip }}
-{% endfor %}
+      {% for record in bind_records_nameservers %}
+      {{- '%-40s' | format(record.name) }}{% if record.ttl is defined %} {{ record.ttl }}{% endif %} IN      A         {{ record.ip }}
+      {% endfor %}
+  {% endif %}
+  {% if bind_records_a is defined %}
+  {% for record in bind_records_a %}
+    {{- '%-40s' | format(record.name) }}{% if record.ttl is defined %} {{ record.ttl }}{% endif %} IN      A         {{ record.ip }}
+  {% endfor %}
 {% endif %}
 
 ; A records - from Ansible inventory
 {% for host in hostvars %}
-{% if hostvars[host].machine_fqdn is defined and hostvars[host].machine_ipv4 is defined %}
-{{ '%-40s' | format(hostvars[host].machine_pfqdn) }} IN      A      {{ hostvars[host].machine_ipv4 }}
-{% endif %}
+  {% if hostvars[host].machine_fqdn is defined and hostvars[host].machine_ipv4 is defined %}
+    {{- '%-40s' | format(hostvars[host].machine_pfqdn) }} IN      A         {{ hostvars[host].machine_ipv4 }}
+  {% endif %}
 {% endfor %}
 
 ; cnames - from Ansible inventory
 {% for host in hostvars %}
-{% if hostvars[host].cnames is defined %}
-{% for cname in hostvars[host].cnames %}
-{{ '%-40s' | format(cname + '.') }} IN      CNAME      {{ hostvars[host].machine_pfqdn }}
-{% endfor %}
-{% endif %}
+  {% if hostvars[host].cnames is defined %}
+    {% for cname in hostvars[host].cnames %}
+      {{- '%-40s' | format(cname + '.') }} IN      CNAME     {{ hostvars[host].machine_pfqdn }}
+    {% endfor %}
+  {% endif %}
 {% endfor %}
 
 ; TXT records - auto-generated from Ansible inventory

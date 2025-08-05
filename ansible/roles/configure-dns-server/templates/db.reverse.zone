@@ -1,7 +1,6 @@
-{% set bind_iprange_segment_string = bind_iprange_segment | string %}
-{% set bind_iprange_reversed = bind_iprange_segment_string.split('.')[0:2] -%}
+#jinja2: lstrip_blocks:True
 $TTL {{ bind_default_ttl }}
-$ORIGIN {{ bind_iprange_reversed[1] }}.{{ bind_iprange_reversed[0]}}.IN-ADDR.ARPA.
+$ORIGIN {{ bind_iprange_reversed | join('.') }}.IN-ADDR.ARPA.
 @                                         IN      SOA     {{ bind_records_nameservers[0].name }}.{{ bind_domain }}. admin.{{ domain_name }}. (
   {{ '%-30s' | format(now(utc=true,fmt='%y%m%d%H%M')) }} ; Serial
   604800                         ; Refresh
@@ -9,6 +8,7 @@ $ORIGIN {{ bind_iprange_reversed[1] }}.{{ bind_iprange_reversed[0]}}.IN-ADDR.ARP
   2419200                        ; Expire
   604800                         ; Negative Cache TTL
 )
+
 ; Nameservers - from config
 {% if bind_records_nameservers is defined %}
 {% for record in bind_records_nameservers %}
@@ -17,37 +17,37 @@ $ORIGIN {{ bind_iprange_reversed[1] }}.{{ bind_iprange_reversed[0]}}.IN-ADDR.ARP
 {% endif %}
 
 ; PTR records - from config
-{% if bind_records_nameservers is defined %}
-{% for record in bind_records_nameservers %}
-{% set record_ip_split = record.ip.split('.')[0:4] -%}
-{{ '%-40s' | format(record_ip_split[3] + '.' + record_ip_split[2])  }} IN      PTR      {{ record.name }}.{{ bind_domain }}.
-{% endfor %}
+{% if bind_records_nameservers is defined -%}
+  {%- for record in bind_records_nameservers %}
+    {%- set record_ip_split = record.ip.split('.')[0:4] %}
+    {{- '%-40s' | format(record_ip_split[3] + '.' + record_ip_split[2])  }} IN      PTR      {{ record.name }}.{{ bind_domain }}.
+  {% endfor %}
 {% endif %}
 {% if bind_records_a is defined %}
-{% for record in bind_records_a %}
-{% set record_ip_split = record.ip.split('.')[0:4] -%}
-{% if record.name == "@" %}
-{{ '%-40s' | format(record_ip_split[3] + '.' + record_ip_split[2])  }} IN      PTR      {{ bind_domain }}.
-{% else -%}
-{{ '%-40s' | format(record_ip_split[3] + '.' + record_ip_split[2])  }} IN      PTR      {{ record.name }}.{{ bind_domain }}.
-{% endif %}
-{% endfor %}
+  {% for record in bind_records_a %}
+    {% set record_ip_split = record.ip.split('.')[0:4] %}
+    {% if record.name == "@" %}
+      {{- '%-40s' | format(record_ip_split[3] + '.' + record_ip_split[2])  }} IN      PTR      {{ bind_domain }}.
+    {% else -%}
+      {{- '%-40s' | format(record_ip_split[3] + '.' + record_ip_split[2])  }} IN      PTR      {{ record.name }}.{{ bind_domain }}.
+    {% endif %}
+  {% endfor %}
 {% endif %} 
 
 ; PTR records - from Ansible inventory
 {% for host in hostvars %}
-{% if hostvars[host].machine_fqdn is defined and hostvars[host].machine_ipv4 is defined %}
-{% set record_ip_split = hostvars[host].machine_ipv4.split('.')[0:4] -%}
-{{ '%-40s' | format(record_ip_split[3] + '.' + record_ip_split[2])  }} IN      PTR      {{ hostvars[host].machine_pfqdn }}.{{ bind_domain}}.
-{% endif %}
+  {% if hostvars[host].machine_fqdn is defined and hostvars[host].machine_ipv4 is defined %}
+    {% set record_ip_split = hostvars[host].machine_ipv4.split('.')[0:4] -%}
+    {{- '%-40s' | format(record_ip_split[3] + '.' + record_ip_split[2])  }} IN      PTR      {{ hostvars[host].machine_pfqdn }}.{{ bind_domain}}.
+  {% endif %}
 {% endfor %}
 
 ; cnames - from Ansible inventory
 {% for host in hostvars %}
-{% if hostvars[host].cnames is defined %}
-{% set record_ip_split = hostvars[host].machine_ipv4.split('.')[0:4] -%}
-{% for cname in hostvars[host].cnames %}
-{{ '%-40s' | format(record_ip_split[3] + '.' + record_ip_split[2])  }} IN      PTR      {{ cname }}.
-{% endfor %}
-{% endif %}
+  {% if hostvars[host].cnames is defined %}
+    {% set record_ip_split = hostvars[host].machine_ipv4.split('.')[0:4] -%}
+    {% for cname in hostvars[host].cnames %}
+      {{- '%-40s' | format(record_ip_split[3] + '.' + record_ip_split[2])  }} IN      PTR      {{ cname }}.
+    {% endfor %}
+  {% endif %}
 {% endfor %}
