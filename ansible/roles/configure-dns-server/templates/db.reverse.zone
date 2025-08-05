@@ -1,6 +1,6 @@
 #jinja2: lstrip_blocks:True
 $TTL {{ bind_default_ttl }}
-$ORIGIN {{ bind_iprange_reversed | join('.') }}.IN-ADDR.ARPA.
+$ORIGIN {{ bind_iprange_reversed }}.IN-ADDR.ARPA.
 @                                         IN      SOA     {{ bind_records_nameservers[0].name }}.{{ bind_domain }}. admin.{{ domain_name }}. (
   1234567890 ; Serial
   604800                         ; Refresh
@@ -23,6 +23,8 @@ $ORIGIN {{ bind_iprange_reversed | join('.') }}.IN-ADDR.ARPA.
     {{- '%-40s' | format(record_ip_split[3] + '.' + record_ip_split[2])  }} IN      PTR      {{ record.name }}.{{ bind_domain }}.
   {% endfor %}
 {% endif %}
+
+; A records - from config
 {% if bind_records_a is defined %}
   {% for record in bind_records_a %}
     {% set record_ip_split = record.ip.split('.')[0:4] %}

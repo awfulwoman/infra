@@ -46,7 +46,7 @@ zone "{{ bind_domain }}" {
         };
 };
 
-zone "{{ bind_iprange_reversed | join('.') }}.in-addr.arpa" {
+zone "{{ bind_iprange_reversed }}.in-addr.arpa" {
     type primary;
     file "/etc/bind/zones/db.{{ bind_domain }}.reverse.zone";
 };

@@ -29,7 +29,7 @@
     mode: "0644"
     validate: named-checkconf %s
 
-- name: Check for changes
+- name: Check for zone changes
   become: true
   ansible.builtin.template:
     src: db.zone
@@ -38,6 +38,16 @@
     group: bind
     mode: "0644"
   register: zone_check
+
+- name: Check for reverse zone changes
+  become: true
+  ansible.builtin.template:
+    src: db.zone
+    dest: "/etc/bind/zones/test.db.{{ bind_domain }}.reverse.zone"
+    owner: root
+    group: bind
+    mode: "0644"
+  register: reverse_zone_check
 
 - name: Ensure zone file exists
   become: true
@@ -60,8 +70,8 @@
     owner: root
     group: bind
     mode: "0644"
-    validate: "named-checkzone {{ bind_iprange_reversed | join('.') }}.in-addr.arpa %s"
-  when: zone_check.changed
+    validate: "named-checkzone {{ bind_iprange_reversed }}.in-addr.arpa %s"
+  when: reverse_zone_check.changed
   notify:
     - Restart named
 
@@ -72,9 +82,16 @@
     regexp: "^  1234567890 ; Serial"
     line: "  {{ now(utc=true, fmt='%y%m%d%H%M') }} ; Serial"
   when: zone_check.changed
-  loop:
-    - "/etc/bind/zones/db.{{ bind_domain }}.reverse.zone"
-    - "/etc/bind/zones/db.{{ bind_domain }}.zone" 
+  notify:
+    - Restart named
+
+- name: Replace serial in reverse zone file if changed
+  become: true
+  ansible.builtin.lineinfile:
+    path: "/etc/bind/zones/db.{{ bind_domain }}.reverse.zone"
+    regexp: "^  1234567890 ; Serial"
+    line: "  {{ now(utc=true, fmt='%y%m%d%H%M') }} ; Serial"
+  when: reverse_zone_check.changed
   notify:
     - Restart named
 
