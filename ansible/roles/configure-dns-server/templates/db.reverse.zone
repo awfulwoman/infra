@@ -1,7 +1,7 @@
 #jinja2: lstrip_blocks:True
 $TTL {{ bind_default_ttl }}
 $ORIGIN {{ bind_iprange_reversed }}.IN-ADDR.ARPA.
-@                                         IN      SOA     {{ bind_records_nameservers[0].name }}.{{ bind_domain }}. admin.{{ domain_name }}. (
+@                                        IN      SOA     {{ bind_records_nameservers[0].name }}.{{ bind_domain }}. admin.{{ domain_name }}. (
   1234567890 ; Serial
   604800 ; Refresh
   86400 ; Retry
