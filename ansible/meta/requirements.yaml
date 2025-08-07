@@ -40,7 +40,7 @@ roles:
   - name: xanmanning.k3s
     version: v3.4.4
   - name: robertdebock.digitalocean_agent
-    version: 3.1.8
+    version: 3.1.9
   # - name: pihole
   #   src: https://gitea.ewwww.eu/awfulwoman/pihole
   #   version: main
