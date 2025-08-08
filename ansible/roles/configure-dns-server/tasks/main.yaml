@@ -19,6 +19,15 @@
     group: bind
     mode: "0755"
 
+- name: Ensure key file exist
+  become: true
+  ansible.builtin.template:
+    src: keys.conf
+    dest: /etc/bind/keys.conf
+    owner: root
+    group: bind
+    mode: "0644"
+
 - name: Ensure config file exist
   become: true
   ansible.builtin.template:

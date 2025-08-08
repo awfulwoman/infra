@@ -36,15 +36,15 @@ options {
 zone "{{ bind_domain }}" {
         type primary;
         file "/etc/bind/zones/db.{{ bind_domain }}.zone";
+{% if bind_acl_groups is defined and bind_acl_groups | length > 0 %}
+        include "/etc/bind/keys.conf";
+{% endif %}
         allow-transfer {
                 localhost; 
 {% if bind_acl_groups is defined %}
 {%- for item in bind_acl_groups %}
                 {{ item.name }};
 {% endfor -%}
-{% endif %}
-{% if bind_acl_groups is defined and bind_acl_groups | length > 0 %}
-        include "/etc/bind/keys.conf";
 {% endif %}
         };
 };
