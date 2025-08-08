@@ -10,7 +10,7 @@ bind_acl_groups:
     iprange: 100.64.0.0/10
 # Forwarding DNS servers (if any)
 bind_forwarders:
-  - 1.1.1.1
+  - 1.1.1.1 # Cloudflare
 # Manually created NS records
 bind_records_nameservers:
   - name: "dns01"
