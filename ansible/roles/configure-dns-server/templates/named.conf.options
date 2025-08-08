@@ -1,55 +1,95 @@
+#jinja2: lstrip_blocks:True, trim_blocks:True
+; {{ ansible_managed }}
 {% if bind_acl_groups is defined %}
-{%- for item in bind_acl_groups %}
+{% for item in bind_acl_groups %}
 acl {{ item.name }} {
-        {{ item.iprange}};
+  {{ item.iprange}};
 };
-{% endfor -%}
+{% endfor %}
 {% endif %}
 
+; DNS server configuration
 options {
-        directory "/var/cache/bind";
-        allow-query { 
-                localhost;
-{% if bind_acl_groups is defined %}
-{%- for item in bind_acl_groups %}
-                {{ item.name }};
-{% endfor -%}
-{% endif %}
-        };
-        forwarders { 
-{% if bind_forwarders is defined %}
-{%- for item in bind_forwarders %}
-                {{ item }};
-{% endfor -%}
-{% endif %}
-        };
-        recursion yes;
-        allow-recursion { 
-{% if bind_acl_groups is defined %}
-{%- for item in bind_acl_groups %}
-                {{ item.name }};
-{% endfor -%}
-{% endif %}
-        };
+  directory "/var/cache/bind";
+
+  ; Queries
+  ; Allow basic DNS querying from these ACLs only
+  allow-query { 
+    localhost;
+    {% if bind_acl_groups is defined %}
+      {% for item in bind_acl_groups %}
+        {{ item.name }};
+      {% endfor %}
+    {% endif %}
+  };
+
+
+  ; -----------------------------------------------------------
+  ; Query recursion
+  ; -----------------------------------------------------------
+  ; Allow this DNS server to recursively query other servers if 
+  ; it doesn't have the answer in its cache.
+  recursion yes;
+  ; Only allow recursion-based queries from these ACLs
+  allow-recursion { 
+  {% if bind_acl_groups is defined %}
+    {% for item in bind_acl_groups %}
+      {{ item.name }};
+    {% endfor %}
+  {% endif %}
+  };
+
+
+  ; -----------------------------------------------------------
+  ; Query forwarding
+  ; -----------------------------------------------------------
+  ; Queries for anything but the authoritiative domain will be 
+  ; forwarded to these DNS servers if this server does not have 
+  ; the answer in its cache.
+  forwarders { 
+  {% if bind_forwarders is defined %}
+    {% for item in bind_forwarders %}
+      {{ item }};
+    {% endfor %}
+  {% endif %}
+  };
+  ; Don't try to resolve DNS queries via this server - just forward 
+  ; them. This is all or nothing - if the forwarders are down, the 
+  ; DNS server  will not answer non-authoritative queries at all.
+  ; 
+  ; forward only;
+
+
 };
 
 zone "{{ bind_domain }}" {
-        type primary;
-        file "/etc/bind/zones/db.{{ bind_domain }}.zone";
-{% if bind_acl_groups is defined and bind_acl_groups | length > 0 %}
-        include "/etc/bind/keys.conf";
-{% endif %}
-        allow-transfer {
-                localhost; 
-{% if bind_acl_groups is defined %}
-{%- for item in bind_acl_groups %}
-                {{ item.name }};
-{% endfor -%}
-{% endif %}
-        };
+  type primary;
+  file "/etc/bind/zones/db.{{ bind_domain }}.zone";
+  
+  ; -----------------------------------------------------------
+  ; DNSSEC
+  ; -----------------------------------------------------------
+  ; Public keys
+  {% if bind_dnssec_keys is defined and bind_dnssec_keys | length > 0 %}
+  include "/etc/bind/keys.conf";
+  {% endif %}
+
+  ; Allow zone info to be copied to a secondary server
+  allow-transfer {
+    localhost; 
+    {% if bind_acl_groups is defined %}
+      {% for item in bind_acl_groups %}
+        {{ item.name }};
+      {% endfor %}
+    {% endif %}
+  };
+
+  ; Allow dynamic updates
+  ; allow-update
+
 };
 
 zone "{{ bind_iprange_reversed }}.in-addr.arpa" {
-    type primary;
-    file "/etc/bind/zones/db.{{ bind_domain }}.reverse.zone";
+  type primary;
+  file "/etc/bind/zones/db.{{ bind_domain }}.reverse.zone";
 };
