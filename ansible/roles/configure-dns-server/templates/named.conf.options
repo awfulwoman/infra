@@ -43,6 +43,9 @@ zone "{{ bind_domain }}" {
                 {{ item.name }};
 {% endfor -%}
 {% endif %}
+{% if bind_acl_groups is defined and bind_acl_groups | length > 0 %}
+        include "/etc/bind/keys.conf";
+{% endif %}
         };
 };
 

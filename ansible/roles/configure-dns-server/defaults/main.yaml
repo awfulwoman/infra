@@ -23,6 +23,10 @@ bind_records_a:
     ip: 192.168.1.116
   - name: "www"
     ip: 192.168.1.116
+# bind_dnssec_keys:
+#   - name: "{{ bind_domain }}."
+#     algorithm: "HMAC-SHA512"
+#     secret: ""
 # Manually created MX records
 # bind_records_mx:
 # Manually created TXT records
