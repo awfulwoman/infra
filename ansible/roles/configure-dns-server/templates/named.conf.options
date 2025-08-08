@@ -1,4 +1,10 @@
 #jinja2: lstrip_blocks:True, trim_blocks:True
+# {{ ansible_managed }}
+
+# -----------------------------------------------------------
+# ACL Groups
+# -----------------------------------------------------------
+
 {% if bind_acl_groups is defined %}
 {% for item in bind_acl_groups %}
 acl {{ item.name }} {
@@ -7,9 +13,19 @@ acl {{ item.name }} {
 {% endfor %}
 {% endif %}
 
-options {
-  directory "/var/cache/bind";
 
+options {
+  # -----------------------------------------------------------
+  # General options
+  # -----------------------------------------------------------
+
+  directory "/var/cache/bind";
+  
+  # -----------------------------------------------------------
+  # Queries
+  # -----------------------------------------------------------
+
+  # Allow basic DNS querying from these ACLs only
   allow-query { 
     localhost;
     {% if bind_acl_groups is defined %}
@@ -19,8 +35,16 @@ options {
     {% endif %}
   };
 
+
+  # -----------------------------------------------------------
+  # Query recursion
+  # -----------------------------------------------------------
+
+  # Allow this DNS server to recursively query other servers if 
+  # it doesn't have the answer in its cache.
   recursion yes;
 
+  # Only allow recursion-related queries from these ACL groups
   allow-recursion { 
   {% if bind_acl_groups is defined %}
     {% for item in bind_acl_groups %}
@@ -30,6 +54,13 @@ options {
   };
 
 
+  # -----------------------------------------------------------
+  # Query forwarding
+  # -----------------------------------------------------------
+
+  # Queries for anything but the authoritiative domain will be 
+  # forwarded to these DNS servers if this server does not have 
+  # the answer in its cache.
   forwarders { 
   {% if bind_forwarders is defined %}
     {% for item in bind_forwarders %}
@@ -38,8 +69,10 @@ options {
   {% endif %}
   };
 
-  forward only; 
-
+  # Don't try to resolve DNS queries via this NS - just forward 
+  # them. Beware! - if the forwarders are down, the NS will not 
+  # answer non-authoritative queries at all!
+  # forward only;
 
 };
 
@@ -47,10 +80,19 @@ zone "{{ bind_domain }}" {
   type primary;
   file "/etc/bind/zones/db.{{ bind_domain }}.zone";
   
+  # -----------------------------------------------------------
+  # DNSSEC
+  # -----------------------------------------------------------
+  # Public keys
   {% if bind_dnssec_keys is defined and bind_dnssec_keys | length > 0 %}
   include "/etc/bind/keys.conf";
   {% endif %}
 
+  # -----------------------------------------------------------
+  # Zone transfers
+  # -----------------------------------------------------------
+
+  # Allow zone info to be copied to a secondary NS
   allow-transfer {
     localhost; 
     {% if bind_acl_groups is defined %}
@@ -60,7 +102,11 @@ zone "{{ bind_domain }}" {
     {% endif %}
   };
 
+  # Allow dynamic updates
+  # allow-update
+
 };
+
 
 zone "{{ bind_iprange_reversed }}.in-addr.arpa" {
   type primary;

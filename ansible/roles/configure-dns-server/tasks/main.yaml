@@ -1,4 +1,4 @@
-- name: Install BIND packages
+- name: Ensure BIND packages are installed
   become: true
   ansible.builtin.apt:
     name:
@@ -104,7 +104,7 @@
   notify:
     - Restart named
 
-- name: Start services
+- name: Ensure services are started and enabled
   become: true
   ansible.builtin.systemd:
     name: "{{ item }}"
