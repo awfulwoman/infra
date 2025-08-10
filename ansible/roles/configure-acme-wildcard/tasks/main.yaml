@@ -1,0 +1,42 @@
+# https://docs.ansible.com/ansible/2.9/modules/acme_certificate_module.html#acme-certificate-module
+
+# Generate key
+
+
+
+- name: Create a challenge for sample.com using a account key file.
+  acme_certificate:
+    account_key_src: /etc/pki/cert/private/account.key
+    account_email: myself@sample.com
+    src: /etc/pki/cert/csr/sample.com.csr
+    cert: /etc/httpd/ssl/sample.com.crt
+    challenge: dns-01
+    # acme_directory: https://acme-v01.api.letsencrypt.org/directory
+    # Renew if the certificate is at least 30 days old
+    remaining_days: 60
+  register: domain_challenge
+
+- name: Register domain
+  community.digitalocean.digital_ocean_domain_record:
+    state: present
+    oauth_token: "{{ vault_digitalocean_domain_token }}"
+    domain: sample.com
+    type: TXT
+    name: "{{ domain_challenge.challenge_data['sample.com']['dns-01'].record }}"
+    data: "{{ domain_challenge.challenge_data['sample.com']['dns-01'].resource_value | regex_replace('^(.*)$', '\"\\1\"') }}"
+    force_update: true
+  when: domain_challenge is changed and 'sample.com' in domain_challenge.challenge_data
+
+- name: Let the challenge be validated and retrieve the cert and intermediate certificate
+  acme_certificate:
+    account_key_src: /etc/pki/cert/private/account.key
+    account_email: myself@sample.com
+    src: /etc/pki/cert/csr/sample.com.csr
+    cert: /etc/httpd/ssl/sample.com.crt
+    fullchain: /etc/httpd/ssl/sample.com-fullchain.crt
+    chain: /etc/httpd/ssl/sample.com-intermediate.crt
+    challenge: dns-01
+    # acme_directory: https://acme-v01.api.letsencrypt.org/directory
+    remaining_days: 60
+    data: "{{ domain_challenge }}"
+  when: domain_challenge is changed
