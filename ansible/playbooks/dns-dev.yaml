@@ -1,7 +1,7 @@
 - name: DNS
   hosts: dns
   roles:
-    - role: configure-dns-server
+    - role: configure-acme-wildcard
 
   handlers:
     - name: Reboot host
