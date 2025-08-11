@@ -1,6 +1,13 @@
 # https://docs.ansible.com/ansible/2.9/modules/acme_certificate_module.html#acme-certificate-module
 # networkdoodles.com/posts/letsencrypt-part1/networkdoodles.com/posts/letsencrypt-part1/
 
+- name: Ensure supporting packages are installed
+  become: true
+  ansible.builtin.package:
+    name:
+      - python3-dnspython
+    state: present
+
 - name: Create directories
   become: true
   ansible.builtin.file:
