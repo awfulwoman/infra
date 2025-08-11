@@ -113,6 +113,7 @@
   when: text_response is defined
 
 - name: Let the challenge be validated and retrieve the cert and intermediate certificate
+  become: true
   community.crypto.acme_certificate:
     validate_certs: true
     account_email: "{{ acmeeeeeeee_email }}"
