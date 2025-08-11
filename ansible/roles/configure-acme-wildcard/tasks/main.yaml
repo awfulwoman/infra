@@ -98,17 +98,14 @@
   ansible.builtin.debug:
     var: txt_response
 
-# - name: "Wait for {{ domain_challenge.challenge_data[acmeeeeeeee_domain]['dns-01'].resource_value }} to appear at {{ domain_challenge.challenge_data[acmeeeeeeee_domain]['dns-01'].record }}"
-#   community.dns.wait_for_txt:
-#     records:
-#       - name: "{{ domain_challenge.challenge_data[acmeeeeeeee_domain]['dns-01'].record }}"
-#         values: "{{ domain_challenge.challenge_data[acmeeeeeeee_domain]['dns-01'].resource_value }}"
-#         mode: equals
-#     server:
-#       - 8.8.8.8
-#       - 1.1.1.1
-#     always_ask_default_resolver: true
-#     timeout: 120
+- name: "Wait for {{ domain_challenge.challenge_data[acmeeeeeeee_domain]['dns-01'].resource_value }} to appear at {{ domain_challenge.challenge_data[acmeeeeeeee_domain]['dns-01'].record }}"
+  community.dns.wait_for_txt:
+    records:
+      - name: "{{ domain_challenge.challenge_data[acmeeeeeeee_domain]['dns-01'].record }}"
+        values: "{{ domain_challenge.challenge_data[acmeeeeeeee_domain]['dns-01'].resource_value }}"
+        mode: equals
+    # always_ask_default_resolver: true
+    timeout: 120
 
 - name: Extract and store the record ID so we can delete it later
   ansible.builtin.set_fact:
