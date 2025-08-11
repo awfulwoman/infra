@@ -109,7 +109,6 @@
       - mosh
       - neofetch
       - get-iplayer
-      - pipx
       - python-is-python3
       - python3
       - python3-docker
@@ -132,12 +131,6 @@
   become: true
   ansible.builtin.apt:
     autoremove: true
-
-- name: Install pip packages via pipx
-  community.general.pipx:
-    name: "{{ item }}"
-  loop:
-    - terminaltexteffects
 
 - name: Ensure Python dir exists
   become: true
