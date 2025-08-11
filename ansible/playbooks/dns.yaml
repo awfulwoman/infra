@@ -10,6 +10,7 @@
     - role: install-ansible
     - role: install-ansible-pull
     - role: configure-dns-server
+    - role: configure-acme-wildcard
 
   handlers:
     - name: Reboot host
