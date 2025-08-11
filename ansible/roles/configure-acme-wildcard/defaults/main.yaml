@@ -1,0 +1,17 @@
+acmeeeeeeee_domain: "{{ vault_domain_test }}"
+acmeeeeeeee_le_private_key_dir: /opt/acme/private
+acmeeeeeeee_le_private_key_filename: le.key
+acmeeeeeeee_csr_private_key_dir: /opt/acme/private
+acmeeeeeeee_csr_private_key_filename: csr.key
+acmeeeeeeee_csr_dir: /opt/acme/csr
+acmeeeeeeee_csr_filename: "{{ acmeeeeeeee_domain }}.csr"
+acmeeeeeeee_email: letsencrypt@whalecoiner.com
+acmeeeeeeee_dir: https://acme-staging-v02.api.letsencrypt.org/directory
+acmeeeeeeee_order_uri: false
+acmeeeeeeee_version: 2
+acmeeeeeeee_cert_dir: /opt/acme/certs
+acmeeeeeeee_cert_filename: "{{ acmeeeeeeee_domain }}.crt"
+acmeeeeeeee_fullchain_dir: /opt/acme/certs
+acmeeeeeeee_fullchain_filename: "{{ acmeeeeeeee_domain }}.fullchain.crt"
+acmeeeeeeee_chain_dir: /opt/acme/certs
+acmeeeeeeee_chain_filename: "{{ acmeeeeeeee_domain }}.intermediate.crt"

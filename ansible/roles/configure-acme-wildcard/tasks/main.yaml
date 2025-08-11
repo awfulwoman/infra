@@ -1,42 +1,137 @@
 # https://docs.ansible.com/ansible/2.9/modules/acme_certificate_module.html#acme-certificate-module
+# networkdoodles.com/posts/letsencrypt-part1/networkdoodles.com/posts/letsencrypt-part1/
 
-# Generate key
+- name: Create directories
+  become: true
+  ansible.builtin.file:
+    dest: "{{ dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0700"
+  loop_control:
+    loop_var: dir
+  loop:
+    - "{{ acmeeeeeeee_le_private_key_dir }}"
+    - "{{ acmeeeeeeee_csr_private_key_dir }}"
+    - "{{ acmeeeeeeee_csr_dir }}"
+    - "{{ acmeeeeeeee_cert_dir }}"
+    - "{{ acmeeeeeeee_fullchain_dir }}"
+    - "{{ acmeeeeeeee_chain_dir }}"
 
+- name: Generate LE private key
+  become: true
+  community.crypto.openssl_privatekey:
+    path: "{{ acmeeeeeeee_le_private_key_dir }}/{{ acmeeeeeeee_le_private_key_filename }}"
+    # curve: secp521r1
+    state: present
 
+- name: Generate CSR private key
+  become: true
+  community.crypto.openssl_privatekey:
+    path: "{{ acmeeeeeeee_csr_private_key_dir }}/{{ acmeeeeeeee_csr_private_key_filename }}"
+    # curve: secp521r1
+    state: present
 
-- name: Create a challenge for sample.com using a account key file.
-  acme_certificate:
-    account_key_src: /etc/pki/cert/private/account.key
-    account_email: myself@sample.com
-    src: /etc/pki/cert/csr/sample.com.csr
-    cert: /etc/httpd/ssl/sample.com.crt
+- name: Make sure account exists and has given contacts. We agree to TOS.
+  become: true
+  community.crypto.acme_account:
+    account_key_src: "{{ acmeeeeeeee_le_private_key_dir }}/{{ acmeeeeeeee_le_private_key_filename }}"
+    acme_directory: "{{ acmeeeeeeee_dir }}"
+    acme_version: "{{ acmeeeeeeee_version }}"
+    state: present
+    terms_agreed: true
+    contact:
+      - mailto:letsencrypt@whalecoiner.com
+  register: acme_account
+
+- name: Debug acme account
+  ansible.builtin.debug:
+    var: acme_account
+
+- name: Generate an OpenSSL Certificate Signing Request
+  become: true
+  community.crypto.openssl_csr:
+    path: "{{ acmeeeeeeee_csr_dir }}/{{ acmeeeeeeee_csr_filename }}"
+    privatekey_path: "{{ acmeeeeeeee_csr_private_key_dir }}/{{ acmeeeeeeee_csr_private_key_filename }}"
+    common_name: "{{ acmeeeeeeee_domain }}"
+
+- name: Create a challenge for domain
+  become: true
+  community.crypto.acme_certificate:
+    validate_certs: true
+    account_key_src: "{{ acmeeeeeeee_le_private_key_dir }}/{{ acmeeeeeeee_le_private_key_filename }}"
+    account_email: "{{ acmeeeeeeee_email }}"
+    src: "{{ acmeeeeeeee_csr_dir }}/{{ acmeeeeeeee_csr_filename }}"
+    cert: "{{ acmeeeeeeee_cert_dir }}/{{ acmeeeeeeee_cert_filename }}"
     challenge: dns-01
-    # acme_directory: https://acme-v01.api.letsencrypt.org/directory
-    # Renew if the certificate is at least 30 days old
+    acme_directory: "{{ acmeeeeeeee_dir }}"
+    acme_version: "{{ acmeeeeeeee_version }}"
     remaining_days: 60
   register: domain_challenge
 
-- name: Register domain
+- name: Debug domain challenge
+  ansible.builtin.debug:
+    var: domain_challenge
+
+- name: Create txt response
+  become: true
   community.digitalocean.digital_ocean_domain_record:
     state: present
     oauth_token: "{{ vault_digitalocean_domain_token }}"
-    domain: sample.com
+    domain: "{{ acmeeeeeeee_domain }}"
     type: TXT
-    name: "{{ domain_challenge.challenge_data['sample.com']['dns-01'].record }}"
-    data: "{{ domain_challenge.challenge_data['sample.com']['dns-01'].resource_value | regex_replace('^(.*)$', '\"\\1\"') }}"
+    name: "{{ domain_challenge.challenge_data[acmeeeeeeee_domain]['dns-01'].record }}"
+    data: "{{ domain_challenge.challenge_data[acmeeeeeeee_domain]['dns-01'].resource_value | regex_replace('^(.*)$', '\"\\1\"') }}"
     force_update: true
-  when: domain_challenge is changed and 'sample.com' in domain_challenge.challenge_data
+  when: domain_challenge is changed
+  register: txt_response
+
+- name: Debug txt response
+  ansible.builtin.debug:
+    var: txt_response
+
+- name: Wait for TXT entry to appear
+  community.dns.wait_for_txt:
+    records:
+      - name: "{{ domain_challenge.challenge_data[acmeeeeeeee_domain]['dns-01'].record }}"
+        values: "{{ domain_challenge.challenge_data[acmeeeeeeee_domain]['dns-01'].resource_value }}"
+        mode: equals
+    always_ask_default_resolver: false
+    timeout: 120
+
+- name: Extract and store the record ID so we can dewlete it later
+  ansible.builtin.set_fact:
+    txt_record_id: "{{ text_response.result.id }}"
+  when: text_response is defined
 
 - name: Let the challenge be validated and retrieve the cert and intermediate certificate
-  acme_certificate:
-    account_key_src: /etc/pki/cert/private/account.key
-    account_email: myself@sample.com
-    src: /etc/pki/cert/csr/sample.com.csr
-    cert: /etc/httpd/ssl/sample.com.crt
-    fullchain: /etc/httpd/ssl/sample.com-fullchain.crt
-    chain: /etc/httpd/ssl/sample.com-intermediate.crt
+  community.crypto.acme_certificate:
+    validate_certs: true
+    account_email: "{{ email }}"
+    src: "{{ acmeeeeeeee_csr_dir }}/{{ acmeeeeeeee_csr_filename }}"
+    cert: "{{ acmeeeeeeee_cert_dir }}/{{ acmeeeeeeee_cert_filename }}"
+    fullchain: "{{ acmeeeeeeee_fullchain_dir }}/{{ acmeeeeeeee_fullchain_filename }}"
+    chain: "{{ acmeeeeeeee_chain_dir }}/{{ acmeeeeeeee_chain_filename }}"
     challenge: dns-01
-    # acme_directory: https://acme-v01.api.letsencrypt.org/directory
     remaining_days: 60
-    data: "{{ domain_challenge }}"
+    data: "{{ com_challenge }}"
+    acme_directory: "{{ acmeeeeeeee_dir }}"
+    acme_version: "{{ acmeeeeeeee_version }}"
+    account_key_src: "{{ acmeeeeeeee_le_private_key_dir }}/{{ acmeeeeeeee_le_private_key_filename }}"
   when: domain_challenge is changed
+  register: lsresult
+  until: "lsresult is not failed"
+  retries: 12
+  delay: 10
+
+- name: Debug order
+  ansible.builtin.debug:
+    var: lsresult
+
+- name: Remove www record based on record_id
+  community.digitalocean.digital_ocean_domain_record:
+    state: absent
+    oauth_token: "{{ vault_digitalocean_domain_token }}"
+    domain: "{{ acmeeeeeeee_domain }}"
+    record_id: "{{ txt_record_id }}"

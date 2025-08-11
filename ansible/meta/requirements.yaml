@@ -1,5 +1,6 @@
----
 # https://www.jeffgeerling.com/blog/2020/ansible-best-practices-using-project-local-collections-and-roles
+# ansible-galaxy install -r ansible/meta/requirements.yaml 
+# ansible-galaxy collection install -r ansible/meta/requirements.yaml
 roles:
   - name: artis3n.tailscale
     version: v5.0.1
@@ -52,6 +53,8 @@ collections:
   - name: community.digitalocean
   - name: community.docker
   - name: community.general
+  - name: community.dns
+  - name: community.crypto
   - name: devsec.hardening
   - name: serdigital64.backup
   - name: serdigital64.core
