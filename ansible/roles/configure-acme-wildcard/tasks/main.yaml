@@ -98,7 +98,7 @@
   ansible.builtin.debug:
     var: txt_response
 
-- name: "Wait for {{ domain_challenge.challenge_data[acmeeeeeeee_domain]['dns-01'].resource_value }} to appear at {{ domain_challenge.challenge_data[acmeeeeeeee_domain]['dns-01'].record }}"
+- name: Wait for TXT record to be created
   community.dns.wait_for_txt:
     records:
       - name: "{{ domain_challenge.challenge_data[acmeeeeeeee_domain]['dns-01'].record }}"
@@ -106,11 +106,12 @@
         mode: equals
     # always_ask_default_resolver: true
     timeout: 120
+  when: domain_challenge is changed
 
 - name: Extract and store the record ID so we can delete it later
   ansible.builtin.set_fact:
     txt_record_id: "{{ text_response.result.id }}"
-  when: text_response is defined
+  when: text_response is defined and domain_challenge is changed
 
 - name: Let the challenge be validated and retrieve the cert and intermediate certificate
   become: true
@@ -137,9 +138,10 @@
   ansible.builtin.debug:
     var: lsresult
 
-- name: Remove www record based on record_id
+- name: Remove TXT record
   community.digitalocean.digital_ocean_domain_record:
     state: absent
     oauth_token: "{{ vault_digitalocean_domain_token }}"
     domain: "{{ acmeeeeeeee_domain }}"
     record_id: "{{ txt_record_id }}"
+  when: text_response is defined and domain_challenge is changed
