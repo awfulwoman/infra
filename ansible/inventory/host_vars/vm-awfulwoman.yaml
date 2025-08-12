@@ -1,6 +1,8 @@
 ansible_host: awfulwoman.com
 ansible_user: "{{ vault_server_username }}"
 
+host_type: virtual
+
 bootstrap_ubuntu_timezone: "Europe/Amsterdam"
 
 # --- NETWORK -------------

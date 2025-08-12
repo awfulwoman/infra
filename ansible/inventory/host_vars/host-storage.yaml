@@ -1,6 +1,8 @@
 ansible_host: host-storage # How to access the host
 ansible_user: "{{ vault_server_username }}" # User to connect as
 
+host_type: baremetal
+
 machine_name: storage # Hostname of the machine
 machine_city: ber # City where the machine is located
 machine_location: xberg # Location of the machine within the city

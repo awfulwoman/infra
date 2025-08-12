@@ -1,5 +1,0 @@
----
-- name: Run compositions
-  hosts: host-workloads
-  roles:
-    - role: compositions

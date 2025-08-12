@@ -1,9 +1,0 @@
-- name: Workloads server
-  hosts: host-workloads
-  roles:
-    - role: configure-sshkey
-
-  handlers:
-    - name: Reboot host
-      become: true
-      ansible.builtin.reboot:

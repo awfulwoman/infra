@@ -2,6 +2,8 @@
 ansible_host: host-albion
 ansible_user: "{{ vault_server_username }}"
 
+host_type: baremetal
+
 bootstrap_ubuntu_timezone: "Europe/London"
 tailscale_exit_node: true
 

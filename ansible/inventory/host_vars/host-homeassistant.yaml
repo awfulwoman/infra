@@ -1,6 +1,8 @@
 ansible_host: "192.168.1.130"
 ansible_user: "{{ vault_server_username }}"
 
+host_type: baremetal
+
 machine_name: homebrain # Hostname of the machine
 machine_city: ber # City where the machine is located
 machine_location: xberg # Location of the machine within the city
