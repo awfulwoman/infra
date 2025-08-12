@@ -55,6 +55,7 @@ collections:
   - name: community.general
   - name: community.dns
   - name: community.crypto
+  - name: community.healthchecksio
   - name: devsec.hardening
   - name: serdigital64.backup
   - name: serdigital64.core
