@@ -1,7 +1,7 @@
 - name: DNS
   hosts: dns
   roles:
-    - role: configure-acme-wildcard
+    - role: install-ansible-pull
 
   handlers:
     - name: Reboot host
