@@ -33,7 +33,7 @@ git -C {{ ansiblepull_workdir }}/home/ pull
 echo " "
 echo "RUN ANSIBLE PLAYBOOKS"
 echo "************************************"
-ansible-pull -U {{ ansiblepull_repo_url }} ansible/playbooks/{{ host_type }}/{{{ inventory_hostname }}/{ ansiblepull_playbook }}.yaml
+ansible-pull -U {{ ansiblepull_repo_url }} ansible/playbooks/{{ host_type }}/{{ inventory_hostname }}/{ ansiblepull_playbook }}.yaml
 
 if [ $? -eq 0 ]
 then
