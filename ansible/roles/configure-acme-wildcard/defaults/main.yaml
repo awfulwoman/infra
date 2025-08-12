@@ -1,4 +1,5 @@
 acmeeeeeeee_domain: "{{ vault_domain_test }}"
+acmeeeeeeee_working_dir: /opt/acme
 acmeeeeeeee_le_private_key_dir: /opt/acme/private
 acmeeeeeeee_le_private_key_filename: le.key
 acmeeeeeeee_csr_private_key_dir: /opt/acme/private

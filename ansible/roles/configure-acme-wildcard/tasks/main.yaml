@@ -8,7 +8,16 @@
       - python3-dnspython
     state: present
 
-- name: Create directories
+- name: Ensure working dir exists
+  become: true
+  ansible.builtin.file:
+    dest: "{{ acmeeeeeeee_working_dir }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0755"
+
+- name: Ensure secure directories exist
   become: true
   ansible.builtin.file:
     dest: "{{ dir }}"
@@ -22,6 +31,18 @@
     - "{{ acmeeeeeeee_le_private_key_dir }}"
     - "{{ acmeeeeeeee_csr_private_key_dir }}"
     - "{{ acmeeeeeeee_csr_dir }}"
+
+- name: Ensure directories exist
+  become: true
+  ansible.builtin.file:
+    dest: "{{ dir }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0744"
+  loop_control:
+    loop_var: dir
+  loop:
     - "{{ acmeeeeeeee_cert_dir }}"
     - "{{ acmeeeeeeee_fullchain_dir }}"
     - "{{ acmeeeeeeee_chain_dir }}"
