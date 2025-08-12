@@ -13,7 +13,7 @@
     - role: zfs-backup-server
       zfsbackup_pushover: false
       zfsbackup_run_after_wake: true
-    - role: install-linux2mqtt
+    - role: monitoring-healthchecksio
 
   handlers:
     - name: Reboot host

@@ -1,7 +1,7 @@
 - name: DNS
   hosts: dns
   roles:
-    - role: install-ansible-pull
+    - role: monitoring-healthchecksio
 
   handlers:
     - name: Reboot host

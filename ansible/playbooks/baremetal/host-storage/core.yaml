@@ -16,6 +16,7 @@
     - role: zfs-backup-client
     - role: compositions
     - role: configure-smartmontools
+    - role: monitoring-healthchecksio
     # - role: sleepuntil
     #   become: true
     # - role: powertop

@@ -16,6 +16,7 @@
     - role: install-ansible-pull
     - role: zfs-backup-client
     - role: compositions
+    - role: monitoring-healthchecksio
 
   handlers:
     - name: Reboot host

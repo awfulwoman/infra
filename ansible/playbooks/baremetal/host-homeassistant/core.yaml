@@ -17,7 +17,7 @@
     - role: ironicbadger.figurine
       become: true
     - role: compositions
-    - role: install-linux2mqtt
+    - role: monitoring-healthchecksio
 
   handlers:
     - name: Reboot host
