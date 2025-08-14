@@ -32,7 +32,7 @@
     - "{{ acmeeeeeeee_csr_private_key_dir }}"
     - "{{ acmeeeeeeee_csr_dir }}"
 
-- name: Ensure directories exist
+- name: Ensure cert directories exist
   become: true
   ansible.builtin.file:
     dest: "{{ dir }}"
@@ -47,7 +47,7 @@
     - "{{ acmeeeeeeee_fullchain_dir }}"
     - "{{ acmeeeeeeee_chain_dir }}"
 
-- name: Check for LE private key
+- name: Check for existing LE private key
   ansible.builtin.stat:
     path: "{{ acmeeeeeeee_le_private_key_dir }}/{{ acmeeeeeeee_le_private_key_filename }}"
   register: le_key
@@ -59,7 +59,7 @@
     state: present
   when: not le_key.stat.exists
 
-- name: Check for CSR private key
+- name: Check for existing CSR private key
   ansible.builtin.stat:
     path: "{{ acmeeeeeeee_le_private_key_dir }}/{{ acmeeeeeeee_le_private_key_filename }}"
   register: csr_key
@@ -84,7 +84,7 @@
     var: account_data
   when: acmeeeeeeee_debug
 
-- name: Create ACME account if missing
+- name: Create ACME account if not present
   community.crypto.acme_account:
     account_key_src: "{{ acmeeeeeeee_le_private_key_dir }}/{{ acmeeeeeeee_le_private_key_filename }}"
     acme_directory: "{{ acmeeeeeeee_dir }}"
@@ -102,7 +102,7 @@
     var: acme_account_creation
   when: acmeeeeeeee_debug
 
-- name: Check for CSR file
+- name: Check for existing CSR file
   ansible.builtin.stat:
     path: "{{ acmeeeeeeee_csr_dir }}/{{ acmeeeeeeee_csr_filename }}"
   register: csr_file
@@ -123,7 +123,8 @@
 
 - name: Show the certificate renewal information
   ansible.builtin.debug:
-    var: cert_data.renewal_info.suggestedWindow.start
+    var: cert_data.renewal_info
+  when: acmeeeeeeee_debug
 
 - name: Abandon play if we are renewing certificate too early
   ansible.builtin.meta: end_play
