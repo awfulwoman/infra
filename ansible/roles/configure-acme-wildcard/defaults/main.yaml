@@ -7,7 +7,8 @@ acmeeeeeeee_csr_private_key_filename: csr.key
 acmeeeeeeee_csr_dir: /opt/acme/csr
 acmeeeeeeee_csr_filename: "{{ acmeeeeeeee_domain }}.csr"
 acmeeeeeeee_email: letsencrypt@whalecoiner.com
-acmeeeeeeee_dir: https://acme-staging-v02.api.letsencrypt.org/directory
+# acmeeeeeeee_dir: https://acme-staging-v02.api.letsencrypt.org/directory
+acmeeeeeeee_dir: https://acme-v02.api.letsencrypt.org/directory
 acmeeeeeeee_order_uri: false
 acmeeeeeeee_version: 2
 acmeeeeeeee_cert_dir: /opt/acme/certs
