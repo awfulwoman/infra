@@ -2,8 +2,6 @@
 # ansible-galaxy install -r ansible/meta/requirements.yaml 
 # ansible-galaxy collection install -r ansible/meta/requirements.yaml
 roles:
-  - name: artis3n.tailscale
-    version: v5.0.1
   - name: diodonfrost.terraform
     version: 1.6.1
   - name: dmotte.disable_ipv6
@@ -48,6 +46,7 @@ roles:
   #   scm: git
 
 collections:
+  - name: artis3n.tailscale
   - name: ansible.netcommon
   - name: ansible.posix
   - name: community.digitalocean

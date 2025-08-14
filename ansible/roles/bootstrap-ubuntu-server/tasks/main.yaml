@@ -181,12 +181,12 @@
 
 - name: Tailscale
   ansible.builtin.include_role:
-    name: artis3n.tailscale
+    name: artis3n.tailscale.machine
   when: tailscale_exit_node is undefined
 
 - name: Tailscale - with exit node
   ansible.builtin.include_role:
-    name: artis3n.tailscale
+    name: artis3n.tailscale.machine
   vars:
     tailscale_args: "--advertise-exit-node"
   when: tailscale_exit_node is defined and tailscale_exit_node is true
