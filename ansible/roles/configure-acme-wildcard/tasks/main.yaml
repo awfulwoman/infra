@@ -126,101 +126,104 @@
     var: cert_data.renewal_info
   when: acmeeeeeeee_debug
 
-- name: Abandon play if we are renewing certificate too early
-  ansible.builtin.meta: end_play
-  when: ansible_date_time.iso8601 < cert_data.renewal_info.suggestedWindow.start
-
 # -------------------------------------------------------
 # RATE LIMITS APPLY FROM HERE ON
 # PLEASE TALK TO A RESPONSIBLE ADULT BEFORE RUNNING THIS
 # -------------------------------------------------------
 
-- name: Start DNS-01 challenge
-  community.crypto.acme_certificate:
-    validate_certs: true
-    account_key_src: "{{ acmeeeeeeee_le_private_key_dir }}/{{ acmeeeeeeee_le_private_key_filename }}"
-    account_email: "{{ acmeeeeeeee_email }}"
-    src: "{{ acmeeeeeeee_csr_dir }}/{{ acmeeeeeeee_csr_filename }}"
-    cert: "{{ acmeeeeeeee_cert_dir }}/{{ acmeeeeeeee_cert_filename }}"
-    challenge: dns-01
-    acme_directory: "{{ acmeeeeeeee_dir }}"
-    acme_version: "{{ acmeeeeeeee_version }}"
-    remaining_days: 60
-  register: domain_challenge
+- name: Start renewal if we are within the renewal window
+  when: ansible_date_time.iso8601 > cert_data.renewal_info.suggestedWindow.start
+  block:
+    - name: Start DNS-01 challenge
+      community.crypto.acme_certificate:
+        validate_certs: true
+        account_key_src: "{{ acmeeeeeeee_le_private_key_dir }}/{{ acmeeeeeeee_le_private_key_filename }}"
+        account_email: "{{ acmeeeeeeee_email }}"
+        src: "{{ acmeeeeeeee_csr_dir }}/{{ acmeeeeeeee_csr_filename }}"
+        cert: "{{ acmeeeeeeee_cert_dir }}/{{ acmeeeeeeee_cert_filename }}"
+        challenge: dns-01
+        acme_directory: "{{ acmeeeeeeee_dir }}"
+        acme_version: "{{ acmeeeeeeee_version }}"
+        remaining_days: 60
+      register: domain_challenge
 
-- name: Debug domain challenge
+    - name: Debug domain challenge
+      ansible.builtin.debug:
+        var: domain_challenge
+      when: acmeeeeeeee_debug
+
+    - name: Satisfy DNS-01 challenge
+      # become: true
+      community.digitalocean.digital_ocean_domain_record:
+        state: present
+        oauth_token: "{{ vault_digitalocean_domain_token }}"
+        domain: "{{ acmeeeeeeee_domain }}"
+        type: TXT
+        ttl: 30
+        name: "{{ domain_challenge.challenge_data[acmeeeeeeee_domain]['dns-01'].resource }}"
+        data: "{{ domain_challenge.challenge_data[acmeeeeeeee_domain]['dns-01'].resource_value }}"
+        force_update: true
+      when: domain_challenge is changed
+      register: txt_response
+
+    - name: Debug txt verification
+      ansible.builtin.debug:
+        var: txt_response
+      when: acmeeeeeeee_debug
+
+    - name: Wait for TXT record to be created
+      community.dns.wait_for_txt:
+        records:
+          - name: "{{ domain_challenge.challenge_data[acmeeeeeeee_domain]['dns-01'].record }}"
+            values: "{{ domain_challenge.challenge_data[acmeeeeeeee_domain]['dns-01'].resource_value }}"
+            mode: equals
+        timeout: 240
+      when: domain_challenge is changed
+
+    - name: Extract and store the TXT record so we can delete it later
+      ansible.builtin.set_fact:
+        txt_record_id: "{{ txt_response.result.id }}"
+      when: txt_response is defined and domain_challenge is changed
+
+    - name: Check with challenger and retrieve certificates
+      community.crypto.acme_certificate:
+        validate_certs: true
+        account_email: "{{ acmeeeeeeee_email }}"
+        src: "{{ acmeeeeeeee_csr_dir }}/{{ acmeeeeeeee_csr_filename }}"
+        cert: "{{ acmeeeeeeee_cert_dir }}/{{ acmeeeeeeee_cert_filename }}"
+        fullchain: "{{ acmeeeeeeee_fullchain_dir }}/{{ acmeeeeeeee_fullchain_filename }}"
+        chain: "{{ acmeeeeeeee_chain_dir }}/{{ acmeeeeeeee_chain_filename }}"
+        challenge: dns-01
+        remaining_days: 60
+        data: "{{ domain_challenge }}"
+        acme_directory: "{{ acmeeeeeeee_dir }}"
+        acme_version: "{{ acmeeeeeeee_version }}"
+        account_key_src: "{{ acmeeeeeeee_le_private_key_dir }}/{{ acmeeeeeeee_le_private_key_filename }}"
+      when: domain_challenge is changed
+      register: lsresult
+      until: "lsresult is not failed"
+      retries: 12
+      delay: 10
+
+    - name: Debug order
+      ansible.builtin.debug:
+        var: lsresult
+      when: acmeeeeeeee_debug
+
+    - name: Remove now unused TXT record
+      community.digitalocean.digital_ocean_domain_record:
+        state: absent
+        oauth_token: "{{ vault_digitalocean_domain_token }}"
+        domain: "{{ acmeeeeeeee_domain }}"
+        record_id: "{{ txt_record_id }}"
+      register: txt_remove_response
+      when: txt_response is defined and domain_challenge is changed
+
+    - name: Debug txt_remove_response
+      ansible.builtin.debug:
+        var: txt_remove_response
+      when: acmeeeeeeee_debug
+
+- name: Peace out
   ansible.builtin.debug:
-    var: domain_challenge
-  when: acmeeeeeeee_debug
-
-- name: Satisfy DNS-01 challenge
-  # become: true
-  community.digitalocean.digital_ocean_domain_record:
-    state: present
-    oauth_token: "{{ vault_digitalocean_domain_token }}"
-    domain: "{{ acmeeeeeeee_domain }}"
-    type: TXT
-    ttl: 30
-    name: "{{ domain_challenge.challenge_data[acmeeeeeeee_domain]['dns-01'].resource }}"
-    data: "{{ domain_challenge.challenge_data[acmeeeeeeee_domain]['dns-01'].resource_value }}"
-    force_update: true
-  when: domain_challenge is changed
-  register: txt_response
-
-- name: Debug txt verification
-  ansible.builtin.debug:
-    var: txt_response
-  when: acmeeeeeeee_debug
-
-- name: Wait for TXT record to be created
-  community.dns.wait_for_txt:
-    records:
-      - name: "{{ domain_challenge.challenge_data[acmeeeeeeee_domain]['dns-01'].record }}"
-        values: "{{ domain_challenge.challenge_data[acmeeeeeeee_domain]['dns-01'].resource_value }}"
-        mode: equals
-    timeout: 240
-  when: domain_challenge is changed
-
-- name: Extract and store the TXT record so we can delete it later
-  ansible.builtin.set_fact:
-    txt_record_id: "{{ txt_response.result.id }}"
-  when: txt_response is defined and domain_challenge is changed
-
-- name: Check with challenger and retrieve certificates
-  community.crypto.acme_certificate:
-    validate_certs: true
-    account_email: "{{ acmeeeeeeee_email }}"
-    src: "{{ acmeeeeeeee_csr_dir }}/{{ acmeeeeeeee_csr_filename }}"
-    cert: "{{ acmeeeeeeee_cert_dir }}/{{ acmeeeeeeee_cert_filename }}"
-    fullchain: "{{ acmeeeeeeee_fullchain_dir }}/{{ acmeeeeeeee_fullchain_filename }}"
-    chain: "{{ acmeeeeeeee_chain_dir }}/{{ acmeeeeeeee_chain_filename }}"
-    challenge: dns-01
-    remaining_days: 60
-    data: "{{ domain_challenge }}"
-    acme_directory: "{{ acmeeeeeeee_dir }}"
-    acme_version: "{{ acmeeeeeeee_version }}"
-    account_key_src: "{{ acmeeeeeeee_le_private_key_dir }}/{{ acmeeeeeeee_le_private_key_filename }}"
-  when: domain_challenge is changed
-  register: lsresult
-  until: "lsresult is not failed"
-  retries: 12
-  delay: 10
-
-- name: Debug order
-  ansible.builtin.debug:
-    var: lsresult
-  when: acmeeeeeeee_debug
-
-- name: Remove now unused TXT record
-  community.digitalocean.digital_ocean_domain_record:
-    state: absent
-    oauth_token: "{{ vault_digitalocean_domain_token }}"
-    domain: "{{ acmeeeeeeee_domain }}"
-    record_id: "{{ txt_record_id }}"
-  register: txt_remove_response
-  when: txt_response is defined and domain_challenge is changed
-
-- name: Debug txt_remove_response
-  ansible.builtin.debug:
-    var: txt_remove_response
-  when: acmeeeeeeee_debug
+    msg: "Cert run finished"
