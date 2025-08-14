@@ -14,8 +14,6 @@
     - role: install-beep
     - role: shoutrrr
       become: true
-    - role: ironicbadger.figurine
-      become: true
     - role: compositions
     - role: monitoring-healthchecksio
 

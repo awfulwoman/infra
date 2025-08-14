@@ -8,7 +8,7 @@
 #   ansible.builtin.debug:
 #     msg: "{{ ansiblepull_workdir }}"
 
-- name: Add ansible password
+- name: Ensure ansible password file exists
   become: true
   ansible.builtin.lineinfile:
     name: "{{ ansiblepull_workdir }}/.vaultpassword"
@@ -19,7 +19,7 @@
     state: present
     create: true
 
-- name: Make project in /opt/ansible
+- name: Ensure Ansible work dir exists
   become: true
   ansible.builtin.file:
     state: directory
@@ -28,11 +28,20 @@
     group: "{{ ansible_user }}"
     mode: "0744"
 
-- name: Make project in /opt/ansible/galaxy-roles
+- name: Ensure Galaxy Collections dir exists
   become: true
   ansible.builtin.file:
     state: directory
-    path: "{{ ansiblepull_workdir }}/galaxy-roles"
+    path: "{{ ansiblepull_workdir }}/galaxy/collections"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0744"
+
+- name: Ensure Galaxy Roles dir exists
+  become: true
+  ansible.builtin.file:
+    state: directory
+    path: "{{ ansiblepull_workdir }}/galaxy/roles"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0744"
@@ -62,12 +71,12 @@
 #     msg: "{{ installed }}"
 
 - name: Run initial requirements install - collections
-  ansible.builtin.command: "ansible-galaxy collection install -r {{ ansiblepull_workdir }}/{{ repo_name }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/galaxy-roles"
+  ansible.builtin.command: "ansible-galaxy collection install -r {{ ansiblepull_workdir }}/{{ repo_name }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/galaxy/collections"
   timeout: 3600 # stupidly long value because ansible-galaxy installation takes FOREVER
   when: not installed
 
 - name: Run initial requirements install - roles
-  ansible.builtin.command: "ansible-galaxy install -r {{ ansiblepull_workdir }}/{{ repo_name }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/galaxy-roles"
+  ansible.builtin.command: "ansible-galaxy install -r {{ ansiblepull_workdir }}/{{ repo_name }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/galaxy/roles"
   timeout: 3600 # stupidly long value because ansible-galaxy installation takes FOREVER
   when: not installed
 
@@ -80,10 +89,17 @@
     mode: "0744"
   when: not installed
 
-- name: Cron to run ansible-galaxy update weekly
+- name: Run galaxy collections weekly
   ansible.builtin.cron:
-    name: "ansible-galaxy"
-    job: "ansible-galaxy install -f -r {{ ansiblepull_workdir }}/{{ repo_name }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/galaxy-roles"
+    name: "ansible-galaxy" # Should be ansible-galaxy-collections, but hey.
+    job: "ansible-galaxy collection install -f -r {{ ansiblepull_workdir }}/{{ repo_name }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/galaxy/collections"
+    state: absent
+    special_time: weekly
+
+- name: Run galaxy roles weekly
+  ansible.builtin.cron:
+    name: "ansible-galaxy-roles"
+    job: "ansible-galaxy install -f -r {{ ansiblepull_workdir }}/{{ repo_name }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/galaxy/roles"
     state: absent
     special_time: weekly
 
