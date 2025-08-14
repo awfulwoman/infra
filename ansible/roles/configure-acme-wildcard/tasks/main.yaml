@@ -22,8 +22,8 @@
   ansible.builtin.file:
     dest: "{{ dir }}"
     state: directory
-    owner: root
-    group: root
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
     mode: "0700"
   loop_control:
     loop_var: dir
@@ -47,45 +47,74 @@
     - "{{ acmeeeeeeee_fullchain_dir }}"
     - "{{ acmeeeeeeee_chain_dir }}"
 
-- name: Generate LE private key
-  become: true
+- name: Check for LE private key
+  ansible.builtin.stat:
+    path: "{{ acmeeeeeeee_le_private_key_dir }}/{{ acmeeeeeeee_le_private_key_filename }}"
+  register: le_key
+
+- name: Generate LE private key if not present
   community.crypto.openssl_privatekey:
     path: "{{ acmeeeeeeee_le_private_key_dir }}/{{ acmeeeeeeee_le_private_key_filename }}"
     curve: secp521r1
     state: present
+  when: not le_key.stat.exists
 
-- name: Generate CSR private key
-  become: true
+- name: Check for CSR private key
+  ansible.builtin.stat:
+    path: "{{ acmeeeeeeee_le_private_key_dir }}/{{ acmeeeeeeee_le_private_key_filename }}"
+  register: csr_key
+
+- name: Generate CSR private key if not present
   community.crypto.openssl_privatekey:
     path: "{{ acmeeeeeeee_csr_private_key_dir }}/{{ acmeeeeeeee_csr_private_key_filename }}"
     curve: secp521r1
     state: present
+  when: not csr_key.stat.exists
 
-- name: Ensure ACME account exists
-  become: true
+- name: Check whether the account exists and is accessible with our key
+  community.crypto.acme_account_info:
+    acme_directory: "{{ acmeeeeeeee_dir }}"
+    acme_version: "{{ acmeeeeeeee_version }}"
+    account_key_src: "{{ acmeeeeeeee_le_private_key_dir }}/{{ acmeeeeeeee_le_private_key_filename }}"
+    account_uri: "{{ acmeeeeeeee_order_uri }}"
+  register: account_data
+
+- name: Debug acme account
+  ansible.builtin.debug:
+    var: account_data
+  when: acmeeeeeeee_debug
+
+- name: Create ACME account if missing
   community.crypto.acme_account:
     account_key_src: "{{ acmeeeeeeee_le_private_key_dir }}/{{ acmeeeeeeee_le_private_key_filename }}"
     acme_directory: "{{ acmeeeeeeee_dir }}"
     acme_version: "{{ acmeeeeeeee_version }}"
+    account_uri: "{{ acmeeeeeeee_order_uri }}"
     state: present
     terms_agreed: true
     contact:
       - mailto:letsencrypt@whalecoiner.com
-  register: acme_account
+  when: not account_data.exists
+  register: acme_account_creation
 
 - name: Debug acme account
   ansible.builtin.debug:
-    var: acme_account
+    var: acme_account_creation
+  when: acmeeeeeeee_debug
 
-- name: Generate an OpenSSL Certificate Signing Request
-  become: true
+- name: Check for CSR file
+  ansible.builtin.stat:
+    path: "{{ acmeeeeeeee_csr_dir }}/{{ acmeeeeeeee_csr_filename }}"
+  register: csr_file
+
+- name: Generate an OpenSSL CSR if not present
   community.crypto.openssl_csr:
     path: "{{ acmeeeeeeee_csr_dir }}/{{ acmeeeeeeee_csr_filename }}"
     privatekey_path: "{{ acmeeeeeeee_csr_private_key_dir }}/{{ acmeeeeeeee_csr_private_key_filename }}"
     common_name: "{{ acmeeeeeeee_domain }}"
+  when: not csr_file.stat.exists
 
-- name: Create a challenge for domain
-  become: true
+- name: Start DNS-01 challenge
   community.crypto.acme_certificate:
     validate_certs: true
     account_key_src: "{{ acmeeeeeeee_le_private_key_dir }}/{{ acmeeeeeeee_le_private_key_filename }}"
@@ -101,9 +130,10 @@
 - name: Debug domain challenge
   ansible.builtin.debug:
     var: domain_challenge
+  when: acmeeeeeeee_debug
 
-- name: Create txt verification
-  become: true
+- name: Satisfy DNS-01 challenge
+  # become: true
   community.digitalocean.digital_ocean_domain_record:
     state: present
     oauth_token: "{{ vault_digitalocean_domain_token }}"
@@ -119,13 +149,7 @@
 - name: Debug txt verification
   ansible.builtin.debug:
     var: txt_response
-
-- name: Debug domain challenge data
-  ansible.builtin.debug:
-    msg: >
-     "Record: {{ domain_challenge.challenge_data[acmeeeeeeee_domain]['dns-01'].record }}"
-     "Value: {{ domain_challenge.challenge_data[acmeeeeeeee_domain]['dns-01'].resource_value }}"
-  when: domain_challenge is changed
+  when: acmeeeeeeee_debug
 
 - name: Wait for TXT record to be created
   community.dns.wait_for_txt:
@@ -136,13 +160,12 @@
     timeout: 240
   when: domain_challenge is changed
 
-- name: Extract and store the record ID so we can delete it later
+- name: Extract and store the TXT record so we can delete it later
   ansible.builtin.set_fact:
     txt_record_id: "{{ txt_response.result.id }}"
   when: txt_response is defined and domain_challenge is changed
 
-- name: Let the challenge be validated and retrieve the cert and intermediate certificate
-  become: true
+- name: Check with challenger and retrieve certificates
   community.crypto.acme_certificate:
     validate_certs: true
     account_email: "{{ acmeeeeeeee_email }}"
@@ -165,8 +188,9 @@
 - name: Debug order
   ansible.builtin.debug:
     var: lsresult
+  when: acmeeeeeeee_debug
 
-- name: Remove TXT record
+- name: Remove now unused TXT record
   community.digitalocean.digital_ocean_domain_record:
     state: absent
     oauth_token: "{{ vault_digitalocean_domain_token }}"
@@ -178,3 +202,4 @@
 - name: Debug txt_remove_response
   ansible.builtin.debug:
     var: txt_remove_response
+  when: acmeeeeeeee_debug

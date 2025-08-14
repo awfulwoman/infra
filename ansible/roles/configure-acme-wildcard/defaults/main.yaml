@@ -1,4 +1,5 @@
 acmeeeeeeee_domain: "{{ vault_domain_test }}"
+acmeeeeeeee_debug: false
 acmeeeeeeee_working_dir: /opt/acme
 acmeeeeeeee_le_private_key_dir: /opt/acme/private
 acmeeeeeeee_le_private_key_filename: le.key
@@ -9,7 +10,7 @@ acmeeeeeeee_csr_filename: "{{ acmeeeeeeee_domain }}.csr"
 acmeeeeeeee_email: letsencrypt@whalecoiner.com
 # acmeeeeeeee_dir: https://acme-staging-v02.api.letsencrypt.org/directory
 acmeeeeeeee_dir: https://acme-v02.api.letsencrypt.org/directory
-acmeeeeeeee_order_uri: false
+acmeeeeeeee_order_uri: https://acme-v02.api.letsencrypt.org/acme/acct/2595600866
 acmeeeeeeee_version: 2
 acmeeeeeeee_cert_dir: /opt/acme/certs
 acmeeeeeeee_cert_filename: "{{ acmeeeeeeee_domain }}.crt"
