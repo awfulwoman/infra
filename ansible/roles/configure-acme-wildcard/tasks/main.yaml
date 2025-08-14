@@ -51,17 +51,17 @@
   become: true
   community.crypto.openssl_privatekey:
     path: "{{ acmeeeeeeee_le_private_key_dir }}/{{ acmeeeeeeee_le_private_key_filename }}"
-    # curve: secp521r1
+    curve: secp521r1
     state: present
 
 - name: Generate CSR private key
   become: true
   community.crypto.openssl_privatekey:
     path: "{{ acmeeeeeeee_csr_private_key_dir }}/{{ acmeeeeeeee_csr_private_key_filename }}"
-    # curve: secp521r1
+    curve: secp521r1
     state: present
 
-- name: Make sure account exists and has given contacts. We agree to TOS.
+- name: Make sure ACME account exists
   become: true
   community.crypto.acme_account:
     account_key_src: "{{ acmeeeeeeee_le_private_key_dir }}/{{ acmeeeeeeee_le_private_key_filename }}"
@@ -102,22 +102,30 @@
   ansible.builtin.debug:
     var: domain_challenge
 
-- name: Create txt response
+- name: Create txt verification
   become: true
   community.digitalocean.digital_ocean_domain_record:
     state: present
     oauth_token: "{{ vault_digitalocean_domain_token }}"
     domain: "{{ acmeeeeeeee_domain }}"
     type: TXT
+    ttl: 30
     name: "{{ domain_challenge.challenge_data[acmeeeeeeee_domain]['dns-01'].resource }}"
     data: "{{ domain_challenge.challenge_data[acmeeeeeeee_domain]['dns-01'].resource_value }}"
     force_update: true
   when: domain_challenge is changed
   register: txt_response
 
-- name: Debug txt response
+- name: Debug txt verification
   ansible.builtin.debug:
     var: txt_response
+
+- name: Debug domain challenge data
+  ansible.builtin.debug:
+    msg: >
+     "Record: {{ domain_challenge.challenge_data[acmeeeeeeee_domain]['dns-01'].record }}"
+     "Value: {{ domain_challenge.challenge_data[acmeeeeeeee_domain]['dns-01'].resource_value }}"
+  when: domain_challenge is changed
 
 - name: Wait for TXT record to be created
   community.dns.wait_for_txt:
@@ -125,14 +133,13 @@
       - name: "{{ domain_challenge.challenge_data[acmeeeeeeee_domain]['dns-01'].record }}"
         values: "{{ domain_challenge.challenge_data[acmeeeeeeee_domain]['dns-01'].resource_value }}"
         mode: equals
-    # always_ask_default_resolver: true
-    timeout: 120
+    timeout: 240
   when: domain_challenge is changed
 
 - name: Extract and store the record ID so we can delete it later
   ansible.builtin.set_fact:
-    txt_record_id: "{{ text_response.result.id }}"
-  when: text_response is defined and domain_challenge is changed
+    txt_record_id: "{{ txt_response.result.id }}"
+  when: txt_response is defined and domain_challenge is changed
 
 - name: Let the challenge be validated and retrieve the cert and intermediate certificate
   become: true
@@ -165,4 +172,9 @@
     oauth_token: "{{ vault_digitalocean_domain_token }}"
     domain: "{{ acmeeeeeeee_domain }}"
     record_id: "{{ txt_record_id }}"
-  when: text_response is defined and domain_challenge is changed
+  register: txt_remove_response
+  when: txt_response is defined and domain_challenge is changed
+
+- name: Debug txt_remove_response
+  ansible.builtin.debug:
+    var: txt_remove_response
