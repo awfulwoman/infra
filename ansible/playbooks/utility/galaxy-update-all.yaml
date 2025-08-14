@@ -1,0 +1,15 @@
+- name: Update ansible galaxy roles and collections on all hosts
+  hosts: all
+  tasks:
+    - name: Run initial requirements install - collections
+      ansible.builtin.command: "ansible-galaxy collection install -r {{ ansible_path }}/{{ repo_name }}/ansible/meta/requirements.yaml -p {{ ansible_path }}/galaxy-roles"
+      timeout: 3600 # stupidly long value because ansible-galaxy installation takes FOREVER
+
+    - name: Run initial requirements install - roles
+      ansible.builtin.command: "ansible-galaxy install -r {{ ansible_path }}/{{ repo_name }}/ansible/meta/requirements.yaml -p {{ ansible_path }}/galaxy-roles"
+      timeout: 3600 # stupidly long value because ansible-galaxy installation takes FOREVER
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:
