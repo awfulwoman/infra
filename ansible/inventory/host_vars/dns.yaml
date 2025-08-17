@@ -13,11 +13,14 @@ zfs_pools:
   - fastpool
 
 container_compositions_zfs_id: fastpool/compositions
+acme_zfs_id: fastpool/acme
 compositions_config_dir: "/{{ container_compositions_zfs_id}}"
+
+acme_path: "/{{ acme_zfs_id }}"
 
 zfs_datasets:
   - "{{ container_compositions_zfs_id }}"
-  - fastpool/acme
+  - "{{ acme_zfs_id }}"
 
 reverseproxy_use_letsencrypt: false
 
