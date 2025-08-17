@@ -1,4 +1,5 @@
 - name: Healthchecks block
+  ignore_errors: true
   block:
     - name: Ensure that Healthchecks.io check is present
       community.healthchecksio.checks:
