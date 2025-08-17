@@ -41,6 +41,15 @@ all:
             offsite:
 # END Experimental groups
 
+    regular:
+      hosts:
+        host-homeassistant:
+        host-mqtt:
+        host-backups:
+        host-storage:
+        vm-awfulwoman:
+        host-albion:
+        dns:
 
     # Group: Home Automation
     homeautomation:
