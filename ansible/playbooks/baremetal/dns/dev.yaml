@@ -2,7 +2,6 @@
   hosts: dns
   roles:
     - role: zfs-core
-    - role: compositions
 
   handlers:
     - name: Reboot host
