@@ -12,7 +12,6 @@ roles:
     version: 3.1.9
 
 collections:
-  - name: community.healthchecksio
   - name: artis3n.tailscale
   - name: ansible.netcommon
   - name: ansible.posix
@@ -21,3 +20,4 @@ collections:
   - name: community.general
   - name: community.dns
   - name: community.crypto
+  - name: community.healthchecksio

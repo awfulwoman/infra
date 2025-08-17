@@ -78,15 +78,15 @@
 # ansible-galaxy role install -r ansible/meta/requirements.yaml -p /opt/ansible/galaxy/roles/
 # ansible-galaxy collection install -r ansible/meta/requirements.yaml -p /opt/ansible/galaxy/collections/
 
-- name: Run initial Galaxy install - roles
+- name: Run Galaxy install - roles
   ansible.builtin.command: "ansible-galaxy role install -r {{ ansiblepull_repo_path }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/galaxy/roles"
   timeout: 3600 # stupidly long value because ansible-galaxy installation takes FOREVER
-  when: not installed
+  # when: not installed
 
-- name: Run initial requirements install - collections
+- name: Run requirements install - collections
   ansible.builtin.command: "ansible-galaxy collection install -r {{ ansiblepull_repo_path }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/galaxy/collections"
   timeout: 3600 # stupidly long value because ansible-galaxy installation takes FOREVER
-  when: not installed
+  # when: not installed
 
 - name: Mark initial install of galaxy as completed
   ansible.builtin.file:
