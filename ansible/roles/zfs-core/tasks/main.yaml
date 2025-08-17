@@ -34,8 +34,6 @@
         cmd: "zpool create {{ item }} -f {{ zfs_pools_filebased_dir }}/{{ item }}"
       loop: "{{ zfs_pools }}"
       when: zfs_pools is defined and zfs_pools_filebased
-      args:
-        creates: "/{{ item }}"
 
 - name: Ensure ZFS pools are present
   ansible.builtin.command:
