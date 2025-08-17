@@ -2,11 +2,11 @@
   hosts: all
   tasks:
     - name: Run initial requirements install - collections
-      ansible.builtin.command: "ansible-galaxy collection install -r {{ ansible_path }}/{{ repo_name }}/ansible/meta/requirements.yaml"
+      ansible.builtin.command: "ansible-galaxy collection install -r {{ ansible_path }}/{{ repo_name }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/galaxy/collections"
       timeout: 3600 # stupidly long value because ansible-galaxy installation takes FOREVER
 
     - name: Run initial requirements install - roles
-      ansible.builtin.command: "ansible-galaxy install -r {{ ansible_path }}/{{ repo_name }}/ansible/meta/requirements.yaml"
+      ansible.builtin.command: "ansible-galaxy install -r {{ ansible_path }}/{{ repo_name }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/galaxy/roles"
       timeout: 3600 # stupidly long value because ansible-galaxy installation takes FOREVER
 
   handlers:
