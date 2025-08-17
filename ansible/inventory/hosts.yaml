@@ -63,6 +63,7 @@ all:
         host-mqtt:
         host-homeassistant:
         host-albion:
+        dns:
 
     # Necessary to handle deployment keys
     sitedeployment: 
