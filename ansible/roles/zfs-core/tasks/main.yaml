@@ -25,6 +25,8 @@
         cmd: "truncate -s 256M {{ zfs_pools_filebased_dir }}/{{ item }}"
       loop: "{{ zfs_pools }}"
       when: zfs_pools is defined and zfs_pools_filebased
+      args:
+        creates: "{{ zfs_pools_filebased_dir }}/{{ item }}"
 
     - name: Ensure ZFS pool from file is present
       become: true
