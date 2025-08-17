@@ -1,2 +1,3 @@
+monitoring_healthchecksio: false
 monitoring_healthchecksio_name: "{{ ansible_hostname }} - Core Playbook"
 monitoring_healthchecksio_debug: false
