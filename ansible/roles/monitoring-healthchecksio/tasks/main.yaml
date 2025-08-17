@@ -1,5 +1,4 @@
 - name: Healthchecks block
-  ignore_errors: true
   block:
     - name: Ensure that Healthchecks.io check is present
       community.healthchecksio.checks:
@@ -34,7 +33,9 @@
       ansible.builtin.debug:
         var: healthchecksio_ping
       when: healthchecksio_ping is defined and monitoring_healthchecksio_debug | bool
+
   rescue:
-    - name: Healthchecks Error
+    - name: All is good if the first task failed
+      when: ansible_failed_task.name == 'Ensure that Healthchecks.io check is present'
       ansible.builtin.debug:
         msg: "Healthchecks.io module couldn't run"
