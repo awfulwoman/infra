@@ -46,10 +46,19 @@
     group: "{{ ansible_user }}"
     mode: "0744"
 
+- name: Ensure repo dir exists
+  become: true
+  ansible.builtin.file:
+    dest: "{{ ansiblepull_repo_path }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0744"
+    state: directory
+
 - name: Clone initial copy of repo
   ansible.builtin.git:
     repo: "{{ repo_url }}"
-    dest: "{{ ansiblepull_workdir }}/{{ repo_name }}"
+    dest: "{{ ansiblepull_repo_path }}"
     clone: true
     update: true
   register: repo_installation_path
@@ -66,19 +75,15 @@
   ansible.builtin.set_fact:
     installed: "{{ installlock_raw.stat.exists }}"
 
-# - name: debug
-#   ansible.builtin.debug:
-#     msg: "{{ installed }}"
-
 - name: Run initial requirements install - collections
-  ansible.builtin.command: "ansible-galaxy collection install -r {{ ansiblepull_workdir }}/{{ repo_name }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/galaxy/collections"
+  ansible.builtin.command: "ansible-galaxy install -r {{ ansiblepull_workdir }}/{{ repo_name }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/galaxy/collections"
   timeout: 3600 # stupidly long value because ansible-galaxy installation takes FOREVER
   when: not installed
 
-- name: Run initial requirements install - roles
-  ansible.builtin.command: "ansible-galaxy install -r {{ ansiblepull_workdir }}/{{ repo_name }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/galaxy/roles"
-  timeout: 3600 # stupidly long value because ansible-galaxy installation takes FOREVER
-  when: not installed
+# - name: Run initial requirements install - roles
+#   ansible.builtin.command: "ansible-galaxy install -r {{ ansiblepull_workdir }}/{{ repo_name }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/galaxy/roles"
+#   timeout: 3600 # stupidly long value because ansible-galaxy installation takes FOREVER
+#   when: not installed
 
 - name: Mark initial install of galaxy as completed
   ansible.builtin.file:
@@ -89,21 +94,18 @@
     mode: "0744"
   when: not installed
 
-- name: Run galaxy collections weekly
+- name: Run Galaxy install weekly
   ansible.builtin.cron:
-    name: "ansible-galaxy" # Should be ansible-galaxy-collections, but hey.
-    job: "ansible-galaxy collection install -f -r {{ ansiblepull_workdir }}/{{ repo_name }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/galaxy/collections"
+    name: "ansible-galaxy"
+    job: "ansible-galaxy install -r {{ ansiblepull_workdir }}/{{ repo_name }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/galaxy/collections"
     state: present
     hour: "5"
     minute: "15"
 
-- name: Run galaxy roles weekly
+- name: REMOVE galaxy roles weekly
   ansible.builtin.cron:
     name: "ansible-galaxy-roles"
-    job: "ansible-galaxy install -f -r {{ ansiblepull_workdir }}/{{ repo_name }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/galaxy/roles"
-    state: present
-    hour: "5"
-    minute: "15"
+    state: absent
 
 - name: Ensure scripts are populated from templates
   ansible.builtin.template:

@@ -1,4 +1,8 @@
 #!/bin/bash
+
+# Can't use variables defined elsewhere in repo, as this is designed to be
+# used standalone to bootstrap a machine.
+
 BOOTSTRAP_USER_ID=$(id -un)
 BOOTSTRAP_GROUP_ID=$(id -gn)
 ANSIBLEPULL_REPO_URL=https://github.com/awfulwoman/infra.git
@@ -10,7 +14,7 @@ read -sp "Playbook to use: " ANSIBLEPULL_PLAYBOOK
 
 if [[ -z "${HOME_REPO_DIR}" ]]; then
 #   HOME_REPO_DIR="$ANSIBLE_PATH/home"
-  HOME_REPO_DIR="/opt/home.git"
+  HOME_REPO_DIR="/opt/infra.git"
 fi
 
 if [[ -z "${ANSIBLE_PATH}" ]]; then
@@ -18,10 +22,10 @@ if [[ -z "${ANSIBLE_PATH}" ]]; then
 fi
 
 if [[ -z "${ANSIBLE_COLLECTIONS_PATH}" ]]; then
-    ANSIBLE_COLLECTIONS_PATH="$ANSIBLE_PATH/collections"
+    ANSIBLE_COLLECTIONS_PATH="$ANSIBLE_PATH/galaxy/collections"
 fi
 if [[ -z "${ANSIBLE_ROLES_PATH}" ]]; then
-    ANSIBLE_ROLES_PATH="$HOME_REPO_DIR/ansible/roles;$ANSIBLE_PATH/galaxy-roles"
+    ANSIBLE_ROLES_PATH="$ANSIBLE_PATH/galaxy/roles;$HOME_REPO_DIR/ansible/roles"
 fi
 
 ANSIBLE_VAULT_PASSWORD_FILE=$ANSIBLE_PATH/.vaultpassword

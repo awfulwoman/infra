@@ -716,20 +716,23 @@ vault_healthchecks_rw_apikey: !vault |
           35353836663933323136613461626562393233636261336533393632636538636133336563373034
           6365316136353066396139646330633933663732626130383761
 
-default_bin_path: /usr/local/bin
-pip_basepath: /opt/ansible/pip/
-pip_requirements_path: /opt/ansible/pip/requirements.txt
-pip_virtualenv_path: /opt/ansible/pip/venv
-pip_virtualenv_python: python3
-pip_virtualenv_bin_path: "/opt/ansible/pip/venv/bin"
-systemd_service_path: /etc/systemd/system
+
 
 # Ansible-pull config
 ansible_path: "/opt/ansible"
 ansible_log_path: "{{ ansible_path }}/logs"
 ansible_vault_password_file: "{{ ansible_path }}/.vaultpassword"
-ansible_roles_path: "./ansible/roles:{{ ansible_path }}/galaxy-roles:{{ ansible_path }}/home/ansible/roles:{{ ansible_path }}/collections/ansible_collections:{{ ansible_path }}/galaxy-roles"
-home_repo_dir: "/opt/home"
+ansible_roles_path: "{{ ansible_path }}/galaxy/roles:./ansible/roles"
+ansible_collections_path: "{{ ansible_path }}/galaxy/collections"
+home_repo_dir: "/opt/infra"
+
+default_bin_path: /usr/local/bin
+pip_basepath: "{{ ansible_path }}/pip/"
+pip_requirements_path: "{{ ansible_path }}/pip/requirements.txt"
+pip_virtualenv_path: "{{ ansible_path }}/pip/venv"
+pip_virtualenv_python: python3
+pip_virtualenv_bin_path: "{{ ansible_path }}/pip/venv/bin"
+systemd_service_path: /etc/systemd/system
 
 environment_config:
   ANSIBLE_FORCE_COLOR: true
@@ -737,4 +740,5 @@ environment_config:
   ANSIBLE_LOG_PATH: "{{ ansible_log_path }}"
   ANSIBLE_VAULT_PASSWORD_FILE: "{{ ansible_vault_password_file }}"
   ANSIBLE_ROLES_PATH: "{{ ansible_roles_path }}"
+  ANSIBLE_COLLECTIONS_PATH: "{{ ansible_collections_path }}"
   HOME_REPO_DIR: "{{ home_repo_dir }}"

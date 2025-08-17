@@ -18,10 +18,10 @@ Not sure why you'd want to install this, as it's my home infra. But hey, knock y
 
 ```
 # Clone repo
-git clone git@github.com:awfulwoman/home.git /opt/ansible/home/
+git clone git@github.com:awfulwoman/infra.git /opt/infra/
 
 # Bootstrap Ubuntu
-/opt/ansible/home/scripts/bootstrap-ubuntu.sh
+/opt/infra/scripts/bootstrap-ubuntu.sh
 
 # Run Ansible
 /opt/ansible/ansible-pull-full.sh

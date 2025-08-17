@@ -18,30 +18,19 @@ exlock_now || exit 1
 echo " "
 echo "UPDATE GIT"
 echo "************************************"
-git -C {{ ansiblepull_workdir }}/home/ pull
+git -C {{ ansiblepull_repo_path }} pull
 
 # echo " "
 # echo "UPDATE ANSIBLE GALAXY ROLES"
 # echo "************************************"
-# ansible-galaxy install -r {{ ansiblepull_workdir }}/{{ repo_name }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/galaxy-roles
+# ansible-galaxy install -r {{ ansiblepull_repo_path }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/galaxy/roles
 
 # echo " "
 # echo "UPDATE ANSIBLE GALAXY COLLECTIONS"
 # echo "************************************"
-# ansible-galaxy collection install -r {{ ansiblepull_workdir }}/{{ repo_name }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/collections
+# ansible-galaxy collection install -r {{ ansiblepull_repo_path }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/galaxy/collections
 
 echo " "
 echo "RUN ANSIBLE PLAYBOOKS"
 echo "************************************"
-ansible-pull -U {{ ansiblepull_repo_url }} ansible/playbooks/{{ host_type }}/{{ inventory_hostname }}/{{ ansiblepull_playbook }}.yaml
-
-if [ $? -eq 0 ]
-then
-  echo "ansible-pull-full success"
-	# Tell healthchecks.io that all is okay
-  /usr/bin/curl -fsSL https://hc-ping.com/{{ vault_autorestic_ping_key }}/{{ inventory_hostname }}-ansible-pull-full > /dev/null
-else
-  echo "ansible-pull-full failure"
-	# Report error via Pushover
-	# /usr/bin/curl -s --form-string token="{{ vault_pushover_home_automation_key }}" --form-string user="{{ vault_pushover_user_key }}" --form-string message="{{ inventory_hostname }} ansible-pull failed - $(date --iso-8601=seconds)" https://api.pushover.net/1/messages.json > /dev/null
-fi
+ansible-pull --url {{ ansiblepull_repo_url }} --directory {{ ansiblepull_repo_path }} ansible/playbooks/{{ host_type }}/{{ inventory_hostname }}/{{ ansiblepull_playbook }}.yaml

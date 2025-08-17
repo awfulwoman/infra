@@ -10,6 +10,16 @@
       ansible.builtin.debug:
         var: galaxy_install
 
+    - name: Delete home dir ansible
+      ansible.builtin.file:
+        path: "/home/{{ ansible_user }}/.ansible"
+        state: absent
+
+    - name: Delete home dir ansible
+      ansible.builtin.file:
+        path: "/home/{{ ansible_user }}/ansible"
+        state: absent
+
   handlers:
     - name: Reboot host
       become: true
