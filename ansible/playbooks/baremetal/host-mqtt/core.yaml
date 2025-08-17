@@ -2,6 +2,8 @@
 - name: Home MQTT Broker
   hosts: host-mqtt
   roles:
+    - role: install-ansible
+    - role: install-ansible-pull
     - role: bootstrap-ubuntu-server
     - role: install-nut-client
     - role: hardware-raspberry-pi
@@ -9,8 +11,6 @@
       raspberry_pi_boot_config_location: /boot/firmware/config.txt
     - role: install-docker
     - role: zfs-core
-    - role: install-ansible
-    - role: install-ansible-pull
     - role: zfs-backup-client
     - role: compositions
     - role: monitoring-healthchecksio
