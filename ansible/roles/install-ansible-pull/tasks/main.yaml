@@ -93,15 +93,17 @@
   ansible.builtin.cron:
     name: "ansible-galaxy" # Should be ansible-galaxy-collections, but hey.
     job: "ansible-galaxy collection install -f -r {{ ansiblepull_workdir }}/{{ repo_name }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/galaxy/collections"
-    state: absent
-    special_time: weekly
+    state: present
+    hour: "5"
+    minute: "15"
 
 - name: Run galaxy roles weekly
   ansible.builtin.cron:
     name: "ansible-galaxy-roles"
     job: "ansible-galaxy install -f -r {{ ansiblepull_workdir }}/{{ repo_name }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/galaxy/roles"
-    state: absent
-    special_time: weekly
+    state: present
+    hour: "5"
+    minute: "15"
 
 - name: Ensure scripts are populated from templates
   ansible.builtin.template:
