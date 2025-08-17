@@ -107,8 +107,10 @@
     - ansible-collections-galaxy
 
 - name: Remove old repo locations
+  become: true
   ansible.builtin.file:
     path: "{{ item }}"
+    state: absent
   loop:
     - /opt/home
     - "{{ ansiblepull_workdir }}/home"
