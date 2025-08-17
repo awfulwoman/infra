@@ -106,6 +106,14 @@
     - ansible-roles-galaxy
     - ansible-collections-galaxy
 
+- name: Remove old repo locations
+  ansible.builtin.file:
+    path: "{{ item }}"
+  loop:
+    - /opt/home
+    - "{{ ansiblepull_workdir }}/home"
+    - "{{ ansiblepull_workdir }}/infra"
+
 - name: Run Galaxy roles weekly
   ansible.builtin.cron:
     name: "ansible-galaxy-install-roles"
