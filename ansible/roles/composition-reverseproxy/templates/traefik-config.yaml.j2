@@ -32,13 +32,15 @@ providers:
     directory: /etc/traefik/providers
     watch: true
 
+{% if reverseproxy_use_letsencrypt %}
 certificatesResolvers:
   letsencrypt:
     acme:
       email: certs@whalecoiner.com
       storage: /letsencrypt/acme.json
-      # caserver: https://acme-staging-v02.api.letsencrypt.org/directory" # Enable this to use the Letsencrypt staging server
+      # caserver: https://acme-staging-v02.api.letsencrypt.org/directory"
       dnschallenge:
         provider: digitalocean
         delaybeforecheck: 0
         DisablePropagationCheck: true
+{% endif %}

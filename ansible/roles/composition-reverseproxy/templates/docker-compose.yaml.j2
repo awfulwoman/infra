@@ -1,6 +1,7 @@
-# code: language=ansible
+# code: language=jinja-dockerfile
 name: "{{ composition_name }}"
 services:
+{% if reverseproxy_catchall %}
   catch-all:
     image: nginx:1.28-alpine
     volumes:
@@ -13,7 +14,9 @@ services:
       - "traefik.http.routers.catch-all-router.rule=HostRegexp(`{host:.+}`)"
       - "traefik.http.routers.catch-all-router.priority=1"
       - "traefik.http.routers.catch-all-router.entryPoints=web"
+{% endif %}
 
+{% if reverseproxy_statuspage %}
   status-pages:
     image: nginx:1.28-alpine
     volumes:
@@ -28,7 +31,9 @@ services:
       - "traefik.http.middlewares.status-pages-middleware.errors.status=400,401,403-405,407-413,416,418,429,500,502-505"
       - "traefik.http.middlewares.status-pages-middleware.errors.service=status-pages-service"
       - "traefik.http.middlewares.status-pages-middleware.errors.query=/{status}.html"
+{% endif %}
 
+{% if reverseproxy_whoami %}
   whoami:
     container_name: whoami
     ports:
@@ -45,6 +50,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
     networks:
       - "{{ default_docker_network }}"
+{% endif %}
 
   reverseproxy:
     container_name: traefik
@@ -60,21 +66,27 @@ services:
       - "traefik.port=80"
       - "traefik.backend=traefik"
       # Allow dashboard access via traefik.{{ansible_hostname}}.{{ domain_name }}
-      - "traefik.http.routers.dashboard.rule=Host(`traefik.{{ ansible_hostname }}.{{ domain_name }}`)"
+      - "traefik.http.routers.dashboard.rule=Host(`{{ reverseproxy_traefik_domain}}`)"
       - "traefik.http.routers.dashboard.service=dashboard@internal"
+{% if reverseproxy_use_letsencrypt %}
       - "traefik.http.routers.dashboard.tls=true"
       - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
+{% endif %}
       # Allow API access via traefik.{{ansible_hostname}}.{{ domain_name }}
-      - "traefik.http.routers.api.rule=Host(`traefik.{{ ansible_hostname }}.{{ domain_name }}`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.api.rule=Host(`{{ reverseproxy_traefik_domain}}`) && PathPrefix(`/api`)"
       - "traefik.http.routers.api.service=api@internal"
+{% if reverseproxy_use_letsencrypt %}
       - "traefik.http.routers.api.tls=true"
       - "traefik.http.routers.api.tls.certresolver=letsencrypt"
+{% endif %}  
     volumes:
       - "{{ composition_config }}/providers:/etc/traefik/providers"
       - "{{ composition_config }}/traefik.yaml:/etc/traefik/traefik.yaml"
+{% if reverseproxy_use_letsencrypt %}
       - "{{ composition_config }}/letsencrypt:/letsencrypt"
+{% endif %}
       - "/var/run/docker.sock:/var/run/docker.sock"
-      - /etc/localtime:/etc/localtime:ro
+      - "/etc/localtime:/etc/localtime:ro"
     networks:
       - "{{ default_docker_network }}"
 
