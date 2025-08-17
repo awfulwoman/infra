@@ -97,17 +97,26 @@
     mode: "0744"
   when: not installed
 
-- name: Run Galaxy install weekly
+- name: Remove old Galaxy crons
   ansible.builtin.cron:
-    name: "ansible-roles-galaxy"
+    name: "{{ item }}"
+    state: absent
+  loop:
+    - ansible-galaxy
+    - ansible-roles-galaxy
+    - ansible-collections-galaxy
+
+- name: Run Galaxy roles weekly
+  ansible.builtin.cron:
+    name: "ansible-galaxy-install-roles"
     job: "ansible-galaxy role install -r {{ ansiblepull_repo_path }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/galaxy/roles"
     state: present
     hour: "5"
     minute: "15"
 
-- name: Run galaxy roles weekly
+- name: Run Galaxy collections weekly
   ansible.builtin.cron:
-    name: "ansible-collections-galaxy"
+    name: "ansible-galaxy-install-collections"
     job: ansible-galaxy collection install -r {{ ansiblepull_repo_path }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/galaxy/collections
     state: present
     hour: "5"
