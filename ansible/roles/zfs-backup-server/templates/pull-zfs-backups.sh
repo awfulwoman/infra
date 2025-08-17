@@ -228,6 +228,7 @@ then
 
   # Loop over client datasets
   # **************************
+  {% if hostvars[zfsbackup_client]['zfs_backup_datasets'] %}
   {% for zfs_backup_dataset in hostvars[zfsbackup_client]['zfs_backup_datasets'] %}
 
   log_info "Starting {{zfs_backup_dataset}}..."
@@ -253,6 +254,7 @@ then
   fi
 
   {% endfor %} # End dataset loop
+  {% endof %}
 
   log_info "{{ zfsbackup_client }} backup finished."
 

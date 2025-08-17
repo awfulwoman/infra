@@ -87,6 +87,7 @@
   ansible.builtin.debug:
     msg: "{{ item }}"
   loop: "{{ zfs_backup_datasets }}"
+  when: zfs_backup_datasets is defined
 
 - name: "Ensure backups of listed datasets can be sent via {{ vault_zfsbackups_user }}"
   become: true
