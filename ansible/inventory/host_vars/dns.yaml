@@ -6,6 +6,15 @@ ansiblepull_cron_hour: "17" # Slow rate because of LE certs
 
 configure_dns_linkdevice_physical: "eth0" 
 
+
+zfs_pools_create: true
+zfs_pools_filebased: true
+zfs_pools:
+  - fastpool
+
+container_compositions_zfs_id: fastpool/compositions
+compositions_config_dir: "/{{ container_compositions_zfs_id}}"
+
 compositions:
   - reverseproxy
   - container-management

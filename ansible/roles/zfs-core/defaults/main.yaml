@@ -1,0 +1,3 @@
+zfs_pools_create: false
+zfs_pools_filebased: false
+zfs_pools_filebased_dir: "{{ ansible_path }}/zfs/pools/"

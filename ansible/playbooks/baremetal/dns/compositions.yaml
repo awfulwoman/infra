@@ -1,7 +1,6 @@
 - name: DNS
   hosts: dns
   roles:
-    - role: zfs-core
     - role: compositions
 
   handlers:

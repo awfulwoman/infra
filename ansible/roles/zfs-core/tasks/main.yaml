@@ -6,6 +6,37 @@
       - acl
     state: present
 
+
+- name: Ensure ZFS pool files exists
+  when: zfs_pools_create and zfs_pools_filebased and zfs_pools_filebased_dir is defined
+  block:
+    - name: Ensure base ZFS filebased directory exists
+      become: true
+      ansible.builtin.file:
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: "0774"
+        state: directory
+        path: "{{ zfs_pools_filebased_dir }}"
+
+    - name: Ensure ZFS pool files exist
+      become: true
+      ansible.builtin.command:
+        cmd: "truncate -s 256M {{ zfs_pools_filebased_dir }}/{{ item }}"
+      loop: "{{ zfs_pools }}"
+      when: zfs_pools is defined and zfs_pools_filebased
+      args:
+        creates: "{{ zfs_pools_filebased_dir }}/{{ item }}"
+
+    - name: Ensure ZFS pool from file is present
+      become: true
+      ansible.builtin.command:
+        cmd: "zpool create {{ item }} -f {{ zfs_pools_filebased_dir }}/{{ item }}"
+      loop: "{{ zfs_pools }}"
+      when: zfs_pools is defined and zfs_pools_filebased
+      args:
+        creates: "/{{ item }}"
+
 - name: Ensure ZFS pools are present
   ansible.builtin.command:
     cmd: "zpool status {{ item }}"

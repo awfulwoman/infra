@@ -1,4 +1,6 @@
-# Infrastructure
+# Naming schemes
+
+## Infrastructure
 
 configure-dns-server                to    infra/name-server
 configure-dhcpd-server              to    infra/dhcp-server
@@ -8,11 +10,12 @@ install-nut-server                  to    infra/nut-server
 nfs-server                          to    infra/nfs-server
 zfs-backup-server                   to    infra/zbackup-server
 
-# Bootstrap
+## Bootstrap
+
 bootstrap-ubuntu-server             to    bootstrap/ubuntu-server
 bootstrap-intel-mac                 to    bootstrap/intel-mac
 
-# Hardware
+## Hardware
 
 hardware-enable-console-blanking    to    hardware/enable-console-blanking
 hardware-grub-tune                  to    hardware/grub-tune
@@ -25,17 +28,20 @@ hardware-wyse-5070                  to    hardware/wyse-5070
 hardware-zigbee-conbee              to    hardware/zigbee-conbee
 wakeonlan                           to    hardware/wakeonlan
 
-# Networking
+## Networking
+
 configure-dns                       to    networking/register-tailscale-subdomain
 ip-address-dhcp                     to    networking/address-dhcp
 ip-address-forwarding               to    networking/address-forwarding
 ip-address-static                   to    networking/address-static
 
-# Ansible
+## Ansible
+
 install-ansible                     to    ansible/core
 install-ansible-pull                to    ansible/autoupdate
 
-# System
+## System
+
 configure-motd                      to    system/motd
 configure-sshkey                    to    system/generate-sshkey
 configure-smartmontools             to    system/smartmontools
@@ -43,21 +49,28 @@ install-beep                        to    system/beep
 sleepuntil                          to    system/sleepuntil
 powertop                            to    system/powertop
 
-# Client
+## Client
+
 nfs-client                          to    clients/nfs
 install-nut-client                  to    clients/nut
 zfs-backup-client                   to    clients/zbackup
 
-# Monitoring
+## Monitoring
+
 monitoring-healthchecksio           to    monitoring/healthchecksio
 install-linux2mqtt                  to    monitoring/linux2mqtt
 
-# Virtualization
+## Virtualization
+
 vm-guest                            to    virtualisation/qemu-guest
 vm-host                             to    virtualisation/qemu-host
 
-# Users
+## Users
+
 config-deployment-user              to    users/sitedeployment
 
-# ZFS
+## ZFS
+
 zfs-core                            to    zfs/core
+
+## Compositions
