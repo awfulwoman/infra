@@ -15,6 +15,9 @@ zfs_pools:
 container_compositions_zfs_id: fastpool/compositions
 compositions_config_dir: "/{{ container_compositions_zfs_id}}"
 
+zfs_datasets:
+  - "{{ container_compositions_zfs_id }}"
+
 reverseproxy_use_letsencrypt: false
 
 compositions:
