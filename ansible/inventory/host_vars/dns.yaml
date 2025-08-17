@@ -5,3 +5,7 @@ host_type: baremetal
 ansiblepull_cron_hour: "17" # Slow rate because of LE certs
 
 configure_dns_linkdevice_physical: "eth0" 
+
+compositions:
+  - reverseproxy
+  - container-management

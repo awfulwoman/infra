@@ -11,6 +11,7 @@
     - role: install-ansible-pull
     - role: configure-dns-server
     - role: configure-acme-wildcard
+    - role: compositions
     - role: monitoring-healthchecksio
 
   handlers:
