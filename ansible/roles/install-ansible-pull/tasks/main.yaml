@@ -75,13 +75,13 @@
   ansible.builtin.set_fact:
     installed: "{{ installlock_raw.stat.exists }}"
 
-- name: Run initial requirements install - collections
-  ansible.builtin.command: "ansible-galaxy install -r {{ ansiblepull_workdir }}/{{ repo_name }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/galaxy/collections"
+- name: Run initial Galaxy install
+  ansible.builtin.command: "ansible-galaxy install -r {{ ansiblepull_repo_path }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/galaxy/collections"
   timeout: 3600 # stupidly long value because ansible-galaxy installation takes FOREVER
   when: not installed
 
 # - name: Run initial requirements install - roles
-#   ansible.builtin.command: "ansible-galaxy install -r {{ ansiblepull_workdir }}/{{ repo_name }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/galaxy/roles"
+#   ansible.builtin.command: "ansible-galaxy install -r {{ ansiblepull_repo_path }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/galaxy/roles"
 #   timeout: 3600 # stupidly long value because ansible-galaxy installation takes FOREVER
 #   when: not installed
 
@@ -97,7 +97,7 @@
 - name: Run Galaxy install weekly
   ansible.builtin.cron:
     name: "ansible-galaxy"
-    job: "ansible-galaxy install -r {{ ansiblepull_workdir }}/{{ repo_name }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/galaxy/collections"
+    job: "ansible-galaxy install -r {{ ansiblepull_repo_path }}/ansible/meta/requirements.yaml -p {{ ansiblepull_workdir }}/galaxy/collections"
     state: present
     hour: "5"
     minute: "15"
@@ -127,8 +127,6 @@
     minute: "{{ ansiblepull_cron_minute }}"
     hour: "{{ ansiblepull_cron_hour }}"
   when: ansiblepull_install_pull_cron
-
-
 
 # Pull after wake
 - name: Create ansible-pull-after-wake.service
