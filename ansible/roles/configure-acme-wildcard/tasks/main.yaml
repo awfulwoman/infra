@@ -114,25 +114,37 @@
     common_name: "{{ acmeeeeeeee_domain }}"
   when: not csr_file.stat.exists
 
+- name: Check for existing cert
+  ansible.builtin.stat:
+    path: "{{ acmeeeeeeee_cert_dir }}/{{ acmeeeeeeee_cert_filename }}"
+  register: cert_file
+
 - name: Retrieve renewal information for existing certificate
   community.crypto.acme_ari_info:
     acme_directory: "{{ acmeeeeeeee_dir }}"
     acme_version: "{{ acmeeeeeeee_version }}"
     certificate_path: "{{ acmeeeeeeee_cert_dir }}/{{ acmeeeeeeee_cert_filename }}"
+  when: cert_file.stat.exists
   register: cert_data
 
 - name: Show the certificate renewal information
   ansible.builtin.debug:
     var: cert_data.renewal_info
-  when: acmeeeeeeee_debug
+  when: cert_file.stat.exists
 
+- name: Test for rate limited area
+  when: cert_file.stat.exists
+  ansible.builtin.assert:
+    that:
+      - ansible_date_time.iso8601 > cert_data.renewal_info.suggestedWindow.start
+    fail_msg: "Outside of time window"
+    success_msg: "Inside time window. Proceeding."
 # -------------------------------------------------------
 # RATE LIMITS APPLY FROM HERE ON
 # PLEASE TALK TO A RESPONSIBLE ADULT BEFORE RUNNING THIS
 # -------------------------------------------------------
 
-- name: Start renewal if we are within the renewal window
-  when: ansible_date_time.iso8601 > cert_data.renewal_info.suggestedWindow.start
+- name: Start cert process
   block:
     - name: Start DNS-01 challenge
       community.crypto.acme_certificate:
