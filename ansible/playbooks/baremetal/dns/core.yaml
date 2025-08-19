@@ -12,6 +12,7 @@
     - role: configure-dns-server
     - role: configure-acme-wildcard
     - role: compositions
+    - role: zfs-backup-client
     - role: monitoring-healthchecksio
 
   handlers:
