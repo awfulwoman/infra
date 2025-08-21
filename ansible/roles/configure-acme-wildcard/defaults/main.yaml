@@ -22,9 +22,11 @@ acmeeeeeeee_csr_private_key_dir: "{{ acme_path }}/private"
 acmeeeeeeee_csr_private_key_filename: csr.key
 acmeeeeeeee_csr_dir: "{{ acme_path }}/csr"
 acmeeeeeeee_email: letsencrypt@whalecoiner.com
-acmeeeeeeee_dir: https://acme-staging-v02.api.letsencrypt.org/directory
-# acmeeeeeeee_dir: https://acme-v02.api.letsencrypt.org/directory
-# acmeeeeeeee_order_uri: https://acme-v02.api.letsencrypt.org/acme/acct/2595600866 # Production
-acmeeeeeeee_order_uri: https://acme-staging-v02.api.letsencrypt.org/acme/acct/221838554 # Staging
 acmeeeeeeee_version: 2
 acmeeeeeeee_cert_dir: "{{ acme_path }}/certs"
+# Staging
+acmeeeeeeee_dir: https://acme-staging-v02.api.letsencrypt.org/directory
+acmeeeeeeee_order_uri: https://acme-staging-v02.api.letsencrypt.org/acme/acct/221838554
+# Production
+# acmeeeeeeee_dir: https://acme-v02.api.letsencrypt.org/directory
+# acmeeeeeeee_order_uri: https://acme-v02.api.letsencrypt.org/acme/acct/2595600866

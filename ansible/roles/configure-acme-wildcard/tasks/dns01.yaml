@@ -3,15 +3,6 @@
 # PLEASE TALK TO A RESPONSIBLE ADULT BEFORE RUNNING THIS
 # -------------------------------------------------------
 
-- name: Var Debug in DNS01
-  ansible.builtin.debug:
-    msg: >
-      dns01_domain_base: "{{ dns01_domain_base }}"
-      dns01_domain_sub: "{{ dns01_domain_sub }}"
-      dns01_domain_sub_no_wildcard: "{{ dns01_domain_sub_no_wildcard }}"
-      dns01_domain_full: "{{ dns01_domain_full }}"
-      dns01_domain_full_no_wildcard: "{{ dns01_domain_full_no_wildcard }}"
-
 - name: Request a DNS-01 challenge
   community.crypto.acme_certificate:
     validate_certs: true
