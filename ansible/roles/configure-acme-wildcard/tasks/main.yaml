@@ -2,13 +2,13 @@
 # https://networkdoodles.com/posts/letsencrypt-part1/networkdoodles.com/posts/letsencrypt-part1/
 # https://serverfault.com/questions/875247/whats-the-difference-between-include-tasks-and-import-tasks
 
-- name: Bootstrap role
+- name: "STEP 1: Bootstrap"
   ansible.builtin.include_tasks: bootstrap.yaml
 
-- name: Confgure ACME account
+- name: "STEP 2: ACME account"
   ansible.builtin.include_tasks: account.yaml
 
-- name: Deal with certificates
+- name: "STEP 3: Certificates"
   ansible.builtin.include_tasks:
     file: cert.yaml
   loop: "{{ acmeeeeeeee_domains }}"
@@ -16,6 +16,6 @@
     loop_var: item
     extended: true
 
-- name: Peace out
+- name: "STEP 4: Just peace out"
   ansible.builtin.debug:
-    msg: "Cert run finished"
+    msg: "All certificate requests finished"
