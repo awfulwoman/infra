@@ -1,0 +1,91 @@
+# -------------------------------------------------------
+# RATE LIMITS APPLY FROM HERE ON
+# PLEASE TALK TO A RESPONSIBLE ADULT BEFORE RUNNING THIS
+# -------------------------------------------------------
+
+- name: Var Debug in DNS01
+  ansible.builtin.debug:
+    msg: >
+      dns01_domain_base: "{{ dns01_domain_base }}"
+      dns01_domain_sub: "{{ dns01_domain_sub }}"
+      dns01_domain_sub_no_wildcard: "{{ dns01_domain_sub_no_wildcard }}"
+      dns01_domain_full: "{{ dns01_domain_full }}"
+      dns01_domain_full_no_wildcard: "{{ dns01_domain_full_no_wildcard }}"
+
+- name: Request a DNS-01 challenge
+  community.crypto.acme_certificate:
+    validate_certs: true
+    account_key_src: "{{ acmeeeeeeee_le_private_key_dir }}/{{ acmeeeeeeee_le_private_key_filename }}"
+    account_email: "{{ acmeeeeeeee_email }}"
+    src: "{{ acmeeeeeeee_csr_dir }}/{{ dns01_domain_full }}.csr"
+    cert: "{{ acmeeeeeeee_cert_dir }}/{{ dns01_domain_full }}.crt"
+    challenge: dns-01
+    acme_directory: "{{ acmeeeeeeee_dir }}"
+    acme_version: "{{ acmeeeeeeee_version }}"
+    remaining_days: 60
+  register: domain_challenge
+
+- name: Debug domain challenge
+  ansible.builtin.debug:
+    var: domain_challenge
+  when: acmeeeeeeee_debug
+
+- name: Respond to DNS-01 challenge
+  community.digitalocean.digital_ocean_domain_record:
+    state: present
+    oauth_token: "{{ vault_digitalocean_letsencrypt_token }}"
+    domain: "{{ dns01_domain_base }}"
+    type: TXT
+    ttl: 30
+    name: "{{ domain_challenge.challenge_data[dns01_domain_full]['dns-01'].resource }}{{ '.' + dns01_domain_sub_no_wildcard if dns01_domain_sub_no_wildcard }}"
+    data: "{{ domain_challenge.challenge_data[dns01_domain_full]['dns-01'].resource_value }}"
+    force_update: true
+  register: txt_response
+
+- name: Extract and store the TXT record so we can delete it later
+  ansible.builtin.set_fact:
+    txt_record_id: "{{ txt_response.result.id }}"
+  when: txt_response is defined
+
+- name: Debug txt verification
+  ansible.builtin.debug:
+    var: txt_response
+  when: acmeeeeeeee_debug
+
+- name: Collect certificate order
+  community.crypto.acme_certificate:
+    validate_certs: true
+    account_email: "{{ acmeeeeeeee_email }}"
+    src: "{{ acmeeeeeeee_csr_dir }}/{{ dns01_domain_full }}.csr"
+    cert: "{{ acmeeeeeeee_cert_dir }}/{{ dns01_domain_full }}.crt"
+    fullchain: "{{ acmeeeeeeee_cert_dir }}/{{ dns01_domain_full }}.fullchain.crt"
+    chain: "{{ acmeeeeeeee_cert_dir }}/{{ dns01_domain_full }}.intermediate.crt"
+    challenge: dns-01
+    remaining_days: 60
+    data: "{{ domain_challenge }}"
+    acme_directory: "{{ acmeeeeeeee_dir }}"
+    acme_version: "{{ acmeeeeeeee_version }}"
+    account_key_src: "{{ acmeeeeeeee_le_private_key_dir }}/{{ acmeeeeeeee_le_private_key_filename }}"
+  register: lsresult
+  until: "lsresult is not failed"
+  retries: 12
+  delay: 10
+
+- name: Debug collected order
+  ansible.builtin.debug:
+    var: lsresult
+  when: acmeeeeeeee_debug
+
+- name: Remove TXT record
+  community.digitalocean.digital_ocean_domain_record:
+    state: absent
+    oauth_token: "{{ vault_digitalocean_domain_token }}"
+    domain: "{{ dns01_domain_base }}"
+    record_id: "{{ txt_record_id }}"
+  register: txt_remove_response
+  when: txt_response is defined
+
+- name: Debug txt_remove_response
+  ansible.builtin.debug:
+    var: txt_remove_response
+  when: acmeeeeeeee_debug

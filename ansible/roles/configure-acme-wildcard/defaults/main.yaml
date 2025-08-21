@@ -1,24 +1,30 @@
-acmeeeeeeee_domain: "*.{{ vault_domain_test }}"
+# acmeeeeeeee_domain: "*.{{ vault_domain_test }}"
 acmeeeeeeee_domains:
-  - "{{ vault_domain_test }}"
-  - "{{ domain_name }}"
-  - awfulwoman.com
-acmeeeeeeee_debug: false
+  # - domain: "{{ vault_domain_test }}"
+  - domain: "{{ vault_domain_test }}"
+    subdomain: "*"
+  - domain: "{{ vault_domain_test }}"
+    subdomain: "test01"
+  - domain: "{{ vault_domain_test }}"
+    subdomain: "*.test02"
+  - domain: "{{ vault_domain_test }}"
+    subdomain: "test03.test02"
+  # - domain: "{{ domain_name }}"
+  #   subdomain: "pancake"
+  # - domain: awfulwoman.com
+  #   subdomain: www
+
+acmeeeeeeee_debug: true
 acmeeeeeeee_working_dir: "{{ acme_path }}"
 acmeeeeeeee_le_private_key_dir: "{{ acme_path }}/private"
 acmeeeeeeee_le_private_key_filename: le.key
 acmeeeeeeee_csr_private_key_dir: "{{ acme_path }}/private"
 acmeeeeeeee_csr_private_key_filename: csr.key
 acmeeeeeeee_csr_dir: "{{ acme_path }}/csr"
-acmeeeeeeee_csr_filename: "{{ acmeeeeeeee_domain }}.csr"
 acmeeeeeeee_email: letsencrypt@whalecoiner.com
 acmeeeeeeee_dir: https://acme-staging-v02.api.letsencrypt.org/directory
 # acmeeeeeeee_dir: https://acme-v02.api.letsencrypt.org/directory
-acmeeeeeeee_order_uri: https://acme-v02.api.letsencrypt.org/acme/acct/2595600866
+# acmeeeeeeee_order_uri: https://acme-v02.api.letsencrypt.org/acme/acct/2595600866 # Production
+acmeeeeeeee_order_uri: https://acme-staging-v02.api.letsencrypt.org/acme/acct/221838554 # Staging
 acmeeeeeeee_version: 2
 acmeeeeeeee_cert_dir: "{{ acme_path }}/certs"
-acmeeeeeeee_cert_filename: "{{ acmeeeeeeee_domain }}.crt"
-acmeeeeeeee_fullchain_dir: "{{ acmeeeeeeee_cert_dir }}"
-acmeeeeeeee_fullchain_filename: "{{ acmeeeeeeee_domain }}.fullchain.crt"
-acmeeeeeeee_chain_dir: "{{ acmeeeeeeee_cert_dir }}"
-acmeeeeeeee_chain_filename: "{{ acmeeeeeeee_domain }}.intermediate.crt"

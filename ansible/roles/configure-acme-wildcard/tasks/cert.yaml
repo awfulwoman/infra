@@ -1,0 +1,71 @@
+- name: Set variables
+  ansible.builtin.set_fact:
+    domain_base: "{{ item.domain }}"
+    domain_sub: "{{ item.subdomain | default(false) }}"
+    domain_sub_no_wildcard: "{{ (item.subdomain | split('.') | reject('match', '[*]') | join('.')) if item.subdomain is defined else false }}"
+    domain_full: "{{ item.subdomain + '.' if item.subdomain is defined }}{{ item.domain }}"
+
+- name: Var Debug
+  ansible.builtin.debug:
+    msg: >
+      domain_base: "{{ domain_base }}"
+      domain_sub: "{{ domain_sub }}"
+      domain_sub_no_wildcard: "{{ domain_sub_no_wildcard }}"
+      domain_full: "{{ domain_full }}"
+
+- name: Check for existing CSR private key
+  ansible.builtin.stat:
+    path: "{{ acmeeeeeeee_csr_private_key_filename }}/{{ acmeeeeeeee_csr_private_key_filename }}"
+  register: csr_key
+
+- name: Generate CSR private key if not present
+  community.crypto.openssl_privatekey:
+    path: "{{ acmeeeeeeee_csr_private_key_dir }}/{{ acmeeeeeeee_csr_private_key_filename }}"
+    curve: secp521r1
+    state: present
+  when: not csr_key.stat.exists
+
+- name: Check for existing CSR file
+  ansible.builtin.stat:
+    path: "{{ acmeeeeeeee_csr_dir }}/{{ domain_full }}.csr"
+  register: csr_file
+
+- name: Generate an OpenSSL CSR if not present
+  community.crypto.openssl_csr:
+    path: "{{ acmeeeeeeee_csr_dir }}/{{ domain_full }}.csr"
+    privatekey_path: "{{ acmeeeeeeee_csr_private_key_dir }}/{{ acmeeeeeeee_csr_private_key_filename }}"
+    common_name: "{{ domain_full }}"
+  when: not csr_file.stat.exists
+
+- name: Check for existing cert
+  ansible.builtin.stat:
+    path: "{{ acmeeeeeeee_cert_dir }}/{{ domain_full }}.crt"
+  register: cert_file
+
+- name: Retrieve renewal information for existing certificate
+  community.crypto.acme_ari_info:
+    acme_directory: "{{ acmeeeeeeee_dir }}"
+    acme_version: "{{ acmeeeeeeee_version }}"
+    certificate_path: "{{ acmeeeeeeee_cert_dir }}/{{ domain_full }}.crt"
+  when: cert_file.stat.exists
+  register: cert_data
+
+- name: DNS01 - new cert
+  when: not cert_file.stat.exists
+  ansible.builtin.include_tasks:
+    file: dns01.yaml
+  vars:
+    dns01_domain_base: "{{ domain_base }}"
+    dns01_domain_sub: "{{ domain_sub }}"
+    dns01_domain_sub_no_wildcard: "{{ domain_sub_no_wildcard }}"
+    dns01_domain_full: "{{ domain_full }}"
+    dns01_domain_full_no_wildcard: "{{ domain_full | split('.') | reject('match', '[*]') | join('.') }}"
+
+# - name: DNS01 - renewal
+#   when: ansible_date_time.iso8601 > cert_data.renewal_info.suggestedWindow.start
+#   ansible.builtin.include_tasks:
+#     file: dns01.yaml
+#   vars:
+#     fulldomain: "{{ item.subdomain + '.' if item.subdomain is defined }}{{ item.domain }}"
+#     basedomain: "{{ item.domain }}"
+#     subdomain: "{{ item.subdomain | default(false) }}"
