@@ -14,6 +14,7 @@
   loop: "{{ acmeeeeeeee_domains }}"
   loop_control:
     loop_var: item
+    extended: true
 
 - name: Peace out
   ansible.builtin.debug:

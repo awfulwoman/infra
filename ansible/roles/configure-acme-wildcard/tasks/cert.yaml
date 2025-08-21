@@ -5,7 +5,7 @@
     domain_sub_no_wildcard: "{{ (item.subdomain | split('.') | reject('match', '[*]') | join('.')) if item.subdomain is defined else false }}"
     domain_full: "{{ item.subdomain + '.' if item.subdomain is defined }}{{ item.domain }}"
 
-- name: Var Debug
+- name: "Assessing {{ domain_full }} - Cert {{ ansible_loop.index }}/{{ ansible_loop.length }}"
   ansible.builtin.debug:
     msg: >
       domain_base: "{{ domain_base }}"
@@ -55,8 +55,7 @@
 #     cert_exists: "{{ cert_file.stat.exists }}"
 #     cert_requires_renewal: "{{ ansible_date_time.iso8601 > cert_data.renewal_info.suggestedWindow.start }}"
 
-
-- name: DNS01 - new cert
+- name: Requesting new certificate - DNS01
   when: not cert_file.stat.exists
   ansible.builtin.include_tasks:
     file: dns01.yaml
@@ -67,7 +66,7 @@
     dns01_domain_full: "{{ domain_full }}"
     dns01_domain_full_no_wildcard: "{{ domain_full | split('.') | reject('match', '[*]') | join('.') }}"
 
-- name: DNS01 - renewal
+- name: Requesting certificate renewal - DNS01
   when: ansible_date_time.iso8601 > cert_data.renewal_info.suggestedWindow.start
   ansible.builtin.include_tasks:
     file: dns01.yaml
