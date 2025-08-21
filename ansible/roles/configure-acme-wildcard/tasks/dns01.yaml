@@ -22,6 +22,7 @@
   when: acmeeeeeeee_debug
 
 - name: Respond to DNS-01 challenge
+  when: domain_challenge.authorizations[dns01_domain_full].challenges[0].status == "pending"
   community.digitalocean.digital_ocean_domain_record:
     state: present
     oauth_token: "{{ vault_digitalocean_letsencrypt_token }}"
@@ -33,17 +34,18 @@
     force_update: true
   register: txt_response
 
-- name: Extract and store the TXT record so we can delete it later
-  ansible.builtin.set_fact:
-    txt_record_id: "{{ txt_response.result.id }}"
-  when: txt_response is defined
-
 - name: Debug txt verification
   ansible.builtin.debug:
     var: txt_response
-  when: acmeeeeeeee_debug
+  when: (acmeeeeeeee_debug) and (txt_response is defined)
+
+- name: Extract and store the TXT record so we can delete it later
+  ansible.builtin.set_fact:
+    txt_record_id: "{{ txt_response.result.id }}"
+  when: txt_response is defined 
 
 - name: Collect certificate order
+  when: domain_challenge.authorizations[dns01_domain_full].challenges[0].status == "pending"
   community.crypto.acme_certificate:
     validate_certs: true
     account_email: "{{ acmeeeeeeee_email }}"
@@ -79,4 +81,4 @@
 - name: Debug txt_remove_response
   ansible.builtin.debug:
     var: txt_remove_response
-  when: acmeeeeeeee_debug
+  when: acmeeeeeeee_debug and (txt_remove_response is defined)

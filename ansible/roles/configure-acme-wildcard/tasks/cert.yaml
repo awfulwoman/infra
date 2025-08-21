@@ -50,6 +50,12 @@
   when: cert_file.stat.exists
   register: cert_data
 
+# - name: Set variables
+#   ansible.builtin.set_fact:
+#     cert_exists: "{{ cert_file.stat.exists }}"
+#     cert_requires_renewal: "{{ ansible_date_time.iso8601 > cert_data.renewal_info.suggestedWindow.start }}"
+
+
 - name: DNS01 - new cert
   when: not cert_file.stat.exists
   ansible.builtin.include_tasks:
@@ -61,11 +67,13 @@
     dns01_domain_full: "{{ domain_full }}"
     dns01_domain_full_no_wildcard: "{{ domain_full | split('.') | reject('match', '[*]') | join('.') }}"
 
-# - name: DNS01 - renewal
-#   when: ansible_date_time.iso8601 > cert_data.renewal_info.suggestedWindow.start
-#   ansible.builtin.include_tasks:
-#     file: dns01.yaml
-#   vars:
-#     fulldomain: "{{ item.subdomain + '.' if item.subdomain is defined }}{{ item.domain }}"
-#     basedomain: "{{ item.domain }}"
-#     subdomain: "{{ item.subdomain | default(false) }}"
+- name: DNS01 - renewal
+  when: ansible_date_time.iso8601 > cert_data.renewal_info.suggestedWindow.start
+  ansible.builtin.include_tasks:
+    file: dns01.yaml
+  vars:
+    dns01_domain_base: "{{ domain_base }}"
+    dns01_domain_sub: "{{ domain_sub }}"
+    dns01_domain_sub_no_wildcard: "{{ domain_sub_no_wildcard }}"
+    dns01_domain_full: "{{ domain_full }}"
+    dns01_domain_full_no_wildcard: "{{ domain_full | split('.') | reject('match', '[*]') | join('.') }}"
