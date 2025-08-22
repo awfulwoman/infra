@@ -1,7 +1,7 @@
 - name: DNS
   hosts: dns
   roles:
-    - role: configure-acme-wildcard
+    - role: infra/certbot
 
   handlers:
     - name: Reboot host
