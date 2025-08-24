@@ -6,7 +6,7 @@
     - role: install-nut-client
     - role: system-wakeonlan
     - role: zfs-core
-    - role: install-msmtp
+    - role: system-msmtp
     - role: system-mqtt2cmd
     - role: zfs-backup-server
       zfsbackup_pushover: false

@@ -9,7 +9,7 @@
     - role: install-nut-client
     - role: zfs-core
     - role: system-mqtt2cmd
-    - role: install-msmtp
+    - role: system-msmtp
     - role: nfs-server
     - role: zfs-backup-client
     - role: compositions
