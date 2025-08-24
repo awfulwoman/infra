@@ -175,7 +175,7 @@
 
 - name: MOTD
   ansible.builtin.include_role:
-    name: configure-motd
+    name: system-motd
   vars:
     ansible_become: true
 
