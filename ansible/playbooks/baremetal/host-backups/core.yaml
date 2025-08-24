@@ -1,7 +1,6 @@
 - name: Backup Server
   hosts: host-backups
   roles:
-    - role: install-ansible
     - role: install-ansible-pull
     - role: bootstrap-ubuntu-server
     - role: install-nut-client

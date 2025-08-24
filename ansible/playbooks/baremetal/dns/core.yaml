@@ -5,7 +5,6 @@
       raspberry_pi_wifi: false
       raspberry_pi_bluetooth: false
       raspberry_pi_boot_config_location: /boot/firmware/config.txt
-    - role: install-ansible
     - role: install-ansible-pull
     - role: bootstrap-ubuntu-server
     - role: configure-sshkey

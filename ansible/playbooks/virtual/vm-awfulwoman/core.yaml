@@ -6,7 +6,6 @@
       become: true
     - role: config-deployment-user
     - role: install-docker
-    - role: install-ansible
     - role: install-ansible-pull
     - role: compositions
     - role: monitoring-healthchecksio

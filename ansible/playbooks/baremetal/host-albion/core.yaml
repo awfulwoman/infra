@@ -6,7 +6,6 @@
       raspberry_pi_boot_config_location: /boot/firmware/config.txt
       raspberry_pi_config_overrides:
         - "dtoverlay=gpio-fan,gpiopin=14,temp=60000"
-    - role: install-ansible
     - role: install-ansible-pull
     - role: bootstrap-ubuntu-server
     - role: configure-sshkey

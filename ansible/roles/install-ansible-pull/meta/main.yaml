@@ -1,2 +1,2 @@
 dependencies:
-  - role: install-ansible
+  - role: ansible-core

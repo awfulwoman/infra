@@ -1,8 +1,6 @@
----
-- name: Home Automation Server NEW
+- name: Home Automation Server
   hosts: host-homeassistant
   roles:
-    - role: install-ansible
     - role: install-ansible-pull
     - role: bootstrap-ubuntu-server
     - role: install-docker
