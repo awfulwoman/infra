@@ -2,7 +2,7 @@
 - name: Storage NAS
   hosts: host-storage
   roles:
-    - role: install-ansible-pull
+    - role: ansible-pull
     - role: bootstrap-ubuntu-server
     - role: hardware-host-bus-adapter
     - role: wakeonlan

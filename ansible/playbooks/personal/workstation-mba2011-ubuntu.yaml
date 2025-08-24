@@ -4,7 +4,7 @@
   roles:
     - role: bootstrap-intel-macbook
     - role: bootstrap-ubuntu-server
-    - role: install-ansible-pull
+    - role: ansible-pull
 
   handlers:
     - name: Reboot host

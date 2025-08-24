@@ -11,7 +11,7 @@
       ip_address_static_gw4: "192.168.1.1"
     - role: install-docker
     # - role: zfs-core
-    - role: install-ansible-pull
+    - role: ansible-pull
     # - role: zfs-backup-client
     - role: pihole
     - role: compositions
