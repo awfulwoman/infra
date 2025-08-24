@@ -8,8 +8,8 @@
     - role: ansible-pull
     - role: bootstrap-ubuntu-server
     - role: configure-sshkey
-    - role: infra/named
-    - role: infra/certbot
+    - role: infra-named
+    - role: infra-certbot
     - role: compositions
     - role: zfs-backup-client
     - role: monitoring-healthchecksio

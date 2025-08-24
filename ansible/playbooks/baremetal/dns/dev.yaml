@@ -1,7 +1,7 @@
 - name: DNS
   hosts: dns
   roles:
-    - role: infra/certbot
+    - role: infra-certbot
 
   handlers:
     - name: Reboot host
