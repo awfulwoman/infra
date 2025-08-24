@@ -13,7 +13,7 @@
     - role: nfs-server
     - role: zfs-backup-client
     - role: compositions
-    - role: configure-smartmontools
+    - role: system-smartmontools
     - role: monitoring-healthchecksio
     # - role: sleepuntil
     #   become: true
