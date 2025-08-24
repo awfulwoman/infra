@@ -8,7 +8,7 @@
         - "dtoverlay=gpio-fan,gpiopin=14,temp=60000"
     - role: ansible-pull
     - role: bootstrap-ubuntu-server
-    - role: configure-sshkey
+    - role: system-sshkey
     - role: network-ip-address-forwarding
     - role: nfs-client
     - role: zfs-core

@@ -8,7 +8,7 @@
     - role: system-wakeonlan
     - role: install-nut-client
     - role: zfs-core
-    - role: install-mqtt2cmd
+    - role: system-mqtt2cmd
     - role: install-msmtp
     - role: nfs-server
     - role: zfs-backup-client

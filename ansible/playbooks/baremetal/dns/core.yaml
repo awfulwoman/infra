@@ -7,7 +7,7 @@
       raspberry_pi_boot_config_location: /boot/firmware/config.txt
     - role: ansible-pull
     - role: bootstrap-ubuntu-server
-    - role: configure-sshkey
+    - role: system-sshkey
     - role: infra-named
     - role: infra-certbot
     - role: compositions
