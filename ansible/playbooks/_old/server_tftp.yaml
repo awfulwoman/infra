@@ -7,7 +7,6 @@
   roles:
     - role: bootstrap
     - role: bootstrap-host
-    - role: apt-upgrade
   post_tasks:
     - name: Install TFTP software
       become: true
