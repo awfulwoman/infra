@@ -4,7 +4,7 @@
     - role: bootstrap-ubuntu-server
     - role: robertdebock.digitalocean_agent
       become: true
-    - role: user-config-deployment
+    - role: user-site-deployment
     - role: ansible-pull
     - role: compositions
     - role: monitoring-healthchecksio
