@@ -8,7 +8,7 @@
     - role: install-mqtt2cmd
     - role: hardware-rtl-433
     - role: zfs-backup-client
-    - role: install-beep
+    - role: system-beep
     - role: shoutrrr
       become: true
     - role: compositions

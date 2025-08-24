@@ -12,7 +12,7 @@
     dest: /etc/udev/rules.d/70-pcspkr-beep.rules
     owner: root
     group: root
-    mode: 0664
+    mode: "0664"
 
 - name: Ensure group "beep" exists
   become: true
@@ -20,7 +20,7 @@
     name: beep
     state: present
 
-- name: Add "{{ ansible_user }}" to beep group
+- name: Add user to beep group
   become: true
   ansible.builtin.user:
     name: "{{ ansible_user }}"
