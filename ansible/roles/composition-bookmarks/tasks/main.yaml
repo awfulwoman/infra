@@ -51,7 +51,7 @@
 
 - name: Run Configure DNS role
   ansible.builtin.include_role:
-    name: "configure-dns"
+    name: "network-register-subdomain"
   vars:
     configure_dns_subdomains:
       - wallabag
