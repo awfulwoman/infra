@@ -1,6 +1,6 @@
 ---
 - name: Install powertop
-  become: true 
+  become: true
   ansible.builtin.apt:
     name:
       - powertop
@@ -13,7 +13,7 @@
     dest: /etc/systemd/system/powertop.service
     owner: root
     group: root
-    mode: 0664
+    mode: "0664"
 
 - name: Make sure powertop service is running
   become: true
