@@ -165,9 +165,6 @@ sleepnow() {
 
 success () {
   log_info "✅✅✅ Backup success!"
-  {% if zfsbackup_healthcheck_send %}
-  curl -fsSL https://hc-ping.com/{{ vault_autorestic_ping_key }}/host-backups-daily-zfs-backup-pull &> /dev/null
-  {% endif %}
 
   # MQTT announce backup
   mosquitto_pub -h mqtt.{{ domain_name }} -t servers/backup -m Finished

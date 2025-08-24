@@ -7,7 +7,7 @@
     - role: system-wakeonlan
     - role: zfs-core
     - role: install-msmtp
-    - role: install-mqtt2cmd
+    - role: system-mqtt2cmd
     - role: zfs-backup-server
       zfsbackup_pushover: false
       zfsbackup_run_after_wake: true

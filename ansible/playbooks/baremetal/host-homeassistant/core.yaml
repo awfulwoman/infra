@@ -9,7 +9,7 @@
     - role: hardware-rtl-433
     - role: zfs-backup-client
     - role: system-beep
-    - role: shoutrrr
+    - role: system-shoutrrr
       become: true
     - role: compositions
     - role: monitoring-healthchecksio
