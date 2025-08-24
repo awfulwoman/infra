@@ -9,7 +9,7 @@
     - role: ansible-pull
     - role: bootstrap-ubuntu-server
     - role: configure-sshkey
-    - role: ip-address-forwarding
+    - role: network-ip-address-forwarding
     - role: install-docker
     - role: nfs-client
     - role: zfs-core
