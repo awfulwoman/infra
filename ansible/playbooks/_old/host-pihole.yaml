@@ -14,7 +14,7 @@
     # - role: zfs-backup-client
     # - role: pihole
     - role: compositions
-    # - role: install-linux2mqtt
+    # - role: monitoring-linux2mqtt
 
   handlers:
     - name: Reboot host
