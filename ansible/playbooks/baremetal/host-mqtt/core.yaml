@@ -8,7 +8,6 @@
     - role: hardware-raspberry-pi
       raspberry_pi_wifi: false
       raspberry_pi_boot_config_location: /boot/firmware/config.txt
-    - role: install-docker
     - role: zfs-core
     - role: zfs-backup-client
     - role: compositions

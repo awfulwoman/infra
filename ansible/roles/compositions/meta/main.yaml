@@ -1,2 +1,2 @@
 dependencies:
-  - role: install-docker
+  - role: system-docker

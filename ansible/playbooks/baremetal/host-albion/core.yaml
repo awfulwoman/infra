@@ -10,7 +10,6 @@
     - role: bootstrap-ubuntu-server
     - role: configure-sshkey
     - role: network-ip-address-forwarding
-    - role: install-docker
     - role: nfs-client
     - role: zfs-core
     - role: zfs-backup-client

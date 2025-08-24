@@ -5,7 +5,6 @@
     - role: robertdebock.digitalocean_agent
       become: true
     - role: user-config-deployment
-    - role: install-docker
     - role: ansible-pull
     - role: compositions
     - role: monitoring-healthchecksio

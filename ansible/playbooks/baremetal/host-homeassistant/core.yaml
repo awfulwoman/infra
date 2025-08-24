@@ -3,7 +3,6 @@
   roles:
     - role: ansible-pull
     - role: bootstrap-ubuntu-server
-    - role: install-docker
     - role: zfs-core
     - role: install-nut-server
     - role: install-mqtt2cmd

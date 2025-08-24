@@ -5,8 +5,7 @@
     - role: ansible-pull
     - role: bootstrap-ubuntu-server
     - role: hardware-host-bus-adapter
-    - role: wakeonlan
-    - role: install-docker
+    - role: system-wakeonlan
     - role: install-nut-client
     - role: zfs-core
     - role: install-mqtt2cmd

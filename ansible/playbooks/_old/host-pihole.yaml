@@ -9,7 +9,6 @@
     - role: network-ip-address-static
       ip_address_static_ip4: "192.168.1.2/24"
       ip_address_static_gw4: "192.168.1.1"
-    - role: install-docker
     # - role: zfs-core
     - role: ansible-pull
     # - role: zfs-backup-client
