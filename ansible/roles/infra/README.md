@@ -1,5 +1,3 @@
-# Infra
+# Infra stuff
 
-These roles generate infrastructure that other hosts depend on.
-
-Quite important.
+These roles provide infra services that other hosts depend on, like DHS, DHCP, and certificates.
