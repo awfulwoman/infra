@@ -6,12 +6,12 @@
     - role: bootstrap-ubuntu-server
     - role: hardware-host-bus-adapter
     - role: system-wakeonlan
-    - role: install-nut-client
+    - role: client-nut
     - role: zfs-core
     - role: system-mqtt2cmd
     - role: system-msmtp
-    - role: nfs-server
-    - role: zfs-backup-client
+    - role: server-nfs
+    - role: client-zbackups
     - role: compositions
     - role: system-smartmontools
     - role: monitoring-healthchecksio

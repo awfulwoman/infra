@@ -4,12 +4,12 @@
   roles:
     - role: ansible-pull
     - role: bootstrap-ubuntu-server
-    - role: install-nut-client
+    - role: client-nut
     - role: hardware-raspberry-pi
       raspberry_pi_wifi: false
       raspberry_pi_boot_config_location: /boot/firmware/config.txt
     - role: zfs-core
-    - role: zfs-backup-client
+    - role: client-zbackups
     - role: compositions
     - role: monitoring-healthchecksio
 

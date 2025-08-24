@@ -4,10 +4,10 @@
     - role: ansible-pull
     - role: bootstrap-ubuntu-server
     - role: zfs-core
-    - role: install-nut-server
+    - role: server-nut
     - role: system-mqtt2cmd
     - role: hardware-rtl-433
-    - role: zfs-backup-client
+    - role: client-zbackups
     - role: system-beep
     - role: system-shoutrrr
       become: true

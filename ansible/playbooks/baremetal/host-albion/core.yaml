@@ -10,9 +10,9 @@
     - role: bootstrap-ubuntu-server
     - role: system-sshkey
     - role: network-ip-address-forwarding
-    - role: nfs-client
+    - role: client-nfs
     - role: zfs-core
-    - role: zfs-backup-client
+    - role: client-zbackups
     - role: compositions
     - role: monitoring-healthchecksio
 

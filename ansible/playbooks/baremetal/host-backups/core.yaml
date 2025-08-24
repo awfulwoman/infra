@@ -3,12 +3,12 @@
   roles:
     - role: ansible-pull
     - role: bootstrap-ubuntu-server
-    - role: install-nut-client
+    - role: client-nut
     - role: system-wakeonlan
     - role: zfs-core
     - role: system-msmtp
     - role: system-mqtt2cmd
-    - role: zfs-backup-server
+    - role: server-zbackups
       zfsbackup_pushover: false
       zfsbackup_run_after_wake: true
     - role: monitoring-healthchecksio
