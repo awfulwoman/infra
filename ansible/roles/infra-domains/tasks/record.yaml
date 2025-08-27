@@ -3,5 +3,6 @@
 - name: DEBUG RECORD
   ansible.builtin.debug:
     msg: >
+      "{{ item.domain }}"
       "{{ domain_item.type }}"
       "{{ domain_item.value }}"
