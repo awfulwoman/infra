@@ -1,4 +1,0 @@
-- name: DEBUG
-  ansible.builtin.debug:
-    msg: >
-      "{{ item.records | default('No records mate') }}"

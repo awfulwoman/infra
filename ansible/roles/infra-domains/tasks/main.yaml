@@ -1,8 +1,8 @@
-- name: DEBUG
-  ansible.builtin.debug:
-    msg: >
-      "{{ item.records | default([]) }}"
-  loop: "{{ infra_domains_domains }}"
+# - name: DEBUG
+#   ansible.builtin.debug:
+#     msg: >
+#       "{{ item.records | default([]) }}"
+#   loop: "{{ infra_domains_domains }}"
 
 - name: Loop over each domain and extract records
   ansible.builtin.include_tasks:
@@ -12,10 +12,10 @@
     loop_var: item
     extended: true
 
-- name: Ensure domains exist
-  community.digitalocean.digital_ocean_domain:
-    state: present
-    name: "{{ item.domain }}"
-    oauth_token: "{{ vault_digitalocean_full_access_token }}"
-    project_name: "{{ item.project }}"
-  loop: "{{ infra_domains_domains }}"
+# - name: Ensure domains exist
+#   community.digitalocean.digital_ocean_domain:
+#     state: present
+#     name: "{{ item.domain }}"
+#     oauth_token: "{{ vault_digitalocean_full_access_token }}"
+#     project_name: "{{ item.project }}"
+#   loop: "{{ infra_domains_domains }}"
