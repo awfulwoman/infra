@@ -12,7 +12,6 @@ infra_domains_domains:
       - type: A
         hostname: gts
         ip: 209.38.108.243
-
   - domain: "{{ vault_olddomain_se }}"
     project: Personal Site
     description: >
@@ -45,7 +44,6 @@ infra_domains_domains:
         value: alt4.aspmx.l.google.com.
         priority: 10
         ttl: 1800
-
   - domain: "{{ vault_olddomain_wc }}"
     project: Personal Site
     description: >
@@ -86,14 +84,12 @@ infra_domains_domains:
         value: mxext1.mailbox.org.
         priority: 10
         ttl: 14400
-
   - domain: "{{ vault_infra_domain_name_ew }}"
-    group: Infra
+    project: Infra
     description: >
       All my internal stuff. The domain itself is only public so
       that I can obtain Let's Encrypt certificates.
-
   - domain: "{{ vault_infra_domain_name_rs }}"
-    group: Infra
+    project: Infra
     description: >
       A testing domain for my domain-related stuff.
