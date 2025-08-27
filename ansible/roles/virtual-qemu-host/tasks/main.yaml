@@ -2,13 +2,13 @@
 - name: Install virtualisation tooling
   become: true
   ansible.builtin.apt:
-    name: 
+    name:
       - qemu-system
-      - libvirt-clients 
+      - libvirt-clients
       - libvirt-daemon-system
-      - bridge-utils 
-      - cpu-checker 
-      - virtinst 
+      - bridge-utils
+      - cpu-checker
+      - virtinst
       - virt-top
       - net-tools
     state: present
@@ -17,7 +17,7 @@
   become: true
   ansible.builtin.user:
     user: "{{ ansible_user }}"
-    groups: 
+    groups:
       - libvirt
       - kvm
     append: true
@@ -34,12 +34,13 @@
   ansible.builtin.template:
     src: default-network.xml.j2
     dest: /usr/share/libvirt/networks/default.xml
+    mode: "0644"
 
 - name: Disable SELinux security driver for libvirt
   become: true
-  ansible.builtin.lineinfile: 
+  ansible.builtin.lineinfile:
     path: /etc/libvirt/qemu.conf
-    regexp: "^security_driver =" 
+    regexp: "^security_driver ="
     line: 'security_driver = "none"'
     state: present
   notify: Restart libvirtd
@@ -47,18 +48,18 @@
 
 - name: Add user for libvirt
   become: true
-  ansible.builtin.lineinfile: 
+  ansible.builtin.lineinfile:
     path: /etc/libvirt/qemu.conf
-    regexp: "^user =" 
+    regexp: "^user ="
     line: 'user = "{{ ansible_user }}"'
     state: present
   notify: Restart libvirtd
 
 - name: Add groups for libvirt
   become: true
-  ansible.builtin.lineinfile: 
+  ansible.builtin.lineinfile:
     path: /etc/libvirt/qemu.conf
-    regexp: "^group =" 
+    regexp: "^group ="
     line: 'group = "libvirt"'
     state: present
   notify: Restart libvirtd
@@ -71,7 +72,7 @@
 # - name: virsh undefine default
 #   become: true
 #   ansible.builtin.command: virsh net-undefine default
-  
+
 # - name: virsh define default
 #   become: true
 #   ansible.builtin.command: virsh net-define /usr/share/libvirt/networks/default.xml
