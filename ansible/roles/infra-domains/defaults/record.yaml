@@ -1,1 +1,6 @@
 # Deal with whatever domain record is passed in
+
+- name: DEBUG RECORD
+  ansible.builtin.debug:
+    msg: >
+      "{{ item }}"

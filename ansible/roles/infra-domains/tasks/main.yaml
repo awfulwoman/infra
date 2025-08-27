@@ -4,6 +4,14 @@
       "{{ item.records | default([]) }}"
   loop: "{{ infra_domains_domains }}"
 
+- name: Loop over each domain and extract records
+  ansible.builtin.include_tasks:
+    file: records.yaml
+  loop: "{{ infra_domains_domains }}"
+  loop_control:
+    loop_var: item
+    extended: true
+
 - name: Ensure domains exist
   community.digitalocean.digital_ocean_domain:
     state: present

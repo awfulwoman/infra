@@ -1,1 +1,4 @@
-# Loop over records and call record.yaml to deal with each
+- name: DEBUG
+  ansible.builtin.debug:
+    msg: >
+      "{{ item.records | default('No records mate') }}"
