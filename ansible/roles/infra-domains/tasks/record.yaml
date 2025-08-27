@@ -1,8 +1,16 @@
-# Deal with whatever domain record is passed in
-
 - name: DEBUG RECORD
   ansible.builtin.debug:
     msg: >
-      "{{ item.domain }}"
-      "{{ domain_item.type }}"
-      "{{ domain_item.value }}"
+      DOMAIN: "{{ item.domain }}"
+      TYPE: "{{ domain_item.type }}"
+      VALUE: "{{ domain_item.value }}"
+      HOSTNAME: "{{ domain_item.hostname | default('@') }}"
+
+# - name: Ensure record exists
+#   community.digitalocean.digital_ocean_domain_record:
+#     state: present
+#     oauth_token: "{{ vault_digitalocean_domain_token }}"
+#     domain: "{{ item.domain }}"
+#     type: "{{ domain_item.type }}"
+#     name: "{{ domain_item.hostname | default('@') }}"
+#     data: "{{ domain_item.value }}"

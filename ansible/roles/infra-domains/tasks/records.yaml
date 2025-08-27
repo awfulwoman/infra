@@ -1,4 +1,4 @@
-- name: Loop over records and deal with each one
+- name: Loop over records in this domain
   ansible.builtin.include_tasks:
     file: record.yaml
   loop: "{{ item.records }}"
