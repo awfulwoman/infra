@@ -3,7 +3,7 @@ name: "{{ composition_name }}"
 services:
 {% if reverseproxy_catchall %}
   catch-all:
-    image: nginx:1.28-alpine
+    image: nginx:1.29-alpine
     volumes:
       - "{{ composition_config }}/nginx/catch-all.conf:/etc/nginx/nginx.conf:ro"
       - "{{ composition_config }}/www-catch-all:/usr/share/nginx/html:ro"
@@ -18,7 +18,7 @@ services:
 
 {% if reverseproxy_statuspage %}
   status-pages:
-    image: nginx:1.28-alpine
+    image: nginx:1.29-alpine
     volumes:
       - "{{ composition_config }}/nginx/status-pages.conf:/etc/nginx/nginx.conf:ro"
       - "{{ composition_config }}/www-status-pages:/usr/share/nginx/html:ro"
