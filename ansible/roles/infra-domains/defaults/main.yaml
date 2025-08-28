@@ -1,60 +1,60 @@
 infra_domains_domains:
-  - domain: "{{ vault_personal_domain }}"
-    project: Personal Site
-    description: >
-      My personal website.
-    records:
-      - type: A
-        value: 209.38.108.243
-        id: 1755594277
-      - type: A
-        hostname: www
-        value: 209.38.108.243
-        id: 1766259276
-      - type: A
-        hostname: gts
-        value: 209.38.108.243
-        id: 1785309921
+  # - domain: "{{ vault_personal_domain }}"
+  #   project: Personal Site
+  #   description: >
+  #     My personal website.
+  #   records:
+  #     - type: A
+  #       value: 209.38.108.243
+  #       id: 1755594277
+  #     - type: A
+  #       hostname: www
+  #       value: 209.38.108.243
+  #       id: 1766259276
+  #     - type: A
+  #       hostname: gts
+  #       value: 209.38.108.243
+  #       id: 1785309921
 
-  - domain: "{{ vault_olddomain_se }}"
-    project: Personal Site
-    description: >
-      A personal site from many years ago. I'd still use it, but
-      it's a .co.uk and that makes me sad. Doubly sadly it's bound
-      up with a paid Google account that I'm trying to rid myself of.
-    records:
-      - type: A
-        value: 209.38.108.243
-        id: 123825149
-      - type: A
-        hostname: www
-        value: 209.38.108.243
-        id: 123825190
-      - type: MX
-        value: aspmx.l.google.com.
-        priority: 1
-        ttl: 1800
-        id: 65126283
-      - type: MX
-        value: alt1.aspmx.l.google.com.
-        priority: 5
-        ttl: 1800
-        id: 65126284
-      - type: MX
-        value: alt2.aspmx.l.google.com.
-        priority: 5
-        ttl: 1800
-        id: 65126285
-      - type: MX
-        value: alt3.aspmx.l.google.com.
-        priority: 10
-        ttl: 1800
-        id: 65126286
-      - type: MX
-        value: alt4.aspmx.l.google.com.
-        priority: 10
-        ttl: 1800
-        id: 65126287
+  # - domain: "{{ vault_olddomain_se }}"
+  #   project: Personal Site
+  #   description: >
+  #     A personal site from many years ago. I'd still use it, but
+  #     it's a .co.uk and that makes me sad. Doubly sadly it's bound
+  #     up with a paid Google account that I'm trying to rid myself of.
+  #   records:
+  #     - type: A
+  #       value: 209.38.108.243
+  #       id: 123825149
+  #     - type: A
+  #       hostname: www
+  #       value: 209.38.108.243
+  #       id: 123825190
+  #     - type: MX
+  #       value: aspmx.l.google.com.
+  #       priority: 1
+  #       ttl: 1800
+  #       id: 65126283
+  #     - type: MX
+  #       value: alt1.aspmx.l.google.com.
+  #       priority: 5
+  #       ttl: 1800
+  #       id: 65126284
+  #     - type: MX
+  #       value: alt2.aspmx.l.google.com.
+  #       priority: 5
+  #       ttl: 1800
+  #       id: 65126285
+  #     - type: MX
+  #       value: alt3.aspmx.l.google.com.
+  #       priority: 10
+  #       ttl: 1800
+  #       id: 65126286
+  #     - type: MX
+  #       value: alt4.aspmx.l.google.com.
+  #       priority: 10
+  #       ttl: 1800
+  #       id: 65126287
 
   # - domain: "{{ vault_olddomain_wc }}"
   #   project: Personal Site
