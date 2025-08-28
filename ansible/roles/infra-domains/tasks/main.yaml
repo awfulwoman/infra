@@ -6,10 +6,15 @@
 #     project_name: "{{ item.project }}"
 #   loop: "{{ infra_domains_domains }}"
 
-- name: Loop over each domains and deal with records
-  ansible.builtin.include_tasks:
-    file: records.yaml
-  loop: "{{ infra_domains_domains }}"
-  loop_control:
-    loop_var: item
-    extended: true
+# - name: Loop over each domains and deal with records
+#   ansible.builtin.include_tasks:
+#     file: records.yaml
+#   loop: "{{ infra_domains_domains }}"
+#   loop_control:
+#     loop_var: item
+#     extended: true
+
+- name: Basic deploy of a service
+  community.general.terraform:
+    project_path: /opt/infra/terraform/personal-domains
+    state: present
