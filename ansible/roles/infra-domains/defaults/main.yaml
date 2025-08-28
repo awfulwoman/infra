@@ -12,12 +12,6 @@ infra_domains_domains:
       - type: A
         hostname: gts
         value: 209.38.108.243
-      - type: NS
-        value: ns1.digitalocean.com
-      - type: NS
-        value: ns2.digitalocean.com
-      - type: NS
-        value: ns3.digitalocean.com
 
   - domain: "{{ vault_olddomain_se }}"
     project: Personal Site
@@ -51,12 +45,6 @@ infra_domains_domains:
         value: alt4.aspmx.l.google.com.
         priority: 10
         ttl: 1800
-      - type: NS
-        value: ns1.digitalocean.com
-      - type: NS
-        value: ns2.digitalocean.com
-      - type: NS
-        value: ns3.digitalocean.com
 
   - domain: "{{ vault_olddomain_wc }}"
     project: Personal Site
@@ -98,34 +86,17 @@ infra_domains_domains:
         value: mxext1.mailbox.org.
         priority: 10
         ttl: 14400
-      - type: NS
-        value: ns1.digitalocean.com
-      - type: NS
-        value: ns2.digitalocean.com
-      - type: NS
-        value: ns3.digitalocean.com
 
   - domain: "{{ vault_infra_domain_name_ew }}"
     project: Infra
     description: >
       All my internal stuff. The domain itself is only public so
       that I can obtain Let's Encrypt certificates.
-    records:
-      - type: NS
-        value: ns1.digitalocean.com
-      - type: NS
-        value: ns2.digitalocean.com
-      - type: NS
-        value: ns3.digitalocean.com
+    records: []
 
   - domain: "{{ vault_infra_domain_name_rs }}"
     project: Infra
     description: >
       A testing domain for my domain-related stuff.
-    records:
-      - type: NS
-        value: ns1.digitalocean.com
-      - type: NS
-        value: ns2.digitalocean.com
-      - type: NS
-        value: ns3.digitalocean.com
+    records: []
+ 

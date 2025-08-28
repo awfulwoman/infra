@@ -1,16 +1,23 @@
 - name: DEBUG RECORD
   ansible.builtin.debug:
-    msg: >
-      DOMAIN: "{{ item.domain }}"
-      TYPE: "{{ domain_item.type }}"
-      VALUE: "{{ domain_item.value }}"
-      HOSTNAME: "{{ domain_item.hostname | default('@') }}"
+    msg: 
+      - "state: present"
+      - "oauth_token: {{ vault_digitalocean_domain_token }}"
+      - "domain: {{ item.domain }}"
+      - "type: {{ domain_item.type }}"
+      - "name: {{ domain_item.hostname | default('@') }}"
+      - "data: {{ domain_item.value }}"
+      - "priority: {{ domain_item.priority | default(false) }}"
+      - "ttl: {{ domain_item.ttl | default('1800') }}"
 
-# - name: Ensure record exists
-#   community.digitalocean.digital_ocean_domain_record:
-#     state: present
-#     oauth_token: "{{ vault_digitalocean_domain_token }}"
-#     domain: "{{ item.domain }}"
-#     type: "{{ domain_item.type }}"
-#     name: "{{ domain_item.hostname | default('@') }}"
-#     data: "{{ domain_item.value }}"
+- name: Ensure record exists
+  community.digitalocean.digital_ocean_domain_record:
+    state: present
+    oauth_token: "{{ vault_digitalocean_domain_token }}"
+    domain: "{{ item.domain }}"
+    type: "{{ domain_item.type }}"
+    name: "{{ domain_item.hostname | default('@') }}"
+    data: "{{ domain_item.value }}"
+    ttl: "{{  domain_item.ttl | default('1800') }}"
+    priority: "{{  domain_item.priority | default(false) }}"
+    force_update: true
