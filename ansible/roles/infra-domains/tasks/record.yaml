@@ -1,16 +1,5 @@
-- name: DEBUG RECORD
-  ansible.builtin.debug:
-    msg: 
-      - "state: present"
-      - "oauth_token: {{ vault_digitalocean_domain_token }}"
-      - "domain: {{ item.domain }}"
-      - "type: {{ domain_item.type }}"
-      - "name: {{ domain_item.hostname | default('@') }}"
-      - "data: {{ domain_item.value }}"
-      - "priority: {{ domain_item.priority | default(false) }}"
-      - "ttl: {{ domain_item.ttl | default('1800') }}"
-
-- name: Ensure record exists
+- name: "Ensure record exists for {{ item.domain }} - {{ domain_item.id }}"
+  when: domain_item.id is defined
   community.digitalocean.digital_ocean_domain_record:
     state: present
     oauth_token: "{{ vault_digitalocean_domain_token }}"
@@ -19,5 +8,33 @@
     name: "{{ domain_item.hostname | default('@') }}"
     data: "{{ domain_item.value }}"
     ttl: "{{  domain_item.ttl | default('1800') }}"
-    priority: "{{  domain_item.priority | default(false) }}"
+    priority: "{{  domain_item.priority | default(10) }}"
+    record_id: "{{ domain_item.id }}"
     force_update: true
+  register: record_update_id
+  # changed_when: false
+
+- name: "DEBUG record update for {{ item.domain }} - {{ domain_item.id }}"
+  ansible.builtin.debug:
+    var: record_update_id
+  when: domain_item.id is defined
+
+- name: "Ensure record exists for {{ item.domain }}"
+  when: domain_item.id is not defined
+  community.digitalocean.digital_ocean_domain_record:
+    state: present
+    oauth_token: "{{ vault_digitalocean_domain_token }}"
+    domain: "{{ item.domain }}"
+    type: "{{ domain_item.type }}"
+    name: "{{ domain_item.hostname | default('@') }}"
+    data: "{{ domain_item.value }}"
+    ttl: "{{  domain_item.ttl | default('1800') }}"
+    priority: "{{  domain_item.priority | default(10) }}"
+    force_update: true
+  register: record_update_no_id
+  # changed_when: false
+
+- name: "DEBUG record update for {{ item.domain }}"
+  ansible.builtin.debug:
+    var: record_update_no_id
+  when: domain_item.id is not defined

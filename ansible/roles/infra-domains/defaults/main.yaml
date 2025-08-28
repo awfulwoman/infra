@@ -6,12 +6,15 @@ infra_domains_domains:
     records:
       - type: A
         value: 209.38.108.243
+        id: 1755594277
       - type: A
         hostname: www
         value: 209.38.108.243
+        id: 1766259276
       - type: A
         hostname: gts
         value: 209.38.108.243
+        id: 1785309921
 
   - domain: "{{ vault_olddomain_se }}"
     project: Personal Site
@@ -22,70 +25,77 @@ infra_domains_domains:
     records:
       - type: A
         value: 209.38.108.243
+        id: 123825149
       - type: A
         hostname: www
         value: 209.38.108.243
+        id: 123825190
       - type: MX
         value: aspmx.l.google.com.
         priority: 1
         ttl: 1800
+        id: 65126283
       - type: MX
         value: alt1.aspmx.l.google.com.
         priority: 5
         ttl: 1800
+        id: 65126284
       - type: MX
         value: alt2.aspmx.l.google.com.
         priority: 5
         ttl: 1800
+        id: 65126285
       - type: MX
         value: alt3.aspmx.l.google.com.
         priority: 10
         ttl: 1800
+        id: 65126286
       - type: MX
         value: alt4.aspmx.l.google.com.
         priority: 10
         ttl: 1800
+        id: 65126287
 
-  - domain: "{{ vault_olddomain_wc }}"
-    project: Personal Site
-    description: >
-      This used to be my personal site. But several people thought
-      it had something to do with crypto and so I noped out.
-    records:
-      - type: A
-        value: 209.38.108.243
-      - type: A
-        hostname: www
-        value: 209.38.108.243
-      - type: TXT
-        hostname: _dmarc
-        value: "v=DMARC1;p=none;rua=mailto:postmaster@{{ vault_olddomain_wc }}"
-      - type: TXT
-        value: v=spf1 include:mailbox.org ~all
-      - type: CNAME
-        hostname: mbo0004._domainkey
-        value: mbo0004._domainkey.mailbox.org.
-      - type: CNAME
-        hostname: mbo0003._domainkey
-        value: mbo0003._domainkey.mailbox.org.
-      - type: CNAME
-        hostname: mbo0002._domainkey
-        value: mbo0002._domainkey.mailbox.org.
-      - type: CNAME
-        hostname: mbo0001._domainkey
-        value: mbo0001._domainkey.mailbox.org.
-      - type: MX
-        value: mxext3.mailbox.org.
-        priority: 20
-        ttl: 14400
-      - type: MX
-        value: mxext2.mailbox.org.
-        priority: 10
-        ttl: 14400
-      - type: MX
-        value: mxext1.mailbox.org.
-        priority: 10
-        ttl: 14400
+  # - domain: "{{ vault_olddomain_wc }}"
+  #   project: Personal Site
+  #   description: >
+  #     This used to be my personal site. But several people thought
+  #     it had something to do with crypto and so I noped out.
+  #   records:
+  #     - type: A
+  #       value: 209.38.108.243
+  #     - type: A
+  #       hostname: www
+  #       value: 209.38.108.243
+  #     - type: TXT
+  #       hostname: _dmarc
+  #       value: "v=DMARC1;p=none;rua=mailto:postmaster@{{ vault_olddomain_wc }}"
+  #     - type: TXT
+  #       value: v=spf1 include:mailbox.org ~all
+  #     - type: CNAME
+  #       hostname: mbo0004._domainkey
+  #       value: mbo0004._domainkey.mailbox.org.
+  #     - type: CNAME
+  #       hostname: mbo0003._domainkey
+  #       value: mbo0003._domainkey.mailbox.org.
+  #     - type: CNAME
+  #       hostname: mbo0002._domainkey
+  #       value: mbo0002._domainkey.mailbox.org.
+  #     - type: CNAME
+  #       hostname: mbo0001._domainkey
+  #       value: mbo0001._domainkey.mailbox.org.
+  #     - type: MX
+  #       value: mxext3.mailbox.org.
+  #       priority: 20
+  #       ttl: 14400
+  #     - type: MX
+  #       value: mxext2.mailbox.org.
+  #       priority: 10
+  #       ttl: 14400
+  #     - type: MX
+  #       value: mxext1.mailbox.org.
+  #       priority: 10
+  #       ttl: 14400
 
   - domain: "{{ vault_infra_domain_name_ew }}"
     project: Infra
