@@ -762,3 +762,4 @@ environment_config:
   ANSIBLE_ROLES_PATH: "{{ ansible_roles_path }}"
   ANSIBLE_COLLECTIONS_PATH: "{{ ansible_collections_path }}"
   HOME_REPO_DIR: "{{ home_repo_dir }}"
+  TF_VAR_digitalocean_token: "{{ vault_ddns_digitalocean_token }}"
