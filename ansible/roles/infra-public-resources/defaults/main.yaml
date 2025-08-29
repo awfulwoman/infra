@@ -25,6 +25,7 @@ infra_domains_domains:
 
   - domain: "{{ vault_personal_domain }}"
     id: aw
+    records: []
   #   project: Personal Site
   #   description: >
   #     My personal website.
@@ -43,6 +44,7 @@ infra_domains_domains:
 
   - domain: "{{ vault_olddomain_se }}"
     id: se
+    records: []
   #   project: Personal Site
   #   description: >
   #     A personal site from many years ago. I'd still use it, but
@@ -84,6 +86,7 @@ infra_domains_domains:
 
   - domain: "{{ vault_olddomain_wc }}"
     id: wc
+    records: []
   #   project: Personal Site
   #   description: >
   #     This used to be my personal site. But several people thought
