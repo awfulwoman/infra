@@ -1,21 +1,25 @@
 # Ensure all DO projects exist
 {% for item in infra_domains_projects %}
-
-resource "digitalocean_project" "{{ item.name | lower }}" {
+{% if item.id is defined %}
+resource "digitalocean_project" "{{ item.id }}" {
   name        = "{{ item.name }}"
   description = "{{ item.description }}"
   purpose     = "Web Application"
   environment = "Production"
 }
+{% endif %}
 {% endfor %}
 
 # Ensure all domain zones are registered with Digital Ocean
+{% if (infra_domains_domains is iterable) and (infra_domains_domains | length > 0) %}
 {% for item in infra_domains_domains %}
-
+{% if (item.domain is defined) and (item.id is defined) %}
 resource "digitalocean_domain" "{{ item.id }}" {
    name = "{{ item.domain }}"
 }
+{% endif %}
 {% endfor %}
+{% endif %}
 
 # Ensure each domain zone is in the appropriate project
 # resource "digitalocean_project_resources" "infra_domains" {
@@ -26,9 +30,14 @@ resource "digitalocean_domain" "{{ item.id }}" {
 # }
 
 # Ensure all records for domains exist
+{% if (infra_domains_domains is iterable) and (infra_domains_domains | length > 0) %}
 {% for item in infra_domains_domains %}
+{% if item.domain is defined %}
 {% for record in item.records %}
-
+{% if (item.domain is defined ) 
+   and (record.id is defined) 
+   and (record.type is defined) 
+   and (record.value is defined) %}
 resource "digitalocean_record" "{{ record.id }}" {
   domain = "{{ item.domain }}"
   type   = "{{ record.type }}"
@@ -41,8 +50,11 @@ resource "digitalocean_record" "{{ record.id }}" {
   ttl = {{ record.ttl }}
   {% endif -%}
 }
+{% endif %}
 {% endfor %}
+{% endif %}
 {% endfor %}
+{% endif %}
 
 
 

@@ -3,132 +3,134 @@ infra_domains_debug: false
 infra_domains_projects:
   - name: Personal
     description: Personal stuff
+    id: personal
   - name: Infra
     description: Infra stuff
+    id: infra
 
 infra_domains_domains:
-  - domain: "{{ vault_infra_domain_name_ew }}"
-    id: ew
-    project: "{{ infra_domains_projects[1].name }}"
-    description: >
-      All my internal stuff. The domain itself is only public so
-      that I can obtain Let's Encrypt certificates.
-    records: []
-  - domain: "{{ vault_infra_domain_name_rs }}"
-    id: rs
-    project: "{{ infra_domains_projects[1].name }}"
-    description: >
-      A testing domain for learning.
-    records: []
+  # - domain: "{{ vault_infra_domain_name_ew }}"
+  #   id: ew
+  #   project: "{{ infra_domains_projects[1].name }}"
+  #   description: >
+  #     All my internal stuff. The domain itself is only public so
+  #     that I can obtain Let's Encrypt certificates.
+  #   records: []
+  # - domain: "{{ vault_infra_domain_name_rs }}"
+  #   id: rs
+  #   project: "{{ infra_domains_projects[1].name }}"
+  #   description: >
+  #     A testing domain for learning.
+  #   records: []
 
-  - domain: "{{ vault_personal_domain }}"
-    id: aw
-    project: Personal Site
-    description: >
-      My personal website.
-    records:
-      - type: A
-        value: 209.38.108.243
-        id: aw_a_main
-      - type: A
-        hostname: www
-        value: 209.38.108.243
-        id: aw_a_www
-      - type: A
-        hostname: gts
-        value: 209.38.108.243
-        id: aw_a_gts
+  # - domain: "{{ vault_personal_domain }}"
+  #   id: aw
+  #   project: Personal Site
+  #   description: >
+  #     My personal website.
+  #   records:
+  #     - type: A
+  #       value: 209.38.108.243
+  #       id: aw_a_main
+  #     - type: A
+  #       hostname: www
+  #       value: 209.38.108.243
+  #       id: aw_a_www
+  #     - type: A
+  #       hostname: gts
+  #       value: 209.38.108.243
+  #       id: aw_a_gts
 
-  - domain: "{{ vault_olddomain_se }}"
-    id: se
-    project: Personal Site
-    description: >
-      A personal site from many years ago. I'd still use it, but
-      it's a .co.uk and that makes me sad. Doubly sadly it's bound
-      up with a paid Google account that I'm trying to rid myself of.
-    records:
-      - type: A
-        value: 209.38.108.243
-        id: se_a_main
-      - type: A
-        hostname: www
-        value: 209.38.108.243
-        id: se_a_www
-      - type: MX
-        value: aspmx.l.google.com.
-        priority: 1
-        ttl: 1800
-        id: se_mx_google
-      - type: MX
-        value: alt1.aspmx.l.google.com.
-        priority: 5
-        ttl: 1800
-        id: se_mx_google_alt1
-      - type: MX
-        value: alt2.aspmx.l.google.com.
-        priority: 5
-        ttl: 1800
-        id: se_mx_google_alt2
-      - type: MX
-        value: alt3.aspmx.l.google.com.
-        priority: 10
-        ttl: 1800
-        id: se_mx_google_alt3
-      - type: MX
-        value: alt4.aspmx.l.google.com.
-        priority: 10
-        ttl: 1800
-        id: se_mx_google_alt4
+  # - domain: "{{ vault_olddomain_se }}"
+  #   id: se
+  #   project: Personal Site
+  #   description: >
+  #     A personal site from many years ago. I'd still use it, but
+  #     it's a .co.uk and that makes me sad. Doubly sadly it's bound
+  #     up with a paid Google account that I'm trying to rid myself of.
+  #   records:
+  #     - type: A
+  #       value: 209.38.108.243
+  #       id: se_a_main
+  #     - type: A
+  #       hostname: www
+  #       value: 209.38.108.243
+  #       id: se_a_www
+  #     - type: MX
+  #       value: aspmx.l.google.com.
+  #       priority: 1
+  #       ttl: 1800
+  #       id: se_mx_google
+  #     - type: MX
+  #       value: alt1.aspmx.l.google.com.
+  #       priority: 5
+  #       ttl: 1800
+  #       id: se_mx_google_alt1
+  #     - type: MX
+  #       value: alt2.aspmx.l.google.com.
+  #       priority: 5
+  #       ttl: 1800
+  #       id: se_mx_google_alt2
+  #     - type: MX
+  #       value: alt3.aspmx.l.google.com.
+  #       priority: 10
+  #       ttl: 1800
+  #       id: se_mx_google_alt3
+  #     - type: MX
+  #       value: alt4.aspmx.l.google.com.
+  #       priority: 10
+  #       ttl: 1800
+  #       id: se_mx_google_alt4
 
-  - domain: "{{ vault_olddomain_wc }}"
-    id: wc
-    project: Personal Site
-    description: >
-      This used to be my personal site. But several people thought
-      it had something to do with crypto and so I noped out.
-    records:
-      - type: A
-        value: 209.38.108.243
-        id: wc_a_main
-      - type: A
-        hostname: www
-        value: 209.38.108.243
-        id: wc_a_www
-      - type: TXT
-        hostname: _dmarc
-        value: "v=DMARC1;p=none;rua=mailto:postmaster@{{ vault_olddomain_wc }}"
-        id: wc_txt_dmarc
-      - type: TXT
-        value: v=spf1 include:mailbox.org ~all
-        id: wc_txt_spf
-      - type: CNAME
-        hostname: mbo0004._domainkey
-        value: mbo0004._domainkey.mailbox.org.
-        id: wc_txt_dk4
-      - type: CNAME
-        hostname: mbo0003._domainkey
-        value: mbo0003._domainkey.mailbox.org.
-        id: wc_txt_dk3
-      - type: CNAME
-        hostname: mbo0002._domainkey
-        value: mbo0002._domainkey.mailbox.org.
-        id: wc_txt_dk2
-      - type: CNAME
-        hostname: mbo0001._domainkey
-        value: mbo0001._domainkey.mailbox.org.
-        id: wc_txt_dk1
-      - type: MX
-        value: mxext3.mailbox.org.
-        priority: 20
-        ttl: 14400
-        id: wc_mx_mb3
-      - type: MX
-        value: mxext2.mailbox.org.
-        priority: 10
-        ttl: 14400
-        id: wc_mx_mb2
-      - type: MX
-        value: mxext1.mailbox.org.
-        priority: 10
-        ttl: 14400
-        id: wc_mx_mb1
+  # - domain: "{{ vault_olddomain_wc }}"
+  #   id: wc
+  #   project: Personal Site
+  #   description: >
+  #     This used to be my personal site. But several people thought
+  #     it had something to do with crypto and so I noped out.
+  #   records:
+  #     - type: A
+  #       value: 209.38.108.243
+  #       id: wc_a_main
+  #     - type: A
+  #       hostname: www
+  #       value: 209.38.108.243
+  #       id: wc_a_www
+  #     - type: TXT
+  #       hostname: _dmarc
+  #       value: "v=DMARC1;p=none;rua=mailto:postmaster@{{ vault_olddomain_wc }}"
+  #       id: wc_txt_dmarc
+  #     - type: TXT
+  #       value: v=spf1 include:mailbox.org ~all
+  #       id: wc_txt_spf
+  #     - type: CNAME
+  #       hostname: mbo0004._domainkey
+  #       value: mbo0004._domainkey.mailbox.org.
+  #       id: wc_txt_dk4
+  #     - type: CNAME
+  #       hostname: mbo0003._domainkey
+  #       value: mbo0003._domainkey.mailbox.org.
+  #       id: wc_txt_dk3
+  #     - type: CNAME
+  #       hostname: mbo0002._domainkey
+  #       value: mbo0002._domainkey.mailbox.org.
+  #       id: wc_txt_dk2
+  #     - type: CNAME
+  #       hostname: mbo0001._domainkey
+  #       value: mbo0001._domainkey.mailbox.org.
+  #       id: wc_txt_dk1
+  #     - type: MX
+  #       value: mxext3.mailbox.org.
+  #       priority: 20
+  #       ttl: 14400
+  #       id: wc_mx_mb3
+  #     - type: MX
+  #       value: mxext2.mailbox.org.
+  #       priority: 10
+  #       ttl: 14400
+  #       id: wc_mx_mb2
+  #     - type: MX
+  #       value: mxext1.mailbox.org.
+  #       priority: 10
+  #       ttl: 14400
+  #       id: wc_mx_mb1
