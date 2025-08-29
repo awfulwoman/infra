@@ -3,7 +3,7 @@
   roles:
     # - role: weareinteractive.environment
     #   become: true
-    # - role: infra-public-resources
+    - role: infra-public-resources
 
   handlers:
     - name: Reboot host

@@ -9,7 +9,7 @@
     - role: bootstrap-ubuntu-server
     - role: system-sshkey
     - role: zfs-core
-    # - role: infra-public-resources
+    - role: infra-public-resources
     - role: infra-named
     - role: infra-certbot
     - role: compositions
