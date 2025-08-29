@@ -9,22 +9,22 @@ infra_domains_projects:
     id: infra
 
 infra_domains_domains:
-  # - domain: "{{ vault_infra_domain_name_ew }}"
-  #   id: ew
-  #   project: "{{ infra_domains_projects[1].name }}"
-  #   description: >
-  #     All my internal stuff. The domain itself is only public so
-  #     that I can obtain Let's Encrypt certificates.
-  #   records: []
-  # - domain: "{{ vault_infra_domain_name_rs }}"
-  #   id: rs
-  #   project: "{{ infra_domains_projects[1].name }}"
-  #   description: >
-  #     A testing domain for learning.
-  #   records: []
+  - domain: "{{ vault_infra_domain_name_ew }}"
+    id: ew
+    project: "{{ infra_domains_projects[1].name }}"
+    description: >
+      All my internal stuff. The domain itself is only public so
+      that I can obtain Let's Encrypt certificates.
+    records: []
+  - domain: "{{ vault_infra_domain_name_rs }}"
+    id: rs
+    project: "{{ infra_domains_projects[1].name }}"
+    description: >
+      A testing domain for learning.
+    records: []
 
-  # - domain: "{{ vault_personal_domain }}"
-  #   id: aw
+  - domain: "{{ vault_personal_domain }}"
+    id: aw
   #   project: Personal Site
   #   description: >
   #     My personal website.
@@ -41,8 +41,8 @@ infra_domains_domains:
   #       value: 209.38.108.243
   #       id: aw_a_gts
 
-  # - domain: "{{ vault_olddomain_se }}"
-  #   id: se
+  - domain: "{{ vault_olddomain_se }}"
+    id: se
   #   project: Personal Site
   #   description: >
   #     A personal site from many years ago. I'd still use it, but
@@ -82,8 +82,8 @@ infra_domains_domains:
   #       ttl: 1800
   #       id: se_mx_google_alt4
 
-  # - domain: "{{ vault_olddomain_wc }}"
-  #   id: wc
+  - domain: "{{ vault_olddomain_wc }}"
+    id: wc
   #   project: Personal Site
   #   description: >
   #     This used to be my personal site. But several people thought
