@@ -6,19 +6,23 @@ ansiblepull_cron_hour: "17" # Slow rate because of LE certs
 
 configure_dns_linkdevice_physical: "eth0" 
 
-
+# ZFS pools
 zfs_pools_create: true
 zfs_pools_filebased: true
 zfs_pools:
   - fastpool
 
+# ZFS datasets
 container_compositions_zfs_id: fastpool/compositions
 acme_zfs_id: fastpool/acme
 terraform_zfs_id: fastpool/terraform
+
+# ZFS paths
 compositions_config_dir: "/{{ container_compositions_zfs_id}}"
 acme_path: "/{{ acme_zfs_id }}"
 terraform_working_dir: "/{{ terraform_zfs_id }}"
 
+# Ensure these datasets exist
 zfs_datasets:
   - "{{ container_compositions_zfs_id }}"
   - "{{ acme_zfs_id }}"
