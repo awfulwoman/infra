@@ -1,9 +1,9 @@
 - name: DNS
   hosts: dns
   roles:
-    - role: weareinteractive.environment
-      become: true
-    - role: infra-domains
+    # - role: weareinteractive.environment
+    #   become: true
+    - role: infra-public-resources
 
   handlers:
     - name: Reboot host

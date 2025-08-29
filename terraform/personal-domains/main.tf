@@ -13,8 +13,8 @@
 # }
 
 resource "digitalocean_project" "personal_sites" {
-  name        = "Test Project"
-  description = "Personal domains and records."
+  name        = "Personal Domains"
+  description = "Personal domains and such."
   purpose     = "Web Application"
   environment = "Production"
 }

@@ -8,7 +8,7 @@
     - role: ansible-pull
     - role: bootstrap-ubuntu-server
     - role: system-sshkey
-    - role: infra-domains
+    - role: infra-public-resources
     - role: infra-named
     - role: infra-certbot
     - role: compositions

@@ -738,7 +738,7 @@ vault_digitalocean_letsencrypt_token: !vault |
           31663739646439636439
 
 
-# Ansible-pull config
+# Ansible-pull
 ansible_path: "/opt/ansible"
 ansible_log_path: "{{ ansible_path }}/logs"
 ansible_vault_password_file: "{{ ansible_path }}/.vaultpassword"
@@ -746,6 +746,7 @@ ansible_roles_path: "{{ ansible_path }}/galaxy/roles:./ansible/roles"
 ansible_collections_path: "{{ ansible_path }}/galaxy/collections"
 home_repo_dir: "/opt/infra"
 
+# Python
 default_bin_path: /usr/local/bin
 pip_basepath: "{{ ansible_path }}/pip/"
 pip_requirements_path: "{{ ansible_path }}/pip/requirements.txt"
@@ -754,6 +755,10 @@ pip_virtualenv_python: python3
 pip_virtualenv_bin_path: "{{ ansible_path }}/pip/venv/bin"
 systemd_service_path: /etc/systemd/system
 
+# Terraform
+terraform_working_dir: /opt/terraform
+
+# Environment Variables
 environment_config:
   ANSIBLE_FORCE_COLOR: true
   ANSIBLE_PATH: "{{ ansible_path }}"
