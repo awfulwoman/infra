@@ -32,19 +32,19 @@
 #     name:
 #       - terraform
 
-# - name: Ensure working dir exists
-#   become: true
-#   ansible.builtin.file:
-#     dest: "{{ infra_domains_terraform_working_dir }}/public-domains"
-#     state: directory
-#     owner: "{{ ansible_user }}"
-#     group: "{{ ansible_user }}"
-#     mode: "0755"
+- name: Ensure working dir exists
+  become: true
+  ansible.builtin.file:
+    dest: "{{ infra_domains_terraform_working_dir }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0755"
 
 - name: Ensure Terraform files exist
   ansible.builtin.template:
     src: "{{ item }}"
-    dest: "{{ infra_domains_terraform_working_dir }}/public-domains/{{ item }}"
+    dest: "{{ infra_domains_terraform_working_dir }}/{{ item }}"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0755"
@@ -63,7 +63,7 @@
 # - name: Ensure Terraform plan is applied
 #   community.general.terraform:
 #     force_init: "{{ tf_files.changed }}"
-#     project_path: "{{ infra_domains_terraform_working_dir }}/public-domains"
+#     project_path: "{{ infra_domains_terraform_working_dir }}"
 #     state: present
 #   register: tf_plan
 

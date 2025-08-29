@@ -1,4 +1,4 @@
-infra_domains_terraform_working_dir: "{{ terraform_working_dir }}"
+infra_domains_terraform_working_dir: "{{ terraform_working_dir }}/public-resources"
 infra_domains_debug: false
 infra_domains_projects:
   - name: Personal

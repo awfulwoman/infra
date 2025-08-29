@@ -21,6 +21,7 @@ acme_path: "/{{ acme_zfs_id }}"
 zfs_datasets:
   - "{{ container_compositions_zfs_id }}"
   - "{{ acme_zfs_id }}"
+  - "{{ terraform_working_dir }}/public-resources"
 
 reverseproxy_use_letsencrypt: false
 
