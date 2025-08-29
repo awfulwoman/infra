@@ -12,11 +12,10 @@ resource "digitalocean_project" "{{ item.name | lower }}" {
 # Ensure all domain zones are registered with Digital Ocean
 {% for item in infra_domains_domains %}
 
-resource "digitalocean_domain" "{{ item.domain }}" {
+resource "digitalocean_domain" "{{ item.id }}" {
    name = "{{ item.domain }}"
 }
 {% endfor %}
-
 
 # Ensure each domain zone is in the appropriate project
 # resource "digitalocean_project_resources" "infra_domains" {
@@ -30,7 +29,7 @@ resource "digitalocean_domain" "{{ item.domain }}" {
 {% for item in infra_domains_domains %}
 {% for record in item.records %}
 
-resource "digitalocean_record" "root" {
+resource "digitalocean_record" "{{ record.id }}" {
   domain = "{{ item.domain }}"
   type   = "{{ record.type }}"
   name   = "{{ record.hostname | default('@') }}"
