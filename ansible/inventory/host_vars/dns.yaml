@@ -17,11 +17,13 @@ acme_zfs_id: fastpool/acme
 compositions_config_dir: "/{{ container_compositions_zfs_id}}"
 
 acme_path: "/{{ acme_zfs_id }}"
+terraform_dataset: fastpool/terraform
+terraform_working_dir: "/{{ terraform_dataset }}"
 
 zfs_datasets:
   - "{{ container_compositions_zfs_id }}"
   - "{{ acme_zfs_id }}"
-  - "{{ terraform_working_dir }}/public-resources"
+  - "{{ terraform_working_dir }}"
 
 reverseproxy_use_letsencrypt: false
 
