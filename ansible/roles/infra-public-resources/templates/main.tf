@@ -45,6 +45,11 @@ resource "digitalocean_record" "{{ record.id }}" {
 {% endfor %}
 
 
+
+# Ensure Block storage exists
+
+
+
 # Ensure all Droplets exist
 # resource "digitalocean_droplet" "host_public" {
 #   image  = "ubuntu-22-10-x64"
