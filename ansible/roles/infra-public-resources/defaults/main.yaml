@@ -90,54 +90,53 @@ infra_domains_domains:
 
   - domain: "{{ vault_olddomain_wc }}"
     id: wc
-    records: []
-  #   project: Personal Site
-  #   description: >
-  #     This used to be my personal site. But several people thought
-  #     it had something to do with crypto and so I noped out.
-  #   records:
-  #     - type: A
-  #       value: 209.38.108.243
-  #       id: wc_a_main
-  #     - type: A
-  #       hostname: www
-  #       value: 209.38.108.243
-  #       id: wc_a_www
-  #     - type: TXT
-  #       hostname: _dmarc
-  #       value: "v=DMARC1;p=none;rua=mailto:postmaster@{{ vault_olddomain_wc }}"
-  #       id: wc_txt_dmarc
-  #     - type: TXT
-  #       value: v=spf1 include:mailbox.org ~all
-  #       id: wc_txt_spf
-  #     - type: CNAME
-  #       hostname: mbo0004._domainkey
-  #       value: mbo0004._domainkey.mailbox.org.
-  #       id: wc_txt_dk4
-  #     - type: CNAME
-  #       hostname: mbo0003._domainkey
-  #       value: mbo0003._domainkey.mailbox.org.
-  #       id: wc_txt_dk3
-  #     - type: CNAME
-  #       hostname: mbo0002._domainkey
-  #       value: mbo0002._domainkey.mailbox.org.
-  #       id: wc_txt_dk2
-  #     - type: CNAME
-  #       hostname: mbo0001._domainkey
-  #       value: mbo0001._domainkey.mailbox.org.
-  #       id: wc_txt_dk1
-  #     - type: MX
-  #       value: mxext3.mailbox.org.
-  #       priority: 20
-  #       ttl: 14400
-  #       id: wc_mx_mb3
-  #     - type: MX
-  #       value: mxext2.mailbox.org.
-  #       priority: 10
-  #       ttl: 14400
-  #       id: wc_mx_mb2
-  #     - type: MX
-  #       value: mxext1.mailbox.org.
-  #       priority: 10
-  #       ttl: 14400
-  #       id: wc_mx_mb1
+    project: Personal Site
+    description: >
+      This used to be my personal site. But several people thought
+      it had something to do with crypto and so I noped out.
+    records:
+      - type: A
+        value: 209.38.108.243
+        id: wc_a_main
+      - type: A
+        hostname: www
+        value: 209.38.108.243
+        id: wc_a_www
+      - type: TXT
+        hostname: _dmarc
+        value: "v=DMARC1;p=none;rua=mailto:postmaster@{{ vault_olddomain_wc }}"
+        id: wc_txt_dmarc
+      - type: TXT
+        value: v=spf1 include:mailbox.org ~all
+        id: wc_txt_spf
+      - type: CNAME
+        hostname: mbo0004._domainkey
+        value: mbo0004._domainkey.mailbox.org.
+        id: wc_txt_dk4
+      - type: CNAME
+        hostname: mbo0003._domainkey
+        value: mbo0003._domainkey.mailbox.org.
+        id: wc_txt_dk3
+      - type: CNAME
+        hostname: mbo0002._domainkey
+        value: mbo0002._domainkey.mailbox.org.
+        id: wc_txt_dk2
+      - type: CNAME
+        hostname: mbo0001._domainkey
+        value: mbo0001._domainkey.mailbox.org.
+        id: wc_txt_dk1
+      - type: MX
+        value: mxext3.mailbox.org.
+        priority: 20
+        ttl: 14400
+        id: wc_mx_mb3
+      - type: MX
+        value: mxext2.mailbox.org.
+        priority: 10
+        ttl: 14400
+        id: wc_mx_mb2
+      - type: MX
+        value: mxext1.mailbox.org.
+        priority: 10
+        ttl: 14400
+        id: wc_mx_mb1
