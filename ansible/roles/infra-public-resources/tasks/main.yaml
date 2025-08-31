@@ -46,7 +46,6 @@
 
 - name: Ensure Terraform plan is applied
   community.general.terraform:
-#     force_init: "{{ tf_files.changed }}"
     project_path: "{{ infra_domains_terraform_working_dir }}"
     state: present
   register: tf_plan
