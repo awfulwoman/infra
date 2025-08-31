@@ -49,45 +49,44 @@ infra_domains_domains:
 
   - domain: "{{ vault_olddomain_se }}"
     id: se
-    records: []
-  #   project: Personal Site
-  #   description: >
-  #     A personal site from many years ago. I'd still use it, but
-  #     it's a .co.uk and that makes me sad. Doubly sadly it's bound
-  #     up with a paid Google account that I'm trying to rid myself of.
-  #   records:
-  #     - type: A
-  #       value: 209.38.108.243
-  #       id: se_a_main
-  #     - type: A
-  #       hostname: www
-  #       value: 209.38.108.243
-  #       id: se_a_www
-  #     - type: MX
-  #       value: aspmx.l.google.com.
-  #       priority: 1
-  #       ttl: 1800
-  #       id: se_mx_google
-  #     - type: MX
-  #       value: alt1.aspmx.l.google.com.
-  #       priority: 5
-  #       ttl: 1800
-  #       id: se_mx_google_alt1
-  #     - type: MX
-  #       value: alt2.aspmx.l.google.com.
-  #       priority: 5
-  #       ttl: 1800
-  #       id: se_mx_google_alt2
-  #     - type: MX
-  #       value: alt3.aspmx.l.google.com.
-  #       priority: 10
-  #       ttl: 1800
-  #       id: se_mx_google_alt3
-  #     - type: MX
-  #       value: alt4.aspmx.l.google.com.
-  #       priority: 10
-  #       ttl: 1800
-  #       id: se_mx_google_alt4
+    project: Personal Site
+    description: >
+      A personal site from many years ago. I'd still use it, but
+      it's a .co.uk and that makes me sad. Doubly sadly it's bound
+      up with a paid Google account that I'm trying to rid myself of.
+    records:
+      - type: A
+        value: 209.38.108.243
+        id: se_a_main
+      - type: A
+        hostname: www
+        value: 209.38.108.243
+        id: se_a_www
+      - type: MX
+        value: aspmx.l.google.com.
+        priority: 1
+        ttl: 1800
+        id: se_mx_google
+      - type: MX
+        value: alt1.aspmx.l.google.com.
+        priority: 5
+        ttl: 1800
+        id: se_mx_google_alt1
+      - type: MX
+        value: alt2.aspmx.l.google.com.
+        priority: 5
+        ttl: 1800
+        id: se_mx_google_alt2
+      - type: MX
+        value: alt3.aspmx.l.google.com.
+        priority: 10
+        ttl: 1800
+        id: se_mx_google_alt3
+      - type: MX
+        value: alt4.aspmx.l.google.com.
+        priority: 10
+        ttl: 1800
+        id: se_mx_google_alt4
 
   - domain: "{{ vault_olddomain_wc }}"
     id: wc
