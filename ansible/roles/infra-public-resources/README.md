@@ -6,13 +6,14 @@ A couple of the infra domains are reused internally via split-horizon DNS. You c
 
 ## Importing DO records
 
-Get the record IDs
+Get the record IDs:
 
 ```bash
 doctl compute domain records list example.com
 ```
 
-Apply the IDs to a TF stansa
+Apply the IDs to a TF stanza:
+
 ```bash
 terraform import digitalocean_record.www example.com,<id from DO api>
 ```
