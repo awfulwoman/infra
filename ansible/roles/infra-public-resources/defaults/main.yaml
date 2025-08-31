@@ -3,10 +3,10 @@ infra_publicresources_debug: false
 infra_publicresources_tf_apply: false
 
 infra_publicresources_droplets:
-  - name: "ubuntu-s-1vcpu-512mb-10gb-ams3-01"
+  - id: public01
+    name: "ubuntu-s-1vcpu-512mb-10gb-ams3-01"
     description: >
       A general-purpose server for things out on the public internet.
-    id: site_server
     image: ubuntu-24-04-x64
     region: ams3
     memory: 1024
@@ -21,7 +21,7 @@ infra_publicresources_volumes:
 
 infra_publicresources_volume_attachments:
   - id: main
-    droplet_id: site_server
+    droplet_id: public01
     volume_id: storage01
 
 infra_publicresources_projects:
