@@ -8,6 +8,7 @@ infra_publicresources_droplets:
     description: >
       A general-purpose server for things out on the public internet.
     image: 160232537
+    # image: ubuntu-24-04-x64
     region: ams3
     size: s-1vcpu-1gb-amd
     volumes:
