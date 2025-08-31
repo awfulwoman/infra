@@ -4,7 +4,7 @@ Hello, good evening, etc. Welcome to the repo where I keep alll my home infrastr
 
 Yes indeed, *everything* I have on my home infra is controlled by this repo. 
 
-Most of it is Ansible, as it's great for configuring individual machines, but you'll find some Terraform, Kubernetes, and ESPhome configs in there as well. 
+Most of it is Ansible, as it's great for configuring individual machines, but you'll find some Terraform, Kubernetes, and ESPhome configs in there as well.
 
 Credentials are stored in this repo, encrypted.
 
@@ -16,7 +16,7 @@ Not sure why you'd want to install this, as it's my home infra. But hey, knock y
 
 ## Getting a host machine up and running
 
-```
+```bash
 # Clone repo
 git clone git@github.com:awfulwoman/infra.git /opt/infra/
 
@@ -26,4 +26,3 @@ git clone git@github.com:awfulwoman/infra.git /opt/infra/
 # Run Ansible
 /opt/ansible/ansible-pull-full.sh
 ```
----
