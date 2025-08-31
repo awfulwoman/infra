@@ -12,6 +12,10 @@ configure_dns_linkdevice_physical: "eth0"
 # --- ZFS -------------
 
 # ZFS pools that should be present
+zfs_pools_create: 
+  - name: fastpool
+    command: "zpool create fastpool /dev/disk/by-id/scsi-0DO_Volume_site-storage"
+
 zfs_pools:
   - slowpool
   - fastpool

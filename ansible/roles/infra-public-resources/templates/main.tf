@@ -87,17 +87,13 @@ resource "digitalocean_droplet" "{{ droplet.id }}" {
   name   = "{{ droplet.name }}"
   region = "{{ droplet.region }}"
   size   = "s-1vcpu-1gb"
-}
-{% endif %}
-{% endfor %}
-
-# Ensure volumes are attached to Droplets
-{% for attachment in infra_publicresources_volume_attachments %}
-{% if attachment.id is defined %}
-
-resource "digitalocean_volume_attachment" "{{ attachment.id }}" {
-  droplet_id = digitalocean_droplet.{{ attachment.droplet_id }}.id
-  volume_id  = digitalocean_volume.{{ attachment.volume_id }}.id
+  {% if droplet.volumes is defined -%}
+  volume_ids = [
+    {% for volume in droplet.volumes %}
+    digitalocean_volume.{{ volume }}.id{{ "," if not loop.last }}
+    {% endfor %}
+  ]
+  {% endif -%}
 }
 {% endif %}
 {% endfor %}

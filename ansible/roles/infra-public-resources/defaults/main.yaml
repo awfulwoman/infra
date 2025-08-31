@@ -9,17 +9,14 @@ infra_publicresources_droplets:
       A general-purpose server for things out on the public internet.
     image: ubuntu-24-04-x64
     region: ams3
+    volumes:
+      - storage01
 
 infra_publicresources_volumes:
   - id: storage01
     name: site-storage
     size: 30
     region: ams3
-
-infra_publicresources_volume_attachments:
-  - id: main
-    droplet_id: public01
-    volume_id: storage01
 
 infra_publicresources_projects:
   - name: Personal
