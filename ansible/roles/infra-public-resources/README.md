@@ -1,4 +1,4 @@
-# Domains
+# Public Resources
 
 Contains the configuration for the various public resources used in this infra. All the records are public info, which is why they're not encrypted. However some of the domain names themselves are things I'd like to leave behind me, which is why they're encrypted.
 
