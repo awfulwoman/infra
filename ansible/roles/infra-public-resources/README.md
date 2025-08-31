@@ -16,3 +16,7 @@ Apply the IDs to a TF stansa
 ```bash
 terraform import digitalocean_record.www example.com,<id from DO api>
 ```
+
+## State
+
+State is stored on the machine running this role. As I'm the only user, and Terraform plans are only executed on this machine via Ansible I think it's pretty safe.
