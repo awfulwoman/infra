@@ -4,14 +4,20 @@ infra_domains_projects:
   - name: Personal
     description: Personal stuff
     id: personal
+    resources:
+      - se
+      - wc
+      - aw
   - name: Infra
     description: Infra stuff
     id: infra
+    resources:
+      - ew
+      - rs
 
 infra_domains_domains:
   - domain: "{{ vault_infra_domain_name_ew }}"
     id: ew
-    project: "{{ infra_domains_projects[1].name }}"
     description: >
       All my internal stuff. The domain itself is only public so
       that I can obtain Let's Encrypt certificates.
@@ -21,7 +27,6 @@ infra_domains_domains:
         id: ew_a_main
   - domain: "{{ vault_infra_domain_name_rs }}"
     id: rs
-    project: "{{ infra_domains_projects[1].name }}"
     description: >
       A testing domain for learning.
     records:

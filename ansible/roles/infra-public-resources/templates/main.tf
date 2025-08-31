@@ -1,18 +1,34 @@
+{% for project in infra_domains_projects %}
+{% if project.id is defined %}
 # Ensure all DO projects exist
-{% for item in infra_domains_projects %}
-{% if item.id is defined %}
 
-resource "digitalocean_project" "{{ item.id }}" {
-  name        = "{{ item.name }}"
-  description = "{{ item.description }}"
+resource "digitalocean_project" "{{ project.id }}" {
+  name        = "{{ project.name }}"
+  description = "{{ project.description }}"
   purpose     = "Web Application"
   environment = "Production"
 }
 {% endif %}
+
+{% if project.resources is defined %}
+# Ensure each domain zone is in the appropriate project
+
+resource "digitalocean_project_resources" "{{ project.id }}" {
+  project = digitalocean_project.{{ project.id }}.id
+  resources = [
+    {% for resource in project.resources %}
+    digitalocean_domain.{{ resource }}.urn{{ "," if not loop.last }}
+    {% endfor %}
+  ]
+}
+
+{% endif %}
 {% endfor %}
 
-# Ensure all domain zones are registered with Digital Ocean
+
+
 {% if (infra_domains_domains is iterable) and (infra_domains_domains | length > 0) %}
+# Ensure all domain zones are registered with Digital Ocean
 {% for item in infra_domains_domains %}
 {% if (item.domain is defined) and (item.id is defined) %}
 
@@ -23,16 +39,10 @@ resource "digitalocean_domain" "{{ item.id }}" {
 {% endfor %}
 {% endif %}
 
-# Ensure each domain zone is in the appropriate project
-# resource "digitalocean_project_resources" "infra_domains" {
-#  project = digitalocean_project.xxxx.id
-#  resources = [
-#    digitalocean_domain.rumblestrut_org.urn
-#  ]
-# }
 
-# Ensure all records for domains exist
+
 {% if (infra_domains_domains is iterable) and (infra_domains_domains | length > 0) %}
+# Ensure all records for domains exist
 {% for item in infra_domains_domains %}
 {% if item.domain is defined %}
 {% for record in item.records %}
@@ -58,6 +68,7 @@ resource "digitalocean_record" "{{ record.id }}" {
 {% endif %}
 {% endfor %}
 {% endif %}
+
 
 # Ensure Block storage exists
 
