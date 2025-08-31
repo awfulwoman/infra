@@ -86,7 +86,7 @@ resource "digitalocean_droplet" "{{ droplet.id }}" {
   image  = "{{ droplet.image }}"
   name   = "{{ droplet.name }}"
   region = "{{ droplet.region }}"
-  size   = "s-1vcpu-1gb"
+  size   = "{{ droplet.size }}"
   {% if droplet.volumes is defined -%}
   volume_ids = [
     {% for volume in droplet.volumes %}

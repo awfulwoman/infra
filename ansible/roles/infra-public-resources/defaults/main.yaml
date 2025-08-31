@@ -7,8 +7,9 @@ infra_publicresources_droplets:
     name: "ubuntu-s-1vcpu-512mb-10gb-ams3-01"
     description: >
       A general-purpose server for things out on the public internet.
-    image: ubuntu-24-04-x64
+    image: 160232537
     region: ams3
+    size: s-1vcpu-1gb-amd
     volumes:
       - storage01
 
