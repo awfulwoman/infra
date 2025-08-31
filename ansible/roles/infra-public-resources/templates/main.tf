@@ -42,7 +42,7 @@ resource "digitalocean_domain" "{{ item.id }}" {
    and (record.value is defined) %}
 
 resource "digitalocean_record" "{{ record.id }}" {
-  domain = "{{ item.domain }}"
+  domain = digitalocean_domain.{{ item.id }}.id
   type   = "{{ record.type }}"
   name   = "{{ record.hostname | default('@') }}"
   value  = "{{ record.value }}"

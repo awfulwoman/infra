@@ -15,13 +15,19 @@ infra_domains_domains:
     description: >
       All my internal stuff. The domain itself is only public so
       that I can obtain Let's Encrypt certificates.
-    records: []
+    records:
+      - type: A
+        value: 100.66.127.130
+        id: ew_a_main
   - domain: "{{ vault_infra_domain_name_rs }}"
     id: rs
     project: "{{ infra_domains_projects[1].name }}"
     description: >
       A testing domain for learning.
-    records: []
+    records:
+      - type: A
+        value: 209.38.108.243
+        id: rs_a_main
 
   - domain: "{{ vault_personal_domain }}"
     id: aw
