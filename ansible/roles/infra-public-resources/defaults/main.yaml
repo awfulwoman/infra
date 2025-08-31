@@ -9,9 +9,6 @@ infra_publicresources_droplets:
       A general-purpose server for things out on the public internet.
     image: ubuntu-24-04-x64
     region: ams3
-    memory: 1024
-    vcpus: 1
-    disk: 25
 
 infra_publicresources_volumes:
   - id: storage01
