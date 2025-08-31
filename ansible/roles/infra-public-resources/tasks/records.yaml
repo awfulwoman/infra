@@ -1,8 +1,0 @@
-- name: Loop over records in this domain
-  ansible.builtin.include_tasks:
-    file: record.yaml
-  loop: "{{ item.records }}"
-  loop_control:
-    loop_var: domain_item
-    extended: true
-  when: item.records is defined
