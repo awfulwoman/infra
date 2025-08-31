@@ -19,7 +19,7 @@
 - name: Ensure Terraform project working dir exists
   become: true
   ansible.builtin.file:
-    dest: "{{ infra_domains_terraform_working_dir }}"
+    dest: "{{ infra_publicresources_terraform_working_dir }}"
     state: directory
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
@@ -28,7 +28,7 @@
 - name: Ensure Terraform files exist
   ansible.builtin.template:
     src: "{{ item }}"
-    dest: "{{ infra_domains_terraform_working_dir }}/{{ item }}"
+    dest: "{{ infra_publicresources_terraform_working_dir }}/{{ item }}"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0755"
@@ -42,15 +42,16 @@
 - name: DEBUG TF files
   ansible.builtin.debug:
     var: tf_files
-  when: infra_domains_debug
+  when: infra_publicresources_debug
 
 - name: Ensure Terraform plan is applied
   community.general.terraform:
-    project_path: "{{ infra_domains_terraform_working_dir }}"
+    project_path: "{{ infra_publicresources_terraform_working_dir }}"
     state: present
   register: tf_plan
+  when: infra_publicresources_tf_apply
 
 - name: DEBUG TF plan
   ansible.builtin.debug:
     var: tf_plan
-  when: infra_domains_debug
+  when: infra_publicresources_debug

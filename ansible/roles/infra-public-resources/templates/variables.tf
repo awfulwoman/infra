@@ -3,4 +3,3 @@ variable "digitalocean_token" {
   sensitive = true
   default=""
 }
-# variable "domain_name" {}

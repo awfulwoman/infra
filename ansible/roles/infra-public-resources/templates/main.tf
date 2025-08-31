@@ -1,7 +1,6 @@
-{% for project in infra_domains_projects %}
-{% if project.id is defined %}
 # Ensure all DO projects exist
-
+{% for project in infra_publicresources_projects %}
+{% if project.id is defined %}
 resource "digitalocean_project" "{{ project.id }}" {
   name        = "{{ project.name }}"
   description = "{{ project.description }}"
@@ -10,9 +9,9 @@ resource "digitalocean_project" "{{ project.id }}" {
 }
 {% endif %}
 
-{% if project.resources is defined %}
-# Ensure each domain zone is in the appropriate project
 
+# Ensure each domain zone is in the appropriate project
+{% if project.resources is defined %}
 resource "digitalocean_project_resources" "{{ project.id }}" {
   project = digitalocean_project.{{ project.id }}.id
   resources = [
@@ -21,15 +20,13 @@ resource "digitalocean_project_resources" "{{ project.id }}" {
     {% endfor %}
   ]
 }
-
 {% endif %}
 {% endfor %}
 
 
-
-{% if (infra_domains_domains is iterable) and (infra_domains_domains | length > 0) %}
 # Ensure all domain zones are registered with Digital Ocean
-{% for item in infra_domains_domains %}
+{% if (infra_publicresources_domains is iterable) and (infra_publicresources_domains | length > 0) %}
+{% for item in infra_publicresources_domains %}
 {% if (item.domain is defined) and (item.id is defined) %}
 
 resource "digitalocean_domain" "{{ item.id }}" {
@@ -40,10 +37,9 @@ resource "digitalocean_domain" "{{ item.id }}" {
 {% endif %}
 
 
-
-{% if (infra_domains_domains is iterable) and (infra_domains_domains | length > 0) %}
 # Ensure all records for domains exist
-{% for item in infra_domains_domains %}
+{% if (infra_publicresources_domains is iterable) and (infra_publicresources_domains | length > 0) %}
+{% for item in infra_publicresources_domains %}
 {% if item.domain is defined %}
 {% for record in item.records %}
 {% if (item.domain is defined ) 
@@ -73,9 +69,14 @@ resource "digitalocean_record" "{{ record.id }}" {
 # Ensure Block storage exists
 
 # Ensure all Droplets exist
-# resource "digitalocean_droplet" "host_public" {
-#   image  = "ubuntu-22-10-x64"
-#   name   = "host-public"
-#   region = "fra1"
-#   size   = "s-1vcpu-1gb"
-# }
+{% for droplet in infra_publicresources_droplet %}
+{% if droplet.id is defined %}
+
+resource "digitalocean_droplet" "host_public" {
+  image  = "{{ droplet.image }}"
+  name   = "{{ droplet.name }}"
+  region = "{{ droplet.region }}"
+  size   = "s-1vcpu-1gb"
+}
+{% endif %}
+{% endfor %}
