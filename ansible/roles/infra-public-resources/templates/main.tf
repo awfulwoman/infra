@@ -71,9 +71,9 @@ resource "digitalocean_record" "{{ record.id }}" {
 {% if volume.id is defined %}
 
 resource "digitalocean_volume" "{{ volume.id }}" {
-  region                  = "{{ volume.region }}"
-  name                    = "{{ volume.name }}"
-  size                    = {{ volume.size }}
+  region = "{{ volume.region }}"
+  name = "{{ volume.name }}"
+  size = {{ volume.size }}
 }
 {% endif %}
 {% endfor %}
