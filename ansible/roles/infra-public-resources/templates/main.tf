@@ -67,16 +67,37 @@ resource "digitalocean_record" "{{ record.id }}" {
 
 
 # Ensure Block storage exists
+{% for volume in infra_publicresources_volumes %}
+{% if volume.id is defined %}
+
+resource "digitalocean_volume" "{{ volume.id }}" {
+  region                  = "{{ volume.region }}"
+  name                    = "{{ volume.name }}"
+  size                    = {{ volume.size }}
+}
+{% endif %}
+{% endfor %}
 
 # Ensure all Droplets exist
-{% for droplet in infra_publicresources_droplet %}
+{% for droplet in infra_publicresources_droplets %}
 {% if droplet.id is defined %}
 
-resource "digitalocean_droplet" "host_public" {
+resource "digitalocean_droplet" "{{ droplet.id }}" {
   image  = "{{ droplet.image }}"
   name   = "{{ droplet.name }}"
   region = "{{ droplet.region }}"
   size   = "s-1vcpu-1gb"
+}
+{% endif %}
+{% endfor %}
+
+# Ensure volumes are attached to Droplets
+{% for attachment in infra_publicresources_volume_attachments %}
+{% if attachment.id is defined %}
+
+resource "digitalocean_volume_attachment" "{{ attachment.id }}" {
+  droplet_id = digitalocean_droplet.{{ attachment.droplet_id }}.id
+  volume_id  = digitalocean_volume.{{ attachment.volume_id }}.id
 }
 {% endif %}
 {% endfor %}
