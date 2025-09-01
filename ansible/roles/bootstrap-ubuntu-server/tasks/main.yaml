@@ -24,6 +24,7 @@
   ansible.posix.authorized_key:
     user: "{{ ansible_user }}"
     key: https://github.com/awfulwoman.keys
+    comment: github.com/awfulwoman
     state: present
 
 - name: Ensure timezone is correct
