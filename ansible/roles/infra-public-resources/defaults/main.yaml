@@ -4,7 +4,7 @@ infra_publicresources_tf_apply: true
 
 infra_publicresources_droplets:
   - id: public01
-    name: "Public Server 01"
+    name: "public-server-01"
     description: >
       A general-purpose server for things out on the public internet.
     image: 160232537
