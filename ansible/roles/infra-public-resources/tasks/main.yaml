@@ -1,10 +1,3 @@
-# - name: keys
-#   ansible.builtin.file:
-#     path: lookup('env','HOME')/.ssh/authorized_keys
-#     state: present
-#   register: motd_contents
-
-
 - name: Ensure Terraform repo exists
   become: true
   ansible.builtin.deb822_repository:
@@ -33,7 +26,6 @@
 - name: Ensure Github keys list exists
   ansible.builtin.set_fact:
     github_keys_list: "{{ github_keys_string.content | split('\n') | reject('==', '') }}"
-  # when: infra_publicresources_debug
 
 - name: Ensure Terraform project working dir exists
   become: true
