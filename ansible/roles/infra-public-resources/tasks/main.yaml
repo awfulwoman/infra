@@ -1,3 +1,10 @@
+# - name: keys
+#   ansible.builtin.file:
+#     path: lookup('env','HOME')/.ssh/authorized_keys
+#     state: present
+#   register: motd_contents
+
+
 - name: Ensure Terraform repo exists
   become: true
   ansible.builtin.deb822_repository:
@@ -15,6 +22,18 @@
     update_cache: true
     name:
       - terraform
+
+- name: Read Github authorized keys as string
+  ansible.builtin.uri:
+    url: https://github.com/awfulwoman.keys
+    method: GET
+    return_content: true
+  register: github_keys_string
+
+- name: Ensure Github keys list exists
+  ansible.builtin.set_fact:
+    github_keys_list: "{{ github_keys_string.content | split('\n') | reject('==', '') }}"
+  # when: infra_publicresources_debug
 
 - name: Ensure Terraform project working dir exists
   become: true

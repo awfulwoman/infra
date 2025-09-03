@@ -1,6 +1,6 @@
 infra_publicresources_terraform_working_dir: "{{ terraform_working_dir }}/public-resources"
 infra_publicresources_debug: false
-infra_publicresources_tf_apply: true
+infra_publicresources_tf_apply: false
 
 infra_publicresources_droplets:
   - id: public01
