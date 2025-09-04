@@ -26,6 +26,11 @@ zfs_datasets:
   - "{{ acme_zfs_id }}"
   - "{{ terraform_zfs_id }}"
 
+zfs_backup_datasets:
+  - "{{ container_compositions_zfs_id }}"
+  - "{{ acme_zfs_id }}"
+  - "{{ terraform_zfs_id }}"
+
 reverseproxy_use_letsencrypt: false
 
 compositions:
