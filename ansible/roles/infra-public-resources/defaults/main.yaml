@@ -2,6 +2,15 @@ infra_publicresources_terraform_working_dir: "{{ terraform_working_dir }}/public
 infra_publicresources_debug: false
 infra_publicresources_tf_apply: false
 
+infra_publicresources_reservedips:
+  - id: public01-reservedip
+    region: ams3
+
+infra_publicresources_reservedip_assignments:
+  - id: public01-ipassignment
+    reservedip: public01-reservedip
+    droplet: public01
+
 infra_publicresources_droplets:
   - id: public01
     name: "public-server-01"
@@ -67,15 +76,15 @@ infra_publicresources_domains:
       My personal website.
     records:
       - type: A
-        value: digitalocean_droplet.public01.ipv4_address
+        value: 209.38.108.243
         id: aw_a_main
       - type: A
         hostname: www
-        value: digitalocean_droplet.public01.ipv4_address
+        value: 209.38.108.243
         id: aw_a_www
       - type: A
         hostname: gts
-        value: digitalocean_droplet.public01.ipv4_address
+        value: 209.38.108.243
         id: aw_a_gts
 
   - domain: "{{ vault_olddomain_se }}"

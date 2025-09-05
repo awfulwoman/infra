@@ -111,5 +111,27 @@ resource "digitalocean_droplet" "{{ droplet.id }}" {
   ]
   {% endif -%}
 }
+
+{% endif %}
+{% endfor %}
+
+# Ensure all Reserved IPs exist
+{% for reservedip in infra_publicresources_reservedips %}
+{% if reservedip.id is defined %}
+
+resource "digitalocean_reserved_ip" "{{ reservedip.id }}" {
+  region = "{{ reservedip.region }}"
+}
+{% endif %}
+{% endfor %}
+
+
+{% for ipassignment in infra_publicresources_reservedip_assignments %}
+{% if ipassignment.id is defined %}
+
+resource "digitalocean_reserved_ip_assignment" "{{ ipassignment.id }}" {
+  ip_address = digitalocean_reserved_ip.{{ ipassignment.reservedip }}.ip_address
+  droplet_id = digitalocean_droplet.{{ ipassignment.droplet }}.id
+}
 {% endif %}
 {% endfor %}
