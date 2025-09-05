@@ -96,9 +96,11 @@ resource "digitalocean_droplet" "{{ droplet.id }}" {
   name   = "{{ droplet.name }}"
   region = "{{ droplet.region }}"
   size   = "{{ droplet.size }}"
+  monitoring = true
+  user_data = file("{{ infra_publicresources_terraform_working_dir }}/cloud-init.yaml")
   ssh_keys = [
 {% for key in github_keys_list %}
-    digitalocean_ssh_key.githubkey{{ loop.index }}.public_key{{ "," if not loop.last }}
+    digitalocean_ssh_key.githubkey{{ loop.index }}.fingerprint{{ "," if not loop.last }}
 {% endfor %}
   ]
   {% if droplet.volumes is defined -%}

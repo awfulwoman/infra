@@ -27,6 +27,14 @@
   ansible.builtin.set_fact:
     github_keys_list: "{{ github_keys_string.content | split('\n') | reject('==', '') }}"
 
+- name: Ensure cloud-init file exists
+  ansible.builtin.template:
+    src: cloud-init
+    dest: "{{ infra_publicresources_terraform_working_dir }}/cloud-init.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0644"
+
 - name: Ensure Terraform project working dir exists
   become: true
   ansible.builtin.file:

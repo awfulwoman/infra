@@ -7,12 +7,18 @@ infra_publicresources_droplets:
     name: "public-server-01"
     description: >
       A general-purpose server for things out on the public internet.
-    image: 160232537
-    # image: ubuntu-24-04-x64
+    image: ubuntu-24-04-x64
     region: ams3
-    size: s-1vcpu-1gb-amd
+    size: s-1vcpu-1gb-intel
     volumes:
       - storage01
+  # - id: test01
+  #   name: "test-server-01"
+  #   description: >
+  #     A testing machine
+  #   image: ubuntu-24-04-x64
+  #   region: ams3
+  #   size: s-1vcpu-1gb-amd
 
 infra_publicresources_volumes:
   - id: storage01
