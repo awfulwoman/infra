@@ -1,3 +1,5 @@
+#cloud-config
+disable_root: true
 users:
   - name: {{ ansible_user }}
     sudo: "ALL=(ALL) NOPASSWD:ALL"
@@ -5,3 +7,4 @@ users:
     ssh_import_id:
       - gh:awfulwoman
     lock_passwd: false
+

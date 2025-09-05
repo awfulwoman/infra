@@ -67,15 +67,15 @@ infra_publicresources_domains:
       My personal website.
     records:
       - type: A
-        value: 209.38.108.243
+        value: digitalocean_droplet.public01.ipv4_address
         id: aw_a_main
       - type: A
         hostname: www
-        value: 209.38.108.243
+        value: digitalocean_droplet.public01.ipv4_address
         id: aw_a_www
       - type: A
         hostname: gts
-        value: 209.38.108.243
+        value: digitalocean_droplet.public01.ipv4_address
         id: aw_a_gts
 
   - domain: "{{ vault_olddomain_se }}"
