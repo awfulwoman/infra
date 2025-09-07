@@ -35,4 +35,3 @@ reverseproxy_use_letsencrypt: false
 compositions:
   - reverseproxy
   - container-management
-  - awfulwoman

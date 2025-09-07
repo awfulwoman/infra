@@ -23,7 +23,8 @@
 #     # force: true
 #     version: main
 
-- name: Unarchive a file that needs to be downloaded (added in 2.0)
+# Downlaoding zip file directly, as clonging takes many times longer, even shallow
+- name: Download and unarchive repo
   ansible.builtin.unarchive:
     src: "https://gitea.{{ domain_name }}/awfulwoman/personal-site/archive/main.zip"
     dest: "{{ script_share_personal_site_path }}"
@@ -40,11 +41,6 @@
     - resources
     - content
     - .git
-
-- name: Check cloned dir
-  ansible.builtin.command: "ls {{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}"
-  args:
-    chdir: "{{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}"
 
 - name: Initialise repo
   ansible.builtin.command: git init
@@ -72,7 +68,7 @@
     value: "Charlie O'Hara"
     repo: "{{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}"
 
-- name: Git add
+- name: Git add files
   ansible.builtin.command: git add .
   args:
     chdir: "{{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}"
@@ -82,7 +78,7 @@
   args:
     chdir: "{{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}"
 
-- name: Set remote
+- name: Set remote origin
   ansible.builtin.command: "git remote add origin https://{{ vault_github_token_share_site }}@github.com/awfulwoman/personal-site"
   args:
     chdir: "{{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}"
