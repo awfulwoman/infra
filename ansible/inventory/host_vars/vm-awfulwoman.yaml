@@ -17,7 +17,6 @@ zfs_pools_create:
     command: "zpool create fastpool /dev/disk/by-id/scsi-0DO_Volume_site-storage"
 
 zfs_pools:
-  - slowpool
   - fastpool
 
 # Named ZFS datasets
