@@ -16,7 +16,7 @@ resource "digitalocean_project_resources" "{{ project.id }}" {
   project = digitalocean_project.{{ project.id }}.id
   resources = [
     {% for resource in project.resources %}
-    digitalocean_domain.{{ resource }}.urn{{ "," if not loop.last }}
+    {{ resource }}.urn{{ "," if not loop.last }}
     {% endfor %}
   ]
 }

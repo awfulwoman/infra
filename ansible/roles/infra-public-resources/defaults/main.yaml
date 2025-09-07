@@ -38,15 +38,17 @@ infra_publicresources_projects:
     description: Personal stuff
     id: personal
     resources: # digitalocean_project_resources
-      - se
-      - wc
-      - aw
+      - digitalocean_domain.se
+      - digitalocean_domain.wc
+      - digitalocean_domain.aw
+      - digitalocean_droplet.public01
+      - digitalocean_reserved_ip.public01-reservedip
   - name: Infra
     description: Infra stuff
     id: infra
     resources: # digitalocean_project_resources
-      - ew
-      - rs
+      - digitalocean_domain.ew
+      - digitalocean_domain.rs
 
 # digitalocean_domain
 infra_publicresources_domains:
