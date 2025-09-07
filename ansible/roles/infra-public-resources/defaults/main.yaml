@@ -2,15 +2,18 @@ infra_publicresources_terraform_working_dir: "{{ terraform_working_dir }}/public
 infra_publicresources_debug: false
 infra_publicresources_tf_apply: false
 
+# digitalocean_reserved_ip
 infra_publicresources_reservedips:
   - id: public01-reservedip
     region: ams3
 
+# digitalocean_reserved_ip_assignment
 infra_publicresources_reservedip_assignments:
   - id: public01-ipassignment
     reservedip: public01-reservedip
     droplet: public01
 
+# digitalocean_droplet
 infra_publicresources_droplets:
   - id: public01
     name: "public-server-01"
@@ -21,35 +24,31 @@ infra_publicresources_droplets:
     size: s-1vcpu-1gb-intel
     volumes:
       - storage01
-  # - id: test01
-  #   name: "test-server-01"
-  #   description: >
-  #     A testing machine
-  #   image: ubuntu-24-04-x64
-  #   region: ams3
-  #   size: s-1vcpu-1gb-amd
 
+# digitalocean_volume
 infra_publicresources_volumes:
   - id: storage01
     name: site-storage
     size: 30
     region: ams3
 
+# digitalocean_project
 infra_publicresources_projects:
   - name: Personal
     description: Personal stuff
     id: personal
-    resources:
+    resources: # digitalocean_project_resources
       - se
       - wc
       - aw
   - name: Infra
     description: Infra stuff
     id: infra
-    resources:
+    resources: # digitalocean_project_resources
       - ew
       - rs
 
+# digitalocean_domain
 infra_publicresources_domains:
   - domain: "{{ vault_infra_domain_name_ew }}"
     id: ew
@@ -57,21 +56,14 @@ infra_publicresources_domains:
     description: >
       All my internal stuff. The domain itself is only public so
       that I can obtain Let's Encrypt certificates.
-    records: []
-    # records:
-    #   - type: A
-    #     value: 100.66.127.130
-    #     id: ew_a_main
+    records: [] # digitalocean_record
+
   - domain: "{{ vault_infra_domain_name_rs }}"
     id: rs
     ipaddress: digitalocean_droplet.public01.ipv4_address
     description: >
       A testing domain for learning.
-    records: []
-    # records:
-    #   - type: A
-    #     value: 188.166.201.10
-    #     id: rs_a_main
+    records: [] # digitalocean_record
 
   - domain: "{{ vault_personal_domain }}"
     id: aw
@@ -79,18 +71,7 @@ infra_publicresources_domains:
     ipaddress: digitalocean_droplet.public01.ipv4_address
     description: >
       My personal website.
-    records:
-      # - type: A
-      #   value: 188.166.201.10
-      #   id: aw_a_main
-      # - type: A
-      #   hostname: www
-      #   value: 188.166.201.10
-      #   id: aw_a_www
-      # - type: A
-      #   hostname: gts
-      #   value: 188.166.201.10
-      #   id: aw_a_gts
+    records: # digitalocean_record
       - type: CNAME
         hostname: www
         value: "@"
@@ -107,14 +88,7 @@ infra_publicresources_domains:
       A personal site from many years ago. I'd still use it, but
       it's a .co.uk and that makes me sad. Doubly sadly it's bound
       up with a paid Google account that I'm trying to rid myself of.
-    records:
-      # - type: A
-      #   value: 188.166.201.10
-      #   id: se_a_main
-      # - type: A
-      #   hostname: www
-      #   value: 188.166.201.10
-      #   id: se_a_www
+    records: # digitalocean_record
       - type: CNAME
         hostname: www
         value: "@"
@@ -151,14 +125,7 @@ infra_publicresources_domains:
     description: >
       This used to be my personal site. But several people thought
       it had something to do with crypto and so I noped out.
-    records:
-      # - type: A
-      #   value: 188.166.201.10
-      #   id: wc_a_main
-      # - type: A
-      #   hostname: www
-      #   value: 188.166.201.10
-      #   id: wc_a_www
+    records: # digitalocean_record
       - type: CNAME
         hostname: www
         value: "@"
