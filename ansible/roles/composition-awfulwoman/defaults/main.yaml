@@ -1,0 +1,4 @@
+awfulwoman_base: /fastpool/sites
+awfulwoman_path: "{{ awfulwoman_base }}/awfulwoman"
+awfulwoman_deploy_group: nginx
+awfulwoman_deploy_user: "{{ vault_sitedeployer_user }}"

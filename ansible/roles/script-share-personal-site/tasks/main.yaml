@@ -1,0 +1,103 @@
+- name: Ensure path is deleted
+  become: true
+  ansible.builtin.file:
+    path: "{{ script_share_personal_site_path }}"
+    state: absent
+
+- name: Ensure path is recreated
+  become: true
+  ansible.builtin.file:
+    path: "{{ script_share_personal_site_path }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0755"
+
+# - name: Shallow clone internal repo
+#   ansible.builtin.git:
+#     repo: "https://gitea.{{ domain_name }}/awfulwoman/personal-site"
+#     dest: "{{ script_share_personal_site_path }}"
+#     single_branch: true
+#     depth: 1
+#     bare: true
+#     # force: true
+#     version: main
+
+# - name: Create temporary build directory
+#   ansible.builtin.tempfile:
+#     state: directory
+#     suffix: repo
+#   register: repotemp
+
+- name: Unarchive a file that needs to be downloaded (added in 2.0)
+  ansible.builtin.unarchive:
+    src: "https://gitea.{{ domain_name }}/awfulwoman/personal-site/archive/main.zip"
+    dest: "{{ script_share_personal_site_path }}"
+    creates: "{{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}"
+    remote_src: true
+
+# Remove content dir
+- name: Ensure sensitive directories are removed
+  ansible.builtin.file:
+    state: absent
+    path: "{{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}/{{ item }}"
+  loop:
+    - public
+    - resources
+    - content
+    - .git
+
+- name: Check cloned dir
+  ansible.builtin.command: "ls {{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}"
+  args:
+    chdir: "{{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}"
+
+# - name: DEBUG tmpdir
+#   ansible.builtin.debug:
+#     msg: "{{ script_share_personal_site_path }}"
+
+- name: Initialise repo
+  ansible.builtin.command: git init
+  args:
+    chdir: "{{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}"
+
+- name: Add a setting - branch
+  community.general.git_config:
+    name: init.defaultBranch
+    scope: local
+    value: main
+    repo: "{{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}"
+
+- name: Add a setting - email
+  community.general.git_config:
+    name: user.email
+    scope: local
+    value: "github@whalecoiner.com"
+    repo: "{{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}"
+
+- name: Add a setting - name
+  community.general.git_config:
+    name: user.name
+    scope: local
+    value: "Charlie O'Hara"
+    repo: "{{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}"
+
+- name: Git add
+  ansible.builtin.command: git add .
+  args:
+    chdir: "{{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}"
+
+- name: Git commit
+  ansible.builtin.command: git commit -m "Auto Commit"
+  args:
+    chdir: "{{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}"
+
+- name: Set remote
+  ansible.builtin.command: "git remote add origin https://{{ vault_github_token_share_site }}@github.com/awfulwoman/personal-site"
+  args:
+    chdir: "{{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}"
+
+- name: Push to remote
+  ansible.builtin.command: git push origin main --force
+  args:
+    chdir: "{{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}"

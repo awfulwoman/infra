@@ -3,7 +3,7 @@
   roles:
     # - role: weareinteractive.environment
     #   become: true
-    - role: infra-public-resources
+    - role: script-share-personal-site
 
   handlers:
     - name: Reboot host

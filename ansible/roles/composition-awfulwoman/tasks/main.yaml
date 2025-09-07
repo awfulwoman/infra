@@ -24,42 +24,42 @@
 # Specific tasks
 # ----------------------------
 
+- name: Ensure nginx config exists
+  ansible.builtin.template:
+    src: nginx.conf
+    dest: "{{ composition_config }}/nginx.conf"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0644"
+
 - name: Ensure group "nginx" exists
   become: true
   ansible.builtin.group:
-    name: nginx
+    name: "{{ awfulwoman_deploy_group }}"
     state: present
 
-# - name: Ensure user "nginx" exists
-#   become: true
-#   ansible.builtin.user:
-#     name: nginx
-#     groups: nginx
-#     create_home: true
-#     state: present
-
-- name: "Ensure user is in nginx group"
+- name: Ensure main user is in nginx group
   become: true
   ansible.builtin.user:
     user: "{{ ansible_user }}"
-    groups: nginx
+    groups: "{{ awfulwoman_deploy_group }}"
     append: true
 
-- name: "Ensure user is in nginx group"
+- name: Ensure deploy user is in nginx group
   become: true
   ansible.builtin.user:
-    user: "{{ vault_sitedeployer_user }}"
-    groups: nginx
+    user: "{{ awfulwoman_deploy_user }}"
+    groups: "{{ awfulwoman_deploy_group }}"
     append: true
 
-- name: Set authorized key
+- name: Ensure public deployment key exists
   become: true
   ansible.posix.authorized_key:
-    user: "{{ vault_sitedeployer_user }}"
+    user: "{{ awfulwoman_deploy_user }}"
     state: present
     key: "{{ vault_sitedeployer_publickey }}"
 
-- name: Ensure support dirs exist
+- name: Ensure nginx support dirs exist
   become: true
   ansible.builtin.file:
     path: "{{ composition_config }}/{{ dir_item }}"
@@ -72,38 +72,28 @@
   loop:
     - logs
 
-
-- name: Ensure content dir exists and is accessible
+- name: Ensure nginx content dir exists and is accessible
   become: true
   ansible.builtin.file:
-    path: /fastpool/sites
+    path: "{{ awfulwoman_path }}"
     state: directory
     recurse: true
     mode: "0755"
-    owner: "{{ vault_sitedeployer_user }}"
+    owner: "{{ awfulwoman_deploy_user }}"
     group: nginx
 
-- name: Check index.html file exists
+- name: Check for an index.html file
   become: true
   ansible.builtin.stat:
-    path: "/fastpool/sites/awfulwoman/index.html"
+    path: "{{ awfulwoman_path }}/index.html"
   register: index_html
 
-- name: Ensure index.html file exists
+- name: Ensure an index.html file exists
   become: true
   ansible.builtin.template:
     src: index.html
     dest: /fastpool/sites/awfulwoman/index.html
-    owner: "{{ vault_sitedeployer_user }}"
+    owner: "{{ awfulwoman_deploy_user }}"
     group: nginx
     mode: "0644"
   when: not index_html.stat.exists
-
-- name: "Copy nginx.conf file"
-  become: true
-  ansible.builtin.template:
-    src: nginx.conf
-    dest: "{{ composition_config }}/nginx.conf"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    mode: "0774"

@@ -1,7 +1,10 @@
 - name: Out on the internet server
   hosts: vm-awfulwoman
+  vars:
+    compositions:
+      - awfulwoman
   roles:
-    - role: zfs-core
+    - role: compositions
 
   handlers:
     - name: Reboot host
