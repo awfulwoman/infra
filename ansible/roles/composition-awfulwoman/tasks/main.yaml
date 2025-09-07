@@ -98,7 +98,6 @@
     group: nginx
     mode: "0644"
   when: not index_html.stat.exists
-  
 
 - name: "Copy nginx.conf file"
   become: true
