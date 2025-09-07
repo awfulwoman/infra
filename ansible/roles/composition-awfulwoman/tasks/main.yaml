@@ -48,7 +48,7 @@
 - name: Set authorized key
   become: true
   ansible.posix.authorized_key:
-    user: nginx
+    user: sitedeployuser
     state: present
     key: "{{ vault_sitedeployer_publickey }}"
 
