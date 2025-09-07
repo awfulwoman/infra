@@ -3,8 +3,8 @@
   # vars:
   #   compositions:
   #     - libretranslate
-  # roles:
-    # - role:
+  roles:
+    - role: zfs-core
 
   handlers:
     - name: Reboot host

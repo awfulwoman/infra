@@ -73,8 +73,17 @@
     recurse: true
     # mode: "01775"
     mode: "0775"
-    owner: nginx
+    owner: "{{ vault_sitedeployer_user }}"
     group: nginx
+
+- name: Ensure index.html file exists
+  become: true
+  ansible.builtin.template:
+    src: index.html
+    dest: /fastpool/sites/awfulwoman/index.html
+    owner: "{{ vault_sitedeployer_user }}"
+    group: nginx
+    mode: "0664"
 
 - name: "Copy nginx.conf file"
   become: true
