@@ -13,26 +13,12 @@
   loop: "{{ zfs_pools_create }}"
   changed_when: false
 
-
-- name: Debug zpool check
-  ansible.builtin.debug:
-    var: zpool_check
-
 - name: Create zpool if it does not exist
   become: true
   ansible.builtin.command:
     cmd: "{{ item.item.command }}"
   loop: "{{ zpool_check.results }}"
   when: item.rc != 0
-
-
-# - name: Create ZFS pool if requested
-#   become: true
-#   ansible.builtin.command:
-#     cmd: "{{ zfs_pools_create.command }}"
-#   when: zfs_pools_create
-#   args:
-#     creates: "/{{ zfs_pools_create.name }}"
 
 - name: Ensure ZFS pools are present
   ansible.builtin.command:
