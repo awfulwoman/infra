@@ -83,6 +83,12 @@
     owner: "{{ vault_sitedeployer_user }}"
     group: nginx
 
+- name: Check index.html file exists
+  become: true
+  ansible.builtin.stat:
+    path: "/fastpool/sites/awfulwoman/index.html"
+  register: index_html
+
 - name: Ensure index.html file exists
   become: true
   ansible.builtin.template:
@@ -91,6 +97,8 @@
     owner: "{{ vault_sitedeployer_user }}"
     group: nginx
     mode: "0644"
+  when: not index_html.stat.exists
+  
 
 - name: "Copy nginx.conf file"
   become: true
