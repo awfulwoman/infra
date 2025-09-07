@@ -64,7 +64,7 @@
   ansible.builtin.file:
     path: "{{ composition_config }}/{{ dir_item }}"
     state: directory
-    mode: "0644"
+    mode: "0755"
     owner: "{{ ansible_user }}"
     group: nginx
   loop_control:
@@ -79,7 +79,7 @@
     path: /fastpool/sites
     state: directory
     recurse: true
-    mode: "0644"
+    mode: "0755"
     owner: "{{ vault_sitedeployer_user }}"
     group: nginx
 
@@ -90,7 +90,7 @@
     dest: /fastpool/sites/awfulwoman/index.html
     owner: "{{ vault_sitedeployer_user }}"
     group: nginx
-    mode: "0775"
+    mode: "0644"
 
 - name: "Copy nginx.conf file"
   become: true

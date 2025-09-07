@@ -54,8 +54,8 @@
     path: "/{{ item }}"
     state: directory
     owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    mode: "0774"
+    # group: "{{ ansible_user }}"
+    mode: "0775"
   loop: "{{ zfs_datasets }}"
   when: zfs_datasets is defined
   tags: ['zfs']
