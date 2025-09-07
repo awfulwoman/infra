@@ -14,8 +14,12 @@
   changed_when: false
   when: (zfs_pools_create is defined) and (zfs_pools_create | length > 0)
 
+# - name: DEBUG zpool_check.results
+#   ansible.builtin.debug:
+#     var: zpool_check
+
 - name: Respond to zpool creation request
-  when: not zpool_check.failed
+  when: (zpool_check.failed is defined) and (not zpool_check.failed)
   block:
   - name: Ensure zpools have been initialised
     become: true
