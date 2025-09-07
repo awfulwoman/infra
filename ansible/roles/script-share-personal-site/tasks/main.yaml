@@ -13,23 +13,22 @@
     group: "{{ ansible_user }}"
     mode: "0755"
 
-# - name: Shallow clone internal repo
-#   ansible.builtin.git:
-#     repo: "https://gitea.{{ domain_name }}/awfulwoman/personal-site"
-#     dest: "{{ script_share_personal_site_path }}"
-#     single_branch: true
-#     depth: 1
-#     bare: true
-#     # force: true
-#     version: main
+- name: Shallow clone internal repo
+  ansible.builtin.git:
+    repo: "https://gitea.{{ domain_name }}/awfulwoman/personal-site"
+    dest: "{{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}"
+    single_branch: true
+    depth: 1
+    # force: true
+    version: main
 
 # Downlaoding zip file directly, as clonging takes many times longer, even shallow
-- name: Download and unarchive repo
-  ansible.builtin.unarchive:
-    src: "https://gitea.{{ domain_name }}/awfulwoman/personal-site/archive/main.zip"
-    dest: "{{ script_share_personal_site_path }}"
-    creates: "{{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}"
-    remote_src: true
+# - name: Download and unarchive repo
+#   ansible.builtin.unarchive:
+#     src: "https://gitea.{{ domain_name }}/awfulwoman/personal-site/archive/main.zip"
+#     dest: "{{ script_share_personal_site_path }}"
+#     creates: "{{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}"
+#     remote_src: true
 
 # Remove content dir
 - name: Ensure sensitive directories are removed
@@ -84,6 +83,6 @@
     chdir: "{{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}"
 
 - name: Push to remote
-  ansible.builtin.command: git push origin main --force
+  ansible.builtin.command: git push --set-upstream origin main --force
   args:
     chdir: "{{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}"
