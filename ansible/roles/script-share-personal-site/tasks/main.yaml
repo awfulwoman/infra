@@ -23,12 +23,6 @@
 #     # force: true
 #     version: main
 
-# - name: Create temporary build directory
-#   ansible.builtin.tempfile:
-#     state: directory
-#     suffix: repo
-#   register: repotemp
-
 - name: Unarchive a file that needs to be downloaded (added in 2.0)
   ansible.builtin.unarchive:
     src: "https://gitea.{{ domain_name }}/awfulwoman/personal-site/archive/main.zip"
@@ -51,10 +45,6 @@
   ansible.builtin.command: "ls {{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}"
   args:
     chdir: "{{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}"
-
-# - name: DEBUG tmpdir
-#   ansible.builtin.debug:
-#     msg: "{{ script_share_personal_site_path }}"
 
 - name: Initialise repo
   ansible.builtin.command: git init
