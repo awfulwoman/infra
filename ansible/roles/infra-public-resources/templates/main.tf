@@ -30,7 +30,14 @@ resource "digitalocean_project_resources" "{{ project.id }}" {
 {% if (item.domain is defined) and (item.id is defined) %}
 
 resource "digitalocean_domain" "{{ item.id }}" {
-   name = "{{ item.domain }}"
+  name = "{{ item.domain }}"
+  {% if item.ipaddress is defined %}
+  {% if item.ipaddress is ansible.utils.ip_address %}
+  ip_address = "{{ item.ipaddress }}"
+  {% else %}
+  ip_address = {{ item.ipaddress }}
+  {% endif %}
+  {% endif %}
 }
 {% endif %}
 {% endfor %}
