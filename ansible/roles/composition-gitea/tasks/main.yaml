@@ -10,6 +10,7 @@
     dest: "{{ composition_root }}/docker-compose.yaml"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
+    mode: "0644"
 
 - name: "Create .env file"
   ansible.builtin.template:
@@ -17,6 +18,7 @@
     dest: "{{ composition_root }}/.environment_vars"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
+    mode: "0644"
 
 # ----------------------------
 # Specific tasks
@@ -26,6 +28,7 @@
   ansible.builtin.file:
     path: "{{ composition_config }}/{{ dir_item }}"
     state: directory
+    mode: "0755"
   loop_control:
     loop_var: dir_item
   loop:
