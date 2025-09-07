@@ -30,18 +30,25 @@
     name: nginx
     state: present
 
-- name: Ensure user "nginx" exists
-  become: true
-  ansible.builtin.user:
-    name: nginx
-    groups: nginx
-    create_home: true
-    state: present
+# - name: Ensure user "nginx" exists
+#   become: true
+#   ansible.builtin.user:
+#     name: nginx
+#     groups: nginx
+#     create_home: true
+#     state: present
 
 - name: "Ensure user is in nginx group"
   become: true
   ansible.builtin.user:
     user: "{{ ansible_user }}"
+    groups: nginx
+    append: true
+
+- name: "Ensure user is in nginx group"
+  become: true
+  ansible.builtin.user:
+    user: "{{ vault_sitedeployer_user }}"
     groups: nginx
     append: true
 
@@ -52,12 +59,12 @@
     state: present
     key: "{{ vault_sitedeployer_publickey }}"
 
-- name: Create simple directories
+- name: Ensure support dirs exist
   become: true
   ansible.builtin.file:
     path: "{{ composition_config }}/{{ dir_item }}"
     state: directory
-    mode: "0775"
+    mode: "0644"
     owner: "{{ ansible_user }}"
     group: nginx
   loop_control:
@@ -65,14 +72,14 @@
   loop:
     - logs
 
-- name: Create simple directories
+
+- name: Ensure content dir exists and is accessible
   become: true
   ansible.builtin.file:
-    path: /fastpool/sites/awfulwoman
+    path: /fastpool/sites
     state: directory
     recurse: true
-    # mode: "01775"
-    mode: "0775"
+    mode: "0644"
     owner: "{{ vault_sitedeployer_user }}"
     group: nginx
 
@@ -83,7 +90,7 @@
     dest: /fastpool/sites/awfulwoman/index.html
     owner: "{{ vault_sitedeployer_user }}"
     group: nginx
-    mode: "0664"
+    mode: "0775"
 
 - name: "Copy nginx.conf file"
   become: true
