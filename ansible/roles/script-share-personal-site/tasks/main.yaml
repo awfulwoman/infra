@@ -41,7 +41,20 @@
     - content
     - .git
 
-- name: Initialise repo
+- name: Recreate content dir
+  ansible.builtin.file:
+    state: directory
+    path: "{{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}/content"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0755"
+
+- name: Ensure demo content exists
+  ansible.builtin.copy:
+    src: ./
+    dest: "{{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}/content"
+
+- name: Initialise git repo
   ansible.builtin.command: git init
   args:
     chdir: "{{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}"
