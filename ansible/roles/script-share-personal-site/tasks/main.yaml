@@ -22,7 +22,7 @@
     # force: true
     version: main
 
-# Downlaoding zip file directly, as clonging takes many times longer, even shallow
+# Downloading zip file directly, as clonging takes many times longer, even shallow
 # - name: Download and unarchive repo
 #   ansible.builtin.unarchive:
 #     src: "https://gitea.{{ domain_name }}/awfulwoman/personal-site/archive/main.zip"
