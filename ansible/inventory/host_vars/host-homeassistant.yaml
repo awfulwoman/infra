@@ -49,6 +49,7 @@ compositions:
   - container-management
   - homeassistant
   - owntracks
+  - mqtt
   - zigbee2mqtt
 
 traefik_providers:
