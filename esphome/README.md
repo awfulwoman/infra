@@ -14,7 +14,7 @@ substitutions:
   secret_wifi_domain: !secret wifi_domain
 ```
 
-Import into each project:
+Import these base packages:
 
 ```yaml
 packages:
@@ -31,4 +31,18 @@ packages:
       - esphome/packages/api.yaml
       - esphome/packages/time.yaml
       - etc
+```
+
+Imported values can be overridden as necessary:
+
+```yaml
+substitutions:  
+  name: "project-mcproject"
+  friendly_name: "A PROJECT"
+  comment: "A COMMENT"
+  area: "Living Room"
+  platform: esp32
+  board: esp32dev
+  owner: awfulwowman
+  version: "1.0.0"
 ```
