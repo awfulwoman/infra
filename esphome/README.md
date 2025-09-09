@@ -19,7 +19,7 @@ Import into each project:
 ```yaml
 packages:
   remote_package:
-    url: http://github.com/awfulwoman/home
+    url: http://github.com/awfulwoman/infra
     ref: main
     refresh: 5min
     files:
