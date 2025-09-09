@@ -1,6 +1,6 @@
 # esphome
 
-A bunch of defaults for my esphome devices.
+A bunch of defaults for my [ESPHome](https://www.esphome.io/) devices.
 
 Ensure the following values are set in the project yaml (because secrets can't be used inside imported code):
 
