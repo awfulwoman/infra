@@ -1,7 +1,7 @@
 - name: Create a docker bridge network
   community.docker.docker_network:
     name: "{{ default_docker_network }}"
-  when: compositions
+  when: compositions is defined
 
 - name: Ensure composition dataset is present
   become: true
@@ -11,8 +11,8 @@
     extra_zfs_properties:
       acltype: posix
       xattr: sa
-  # when: compositions is defined and zfs_pools is defined and zfs_pools is true
-  when: compositions
+  # when: compositions is defined is defined and zfs_pools is defined and zfs_pools is true
+  when: compositions is defined
 
 - name: Ensure composition dataset is owned by user
   become: true
@@ -22,8 +22,8 @@
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0774"
-  # when: compositions is defined and zfs_pools is defined and zfs_pools is true
-  when: compositions
+  # when: compositions is defined is defined and zfs_pools is defined and zfs_pools is true
+  when: compositions is defined
 
 - name: Ensure a ZFS dataset for each composition is present
   become: true
@@ -34,8 +34,8 @@
       acltype: posix
       xattr: sa
   loop: "{{ compositions }}"
-  # when: compositions is defined and zfs_pools is defined and zfs_pools is true
-  when: compositions
+  # when: compositions is defined is defined and zfs_pools is defined and zfs_pools is true
+  when: compositions is defined
 
 # - name: Ensure datasets are owned by user
 #   become: true
@@ -46,8 +46,8 @@
 #     # group: "{{ ansible_user }}"
 #     mode: "0774"
 #   loop: "{{ compositions }}"
-#   # when: compositions is defined and zfs_pools is defined and zfs_pools is true
-#   when: compositions
+#   # when: compositions is defined is defined and zfs_pools is defined and zfs_pools is true
+#   when: compositions is defined
 
 - name: Ensure composition config dirs exist
   ansible.builtin.file:
@@ -57,7 +57,7 @@
     group: "{{ ansible_user }}"
     mode: "0774"
   loop: "{{ compositions }}"
-  when: compositions
+  when: compositions is defined
 
 - name: Ensure composition roles are run
   ansible.builtin.include_role:
@@ -67,11 +67,11 @@
     composition_root: "{{ compositions_config_dir }}/{{ item }}"
     composition_config: "{{ compositions_config_dir }}/{{ item }}/config"
   loop: "{{ compositions }}"
-  when: compositions
+  when: compositions is defined
 
 - name: Ensure all composition containers are started
   community.docker.docker_compose_v2:
     project_src: "{{ compositions_config_dir }}/{{ item }}"
     state: present
   loop: "{{ compositions }}"
-  when: compositions
+  when: compositions is defined
