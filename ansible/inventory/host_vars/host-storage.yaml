@@ -142,7 +142,8 @@ vault_ironwolfpro_16tb_beta: !vault |
 
 
 # -------------------------------------------------------------------
-# CONTAINERS
+# COMPOSITIONS
+# Containers to run on this machine.
 # -------------------------------------------------------------------
 
 compositions:
@@ -172,6 +173,7 @@ traefik_providers:
 
 # -------------------------------------------------------------------
 # CNAMES
+# These cnames will be aliased to this machine's FQDN.
 # -------------------------------------------------------------------
 
 cnames:
