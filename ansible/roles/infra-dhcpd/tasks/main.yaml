@@ -1,0 +1,6 @@
+- name: Ensure apt packages are installed
+  become: true
+  ansible.builtin.apt:
+    package:
+      - isc-dhcp-server
+

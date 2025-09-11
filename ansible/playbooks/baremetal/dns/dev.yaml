@@ -4,7 +4,8 @@
     # - role: weareinteractive.environment
     #   become: true
     # - role: script-share-personal-site
-    - role: infra-named
+    # - role: infra-named
+    - role: infra-dhcpd
 
   handlers:
     - name: Reboot host
