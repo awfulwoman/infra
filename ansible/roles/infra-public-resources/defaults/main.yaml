@@ -42,7 +42,6 @@ infra_publicresources_projects:
       - digitalocean_domain.wc
       - digitalocean_domain.aw
       - digitalocean_droplet.public01
-      - digitalocean_reserved_ip.public01-reservedip
   - name: Infra
     description: Infra stuff
     id: infra
