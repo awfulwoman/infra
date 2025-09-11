@@ -60,4 +60,4 @@
   loop:
     - "owntracks-recorder"
     - "owntracks"
-   when: ansible_tailscale0.ipv4.address is defined
+  when: ansible_tailscale0.ipv4.address is defined
