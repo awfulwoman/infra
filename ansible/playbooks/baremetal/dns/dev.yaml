@@ -5,7 +5,8 @@
     #   become: true
     # - role: script-share-personal-site
     # - role: infra-named
-    - role: infra-dhcpd
+    # - role: infra-dhcpd
+    - role: infra-public-resources
 
   handlers:
     - name: Reboot host

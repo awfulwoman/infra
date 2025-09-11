@@ -53,7 +53,7 @@ infra_publicresources_projects:
 infra_publicresources_domains:
   - domain: "{{ vault_infra_domain_name_ew }}"
     id: ew
-    ipaddress: digitalocean_droplet.public01.ipv4_address
+    ipaddress: digitalocean_reserved_ip.public01-reservedip.ip_address
     description: >
       All my internal stuff. The domain itself is only public so
       that I can obtain Let's Encrypt certificates.
@@ -61,7 +61,7 @@ infra_publicresources_domains:
 
   - domain: "{{ vault_infra_domain_name_rs }}"
     id: rs
-    ipaddress: digitalocean_droplet.public01.ipv4_address
+    ipaddress: digitalocean_reserved_ip.public01-reservedip.ip_address
     description: >
       A testing domain for learning.
     records: [] # digitalocean_record
@@ -69,7 +69,7 @@ infra_publicresources_domains:
   - domain: "{{ vault_personal_domain }}"
     id: aw
     project: Personal Site
-    ipaddress: digitalocean_droplet.public01.ipv4_address
+    ipaddress: digitalocean_reserved_ip.public01-reservedip.ip_address
     description: >
       My personal website.
     records: # digitalocean_record
@@ -85,6 +85,7 @@ infra_publicresources_domains:
   - domain: "{{ vault_olddomain_se }}"
     id: se
     project: Personal Site
+    ipaddress: digitalocean_reserved_ip.public01-reservedip.ip_address
     description: >
       A personal site from many years ago. I'd still use it, but
       it's a .co.uk and that makes me sad. Doubly sadly it's bound
