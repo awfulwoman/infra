@@ -34,7 +34,6 @@ $ORIGIN    {{ bind_domain }}.
 
 ; A records - from Ansible inventory
 {% for host in groups[bind_ansible_group] %}
-; {{ host }}
   {% if (hostvars[host].host_fqdn is defined) and (hostvars[host].host_ipv4 is defined) %}
     {% if hostvars[host].host_ipv4 is not none %}
       {{- '%-40s' | format(hostvars[host].host_pfqdn) }} IN      A         {{ hostvars[host].host_ipv4 }}
