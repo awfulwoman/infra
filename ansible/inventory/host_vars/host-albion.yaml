@@ -3,6 +3,12 @@ ansible_host: host-albion
 ansible_user: "{{ vault_server_username }}"
 
 host_type: baremetal
+host_name: albion
+host_city: ldn
+host_location: camden
+host_ipv4: 
+host_pfqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}"
+host_fqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}.{{ domain_name }}"
 
 bootstrap_ubuntu_timezone: "Europe/London"
 tailscale_exit_node: true

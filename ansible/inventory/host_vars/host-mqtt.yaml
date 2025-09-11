@@ -2,6 +2,12 @@ ansible_host: host-mqtt
 ansible_user: "{{ vault_server_username }}"
 
 host_type: baremetal
+host_name: host-mqtt
+host_city: ber
+host_location: xberg
+host_ipv4: 
+host_pfqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}"
+host_fqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}.{{ domain_name }}"
 
 # --- NETWORK -------------
 configure_dns_linkdevice_physical: "eth0" 

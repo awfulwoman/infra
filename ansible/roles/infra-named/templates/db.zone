@@ -30,8 +30,8 @@ $ORIGIN    {{ bind_domain }}.
 
 ; A records - from Ansible inventory
 {% for host in hostvars %}
-  {% if hostvars[host].machine_fqdn is defined and hostvars[host].machine_ipv4 is defined %}
-    {{- '%-40s' | format(hostvars[host].machine_pfqdn) }} IN      A         {{ hostvars[host].machine_ipv4 }}
+  {% if hostvars[host].host_fqdn is defined and hostvars[host].host_ipv4 is defined %}
+    {{- '%-40s' | format(hostvars[host].host_pfqdn) }} IN      A         {{ hostvars[host].host_ipv4 }}
   {% endif %}
 {% endfor %}
 
@@ -39,7 +39,7 @@ $ORIGIN    {{ bind_domain }}.
 {% for host in hostvars %}
   {% if hostvars[host].cnames is defined %}
     {% for cname in hostvars[host].cnames %}
-      {{- '%-40s' | format(cname + '.') }} IN      CNAME     {{ hostvars[host].machine_pfqdn }}
+      {{- '%-40s' | format(cname + '.') }} IN      CNAME     {{ hostvars[host].host_pfqdn }}
     {% endfor %}
   {% endif %}
 {% endfor %}
