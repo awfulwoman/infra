@@ -8,10 +8,10 @@ infra_publicresources_reservedips:
     region: ams3
 
 # digitalocean_reserved_ip_assignment
-infra_publicresources_reservedip_assignments:
-  - id: public01-ipassignment
-    reservedip: public01-reservedip
-    droplet: public01
+# infra_publicresources_reservedip_assignments:
+#   - id: public01-ipassignment
+#     reservedip: public01-reservedip
+#     droplet: public01
 
 # digitalocean_droplet
 infra_publicresources_droplets:
