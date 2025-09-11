@@ -50,5 +50,3 @@ $ORIGIN    {{ bind_domain }}.
     {% endfor %}
   {% endif %}
 {% endfor %}
-
-; TXT records - auto-generated from Ansible inventory
