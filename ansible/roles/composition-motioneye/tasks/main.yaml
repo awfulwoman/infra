@@ -51,7 +51,7 @@
     loop_var: domain_item
   loop:
     - "motioneye.{{ ansible_hostname }}"
-  when: ansible_tailscale0.ipv4.address
+   when: ansible_tailscale0.ipv4.address is defined
 
 - name: Enact ZFS drive
   ansible.builtin.command: "zpool create fastpool {{ composition_motioneye_zfsdriveid }}"

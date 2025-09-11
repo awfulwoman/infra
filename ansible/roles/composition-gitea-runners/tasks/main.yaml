@@ -67,4 +67,4 @@
 #     loop_var: domain_item
 #   loop:
 #     - "git"
-#   when: ansible_tailscale0.ipv4.address
+#    when: ansible_tailscale0.ipv4.address is defined
