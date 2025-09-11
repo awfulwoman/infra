@@ -2,10 +2,10 @@ ansible_user: "{{ vault_server_username }}"
 ansible_host: host-backups
 
 host_type: baremetal
-host_name: 
+host_name: backy
 host_city: ber
 host_location: xberg
-host_ipv4: 
+host_ipv4: 192.168.1.118
 host_pfqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}"
 host_fqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}.{{ domain_name }}"
 

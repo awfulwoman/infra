@@ -19,37 +19,45 @@ $ORIGIN {{ bind_iprange_reversed }}.IN-ADDR.ARPA.
 ; PTR records - from config
 {% if bind_records_nameservers is defined -%}
   {%- for record in bind_records_nameservers %}
-    {%- set record_ip_split = record.ip.split('.')[0:4] %}
-    {{- '%-40s' | format(record_ip_split[3] + '.' + record_ip_split[2])  }} IN      PTR      {{ record.name }}.{{ bind_domain }}.
+    {% if record.ip is defined %}
+      {%- set record_ip_split = record.ip.split('.')[0:4] %}
+      {{- '%-40s' | format(record_ip_split[3] + '.' + record_ip_split[2])  }} IN      PTR      {{ record.name }}.{{ bind_domain }}.
+    {% endif %}
   {% endfor %}
 {% endif %}
 
 ; A records - from config
 {% if bind_records_a is defined %}
   {% for record in bind_records_a %}
-    {% set record_ip_split = record.ip.split('.')[0:4] %}
-    {% if record.name == "@" %}
-      {{- '%-40s' | format(record_ip_split[3] + '.' + record_ip_split[2])  }} IN      PTR      {{ bind_domain }}.
-    {% else -%}
-      {{- '%-40s' | format(record_ip_split[3] + '.' + record_ip_split[2])  }} IN      PTR      {{ record.name }}.{{ bind_domain }}.
+    {% if record.ip is defined %}
+      {% set record_ip_split = record.ip.split('.')[0:4] %}
+      {% if record.name == "@" %}
+        {{- '%-40s' | format(record_ip_split[3] + '.' + record_ip_split[2])  }} IN      PTR      {{ bind_domain }}.
+      {% else -%}
+        {{- '%-40s' | format(record_ip_split[3] + '.' + record_ip_split[2])  }} IN      PTR      {{ record.name }}.{{ bind_domain }}.
+      {% endif %}
     {% endif %}
   {% endfor %}
 {% endif %} 
 
 ; PTR records - from Ansible inventory
-{% for host in hostvars %}
+{% for host in groups[bind_ansible_group] %}
   {% if hostvars[host].host_fqdn is defined and hostvars[host].host_ipv4 is defined %}
-    {% set record_ip_split = hostvars[host].host_ipv4.split('.')[0:4] -%}
-    {{- '%-40s' | format(record_ip_split[3] + '.' + record_ip_split[2])  }} IN      PTR      {{ hostvars[host].host_pfqdn }}.{{ bind_domain}}.
+    {% if hostvars[host].host_ipv4 is not none %}
+      {% set record_ip_split = hostvars[host].host_ipv4.split('.')[0:4] -%}
+      {{- '%-40s' | format(record_ip_split[3] + '.' + record_ip_split[2])  }} IN      PTR      {{ hostvars[host].host_pfqdn }}.{{ bind_domain}}.
+    {% endif %}
   {% endif %}
 {% endfor %}
 
 ; cnames - from Ansible inventory
-{% for host in hostvars %}
+{% for host in groups[bind_ansible_group] %}
   {% if hostvars[host].cnames is defined %}
-    {% set record_ip_split = hostvars[host].host_ipv4.split('.')[0:4] -%}
-    {% for cname in hostvars[host].cnames %}
-      {{- '%-40s' | format(record_ip_split[3] + '.' + record_ip_split[2])  }} IN      PTR      {{ cname }}.
-    {% endfor %}
+    {% if hostvars[host].host_ipv4 is not none %}
+      {% set record_ip_split = hostvars[host].host_ipv4.split('.')[0:4] -%}
+      {% for cname in hostvars[host].cnames %}
+        {{- '%-40s' | format(record_ip_split[3] + '.' + record_ip_split[2])  }} IN      PTR      {{ cname }}.
+      {% endfor %}
+    {% endif %}
   {% endif %}
 {% endfor %}

@@ -42,7 +42,7 @@
   become: true
   ansible.builtin.template:
     src: db.zone
-    dest: "/etc/bind/zones/test.db.{{ bind_domain }}.zone"
+    dest: "/etc/bind/zones/db.{{ bind_domain }}.zone"
     owner: root
     group: bind
     mode: "0644"
@@ -52,7 +52,7 @@
   become: true
   ansible.builtin.template:
     src: db.zone
-    dest: "/etc/bind/zones/test.db.{{ bind_domain }}.reverse.zone"
+    dest: "/etc/bind/zones/db.{{ bind_domain }}.reverse.zone"
     owner: root
     group: bind
     mode: "0644"

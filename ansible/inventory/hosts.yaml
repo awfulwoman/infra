@@ -8,16 +8,7 @@ all:
     host-mba2011:
     host-albion:
     dns:
-    infra02:
-
-# START Experimental hosts
-    nas:
-    backups:
-    homebrain:
-    pbj:
-    albion:
-    awfulwoman:
-# END Experimental hosts
+    # infra02:
 
   children:
 # START Experimental groups
@@ -26,7 +17,7 @@ all:
         vm-awfulwoman:
     ldn:
       children:
-        kentishtown:
+        camden:
           hosts:
             albion:
     ber:
@@ -37,9 +28,10 @@ all:
             backups:
             homeautomation:
             mqtt:
-        kotti:
-          hosts:
-            offsite:
+            dns:
+        # kotti:
+        #   hosts:
+        #     offsite:
 # END Experimental groups
 
     regular:

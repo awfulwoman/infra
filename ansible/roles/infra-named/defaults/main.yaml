@@ -2,6 +2,7 @@ bind_domain: "{{ domain_name }}"
 bind_default_ttl: 604800 # 1 week
 bind_iprange_segment: 192.168
 bind_iprange_reversed: "{{ bind_iprange_segment | string | split('.') | reverse | join('.') }}"
+bind_ansible_group: regular
 # Define ACL groups for using this DNS server
 bind_acl_groups:
   - name: LAN
@@ -15,8 +16,8 @@ bind_forwarders:
 bind_records_nameservers:
   - name: "dns01"
     ip: 192.168.1.2
-  - name: "dns02"
-    ip: 172.16.0.3
+  # - name: "dns02"
+  #   ip: 172.16.0.3
 # Manually created A records
 bind_records_a:
   - name: "@"

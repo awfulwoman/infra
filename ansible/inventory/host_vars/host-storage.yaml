@@ -5,8 +5,8 @@ host_type: baremetal
 host_name: storage
 host_city: ber
 host_location: xberg
-# host_ipv4: 192.168.1.116
-host_ipv4: 172.16.0.4
+host_ipv4: 192.168.1.116
+# host_ipv4: 172.16.0.4
 host_pfqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}"
 host_fqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}.{{ domain_name }}"
 

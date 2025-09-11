@@ -5,7 +5,7 @@ host_type: baremetal
 host_name: host-mqtt
 host_city: ber
 host_location: xberg
-host_ipv4: 
+host_ipv4: 192.168.1.112
 host_pfqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}"
 host_fqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}.{{ domain_name }}"
 

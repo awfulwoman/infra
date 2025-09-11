@@ -19,24 +19,31 @@ $ORIGIN    {{ bind_domain }}.
 ; A records - from config
 {% if bind_records_nameservers is defined %}
   {% for record in bind_records_nameservers %}
-    {{- '%-40s' | format(record.name) }}{% if record.ttl is defined %} {{ record.ttl }}{% endif %} IN      A         {{ record.ip }}
+    {% if record.ip is defined %}
+      {{- '%-40s' | format(record.name) }}{% if record.ttl is defined %} {{ record.ttl }}{% endif %} IN      A         {{ record.ip }}
+    {% endif %}
   {% endfor %}
 {% endif %} 
 {% if bind_records_a is defined %}
   {% for record in bind_records_a %}
-    {{- '%-40s' | format(record.name) }}{% if record.ttl is defined %} {{ record.ttl }}{% endif %} IN      A         {{ record.ip }}
+    {% if record.ip is defined %}
+      {{- '%-40s' | format(record.name) }}{% if record.ttl is defined %} {{ record.ttl }}{% endif %} IN      A         {{ record.ip }}
+    {% endif %}
   {% endfor %}
 {% endif %}
 
 ; A records - from Ansible inventory
-{% for host in hostvars %}
-  {% if hostvars[host].host_fqdn is defined and hostvars[host].host_ipv4 is defined %}
-    {{- '%-40s' | format(hostvars[host].host_pfqdn) }} IN      A         {{ hostvars[host].host_ipv4 }}
+{% for host in groups[bind_ansible_group] %}
+; {{ host }}
+  {% if (hostvars[host].host_fqdn is defined) and (hostvars[host].host_ipv4 is defined) %}
+    {% if hostvars[host].host_ipv4 is not none %}
+      {{- '%-40s' | format(hostvars[host].host_pfqdn) }} IN      A         {{ hostvars[host].host_ipv4 }}
+    {% endif %}
   {% endif %}
 {% endfor %}
 
 ; cnames - from Ansible inventory
-{% for host in hostvars %}
+{% for host in groups[bind_ansible_group] %}
   {% if hostvars[host].cnames is defined %}
     {% for cname in hostvars[host].cnames %}
       {{- '%-40s' | format(cname + '.') }} IN      CNAME     {{ hostvars[host].host_pfqdn }}
