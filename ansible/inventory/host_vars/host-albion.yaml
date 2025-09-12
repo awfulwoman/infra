@@ -1,7 +1,12 @@
-
+# -------------------------------------------------------------------
+# ANSIBLE
+# -------------------------------------------------------------------
 ansible_host: host-albion
 ansible_user: "{{ vault_server_username }}"
 
+# -------------------------------------------------------------------
+# INFRA
+# -------------------------------------------------------------------
 host_type: baremetal
 host_name: albion
 host_city: ldn
@@ -13,11 +18,14 @@ host_fqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}.{{ domain_name }
 bootstrap_ubuntu_timezone: "Europe/London"
 tailscale_exit_node: true
 
-# --- NETWORK -------------
+# -------------------------------------------------------------------
+# NETWORK
+# -------------------------------------------------------------------
 configure_dns_linkdevice_physical: "eth0" 
 
-# --- ZFS -------------
-
+# -------------------------------------------------------------------
+# ZFS
+# -------------------------------------------------------------------
 # ZFS pools that should be present
 zfs_pools:
   - fastpool
@@ -40,12 +48,18 @@ zfs_backup_datasets:
 compositions_config_dir: "/{{ container_compositions_zfs_id }}"
 zfspath_downloads: "/{{ zfsid_downloads }}"
 
+# -------------------------------------------------------------------
+# NFS
+# -------------------------------------------------------------------
 nfs_mounts:
   - remote_server: "host-storage"
     remote_path: "/slowpool/shared/media"
     local_path: "/fastpool/storage-share"
     # mount_options: "defaults,_netdev,x-systemd.after=network-online.target"
 
+# -------------------------------------------------------------------
+# COMPOSITIONS
+# -------------------------------------------------------------------
 compositions:
   - reverseproxy
   - container-management
