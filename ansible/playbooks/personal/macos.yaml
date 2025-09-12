@@ -8,6 +8,12 @@
       - airflow
       - balenaetcher
       - docker
+      - dropbox
+      - font-fira-mono-nerd-font
+      - grandperspective
+      - lunar
+      - netnewswire
+      - tailscale
       - firefox
       - google-chrome
       - handbrake
@@ -15,7 +21,6 @@
       - imageoptim
       - mullvadvpn
       - raspberry-pi-imager
-      # - send-to-kindle
       - telegram-desktop
       - visual-studio-code
       - vlc
@@ -35,22 +40,19 @@
       - sqlite
       - watch
       - wget
+      - tree
       - yt-dlp
       - yq
       - mas
+      - exif
+      - ipcalc
 
 
   tasks:
-
     - name: Ensuring Homebrew Is Installed
       ansible.builtin.stat:
         path: /opt/homebrew/bin/brew
       register: homebrew_check
-
-    # - name: Updating Homebrew
-    #   community.general.homebrew:
-    #     update_homebrew: true
-    #   when: homebrew_check.stat.exists
 
     - name: Ensure all casks are installed
       community.general.homebrew_cask:
