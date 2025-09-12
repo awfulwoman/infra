@@ -6,33 +6,35 @@
 
 - name: "Create compose file"
   ansible.builtin.template:
-    src: docker-compose.yaml.j2
+    src: docker-compose.yaml
     dest: "{{ composition_root }}/docker-compose.yaml"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
+    mode: "0644"
 
 - name: "Create .env file"
   ansible.builtin.template:
-    src: environment_vars.j2
+    src: environment_vars
     dest: "{{ composition_root }}/.environment_vars"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
+    mode: "0644"
 
 - name: Copy watchtower config.json script
   become: true
   ansible.builtin.template:
-    src: templates/watchtower-config.json.j2
+    src: templates/watchtower-config.json
     dest: "{{ composition_config }}/config.json"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
+    mode: "0644"
 
-- name: Run Configure DNS role
-  ansible.builtin.include_role:
-    name: "network-register-subdomain"
-  vars:
-    configure_dns_subdomains:
-      - "dockage.{{ ansible_hostname }}"
-      - "dozzle.{{ ansible_hostname }}"
+# - name: Run Configure DNS role
+#   ansible.builtin.include_role:
+#     name: "network-register-subdomain"
+#   vars:
+#     configure_dns_subdomains:
+#       - "dockage.{{ ansible_hostname }}"
 
 # ----------------------------
 # Specific tasks
