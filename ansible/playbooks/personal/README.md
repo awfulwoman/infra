@@ -1,3 +1,3 @@
 # Playbooks for personal machines
 
-Desktops, laptops, etc. 
+Desktops, laptops, etc.

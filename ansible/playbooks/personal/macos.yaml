@@ -1,9 +1,10 @@
 ---
 - name: Install MacOS Packages
   hosts: localhost
-  become: false
+  # become: true
   vars:
-    brew_cask_packages: 
+    upgrade_homebrew_packages: true
+    brew_casks:
       - airflow
       - balenaetcher
       - docker
@@ -14,12 +15,11 @@
       - imageoptim
       - mullvadvpn
       - raspberry-pi-imager
-      - remarkable
-      - send-to-kindle
+      # - send-to-kindle
       - telegram-desktop
       - visual-studio-code
       - vlc
-    brew_packages:
+    brew_formula:
       - ffmpeg
       - flux
       - get_iplayer
@@ -35,40 +35,44 @@
       - sqlite
       - watch
       - wget
-      - youtube-dl
+      - yt-dlp
       - yq
       - mas
-  pre_tasks:
-    - name: Ensuring Homebrew Is Installed
-      stat:
-        path: /usr/local/bin/brew
-      register: homebrew_check
+
 
   tasks:
-    - name: Updating Homebrew
-      community.general.homebrew:
-        update_homebrew: true
-      when: homebrew_check.stat.exists
 
-    # - name: Upgrading Homebrew Packages
+    - name: Ensuring Homebrew Is Installed
+      ansible.builtin.stat:
+        path: /opt/homebrew/bin/brew
+      register: homebrew_check
+
+    # - name: Updating Homebrew
     #   community.general.homebrew:
-    #     upgrade_all: "{{ upgrade_homebrew_packages }}"
-    #   register: result
-    #   until: result is successful
+    #     update_homebrew: true
     #   when: homebrew_check.stat.exists
 
-    - name: Installing Homebrew Casks
+    - name: Ensure all casks are installed
       community.general.homebrew_cask:
-        name: "{{ brew_cask_packages }}"
+        name: "{{ brew_casks }}"
         state: present
+        update_homebrew: true
       register: result
       until: result is successful
       when: homebrew_check.stat.exists
 
-    - name: Installing Homebrew Packages
+    - name: Ensure all formula are installed
       community.general.homebrew:
-        name: "{{ brew_packages }}"
+        name: "{{ brew_formula }}"
         state: present
+        update_homebrew: true
+      register: result
+      until: result is successful
+      when: homebrew_check.stat.exists
+
+    - name: Ensure existing brew are upgraded
+      community.general.homebrew:
+        upgrade_all: "{{ upgrade_homebrew_packages }}"
       register: result
       until: result is successful
       when: homebrew_check.stat.exists
