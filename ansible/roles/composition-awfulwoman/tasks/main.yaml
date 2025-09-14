@@ -92,7 +92,7 @@
   become: true
   ansible.builtin.template:
     src: index.html
-    dest: /fastpool/sites/awfulwoman/index.html
+    dest: "{{ awfulwoman_path }}/index.html"
     owner: "{{ awfulwoman_deploy_user }}"
     group: nginx
     mode: "0644"
