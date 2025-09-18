@@ -167,11 +167,11 @@
     mode: "0744"
 
 - name: Env vars
+  no_log: true
   ansible.builtin.include_role:
     name: weareinteractive.environment
   vars:
     ansible_become: true
-    no_log: true
 
 - name: That awful guy geerling
   ansible.builtin.include_role:
