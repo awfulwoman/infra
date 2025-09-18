@@ -7,7 +7,7 @@
     - role: hardware-host-bus-adapter
     - role: system-wakeonlan
     - role: client-nut
-    - role: zfs-core
+    - role: system-zfs
     - role: system-mqtt2cmd
     - role: system-msmtp
     - role: server-nfs

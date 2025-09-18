@@ -9,9 +9,9 @@
     - role: ansible-pull
     - role: bootstrap-ubuntu-server
     - role: system-sshkey
+    - role: system-zfs
     - role: network-ip-address-forwarding
     - role: client-nfs
-    - role: zfs-core
     - role: client-zbackups
     - role: compositions
     - role: monitoring-healthchecksio

@@ -4,7 +4,7 @@
     - role: bootstrap-ubuntu-server
     - role: user-site-deployment
     - role: ansible-pull
-    - role: zfs-core
+    - role: system-zfs
     - role: compositions
     - role: monitoring-healthchecksio
 

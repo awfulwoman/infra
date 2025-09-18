@@ -3,7 +3,7 @@
   roles:
     - role: ansible-pull
     - role: bootstrap-ubuntu-server
-    - role: zfs-core
+    - role: system-zfs
     - role: server-nut
     - role: system-mqtt2cmd
     - role: hardware-rtl-433

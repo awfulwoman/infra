@@ -5,7 +5,7 @@
     - role: bootstrap-ubuntu-server
     - role: client-nut
     - role: system-wakeonlan
-    - role: zfs-core
+    - role: system-zfs
     - role: system-msmtp
     - role: system-mqtt2cmd
     - role: server-zbackups
