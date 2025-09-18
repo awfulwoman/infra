@@ -10,6 +10,10 @@ roles:
     version: v3.5.0
   - name: robertdebock.digitalocean_agent
     version: 3.1.9
+  - name: mrlesmithjr.netplan
+    src: https://git@github.com/mrlesmithjr/ansible-netplan.git
+    version: master
+    scm: git
 
 collections:
   - name: artis3n.tailscale
