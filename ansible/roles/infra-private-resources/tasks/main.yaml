@@ -1,0 +1,61 @@
+- name: Ensure Terraform repo exists
+  become: true
+  ansible.builtin.deb822_repository:
+    name: terraform
+    types: deb
+    uris: "https://apt.releases.hashicorp.com"
+    suites: "{{ ansible_distribution_release }}"
+    components: main
+    architectures: "{{ 'amd64' if ansible_architecture == 'x86_64' else 'arm64' if ansible_architecture == 'aarch64' else ansible_architecture }}"
+    signed_by: "https://apt.releases.hashicorp.com/gpg"
+
+- name: Ensure Terraform itself is installed
+  become: true
+  ansible.builtin.apt:
+    update_cache: true
+    name:
+      - terraform
+
+- name: Ensure libvirt packages are installed
+  become: true
+  ansible.builtin.apt:
+    name:
+      - qemu-kvm
+      - libvirt-daemon-system
+      - libvirt-clients
+      - bridge-utils
+
+- name: Ensure main user is in libvirt group
+  become: true
+  ansible.builtin.user:
+    user: "{{ ansible_user }}"
+    groups: libvirt
+    append: true
+
+- name: Read Github authorized keys as string
+  ansible.builtin.uri:
+    url: https://github.com/awfulwoman.keys
+    method: GET
+    return_content: true
+  register: github_keys_string
+
+- name: Ensure Github keys list exists
+  ansible.builtin.set_fact:
+    github_keys_list: "{{ github_keys_string.content | split('\n') | reject('==', '') }}"
+
+- name: Ensure Terraform project working dir exists
+  become: true
+  ansible.builtin.file:
+    dest: "{{ infra_privateresources_terraform_working_dir }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0755"
+
+- name: Ensure cloud-init file exists
+  ansible.builtin.template:
+    src: cloud-init
+    dest: "{{ infra_privateresources_terraform_working_dir }}/cloud-init.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0644"

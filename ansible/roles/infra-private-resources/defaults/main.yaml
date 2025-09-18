@@ -1,0 +1,3 @@
+infra_privateresources_terraform_working_dir: "{{ terraform_working_dir }}/private-resources"
+infra_privateresources_debug: false
+infra_privateresources_tf_apply: false
