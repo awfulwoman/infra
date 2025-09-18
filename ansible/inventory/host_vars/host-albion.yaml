@@ -19,6 +19,14 @@ bootstrap_ubuntu_timezone: "Europe/London"
 tailscale_exit_node: true
 
 # -------------------------------------------------------------------
+# HARDWARE
+# -------------------------------------------------------------------
+raspberry_pi_wifi: false
+raspberry_pi_boot_config_location: /boot/firmware/config.txt
+raspberry_pi_config_overrides:
+  - "dtoverlay=gpio-fan,gpiopin=14,temp=60000"
+
+# -------------------------------------------------------------------
 # NETWORK
 # -------------------------------------------------------------------
 configure_dns_linkdevice_physical: "eth0" 

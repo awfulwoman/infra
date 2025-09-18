@@ -2,10 +2,6 @@
   hosts: host-albion
   roles:
     - role: hardware-raspberry-pi
-      raspberry_pi_wifi: false
-      raspberry_pi_boot_config_location: /boot/firmware/config.txt
-      raspberry_pi_config_overrides:
-        - "dtoverlay=gpio-fan,gpiopin=14,temp=60000"
     - role: ansible-pull
     - role: bootstrap-ubuntu-server
     - role: system-sshkey
