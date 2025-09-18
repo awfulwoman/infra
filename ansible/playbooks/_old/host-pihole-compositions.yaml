@@ -1,9 +1,0 @@
-- name: PiHole DNS + DHCP server
-  hosts: host-pihole
-  roles:
-    - role: compositions
-
-  handlers:
-    - name: Reboot host
-      become: true
-      ansible.builtin.reboot:
