@@ -19,6 +19,40 @@
         ansible_default_ipv4.address: "{{ ansible_default_ipv4.address }}"
         The default IPv4 address of the machine, used for network communication.
 
+- name: Ensure core apt packages are installed
+  become: true
+  ansible.builtin.apt:
+    name:
+      - util-linux-extra
+      - curl
+      - dirmngr
+      - e2fsprogs
+      - ffmpeg
+      - git
+      - htop
+      - iptables
+      - lm-sensors
+      - mosh
+      - neofetch
+      - get-iplayer
+      - python-is-python3
+      - python3
+      - python3-docker
+      - python3-pip
+      - python3-virtualenv
+      - restic
+      - retry
+      - smartmontools
+      - sqlite3
+      - timg
+      - tmux
+      - unzip
+      - uptimed
+      - vim
+      - wget
+      - zsh
+    state: present
+
 - name: Ensure Github SSH keys are present
   become: true
   ansible.posix.authorized_key:
@@ -100,39 +134,6 @@
   ansible.builtin.apt:
     upgrade: full
     update_cache: true
-
-- name: Install necessary apt packages
-  become: true
-  ansible.builtin.apt:
-    name:
-      - curl
-      - dirmngr
-      - e2fsprogs
-      - ffmpeg
-      - git
-      - htop
-      - iptables
-      - lm-sensors
-      - mosh
-      - neofetch
-      - get-iplayer
-      - python-is-python3
-      - python3
-      - python3-docker
-      - python3-pip
-      - python3-virtualenv
-      - restic
-      - retry
-      - smartmontools
-      - sqlite3
-      - timg
-      - tmux
-      - unzip
-      - uptimed
-      - vim
-      - wget
-      - zsh
-    state: present
 
 - name: Autoremove apt packages
   become: true
