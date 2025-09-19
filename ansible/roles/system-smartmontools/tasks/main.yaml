@@ -6,7 +6,7 @@
     owner: "root"
     group: "root"
     mode: "0644"
-  when: smartmontools_drives
+  when: smartmontools_drives is defined
 
 - name: Log smartmontools_drives
   ansible.builtin.debug:
