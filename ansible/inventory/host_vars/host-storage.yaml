@@ -5,35 +5,37 @@ ansible_host: host-storage # How to access the host
 ansible_user: "{{ vault_server_username }}" # User to connect as
 
 # -------------------------------------------------------------------
-# INFRA
+# HOST
 # -------------------------------------------------------------------
 host_type: baremetal
 host_name: storage
 host_city: ber
 host_location: xberg
-host_ipv4: 192.168.1.116
-# host_ipv4: 172.16.0.4
+# host_ipv4_address: 172.16.0.4
+host_ipv4_address: 192.168.1.116
+host_ipv4_range: 24
 host_pfqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}"
 host_fqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}.{{ domain_name }}"
+host_interface: enp3s0
 
 # -------------------------------------------------------------------
 # NETWORK
 # -------------------------------------------------------------------
 wakeonlan_mac_address: "34:60:f9:bb:3d:16"
-wakeonlan_interface: enp3s0
-configure_dns_linkdevice_physical: enp3s0
+wakeonlan_interface: "{{ host_interface }}"
+configure_dns_linkdevice_physical: "{{ host_interface }}"
 netplan_configuration:
   network:
     version: 2
     ethernets:
       # enp0s3:
       #   dhcp4: true
-      enp0s3:
+      "{{ host_interface }}":
         addresses:
-          - 192.168.1.116/24
+          - "{{ host_ipv4_address }}/{{ host_ipv4_range }}"
         nameservers:
           addresses:
-            - 192.168.1.1
+            - "{{ infra_gateway }}"
           search:
             - "{{ domain_name }}"
 # -------------------------------------------------------------------

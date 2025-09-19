@@ -4,7 +4,7 @@
   #   compositions:
   #     - libretranslate
   roles:
-    - role: infra-private-resources
+    - role: system-netplan
 
   handlers:
     - name: Reboot host

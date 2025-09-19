@@ -5,7 +5,7 @@ host_type: baremetal
 host_name: homebrain # Hostname of the machine
 host_city: ber # City where the machine is located
 host_location: xberg # Location of the machine within the city
-host_ipv4: 192.168.1.130
+host_ipv4_address: 192.168.1.130
 host_pfqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}"
 host_fqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}.{{ domain_name }}"
 
