@@ -22,7 +22,20 @@ host_fqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}.{{ domain_name }
 wakeonlan_mac_address: "34:60:f9:bb:3d:16"
 wakeonlan_interface: enp3s0
 configure_dns_linkdevice_physical: enp3s0
-
+netplan_configuration:
+  network:
+    version: 2
+    ethernets:
+      # enp0s3:
+      #   dhcp4: true
+      enp0s3:
+        addresses:
+          - 192.168.1.116/24
+        nameservers:
+          addresses:
+            - 192.168.1.1
+          search:
+            - "{{ domain_name }}"
 # -------------------------------------------------------------------
 # ZFS
 # -------------------------------------------------------------------
