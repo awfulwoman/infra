@@ -37,8 +37,8 @@ login_user_password_salted: "{{ vault_password_salted }}"
 # workhorse_user_password: "{{ vault_password }}"
 # workhorse_user_password_salted: "{{ vault_password_salted }}"
 
-config_system_locale: 'en_GB.UTF-8'
-config_system_language: 'en_GB.UTF-8'
+# config_system_locale: 'en_GB.UTF-8'
+# config_system_language: 'en_GB.UTF-8'
 
 vault_aws_backupuser_access_key_id: !vault |
           $ANSIBLE_VAULT;1.2;AES256;beanpod
