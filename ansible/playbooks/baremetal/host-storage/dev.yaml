@@ -4,7 +4,8 @@
   #   compositions:
   #     - libretranslate
   roles:
-    - role: infra-private-resources
+    # - role: infra-private-resources
+    - role: system-zfs
 
   handlers:
     - name: Reboot host

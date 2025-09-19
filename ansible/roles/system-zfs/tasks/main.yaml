@@ -19,16 +19,19 @@
   changed_when: false
   when: (zfs_pools_create is defined)
 
-- name: DEBUG zpool_check
-  ansible.builtin.debug:
-    var: zpool_check
+# - name: DEBUG zpool_check
+#   ansible.builtin.debug:
+#     var: zpool_check
 
-- name: Ensure zpools have been initialised
-  become: true
-  ansible.builtin.command:
-    cmd: "{{ item.item.command }}"
-  loop: "{{ zpool_check.results }}"
-  when: (item.rc != 0) and (zfs_pools_create is defined)
+- name: ZFS create...
+  when: (zfs_pools_create is defined) and (zfs_pools_create | bool)
+  block:
+    - name: Ensure zpools have been initialised
+      become: true
+      ansible.builtin.command:
+        cmd: "{{ item.item.command }}"
+      loop: "{{ zpool_check.results }}"
+      when: (item.rc != 0)
 
 - name: Ensure ZFS pools are present
   ansible.builtin.command:
