@@ -30,8 +30,6 @@
   loop: "{{ zpool_check.results }}"
   when: (item.rc != 0) and (zfs_pools_create is defined)
 
-
-
 - name: Ensure ZFS pools are present
   ansible.builtin.command:
     cmd: "zpool status {{ item }}"
