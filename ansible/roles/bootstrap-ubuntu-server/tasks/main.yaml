@@ -128,16 +128,16 @@
     - ppa:m-grant-prg/utils
     - ppa:tomtomtom/yt-dlp
 
-- name: Upgrade apt packages
-  become: true
-  ansible.builtin.apt:
-    upgrade: full
-    update_cache: true
+# - name: Upgrade apt packages
+#   become: true
+#   ansible.builtin.apt:
+#     upgrade: full
+#     update_cache: true
 
-- name: Autoremove apt packages
-  become: true
-  ansible.builtin.apt:
-    autoremove: true
+# - name: Autoremove apt packages
+#   become: true
+#   ansible.builtin.apt:
+#     autoremove: true
 
 - name: Ensure Python dir exists
   become: true

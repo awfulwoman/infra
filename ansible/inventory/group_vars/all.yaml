@@ -1,20 +1,17 @@
 # code: language=ansible
-
-ansible_become_password: "{{ vault_password }}"
 domain_name: "{{ vault_infra_domain_name_ew }}"
 tailscale_authkey: "{{ vault_tailscale_authkey }}"
 
-
-# Unattended upgrades settings
+# geerlingguy.security settings
+# security_autoupdate_enabled: false
 security_autoupdate_mail_on_error: true
 security_autoupdate_mail_to: unattended@whalecoiner.com
 security_autoupdate_reboot: true
 security_autoupdate_reboot_time: 03:00
+security_sudoers_passwordless:
+  - "{{ vault_server_username }}"
 
-public_keys:
-  - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEGt7Z1QleOUNalSOYF2KXdD3W9xDhGPFFceIyjWFvHP
-  - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJcD9D+x3UWpKnl44gPW+NeaCo8Y8vGe59FU0Y1ddNLo
-
+# Locale
 config_system_locale: 'en_GB.UTF-8'
 config_system_language: 'en_GB.UTF-8'
 
