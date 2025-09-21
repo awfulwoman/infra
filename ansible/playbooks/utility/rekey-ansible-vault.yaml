@@ -6,9 +6,9 @@
     - name: Replace encryption key for encrypted variables
       ansible.builtin.include_role:
         name: aliakkaya7.ansible_rekey_variables.rekey_variable
-      # when:
-      #   - rekey_variable_vault_change | default('true') | bool
-      # tags: aap_vault_change
+      when:
+        - rekey_variable_vault_change | default('true') | bool
+      tags: aap_vault_change
 
 
 # ENSURE localhost is added to inventory as a host

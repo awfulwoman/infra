@@ -9,32 +9,10 @@ all:
     host-albion:
     dns:
     # infra02:
+    # localhost:
 
   children:
-# START Experimental groups
-    vps:
-      hosts:
-        vm-awfulwoman:
-    ldn:
-      children:
-        camden:
-          hosts:
-            albion:
-    ber:
-      children:
-        xberg:
-          hosts:
-            storage:
-            backups:
-            homeautomation:
-            mqtt:
-            dns:
-        # kotti:
-        #   hosts:
-        #     offsite:
-# END Experimental groups
-
-    regular:
+    infra:
       hosts:
         host-homeassistant:
         host-mqtt:

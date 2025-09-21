@@ -1,5 +1,5 @@
 - name: Update ansible galaxy roles and collections on all hosts
-  hosts: regular
+  hosts: infra
   tasks:
     - name: Run initial requirements install - collections
       ansible.builtin.command: "ansible-galaxy collection install -r {{ ansible_path }}/{{ repo_name }}/ansible/meta/requirements.yaml"

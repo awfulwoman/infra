@@ -1,5 +1,5 @@
 - name: Reboot all immediately
-  hosts: regular
+  hosts: infra
   tasks:
     - name: Reboot host
       become: true
