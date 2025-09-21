@@ -6,5 +6,4 @@ users:
     groups: users, adm, sudo
     ssh_import_id:
       - gh:awfulwoman
-    lock_passwd: false
-
+    lock_passwd: true
