@@ -36,6 +36,16 @@ infra_publicresources_digitalocean_firewalls:
           - "::/0"
       - protocol: icmp
     outbound:
+      - protocol: tcp
+        port_range: 80
+        ip_addresses:
+          - "0.0.0.0/0"
+          - "::/0"
+      - protocol: tcp
+        port_range: 443
+        ip_addresses:
+          - "0.0.0.0/0"
+          - "::/0"
       - protocol: icmp
 
 # digitalocean_droplet
