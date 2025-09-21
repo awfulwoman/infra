@@ -4,6 +4,7 @@ services:
   web:
     image: nginx
     container_name: awfulwoman
+    restart: unless-stopped
     ports:
       - "127.0.0.1:8081:80"
     env_file: .environment_vars
