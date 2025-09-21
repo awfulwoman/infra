@@ -2,7 +2,6 @@
   hosts: host-albion
   roles:
     - role: hardware-raspberry-pi
-    - role: ansible-pull
     - role: bootstrap-ubuntu-server
     - role: system-sshkey
     - role: system-zfs

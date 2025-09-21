@@ -1,7 +1,6 @@
 - name: Backup Server
   hosts: host-backups
   roles:
-    - role: ansible-pull
     - role: bootstrap-ubuntu-server
     - role: client-nut
     - role: system-wakeonlan

@@ -2,7 +2,6 @@
 - name: Home MQTT Broker
   hosts: host-mqtt
   roles:
-    - role: ansible-pull
     - role: bootstrap-ubuntu-server
     - role: client-nut
     - role: hardware-raspberry-pi

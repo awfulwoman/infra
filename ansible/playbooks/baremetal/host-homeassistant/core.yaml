@@ -1,7 +1,6 @@
 - name: Home Automation Server
   hosts: host-homeassistant
   roles:
-    - role: ansible-pull
     - role: bootstrap-ubuntu-server
     - role: system-zfs
     - role: server-nut
