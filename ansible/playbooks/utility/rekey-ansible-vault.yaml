@@ -1,0 +1,13 @@
+- name: Change vault password for all encrypted variables in Roles
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: Replace encryption key for encrypted variables
+      ansible.builtin.include_role:
+        name: aliakkaya7.ansible_rekey_variables.rekey_variable
+      # when:
+      #   - rekey_variable_vault_change | default('true') | bool
+      # tags: aap_vault_change
+
+# ansible-playbook ansible/playbooks/utility/rekey-ansible-vault.yaml -i ansible/inventory/hosts.yaml --ask-vault-pass -e rekey_variable_new_vault_password=test12 -e rekey_variable_inventory_repo_name=infra --vault-id new_vault_password@prompt
