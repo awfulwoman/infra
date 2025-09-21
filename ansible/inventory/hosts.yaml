@@ -9,7 +9,7 @@ all:
     host-albion:
     dns:
     # infra02:
-    # localhost:
+    localhost:
 
   children:
     infra:
