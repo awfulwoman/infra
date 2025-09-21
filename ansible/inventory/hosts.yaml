@@ -8,8 +8,6 @@ all:
     host-mba2011:
     host-albion:
     dns:
-    # infra02:
-    localhost:
 
   children:
     infra:
