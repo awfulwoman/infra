@@ -13,15 +13,32 @@ infra_publicresources_reservedip_assignments:
     reservedip: bonjo
     droplet: public26
 
+# digitalocean_firewall
+infra_publicresources_digitalocean_firewalls:
+  - id: web
+    tags:
+      - secured
+    inbound:
+      - protocol: tcp
+        port_range: 22
+      - protocol: tcp
+        port_range: 80
+      - protocol: tcp
+        port_range: 443
+    outbound:
+      - protocol: icmp
+
 # digitalocean_droplet
 infra_publicresources_droplets:
-  - id: public75
-    name: "public-server-01-dead"
-    description: >
-      This machine had a boo boo.
-    image: ubuntu-24-04-x64
-    region: ams3
-    size: s-1vcpu-1gb-intel
+  # - id: public75
+  #   name: "public-server-01-dead"
+  #   description: >
+  #     This machine had a boo boo.
+  #   image: ubuntu-24-04-x64
+  #   region: ams3
+  #   size: s-1vcpu-1gb-intel
+  #   tags:
+  #     - secured
 
   - id: public26
     name: "public-server-01"
@@ -30,8 +47,10 @@ infra_publicresources_droplets:
     image: ubuntu-24-04-x64
     region: ams3
     size: s-1vcpu-1gb-intel
-    volumes:
-      - storage01
+    tags:
+      - secured
+    # volumes:
+    #   - storage01
 
 # digitalocean_volume
 infra_publicresources_volumes:

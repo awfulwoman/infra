@@ -117,6 +117,13 @@ resource "digitalocean_droplet" "{{ droplet.id }}" {
     {% endfor %}
   ]
   {% endif -%}
+  {% if droplet.tags is defined %}
+  tags = [
+    {% for tag in droplet.tags %}
+    "{{ tag }}"{{ "," if not loop.last }}
+    {% endfor %}
+  ]
+  {% endif %}
 }
 
 {% endif %}
@@ -142,3 +149,44 @@ resource "digitalocean_reserved_ip_assignment" "{{ ipassignment.id }}" {
 }
 {% endif %}
 {% endfor %}
+
+{% if infra_publicresources_digitalocean_firewalls is defined %}
+{% for firewall in infra_publicresources_digitalocean_firewalls %}
+{% if firewall.id is defined %}
+
+resource "digitalocean_firewall" "{{ firewall.id }}" {
+  name = "{{ firewall.id }}"
+  
+  {% if firewall.tags is defined %}
+  tags = [
+    {% for tag in firewall.tags %}
+    "{{ tag }}"{{ "," if not loop.last }}
+    {% endfor %}
+  ]
+  {% endif %}
+
+  {% if firewall.inbound is defined %}
+  {% for inbound in firewall.inbound %}
+  inbound_rule {
+    protocol = "{{ inbound.protocol }}"
+    {% if inbound.port_range is defined %}
+    port_range = "{{ inbound.port_range }}"
+    {% endif %}
+  }
+  {% endfor %}
+  {% endif %}
+
+  {% if firewall.outbound is defined %}
+  {% for outbound in firewall.outbound %}
+  outbound_rule {
+    protocol = "{{ outbound.protocol }}"
+    {% if outbound.port_range is defined %}
+    port_range = "{{ outbound.port_range }}"
+    {% endif %}
+  }
+  {% endfor %}
+  {% endif %}
+}
+{% endif %}
+{% endfor %}
+{% endif %}
