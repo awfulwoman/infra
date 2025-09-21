@@ -12,7 +12,7 @@
   become: true
   ansible.builtin.lineinfile:
     name: "{{ ansiblepull_workdir }}/.vaultpassword"
-    line: "{{ vault_ansible_password }}"
+    line: "{{ vault_ansible_password }}" # eh oh no
     mode: "0644"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
