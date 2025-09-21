@@ -1,8 +1,9 @@
 # -------------------------------------------------------------------
 # ANSIBLE
 # -------------------------------------------------------------------
-ansible_host: host-storage # How to access the host
+ansible_host: 192.168.1.116 # How to access the host
 ansible_user: "{{ vault_server_username }}" # User to connect as
+ansible_become_password: "{{ vault_password }}"
 
 # -------------------------------------------------------------------
 # INFRA
