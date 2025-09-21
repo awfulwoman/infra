@@ -11,11 +11,19 @@ infra_publicresources_reservedips:
 infra_publicresources_reservedip_assignments:
   - id: mike
     reservedip: bonjo
-    droplet: public75
+    droplet: public26
 
 # digitalocean_droplet
 infra_publicresources_droplets:
   - id: public75
+    name: "public-server-01-dead"
+    description: >
+      This machine had a boo boo.
+    image: ubuntu-24-04-x64
+    region: ams3
+    size: s-1vcpu-1gb-intel
+
+  - id: public26
     name: "public-server-01"
     description: >
       A general-purpose server for things out on the public internet.
@@ -41,7 +49,7 @@ infra_publicresources_projects:
       - digitalocean_domain.se
       - digitalocean_domain.wc
       - digitalocean_domain.aw
-      - digitalocean_droplet.public75
+      - digitalocean_droplet.public26
   - name: Infra
     description: Infra stuff
     id: infra
