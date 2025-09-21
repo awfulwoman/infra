@@ -172,6 +172,15 @@ resource "digitalocean_firewall" "{{ firewall.id }}" {
     {% if inbound.port_range is defined %}
     port_range = "{{ inbound.port_range }}"
     {% endif %}
+
+    {% if inbound.ip_addresses is defined %}
+    source_addresses = [
+      {% for ipaddress in inbound.ip_addresses %}
+      "{{ ipaddress }}"{{ "," if not loop.last }}
+      {% endfor %}
+    ]
+    {% endif %}
+
   }
   {% endfor %}
   {% endif %}
@@ -182,6 +191,14 @@ resource "digitalocean_firewall" "{{ firewall.id }}" {
     protocol = "{{ outbound.protocol }}"
     {% if outbound.port_range is defined %}
     port_range = "{{ outbound.port_range }}"
+    {% endif %}
+
+    {% if outbound.ip_addresses is defined %}
+    destination_addresses = [
+      {% for ipaddress in outbound.ip_addresses %}
+      "{{ ipaddress }}"{{ "," if not loop.last }}
+      {% endfor %}
+    ]
     {% endif %}
   }
   {% endfor %}

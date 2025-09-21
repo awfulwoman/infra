@@ -1,4 +1,4 @@
-bind_domain: "{{ vault_infra_domain_name_ew }}"
+bind_domain: "{{ domain_name }}"
 bind_default_ttl: 604800 # 1 week
 bind_iprange_segment: 192.168
 bind_iprange_reversed: "{{ bind_iprange_segment | string | split('.') | reverse | join('.') }}"
