@@ -13,10 +13,6 @@ public_keys:
 config_system_locale: 'en_GB.UTF-8'
 config_system_language: 'en_GB.UTF-8'
 
-# NFS Client
-nfs_backups_client_path: /mnt/backups
-restic_client_path: "{{ nfs_backups_client_path }}/restic"
-
 # Repo
 repo_url: https://github.com/awfulwoman/infra
 repo_name: infra
