@@ -1,7 +1,9 @@
 # code: language=ansible
 
+ansible_become_password: "{{ vault_password }}"
 domain_name: "{{ vault_infra_domain_name_ew }}"
 tailscale_authkey: "{{ vault_tailscale_authkey }}"
+
 
 # Unattended upgrades settings
 security_autoupdate_mail_on_error: true
