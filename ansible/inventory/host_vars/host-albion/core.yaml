@@ -3,6 +3,7 @@
 # -------------------------------------------------------------------
 ansible_host: host-albion
 ansible_user: "{{ vault_server_username }}"
+ansible_become_password: "{{ vault_password }}"
 
 # -------------------------------------------------------------------
 # INFRA
