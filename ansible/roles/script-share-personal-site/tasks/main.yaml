@@ -1,101 +1,34 @@
-- name: Ensure path is deleted
+- name: Ensure path is created
   become: true
   ansible.builtin.file:
-    path: "{{ script_share_personal_site_path }}"
-    state: absent
-
-- name: Ensure path is recreated
-  become: true
-  ansible.builtin.file:
-    path: "{{ script_share_personal_site_path }}"
+    path: "{{ script_share_personal_site_path }}/{{ item }}"
     state: directory
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0755"
-
-- name: Shallow clone internal repo
-  ansible.builtin.git:
-    repo: "https://gitea.{{ domain_name }}/awfulwoman/personal-site"
-    dest: "{{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}"
-    single_branch: true
-    depth: 1
-    # force: true
-    version: main
-
-# Downloading zip file directly, as clonging takes many times longer, even shallow
-# - name: Download and unarchive repo
-#   ansible.builtin.unarchive:
-#     src: "https://gitea.{{ domain_name }}/awfulwoman/personal-site/archive/main.zip"
-#     dest: "{{ script_share_personal_site_path }}"
-#     creates: "{{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}"
-#     remote_src: true
-
-# Remove content dir
-- name: Ensure sensitive directories are removed
-  ansible.builtin.file:
-    state: absent
-    path: "{{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}/{{ item }}"
   loop:
-    - public
-    - resources
-    - content
-    - .git
+    - "{{ script_share_personal_site_name }}"
+    - dummycontent
 
-- name: Recreate content dir
-  ansible.builtin.file:
-    state: directory
-    path: "{{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}/content"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    mode: "0755"
-
-- name: Ensure demo content exists
+- name: Copy over dummy content
   ansible.builtin.copy:
     src: ./
-    dest: "{{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}/content"
+    dest: "{{ script_share_personal_site_path }}/dummycontent"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0644"
 
-- name: Initialise git repo
-  ansible.builtin.command: git init
-  args:
-    chdir: "{{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}"
+- name: Copy over script
+  ansible.builtin.template:
+    src: share-site.sh
+    dest: "{{ script_share_personal_site_path }}/share-site.sh"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0744"
 
-- name: Add a setting - branch
-  community.general.git_config:
-    name: init.defaultBranch
-    scope: local
-    value: main
-    repo: "{{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}"
-
-- name: Add a setting - email
-  community.general.git_config:
-    name: user.email
-    scope: local
-    value: "github@whalecoiner.com"
-    repo: "{{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}"
-
-- name: Add a setting - name
-  community.general.git_config:
-    name: user.name
-    scope: local
-    value: "Charlie O'Hara"
-    repo: "{{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}"
-
-- name: Git add files
-  ansible.builtin.command: git add .
-  args:
-    chdir: "{{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}"
-
-- name: Git commit
-  ansible.builtin.command: git commit -m "Auto Commit"
-  args:
-    chdir: "{{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}"
-
-- name: Set remote origin
-  ansible.builtin.command: "git remote add origin https://{{ vault_github_token_share_site }}@github.com/awfulwoman/personal-site"
-  args:
-    chdir: "{{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}"
-
-- name: Push to remote
-  ansible.builtin.command: git push --set-upstream origin main --force
-  args:
-    chdir: "{{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}"
+- name: Set up cron for script
+  ansible.builtin.cron:
+    name: "Share Site"
+    minute: "0"
+    hour: "5,2"
+    job: "{{ script_share_personal_site_path }}/share-site.sh"

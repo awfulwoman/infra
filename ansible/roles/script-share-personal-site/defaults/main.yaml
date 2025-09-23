@@ -1,2 +1,2 @@
-script_share_personal_site_path: /fastpool/scripts/share-site
+script_share_personal_site_path: /opt/scripts/share-site
 script_share_personal_site_name: personal-site

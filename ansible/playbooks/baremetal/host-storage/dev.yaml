@@ -5,7 +5,7 @@
   #     - libretranslate
   roles:
     # - role: infra-private-resources
-    - role: system-zfs
+    - role: script-share-personal-site
 
   handlers:
     - name: Reboot host
