@@ -1,0 +1,13 @@
+- name: Reload systemd
+  ansible.builtin.systemd_service:
+    daemon_reload: true
+
+- name: Restart SSH
+  ansible.builtin.service:
+    name: "{{ security_sshd_name }}"
+    state: "{{ security_ssh_restart_handler_state }}"
+
+- name: Reload fail2ban
+  ansible.builtin.service:
+    name: fail2ban
+    state: reloaded

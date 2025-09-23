@@ -2,8 +2,6 @@
 # ansible-galaxy install -r ansible/meta/requirements.yaml 
 # ansible-galaxy collection install -r ansible/meta/requirements.yaml
 roles:
-  - name: geerlingguy.security
-    version: 3.0.0
   - name: weareinteractive.environment
     version: 1.5.0
   - name: xanmanning.k3s

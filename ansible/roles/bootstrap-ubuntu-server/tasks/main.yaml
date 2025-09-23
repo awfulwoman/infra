@@ -173,9 +173,9 @@
   vars:
     ansible_become: true
 
-- name: That awful guy geerling
+- name: Security
   ansible.builtin.include_role:
-    name: geerlingguy.security
+    name: system-security
   vars:
     ansible_become: true
     security_fail2ban_enabled: false

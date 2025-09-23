@@ -1,0 +1,30 @@
+# Unattended Upgrades
+security_autoupdate_enabled: true
+security_autoupdate_blacklist: []
+security_autoupdate_additional_origins: []
+security_autoupdate_mail_on_error: true
+security_autoupdate_mail_to: unattended@whalecoiner.com
+security_autoupdate_reboot: true
+security_autoupdate_reboot_time: 03:00
+
+# Sudo and such
+security_sudoers_passwordless:
+  - "{{ vault_server_username }}"
+security_sudoers_passworded: []
+
+# SSH hardening
+security_ssh_port: 22
+security_ssh_password_authentication: false
+security_ssh_permit_root_login: false
+security_ssh_usedns: false
+security_ssh_permit_empty_password: false
+security_ssh_challenge_response_auth: false
+security_ssh_gss_api_authentication: false
+security_ssh_x11_forwarding: false
+security_sshd_state: started
+security_ssh_restart_handler_state: restarted
+security_ssh_allowed_users: []
+security_ssh_allowed_groups: []
+
+security_fail2ban_enabled: true
+security_fail2ban_custom_configuration_template: "jail.local.j2"

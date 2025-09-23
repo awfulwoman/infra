@@ -1,0 +1,127 @@
+- name: Ensure packages are installed
+  ansible.builtin.apt:
+    name:
+      - unattended-upgrades
+    state: present
+
+- name: Copy unattended-upgrades configuration files
+  ansible.builtin.template:
+    src: "{{ item }}.j2"
+    dest: "/etc/apt/apt.conf.d/{{ item }}"
+    owner: root
+    group: root
+    mode: "0644"
+  loop:
+    - 10periodic
+    - 50unattended-upgrades
+
+- name: Ensure SSH daemon is running
+  ansible.builtin.service:
+    name: "{{ security_sshd_name }}"
+    state: "{{ security_sshd_state }}"
+
+- name: Ensure SSH config is hardened
+  ansible.builtin.lineinfile:
+    dest: "{{ security_ssh_config_path }}"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+    validate: 'sshd -T -f %s'
+    mode: "0644"
+  with_items:
+    - regexp: "^PasswordAuthentication"
+      line: "PasswordAuthentication {{ 'yes' if security_ssh_password_authentication else 'no' }}"
+    - regexp: "^PermitRootLogin"
+      line: "PermitRootLogin {{ 'yes' if security_ssh_permit_root_login else 'no' }}"
+    - regexp: "^Port"
+      line: "Port {{ security_ssh_port }}"
+    - regexp: "^UseDNS"
+      line: "UseDNS {{ 'yes' if security_ssh_usedns else 'no' }}"
+    - regexp: "^PermitEmptyPasswords"
+      line: "PermitEmptyPasswords {{ 'yes' if security_ssh_permit_empty_password else 'no' }}"
+    - regexp: "^ChallengeResponseAuthentication"
+      line: "ChallengeResponseAuthentication {{ 'yes' if security_ssh_challenge_response_auth else 'no' }}"
+    - regexp: "^GSSAPIAuthentication"
+      line: "GSSAPIAuthentication {{ 'yes' if security_ssh_gss_api_authentication else 'no' }}"
+    - regexp: "^X11Forwarding"
+      line: "X11Forwarding {{ 'yes' if security_ssh_x11_forwarding else 'no' }}"
+  notify:
+    - reload systemd
+    - Restart SSH
+
+- name: Add configured users allowed to connect over ssh
+  ansible.builtin.lineinfile:
+    dest: "{{ security_ssh_config_path }}"
+    regexp: '^AllowUsers'
+    line: "AllowUsers {{ security_ssh_allowed_users | join(' ') }}"
+    state: present
+    create: true
+    validate: 'sshd -T -f %s'
+    mode: "0644"
+  when: security_ssh_allowed_users | length > 0
+  notify: Restart SSH
+
+- name: Add configured groups allowed to connect over ssh
+  ansible.builtin.lineinfile:
+    dest: "{{ security_ssh_config_path }}"
+    regexp: '^AllowGroups'
+    line: "AllowGroups {{ security_ssh_allowed_groups | join(' ') }}"
+    state: present
+    create: true
+    validate: 'sshd -T -f %s'
+    mode: "0644"
+  when: security_ssh_allowed_groups | length > 0
+  notify: Restart SSH
+
+- name: Add configured user accounts to passwordless sudoers.
+  ansible.builtin.lineinfile:
+    dest: /etc/sudoers
+    regexp: '^{{ item }}'
+    line: '{{ item }} ALL=(ALL) NOPASSWD: ALL'
+    state: present
+    validate: 'visudo -cf %s'
+    mode: "0440"
+  with_items: "{{ security_sudoers_passwordless }}"
+  when: security_sudoers_passwordless | length > 0
+
+- name: Add configured user accounts to passworded sudoers.
+  ansible.builtin.lineinfile:
+    dest: /etc/sudoers
+    regexp: '^{{ item }}'
+    line: '{{ item }} ALL=(ALL) ALL'
+    state: present
+    validate: 'visudo -cf %s'
+    mode: "0440"
+  with_items: "{{ security_sudoers_passworded }}"
+  when: security_sudoers_passworded | length > 0
+
+- name: Ensure fail2ban is installed
+  ansible.builtin.package:
+    name: fail2ban
+    state: present
+
+- name: Ensure any jail custom configurations exist
+  ansible.builtin.template:
+    src: "{{ security_fail2ban_custom_configuration_template }}"
+    dest: /etc/fail2ban/jail.local
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - Reload fail2ban
+
+- name: Ensure fail2ban configuration exists
+  ansible.builtin.template:
+    src: fail2ban.local.j2
+    dest: /etc/fail2ban/fail2ban.local
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - Reload fail2ban
+
+- name: Ensure fail2ban is running and enabled
+  ansible.builtin.service:
+    name: fail2ban
+    state: started
+    enabled: true
