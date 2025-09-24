@@ -20,7 +20,7 @@ rm -rf {{ script_share_personal_site_path }}/{{ script_share_personal_site_name 
 
 echo "Copy content"
 mkdir {{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}/content
-cp -r "{{ script_share_personal_site_path }}/dummycontent/" {{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}/content
+rsync -a "{{ script_share_personal_site_path }}/dummycontent/" {{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}/content
 
 # ls -alh "{{ script_share_personal_site_path }}/dummycontent/*" {{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}/content
 
