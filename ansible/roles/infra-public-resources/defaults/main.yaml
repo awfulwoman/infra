@@ -156,10 +156,6 @@ infra_publicresources_domains:
         priority: 10
         ttl: 14400
         id: aw_mx_mb1
-      - type: MX
-        hostname: db4fb4d222c289b319600fb0f87e82491cf603ce
-        value: 96f3e1d37f563d3215ed3dd71a276711d21fcd7a
-        id: aw_mbox_validation
 
   - domain: "{{ vault_olddomain_se }}"
     id: se
