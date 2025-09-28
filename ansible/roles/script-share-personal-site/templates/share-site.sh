@@ -10,20 +10,22 @@ else
   git pull
 fi
 
+
 rm -rf {{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}/public
 rm -rf {{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}/resources
 rm -rf {{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}/content
 rm -rf {{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}/.git
 
+
 mkdir {{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}/content
 rsync -a "{{ script_share_personal_site_path }}/dummycontent/" {{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}/content
+
 
 cd {{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}
 git config --global init.defaultBranch main
 git init .
 git config user.email "github@{{ vault_olddomain_wc }}"
 git config user.name "Charlie O'Hara"
-
 git add .
 git commit -m "Auto Commit $(date +'%Y-%m-%dT%H:%M:%S%z')"
 git remote add origin https://{{ vault_github_token_share_site }}@github.com/awfulwoman/personal-site
