@@ -21,6 +21,7 @@ services:
     networks:
       - "{{ default_docker_network }}"
     volumes:
+    - slowpool/charlie/sync:/var/syncthing
     {% for key, value in syncthing_paths.items() %}
     - "{{ value }}:/{{ key }}"
     {% endfor %}
