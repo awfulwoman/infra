@@ -1,0 +1,1 @@
+{{ mailer_smtp_server }} smtp --port=465 --auth-login --user={{ mailer_smtp_user }} --pass={{ mailer_smtp_password }} --ssl

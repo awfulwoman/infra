@@ -1,0 +1,68 @@
+- name: Ensure installation dependencies exist
+  become: true
+  ansible.builtin.apt:
+    name:
+      - mailutils
+      - nullmailer
+    state: present
+
+- name: Ensure dir exists
+  become: true
+  ansible.builtin.file:
+    dest: /etc/nullmailer
+    state: directory
+    owner: root
+    group: sudo
+    mode: "0774"
+
+- name: Ensure files exist
+  become: true
+  ansible.builtin.template:
+    src: "{{ item }}"
+    dest: "/etc/nullmailer/{{ item }}"
+    owner: root
+    group: sudo
+    mode: "0664"
+  loop:
+    - adminaddr
+    - defaultdomain
+    - defaulthost
+    # - me
+    - remotes
+  notify: Restart service
+
+- name: Ensure /etc/aliases exists
+  become: true
+  ansible.builtin.file:
+    dest: /etc/aliases
+    state: touch
+    owner: root
+    group: sudo
+    mode: "0664"
+
+- name: Ensure aliases are present
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/aliases
+    line: "{{ item }}"
+    state: present
+  loop:
+    - "root: serversimportant@{{ vault_personal_domain }}"
+    - "default: servers@{{ vault_personal_domain }}"
+  notify: Restart service
+
+# - name: Ensure conf files exist
+#   become: true
+#   ansible.builtin.template:
+#     src: msmtprc
+#     dest: /etc/msmtprc
+#     owner: root
+#     group: root
+#     mode: "0664"
+
+# - name: Ensure services are started and enabled
+#   become: true
+#   ansible.builtin.systemd:
+#     name: msmtpd
+#     state: started
+#     enabled: true
