@@ -76,3 +76,7 @@
     remove_orphans: true
   loop: "{{ compositions }}"
   when: compositions is defined
+
+- name: Prune unused images
+  community.docker.docker_prune:
+    images: true
