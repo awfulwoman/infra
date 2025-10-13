@@ -251,7 +251,7 @@ then
   fi
 
   {% endfor %} # End dataset loop
-  {% endof %}
+  {% endif %}
 
   log_info "{{ zfsbackup_client }} backup finished."
 

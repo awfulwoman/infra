@@ -6,6 +6,7 @@ security_autoupdate_additional_origins:
   - "LP-PPA-m-grant-prg-utils:noble"
   - "Docker:noble"
   - "Tailscale:noble"
+# - "Ansible:noble"
 security_autoupdate_mail_on_error: true
 security_autoupdate_mail_to: unattended@whalecoiner.com
 security_autoupdate_reboot: true
