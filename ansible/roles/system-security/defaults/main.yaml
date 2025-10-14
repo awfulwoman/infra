@@ -4,9 +4,9 @@ security_autoupdate_blacklist: []
 security_autoupdate_additional_origins:
   - "LP-PPA-tomtomtom-yt-dlp:noble"
   - "LP-PPA-m-grant-prg-utils:noble"
+  - "LP-PPA-ansible-ansible:noble"
   - "Docker:noble"
   - "Tailscale:noble"
-# - "Ansible:noble"
 security_autoupdate_mail_on_error: true
 security_autoupdate_mail_to: unattended@whalecoiner.com
 security_autoupdate_reboot: true
