@@ -17,6 +17,12 @@ host_pfqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}"
 host_fqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}.{{ domain_name }}"
 
 # -------------------------------------------------------------------
+# UBUNTU
+# -------------------------------------------------------------------
+
+ubuntupro_attach: true
+
+# -------------------------------------------------------------------
 # BOOTSTRAP
 # -------------------------------------------------------------------#
 bootstrap_ubuntu_timezone: "Europe/London"

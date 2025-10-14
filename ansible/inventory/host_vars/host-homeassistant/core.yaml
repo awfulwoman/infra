@@ -1,7 +1,13 @@
+# -------------------------------------------------------------------
+# ANSIBLE
+# -------------------------------------------------------------------
 ansible_host: "192.168.1.130"
 ansible_user: "{{ vault_server_username }}"
 ansible_become_password: "{{ vault_password }}"
 
+# -------------------------------------------------------------------
+# INFRA
+# -------------------------------------------------------------------
 host_type: baremetal
 host_name: homebrain # Hostname of the machine
 host_city: ber # City where the machine is located
@@ -10,10 +16,18 @@ host_ipv4: 192.168.1.130
 host_pfqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}"
 host_fqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}.{{ domain_name }}"
 
+# -------------------------------------------------------------------
+# UBUNTU
+# -------------------------------------------------------------------
+
+ubuntupro_attach: true
+
 # --- NETWORK -------------
 # configure_dns_linkdevice_physical: "enp1s0"
 
-# --- ZFS -------------
+# -------------------------------------------------------------------
+# ZFS
+# -------------------------------------------------------------------
 
 # ZFS pools
 zfs_pools:

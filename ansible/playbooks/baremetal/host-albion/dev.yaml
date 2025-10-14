@@ -1,7 +1,8 @@
 - name: UK Server (dev work)
   hosts: host-albion
   roles:
-    - role: compositions
+    # - role: compositions
+    - role: system-ubuntupro
 
   handlers:
     - name: Reboot host

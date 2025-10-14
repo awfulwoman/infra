@@ -5,7 +5,8 @@
   #     - libretranslate
   roles:
     # - role: infra-private-resources
-    - role: script-share-personal-site
+    # - role: script-share-personal-site
+    - role: system-ubuntupro
 
   handlers:
     - name: Reboot host

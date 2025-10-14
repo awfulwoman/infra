@@ -1,0 +1,39 @@
+- name: Register Pro initial status
+  ansible.builtin.command: "pro status --format json"
+  register: _ubuntupro_output_status
+  changed_when: false
+
+- name: Set Pro initial status
+  ansible.builtin.set_fact:
+    _ubuntupro_initial_registration_status: "{{ (_ubuntupro_output_status.stdout | from_json).get('attached') }}"
+
+- name: DEBUG Pro inital status
+  ansible.builtin.debug:
+    var: _ubuntupro_initial_registration_status
+  when: ubuntupro_debug and _ubuntupro_initial_registration_status is defined
+
+- name: Ensure machine is attached to Ubuntu Pro
+  when: vault_ubuntupro_token is defined and ubuntupro_attach is true and _ubuntupro_initial_registration_status is false
+  ansible.builtin.command: "pro attach {{ vault_ubuntupro_token }}"
+  become: true
+  register: ubuntupro_output_attachment
+  changed_when: ubuntupro_output_attachment.rc == 0
+  failed_when: (ubuntupro_output_attachment.rc != 0) and _ubuntupro_initial_registration_status is false
+
+- name: Ensure machine is detached from Ubuntu Pro
+  when: vault_ubuntupro_token is defined and ubuntupro_attach is false and _ubuntupro_initial_registration_status is true
+  ansible.builtin.command: "pro detach --assume-yes"
+  become: true
+  register: ubuntupro_output_detachment
+  changed_when: ubuntupro_output_detachment.rc == 0
+  failed_when: (ubuntupro_output_detachment.rc != 0) and _ubuntupro_initial_registration_status is true
+
+- name: DEBUG Pro attachment
+  ansible.builtin.debug:
+    var: ubuntupro_output_attachment
+  when: ubuntupro_debug and ubuntupro_output_attachment is defined
+
+- name: DEBUG Pro detachment
+  ansible.builtin.debug:
+    var: ubuntupro_output_detachment
+  when: ubuntupro_debug and ubuntupro_output_detachment is defined

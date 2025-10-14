@@ -4,6 +4,15 @@
       - unattended-upgrades
     state: present
 
+- name: Register Pro initial status
+  ansible.builtin.command: "pro status --format json"
+  register: ubuntupro_output_status
+  changed_when: false
+
+- name: Set Pro initial status
+  ansible.builtin.set_fact:
+    _ubuntupro_initial_registration_status: "{{ (ubuntupro_output_status.stdout | from_json).get('attached') }}"
+
 - name: Copy unattended-upgrades configuration files
   ansible.builtin.template:
     src: "{{ item }}.j2"
