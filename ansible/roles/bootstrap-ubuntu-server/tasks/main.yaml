@@ -173,6 +173,10 @@
   vars:
     ansible_become: true
 
+- name: Ubuntu Pro
+  ansible.builtin.include_role:
+    name: system-ubuntupro
+
 - name: Security
   ansible.builtin.include_role:
     name: system-security
