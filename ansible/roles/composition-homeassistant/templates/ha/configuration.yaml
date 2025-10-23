@@ -20,21 +20,6 @@ http:
 # https://github.com/bramstroker/homeassistant-powercalc
 powercalc:
 
-climate:
-  - platform: generic_thermostat
-    unique_id: climate_upstairs
-    name: Upstairs
-    heater: switch.upstairs_radiators
-    target_sensor: sensor.upstairs_temperature
-    target_temp: 19
-    sleep_temp: 17.5
-    away_temp: 15
-    home_temp: 19
-    max_temp: 23
-    min_temp: 15
-    target_temp_step: 0.5
-    hot_tolerance: 0
-
 # Not supported yet in the UI
 # https://www.home-assistant.io/integrations/wake_on_lan/
 switch:
@@ -61,28 +46,24 @@ switch:
         payload: suspend
         topic: servers/host-backups
 
+# Add some additional time date sensors for use in scripts
 sensor:
   - platform: time_date
     display_options:
       - 'time'
       - 'date'
       - 'date_time'
-      - 'date_time_utc'
       - 'date_time_iso'
-      - 'time_date'
-      - 'time_utc'
 
+# Exclude these entities from showing in the logbook/Activity stream
+# because they're quite spammy.
 logbook:
   exclude:
     entities:
       - sensor.time
       - sensor.date
       - sensor.date_time
-      - sensor.date_time_utc
       - sensor.date_time_iso
-      - sensor.time_date
-      - sensor.time_utc
-      - sensor.beat
       - sensor.fritz_box_7412_ui_connection_uptime
       - sensor.fritz_box_7412_ui_last_restart
     entity_globs:
@@ -90,6 +71,8 @@ logbook:
     domains:
       - sun
 
+# Prevent these entities from being written to storage. 
+# Quite useful on a Raspberry Pi SD card to save write wear.
 recorder:
   exclude:
     entities:
