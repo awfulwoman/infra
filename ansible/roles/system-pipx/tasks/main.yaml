@@ -1,0 +1,25 @@
+- name: Check for pipx
+  ansible.builtin.stat:
+    path: "{{ ansible_facts.user_dir }}/.local/bin/pipx"
+  ignore_errors: true
+  changed_when: false
+  register: pipx_status
+
+- name: Ensure pipx is installed
+  when: not pipx_status.stat.exists
+  block:
+    - name: Install pipx
+      ansible.builtin.command: "{{ item }}"
+      loop:
+        - python -m venv /tmp/bootstrap
+        - /tmp/bootstrap/bin/pip install pipx
+        - /tmp/bootstrap/bin/pipx install pipx
+        - rm -rf /tmp/bootstrap
+
+- name: Ensure pipx packages are installed
+  community.general.pipx:
+    executable: "{{ ansible_facts.user_dir }}/.local/bin/pipx"
+    name: "{{ item }}"
+    install_deps: true
+    state: install
+  loop: "{{ system_pipx_packages }}"

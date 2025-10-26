@@ -22,34 +22,7 @@
 - name: Ensure core apt packages are installed
   become: true
   ansible.builtin.apt:
-    name:
-      - util-linux-extra
-      - curl
-      - dirmngr
-      - e2fsprogs
-      - ffmpeg
-      - git
-      - htop
-      - iptables
-      - lm-sensors
-      - mosh
-      - neofetch
-      - python-is-python3
-      - python3
-      - python3-docker
-      - python3-pip
-      - python3-virtualenv
-      - restic
-      - retry
-      - smartmontools
-      - sqlite3
-      - timg
-      - tmux
-      - unzip
-      - uptimed
-      - vim
-      - wget
-      - zsh
+    name: "{{ bootstrap_ubuntu_apt_packages }}"
     state: present
 
 - name: Ensure Github SSH keys are present
@@ -139,32 +112,36 @@
 #   ansible.builtin.apt:
 #     autoremove: true
 
-- name: Ensure Python dir exists
-  become: true
-  ansible.builtin.file:
-    state: directory
-    path: "{{ pip_basepath }}"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    mode: "0775"
+# - name: Ensure Python dir exists
+#   become: true
+#   ansible.builtin.file:
+#     state: directory
+#     path: "{{ pip_basepath }}"
+#     owner: "{{ ansible_user }}"
+#     group: "{{ ansible_user }}"
+#     mode: "0775"
 
-- name: Ensure Python venv dir exists
-  become: true
-  ansible.builtin.file:
-    state: directory
-    path: "{{ pip_virtualenv_path }}"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    mode: "0775"
+# - name: Ensure Python venv dir exists
+#   become: true
+#   ansible.builtin.file:
+#     state: directory
+#     path: "{{ pip_virtualenv_path }}"
+#     owner: "{{ ansible_user }}"
+#     group: "{{ ansible_user }}"
+#     mode: "0775"
 
-- name: Ensure Python requirements file exists
-  ansible.builtin.copy:
-    content: ""
-    force: false
-    dest: "{{ pip_requirements_path }}"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    mode: "0744"
+# - name: Ensure Python requirements file exists
+#   ansible.builtin.copy:
+#     content: ""
+#     force: false
+#     dest: "{{ pip_requirements_path }}"
+#     owner: "{{ ansible_user }}"
+#     group: "{{ ansible_user }}"
+#     mode: "0744"
+
+- name: Pipx
+  ansible.builtin.include_role:
+    name: system-pipx
 
 - name: Env vars
   no_log: true

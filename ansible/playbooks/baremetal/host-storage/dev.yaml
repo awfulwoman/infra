@@ -6,7 +6,7 @@
   roles:
     # - role: infra-private-resources
     # - role: script-share-personal-site
-    - role: system-ubuntupro
+    - role: system-pipx
 
   handlers:
     - name: Reboot host

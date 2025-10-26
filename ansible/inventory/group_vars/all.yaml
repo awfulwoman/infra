@@ -30,11 +30,6 @@ home_repo_dir: "/opt/infra"
 
 # Python
 default_bin_path: /usr/local/bin
-pip_basepath: "{{ ansible_path }}/pip/"
-pip_requirements_path: "{{ ansible_path }}/pip/requirements.txt"
-pip_virtualenv_path: "{{ ansible_path }}/pip/venv"
-pip_virtualenv_python: python3
-pip_virtualenv_bin_path: "{{ ansible_path }}/pip/venv/bin"
 systemd_service_path: /etc/systemd/system
 
 # Terraform

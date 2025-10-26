@@ -1,15 +1,15 @@
-- name: Ensure package is in global requirements file
-  ansible.builtin.lineinfile:
-    path: "{{ pip_requirements_path }}"
-    line: "{{ item }}"
-  loop:
-    - linux2mqtt
+# - name: Ensure package is in global requirements file
+#   ansible.builtin.lineinfile:
+#     path: "{{ pip_requirements_path }}"
+#     line: "{{ item }}"
+#   loop:
+#     - linux2mqtt
 
-- name: Ensure pip packages are installed
-  ansible.builtin.pip:
-    requirements: "{{ pip_requirements_path }}"
-    virtualenv: "{{ pip_virtualenv_path }}"
-    virtualenv_python: "{{ pip_virtualenv_python }}"
+# - name: Ensure pip packages are installed
+#   ansible.builtin.pip:
+#     requirements: "{{ pip_requirements_path }}"
+#     virtualenv: "{{ pip_virtualenv_path }}"
+#     virtualenv_python: "{{ pip_virtualenv_python }}"
 
 - name: Ensure service file exists in {{ linux2mqtt_service_path }}
   become: true

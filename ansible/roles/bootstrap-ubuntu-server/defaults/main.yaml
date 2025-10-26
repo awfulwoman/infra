@@ -1,1 +1,29 @@
 bootstrap_ubuntu_timezone: "Europe/Berlin"
+bootstrap_ubuntu_apt_packages:
+  - curl
+  - dirmngr
+  - e2fsprogs
+  - ffmpeg
+  - git
+  - htop
+  - iptables
+  - lm-sensors
+  - mosh
+  - neofetch
+  - python-is-python3
+  - python3
+  - python3-docker
+  - python3-pip
+  - python3-virtualenv
+  - restic
+  - retry
+  - smartmontools
+  - sqlite3
+  - timg
+  - tmux
+  - unzip
+  - uptimed
+  - util-linux-extra
+  - vim
+  - wget
+  - zsh
