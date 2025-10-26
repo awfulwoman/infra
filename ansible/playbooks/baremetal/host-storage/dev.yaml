@@ -1,12 +1,13 @@
 - name: Storage NAS
   hosts: host-storage
-  # vars:
-  #   compositions:
-  #     - libretranslate
+  vars:
+    compositions:
+      - syncthing
   roles:
     # - role: infra-private-resources
     # - role: script-share-personal-site
-    - role: system-pipx
+    # - role: system-pipx
+    - role: compositions
 
   handlers:
     - name: Reboot host

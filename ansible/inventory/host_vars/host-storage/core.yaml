@@ -101,9 +101,9 @@ shared_media_path: "/slowpool/shared/media"
 
 tubeachivist_youtube_path: "{{ shared_media_path }}/youtube"
 
-syncthing_paths:
-  data_default: "/slowpool/shared/syncthing"
-  data_charlie: "{{ syncthing_data_path }}"
+# syncthing_paths:
+#   data_default: "/slowpool/shared/syncthing"
+#   data_charlie: "{{ syncthing_data_path }}"
 
 # -------------------------------------------------------------------
 # NFS

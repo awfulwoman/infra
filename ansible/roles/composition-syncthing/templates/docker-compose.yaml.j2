@@ -21,10 +21,7 @@ services:
     networks:
       - "{{ default_docker_network }}"
     volumes:
-    - slowpool/charlie/sync:/var/syncthing
-    {% for key, value in syncthing_paths.items() %}
-    - "{{ value }}:/{{ key }}"
-    {% endfor %}
+      - "/slowpool/charlie/syncthing:/var/syncthing"
 
     healthcheck:
       test: curl -fkLsS -m 2 127.0.0.1:8384/rest/noauth/health | grep -o --color=never OK || exit 1
