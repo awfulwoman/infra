@@ -1,5 +1,3 @@
 TZ="Europe/Berlin"
 WATCHTOWER_CLEANUP=true
-WATCHTOWER_NOTIFICATION_URL="pushover://shoutrrr:{{ vault_pushover_home_network_key }}@{{ vault_pushover_user_key  }}/?devices=iphone"
-WATCHTOWER_NO_STARTUP_MESSAGE=true
-WATCHTOWER_NOTIFICATIONS_HOSTNAME="{{ ansible_hostname }}"
+WATCHTOWER_SCHEDULE="0 0 01 * * *"
