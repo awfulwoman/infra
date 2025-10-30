@@ -6,7 +6,7 @@ services:
     ports:
       - "127.0.0.1:3000:3000"
       - "222:22"
-    image: gitea/gitea:1.24
+    image: gitea/gitea:1.25
     restart: unless-stopped
     env_file: .environment_vars
     environment:
