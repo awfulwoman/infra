@@ -3,7 +3,7 @@ domain_name: "{{ vault_infra_domain_name_ew }}"
 tailscale_authkey: "{{ vault_tailscale_authkey }}"
 
 security_autoupdate_mail_on_error: true
-security_autoupdate_mail_to: unattended@whalecoiner.com
+security_autoupdate_mail_to: "unattended@{{ vault_olddomain_wc }}"
 security_autoupdate_reboot: true
 security_autoupdate_reboot_time: 03:00
 security_sudoers_passwordless:
