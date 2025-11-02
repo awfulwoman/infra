@@ -5,7 +5,7 @@
     - role: client-nut
     - role: system-wakeonlan
     - role: system-zfs
-    - role: system-msmtp
+    # - role: system-msmtp
     - role: system-mqtt2cmd
     - role: server-zbackups
       zfsbackup_pushover: false

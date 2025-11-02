@@ -8,7 +8,7 @@
     - role: client-nut
     - role: system-zfs
     - role: system-mqtt2cmd
-    - role: system-msmtp
+    # - role: system-msmtp
     - role: server-nfs
     - role: client-zbackups
     - role: compositions
