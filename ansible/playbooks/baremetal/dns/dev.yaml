@@ -6,7 +6,8 @@
     # - role: script-share-personal-site
     # - role: infra-named
     # - role: infra-dhcpd
-    - role: infra-public-resources
+    - role: infothrill.nullmailer
+      become: true
 
   handlers:
     - name: Reboot host

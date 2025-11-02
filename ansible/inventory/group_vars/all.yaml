@@ -35,6 +35,12 @@ systemd_service_path: /etc/systemd/system
 # Terraform
 terraform_working_dir: /opt/terraform
 
+nullmailer_mail_recipient: charlie@{{ vault_olddomain_wc }}
+nullmailer_relay_host: "smtp.{{ vault_mailbox_domain }}"
+nullmailer_relay_port: 465
+nullmailer_relay_user: "{{ vault_mailbox_user }}"
+nullmailer_relay_pass: "{{ vault_mailbox_password }}"
+
 # Environment Variables
 environment_config:
   ANSIBLE_FORCE_COLOR: true
