@@ -9,7 +9,7 @@ roles:
   - name: robertdebock.digitalocean_agent
     version: 3.1.9
   - name: infothrill.nullmailer
-    version: v3.1.0
+    version: v3.2.0
 
 collections:
   - name: ansible.netcommon
