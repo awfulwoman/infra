@@ -2,11 +2,12 @@
 security_autoupdate_enabled: true
 security_autoupdate_blacklist: []
 security_autoupdate_additional_origins:
-  - "LP-PPA-tomtomtom-yt-dlp:noble"
-  - "LP-PPA-m-grant-prg-utils:noble"
-  - "LP-PPA-ansible-ansible:noble"
-  - "Docker:noble"
-  - "Tailscale:noble"
+  - "LP-PPA-tomtomtom-yt-dlp:{{ ansible_distribution_release }}"
+  - "LP-PPA-m-grant-prg-utils:{{ ansible_distribution_release }}"
+  - "LP-PPA-ansible-ansible:{{ ansible_distribution_release }}"
+  - "Docker:{{ ansible_distribution_release }}"
+  - "Tailscale:{{ ansible_distribution_release }}"
+  - "terraform:{{ ansible_distribution_release }}"
 security_autoupdate_mail_on_error: true
 security_autoupdate_mail_to: unattended@whalecoiner.com
 security_autoupdate_reboot: true

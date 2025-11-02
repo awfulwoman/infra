@@ -158,7 +158,6 @@
   ansible.builtin.include_role:
     name: system-security
   vars:
-    ansible_become: true
     security_fail2ban_enabled: false
 
 - name: MOTD

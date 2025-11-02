@@ -9,15 +9,15 @@ Unattended-Upgrade::MailOnlyOnError "true";
 {% endif %}
 
 Unattended-Upgrade::Allowed-Origins {
-    "${distro_id}:${distro_codename}";
-    "${distro_id}:${distro_codename}-security";
-    "${distro_id}:${distro_codename}-updates";
+    "{{ ansible_distribution }}:{{ ansible_distribution_release }}";
+    "{{ ansible_distribution }}:{{ ansible_distribution_release }}-security";
+    "{{ ansible_distribution }}:{{ ansible_distribution_release }}-updates";
 {% if _ubuntupro_initial_registration_status %}
-    "${distro_id}ESM:${distro_codename}";
-    "${distro_id}ESM:${distro_codename}-updates";
-    "${distro_id}ESM:${distro_codename}-security";
-    "${distro_id}ESM:${distro_codename}-infra-security";
-    "${distro_id}ESMApps:${distro_codename}-apps-security";
+    "{{ ansible_distribution }}ESM:{{ ansible_distribution_release }}";
+    "{{ ansible_distribution }}ESM:{{ ansible_distribution_release }}-updates";
+    "{{ ansible_distribution }}ESM:{{ ansible_distribution_release }}-security";
+    "{{ ansible_distribution }}ESM:{{ ansible_distribution_release }}-infra-security";
+    "{{ ansible_distribution }}ESMApps:{{ ansible_distribution_release }}-apps-security";
 {% endif %}
 {% for origin in security_autoupdate_additional_origins %}
     "{{ origin }}";

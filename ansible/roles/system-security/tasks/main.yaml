@@ -1,7 +1,9 @@
 - name: Ensure packages are installed
+  become: true
   ansible.builtin.apt:
     name:
       - unattended-upgrades
+      - fail2ban
     state: present
 
 - name: Register Pro initial status
@@ -14,6 +16,7 @@
     _ubuntupro_initial_registration_status: "{{ (ubuntupro_output_status.stdout | from_json).get('attached') }}"
 
 - name: Copy unattended-upgrades configuration files
+  become: true
   ansible.builtin.template:
     src: "{{ item }}.j2"
     dest: "/etc/apt/apt.conf.d/{{ item }}"
@@ -25,11 +28,13 @@
     - 50unattended-upgrades
 
 - name: Ensure SSH daemon is running
+  become: true
   ansible.builtin.service:
     name: "{{ security_sshd_name }}"
     state: "{{ security_sshd_state }}"
 
 - name: Ensure SSH config is hardened
+  become: true
   ansible.builtin.lineinfile:
     dest: "{{ security_ssh_config_path }}"
     regexp: "{{ item.regexp }}"
@@ -59,6 +64,7 @@
     - Restart SSH
 
 - name: Add configured users allowed to connect over ssh
+  become: true
   ansible.builtin.lineinfile:
     dest: "{{ security_ssh_config_path }}"
     regexp: '^AllowUsers'
@@ -71,6 +77,7 @@
   notify: Restart SSH
 
 - name: Add configured groups allowed to connect over ssh
+  become: true
   ansible.builtin.lineinfile:
     dest: "{{ security_ssh_config_path }}"
     regexp: '^AllowGroups'
@@ -82,7 +89,8 @@
   when: security_ssh_allowed_groups | length > 0
   notify: Restart SSH
 
-- name: Add configured user accounts to passwordless sudoers.
+- name: Add configured user accounts to passwordless sudoers
+  become: true
   ansible.builtin.lineinfile:
     dest: /etc/sudoers
     regexp: '^{{ item }}'
@@ -94,6 +102,7 @@
   when: security_sudoers_passwordless | length > 0
 
 - name: Add configured user accounts to passworded sudoers.
+  become: true
   ansible.builtin.lineinfile:
     dest: /etc/sudoers
     regexp: '^{{ item }}'
@@ -104,12 +113,8 @@
   with_items: "{{ security_sudoers_passworded }}"
   when: security_sudoers_passworded | length > 0
 
-- name: Ensure fail2ban is installed
-  ansible.builtin.package:
-    name: fail2ban
-    state: present
-
 - name: Ensure any jail custom configurations exist
+  become: true
   ansible.builtin.template:
     src: "{{ security_fail2ban_custom_configuration_template }}"
     dest: /etc/fail2ban/jail.local
@@ -120,6 +125,7 @@
     - Reload fail2ban
 
 - name: Ensure fail2ban configuration exists
+  become: true
   ansible.builtin.template:
     src: fail2ban.local.j2
     dest: /etc/fail2ban/fail2ban.local
@@ -130,6 +136,7 @@
     - Reload fail2ban
 
 - name: Ensure fail2ban is running and enabled
+  become: true
   ansible.builtin.service:
     name: fail2ban
     state: started
