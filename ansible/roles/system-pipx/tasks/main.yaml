@@ -13,14 +13,14 @@
   when: not pipx_status.stat.exists
   block:
 
-    - name: Ensure related packages exists
+    - name: Ensure related apt packages exist
       become: true
       ansible.builtin.apt:
         name:
           - python3-venv
         state: present
 
-    - name: Install pipx
+    - name: Ensure pipx installation steps run
       ansible.builtin.command: "{{ item }}"
       loop:
         - python3 -m venv /tmp/bootstrap
