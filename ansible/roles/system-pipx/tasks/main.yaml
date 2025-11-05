@@ -5,9 +5,21 @@
   changed_when: false
   register: pipx_status
 
+- name: DEBUG pipx_status
+  ansible.builtin.debug:
+    var: pipx_status
+
 - name: Ensure pipx is installed
   when: not pipx_status.stat.exists
   block:
+
+    - name: Ensure related packages exists
+      become: true
+      ansible.builtin.apt:
+        name:
+          - python3-venv
+        state: present
+
     - name: Install pipx
       ansible.builtin.command: "{{ item }}"
       loop:
