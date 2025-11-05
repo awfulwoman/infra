@@ -11,8 +11,8 @@
     - name: Install pipx
       ansible.builtin.command: "{{ item }}"
       loop:
-        - python -m venv /tmp/bootstrap
-        - /tmp/bootstrap/bin/pip install pipx
+        - python3 -m venv /tmp/bootstrap
+        - /tmp/bootstrap/bin/pip3 install pipx
         - /tmp/bootstrap/bin/pipx install pipx
         - rm -rf /tmp/bootstrap
 
