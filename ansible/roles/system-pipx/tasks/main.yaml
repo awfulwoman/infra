@@ -5,10 +5,6 @@
   changed_when: false
   register: pipx_status
 
-- name: DEBUG pipx_status
-  ansible.builtin.debug:
-    var: pipx_status
-
 - name: Ensure pipx is installed
   when: not pipx_status.stat.exists
   block:
