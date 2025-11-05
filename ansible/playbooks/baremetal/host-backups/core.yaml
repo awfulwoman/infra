@@ -3,6 +3,8 @@
   roles:
     - role: bootstrap-ubuntu-server
     - role: client-nut
+    - role: infothrill.nullmailer
+      become: true
     - role: system-wakeonlan
     - role: system-zfs
     # - role: system-msmtp

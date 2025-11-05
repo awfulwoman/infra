@@ -76,7 +76,7 @@
     job: "/usr/sbin/sanoid --cron"
     state: absent
 
-- name: Enable Sanoid timer unit.
+- name: Enable Sanoid timer unit
   ansible.builtin.systemd_service:
     name: sanoid.timer
     state: started

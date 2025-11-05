@@ -3,6 +3,8 @@
   roles:
     - role: hardware-raspberry-pi
     - role: bootstrap-ubuntu-server
+    - role: infothrill.nullmailer
+      become: true
     - role: system-sshkey
     - role: system-zfs
     - role: network-ip-address-forwarding

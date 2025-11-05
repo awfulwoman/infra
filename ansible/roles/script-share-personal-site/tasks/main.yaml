@@ -30,5 +30,5 @@
   ansible.builtin.cron:
     name: "Share Site"
     minute: "0"
-    hour: "5,2"
-    job: "{{ script_share_personal_site_path }}/share-site.sh"
+    hour: "23"
+    job: "{{ script_share_personal_site_path }}/share-site.sh > /dev/null 2>&1"

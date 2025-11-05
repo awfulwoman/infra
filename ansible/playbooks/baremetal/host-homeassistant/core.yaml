@@ -3,6 +3,8 @@
   roles:
     - role: bootstrap-ubuntu-server
     - role: system-zfs
+    - role: infothrill.nullmailer
+      become: true
     - role: server-nut
     - role: system-mqtt2cmd
     - role: hardware-rtl-433
