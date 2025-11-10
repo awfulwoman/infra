@@ -9,7 +9,7 @@ security_autoupdate_additional_origins:
   - "Tailscale:{{ ansible_distribution_release }}"
   - "terraform:{{ ansible_distribution_release }}"
 security_autoupdate_mail_on_error: true
-security_autoupdate_mail_to: unattended@whalecoiner.com
+security_autoupdate_mail_to: "unattended@{{ vault_personal_domain }}"
 security_autoupdate_reboot: true
 security_autoupdate_reboot_time: 03:00
 

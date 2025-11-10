@@ -32,7 +32,7 @@
     state: present
     terms_agreed: true
     contact:
-      - mailto:letsencrypt@whalecoiner.com
+      - "mailto:letsencrypt@{{ vault_personal_domain }}"
   when: not account_data.exists
   register: acme_account_creation
 
