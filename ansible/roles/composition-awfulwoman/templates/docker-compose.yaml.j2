@@ -9,11 +9,11 @@ services:
       - "127.0.0.1:8081:80"
     env_file: .environment_vars
     environment:
-      - NGINX_HOST="awfulwoman.com"
+      - NGINX_HOST="{{ vault_personal_domain }}"
       - NGINX_PORT=80
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.beta.rule=Host(`awfulwoman.com`) || Host(`{{ vault_olddomain_wc }}) || Host(`{{ vault_olddomain_se }}`)"
+      - "traefik.http.routers.beta.rule=Host(`{{ vault_personal_domain }}`) || Host(`{{ vault_olddomain_wc }}) || Host(`{{ vault_olddomain_se }}`)"
       - "traefik.http.routers.beta.tls=true"
       - "traefik.http.routers.beta.tls.certresolver=letsencrypt"
     volumes:
