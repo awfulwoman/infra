@@ -89,7 +89,7 @@
   become: true
   ansible.builtin.template:
     src: docker.conf
-    dest: /etc/systemd/system/docker.service.d/docker.conf
+    dest: /etc/systemd/system/docker.service.d/override.conf
     owner: root
     group: root
     mode: '0644'
