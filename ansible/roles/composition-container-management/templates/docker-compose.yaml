@@ -3,7 +3,7 @@ name: "{{ composition_name }}"
 services:
   watchtower:
     container_name: watchtower
-    image: beatkind/watchtower # https://watchtower.devcdn.net/
+    image: nickfedor/watchtower # https://github.com/nicholas-fedor/watchtower/
     restart: unless-stopped
     env_file: .environment_vars
     volumes:
