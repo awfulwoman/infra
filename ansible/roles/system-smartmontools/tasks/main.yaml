@@ -18,5 +18,5 @@
     name: "update-smart-drivedb"
     minute: "0"
     hour: "5"
-    job: "/usr/sbin/update-smart-drivedb"
+    job: "/usr/sbin/update-smart-drivedb > /dev/null 2>&1"
     state: present
