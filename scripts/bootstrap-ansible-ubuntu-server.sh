@@ -25,7 +25,7 @@ if [[ -z "${ANSIBLE_COLLECTIONS_PATH}" ]]; then
     ANSIBLE_COLLECTIONS_PATH="$ANSIBLE_PATH/galaxy/collections"
 fi
 if [[ -z "${ANSIBLE_ROLES_PATH}" ]]; then
-    ANSIBLE_ROLES_PATH="$ANSIBLE_PATH/galaxy/roles;$HOME_REPO_DIR/ansible/roles"
+    ANSIBLE_ROLES_PATH="$ANSIBLE_PATH/galaxy/roles"
 fi
 
 ANSIBLE_VAULT_PASSWORD_FILE=$ANSIBLE_PATH/.vaultpassword

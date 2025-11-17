@@ -1,14 +1,14 @@
 # Scripts
 
-Various useful scripts and whatnots. 
+Various useful scripts and whatnots.
 
-## Prepping for Ansible
+## Preparing a machine for Ansible
 
 These two scripts will prepare a machine for being controlled by Ansible, and particularly via ansible-pull.
 
-* [Ubuntu](bootstra-ansible-ubuntu.sh)
-* [Mac](bootstra-ansible-mac.sh)
+* [Ubuntu](bootstrap-ansible-ubuntu-server.sh)
+* [Mac](bootstrap-ansible-mac.sh)
 
-# Firmware
+## Firmware
 
 * [Update Sonoff Zigbee stick](update_zigbee_sonoff.sh)
