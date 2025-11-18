@@ -1,0 +1,7 @@
+- import_playbook: virtual/vm-awfulwoman/core.yaml
+- import_playbook: baremetal/dns/core.yaml
+- import_playbook: baremetal/host-storage/core.yaml
+- import_playbook: baremetal/host-homeassistant/core.yaml
+- import_playbook: baremetal/host-albion/core.yaml
+- import_playbook: baremetal/host-backups/core.yaml
+
