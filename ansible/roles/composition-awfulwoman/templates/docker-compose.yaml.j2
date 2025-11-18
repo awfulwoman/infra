@@ -13,7 +13,7 @@ services:
       - NGINX_PORT=80
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.beta.rule=Host(`{{ vault_personal_domain }}`) || Host(`{{ vault_olddomain_wc }}) || Host(`{{ vault_olddomain_se }}`)"
+      - "traefik.http.routers.beta.rule=Host(`{{ vault_personal_domain }}`) || Host(`{{ vault_olddomain_wc }}`) || Host(`{{ vault_olddomain_se }}`)"
       - "traefik.http.routers.beta.tls=true"
       - "traefik.http.routers.beta.tls.certresolver=letsencrypt"
     volumes:
