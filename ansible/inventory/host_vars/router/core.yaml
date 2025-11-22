@@ -1,0 +1,17 @@
+# -------------------------------------------------------------------
+# ANSIBLE
+# -------------------------------------------------------------------
+ansible_host: 192.168.1.245 # 172.16.0.1
+ansible_user: "{{ vault_server_username }}"
+ansible_become_password: "{{ vault_password }}"
+
+# -------------------------------------------------------------------
+# INFRA
+# -------------------------------------------------------------------
+host_type: baremetal
+host_name: router
+host_city: ber
+host_location: xberg
+host_ipv4: 
+host_pfqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}"
+host_fqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}.{{ domain_name }}"

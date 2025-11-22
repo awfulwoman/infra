@@ -1,0 +1,20 @@
+- name: Router
+  hosts: router
+  roles:
+    - role: bootstrap-ubuntu-server
+    - role: infothrill.nullmailer
+      become: true
+    # - role: system-sshkey
+    # - role: system-zfs
+    # - role: infra-public-resources
+    - role: infra-named
+    # - role: infra-certbot
+    # - role: compositions
+    # - role: client-zbackups
+    # - role: script-share-personal-site
+    - role: monitoring-healthchecksio
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:

@@ -8,6 +8,7 @@ all:
     host-mba2011:
     host-albion:
     dns:
+    router:
 
   children:
     infra:
@@ -19,6 +20,7 @@ all:
         vm-awfulwoman:
         host-albion:
         dns:
+        router:
 
     # Group: Home Automation
     homeautomation:
