@@ -60,7 +60,6 @@
     - regexp: "^X11Forwarding"
       line: "X11Forwarding {{ 'yes' if security_ssh_x11_forwarding else 'no' }}"
   notify:
-    - Reload systemd
     - Restart SSH
 
 - name: Add configured users allowed to connect over ssh
