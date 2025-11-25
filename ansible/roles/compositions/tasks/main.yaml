@@ -37,17 +37,17 @@
   # when: compositions is defined is defined and zfs_pools is defined and zfs_pools is true
   when: compositions is defined
 
-# - name: Ensure datasets are owned by user
-#   become: true
-#   ansible.builtin.file:
-#     path: "/{{ container_compositions_zfs_id }}/{{ item }}"
-#     state: directory
-#     owner: "{{ ansible_user }}"
-#     # group: "{{ ansible_user }}"
-#     mode: "0774"
-#   loop: "{{ compositions }}"
-#   # when: compositions is defined is defined and zfs_pools is defined and zfs_pools is true
-#   when: compositions is defined
+- name: Ensure datasets are owned by user
+  become: true
+  ansible.builtin.file:
+    path: "/{{ container_compositions_zfs_id }}/{{ item }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"
+  loop: "{{ compositions }}"
+  # when: compositions is defined is defined and zfs_pools is defined and zfs_pools is true
+  when: compositions is defined
 
 - name: Ensure composition config dirs exist
   ansible.builtin.file:
