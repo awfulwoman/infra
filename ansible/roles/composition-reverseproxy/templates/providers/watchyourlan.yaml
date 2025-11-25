@@ -1,0 +1,48 @@
+tls:
+  options:
+    default:
+      minVersion: VersionTLS13
+      sniStrict: true
+
+http:
+  routers:
+    watchyourlan:
+      service: watchyourlan
+      rule: "Host(`lan.{{ domain_name }}`)"
+      tls:
+        certresolver: letsencrypt
+      entrypoints:
+        - websecure
+        # websecure:
+        #   address: :443
+        #   transport:
+        #     respondingTimeouts:
+        #       readTimeout: 600s
+        #       idleTimeout: 600s
+        #       writeTimeout: 600s
+      middlewares:
+        - secHeaders
+        - https-redirect
+  
+  middlewares:
+    secHeaders:
+      headers:
+        browserXssFilter: true
+        contentTypeNosniff: true
+        frameDeny: true
+        sslRedirect: true
+        stsIncludeSubdomains: true
+        stsPreload: true
+        stsSeconds: 31536000
+        customFrameOptionsValue: SAMEORIGIN
+    https-redirect:
+      redirectScheme:
+        scheme: https
+
+  services:
+    watchyourlan:
+      loadBalancer:
+        passHostHeader: true
+        servers:
+          # - url: "http://172.17.0.1:8123"
+          - url: "http://192.168.1.130:8840"

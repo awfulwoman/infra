@@ -3,7 +3,7 @@
   hosts: host-homeassistant
   vars:
     compositions:
-      - homeassistant
+      - watchyourlan
   roles:
     - role: compositions
 

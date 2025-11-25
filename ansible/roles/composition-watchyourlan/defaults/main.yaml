@@ -1,0 +1,1 @@
+watchyourlan_interface: "{{ network_interface_primary }}"

@@ -1,0 +1,24 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  watchyourlan:
+    container_name: watchyourlan
+    # ports:
+    #   - "127.0.0.1:OUTSIDE:INSIDE"
+    image: aceberg/watchyourlan
+    restart: unless-stopped
+    env_file: .environment_vars
+    network_mode: host
+    labels:
+      - "traefik.enable=true"
+      # - "traefik.http.routers.watchyourlan.rule=Host(`lan.{{ domain_name }}`)"
+      # - "traefik.http.routers.watchyourlan.tls=true"
+      # - "traefik.http.routers.watchyourlan.tls.certresolver=letsencrypt"
+      # - "traefik.http.services.watchyourlan.loadbalancer.server.port=8840"
+    volumes:
+      - "{{ composition_config }}/wyl:/data/WatchYourLAN"
+      - /etc/localtime:/etc/localtime:ro
+
+networks:
+  "{{ default_docker_network }}":
+    external: true
