@@ -7,9 +7,8 @@ services:
     restart: unless-stopped
     env_file: .environment_vars
     volumes:
-      - "{{ composition_config }}/config.json:/config.json"
-      - /etc/localtime:/etc/localtime:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      # - "{{ composition_config }}/config.json:/config.json"
+      - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - "{{ default_docker_network }}"
 

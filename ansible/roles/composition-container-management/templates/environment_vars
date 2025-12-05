@@ -1,3 +1,4 @@
 TZ="Europe/Berlin"
 WATCHTOWER_CLEANUP=true
 WATCHTOWER_SCHEDULE="0 0 * * * *"
+# WATCHTOWER_TRACE=true

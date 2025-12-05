@@ -20,6 +20,12 @@
     group: "{{ ansible_user }}"
     mode: "0644"
 
+# - name: Ensure watchtower config.json is absent
+#   become: true
+#   ansible.builtin.file:
+#     path: "{{ composition_config }}/config.json"
+#     state: absent
+
 - name: Copy watchtower config.json script
   become: true
   ansible.builtin.template:

@@ -1,9 +1,9 @@
 ---
-- name: Home Automation Server NEW
+- name: Dev stuff
   hosts: host-homeassistant
   vars:
     compositions:
-      - watchyourlan
+      - container-management
   roles:
     - role: compositions
 
