@@ -1,4 +1,5 @@
 TZ="Europe/Berlin"
 WATCHTOWER_CLEANUP=true
-WATCHTOWER_SCHEDULE="0 0 * * * *"
+WATCHTOWER_SCHEDULE="0 18,39 * * * *" # seconds, minutes, hours
+WATCHTOWER_UPDATE_ON_START=true
 # WATCHTOWER_TRACE=true
