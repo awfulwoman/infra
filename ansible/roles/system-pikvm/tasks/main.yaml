@@ -1,0 +1,16 @@
+- name: Make filesystem RW
+  ansible.builtin.command:
+    cmd: rw
+
+- name: Update packages
+  ansible.builtin.command:
+    cmd: pikvm-update
+  register: update_result --no-reboot
+
+- name: DEBUG update output
+  ansible.builtin.debug:
+    var: update_result
+
+- name: Make filesystem RO again
+  ansible.builtin.command:
+    cmd: ro

@@ -1,0 +1,19 @@
+# -------------------------------------------------------------------
+# ANSIBLE
+# -------------------------------------------------------------------
+ansible_host: 192.168.1.111 # How to access the host
+ansible_user: root # User to connect as
+ansible_become_password: "{{ vault_password }}"
+ansible_remote_tmp: "/tmp/.ansible/tmp"
+
+# -------------------------------------------------------------------
+# INFRA
+# -------------------------------------------------------------------
+host_type: baremetal
+host_name: pikvm
+host_city: ber
+host_location: xberg
+host_ipv4: 192.168.1.111
+# host_ipv4: 172.16.0.4
+host_pfqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}"
+host_fqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}.{{ domain_name }}"
