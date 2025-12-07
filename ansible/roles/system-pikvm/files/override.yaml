@@ -1,0 +1,99 @@
+# #####################################
+# DO NOT EDIT - MANAGED BY ANSIBLE
+# #####################################
+
+kvmd:
+    gpio:
+        drivers:
+            tes:
+                type: tesmart
+                host: 192.168.1.10 # Address of HDMI switch
+                port: 5000
+        scheme:
+            server0_led:
+                driver: tes
+                pin: 0
+                mode: input
+            server0_switch:
+                driver: tes
+                pin: 0
+                mode: output
+                switch: false
+            server1_led:
+                driver: tes
+                pin: 1
+                mode: input
+            server1_switch:
+                driver: tes
+                pin: 1
+                mode: output
+                switch: false
+            server2_led:
+                driver: tes
+                pin: 2
+                mode: input
+            server2_switch:
+                driver: tes
+                pin: 2
+                mode: output
+                switch: false
+            server3_led:
+                driver: tes
+                pin: 3
+                mode: input
+            server3_switch:
+                driver: tes
+                pin: 3
+                mode: output
+                switch: false
+            server4_led:
+                driver: tes
+                pin: 4
+                mode: input
+            server4_switch:
+                driver: tes
+                pin: 4
+                mode: output
+                switch: false
+            server5_led:
+                driver: tes
+                pin: 5
+                mode: input
+            server5_switch:
+                driver: tes
+                pin: 5
+                mode: output
+                switch: false
+            server6_led:
+                driver: tes
+                pin: 6
+                mode: input
+            server6_switch:
+                driver: tes
+                pin: 6
+                mode: output
+                switch: false
+            server7_led:
+                driver: tes
+                pin: 7
+                mode: input
+            server7_switch:
+                driver: tes
+                pin: 7
+                mode: output
+                switch: false
+        view:
+            header:
+                title: HDMI Switch
+            table:
+                - ["TESMART Switch"]
+                - []
+                - ["#Home Automation", server7_led, server7_switch|Switch]
+                - ["#Storage", server5_led, server5_switch|Switch]
+                - ["#Router", server6_led, server6_switch|Switch]
+                - ["#Backups", server4_led, server4_switch|Switch]
+                #- ["#Server 2", server1_led, server1_switch|Switch]
+                #- ["#Server 3", server2_led, server2_switch|Switch]
+                #- ["#Server 4", server3_led, server3_switch|Switch]
+                #- ["#Server 5", server0_led, server0_switch|Switch]
+

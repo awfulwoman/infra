@@ -1,16 +1,63 @@
-- name: Make filesystem RW
+# This whole thing is awful. But it's hard to write something that
+
+- name: Ensure filesystem is read-write
   ansible.builtin.command:
     cmd: rw
+  changed_when: false
 
-- name: Update packages
+- name: Ensure override config is in place
+  ansible.builtin.copy:
+    src: override.yaml
+    dest: /etc/kvmd/override.yaml
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Ensure sshd config allows public key authentication
+  ansible.builtin.lineinfile:
+    dest: /etc/ssh/sshd_config
+    line: "PubkeyAuthentication yes"
+    regexp: "#PubkeyAuthentication yes"
+    state: present
+
+- name: Ensure sshd config prohibits password login
+  ansible.builtin.lineinfile:
+    dest: /etc/ssh/sshd_config
+    line: "PermitRootLogin prohibit-password"
+    regexp: "#PermitRootLogin prohibit-password"
+    state: present
+
+- name: Ensure the Tailscale package is installed
+  community.general.pacman:
+    name: tailscale-pikvm
+    state: present
+
+- name: Ensure the Tailscale service is running
+  ansible.builtin.systemd_service:
+    state: started
+    name: tailscaled
+
+- name: Ensure the Tailnet is brought up
+  ansible.builtin.command:
+    cmd: "tailscale up --auth-key={{ tailscale_authkey }}"
+  register: tailscaleup_result
+  changed_when: tailscaleup_result.rc != 0
+
+- name: DEBUG Tailnet output
+  ansible.builtin.debug:
+    var: tailscaleup_result
+
+- name: Ensure packages are updated
   ansible.builtin.command:
     cmd: pikvm-update --no-reboot
   register: update_result
+  changed_when: false
 
 - name: DEBUG update output
   ansible.builtin.debug:
-    var: update_result
+    var: update_result.stdout_lines
 
-- name: Make filesystem RO again
+- name: Ensure filesystem is read-only
   ansible.builtin.command:
     cmd: ro
+  changed_when: false
