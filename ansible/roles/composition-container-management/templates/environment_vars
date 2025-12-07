@@ -1,5 +1,4 @@
 TZ="Europe/Berlin"
-WATCHTOWER_CLEANUP=true
-WATCHTOWER_SCHEDULE="0 18,39 * * * *" # seconds, minutes, hours
-WATCHTOWER_UPDATE_ON_START=true
-# WATCHTOWER_TRACE=true
+WATCHTOWER_CLEANUP=true # Remove old images
+WATCHTOWER_SCHEDULE="0 30 * * * *" # 6 digit cron: seconds, minutes, hours
+WATCHTOWER_UPDATE_ON_START=true # Perform checks on startup
