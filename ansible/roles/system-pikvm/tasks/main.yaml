@@ -4,8 +4,8 @@
 
 - name: Update packages
   ansible.builtin.command:
-    cmd: pikvm-update
-  register: update_result --no-reboot
+    cmd: pikvm-update --no-reboot
+  register: update_result
 
 - name: DEBUG update output
   ansible.builtin.debug:

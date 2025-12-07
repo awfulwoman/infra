@@ -1,6 +1,2 @@
-- import_playbook: virtual/vm-awfulwoman/compositions.yaml
-- import_playbook: baremetal/dns/compositions.yaml
-- import_playbook: baremetal/host-storage/compositions.yaml
-- import_playbook: baremetal/host-homeassistant/compositions.yaml
-- import_playbook: baremetal/host-albion/compositions.yaml
-- import_playbook: baremetal/host-backups/compositions.yaml
+- import_playbook: virtual/compositions.yaml
+- import_playbook: baremetal/compositions.yaml
