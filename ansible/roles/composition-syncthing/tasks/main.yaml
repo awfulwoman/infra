@@ -44,4 +44,4 @@
     name: "network-register-subdomain"
   vars:
     configure_dns_subdomains:
-      - "syncthing.{{ ansible_hostname }}"
+      - "syncthing.{{ ansible_facts['hostname'] }}"

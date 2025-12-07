@@ -40,7 +40,7 @@
 #     name: "network-register-subdomain"
 #   vars:
 #     configure_dns_subdomains:
-#       - "dockage.{{ ansible_hostname }}"
+#       - "dockage.{{ ansible_facts['hostname'] }}"
 
 # ----------------------------
 # Specific tasks

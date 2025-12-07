@@ -13,7 +13,7 @@ services:
       - "GITEA_INSTANCE_URL=https://gitea.{{ domain_name }}"
       - "GITEA_RUNNER_REGISTRATION_TOKEN={{ gitea_runner_registration }}"
       - "GITEA_RUNNER_JOB_CONTAINER_NETWORK={{ default_docker_network }}"
-      - "GITEA_RUNNER_NAME={{ ansible_hostname }}-runner01"
+      - "GITEA_RUNNER_NAME={{ ansible_facts['hostname'] }}-runner01"
     volumes:
       - "{{ composition_config }}/runner01:/data"
       - "/opt/gitea/cache:/cache"
@@ -35,7 +35,7 @@ services:
   #     - "GITEA_INSTANCE_URL=https://gitea.{{ domain_name }}"
   #     - "GITEA_RUNNER_REGISTRATION_TOKEN={{ gitea_runner_registration }}"
   #     - "GITEA_RUNNER_JOB_CONTAINER_NETWORK={{ default_docker_network }}"
-  #     - "GITEA_RUNNER_NAME={{ ansible_hostname }}-runner02"
+  #     - "GITEA_RUNNER_NAME={{ ansible_facts['hostname'] }}-runner02"
   #   volumes:
   #     - "{{ composition_config }}/runner02:/data"
   #     - "/opt/gitea/cache:/cache"

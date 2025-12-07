@@ -14,7 +14,7 @@ services:
     env_file: .environment_vars
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.motioneye.rule=Host(`motioneye.{{ ansible_hostname }}.{{ domain_name }}`)"
+      - "traefik.http.routers.motioneye.rule=Host(`motioneye.{{ ansible_facts['hostname'] }}.{{ domain_name }}`)"
       - "traefik.http.routers.motioneye.tls=true"
       - "traefik.http.routers.motioneye.tls.certresolver=letsencrypt"
       - "traefik.http.services.motioneye.loadbalancer.server.port=8765"

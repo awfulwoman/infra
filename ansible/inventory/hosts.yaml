@@ -1,30 +1,51 @@
 all:
   hosts:
     host-homeassistant:
-    host-mqtt:
     host-backups:
     host-storage:
     vm-awfulwoman:
     host-mba2011:
     host-albion:
     dns:
-    router:
+    testrouter:
     pikvm:
+    appletv:
+      host_type: baremetal
+      host_name: appletv
+      host_city: ber
+      host_location: xberg
+      host_ipv4: 192.168.1.221
+      host_pfqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}"
+      host_fqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}.{{ domain_name }}"
+    chromecast:
+      host_type: baremetal
+      host_name: chromecast
+      host_city: ber
+      host_location: xberg
+      host_ipv4: 192.168.1.221
+      host_pfqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}"
+      host_fqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}.{{ domain_name }}"
 
   children:
+    # Devices
+    devices:
+      hosts:
+        appletv:
+        chromecast:
+
+    # Infrastructure
     infra:
       hosts:
         host-homeassistant:
-        host-mqtt:
         host-backups:
         host-storage:
         vm-awfulwoman:
         host-albion:
         dns:
-        router:
+        testrouter:
         pikvm:
 
-    # Group: Home Automation
+    # Home Automation
     homeautomation:
       hosts:
         host-homeassistant:
@@ -33,7 +54,6 @@ all:
     zfs-backup-clients:
       hosts:
         host-storage:
-        host-mqtt:
         host-homeassistant:
         host-albion:
         dns:

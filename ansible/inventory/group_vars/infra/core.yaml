@@ -1,0 +1,54 @@
+# code: language=ansible
+
+tailscale_authkey: "{{ vault_tailscale_authkey }}"
+
+security_autoupdate_mail_on_error: true
+security_autoupdate_mail_to: "unattended@{{ vault_olddomain_wc }}"
+security_autoupdate_reboot: true
+security_autoupdate_reboot_time: 03:00
+security_sudoers_passwordless:
+  - "{{ vault_server_username }}"
+
+# Locale
+config_system_locale: 'en_GB.UTF-8'
+config_system_language: 'en_GB.UTF-8'
+
+# Repo
+repo_url: https://github.com/awfulwoman/infra
+repo_name: infra
+
+# Docker
+default_docker_network: guineanet
+
+# Ansible-pull
+ansible_path: "/opt/ansible"
+ansible_log_path: "{{ ansible_path }}/logs"
+ansible_vault_password_file: "{{ ansible_path }}/.vaultpassword"
+ansible_roles_path: "{{ ansible_path }}/galaxy/roles:./ansible/roles"
+ansible_collections_path: "{{ ansible_path }}/galaxy/collections"
+home_repo_dir: "/opt/infra"
+
+# Python
+default_bin_path: /usr/local/bin
+systemd_service_path: /etc/systemd/system
+
+# Terraform
+terraform_working_dir: /opt/terraform
+
+nullmailer_mail_recipient: "hardcoded@{{ vault_olddomain_wc }}"
+nullmailer_relay_host: "smtp.{{ vault_mailbox_domain }}"
+nullmailer_relay_port: 465
+nullmailer_relay_user: "{{ vault_mailbox_user }}"
+nullmailer_relay_pass: "{{ vault_mailbox_password }}"
+nullmailer_allmailfrom: "{{ vault_mailbox_user }}"
+
+# Environment Variables
+environment_config:
+  ANSIBLE_FORCE_COLOR: true
+  ANSIBLE_PATH: "{{ ansible_path }}"
+  ANSIBLE_LOG_PATH: "{{ ansible_log_path }}"
+  ANSIBLE_VAULT_PASSWORD_FILE: "{{ ansible_vault_password_file }}"
+  ANSIBLE_ROLES_PATH: "{{ ansible_roles_path }}"
+  ANSIBLE_COLLECTIONS_PATH: "{{ ansible_collections_path }}"
+  HOME_REPO_DIR: "{{ home_repo_dir }}"
+  TF_VAR_digitalocean_token: "{{ vault_ddns_digitalocean_token }}"

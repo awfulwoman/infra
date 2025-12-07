@@ -43,7 +43,7 @@ services:
     env_file: .environment_vars
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.whoami.rule=Host(`whoami.{{ ansible_hostname }}.{{ domain_name }}`)"
+      - "traefik.http.routers.whoami.rule=Host(`whoami.{{ ansible_facts['hostname'] }}.{{ domain_name }}`)"
       - "traefik.http.routers.whoami.tls=true"
       - "traefik.http.routers.whoami.tls.certresolver=letsencrypt"
     volumes:
@@ -65,14 +65,14 @@ services:
       - "traefik.enable=true"
       - "traefik.port=80"
       - "traefik.backend=traefik"
-      # Allow dashboard access via traefik.{{ansible_hostname}}.{{ domain_name }}
+      # Allow dashboard access via traefik.{{ansible_facts['hostname']}}.{{ domain_name }}
       - "traefik.http.routers.dashboard.rule=Host(`{{ reverseproxy_traefik_domain}}`)"
       - "traefik.http.routers.dashboard.service=dashboard@internal"
 {% if reverseproxy_use_letsencrypt %}
       - "traefik.http.routers.dashboard.tls=true"
       - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
 {% endif %}
-      # Allow API access via traefik.{{ansible_hostname}}.{{ domain_name }}
+      # Allow API access via traefik.{{ansible_facts['hostname']}}.{{ domain_name }}
       - "traefik.http.routers.api.rule=Host(`{{ reverseproxy_traefik_domain}}`) && PathPrefix(`/api`)"
       - "traefik.http.routers.api.service=api@internal"
 {% if reverseproxy_use_letsencrypt %}

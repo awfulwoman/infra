@@ -50,4 +50,4 @@
 #   vars:
 #     configure_dns_subdomains:
 #       - homeassistant
-#       - whoami.{{ ansible_hostname }}
+#       - whoami.{{ ansible_facts['hostname'] }}

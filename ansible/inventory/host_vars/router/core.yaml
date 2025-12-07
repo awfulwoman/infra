@@ -9,9 +9,9 @@ ansible_become_password: "{{ vault_password }}"
 # INFRA
 # -------------------------------------------------------------------
 host_type: baremetal
-host_name: router
+host_name: testrouter
 host_city: ber
 host_location: xberg
-host_ipv4: 
+host_ipv4: 192.168.1.221
 host_pfqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}"
 host_fqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}.{{ domain_name }}"

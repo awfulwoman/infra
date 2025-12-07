@@ -2,4 +2,4 @@ reverseproxy_use_letsencrypt: true
 reverseproxy_catchall: false
 reverseproxy_statuspage: false
 reverseproxy_whoami: false
-reverseproxy_traefik_domain: "traefik.{{ ansible_hostname }}.{{ domain_name }}"
+reverseproxy_traefik_domain: "traefik.{{ ansible_facts['hostname'] }}.{{ domain_name }}"

@@ -7,7 +7,7 @@
         inventory_hostname: "{{ inventory_hostname }}"
         Obtained from the Ansible inventory configuration. Can be different than the machine's hostname.
       * Ansible's hostname
-        ansible_hostname: "{{ ansible_hostname }}"
+        ansible_facts['hostname']: "{{ ansible_facts['hostname'] }}"
         Obtained via gather_facts. Short version of the hostname.
       * Ansible's FQDN
         ansible_fqdn: "{{ ansible_fqdn }}"

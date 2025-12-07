@@ -3,7 +3,7 @@ name: "{{ composition_name }}"
 services:
   syncthing:
     container_name: syncthing
-    hostname: "{{ ansible_hostname }}"
+    hostname: "{{ ansible_facts['hostname'] }}"
     ports:
       - "127.0.0.1:8384:8384"
       - 22000:22000/tcp
@@ -13,7 +13,7 @@ services:
     env_file: .environment_vars
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.syncthing.rule=Host(`syncthing.{{ ansible_hostname }}.{{ domain_name }}`)"
+      - "traefik.http.routers.syncthing.rule=Host(`syncthing.{{ ansible_facts['hostname'] }}.{{ domain_name }}`)"
       - "traefik.http.routers.syncthing.tls=true"
       - "traefik.http.routers.syncthing.tls.certresolver=letsencrypt"
       - "traefik.http.services.syncthing.loadbalancer.server.port=8384"

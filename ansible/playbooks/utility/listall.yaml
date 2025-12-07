@@ -1,0 +1,15 @@
+# code: language=ansible
+- name: Test
+  hosts: localhost
+  tasks:
+    - name: Test
+      ansible.builtin.pause:
+        seconds: 1
+        # var: hostvars['appletv']['infra_info']
+        prompt: |
+          {% for host in groups['devices'] %}
+          ####################################
+          {% for key, value in hostvars[host].items() %}
+          {{ key }}: {{ value | default('undefined') }}
+          {% endfor %}
+          {% endfor %}

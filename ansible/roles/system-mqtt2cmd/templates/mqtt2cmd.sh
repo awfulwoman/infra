@@ -4,7 +4,7 @@
 
 while true  # Keep an infinite loop to reconnect when connection lost/broker unavailable
 do
-    mosquitto_sub -h "{{ mqtt2cmd_broker }}" -t "{{ mqtt2cmd_basetopic }}/{{ ansible_hostname }}" | while read -r payload
+    mosquitto_sub -h "{{ mqtt2cmd_broker }}" -t "{{ mqtt2cmd_basetopic }}/{{ ansible_facts['hostname'] }}" | while read -r payload
     do
         echo "Rx MQTT: ${payload}"
         

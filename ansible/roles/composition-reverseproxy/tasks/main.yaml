@@ -67,8 +67,8 @@
     name: "network-register-subdomain"
   vars:
     configure_dns_subdomains:
-      - "whoami.{{ ansible_hostname }}"
-      - "traefik.{{ ansible_hostname }}"
+      - "whoami.{{ ansible_facts['hostname'] }}"
+      - "traefik.{{ ansible_facts['hostname'] }}"
 
 
 # Custom http responses
