@@ -115,6 +115,10 @@ infra_publicresources_domains:
         value: "@"
         id: aw_a_www
       - type: CNAME
+        hostname: shared
+        value: "@"
+        id: aw_a_shared
+      - type: CNAME
         hostname: gts
         value: "@"
         id: aw_a_gts

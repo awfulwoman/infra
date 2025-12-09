@@ -1,0 +1,9 @@
+- name: Update Terraform
+  hosts: dns
+  roles:
+    - role: infra-public-resources
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:
