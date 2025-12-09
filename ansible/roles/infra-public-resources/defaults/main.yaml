@@ -236,7 +236,7 @@ infra_publicresources_domains:
         ttl: 14400
         id: wc_mx_mb3
       - type: MX
-        value: "mxext2.{{ vault_mailbox_domain }}"
+        value: "mxext2.{{ vault_mailbox_domain }}."
         priority: 10
         ttl: 14400
         id: wc_mx_mb2
