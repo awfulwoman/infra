@@ -1,4 +1,5 @@
 # This whole thing is awful. But it's hard to write something that
+# handles PiKVM stuff without going DEEEEEEP.
 
 - name: Ensure filesystem is read-write
   ansible.builtin.command:
@@ -12,6 +13,23 @@
     owner: root
     group: root
     mode: "0644"
+
+- name: Ensure latest public SSH keys are authorised
+  ansible.builtin.uri:
+    url: https://github.com/awfulwoman.keys
+    return_content: true
+  register: ssh_keys
+
+- name: Clean up keys
+  ansible.builtin.set_fact:
+    ssh_keys_list: "{{ ssh_keys.content | split('\n') | select() | list }}" # select removes blank items
+
+- name: Add SSH keys to ~/.ssh/authorized_keys
+  ansible.builtin.lineinfile:
+    dest: ~/.ssh/authorized_keys
+    line: "{{ item }}"
+    state: present
+  loop: "{{ ssh_keys_list }}"
 
 - name: Ensure sshd config allows public key authentication
   ansible.builtin.lineinfile:
@@ -43,9 +61,10 @@
   register: tailscaleup_result
   changed_when: tailscaleup_result.rc != 0
 
-- name: DEBUG Tailnet output
+- name: DEBUG Tailnet output due to errors
   ansible.builtin.debug:
     var: tailscaleup_result
+  when: tailscaleup_result.rc != 0
 
 - name: Ensure packages are updated
   ansible.builtin.command:
@@ -53,9 +72,11 @@
   register: update_result
   changed_when: false
 
-- name: DEBUG update output
+- name: Check for reboots
   ansible.builtin.debug:
-    var: update_result.stdout_lines
+    var: update_result
+  changed_when: '"A reboot is necessary" in update_result.stdout'
+  notify: Reboot host
 
 - name: Ensure filesystem is read-only
   ansible.builtin.command:
