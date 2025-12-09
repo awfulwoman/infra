@@ -22,7 +22,7 @@
 
 - name: Clean up keys
   ansible.builtin.set_fact:
-    ssh_keys_list: "{{ ssh_keys.content | split('\n') | select() | list }}" # select removes blank items
+    ssh_keys_list: "{{ ssh_keys.content | split('\n') | select() }}" # select removes blank items
 
 - name: Add SSH keys to ~/.ssh/authorized_keys
   ansible.builtin.lineinfile:
