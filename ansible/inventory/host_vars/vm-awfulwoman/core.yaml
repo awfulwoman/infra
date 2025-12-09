@@ -5,11 +5,14 @@ host_type: virtual
 
 bootstrap_ubuntu_timezone: "Europe/Amsterdam"
 
-# --- NETWORK -------------
+# -------------------------------------------------------------------
+# NETWORK
+# -------------------------------------------------------------------
 configure_dns_linkdevice_physical: "eth0" 
 
-
-# --- ZFS -------------
+# -------------------------------------------------------------------
+# ZFS
+# -------------------------------------------------------------------
 
 # ZFS pools that should be present
 zfs_pools_create: 
@@ -36,6 +39,14 @@ zfs_datasets:
   - "{{ sites_zfs_id }}"
   - "{{ awfulwoman_sites_zfs_id}}"
 
+# -------------------------------------------------------------------
+# NFS
+# -------------------------------------------------------------------
+nfs_mounts:
+  - remote_server: "host-storage"
+    remote_path: "/slowpool/shared/publicfileshares"
+    local_path: "/fastpool/compositions/gokapi/config/data"
+
 traefik_providers:
   - gotosocial
 
@@ -43,3 +54,4 @@ compositions:
   - reverseproxy
   - container-management
   - awfulwoman
+  - gokapi

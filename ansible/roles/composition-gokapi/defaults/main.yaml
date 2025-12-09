@@ -1,0 +1,3 @@
+gokapi_domainname: "shared.{{ vault_personal_domain }}"
+gokapi_data_dir: "{{ composition_config }}/data"
+gokapi_use_local_domain: false

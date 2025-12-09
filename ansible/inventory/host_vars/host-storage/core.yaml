@@ -46,6 +46,7 @@ charlie_syncthing_data_path_zfs_id: slowpool/charlie/syncthing
 zfs_dataset_wifey: "slowpool/{{vault_wifey_name}}"
 charlie_photos_data_path_zfs_id: slowpool/charlie/photos
 terraform_zfs_id: fastpool/terraform
+public_fileshares_zfs_id: slowpool/shared/publicfileshares
 
 # Define useful paths from ZFS datasets
 syncthing_data_path: "/{{ charlie_syncthing_data_path_zfs_id }}"
@@ -53,6 +54,7 @@ wifey_data_path: "/{{ zfs_dataset_wifey }}"
 compositions_config_dir: "/{{ container_compositions_zfs_id }}"
 charlie_photos_data_path: "/{{ charlie_photos_data_path_zfs_id }}"
 terraform_working_dir: "/{{ terraform_zfs_id }}"
+public_fileshares_dir: "/{{ public_fileshares_zfs_id }}"
 
 # Datasets that should be present 
 zfs_datasets:
@@ -76,6 +78,7 @@ zfs_datasets:
   - slowpool/shared/media/shows
   - slowpool/shared/media/youtube
   - "{{ terraform_zfs_id }}"
+  - "{{ public_fileshares_zfs_id }}"
 
 # Datasets to be backed-up
 zfs_backup_datasets:
@@ -115,7 +118,17 @@ tubeachivist_youtube_path: "{{ shared_media_path }}/youtube"
 zfs_nfs_exports:
   - dataset: "{{ shared_media_path_zfs_id }}"
     options: "rw=100.64.0.0/10,anonuid=1000,anongid=1000,no_root_squash,all_squash"
+  - dataset: "{{ public_fileshares_zfs_id }}"
+    options: "rw=100.64.0.0/10,anonuid=1000,anongid=1000,no_root_squash,all_squash"
 
+
+# -------------------------------------------------------------------
+# APPS
+# -------------------------------------------------------------------
+
+gokapi_data_dir: "{{ public_fileshares_dir }}"
+gokapi_domainname: "shared.{{ domain_name }}"
+gokapi_use_local_domain: true
 
 # -------------------------------------------------------------------
 # DRIVES
@@ -177,6 +190,7 @@ compositions:
   - piper
   - gotosocial
   - libretranslate
+  - gokapi
 
 traefik_providers:
   - musicassistant
@@ -208,3 +222,4 @@ cnames:
   - wallabag.{{ domain_name }}
   - jellyseerr.{{ domain_name }}
   - translate.{{ domain_name }}
+  - gokapi.{{ domain_name }}

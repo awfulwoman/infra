@@ -4,6 +4,7 @@
     - role: bootstrap-ubuntu-server
     - role: user-site-deployment
     - role: system-zfs
+    - role: client-nfs
     - role: compositions
     - role: monitoring-healthchecksio
 

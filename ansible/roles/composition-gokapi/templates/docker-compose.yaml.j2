@@ -1,0 +1,25 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  gokapi:
+    container_name: gokapi
+    # ports:
+    #   - "127.0.0.1:OUTSIDE:INSIDE"
+    image: docker.io/f0rc3/gokapi:latest
+    restart: unless-stopped
+    env_file: .environment_vars
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.gokapi.rule=Host(`{{ gokapi_domainname }}`)"
+      - "traefik.http.routers.gokapi.tls=true"
+      - "traefik.http.routers.gokapi.tls.certresolver=letsencrypt"
+      - "traefik.http.services.gokapi.loadbalancer.server.port=53842"
+    volumes:
+      - "{{ gokapi_data_dir }}:/app/data"
+      - "{{ composition_config }}/config:/app/config"
+    networks:
+      - "{{ default_docker_network }}"
+
+networks:
+  "{{ default_docker_network }}":
+    external: true
