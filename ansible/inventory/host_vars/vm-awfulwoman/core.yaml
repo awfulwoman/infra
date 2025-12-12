@@ -39,14 +39,6 @@ zfs_datasets:
   - "{{ sites_zfs_id }}"
   - "{{ awfulwoman_sites_zfs_id}}"
 
-# -------------------------------------------------------------------
-# NFS
-# -------------------------------------------------------------------
-nfs_mounts:
-  - remote_server: "host-storage"
-    remote_path: "/slowpool/shared/publicfileshares"
-    local_path: "/fastpool/compositions/gokapi/config/data"
-
 traefik_providers:
   - gotosocial
 
@@ -54,4 +46,3 @@ compositions:
   - reverseproxy
   - container-management
   - awfulwoman
-  - gokapi
