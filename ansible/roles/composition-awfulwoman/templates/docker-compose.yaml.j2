@@ -17,6 +17,7 @@ services:
       - "traefik.http.services.beta.loadbalancer.server.port=80"
     volumes:
       - "{{ awfulwoman_sites_zfs_path }}:/usr/share/nginx/html"
+      - "{{ shared_zfs_path }}:/usr/share/nginx/html/shared"
       - "{{ composition_config }}/nginx.conf:/etc/nginx/nginx.conf"
       - /etc/localtime:/etc/localtime:ro
     networks:
