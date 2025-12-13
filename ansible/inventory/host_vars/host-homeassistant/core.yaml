@@ -63,6 +63,7 @@ compositions:
   - reverseproxy
   - container-management
   - homeassistant
+  - matter
   - owntracks
   - mqtt
   - zigbee2mqtt

@@ -1,0 +1,22 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  matter:
+    container_name: matter
+    image: ghcr.io/matter-js/python-matter-server:stable
+    restart: unless-stopped
+    env_file: .environment_vars
+    security_opt:
+      # Needed for Bluetooth via dbus
+      - apparmor:unconfined
+    # labels:
+    #   - "traefik.enable=true"
+    #   - "traefik.http.routers.matter.rule=Host(`matter.{{ domain_name }}`)"
+    #   - "traefik.http.routers.matter.tls=true"
+    #   - "traefik.http.routers.matter.tls.certresolver=letsencrypt"
+    #   - "traefik.http.services.matter.loadbalancer.server.port=5800"
+    volumes:
+      - "{{ composition_config }}:/data"
+      - /run/dbus:/run/dbus:ro
+    network_mode: host
+    command: --storage-path /data --paa-root-cert-dir /data/credentials --bluetooth-adapter 0
