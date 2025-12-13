@@ -40,7 +40,7 @@ zfs_datasets:
   - "{{ container_compositions_zfs_id }}"
   - "{{ sites_zfs_id }}"
   - "{{ awfulwoman_sites_zfs_id}}"
-  - "{{ shared_zfs_path }}"
+  - "{{ shared_zfs_id }}"
 
 traefik_providers:
   - gotosocial
