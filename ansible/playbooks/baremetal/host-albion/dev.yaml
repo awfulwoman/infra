@@ -1,8 +1,9 @@
 - name: UK Server (dev work)
   hosts: host-albion
+  gather_facts: false
   roles:
     # - role: compositions
-    - role: system-ubuntupro
+    - role: system-zfs-new
 
   handlers:
     - name: Reboot host

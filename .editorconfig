@@ -19,3 +19,8 @@ insert_final_newline = true
 end_of_line = lf
 indent_style = space
 insert_final_newline = true
+
+[*.py]
+end_of_line = lf
+indent_style = space
+insert_final_newline = true

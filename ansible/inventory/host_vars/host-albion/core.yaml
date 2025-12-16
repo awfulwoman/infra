@@ -44,6 +44,45 @@ tailscale_exit_node: true
 # -------------------------------------------------------------------
 # ZFS
 # -------------------------------------------------------------------
+
+zfs:
+  fastpool:
+    datasets:
+      # exampleset:
+      #   infra:
+      #     backup: true
+      #   state: present
+      #   delegation:
+      #     users:
+      #     permissions:
+      #     local: true
+      #     descendents:
+      #   properties:
+      #     volsize: 10M
+      #     encryption:
+      #       algorithm: aes-256-gcm
+      #       keylocation: 
+      #       keyformat: passphrase
+      compositions:
+      encrypted:
+        properties:
+          encryption:
+            keyformat: passphrase
+        datasets:
+          photos:
+
+  slowpool:
+    initialisation_command:
+    datasets:
+      personaldata:
+      shareddata:
+        datasets:
+          person_a:
+            datasets:
+              supernested:
+
+zfs_test_reference: "{{ zfs.slowpool.datasets.personaldata }}"
+
 zfs_pools:
   - fastpool
 

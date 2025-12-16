@@ -1,0 +1,23 @@
+- name: Ensure ZFS dependencies are installed
+  become: true
+  ansible.builtin.apt:
+    name:
+      - zfsutils-linux
+      - acl
+    state: present
+
+- name: New ZFS config testing
+  when: zfs is defined
+  block:
+    # - name: ZFS debug top level datasets
+    #   ansible.builtin.debug:
+    #     msg: '{{ item.value.datasets.keys() | list }}'
+    #   loop: "{{ zfs | dict2items }}"
+
+    # - name: ZFS debug
+    #   ansible.builtin.debug:
+    #     msg: '{{ zfs }}'
+
+    - name: Using zfs
+      ansible.builtin.debug:
+        msg: "{{ zfs | zfs_all_datasets }}"
