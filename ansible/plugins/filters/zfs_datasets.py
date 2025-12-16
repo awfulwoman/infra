@@ -28,7 +28,6 @@ class FilterModule(object):
         pools = []
         
         for key, value in zfs_dict.items():
-            # A pool is a top-level key that contains a 'datasets' key
             if isinstance(value, dict) and 'datasets' in value:
                 pools.append(key)
         
