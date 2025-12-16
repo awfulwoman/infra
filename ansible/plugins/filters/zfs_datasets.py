@@ -10,6 +10,7 @@ class FilterModule(object):
     def filters(self):
         return {
             'zfs_all_datasets': self.zfs_all_datasets,
+            'zfs_all_pools': self.zfs_all_pools,
         }
 
     def zfs_all_datasets(self, zfs_dict):
@@ -19,6 +20,19 @@ class FilterModule(object):
         result = []
         self._walk_tree(zfs_dict, result, [])
         return result
+
+    def zfs_all_pools(self, zfs_dict):
+        if not isinstance(zfs_dict, dict):
+            raise AnsibleFilterError('zfs_all_pools requires a dictionary')
+        
+        pools = []
+        
+        for key, value in zfs_dict.items():
+            # A pool is a top-level key that contains a 'datasets' key
+            if isinstance(value, dict) and 'datasets' in value:
+                pools.append(key)
+        
+        return pools
 
     def _walk_tree(self, current_dict, result, path_components):
         if not isinstance(current_dict, dict):
