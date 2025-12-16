@@ -26,11 +26,9 @@ class FilterModule(object):
             raise AnsibleFilterError('zfs_all_pools requires a dictionary')
         
         pools = []
-        
         for key, value in zfs_dict.items():
             if isinstance(value, dict) and 'datasets' in value:
                 pools.append(key)
-        
         return pools
 
     def _walk_tree(self, current_dict, result, path_components):
