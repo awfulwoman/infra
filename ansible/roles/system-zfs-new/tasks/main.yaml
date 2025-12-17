@@ -9,15 +9,50 @@
 - name: New ZFS config testing
   when: zfs is defined
   block:
-    # - name: ZFS debug top level datasets
-    #   ansible.builtin.debug:
-    #     msg: '{{ item.value.datasets.keys() | list }}'
-    #   loop: "{{ zfs | dict2items }}"
+    - name: Check status of pools
+      ansible.builtin.command:
+        cmd: "zpool status {{ item }}"
+      register: zpool_check_result
+      loop: "{{ zfs | zfs_all_pools }}"
+      changed_when: false
+      ignore_errors: true
 
-    # - name: ZFS debug
+    # - name: DEBUG zpool_check_result
     #   ansible.builtin.debug:
-    #     msg: '{{ zfs }}'
+    #     var: zpool_check_result
 
-    - name: Using zfs
+    - name: Address failed pools
+      when: zpool_check_result.failed
+      block:
+        - name: Attempt to import pool from block storage device
+          ansible.builtin.debug:
+            msg: "zpool import {{ item.item }}"
+          loop: "{{ zpool_check_result.results | selectattr('rc', '>', 0) | list }}"
+
+        - name: Check status of pools after import attempt
+          ansible.builtin.command:
+            cmd: "zpool status {{ item }}"
+          register: zpool_check_result_import
+          loop: "{{ zfs | zfs_all_pools }}"
+          changed_when: false
+          ignore_errors: true
+
+        - name: From remaining uninitialised pools get those with device specified
+          ansible.builtin.debug:
+            msg: "zpool create {{ item.item }} - {{ zfs[item.item].device }}"
+          when: zfs[item.item].device is defined
+          loop: "{{ zpool_check_result_import.results | selectattr('rc', '>', 0) | list }}"
+          register: zpool_check_result_create
+
+    - name: Ensure datasets exist
+      become: true
+      # community.general.zfs:
+      #   name: "{{ item }}"
+      #   state: present
+      #   extra_zfs_properties:
+      #     acltype: posix
+      #     xattr: sa
       ansible.builtin.debug:
-        msg: "{{ zfs | zfs_all_datasets }}"
+        msg: "{{ item }}"
+      loop: "{{ zfs | zfs_all_datasets }}"
+      when: zfs_datasets is defined

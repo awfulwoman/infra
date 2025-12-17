@@ -47,6 +47,7 @@ tailscale_exit_node: true
 
 zfs:
   fastpool:
+    device: /dev/sijfsoifjsoifosfjio
     datasets:
       # exampleset:
       #   infra:
@@ -58,6 +59,7 @@ zfs:
       #     local: true
       #     descendents:
       #   properties:
+      #     ashift: 12
       #     volsize: 10M
       #     encryption:
       #       algorithm: aes-256-gcm
@@ -71,8 +73,10 @@ zfs:
         datasets:
           photos:
 
+  testpool:
+    device: /dev/sdfjwoiurhksfkasjnfkajn
   slowpool:
-    initialisation_command:
+    device: /dev/3543453534345
     datasets:
       personaldata:
       shareddata:

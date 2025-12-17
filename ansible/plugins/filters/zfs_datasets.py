@@ -27,7 +27,8 @@ class FilterModule(object):
         
         pools = []
         for key, value in zfs_dict.items():
-            if isinstance(value, dict) and 'datasets' in value:
+            # if isinstance(value, dict) and 'datasets' in value:
+            if isinstance(value, dict):
                 pools.append(key)
         return pools
 
