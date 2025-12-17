@@ -54,15 +54,15 @@
       #   name: "{{ item.dataset }}"
       #   state: present
       #   extra_zfs_properties: "{{ item.properties | default('[]') }}"
-      ansible.builtin.debug:
-        msg: >-
+      ansible.builtin.shell: # Shell, because of pipes
+        cmd: >-
           {%- if item.properties is defined -%}
           {%- if item.properties.passphrase is defined -%}
           echo {{ item.properties.passphrase }} |
           {%- endif -%}
           {%- endif -%}
           zfs create
-          {%- if item.properties is defined %}
+          {% if item.properties is defined %}
           {%- for key, value in item.properties.items() -%}
           {%- if key != 'passphrase' %}
           -o {{ key }}={%if value is sameas true or item is sameas false %}{{ value | ternary('on', 'off') }} {% else %}{{ value }} {% endif %}
@@ -70,4 +70,11 @@
           {%- endfor -%}
           {%- endif -%}
           {{ item.dataset }}
+        creates: "{{ item.dataset }}"
       loop: "{{ zfs | zfs_datasets_with_config }}"
+      register: creation
+      ignore_errors: true
+
+    - name: DEBUG creation
+      ansible.builtin.debug:
+        var: creation
