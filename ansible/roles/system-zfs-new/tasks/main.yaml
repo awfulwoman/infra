@@ -45,7 +45,7 @@
           register: zpool_check_result_create
 
     - name: Ensure datasets exist
-      become: true
+      # become: true
       # community.general.zfs:
       #   name: "{{ item }}"
       #   state: present
@@ -53,6 +53,12 @@
       #     acltype: posix
       #     xattr: sa
       ansible.builtin.debug:
-        msg: "{{ item }}"
-      loop: "{{ zfs | zfs_all_datasets }}"
-      when: zfs_datasets is defined
+        msg: >-
+          zfs create
+          {%- if item.properties is defined %}
+          {% for key, value in item.properties.items() %}
+          -o {{ key }}={%if value is sameas true or item is sameas false %}{{ value | ternary('on', 'off') }}{% else %}{{ value }}{% endif %}
+          {%- endfor %}
+          {% endif %}
+          {{ item.dataset }}
+      loop: "{{ zfs | zfs_datasets_with_config }}"

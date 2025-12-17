@@ -49,27 +49,25 @@ zfs:
   fastpool:
     device: /dev/sijfsoifjsoifosfjio
     datasets:
-      # exampleset:
-      #   infra:
-      #     backup: true
-      #   state: present
-      #   delegation:
-      #     users:
-      #     permissions:
-      #     local: true
-      #     descendents:
-      #   properties:
-      #     ashift: 12
-      #     volsize: 10M
-      #     encryption:
-      #       algorithm: aes-256-gcm
-      #       keylocation: 
-      #       keyformat: passphrase
+      exampleset:
+        infra:
+          backup: true
+        state: present
+        delegation:
+          users:
+          permissions:
+          local: true
+          descendents:
+        properties:
+          ashift: 12
+          volsize: 10M
+          encryption: true
+          keyformat: passphrase
       compositions:
       encrypted:
         properties:
-          encryption:
-            keyformat: passphrase
+          encryption: true
+          keyformat: passphrase
         datasets:
           photos:
 
@@ -85,7 +83,7 @@ zfs:
             datasets:
               supernested:
 
-zfs_test_reference: "{{ zfs.slowpool.datasets.personaldata }}"
+zfs_test_reference: "{{ zfs.slowpool.datasets.shareddata }}"
 
 zfs_pools:
   - fastpool
