@@ -70,8 +70,8 @@ zfs:
       encrypted:
         properties:
           encryption: true
+          keylocation: file:///root/zfs/passphrase
           keyformat: passphrase
-          passphrase: testtest # This is not production and only used for testing
         datasets:
           photos:
 

@@ -1,13 +1,19 @@
-# Resources
+# ###################################################################
+# NOTE: This role only applies ZFS properties on first creation, as
+# there's no distinction between mutable and static properties.
+# Meh, good enough for now.
 # https://support.tools/how-to-create-encrypted-zfs-pool/
 # https://github.com/BojanZelic/ansible-zfs-encrypted-datasets/blob/master/tasks/main.yml
 # https://arstechnica.com/gadgets/2021/06/a-quick-start-guide-to-openzfs-native-encryption/
+# https://github.com/ansible-collections/community.general/issues/4699
+# ###################################################################
 
-- name: Ensure ZFS dependencies are installed
+- name: Ensure ZFS package dependencies exist
   become: true
   ansible.builtin.apt:
     name:
       - zfsutils-linux
+      - zfs-zed
       - acl
     state: present
 
@@ -22,10 +28,6 @@
       loop: "{{ zfs | zfs_all_pools }}"
       changed_when: false
       ignore_errors: true
-
-    # - name: DEBUG zpool_check_result
-    #   ansible.builtin.debug:
-    #     var: zpool_check_result
 
     - name: Address failed pools
       when: zpool_check_result.failed is defined and zpool_check_result.failed
@@ -43,10 +45,6 @@
           changed_when: false
           ignore_errors: true
 
-        # - name: DEBUG zpool_check_result_import
-        #   ansible.builtin.debug:
-        #     msg: "{{ zpool_check_result_import }}"
-
         - name: From remaining uninitialised pools get those with device specified
           ansible.builtin.debug:
             msg: "zpool create {{ item.item }} - {{ zfs[item.item].device }}"
@@ -54,19 +52,34 @@
           loop: "{{ zpool_check_result_import.results | selectattr('rc', '>', 0) | list }}"
           register: zpool_check_result_create
 
+    - name: Ensure encryption dir exists in /root
+      become: true
+      ansible.builtin.file:
+        dest: "/root/zfs"
+        mode: "0644"
+        owner: root
+        group: root
+        state: directory
+
+    - name: Ensure encryption passphrase exists in /root
+      become: true
+      ansible.builtin.copy:
+        content: "{{ vault_zfs_passphrase }}"
+        dest: "/root/zfs/passphrase"
+        mode: "0640"
+        owner: root
+        group: root
+
     - name: Ensure datasets exist
       become: true
+      # This role does't cope with trying to apply properties that
+      # are static. Hence the Jinja mess below.
       # community.general.zfs:
       #   name: "{{ item.dataset }}"
       #   state: present
-      #   extra_zfs_properties: "{{ item.properties | default('[]') }}"
-      ansible.builtin.shell: # Shell, because of pipes
+      #   extra_zfs_properties: "{{ item.properties | default({}) }}"
+      ansible.builtin.command:
         cmd: >-
-          {%- if item.properties is defined -%}
-          {%- if item.properties.passphrase is defined -%}
-          echo {{ item.properties.passphrase }} |
-          {%- endif -%}
-          {%- endif -%}
           zfs create
           {% if item.properties is defined %}
           {%- for key, value in item.properties.items() -%}
@@ -76,11 +89,7 @@
           {%- endfor -%}
           {%- endif -%}
           {{ item.dataset }}
-        creates: "{{ item.dataset }}"
+        creates: "/{{ item.dataset }}"
       loop: "{{ zfs | zfs_datasets_with_config }}"
       register: dataset_creation_result
-      ignore_errors: true
 
-    - name: DEBUG creation
-      ansible.builtin.debug:
-        var: dataset_creation_result
