@@ -74,20 +74,8 @@ zfs:
           keyformat: passphrase
         datasets:
           photos:
-
-  # testpool:
-  #   device: /dev/sdfjwoiurhksfkasjnfkajn
-  # slowpool:
-  #   device: /dev/3543453534345
-  #   datasets:
-  #     personaldata:
-  #     shareddata:
-  #       datasets:
-  #         person_a:
-  #           datasets:
-  #             supernested:
-
-zfs_test_reference: "{{ zfs.slowpool.datasets.shareddata }}"
+            properties:
+              compression: false
 
 zfs_pools:
   - fastpool

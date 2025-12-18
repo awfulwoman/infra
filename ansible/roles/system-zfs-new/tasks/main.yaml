@@ -70,26 +70,45 @@
         owner: root
         group: root
 
+    # - name: Ensure datasets exist
+    #   become: true
+    #   ansible.builtin.command:
+    #     cmd: >-
+    #       zfs create
+    #       {% if item.properties is defined %}
+    #       {%- for key, value in item.properties.items() -%}
+    #       -o {{ key }}={%if value is sameas true or item is sameas false %}{{ value | ternary('on', 'off') }} {% else %}{{ value }} {% endif %}
+    #       {%- endfor -%}
+    #       {%- endif -%}
+    #       {{ item.dataset }}
+    #     creates: "/{{ item.dataset }}"
+    #   loop: "{{ zfs | zfs_datasets_with_config }}"
+    #   register: dataset_creation_result
+
     - name: Ensure datasets exist
       become: true
       # This role does't cope with trying to apply properties that
       # are static. Hence the Jinja mess below.
-      # community.general.zfs:
-      #   name: "{{ item.dataset }}"
-      #   state: present
-      #   extra_zfs_properties: "{{ item.properties | default({}) }}"
-      ansible.builtin.command:
-        cmd: >-
-          zfs create
-          {% if item.properties is defined %}
-          {%- for key, value in item.properties.items() -%}
-          {%- if key != 'passphrase' %}
-          -o {{ key }}={%if value is sameas true or item is sameas false %}{{ value | ternary('on', 'off') }} {% else %}{{ value }} {% endif %}
-          {%- endif -%}
-          {%- endfor -%}
-          {%- endif -%}
-          {{ item.dataset }}
-        creates: "/{{ item.dataset }}"
+      community.general.zfs:
+        name: "{{ item.dataset }}"
+        state: present
+        extra_zfs_properties: "{{ item.properties | default({}) }}"
       loop: "{{ zfs | zfs_datasets_with_config }}"
       register: dataset_creation_result
 
+- name: Ensure zfs-load-key.service exists
+  become: true
+  ansible.builtin.template:
+    src: zfs-load-key.service
+    dest: /etc/systemd/system/zfs-load-key.service
+    owner: root
+    group: root
+    mode: "0664"
+
+- name: Ensure zfs-load-key.service  is running
+  become: true
+  ansible.builtin.systemd_service:
+    state: started
+    name: zfs-load-key.service
+    enabled: true
+    no_block: true
