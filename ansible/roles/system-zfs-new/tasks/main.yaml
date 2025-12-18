@@ -1,3 +1,8 @@
+# Resources
+# https://support.tools/how-to-create-encrypted-zfs-pool/
+# https://github.com/BojanZelic/ansible-zfs-encrypted-datasets/blob/master/tasks/main.yml
+# https://arstechnica.com/gadgets/2021/06/a-quick-start-guide-to-openzfs-native-encryption/
+
 - name: Ensure ZFS dependencies are installed
   become: true
   ansible.builtin.apt:
@@ -38,7 +43,7 @@
           changed_when: false
           ignore_errors: true
 
-        # - name: DEBUG wha
+        # - name: DEBUG zpool_check_result_import
         #   ansible.builtin.debug:
         #     msg: "{{ zpool_check_result_import }}"
 
@@ -73,9 +78,9 @@
           {{ item.dataset }}
         creates: "{{ item.dataset }}"
       loop: "{{ zfs | zfs_datasets_with_config }}"
-      register: creation
+      register: dataset_creation_result
       ignore_errors: true
 
     - name: DEBUG creation
       ansible.builtin.debug:
-        var: creation
+        var: dataset_creation_result

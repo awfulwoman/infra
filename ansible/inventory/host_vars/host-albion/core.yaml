@@ -47,7 +47,10 @@ tailscale_exit_node: true
 
 zfs:
   fastpool:
-    device: /dev/sijfsoifjsoifosfjio
+    # Only a single device right now, as this isn't being used to set 
+    # up complex storage devices, just single-use nodes
+    # TODO: Make this a dictionary of vdevs and devices
+    device: /dev/disk/by-id/scsi-SIntenso_SSD_SATAIII_512011020200
     datasets:
       # exampleset:
       #   infra:
@@ -68,7 +71,7 @@ zfs:
         properties:
           encryption: true
           keyformat: passphrase
-          passphrase: testtest
+          passphrase: testtest # This is not production and only used for testing
         datasets:
           photos:
 
