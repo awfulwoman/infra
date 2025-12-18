@@ -6,6 +6,7 @@
       - acl
     state: present
 
+# Testing config stored in <reporoot>/ansible/inventory/host_vars/host-albion/core.yaml
 - name: New ZFS config testing
   when: zfs is defined
   block:
