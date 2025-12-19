@@ -22,12 +22,20 @@ def sendreceive(host, user, dataset, destination, mode):
         zfs_find_latest_snapshot = "snapshot_placeholder"   
 
         # Construct the ZFS send and receive command
-        if mode == 'push':  
+        if mode == 'push':
+            # Push datasets to an offsite location
+            sendoptions = "--dryrun --raw"
+            receiveoptions = ""
             # zfs_find_latest_snapshot = f"zfs list -t snapshot -H -o name -S creation -r {dataset} | head -n 1"   
-            zfscommand = f"zfs send {dataset}@{zfs_find_latest_snapshot} | ssh {user}@{host} zfs receive {destination}/{host}/{dataset}"
+            snapshot_name = subprocess.check_call(zfs_find_latest_snapshot, shell=True)
+            zfscommand = f"zfs send {sendoptions} {dataset}@{snapshot_name} | ssh {user}@{host} zfs receive {receiveoptions} {destination}/{host}/{dataset}"
         elif mode == 'pull':
+            # Pull datasets from production machines
+            sendoptions = "--dryrun"
+            receiveoptions = ""
             # zfs_find_latest_snapshot = f"ssh {host} zfs list -t snapshot -H -o name -S creation -r {dataset} | head -n 1"   
-            zfscommand = f"ssh {user}@{host} zfs send {dataset}@{zfs_find_latest_snapshot} | zfs receive {destination}/{host}/{dataset}"
+            snapshot_name = subprocess.check_call(zfs_find_latest_snapshot, shell=True)
+            zfscommand = f"ssh {user}@{host} zfs send {sendoptions} {dataset}@{snapshot_name} | zfs receive {receiveoptions} {destination}/{host}/{dataset}"
         else:
             print("Invalid mode specified", file=sys.stderr)
             sys.exit(1)

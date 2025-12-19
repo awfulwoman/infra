@@ -29,15 +29,6 @@
       acltype: posix
       xattr: sa
 
-# - name: Allow non-sudo account to do ZFS things
-#   become: true
-#   community.general.zfs_delegate_admin:
-#     name: "{{ zfsbackup_poolname }}"
-#     users: "{{ ansible_user }}"
-#     descendents: true
-#     state: absent
-#     permissions: compression,mountpoint,create,mount,receive,rollback,snapshot,hold,release,destroy,xattr,acltype,rename
-
 - name: Define dataset list stub
   ansible.builtin.set_fact:
     datasets: []
@@ -64,27 +55,6 @@
       xattr: sa
       # mountpoint: none
   loop: "{{ datasets }}"
-
-# - name: "Ensure {{ zfsbackup_poolmountpoint }} mountpoint is owned by {{ ansible_user }}"
-#   become: true
-#   ansible.builtin.file:
-#     path: "{{ zfsbackup_poolmountpoint }}"
-#     owner: "{{ ansible_user }}"
-#     group: "{{ ansible_user }}"
-#     state: directory
-#     mode: 0774
-#     recurse: true
-
-# - name: "Ensure ZFS pools are owned by {{ ansible_user }}"
-#   become: true
-#   ansible.builtin.file:
-#     path: "/{{ item }}"
-#     state: directory
-#     owner: "{{ ansible_user }}"
-#     group: "{{ ansible_user }}"
-#     mode: 0774
-#   loop: "{{ zfs_datasets }}"
-#   when: zfs_datasets is defined
 
 - name: Ensure working dir exists
   become: true
@@ -123,16 +93,6 @@
     owner: root
     group: root
     mode: "0644"
-
-# - name: Cron to run zfs-backup
-#   # Runs at a specified time to catch reboots and previous backup failures
-#   become: true
-#   ansible.builtin.cron:
-#     name: "backup.sh"
-#     job: "{{ zfsbackup_script_path }}"
-#     state: present
-#     minute: "{{ zfsbackup_cron_minute }}"
-#     hour: "{{ zfsbackup_cron_hour }}"
 
 - name: "Ensure user can sudo without password"
   become: true
