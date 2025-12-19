@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 import subprocess
 import sys
 import argparse
@@ -49,16 +48,10 @@ def sendreceive(host, user, dataset, destination, mode):
 
 
 def sendreceive_init(user, host, datasets, destination, mode):
-    # print(f"Looping over datasets {datasets}")
     for dataset in datasets:
-        # print(f"Backing up {dataset}")
         sendreceive(host, user, dataset, destination, mode)
 
 if __name__ == "__main__":
-    # if len(sys.argv) < 3:
-    #     print("Usage: pull-zfs-backups.py --user <user> --host <host> --datasets <datasets> [<destination>]", file=sys.stderr)
-    #     sys.exit(1)
-
     parser = argparse.ArgumentParser(description='Push or pull ZFS backups from a remote host')
     parser.add_argument('--user', help='Remote SSH user')
     parser.add_argument('--host', help='Remote host')
