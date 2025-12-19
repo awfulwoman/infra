@@ -19,15 +19,15 @@ def preflight(host, user, datasets, destination, mode):
 
 def sendreceive(host, user, dataset, destination, mode):
     try:
-        # Find the latest snapshot
-        # zfs_find_latest_snapshot = f"ssh {host} zfs list -t snapshot -H -o name -S creation -r {dataset} | head -n 1"
-        zfs_find_latest_snapshot = "test"    
+        zfs_find_latest_snapshot = "snapshot_placeholder"   
 
         # Construct the ZFS send and receive command
-        if mode == 'push':    
-            zfscommand = f"zfs send {user}@{dataset}@{zfs_find_latest_snapshot} | ssh {host} zfs receive {destination}/{host}/{dataset}"
+        if mode == 'push':  
+            # zfs_find_latest_snapshot = f"zfs list -t snapshot -H -o name -S creation -r {dataset} | head -n 1"   
+            zfscommand = f"zfs send {dataset}@{zfs_find_latest_snapshot} | ssh {user}@{host} zfs receive {destination}/{host}/{dataset}"
         elif mode == 'pull':
-            zfscommand = f"ssh {host} zfs send {user}@{dataset}@{zfs_find_latest_snapshot} | zfs receive {destination}/{host}/{dataset}"
+            # zfs_find_latest_snapshot = f"ssh {host} zfs list -t snapshot -H -o name -S creation -r {dataset} | head -n 1"   
+            zfscommand = f"ssh {user}@{host} zfs send {dataset}@{zfs_find_latest_snapshot} | zfs receive {destination}/{host}/{dataset}"
         else:
             print("Invalid mode specified", file=sys.stderr)
             sys.exit(1)
