@@ -65,16 +65,7 @@
     group: "{{ ansible_user }}"
     mode: "0774"
 
-- name: Ensure backup bash script exists
-  become: true
-  ansible.builtin.template:
-    src: templates/pull-zfs-backups.sh
-    dest: "{{ zfsbackup_script_path }}/pull-zfs-backups"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    mode: "0774"
-
-- name: Ensure backup python script exists
+- name: Ensure backup script exists
   become: true
   ansible.builtin.template:
     src: templates/zfs-backups.py
