@@ -45,6 +45,9 @@
   ansible.builtin.debug:
     var: datasets
 
+
+
+
 - name: Ensure a dataset for each dataset of each backup client is present
   become: true
   community.general.zfs:
@@ -55,6 +58,10 @@
       xattr: sa
       # mountpoint: none
   loop: "{{ datasets }}"
+
+
+
+
 
 - name: Ensure working dir exists
   become: true

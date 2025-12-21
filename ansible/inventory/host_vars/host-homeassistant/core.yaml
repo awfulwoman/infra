@@ -30,6 +30,19 @@ network_interface_primary: "enp1s0"
 # ZFS
 # -------------------------------------------------------------------
 
+zfs:
+  fastpool:
+    device: /dev/disk/by-id/scsi-SATA_INTENSO_SSD_AA000000000000001079
+    datasets:
+      compositions:
+        state: present
+        importance: critical
+
+
+
+
+
+
 # ZFS pools
 zfs_pools:
   - fastpool
