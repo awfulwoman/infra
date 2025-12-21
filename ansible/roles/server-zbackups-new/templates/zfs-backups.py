@@ -18,7 +18,7 @@ def preflight(host, user, datasets, destination, mode):
 
 def sendreceive(host, user, dataset, destination, mode):
     try:
-        zfs_find_latest_snapshot = "snapshot_placeholder"   
+        zfs_find_latest_snapshot = "zfs list -t snapshot -H -o name -S creation -r {dataset} | head -n 1"   
 
         # Construct the ZFS send and receive command
         if mode == 'push':
@@ -57,12 +57,12 @@ if __name__ == "__main__":
     parser.add_argument('--host', help='Remote host')
     parser.add_argument('--datasets', nargs='+', help='Source datasets')
     parser.add_argument('--destination', default=DEFAULT_destination, help='Destination dataset to receive backups (default: %(default)s)')
-    parser.add_argument('--mode', default=DEFAULT_mode, help='Either push or pull from server (default: %(default)s)')
+    parser.add_argument('--mode', help='Either push or pull from server')
 
     args = parser.parse_args()
 
     if not args.user or not args.host or not args.datasets:
-        print("Usage: pull-zfs-backups.py --user <user> --host <host> --datasets <space-seperated list> [--datasets <destination> --mode <mode>]", file=sys.stderr)
+        print("Usage: pull-zfs-backups.py --mode <mode> --user <user> --host <host> --datasets <space-seperated list> [--datasets <destination>]", file=sys.stderr)
         sys.exit(1)
 
     preflight(args.user, args.host, args.datasets, args.destination, args.mode)
