@@ -7,6 +7,7 @@
       become: true
     - role: system-wakeonlan
     - role: system-zfs
+    - role: system-zfs-new
     # - role: system-msmtp
     - role: system-mqtt2cmd
     - role: server-zbackups-new

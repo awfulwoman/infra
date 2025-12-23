@@ -20,19 +20,19 @@
   ansible.builtin.set_fact:
     public_key: "{{ vault_zfsbackups_public_key }}"
 
-# - name: DEBUG datasets raw
-#   ansible.builtin.debug:
-#     msg: >-
-#       {{ hostvars[item].zfs | zfs_critical_datasets | map(attribute='dataset') }}
-#   loop: "{{ groups[zfsbackup_pull_group] }}"
+- name: DEBUG datasets raw
+  ansible.builtin.debug:
+    msg: >-
+      {{ hostvars[item].zfs | zfs_critical_datasets }}
+  loop: "{{ groups[zfsbackup_pull_group] }}"
 
 # https://stackoverflow.com/a/78339774
 - name: Concat datasets
   ansible.builtin.set_fact:
     backup_datasets: >-
       {% set data = namespace(test=[]) %}
-      {%- for ds in hostvars[item].zfs | zfs_critical_datasets | map(attribute='dataset') -%}
-        {% set data.test = data.test + [{'dataset': (item ~ '/' ~ ds) }] %}
+      {%- for ds in (hostvars[item].zfs | zfs_critical_datasets) -%}
+        {% set data.test = data.test + [{'dataset': (item ~ '/' ~ ds.dataset), 'properties': (ds.properties | default({})) }] %}
       {%- endfor -%}
       {{ (backup_datasets | default([])) + data.test }}
   loop: "{{ groups[zfsbackup_pull_group] }}"
@@ -41,14 +41,13 @@
   ansible.builtin.debug:
     msg: "{{ backup_datasets }}"
 
-# - name: Ensure backups pool exists
-#   become: true
-#   community.general.zfs:
-#     name: "{{ item }}"
-#     extra_zfs_properties:
-#       acltype: posix
-#       xattr: sa
-#   loop: "{{ backup_datasets }}"
+- name: Ensure backup datasets exist
+  become: true
+  community.general.zfs:
+    name: "{{ zfsbackup_dataset }}/{{ item.dataset }}"
+    extra_zfs_properties: "{{ item.properties }}"
+    state: present
+  loop: "{{ backup_datasets }}"
 
 
 # - name: Ensure script working dir exists
