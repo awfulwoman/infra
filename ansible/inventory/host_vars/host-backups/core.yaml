@@ -31,18 +31,12 @@ wakeonlan_interface: enp3s0
 zfs:
   backuppool:
     datasets:
-      encrypted:
-        backup:
-          mode: push
-          destination:
-            - host: host-albion
-              location: fastpool/encryptedbackups
+      encryptedbackups:
+        state: present
         properties:
           encryption: aes-256-gcm
           keylocation: file:///root/zfs/passphrase
           keyformat: passphrase
-
-
 
 zfs_pools:
   - backuppool

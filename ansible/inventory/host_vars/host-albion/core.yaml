@@ -62,17 +62,13 @@ zfs:
       #     local: true
       #     descendents:
       encrypted:
+        state: absent
+      encryptedbackups:
         importance: critical
         properties:
           encryption: aes-256-gcm
           keylocation: file:///root/zfs/passphrase
           keyformat: passphrase
-        datasets:
-          photos:
-            importance: critical
-            properties:
-              compression: false
-
 
 zfs_pools:
   - fastpool

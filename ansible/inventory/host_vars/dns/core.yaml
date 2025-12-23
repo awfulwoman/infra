@@ -35,6 +35,17 @@ configure_dns_linkdevice_physical: "eth0"
 # -------------------------------------------------------------------
 # ZFS
 # -------------------------------------------------------------------
+
+zfs:
+  fastpool:
+    datasets:
+      compositions:
+        datasets:
+          acme:
+            importance: critical
+          terraform:
+            importance: critical
+
 zfs_pools:
   - fastpool
 

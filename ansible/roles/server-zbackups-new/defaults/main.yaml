@@ -3,10 +3,6 @@ zfsbackup_cron_minute: "0"
 zfsbackup_logging_dir: /opt/zfsbackup/logs
 zfsbackup_logging_successfile: backups.log
 zfsbackup_logging_errorfile: error.log
-zfsbackup_pushover: "{{ vault_pushover_home_network_key | default('false') }}"
 zfsbackup_script_path: /opt/zfsbackup
-zfsbackup_ansiblepull_workdir: "{{ ansiblepull_workdir | default('undefined') }}"
-zfsbackup_ansiblepull_script_name: "{{ ansiblepull_script_name | default('undefined') }}"
-zfsbackup_poolname: backuppool
-zfsbackup_poolmountpoint: "/{{ zfsbackup_poolname }}"
-zfsbackup_run_after_wake: false
+zfsbackup_dataset: fastpool/encryptedbackups
+zfsbackup_pull_group: zfs-backup-clients # The ansible group that we try to pull backup data from

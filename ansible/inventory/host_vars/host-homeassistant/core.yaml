@@ -39,10 +39,6 @@ zfs:
         importance: critical
 
 
-
-
-
-
 # ZFS pools
 zfs_pools:
   - fastpool

@@ -12,6 +12,7 @@ class FilterModule(object):
             'zfs_all_datasets': self.zfs_all_datasets,
             'zfs_all_pools': self.zfs_all_pools,
             'zfs_datasets_with_config': self.zfs_datasets_with_config,
+            'zfs_critical_datasets': self.zfs_critical_datasets,
         }
 
     def zfs_all_datasets(self, zfs_dict):
@@ -112,3 +113,69 @@ class FilterModule(object):
                     self._walk_tree_with_config(value, result, path_components + [key])
                 else:
                     self._walk_tree_with_config(value, result, path_components)
+
+    def zfs_critical_datasets(self, zfs_dict):
+        """
+        Extract all datasets marked as 'critical' from a ZFS configuration dictionary.
+        
+        Processes the zfs dictionary and extracts all datasets that have importance: critical.
+        
+        Args:
+            zfs_dict: ZFS configuration dictionary
+
+        """
+        if not isinstance(zfs_dict, dict):
+            raise AnsibleFilterError('zfs_critical_datasets requires a dictionary')
+        
+        result = []
+        self._extract_critical_datasets(zfs_dict, result, [])
+        return result
+
+    def _extract_critical_datasets(self, current_dict, result, path_components):
+        """
+        Recursively extract datasets marked as critical.
+        """
+        if not isinstance(current_dict, dict):
+            return
+        
+        for key, value in current_dict.items():
+            if key == 'datasets' and isinstance(value, dict):
+                # Found a 'datasets' key - check each dataset
+                for dataset_name, dataset_value in value.items():
+                    dataset_path = path_components + [dataset_name]
+                    
+                    # Check if this dataset is marked as critical
+                    is_critical = False
+                    if isinstance(dataset_value, dict) and 'importance' in dataset_value:
+                        if dataset_value['importance'] == 'critical':
+                            is_critical = True
+                    
+                    if is_critical:
+                        # Build the dataset dictionary
+                        dataset_dict = {
+                            'dataset': '/'.join(dataset_path)
+                        }
+                        
+                        # Extract properties if they exist
+                        if 'properties' in dataset_value:
+                            properties = dataset_value['properties']
+                            if isinstance(properties, dict) and properties:
+                                dataset_dict['properties'] = properties
+                        
+                        # Extract delegation if it exists
+                        if 'delegation' in dataset_value:
+                            delegation = dataset_value['delegation']
+                            if isinstance(delegation, dict) and delegation:
+                                dataset_dict['delegation'] = delegation
+                        
+                        result.append(dataset_dict)
+                    
+                    # Recurse into nested datasets
+                    if isinstance(dataset_value, dict):
+                        self._extract_critical_datasets(dataset_value, result, dataset_path)
+            elif isinstance(value, dict):
+                # Check if this is a pool
+                if 'datasets' in value:
+                    self._extract_critical_datasets(value, result, path_components + [key])
+                else:
+                    self._extract_critical_datasets(value, result, path_components)

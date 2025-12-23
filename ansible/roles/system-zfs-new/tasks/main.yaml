@@ -105,7 +105,7 @@
     group: root
     mode: "0664"
 
-- name: Ensure zfs-load-key.service  is running
+- name: Ensure zfs-load-key.service is running
   become: true
   ansible.builtin.systemd_service:
     state: started

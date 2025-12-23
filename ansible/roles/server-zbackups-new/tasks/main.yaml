@@ -20,148 +20,106 @@
   ansible.builtin.set_fact:
     public_key: "{{ vault_zfsbackups_public_key }}"
 
-- name: Ensure backups pool exists
-  become: true
-  community.general.zfs:
-    name: "{{ zfsbackup_poolname }}"
-    state: present
-    extra_zfs_properties:
-      acltype: posix
-      xattr: sa
+# - name: DEBUG datasets raw
+#   ansible.builtin.debug:
+#     msg: >-
+#       {{ hostvars[item].zfs | zfs_critical_datasets | map(attribute='dataset') }}
+#   loop: "{{ groups[zfsbackup_pull_group] }}"
 
-- name: Define dataset list stub
+# https://stackoverflow.com/a/78339774
+- name: Concat datasets
   ansible.builtin.set_fact:
-    datasets: []
+    backup_datasets: >-
+      {% set data = namespace(test=[]) %}
+      {%- for ds in hostvars[item].zfs | zfs_critical_datasets | map(attribute='dataset') -%}
+        {% set data.test = data.test + [{'dataset': (item ~ '/' ~ ds) }] %}
+      {%- endfor -%}
+      {{ (backup_datasets | default([])) + data.test }}
+  loop: "{{ groups[zfsbackup_pull_group] }}"
 
-- name: Define dataset list
-  ansible.builtin.set_fact:
-    datasets: "{{ datasets + _result }}"
-  loop: "{{ query('inventory_hostnames', 'zfs-backup-clients') }}"
-  vars:
-    _host_datasets: "{{ hostvars[item].zfs_backup_datasets }}"
-    _result: "{{ [item + '/'] | product(_host_datasets) | map('join') | list }}"
-
-- name: DEBUG dataset_names
+- name: DEBUG backup_datasets
   ansible.builtin.debug:
-    var: datasets
+    msg: "{{ backup_datasets }}"
+
+# - name: Ensure backups pool exists
+#   become: true
+#   community.general.zfs:
+#     name: "{{ item }}"
+#     extra_zfs_properties:
+#       acltype: posix
+#       xattr: sa
+#   loop: "{{ backup_datasets }}"
 
 
+# - name: Ensure script working dir exists
+#   become: true
+#   ansible.builtin.file:
+#     path: "/opt/zfsbackup"
+#     state: directory
+#     owner: "{{ ansible_user }}"
+#     group: "{{ ansible_user }}"
+#     mode: "0774"
 
+# - name: Ensure backup script exists
+#   become: true
+#   ansible.builtin.template:
+#     src: templates/zfs-backups.py
+#     dest: "{{ zfsbackup_script_path }}/zfs-backups"
+#     owner: "{{ ansible_user }}"
+#     group: "{{ ansible_user }}"
+#     mode: "0774"
 
-- name: Ensure a dataset for each dataset of each backup client is present
-  become: true
-  community.general.zfs:
-    name: "{{ zfsbackup_poolname }}/{{ item }}"
-    state: present
-    extra_zfs_properties:
-      acltype: posix
-      xattr: sa
-      # mountpoint: none
-  loop: "{{ datasets }}"
+# # Fix for backup script
+# # see https://unix.stackexchange.com/questions/374093/why-doesnt-sudo-sh-source-profile-d-scripts
+# - name: Add script to system-wide $PATH
+#   become: true
+#   ansible.builtin.copy:
+#     dest: /etc/profile.d/custom-path-zfs-backup.sh
+#     content: 'PATH=$PATH:{{ zfsbackup_script_path }}'
+#     owner: root
+#     group: root
+#     mode: "0644"
 
+# - name: "Ensure user can sudo without password"
+#   become: true
+#   community.general.sudoers:
+#     name: allow-zfsbackup
+#     state: present
+#     user: "{{ ansible_user }}"
+#     nopassword: true
+#     commands:
+#       - "{{ zfsbackup_script_path }}/zfs-backups"
 
+# - name: Ensure .ssh directory exists
+#   ansible.builtin.file:
+#     dest: "/home/{{ ansible_user }}/.ssh"
+#     mode: "0700"
+#     owner: "{{ ansible_user }}"
+#     group: "{{ ansible_user }}"
+#     state: directory
 
+# - name: Ensure SSH backup user key exists
+#   ansible.builtin.copy:
+#     content: "{{ vault_zfsbackups_privatekey_b64 | b64decode }}"
+#     dest: "/home/{{ ansible_user }}/.ssh/id_rsa"
+#     mode: "0600"
+#     owner: "{{ ansible_user }}"
+#     group: "{{ ansible_user }}"
 
+# - name: Ensure .ssh directory exists for root
+#   become: true
+#   ansible.builtin.file:
+#     dest: "/root/.ssh"
+#     mode: "0700"
+#     owner: root
+#     group: root
+#     state: directory
 
-- name: Ensure working dir exists
-  become: true
-  ansible.builtin.file:
-    path: "/opt/zfsbackup"
-    state: directory
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    mode: "0774"
-
-- name: Ensure backup script exists
-  become: true
-  ansible.builtin.template:
-    src: templates/zfs-backups.py
-    dest: "{{ zfsbackup_script_path }}/zfs-backups"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    mode: "0774"
-
-# Fix for backup script
-# see https://unix.stackexchange.com/questions/374093/why-doesnt-sudo-sh-source-profile-d-scripts
-- name: Add script to system-wide $PATH
-  become: true
-  ansible.builtin.copy:
-    dest: /etc/profile.d/custom-path-zfs-backup.sh
-    content: 'PATH=$PATH:{{ zfsbackup_script_path }}'
-    owner: root
-    group: root
-    mode: "0644"
-
-- name: "Ensure user can sudo without password"
-  become: true
-  community.general.sudoers:
-    name: allow-zfsbackup
-    state: present
-    user: "{{ ansible_user }}"
-    nopassword: true
-    commands:
-      - "{{ zfsbackup_script_path }}/pull-zfs-backups"
-      - "{{ zfsbackup_script_path }}/zfs-backups"
-
-- name: Ensure .ssh directory exists
-  ansible.builtin.file:
-    dest: "/home/{{ ansible_user }}/.ssh"
-    mode: "0700"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    state: directory
-
-- name: Ensure SSH key is installed
-  ansible.builtin.copy:
-    content: "{{ vault_zfsbackups_privatekey_b64 | b64decode }}"
-    dest: "/home/{{ ansible_user }}/.ssh/id_rsa"
-    mode: "0600"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-
-# temp?
-- name: Ensure .ssh directory exists ROOT
-  become: true
-  ansible.builtin.file:
-    dest: "/root/.ssh"
-    mode: "0700"
-    owner: root
-    group: root
-    state: directory
-
-- name: Ensure SSH key is installed ROOT
-  become: true
-  ansible.builtin.copy:
-    content: "{{ vault_zfsbackups_privatekey_b64 | b64decode }}"
-    dest: "/root/.ssh/id_rsa"
-    mode: "0600"
-    owner: root
-    group: root
-
-- name: Ensure user can run syncoid with no password
-  become: true
-  community.general.sudoers:
-    name: allow-syncoid
-    state: present
-    user: "{{ ansible_user }}"
-    nopassword: true
-    commands: /usr/sbin/syncoid
-
-- name: Ensure pull-zfs-backups-after-wake.service exists
-  become: true
-  ansible.builtin.template:
-    src: pull-zfs-backups-after-wake.service
-    dest: /etc/systemd/system/pull-zfs-backups-after-wake.service
-    owner: root
-    group: root
-    mode: "0664"
-  when: zfsbackup_run_after_wake
-
-- name: Ensure pull-zfs-backups-after-wake service is running
-  become: true
-  ansible.builtin.systemd_service:
-    state: started
-    name: pull-zfs-backups-after-wake
-    enabled: true
-    no_block: true
-  when: zfsbackup_run_after_wake
+# - name: Ensure SSH backup user key exists for root
+#   become: true
+#   ansible.builtin.copy:
+#     content: "{{ vault_zfsbackups_privatekey_b64 | b64decode }}"
+#     dest: "/root/.ssh/id_rsa"
+#     mode: "0600"
+#     owner: root
+#     group: root

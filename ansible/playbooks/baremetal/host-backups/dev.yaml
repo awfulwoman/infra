@@ -1,0 +1,10 @@
+- name: Backup Server (dev work)
+  hosts: host-backups
+  gather_facts: true
+  roles:
+    - role: server-zbackups-new
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:
