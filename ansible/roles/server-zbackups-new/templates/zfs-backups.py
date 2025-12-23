@@ -3,8 +3,7 @@ import subprocess
 import sys
 import argparse
 
-DEFAULT_destination = "backuppool"
-DEFAULT_mode = "push"
+DEFAULT_destination = "{{ zfsbackup_dataset }}"
 
 def preflight(host, user, datasets, destination, mode):
     # Check ability to connect to remote host
