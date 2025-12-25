@@ -61,14 +61,17 @@
     group: "{{ ansible_user }}"
     mode: "0774"
 
-- name: Ensure backup script exists
+- name: Ensure backup scripts exist
   become: true
   ansible.builtin.template:
-    src: templates/zfs-backups.py
-    dest: "{{ zfsbackup_script_path }}/zfs-backups"
+    src: "templates/zfs-{{ item }}-backups.py"
+    dest: "{{ zfsbackup_script_path }}/zfs-{{ item }}-backups"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0774"
+  loop:
+    - pull
+    - push
 
 # Fix for backup script
 # see https://unix.stackexchange.com/questions/374093/why-doesnt-sudo-sh-source-profile-d-scripts
@@ -124,4 +127,3 @@
     mode: "0600"
     owner: root
     group: root
-
