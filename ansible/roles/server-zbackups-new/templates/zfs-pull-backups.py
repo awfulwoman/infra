@@ -60,7 +60,7 @@ def pulldatasets(host, dataset, user, destination):
    
     # Construct commands
     command_send = f"zfs send {sendoptions} {dataset}@{result_latest_snapshot}"
-    command_receive = f"zfs receive {destination}/{host}/{dataset}"
+    command_receive = f"zfs receive {receiveoptions} {destination}/{host}/{dataset}"
     command_ssh_and_custom = command_ssh_connection +  ' ' + command_send
     
     print("DEBUG: " + command_ssh_and_custom)
@@ -73,6 +73,7 @@ def pulldatasets(host, dataset, user, destination):
             stderr=subprocess.PIPE
             )
        
+        print("DEBUG: " + command_receive)
         print(f"Receiving ZFS stream from {host}")
         local = subprocess.Popen(command_receive.split(' '),
                     shell=False,
