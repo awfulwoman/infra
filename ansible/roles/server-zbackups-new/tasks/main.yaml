@@ -2,7 +2,7 @@
 # Prepare a server to receive ZFS datasets
 # ###################################################################
 
-- name: Ensure package dependencies exist
+- name: Ensure apt packages are installed 
   become: true
   ansible.builtin.apt:
     name:
@@ -15,42 +15,18 @@
       - mosquitto-clients
     state: present
 
+- name: Install pip env
+  ansible.builtin.pip:
+    name: "{{ item }}"
+    virtualenv: /opt/zfsbackup
+    virtualenv_site_packages: true
+  loop:
+    - zfslib
+
 # TODO: is this even needed?
 - name: Publish backup server public key as fact
   ansible.builtin.set_fact:
     public_key: "{{ vault_zfsbackups_public_key }}"
-
-- name: DEBUG datasets raw
-  ansible.builtin.debug:
-    msg: >-
-      {{ hostvars[item].zfs | zfs_critical_datasets }}
-  loop: "{{ groups[zfsbackup_pull_group] }}"
-
-# Using namespaces because of Jinja weirdness
-# https://stackoverflow.com/a/78339774
-- name: Add host info to datasets
-  ansible.builtin.set_fact:
-    backup_datasets: >-
-      {% set data = namespace(test=[]) %}
-      {%- for ds in (hostvars[item].zfs | zfs_critical_datasets) -%}
-        {% set data.test = data.test + [{'dataset': (item ~ '/' ~ ds.dataset), 'properties': (ds.properties | default({})) }] %}
-      {%- endfor -%}
-      {{ (backup_datasets | default([])) + data.test }}
-  loop: "{{ groups[zfsbackup_pull_group] }}"
-
-- name: DEBUG backup_datasets
-  ansible.builtin.debug:
-    msg: "{{ backup_datasets }}"
-
-- name: Ensure backup datasets exist
-  become: true
-  community.general.zfs:
-    name: "{{ zfsbackup_dataset }}/{{ item.dataset }}"
-    extra_zfs_properties:
-      acltype: posix
-      xattr: sa
-    state: present
-  loop: "{{ backup_datasets }}"
 
 - name: Ensure script working dir exists
   become: true
@@ -83,6 +59,40 @@
     owner: root
     group: root
     mode: "0644"
+
+
+
+- name: DEBUG datasets raw
+  ansible.builtin.debug:
+    msg: >-
+      {{ hostvars[item].zfs | zfs_critical_datasets }}
+  loop: "{{ groups[zfsbackup_pull_group] }}"
+
+# Using namespaces because of Jinja weirdness
+# https://stackoverflow.com/a/78339774
+- name: Add host info to datasets
+  ansible.builtin.set_fact:
+    backup_datasets: >-
+      {% set data = namespace(test=[]) %}
+      {%- for ds in (hostvars[item].zfs | zfs_critical_datasets) -%}
+        {% set data.test = data.test + [{'dataset': (item ~ '/' ~ ds.dataset), 'properties': (ds.properties | default({})) }] %}
+      {%- endfor -%}
+      {{ (backup_datasets | default([])) + data.test }}
+  loop: "{{ groups[zfsbackup_pull_group] }}"
+
+- name: DEBUG backup_datasets
+  ansible.builtin.debug:
+    msg: "{{ backup_datasets }}"
+
+- name: Ensure backup datasets exist
+  become: true
+  community.general.zfs:
+    name: "{{ zfsbackup_dataset }}/{{ item.dataset }}"
+    extra_zfs_properties:
+      acltype: posix
+      xattr: sa
+    state: present
+  loop: "{{ backup_datasets }}"
 
 - name: "Ensure user can sudo without password"
   become: true
