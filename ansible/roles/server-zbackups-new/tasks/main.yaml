@@ -2,7 +2,7 @@
 # Prepare a server to receive ZFS datasets
 # ###################################################################
 
-- name: Ensure apt packages are installed 
+- name: Ensure apt packages are installed
   become: true
   ansible.builtin.apt:
     name:
