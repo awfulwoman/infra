@@ -9,44 +9,47 @@ DEFAULT_user="{{ vault_zfsbackups_user }}"
 
 def preflight(host, datasets, user, destination):
     
-    errorflagged = 0
+    errors = False
+    errorMessages = []
     
     # Check host is up
-    print('Checking host is up')
-    check_host = subprocess.run(['ssh', f'{user}@{host}', 'ls'],
-            shell=False, 
-            check=False,
-            capture_output=True
-            ).returncode
-    errorflagged = errorflagged + check_host
+    try: 
+        print('Checking host is up')
+        check_host = subprocess.run(['ssh', f'{user}@{host}', 'ls'],
+                shell=False, 
+                check=True,
+                capture_output=True
+                )
+       
         
     # Check local destination dataset exists
-    print('Checking local dataset exist')
-    check_local_dataset = subprocess.run(['zfs', 'list', f'{destination}'],
-            shell=False, 
-            check=False,
-            capture_output=True
-            ).returncode
-    errorflagged = errorflagged + check_local_dataset
+
+        print('Checking local dataset exist')
+        check_local_dataset = subprocess.run(['zfs', 'list', f'{destination}'],
+                shell=False, 
+                check=True,
+                capture_output=True
+                )
+        
 
     # Check remote datasets exist
-    for dataset in datasets:
-        print(f'Checking {dataset} exists')
-        check_remote_datasets = subprocess.run(
-            ['ssh', f'{user}@{host}', f'zfs list {dataset}'],
-            shell=False, 
-            check=False,
-            capture_output=True
-            ).returncode
-        errorflagged = errorflagged + check_remote_datasets
-
-    # All passed - start backup
-    if errorflagged == 0:
-        print("No errors detected - proceeding.\n")
-        pulldatasets_init(host, datasets, user, destination)
-    else:
-        print("Errors detected - halting.\n")
+        for dataset in datasets:
+            print(f'Checking {dataset} exists')
+            check_remote_datasets = subprocess.run(
+                ['ssh', f'{user}@{host}', f'zfs list {dataset}'],
+                shell=False, 
+                check=True,
+                capture_output=True
+                )
+            
+    except subprocess.CalledProcessError as e:
+        
+        print("Errors!")
+        print(e)
         sys.exit(1)
+
+
+    pulldatasets_init(host, datasets, user, destination)
 
 def pulldatasets_init(host, datasets, user, destination):
     for dataset in datasets:
