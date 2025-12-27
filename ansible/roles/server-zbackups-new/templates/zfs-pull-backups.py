@@ -36,7 +36,7 @@ def preflight(host, datasets, user, destination, debug):
         print("Errors detected in preflight checks. Aborting.")
         if debug:
             print(f"DEBUG: {e}")
-        print("\n")
+        print(" ")
         sys.exit(1)
 
     pulldatasets_init(host, datasets, user, destination, debug)
