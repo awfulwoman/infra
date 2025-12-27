@@ -5,20 +5,19 @@ import argparse
 
 DEFAULT_destination = "{{ zfsbackup_dataset }}"
 DEFAULT_user="{{ vault_zfsbackups_user }}"
+DEFAULT_debug = False
 
-debug = False
-
-def preflight(host, datasets, user, destination): 
+def preflight(host, datasets, user, destination, debug): 
     try:
         print('Checking host is up')
-        check_host = subprocess.run(['ssh', f'{user}@{host}', 'ls'],
+        subprocess.run(['ssh', f'{user}@{host}', 'ls'],
                 shell=False, 
                 check=True,
                 capture_output=True
                 )
        
         print('Checking local dataset exist')
-        check_local_dataset = subprocess.run(['zfs', 'list', f'{destination}'],
+        subprocess.run(['zfs', 'list', f'{destination}'],
                 shell=False, 
                 check=True,
                 capture_output=True
@@ -26,7 +25,7 @@ def preflight(host, datasets, user, destination):
         
         for dataset in datasets:
             print(f'Checking {dataset} exists')
-            check_remote_datasets = subprocess.run(
+            subprocess.run(
                 ['ssh', f'{user}@{host}', f'zfs list {dataset}'],
                 shell=False, 
                 check=True,
@@ -34,18 +33,19 @@ def preflight(host, datasets, user, destination):
                 )
             
     except subprocess.CalledProcessError as e:        
-        print("Errors detected in preflight checks. Aborting.\n")
+        print("Errors detected in preflight checks. Aborting.")
         if debug:
-            print(f"DEBUG: {e}\n")
+            print(f"DEBUG: {e}")
+        print("\n")
         sys.exit(1)
 
-    pulldatasets_init(host, datasets, user, destination)
+    pulldatasets_init(host, datasets, user, destination, debug)
 
-def pulldatasets_init(host, datasets, user, destination):
+def pulldatasets_init(host, datasets, user, destination, debug):
     for dataset in datasets:
-        pulldatasets(host, dataset, user, destination)
+        pulldatasets(host, dataset, user, destination, debug)
         
-def get_latest_snapshot(host, dataset, user):
+def get_latest_snapshot(host, dataset, user, debug):
     command_ssh_connection = f"ssh {user}@{host}"
     command_zfs_get_latest_snapshot = f"zfs list -t snapshot -H -o name -S creation -r {dataset}"
     command_get_latest_snapshot = command_ssh_connection + ' ' + command_zfs_get_latest_snapshot
@@ -67,12 +67,12 @@ def get_latest_snapshot(host, dataset, user):
     return result_latest_snapshot.split("@")[1]
         
 
-def pulldatasets(host, dataset, user, destination):
+def pulldatasets(host, dataset, user, destination, debug):
     sendoptions = "--raw"
     receiveoptions = ""
     command_ssh_connection = f"ssh {user}@{host}"
    
-    result_latest_snapshot = get_latest_snapshot(host, dataset, user,)
+    result_latest_snapshot = get_latest_snapshot(host, dataset, user, debug)
    
     # Construct commands
     command_send = f"zfs send {sendoptions} {dataset}@{result_latest_snapshot}"
@@ -112,16 +112,16 @@ def pulldatasets(host, dataset, user, destination):
         sys.exit(1)
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Push or pull ZFS backups from a remote host')
+    parser = argparse.ArgumentParser(description='Pull ZFS datasets from a remote host.')
     parser.add_argument('--host', help='Remote host')
     parser.add_argument('--datasets', nargs='+', help='Source datasets')
     parser.add_argument('--user', default=DEFAULT_user, help='Remote SSH user')
     parser.add_argument('--destination', default=DEFAULT_destination, help='Local dataset to receive backups (default: %(default)s)')
-
+    parser.add_argument('--debug', default=DEFAULT_debug, help='Debug code', action=argparse.BooleanOptionalAction)
     args = parser.parse_args()
 
     if not args.user or not args.host or not args.datasets:
         print("Usage: zfs-pull-backups --user <user> --host <host> --datasets-source <space-seperated list> [--datasets-destination <destination>]", file=sys.stderr)
         sys.exit(1)
 
-    preflight(args.host, args.datasets, args.user, args.destination)
+    preflight(args.host, args.datasets, args.user, args.destination, args.debug)
