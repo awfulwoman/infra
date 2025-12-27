@@ -8,23 +8,45 @@ DEFAULT_destination = "{{ zfsbackup_dataset }}"
 DEFAULT_user="{{ vault_zfsbackups_user }}"
 
 def preflight(host, datasets, user, destination):
-    # Check ability to connect to remote host
-    # connstring = f'{user}@{host}'
-    # print(connstring)
-    # conn = zfs.Connection(host=connstring)
-    # poolset = conn.load_poolset()
     
+    errorflagged = 0
+    
+    # Check host is up
+    print('Checking host is up')
+    check_host = subprocess.run(['ssh', f'{user}@{host}', 'ls'],
+            shell=False, 
+            check=False,
+            capture_output=True
+            ).returncode
+    errorflagged = errorflagged + check_host
+        
+    # Check local destination dataset exists
+    print('Checking local dataset exist')
+    check_local_dataset = subprocess.run(['zfs', 'list', f'{destination}'],
+            shell=False, 
+            check=False,
+            capture_output=True
+            ).returncode
+    errorflagged = errorflagged + check_local_dataset
 
-    # p = poolset.get_pool('fastpool')
-    # ds = p.get_dataset('compositions')
-    # all_snaps = ds.get_all_snapshots()
-    # if len(all_snaps) == 0:
-    #     print('No snapshots found for dataset: {}'.format(ds))
-    
-    # Check for destination
-    
+    # Check remote datasets exist
+    for dataset in datasets:
+        print(f'Checking {dataset} exists')
+        check_remote_datasets = subprocess.run(
+            ['ssh', f'{user}@{host}', f'zfs list {dataset}'],
+            shell=False, 
+            check=False,
+            capture_output=True
+            ).returncode
+        errorflagged = errorflagged + check_remote_datasets
+
     # All passed - start backup
-    pulldatasets_init(host, datasets, user, destination)
+    if errorflagged == 0:
+        print("No errors detected - proceeding.\n")
+        pulldatasets_init(host, datasets, user, destination)
+    else:
+        print("Errors detected - halting.\n")
+        sys.exit(1)
 
 def pulldatasets_init(host, datasets, user, destination):
     for dataset in datasets:
@@ -60,7 +82,7 @@ def pulldatasets(host, dataset, user, destination):
    
     # Construct commands
     command_send = f"zfs send {sendoptions} {dataset}@{result_latest_snapshot}"
-    command_receive = f"zfs receive {receiveoptions} {destination}/{host}/{dataset}"
+    command_receive = f"zfs receive {destination}/{host}/{dataset}"
     command_ssh_and_custom = command_ssh_connection +  ' ' + command_send
     
     print("DEBUG: " + command_ssh_and_custom)
