@@ -2,18 +2,14 @@
 import subprocess
 import sys
 import argparse
-import zfslib as zfs
 
 DEFAULT_destination = "{{ zfsbackup_dataset }}"
 DEFAULT_user="{{ vault_zfsbackups_user }}"
 
-def preflight(host, datasets, user, destination):
-    
-    errors = False
-    errorMessages = []
-    
-    # Check host is up
-    try: 
+debug = False
+
+def preflight(host, datasets, user, destination): 
+    try:
         print('Checking host is up')
         check_host = subprocess.run(['ssh', f'{user}@{host}', 'ls'],
                 shell=False, 
@@ -21,9 +17,6 @@ def preflight(host, datasets, user, destination):
                 capture_output=True
                 )
        
-        
-    # Check local destination dataset exists
-
         print('Checking local dataset exist')
         check_local_dataset = subprocess.run(['zfs', 'list', f'{destination}'],
                 shell=False, 
@@ -31,8 +24,6 @@ def preflight(host, datasets, user, destination):
                 capture_output=True
                 )
         
-
-    # Check remote datasets exist
         for dataset in datasets:
             print(f'Checking {dataset} exists')
             check_remote_datasets = subprocess.run(
@@ -42,12 +33,11 @@ def preflight(host, datasets, user, destination):
                 capture_output=True
                 )
             
-    except subprocess.CalledProcessError as e:
-        
-        print("Errors!")
-        print(e)
+    except subprocess.CalledProcessError as e:        
+        print("Errors detected in preflight checks. Aborting.\n")
+        if debug:
+            print(f"DEBUG: {e}\n")
         sys.exit(1)
-
 
     pulldatasets_init(host, datasets, user, destination)
 
@@ -60,7 +50,8 @@ def get_latest_snapshot(host, dataset, user):
     command_zfs_get_latest_snapshot = f"zfs list -t snapshot -H -o name -S creation -r {dataset}"
     command_get_latest_snapshot = command_ssh_connection + ' ' + command_zfs_get_latest_snapshot
     
-    print("DEBUG: " + command_ssh_connection + ' ' + command_zfs_get_latest_snapshot)
+    if debug:
+        print("DEBUG: " + command_ssh_connection + ' ' + command_zfs_get_latest_snapshot)
     
     try:
         ssh = subprocess.Popen(command_get_latest_snapshot.split(' '),
@@ -88,7 +79,8 @@ def pulldatasets(host, dataset, user, destination):
     command_receive = f"zfs receive {destination}/{host}/{dataset}"
     command_ssh_and_custom = command_ssh_connection +  ' ' + command_send
     
-    print("DEBUG: " + command_ssh_and_custom)
+    if debug:
+        print("DEBUG: " + command_ssh_and_custom)
 
     try:
         print(f"Initiating send from {host}")
@@ -97,8 +89,9 @@ def pulldatasets(host, dataset, user, destination):
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE
             )
-       
-        print("DEBUG: " + command_receive)
+        if debug:
+            print("DEBUG: " + command_receive)
+        
         print(f"Receiving ZFS stream from {host}")
         local = subprocess.Popen(command_receive.split(' '),
                     shell=False,
@@ -109,9 +102,10 @@ def pulldatasets(host, dataset, user, destination):
         
         stout, stderr = local.communicate()
         
-        print('Result of receive ZFS stream')
-        print(stout.decode())
-        print(stderr.decode())
+        if debug:
+            print('Result of receive ZFS stream')
+            print(stout.decode())
+            print(stderr.decode())
         
     except subprocess.CalledProcessError as e:
         print("ERROR: Backup failed.\n", e.output)
