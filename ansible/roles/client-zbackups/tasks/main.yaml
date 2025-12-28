@@ -94,7 +94,7 @@
   community.general.zfs_delegate_admin:
     name: "{{ item }}"
     users: "{{ vault_zfsbackups_user }}"
-    permissions: mount,send,hold,snapshot,destroy
+    permissions: mount,send,hold,snapshot,destroy,release
     # descendents: true
   loop: "{{ zfs_backup_datasets }}"
   when: zfs_backup_datasets is defined
