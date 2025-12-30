@@ -102,7 +102,7 @@
   community.general.zfs_delegate_admin:
     name: "{{ zfsbackup_dataset }}"
     users: "{{ ansible_user }}"
-    permissions: compression,mountpoint,create,mount,receive,rollback,destroy,release,hold,userprop,readonly,canmount,dedup
+    permissions: compression,mountpoint,create,mount,receive,rollback,destroy,release,hold,userprop,readonly,canmount,dedup,xattr,acltype
     descendents: true
 
 - name: Ensure .ssh directory exists
