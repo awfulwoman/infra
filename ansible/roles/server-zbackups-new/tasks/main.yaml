@@ -15,14 +15,6 @@
       - mosquitto-clients
     state: present
 
-- name: Install pip env
-  ansible.builtin.pip:
-    name: "{{ item }}"
-    virtualenv: /opt/zfsbackup
-    virtualenv_site_packages: true
-  loop:
-    - zfslib
-
 # TODO: is this even needed?
 - name: Publish backup server public key as fact
   ansible.builtin.set_fact:
@@ -94,6 +86,7 @@
     state: present
   loop: "{{ backup_datasets }}"
 
+# TODO: remove this if not needed
 - name: "Ensure user can sudo without password"
   become: true
   community.general.sudoers:
@@ -103,6 +96,14 @@
     nopassword: true
     commands:
       - "{{ zfsbackup_script_path }}/zfs-backups"
+
+- name: "Ensure normal user has permissions on backup datasets"
+  become: true
+  community.general.zfs_delegate_admin:
+    name: "{{ zfsbackup_dataset }}"
+    users: "{{ ansible_user }}"
+    permissions: compression,mountpoint,create,mount,receive,rollback,destroy,release,hold,userprop,readonly,canmount,dedup
+    descendents: true
 
 - name: Ensure .ssh directory exists
   ansible.builtin.file:

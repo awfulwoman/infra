@@ -15,18 +15,18 @@ def preflight(host, datasets, user, destination, debug):
                 check=True,
                 capture_output=True
                 )
-       
-        print('Checking local dataset exist')
-        subprocess.run(['zfs', 'list', f'{destination}'],
+    
+        for dataset in datasets:
+            print(f'Checking remote {dataset} exists')
+            subprocess.run(
+                ['ssh', f'{user}@{host}', f'zfs list {dataset}'],
                 shell=False, 
                 check=True,
                 capture_output=True
                 )
-        
-        for dataset in datasets:
-            print(f'Checking {dataset} exists')
-            subprocess.run(
-                ['ssh', f'{user}@{host}', f'zfs list {dataset}'],
+            
+        print('Checking backup root dataset exist')
+        subprocess.run(['zfs', 'list', f'{destination}'],
                 shell=False, 
                 check=True,
                 capture_output=True
@@ -68,47 +68,47 @@ def get_latest_snapshot(host, dataset, user, debug):
         
 
 def pulldatasets(host, dataset, user, destination, debug):
-    sendoptions = "--raw"
-    receiveoptions = ""
+    sendoptions = "-R"
+    receiveoptions = "-F"
     command_ssh_connection = f"ssh {user}@{host}"
    
     result_latest_snapshot = get_latest_snapshot(host, dataset, user, debug)
    
     # Construct commands
     command_send = f"zfs send {sendoptions} {dataset}@{result_latest_snapshot}"
-    command_receive = f"zfs receive {destination}/{host}/{dataset}"
+    command_receive = f"zfs receive {receiveoptions} {destination}/{host}/{dataset}"
     command_ssh_and_custom = command_ssh_connection +  ' ' + command_send
     
-    if debug:
-        print("DEBUG: " + command_ssh_and_custom)
-
     try:
         print(f"Initiating send from {host}")
-        ssh = subprocess.Popen(
+        if debug:
+            print("DEBUG: " + command_ssh_and_custom)
+        remote = subprocess.run(
             command_ssh_and_custom.split(' '),
             stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE
+            stderr=subprocess.PIPE,
+            check=True
             )
+        
+        # print(remote)
+
+        print(f"Receiving ZFS stream from {host}")
+        print(f"Saving to {destination}/{host}/{dataset}")
         if debug:
             print("DEBUG: " + command_receive)
-        
-        print(f"Receiving ZFS stream from {host}")
-        local = subprocess.Popen(command_receive.split(' '),
-                    shell=False,
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE,
-                    stdin=ssh.stdout
-                    )
-        
-        stout, stderr = local.communicate()
-        
-        if debug:
-            print('Result of receive ZFS stream')
-            print(stout.decode())
-            print(stderr.decode())
+        receive_zfs = subprocess.run(command_receive.split(' '),
+                            shell=False,
+                            input=remote.stdout,
+                            check=True
+                            )
         
     except subprocess.CalledProcessError as e:
-        print("ERROR: Backup failed.\n", e.output)
+        print('#############################')
+        print("ERROR: Backup failed.\n", e)
+        print('#############################')
+        print('')
+    except Exception as e:
+        print(e)
         sys.exit(1)
 
 if __name__ == "__main__":
