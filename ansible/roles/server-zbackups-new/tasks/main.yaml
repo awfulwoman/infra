@@ -7,11 +7,7 @@
   ansible.builtin.apt:
     name:
       - zfsutils-linux
-      - sanoid
       - acl
-      - moreutils # for ts (timestamp) util
-      - lzop
-      - mbuffer
       - mosquitto-clients
     state: present
 
