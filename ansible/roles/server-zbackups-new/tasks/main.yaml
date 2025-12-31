@@ -48,8 +48,6 @@
     group: root
     mode: "0644"
 
-
-
 - name: DEBUG datasets raw
   ansible.builtin.debug:
     msg: >-
