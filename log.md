@@ -106,6 +106,11 @@ def ensure_remote_parent_exists(remote_user, remote_host, remote_dataset):
     subprocess.run(ssh_cmd, check=False)  # Ignore if already exists
 ```
 
+### Additional Work
+
+- **Created `suspend-backups.sh`** - A simple bash script in the repo root that uses `mosquitto_pub` to publish a "suspend" message to the `servers/host-backups` MQTT topic (host configured via `MQTT_HOST` env var)
+- This script is used to suspend the backup server when done working on the server-zfsbackups role
+
 ---
 
 ## December 30, 2025 - ZFS Backup Script Refactor
