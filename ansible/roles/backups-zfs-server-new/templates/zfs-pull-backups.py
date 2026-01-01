@@ -9,7 +9,7 @@ DEFAULT_debug = False
 
 def preflight(host, datasets, user, destination, debug): 
     try:
-        print('Checking host is up')
+        print('Checking {host} is up')
         subprocess.run(['ssh', f'{user}@{host}', 'ls'],
                 shell=False, 
                 check=True,
@@ -41,8 +41,49 @@ def preflight(host, datasets, user, destination, debug):
 
     pulldatasets_init(host, datasets, user, destination, debug)
 
+def get_remote_child_datasets(host, dataset, user, debug):
+    """Get all datasets under a parent (including the parent itself)."""
+    command = f"ssh {user}@{host} zfs list -H -o name -r {dataset}"
+
+    if debug:
+        print("DEBUG: " + command)
+
+    try:
+        result = subprocess.run(
+            command.split(' '),
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=True
+        )
+        datasets = result.stdout.decode().strip().splitlines()
+
+        if debug:
+            print(f"DEBUG: Found {len(datasets)} datasets under {dataset}")
+
+        return datasets
+
+    except subprocess.CalledProcessError as e:
+        print(f"ERROR when listing remote datasets:\n", e.stderr.decode())
+        sys.exit(1)
+
+
 def pulldatasets_init(host, datasets, user, destination, debug):
+    # Expand each dataset to include all children
+    all_datasets = []
     for dataset in datasets:
+        children = get_remote_child_datasets(host, dataset, user, debug)
+        all_datasets.extend(children)
+
+    # Remove duplicates while preserving order
+    seen = set()
+    unique_datasets = []
+    for ds in all_datasets:
+        if ds not in seen:
+            seen.add(ds)
+            unique_datasets.append(ds)
+
+    print(f"Backing up {len(unique_datasets)} datasets individually")
+    for dataset in unique_datasets:
         pulldatasets(host, dataset, user, destination, debug)
         
 def get_remote_snapshots(host, dataset, user, debug):
@@ -153,22 +194,22 @@ def pulldatasets(host, dataset, user, destination, debug):
 
     if not common_snapshots:
         # Initial sync: no common snapshots, need full send
-        print(f"No local snapshots found. Performing initial sync for {dataset}")
+        print(f"No common snapshots found. Performing initial sync for {host} - {dataset}")
         print(f"Remote has {len(remote_snapshots)} snapshots: {earliest_remote} -> {latest_remote}")
 
         # Step 1: Full send of earliest snapshot
-        print(f"Step 1: Pulling earliest snapshot '{earliest_remote}'")
-        send_cmd = f"ssh {user}@{host} zfs send -R {dataset}@{earliest_remote}"
-        receive_cmd = f"zfs receive -F {local_dataset}"
+        print(f"Pulling earliest snapshot from {host} - '{dataset}@{earliest_remote}'")
+        send_cmd = f"ssh {user}@{host} zfs send {dataset}@{earliest_remote}"
+        receive_cmd = f"zfs receive -F -u {local_dataset}"
 
         if not send_and_receive(send_cmd, receive_cmd, debug):
             sys.exit(1)
-        print(f"Successfully received earliest snapshot '{earliest_remote}'")
+        print(f"Successfully received earliest snapshot from {host} - '{dataset}@{earliest_remote}'")
 
         # Step 2: Incremental from earliest to latest (if more than one snapshot)
         if earliest_remote != latest_remote:
-            print(f"Step 2: Pulling incremental '{earliest_remote}' -> '{latest_remote}'")
-            send_cmd = f"ssh {user}@{host} zfs send -R -I {dataset}@{earliest_remote} {dataset}@{latest_remote}"
+            print(f"Pulling incremental snapshots '{earliest_remote}' -> '{latest_remote}'")
+            send_cmd = f"ssh {user}@{host} zfs send -I {dataset}@{earliest_remote} {dataset}@{latest_remote}"
 
             if not send_and_receive(send_cmd, receive_cmd, debug):
                 sys.exit(1)
@@ -179,15 +220,15 @@ def pulldatasets(host, dataset, user, destination, debug):
     else:
         # Incremental sync: find latest common snapshot and sync from there
         latest_common = common_snapshots[-1]
-        print(f"Found {len(common_snapshots)} common snapshots. Latest: {latest_common}")
+        # print(f"Found {len(common_snapshots)} common snapshots. Latest: {latest_common}")
 
         if latest_common == latest_remote:
-            print(f"Already up to date with '{latest_remote}'")
+            print(f"Already up to date with {host} - '{dataset}@{latest_remote}'")
             return
 
         print(f"Pulling incremental '{latest_common}' -> '{latest_remote}'")
-        send_cmd = f"ssh {user}@{host} zfs send -R -I {dataset}@{latest_common} {dataset}@{latest_remote}"
-        receive_cmd = f"zfs receive -F {local_dataset}"
+        send_cmd = f"ssh {user}@{host} zfs send -I {dataset}@{latest_common} {dataset}@{latest_remote}"
+        receive_cmd = f"zfs receive -F -u {local_dataset}"
 
         if not send_and_receive(send_cmd, receive_cmd, debug):
             sys.exit(1)

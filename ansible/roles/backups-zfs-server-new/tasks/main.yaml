@@ -70,6 +70,14 @@
   ansible.builtin.debug:
     msg: "{{ backup_datasets }}"
 
+- name: Ensure backup parent dataset has canmount=off
+  become: true
+  community.general.zfs:
+    name: "{{ backups_zfs_server_dataset }}"
+    extra_zfs_properties:
+      canmount: off
+    state: present
+
 - name: Ensure backup datasets exist
   become: true
   community.general.zfs:
@@ -77,6 +85,7 @@
     extra_zfs_properties:
       acltype: posix
       xattr: sa
+      canmount: off
     state: present
   loop: "{{ backup_datasets }}"
 
