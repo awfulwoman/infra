@@ -51,24 +51,22 @@ zfs:
     # up complex storage devices, just single-use nodes
     # TODO: Make this a dictionary of vdevs and devices
     device: /dev/disk/by-id/scsi-SIntenso_SSD_SATAIII_512011020200
-    # datasets:
-    #   # exampleset:
-    #   #   infra:
-    #   #     backup: true
-    #   #   state: present
-    #   #   delegation:
-    #   #     users:
-    #   #     permissions:
-    #   #     local: true
-    #   #     descendents:
-    #   encrypted:
-    #     state: absent
-    #   encryptedbackups:
-    #     importance: critical
-    #     properties:
-    #       encryption: aes-256-gcm
-    #       keylocation: file:///root/zfs/passphrase
-    #       keyformat: passphrase
+    datasets:
+      # exampleset:
+      #   infra:
+      #     backup: true
+      #   state: present
+      #   delegation:
+      #     users:
+      #     permissions:
+      #     local: true
+      #     descendents:
+      composition:
+        # importance: critical
+        # properties:
+        #   encryption: aes-256-gcm
+        #   keylocation: "{{ vault_zfs_default_encryption_passphrase_path }}"
+        #   keyformat: passphrase
 
 zfs_pools:
   - fastpool
