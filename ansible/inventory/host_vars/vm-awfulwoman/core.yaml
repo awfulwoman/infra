@@ -14,6 +14,15 @@ configure_dns_linkdevice_physical: "eth0"
 # ZFS
 # -------------------------------------------------------------------
 
+zfs:
+  fastpool:
+    datasets:
+      compositions:
+        importance: high
+      sites:
+        datasets:
+          awfulwoman
+
 # ZFS pools that should be present
 zfs_pools_create: 
   - name: fastpool

@@ -39,6 +39,34 @@ zfs:
     datasets:
       compositions:
         importance: critical
+  slowpool:
+    datasets:
+      shared:
+        datasets:
+          syncthing:
+          media:
+            datasets:
+              shows:
+              movies:
+              music:
+                importance: critical
+              books:
+                importance: critical
+              audiobooks:
+                importance: critical
+              downloads:
+                datasets:
+                  torrents:
+              podcasts:
+                importance: critical
+              youtube:
+      charlie:
+        importance: critical
+        datasets:
+          syncthing:
+          photos:
+      "{{ vault_wifey_name }}":
+
 
 # ZFS pools that should be present
 zfs_pools:

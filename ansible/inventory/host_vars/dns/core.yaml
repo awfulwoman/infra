@@ -41,6 +41,8 @@ zfs:
     datasets:
       compositions:
         datasets:
+          compositions:
+            importance: critical
           acme:
             importance: critical
           terraform:
