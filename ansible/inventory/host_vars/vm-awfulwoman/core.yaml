@@ -21,7 +21,7 @@ zfs:
         importance: high
       sites:
         datasets:
-          awfulwoman
+          awfulwoman:
 
 # ZFS pools that should be present
 zfs_pools_create: 
