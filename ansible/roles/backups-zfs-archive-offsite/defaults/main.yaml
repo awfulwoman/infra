@@ -1,0 +1,2 @@
+backups_zfs_archive_offsite_dataset: fastpool/encryptedbackups
+backups_zfs_archive_offsite_user: "{{ vault_zfsbackups_user }}"

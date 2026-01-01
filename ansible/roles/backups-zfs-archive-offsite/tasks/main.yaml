@@ -1,0 +1,70 @@
+# ###################################################################
+# Provision an off-site host to receive raw encrypted ZFS backups
+#
+# This host is passive-only: it can receive backups pushed from the
+# central backup server, but cannot pull from anywhere. The encryption
+# key is never loaded here, making this suitable for untrusted locations.
+# ###################################################################
+
+- name: Ensure apt packages are installed
+  become: true
+  ansible.builtin.apt:
+    name:
+      - zfsutils-linux
+      - acl
+    state: present
+
+- name: Ensure that backup user exists
+  become: true
+  ansible.builtin.user:
+    name: "{{ backups_zfs_archive_offsite_user }}"
+    comment: ZFS Backup Receive User
+    system: true
+    create_home: true
+    uid: 1099
+    state: present
+  register: created_user
+
+- name: Ensure .ssh directory exists
+  become: true
+  ansible.builtin.file:
+    path: "{{ created_user.home }}/.ssh"
+    state: directory
+    owner: "{{ backups_zfs_archive_offsite_user }}"
+    group: "{{ backups_zfs_archive_offsite_user }}"
+    mode: "0700"
+
+- name: Ensure restrict_commands.sh exists
+  become: true
+  ansible.builtin.copy:
+    src: restrict_commands.sh
+    dest: /usr/local/bin/restrict_commands.sh
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Ensure that authorized key is set with command restriction
+  become: true
+  ansible.posix.authorized_key:
+    user: "{{ backups_zfs_archive_offsite_user }}"
+    state: present
+    key: "{{ vault_zfsbackups_public_key }}"
+    key_options: 'restrict,command="/usr/local/bin/restrict_commands.sh"'
+  when: vault_zfsbackups_public_key is defined
+
+- name: Ensure destination dataset exists
+  become: true
+  community.general.zfs:
+    name: "{{ backups_zfs_archive_offsite_dataset }}"
+    extra_zfs_properties:
+      acltype: posix
+      xattr: sa
+    state: present
+
+- name: Ensure that backup user has ZFS receive permissions
+  become: true
+  community.general.zfs_delegate_admin:
+    name: "{{ backups_zfs_archive_offsite_dataset }}"
+    users: "{{ backups_zfs_archive_offsite_user }}"
+    permissions: create,mount,receive,rollback,destroy,release,hold,compression,mountpoint,canmount,readonly
+    descendents: true
