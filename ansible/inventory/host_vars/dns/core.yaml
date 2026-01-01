@@ -40,13 +40,11 @@ zfs:
   fastpool:
     datasets:
       compositions:
-        datasets:
-          compositions:
-            importance: critical
-          acme:
-            importance: critical
-          terraform:
-            importance: critical
+        importance: critical
+      acme:
+        importance: critical
+      terraform:
+        importance: critical
 
 zfs_pools:
   - fastpool
