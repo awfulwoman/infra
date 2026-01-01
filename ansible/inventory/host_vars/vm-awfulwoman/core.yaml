@@ -16,6 +16,7 @@ configure_dns_linkdevice_physical: "eth0"
 
 zfs:
   fastpool:
+    device: /dev/disk/by-id/scsi-0DO_Volume_site-storage
     datasets:
       compositions:
         importance: high
