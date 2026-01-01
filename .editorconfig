@@ -7,7 +7,7 @@ root = true
 # tabs are because of: https://twitter.com/Rich_Harris/status/1541761871585464323
 [*]
 end_of_line = lf
-indent_style = tab
+indent_style = space
 insert_final_newline = true
 
 [*.yaml]
