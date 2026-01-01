@@ -38,6 +38,7 @@ The primary configuration management tool. Structure:
 - **`roles/`**: ~97 roles following naming conventions:
   - `bootstrap-*`: Roles to setup essential configurations of a host type (personal machines, Ubuntu servers)
   - `composition-*`: Docker Compose applications (roughly 39 roles - homeassistant, gitea, jellyfin, etc.)
+  - `backups-*`: The ZFS backup infrastructure
   - `system-*`: System configurations (docker, zfs, security)
   - `server-*`: The server half of client-server pairs
   - `client-*`: The client half of client-server pairs
