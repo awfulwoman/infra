@@ -1,6 +1,6 @@
 # My Home Infra
 
-Hello, good evening, etc. Welcome to the repo where I keep alll my home infrastructure.
+Hello, good evening, etc. Welcome to the repo where I keep all my home infrastructure.
 
 Yes indeed, *everything* I have on my home infra is controlled by this repo. 
 
