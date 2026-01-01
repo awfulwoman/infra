@@ -4,7 +4,7 @@ import sys
 import argparse
 
 DEFAULT_user="{{ vault_zfsbackups_user }}"
-DEFAULT_strip_prefix = "{{ zfsbackup_dataset }}"
+DEFAULT_strip_prefix = "{{ backups_zfs_server_dataset }}"
 DEFAULT_debug = False
 
 def preflight(host, datasets, user, destination, strip_prefix, debug):

@@ -29,7 +29,7 @@
   become: true
   ansible.builtin.template:
     src: "templates/zfs-{{ item }}-backups.py"
-    dest: "{{ zfsbackup_script_path }}/zfs-{{ item }}-backups"
+    dest: "{{ backups_zfs_server_script_path }}/zfs-{{ item }}-backups"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0774"
@@ -43,7 +43,7 @@
   become: true
   ansible.builtin.copy:
     dest: /etc/profile.d/custom-path-zfs-backup.sh
-    content: 'PATH=$PATH:{{ zfsbackup_script_path }}'
+    content: 'PATH=$PATH:{{ backups_zfs_server_script_path }}'
     owner: root
     group: root
     mode: "0644"
@@ -52,7 +52,7 @@
   ansible.builtin.debug:
     msg: >-
       {{ hostvars[item].zfs | zfs_critical_datasets }}
-  loop: "{{ groups[zfsbackup_pull_group] }}"
+  loop: "{{ groups[backups_zfs_server_pull_group] }}"
 
 # Using namespaces because of Jinja weirdness
 # https://stackoverflow.com/a/78339774
@@ -64,7 +64,7 @@
         {% set data.test = data.test + [{'dataset': (item ~ '/' ~ ds.dataset), 'properties': (ds.properties | default({})) }] %}
       {%- endfor -%}
       {{ (backup_datasets | default([])) + data.test }}
-  loop: "{{ groups[zfsbackup_pull_group] }}"
+  loop: "{{ groups[backups_zfs_server_pull_group] }}"
 
 - name: DEBUG backup_datasets
   ansible.builtin.debug:
@@ -73,7 +73,7 @@
 - name: Ensure backup datasets exist
   become: true
   community.general.zfs:
-    name: "{{ zfsbackup_dataset }}/{{ item.dataset }}"
+    name: "{{ backups_zfs_server_dataset }}/{{ item.dataset }}"
     extra_zfs_properties:
       acltype: posix
       xattr: sa
@@ -89,12 +89,12 @@
     user: "{{ ansible_user }}"
     nopassword: true
     commands:
-      - "{{ zfsbackup_script_path }}/zfs-backups"
+      - "{{ backups_zfs_server_script_path }}/zfs-backups"
 
 - name: "Ensure normal user has permissions on backup datasets"
   become: true
   community.general.zfs_delegate_admin:
-    name: "{{ zfsbackup_dataset }}"
+    name: "{{ backups_zfs_server_dataset }}"
     users: "{{ ansible_user }}"
     permissions: send,compression,mountpoint,create,mount,receive,rollback,destroy,release,hold,userprop,readonly,canmount,dedup,xattr,acltype
     descendents: true

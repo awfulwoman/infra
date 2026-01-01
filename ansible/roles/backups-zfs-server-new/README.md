@@ -1,6 +1,6 @@
 # ZFS Backups
 
-This role sets this host as a backup server. It allows ZFS datasets to be _pushed_ and/or _pulled_ to and from hosts configured with `client-zbackups`. The newly configured backup host thus acts as the controller for ZFS backups, enabling the pulling of datasets from other hosts to its own encrypted datasets, and pushing those encrypted off-site to potentially less trusted hosts.
+This role sets this host as a backup server. It allows ZFS datasets to be _pushed_ and/or _pulled_ to and from hosts configured with `backups-zfs-client`. The newly configured backup host thus acts as the controller for ZFS backups, enabling the pulling of datasets from other hosts to its own encrypted datasets, and pushing those encrypted off-site to potentially less trusted hosts.
 
 ## Push vs Pull
 

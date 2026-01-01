@@ -3,7 +3,7 @@ import subprocess
 import sys
 import argparse
 
-DEFAULT_destination = "{{ zfsbackup_dataset }}"
+DEFAULT_destination = "{{ backups_zfs_server_dataset }}"
 DEFAULT_user="{{ vault_zfsbackups_user }}"
 DEFAULT_debug = False
 
