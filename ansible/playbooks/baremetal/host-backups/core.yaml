@@ -10,7 +10,7 @@
     - role: system-zfs-new
     # - role: system-msmtp
     - role: system-mqtt2cmd
-    - role: server-zbackups-new
+    - role: backups-zfs-server-new
       zfsbackup_pushover: false
       zfsbackup_run_after_wake: false
     - role: monitoring-healthchecksio

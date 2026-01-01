@@ -10,7 +10,7 @@
     - role: infra-named
     # - role: infra-certbot
     # - role: compositions
-    # - role: client-zbackups
+    # - role: backups-zfs-client
     # - role: script-share-personal-site
     - role: monitoring-healthchecksio
 

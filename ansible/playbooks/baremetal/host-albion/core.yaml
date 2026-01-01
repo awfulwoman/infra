@@ -9,7 +9,7 @@
     - role: system-zfs
     - role: network-ip-address-forwarding
     - role: client-nfs
-    - role: client-zbackups
+    - role: backups-zfs-client
     - role: compositions
     - role: monitoring-healthchecksio
 
