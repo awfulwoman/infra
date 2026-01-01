@@ -133,8 +133,11 @@
     owner: root
     group: root
 
-- name: Ensure that pull backup cronjobs exist for each client
+- name: Ensure that pull backup cronjobs are managed for each client
   become: true
+  vars:
+    _datasets: "{{ hostvars[item].zfs | default({}) | zfs_backup_datasets }}"
+    _has_datasets: "{{ _datasets | length > 0 }}"
   ansible.builtin.cron:
     name: "zfs-pull-backups {{ item }}"
     hour: "{{ backups_zfs_server_cron_hour }}"
@@ -143,8 +146,6 @@
       {{ backups_zfs_server_script_path }}/zfs-pull-backups
       --host {{ item }}
       --user {{ vault_zfsbackups_user }}
-      --datasets {{ hostvars[item].zfs | zfs_critical_datasets | map(attribute='dataset') | join(' ') }}
+      --datasets {{ _datasets | map(attribute='dataset') | join(' ') }}
+    state: "{{ 'present' if _has_datasets else 'absent' }}"
   loop: "{{ groups[backups_zfs_server_pull_group] }}"
-  when:
-    - hostvars[item].zfs is defined
-    - (hostvars[item].zfs | zfs_critical_datasets | length) > 0

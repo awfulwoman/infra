@@ -13,6 +13,7 @@ class FilterModule(object):
             'zfs_all_pools': self.zfs_all_pools,
             'zfs_datasets_with_config': self.zfs_datasets_with_config,
             'zfs_critical_datasets': self.zfs_critical_datasets,
+            'zfs_backup_datasets': self.zfs_backup_datasets,
         }
 
     def zfs_all_datasets(self, zfs_dict):
@@ -179,3 +180,62 @@ class FilterModule(object):
                     self._extract_critical_datasets(value, result, path_components + [key])
                 else:
                     self._extract_critical_datasets(value, result, path_components)
+
+    def zfs_backup_datasets(self, zfs_dict):
+        """
+        Extract all datasets marked for backup from a ZFS configuration dictionary.
+
+        Returns datasets that have importance: high or importance: critical.
+
+        Args:
+            zfs_dict: ZFS configuration dictionary
+        """
+        if not isinstance(zfs_dict, dict):
+            raise AnsibleFilterError('zfs_backup_datasets requires a dictionary')
+
+        result = []
+        self._extract_backup_datasets(zfs_dict, result, [])
+        return result
+
+    def _extract_backup_datasets(self, current_dict, result, path_components):
+        """
+        Recursively extract datasets marked as high or critical importance.
+        """
+        if not isinstance(current_dict, dict):
+            return
+
+        for key, value in current_dict.items():
+            if key == 'datasets' and isinstance(value, dict):
+                for dataset_name, dataset_value in value.items():
+                    dataset_path = path_components + [dataset_name]
+
+                    # Check if this dataset is marked as high or critical
+                    should_backup = False
+                    if isinstance(dataset_value, dict) and 'importance' in dataset_value:
+                        if dataset_value['importance'] in ('high', 'critical'):
+                            should_backup = True
+
+                    if should_backup:
+                        dataset_dict = {
+                            'dataset': '/'.join(dataset_path)
+                        }
+
+                        if 'properties' in dataset_value:
+                            properties = dataset_value['properties']
+                            if isinstance(properties, dict) and properties:
+                                dataset_dict['properties'] = properties
+
+                        if 'delegation' in dataset_value:
+                            delegation = dataset_value['delegation']
+                            if isinstance(delegation, dict) and delegation:
+                                dataset_dict['delegation'] = delegation
+
+                        result.append(dataset_dict)
+
+                    if isinstance(dataset_value, dict):
+                        self._extract_backup_datasets(dataset_value, result, dataset_path)
+            elif isinstance(value, dict):
+                if 'datasets' in value:
+                    self._extract_backup_datasets(value, result, path_components + [key])
+                else:
+                    self._extract_backup_datasets(value, result, path_components)
