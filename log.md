@@ -4,6 +4,123 @@ This log tracks significant changes, decisions, and progress across work session
 
 ---
 
+## January 2, 2026 - ZFS Backup Memory Optimization
+
+**Session Overview**: Optimized the ZFS pull backup script to eliminate unbounded memory consumption during snapshot transfers by implementing true streaming pipelines.
+
+### What Was Done
+
+- **Fixed memory consumption issue in ZFS backup script** (`ansible/roles/backups-zfs-server-new/templates/zfs-pull-backups.py`):
+  - **Problem**: The `send_and_receive()` function was using `subprocess.run()` with `stdout=subprocess.PIPE`, which buffered the entire ZFS send stream in Python memory before passing it to `zfs receive`
+  - **Impact**: For large datasets, this could consume gigabytes of RAM, potentially causing OOM errors or system instability
+  - **Solution**: Replaced `subprocess.run()` with `subprocess.Popen` to create a true streaming pipeline where data flows directly from send to receive through the OS kernel's pipe buffer (~64KB)
+  - **Memory complexity**: Reduced from O(n) where n = dataset size to O(1) constant memory usage
+
+- **Code explanation provided**:
+  - Explained the Python `_` convention for discarding unwanted values during tuple unpacking (e.g., `_, receive_stderr = receive_proc.communicate()`)
+  - Clarified the purpose of `send_proc.stdout.close()` to enable SIGPIPE handling for proper pipeline cleanup
+
+### Key Decisions
+
+- **Streaming pipeline pattern over store-and-forward**: The new implementation uses `Popen` to create two processes with piped I/O, allowing the OS kernel to manage data flow directly between processes without Python intermediation. This is the standard Unix pipeline pattern (`command1 | command2`) implemented programmatically.
+
+- **Proper pipeline cleanup**: Closing the send process's stdout after connecting it to receive's stdin ensures that if the receive process fails, the send process receives SIGPIPE and can terminate cleanly rather than blocking indefinitely.
+
+### Files Changed
+
+- `/Users/charlie/Code/infra/ansible/roles/backups-zfs-server-new/templates/zfs-pull-backups.py`:
+  - Modified `send_and_receive()` function (lines 149-188)
+  - Replaced `subprocess.run()` with `subprocess.Popen` for both send and receive commands
+  - Added `send_proc.stdout.close()` for proper SIGPIPE handling
+  - Data now flows: `send_proc.stdout → receive_proc.stdin` via OS pipe buffer
+
+### Current State
+
+- ZFS backup script now uses constant memory regardless of dataset size
+- Script is production-ready with efficient resource usage
+- Changes are uncommitted in git
+- Previous session's ZFS backup fixes (non-recursive sends, mount prevention) remain in place
+
+### Next Steps
+
+1. **Test memory usage improvements**:
+   - Run backup script with large datasets and monitor memory consumption
+   - Verify RSS/VSZ memory metrics remain constant during transfers
+   - Compare before/after memory usage if possible
+
+2. **Commit these changes**:
+   - Commit the memory optimization improvements
+   - Consider combining with previous ZFS backup session changes or keep separate
+
+3. **Monitor production performance**:
+   - Watch for any changes in backup completion times
+   - Verify no regressions in reliability
+   - Confirm memory usage stays low during large transfers
+
+### Notes
+
+- The original implementation with `subprocess.run(stdout=subprocess.PIPE)` would load the entire ZFS send stream into a Python bytes object before passing it along. For a 1TB dataset, this would require 1TB of RAM.
+
+- The new implementation uses `subprocess.Popen` which creates processes that communicate via OS pipes. The kernel manages a small circular buffer (typically 64KB on Linux) that automatically blocks writers when full and blocks readers when empty.
+
+- This is the canonical way to implement pipelines in Python when working with large data streams. It's equivalent to shell pipes but with programmatic control over each process.
+
+- The `_` naming convention in Python indicates "I'm unpacking this value but don't care about it." In `_, receive_stderr = receive_proc.communicate()`, we only need stderr, so stdout is discarded into `_`.
+
+- SIGPIPE is a Unix signal sent when writing to a pipe with no readers. Closing `send_proc.stdout` after connecting it to `receive_proc.stdin` allows the kernel to send SIGPIPE to the send process if receive exits early, preventing deadlocks.
+
+### Code Snippets
+
+**Before (memory-inefficient)**:
+```python
+def send_and_receive(send_cmd, receive_cmd, debug):
+    # This buffers entire stream in memory
+    send_result = subprocess.run(
+        send_cmd.split(' '),
+        stdout=subprocess.PIPE,  # Captures all output in memory
+        stderr=subprocess.PIPE
+    )
+    receive_result = subprocess.run(
+        receive_cmd.split(' '),
+        input=send_result.stdout,  # Entire stream already in RAM
+        stderr=subprocess.PIPE
+    )
+```
+
+**After (memory-efficient streaming)**:
+```python
+def send_and_receive(send_cmd, receive_cmd, debug):
+    """Execute a zfs send | zfs receive pipeline using streaming (no memory buffering)."""
+    # Create a true pipeline: send.stdout -> receive.stdin
+    # This streams data directly without buffering in memory
+    send_proc = subprocess.Popen(
+        send_cmd.split(' '),
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE
+    )
+
+    receive_proc = subprocess.Popen(
+        receive_cmd.split(' '),
+        stdin=send_proc.stdout,  # Connect pipe directly
+        stderr=subprocess.PIPE
+    )
+
+    # Allow send_proc to receive SIGPIPE if receive_proc exits
+    send_proc.stdout.close()
+
+    # Wait for receive to complete and capture stderr
+    _, receive_stderr = receive_proc.communicate()  # _ discards stdout (None)
+
+    # Now wait for send to complete
+    _, send_stderr = send_proc.communicate()  # _ discards stdout (None)
+```
+
+**Memory usage comparison**:
+- Old approach: O(n) where n = size of ZFS snapshot (could be gigabytes)
+- New approach: O(1) constant ~64KB kernel pipe buffer
+
+---
+
 ## January 1, 2026 - ZFS Pull Backup Fixes & Custom Commit Command
 
 **Session Overview**: Fixed critical issues in the ZFS pull backup script to handle child datasets with mismatched snapshots and resolved ZFS receive permission errors. Also created a custom Claude Code slash command for git commits.

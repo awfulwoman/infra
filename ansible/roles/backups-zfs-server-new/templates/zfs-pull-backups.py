@@ -147,31 +147,56 @@ def get_local_snapshots(dataset, debug):
         
 
 def send_and_receive(send_cmd, receive_cmd, debug):
-    """Execute a zfs send | zfs receive pipeline."""
+    """Execute a zfs send | zfs receive pipeline using streaming (no memory buffering)."""
     try:
         if debug:
             print(f"DEBUG: {send_cmd}")
             print(f"DEBUG: {receive_cmd}")
 
-        send_result = subprocess.run(
+        # Create a true pipeline: send.stdout -> receive.stdin
+        # This streams data directly without buffering in memory
+        send_proc = subprocess.Popen(
             send_cmd.split(' '),
             stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            check=True
+            stderr=subprocess.PIPE
         )
 
-        subprocess.run(
+        receive_proc = subprocess.Popen(
             receive_cmd.split(' '),
-            input=send_result.stdout,
-            check=True
+            stdin=send_proc.stdout,
+            stderr=subprocess.PIPE
         )
+
+        # Allow send_proc to receive SIGPIPE if receive_proc exits
+        send_proc.stdout.close()
+
+        # Wait for receive to complete and capture stderr
+        _, receive_stderr = receive_proc.communicate()
+
+        # Now wait for send to complete
+        _, send_stderr = send_proc.communicate()
+
+        if send_proc.returncode != 0:
+            print('#############################')
+            print(f"ERROR: zfs send failed with code {send_proc.returncode}")
+            if send_stderr:
+                print(send_stderr.decode())
+            print('#############################')
+            return False
+
+        if receive_proc.returncode != 0:
+            print('#############################')
+            print(f"ERROR: zfs receive failed with code {receive_proc.returncode}")
+            if receive_stderr:
+                print(receive_stderr.decode())
+            print('#############################')
+            return False
+
         return True
 
-    except subprocess.CalledProcessError as e:
+    except Exception as e:
         print('#############################')
         print(f"ERROR: Transfer failed.\n{e}")
-        if e.stderr:
-            print(e.stderr.decode())
         print('#############################')
         return False
 
