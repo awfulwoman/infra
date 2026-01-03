@@ -6,10 +6,16 @@ import argparse
 DEFAULT_destination = "{{ backups_zfs_server_dataset }}"
 DEFAULT_user="{{ vault_zfsbackups_user }}"
 DEFAULT_debug = False
+DEFAULT_quiet = False
 
-def preflight(host, datasets, user, destination, debug): 
+def info(message):
+    """Print informational message unless quiet mode is enabled."""
+    if not _quiet:
+        print(message)
+
+def preflight(host, datasets, user, destination, debug):
     try:
-        print(f'Checking {host} is up')
+        info(f'Checking {host} is up')
         subprocess.run(['ssh', f'{user}@{host}', 'ls'],
                 shell=False, 
                 check=True,
@@ -17,7 +23,7 @@ def preflight(host, datasets, user, destination, debug):
                 )
     
         for dataset in datasets:
-            print(f'Checking remote {dataset} exists')
+            info(f'Checking remote {dataset} exists')
             subprocess.run(
                 ['ssh', f'{user}@{host}', f'zfs list {dataset}'],
                 shell=False, 
@@ -25,7 +31,7 @@ def preflight(host, datasets, user, destination, debug):
                 capture_output=True
                 )
             
-        print(f'Checking local {destination} exist')
+        info(f'Checking local {destination} exist')
         subprocess.run(['zfs', 'list', f'{destination}'],
                 shell=False, 
                 check=True,
@@ -82,7 +88,7 @@ def pulldatasets_init(host, datasets, user, destination, debug):
             seen.add(ds)
             unique_datasets.append(ds)
 
-    print(f"Backing up {len(unique_datasets)} datasets individually")
+    info(f"Backing up {len(unique_datasets)} datasets individually")
     for dataset in unique_datasets:
         pulldatasets(host, dataset, user, destination, debug)
         
@@ -219,28 +225,28 @@ def pulldatasets(host, dataset, user, destination, debug):
 
     if not common_snapshots:
         # Initial sync: no common snapshots, need full send
-        print(f"No common snapshots found. Performing initial sync for {host} - {dataset}")
-        print(f"Remote has {len(remote_snapshots)} snapshots: {earliest_remote} -> {latest_remote}")
+        info(f"No common snapshots found. Performing initial sync for {host} - {dataset}")
+        info(f"Remote has {len(remote_snapshots)} snapshots: {earliest_remote} -> {latest_remote}")
 
         # Step 1: Full send of earliest snapshot
-        print(f"Pulling earliest snapshot from {host} - '{dataset}@{earliest_remote}'")
+        info(f"Pulling earliest snapshot from {host} - '{dataset}@{earliest_remote}'")
         send_cmd = f"ssh {user}@{host} zfs send {dataset}@{earliest_remote}"
         receive_cmd = f"zfs receive -F -u {local_dataset}"
 
         if not send_and_receive(send_cmd, receive_cmd, debug):
             sys.exit(1)
-        print(f"Successfully received earliest snapshot from {host} - '{dataset}@{earliest_remote}'")
+        info(f"Successfully received earliest snapshot from {host} - '{dataset}@{earliest_remote}'")
 
         # Step 2: Incremental from earliest to latest (if more than one snapshot)
         if earliest_remote != latest_remote:
-            print(f"Pulling incremental snapshots '{earliest_remote}' -> '{latest_remote}'")
+            info(f"Pulling incremental snapshots '{earliest_remote}' -> '{latest_remote}'")
             send_cmd = f"ssh {user}@{host} zfs send -I {dataset}@{earliest_remote} {dataset}@{latest_remote}"
 
             if not send_and_receive(send_cmd, receive_cmd, debug):
                 sys.exit(1)
-            print(f"Successfully received all snapshots up to '{latest_remote}'")
+            info(f"Successfully received all snapshots up to '{latest_remote}'")
         else:
-            print("Only one snapshot exists, no incremental needed.")
+            info("Only one snapshot exists, no incremental needed.")
 
     else:
         # Incremental sync: find latest common snapshot and sync from there
@@ -248,16 +254,16 @@ def pulldatasets(host, dataset, user, destination, debug):
         # print(f"Found {len(common_snapshots)} common snapshots. Latest: {latest_common}")
 
         if latest_common == latest_remote:
-            print(f"Already up to date with {host} - '{dataset}@{latest_remote}'")
+            info(f"Already up to date with {host} - '{dataset}@{latest_remote}'")
             return
 
-        print(f"Pulling incremental '{latest_common}' -> '{latest_remote}'")
+        info(f"Pulling incremental '{latest_common}' -> '{latest_remote}'")
         send_cmd = f"ssh {user}@{host} zfs send -I {dataset}@{latest_common} {dataset}@{latest_remote}"
         receive_cmd = f"zfs receive -F -u {local_dataset}"
 
         if not send_and_receive(send_cmd, receive_cmd, debug):
             sys.exit(1)
-        print(f"Successfully synced up to '{latest_remote}'")
+        info(f"Successfully synced up to '{latest_remote}'")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Pull ZFS datasets from a remote host.')
@@ -266,7 +272,11 @@ if __name__ == "__main__":
     parser.add_argument('--user', default=DEFAULT_user, help='Remote SSH user')
     parser.add_argument('--destination', default=DEFAULT_destination, help='Local dataset to receive backups (default: %(default)s)')
     parser.add_argument('--debug', default=DEFAULT_debug, help='Debug code', action=argparse.BooleanOptionalAction)
+    parser.add_argument('--quiet', '-q', default=DEFAULT_quiet, help='Suppress informational output (errors still shown)', action=argparse.BooleanOptionalAction)
     args = parser.parse_args()
+
+    # Set quiet flag for info() helper
+    _quiet = args.quiet
 
     if not args.user or not args.host or not args.datasets:
         print("Usage: zfs-pull-backups --user <user> --host <host> --datasets-source <space-seperated list> [--datasets-destination <destination>]", file=sys.stderr)
