@@ -9,7 +9,7 @@ DEFAULT_debug = False
 
 def preflight(host, datasets, user, destination, debug): 
     try:
-        print('Checking {host} is up')
+        print(f'Checking {host} is up')
         subprocess.run(['ssh', f'{user}@{host}', 'ls'],
                 shell=False, 
                 check=True,
@@ -25,7 +25,7 @@ def preflight(host, datasets, user, destination, debug):
                 capture_output=True
                 )
             
-        print('Checking backup root dataset exist')
+        print(f'Checking local {destination} exist')
         subprocess.run(['zfs', 'list', f'{destination}'],
                 shell=False, 
                 check=True,
