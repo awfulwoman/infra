@@ -96,6 +96,7 @@ def pulldatasets_init(host, datasets, user, destination):
     info(f"Backing up {len(unique_datasets)} datasets individually")
     for dataset in unique_datasets:
         pulldatasets(host, dataset, user, destination)
+    print('')
         
 def get_remote_snapshots(host, dataset, user):
     """Get all snapshot names for a dataset on remote host, sorted by creation time."""
