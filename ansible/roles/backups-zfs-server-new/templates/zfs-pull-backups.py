@@ -11,7 +11,7 @@ DEFAULT_quiet = False
 def info(message):
     """Print informational message unless quiet mode is enabled."""
     if not _quiet:
-        print(message)
+        print("* " + message)
         
 def debug(message):
     """Print debug messages."""
