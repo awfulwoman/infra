@@ -12,8 +12,13 @@ def info(message):
     """Print informational message unless quiet mode is enabled."""
     if not _quiet:
         print(message)
-
-def preflight(host, datasets, user, destination, debug):
+        
+def debug(message):
+    """Print debug messages."""
+    if not _debug:
+        print(message)
+        
+def preflight(host, datasets, user, destination):
     try:
         info(f'Checking {host} is up')
         subprocess.run(['ssh', f'{user}@{host}', 'ls'],
@@ -40,19 +45,17 @@ def preflight(host, datasets, user, destination, debug):
             
     except subprocess.CalledProcessError as e:        
         print("Errors detected in preflight checks. Aborting.")
-        if debug:
-            print(f"DEBUG: {e}")
+        debug(f"DEBUG: {e}")
         print(" ")
         sys.exit(1)
 
-    pulldatasets_init(host, datasets, user, destination, debug)
+    pulldatasets_init(host, datasets, user, destination)
 
-def get_remote_child_datasets(host, dataset, user, debug):
+def get_remote_child_datasets(host, dataset, user):
     """Get all datasets under a parent (including the parent itself)."""
     command = f"ssh {user}@{host} zfs list -H -o name -r {dataset}"
 
-    if debug:
-        print("DEBUG: " + command)
+    debug("DEBUG: " + command)
 
     try:
         result = subprocess.run(
@@ -63,8 +66,7 @@ def get_remote_child_datasets(host, dataset, user, debug):
         )
         datasets = result.stdout.decode().strip().splitlines()
 
-        if debug:
-            print(f"DEBUG: Found {len(datasets)} datasets under {dataset}")
+        debug(f"DEBUG: Found {len(datasets)} datasets under {dataset}")
 
         return datasets
 
@@ -73,11 +75,11 @@ def get_remote_child_datasets(host, dataset, user, debug):
         sys.exit(1)
 
 
-def pulldatasets_init(host, datasets, user, destination, debug):
+def pulldatasets_init(host, datasets, user, destination):
     # Expand each dataset to include all children
     all_datasets = []
     for dataset in datasets:
-        children = get_remote_child_datasets(host, dataset, user, debug)
+        children = get_remote_child_datasets(host, dataset, user)
         all_datasets.extend(children)
 
     # Remove duplicates while preserving order
@@ -90,14 +92,13 @@ def pulldatasets_init(host, datasets, user, destination, debug):
 
     info(f"Backing up {len(unique_datasets)} datasets individually")
     for dataset in unique_datasets:
-        pulldatasets(host, dataset, user, destination, debug)
+        pulldatasets(host, dataset, user, destination)
         
-def get_remote_snapshots(host, dataset, user, debug):
+def get_remote_snapshots(host, dataset, user):
     """Get all snapshot names for a dataset on remote host, sorted by creation time."""
     command = f"ssh {user}@{host} zfs list -t snapshot -H -o name -s creation -r {dataset}"
 
-    if debug:
-        print("DEBUG: " + command)
+    debug("DEBUG: " + command)
 
     try:
         result = subprocess.run(
@@ -110,8 +111,7 @@ def get_remote_snapshots(host, dataset, user, debug):
         # Filter to only direct snapshots of this dataset (not child datasets)
         direct_snapshots = [s.split("@")[1] for s in snapshots if s.startswith(f"{dataset}@")]
 
-        if debug:
-            print(f"DEBUG: Found {len(direct_snapshots)} remote snapshots")
+        debug(f"DEBUG: Found {len(direct_snapshots)} remote snapshots")
 
         return direct_snapshots
 
@@ -120,12 +120,11 @@ def get_remote_snapshots(host, dataset, user, debug):
         sys.exit(1)
 
 
-def get_local_snapshots(dataset, debug):
+def get_local_snapshots(dataset):
     """Get all snapshot names for a local dataset, sorted by creation time."""
     command = f"zfs list -t snapshot -H -o name -s creation -r {dataset}"
 
-    if debug:
-        print("DEBUG: " + command)
+    debug("DEBUG: " + command)
 
     try:
         result = subprocess.run(
@@ -141,23 +140,20 @@ def get_local_snapshots(dataset, debug):
         # Filter to only direct snapshots of this dataset (not child datasets)
         direct_snapshots = [s.split("@")[1] for s in snapshots if s.startswith(f"{dataset}@")]
 
-        if debug:
-            print(f"DEBUG: Found {len(direct_snapshots)} local snapshots")
+        debug(f"DEBUG: Found {len(direct_snapshots)} local snapshots")
 
         return direct_snapshots
 
     except Exception as e:
-        if debug:
-            print(f"DEBUG: Error getting local snapshots: {e}")
+        debug(f"DEBUG: Error getting local snapshots: {e}")
         return []
         
 
-def send_and_receive(send_cmd, receive_cmd, debug):
+def send_and_receive(send_cmd, receive_cmd):
     """Execute a zfs send | zfs receive pipeline using streaming (no memory buffering)."""
     try:
-        if debug:
-            print(f"DEBUG: {send_cmd}")
-            print(f"DEBUG: {receive_cmd}")
+        debug(f"DEBUG: {send_cmd}")
+        debug(f"DEBUG: {receive_cmd}")
 
         # Create a true pipeline: send.stdout -> receive.stdin
         # This streams data directly without buffering in memory
@@ -183,19 +179,15 @@ def send_and_receive(send_cmd, receive_cmd, debug):
         _, send_stderr = send_proc.communicate()
 
         if send_proc.returncode != 0:
-            print('#############################')
             print(f"ERROR: zfs send failed with code {send_proc.returncode}")
             if send_stderr:
                 print(send_stderr.decode())
-            print('#############################')
             return False
 
         if receive_proc.returncode != 0:
-            print('#############################')
             print(f"ERROR: zfs receive failed with code {receive_proc.returncode}")
             if receive_stderr:
                 print(receive_stderr.decode())
-            print('#############################')
             return False
 
         return True
@@ -207,15 +199,15 @@ def send_and_receive(send_cmd, receive_cmd, debug):
         return False
 
 
-def pulldatasets(host, dataset, user, destination, debug):
+def pulldatasets(host, dataset, user, destination):
     local_dataset = f"{destination}/{host}/{dataset}"
 
-    remote_snapshots = get_remote_snapshots(host, dataset, user, debug)
+    remote_snapshots = get_remote_snapshots(host, dataset, user)
     if not remote_snapshots:
         print(f"ERROR: No snapshots found on remote for {dataset}")
         sys.exit(1)
 
-    local_snapshots = get_local_snapshots(local_dataset, debug)
+    local_snapshots = get_local_snapshots(local_dataset)
 
     earliest_remote = remote_snapshots[0]
     latest_remote = remote_snapshots[-1]
@@ -233,7 +225,7 @@ def pulldatasets(host, dataset, user, destination, debug):
         send_cmd = f"ssh {user}@{host} zfs send {dataset}@{earliest_remote}"
         receive_cmd = f"zfs receive -F -u {local_dataset}"
 
-        if not send_and_receive(send_cmd, receive_cmd, debug):
+        if not send_and_receive(send_cmd, receive_cmd):
             sys.exit(1)
         info(f"Successfully received earliest snapshot from {host} - '{dataset}@{earliest_remote}'")
 
@@ -242,7 +234,7 @@ def pulldatasets(host, dataset, user, destination, debug):
             info(f"Pulling incremental snapshots '{earliest_remote}' -> '{latest_remote}'")
             send_cmd = f"ssh {user}@{host} zfs send -I {dataset}@{earliest_remote} {dataset}@{latest_remote}"
 
-            if not send_and_receive(send_cmd, receive_cmd, debug):
+            if not send_and_receive(send_cmd, receive_cmd):
                 sys.exit(1)
             info(f"Successfully received all snapshots up to '{latest_remote}'")
         else:
@@ -261,7 +253,7 @@ def pulldatasets(host, dataset, user, destination, debug):
         send_cmd = f"ssh {user}@{host} zfs send -I {dataset}@{latest_common} {dataset}@{latest_remote}"
         receive_cmd = f"zfs receive -F -u {local_dataset}"
 
-        if not send_and_receive(send_cmd, receive_cmd, debug):
+        if not send_and_receive(send_cmd, receive_cmd):
             sys.exit(1)
         info(f"Successfully synced up to '{latest_remote}'")
 
@@ -275,8 +267,8 @@ if __name__ == "__main__":
     parser.add_argument('--quiet', '-q', default=DEFAULT_quiet, help='Suppress informational output (errors still shown)', action=argparse.BooleanOptionalAction)
     args = parser.parse_args()
 
-    # Set quiet flag for info() helper
     _quiet = args.quiet
+    _debug = args.debug
 
     if not args.user or not args.host or not args.datasets:
         print("Usage: zfs-pull-backups --user <user> --host <host> --datasets-source <space-seperated list> [--datasets-destination <destination>]", file=sys.stderr)
