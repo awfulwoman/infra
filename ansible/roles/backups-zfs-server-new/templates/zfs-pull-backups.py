@@ -241,18 +241,18 @@ def pulldatasets(host, dataset, user, destination):
                 sys.exit(1)
             info(f"Successfully received all snapshots up to '{latest_remote}'")
         else:
-            info("Only one snapshot exists, no incremental needed.")
+            info("Only one snapshot exists, no incremental receive needed.")
 
     else:
         # Incremental sync: find latest common snapshot and sync from there
         latest_common = common_snapshots[-1]
 
         if latest_common == latest_remote:
-            info(f"Already up to date with {host} - '{dataset}@{latest_remote}'")
-            debug(f"{dataset}@{latest_remote}")
+            info(f"Already up to date with {host} - {dataset}")
+            debug(f"Latest is {dataset}@{latest_remote}")
             return
 
-        info(f"Pulling incremental.")
+        info(f"Pulling incremental snapshots.")
         debug(f"{latest_common}' -> '{latest_remote}")
         send_cmd = f"ssh {user}@{host} zfs send -I {dataset}@{latest_common} {dataset}@{latest_remote}"
         receive_cmd = f"zfs receive -F -u {local_dataset}"
