@@ -15,7 +15,7 @@ def info(message):
         
 def debug(message):
     """Print debug messages."""
-    if not _debug:
+    if not _debug and not _quiet:
         print(message)
         
 def preflight(host, datasets, user, destination):
