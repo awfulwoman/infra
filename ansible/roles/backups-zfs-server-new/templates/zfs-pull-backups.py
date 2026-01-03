@@ -15,7 +15,7 @@ def info(message):
         
 def debug(message):
     """Print debug messages."""
-    if not _debug and not _quiet:
+    if _debug and not _quiet:
         print("ℹ️ " + message)
         
 def error(message):
