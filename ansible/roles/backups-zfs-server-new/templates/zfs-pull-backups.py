@@ -24,28 +24,39 @@ def error(message):
         
 def preflight(host, datasets, user, destination):
     try:
-        info(f'Checking {host} is up')
-        subprocess.run(['ssh', f'{user}@{host}', 'ls'],
+        
+        result = subprocess.run(['ssh', f'{user}@{host}', 'ls'],
                 shell=False, 
                 check=True,
                 capture_output=True
                 )
+        if result.returncode != 0:
+            error(f'Could not connect to {host}')
+        else:
+            info(f'{host} is up')
     
         for dataset in datasets:
-            info(f'Checking remote {dataset} exists')
-            subprocess.run(
+            result = subprocess.run(
                 ['ssh', f'{user}@{host}', f'zfs list {dataset}'],
                 shell=False, 
                 check=True,
                 capture_output=True
                 )
+        if result.returncode != 0:
+            error(f'{dataset} does not exist')
+        else:
+            debug(f'{dataset} exists')
             
-        info(f'Checking local {destination} exist')
-        subprocess.run(['zfs', 'list', f'{destination}'],
+        
+        result = subprocess.run(['zfs', 'list', f'{destination}'],
                 shell=False, 
                 check=True,
                 capture_output=True
                 )
+        if result.returncode != 0:
+            error(f'Local destination ({dataset}) does not exist')
+        else:
+            debug(f'Destination {destination} exists')
             
     except subprocess.CalledProcessError as e:        
         error("Errors detected in preflight checks. Aborting.")
@@ -249,7 +260,7 @@ def pulldatasets(host, dataset, user, destination):
         latest_common = common_snapshots[-1]
 
         if latest_common == latest_remote:
-            info(f"Already up to date with {host} - {dataset}")
+            info(f"Up-to-date - {dataset}")
             debug(f"Latest is {dataset}@{latest_remote}")
             return
 
