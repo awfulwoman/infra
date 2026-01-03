@@ -278,4 +278,4 @@ if __name__ == "__main__":
         print("Usage: zfs-pull-backups --user <user> --host <host> --datasets-source <space-seperated list> [--datasets-destination <destination>]", file=sys.stderr)
         sys.exit(1)
 
-    preflight(args.host, args.datasets, args.user, args.destination, args.debug)
+    preflight(args.host, args.datasets, args.user, args.destination)
