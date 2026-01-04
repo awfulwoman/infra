@@ -63,6 +63,7 @@ zfs-push-backups --host <hostname> --datasets <dataset1> [dataset2 ...] --destin
 - `--quiet`, `-q` - Suppress informational output (errors still shown)
 
 **Example:**
+
 ```bash
 zfs-push-backups --host offsite-server --datasets backuppool/encryptedbackups/server1/tank/data --destination offsite/backups
 ```
