@@ -13,3 +13,56 @@ In a host's `zfs` config each and every dataset can have the `importance` attrib
 - `none` (default): this dataset will not have snapshots enabled and will not be pulled to the central backup server.
 - `low`: this dataset will enable daily snapshots and retain them for one week. The dataset and all snapshots will be pulled to the central backup server.
 - `critical`: this dataset will enable hourly snapshots and will retain them on a weekly, monthly, and year basis. The dataset and all snapshots will be pulled to the central backup server, and from there pushed to one or more off-site backup locations.
+
+## Commands
+
+### zfs-pull-backups
+
+Pulls ZFS datasets from a remote host to the local backup server. Automatically handles initial full syncs and subsequent incremental transfers.
+
+```bash
+zfs-pull-backups --host <hostname> --datasets <dataset1> [dataset2 ...] [options]
+```
+
+**Required arguments:**
+
+- `--host` - Remote host to pull from
+- `--datasets` - Space-separated list of source datasets on the remote host
+
+**Optional arguments:**
+
+- `--user` - SSH user for remote connection (default: configured vault user)
+- `--destination` - Local dataset to receive backups (default: configured backup dataset)
+- `--debug` - Enable debug output showing commands and detailed progress
+- `--quiet`, `-q` - Suppress informational output (errors still shown)
+
+**Example:**
+```bash
+zfs-pull-backups --host server1 --datasets tank/data tank/media --debug
+```
+
+### zfs-push-backups
+
+Pushes ZFS datasets from the local backup server to a remote host (typically off-site storage). Uses raw send (`-w`) to preserve encryption. Automatically handles initial full syncs and subsequent incremental transfers.
+
+```bash
+zfs-push-backups --host <hostname> --datasets <dataset1> [dataset2 ...] --destination <remote-dataset> [options]
+```
+
+**Required arguments:**
+
+- `--host` - Remote host to push to
+- `--datasets` - Space-separated list of local source datasets to push
+- `--destination` - Remote dataset to receive backups
+
+**Optional arguments:**
+
+- `--user` - SSH user for remote connection (default: configured vault user)
+- `--strip-prefix` - Prefix to strip from dataset paths (default: configured backup dataset)
+- `--debug` - Enable debug output showing commands and detailed progress
+- `--quiet`, `-q` - Suppress informational output (errors still shown)
+
+**Example:**
+```bash
+zfs-push-backups --host offsite-server --datasets backuppool/encryptedbackups/server1/tank/data --destination offsite/backups
+```
