@@ -31,18 +31,40 @@ The top level items underneath the `zfs` item are always pool names.
 
 Below each pool datasets are defined with the `dataset` item.
 
+
 ## Snapshots
 
 ZFS in this infrastructure is policy-driven. This means that policies are defined and then applied to datasets. Policies are assigned to datasets using the `importance` item.
+
+- `none` (default): this dataset will not have snapshots enabled and will not be pulled to the central backup server.
+- `low`: this dataset will enable daily snapshots and retain them for one week. The dataset and all snapshots will be pulled to the central backup server.
+- `critical`: this dataset will enable hourly snapshots and will retain them on a weekly, monthly, and year basis. The dataset and all snapshots will be pulled to the central backup server, and from there pushed to one or more off-site backup locations.
 
 The `system-zfs` Ansible role reads the contents of a hosts `zfs` dictionary and creates pools and datasets.
 
 Another, as yet undefined role (likely to be called `system-zfs-snapshots`), sets up ZFS snapshots via the policy system.
 
+Sanoid is currently being used but will soon be removed, in favour of the new role.
+
 ## Replication
+
+The infra uses a three-tier backup system (local snapshots → central backup server → encrypted off-site archive), importance-based policies, and a zero-trust off-site model where encryption keys are never loaded on remote hosts.
 
 The following roles form the core of the ZFS backup and replication system.
 
 - `backups-zfs-client`
 - `backups-zfs-server`
 - `backups-zfs-archive-offsite`
+
+A dedicated backup user is used to transmit snapshots.
+
+### Push vs Pull
+
+Note the _pulling_ and _pushing_ of datasets. The other hosts are deliberately never given the ability to directly connect to the backup host. Instead the backup host performs an SSH connection to each machine and either initiates a `zfs send` from that machine to itself using a locked-down user, or starts `zfs receive` and pushes directly to an off-site host.
+
+## Naming conventions
+
+Pool names are typically:
+
+- `fastpool` for SSDs
+- `slowpool` for HDDs
