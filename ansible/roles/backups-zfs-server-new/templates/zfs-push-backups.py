@@ -4,7 +4,7 @@ import sys
 import argparse
 
 DEFAULT_user="{{ vault_zfsbackups_user }}"
-DEFAULT_strip_prefix = "{{ backups_zfs_server_dataset }}"
+DEFAULT_strip_prefix = "{{ backups_zfs_server_local_dataset }}"
 DEFAULT_debug = False
 DEFAULT_quiet = False
 

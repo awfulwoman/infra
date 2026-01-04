@@ -4,5 +4,5 @@ backups_zfs_server_logging_dir: /opt/zfsbackup/logs
 backups_zfs_server_logging_successfile: backups.log
 backups_zfs_server_logging_errorfile: error.log
 backups_zfs_server_script_path: /opt/zfsbackup
-backups_zfs_server_dataset: backuppool/encryptedbackups
+backups_zfs_server_local_dataset: backuppool/encryptedbackups
 backups_zfs_server_pull_group: zfs-backup-clients # The ansible group that we try to pull backup data from

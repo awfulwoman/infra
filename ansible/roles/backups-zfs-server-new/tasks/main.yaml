@@ -73,7 +73,7 @@
 - name: Ensure backup parent dataset has canmount=off
   become: true
   community.general.zfs:
-    name: "{{ backups_zfs_server_dataset }}"
+    name: "{{ backups_zfs_server_local_dataset }}"
     extra_zfs_properties:
       canmount: off
     state: present
@@ -81,7 +81,7 @@
 - name: Ensure backup datasets exist
   become: true
   community.general.zfs:
-    name: "{{ backups_zfs_server_dataset }}/{{ item.dataset }}"
+    name: "{{ backups_zfs_server_local_dataset }}/{{ item.dataset }}"
     extra_zfs_properties:
       acltype: posix
       xattr: sa
@@ -103,7 +103,7 @@
 - name: "Ensure normal user has permissions on backup datasets"
   become: true
   community.general.zfs_delegate_admin:
-    name: "{{ backups_zfs_server_dataset }}"
+    name: "{{ backups_zfs_server_local_dataset }}"
     users: "{{ ansible_user }}"
     permissions: send,compression,mountpoint,create,mount,receive,rollback,destroy,release,hold,userprop,readonly,canmount,dedup,xattr,acltype
     descendents: true
