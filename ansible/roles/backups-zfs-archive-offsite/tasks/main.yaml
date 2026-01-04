@@ -67,4 +67,5 @@
     name: "{{ backups_zfs_archive_offsite_dataset }}"
     users: "{{ backups_zfs_archive_offsite_user }}"
     permissions: create,mount,receive,rollback,destroy,release,hold,compression,mountpoint,canmount,readonly
+    local: true
     descendents: true

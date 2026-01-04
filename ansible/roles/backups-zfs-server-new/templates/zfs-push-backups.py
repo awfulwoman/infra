@@ -127,41 +127,52 @@ def get_remote_snapshots(host, dataset, user):
 
 
 def ensure_remote_parent_exists(host, dataset, user):
-    """Ensure parent dataset exists on remote, creating it if necessary."""
+    """Ensure parent dataset exists on remote, creating each level with canmount=off."""
     parent = "/".join(dataset.split("/")[:-1])
     if not parent:
         return True  # No parent needed (top-level dataset)
 
-    command = f"ssh {user}@{host} zfs list {parent}"
-    debug(f"Checking if remote parent exists: {command}")
+    # Build list of ancestors that need to be checked/created
+    # e.g., for "pool/a/b/c" we need to check: pool, pool/a, pool/a/b, pool/a/b/c
+    parts = parent.split("/")
+    ancestors = []
+    for i in range(1, len(parts) + 1):
+        ancestors.append("/".join(parts[:i]))
 
-    result = subprocess.run(
-        command.split(' '),
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        check=False
-    )
+    for ancestor in ancestors:
+        # Check if this ancestor exists
+        check_cmd = f"ssh {user}@{host} zfs list {ancestor}"
+        debug(f"Checking if {ancestor} exists")
 
-    if result.returncode == 0:
-        debug(f"Remote parent {parent} already exists")
-        return True
-
-    # Parent doesn't exist, create it (and any ancestors)
-    info(f"Creating remote parent dataset: {parent}")
-    create_cmd = f"ssh {user}@{host} zfs create -p {parent}"
-    debug(create_cmd)
-
-    try:
-        subprocess.run(
-            create_cmd.split(' '),
+        result = subprocess.run(
+            check_cmd.split(' '),
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            check=True
+            check=False
         )
-        return True
-    except subprocess.CalledProcessError as e:
-        error(f"Failed to create remote parent dataset: {e.stderr.decode()}")
-        return False
+
+        if result.returncode == 0:
+            debug(f"{ancestor} already exists")
+            continue
+
+        # Create this single level with canmount=off
+        # Not using -p so that we control the properties on each level
+        info(f"Creating remote dataset: {ancestor}")
+        create_cmd = f"ssh {user}@{host} zfs create -o canmount=off {ancestor}"
+        debug(create_cmd)
+
+        try:
+            subprocess.run(
+                create_cmd.split(' '),
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                check=True
+            )
+        except subprocess.CalledProcessError as e:
+            error(f"Failed to create remote dataset {ancestor}: {e.stderr.decode()}")
+            return False
+
+    return True
 
 
 def send_and_receive(send_cmd, receive_cmd):
@@ -251,7 +262,7 @@ def pushdatasets(host, dataset, user, destination, strip_prefix):
         # Step 1: Full send of earliest snapshot (raw for encrypted datasets)
         info(f"Pushing earliest snapshot '{earliest_local}'")
         send_cmd = f"zfs send -Rw {dataset}@{earliest_local}"
-        receive_cmd = f"ssh {user}@{host} zfs receive -F {remote_dataset}"
+        receive_cmd = f"ssh {user}@{host} zfs receive -F -u {remote_dataset}"
 
         if not send_and_receive(send_cmd, receive_cmd):
             sys.exit(1)
@@ -281,7 +292,7 @@ def pushdatasets(host, dataset, user, destination, strip_prefix):
         info(f"Pushing incremental snapshots.")
         debug(f"{latest_common}' -> '{latest_local}")
         send_cmd = f"zfs send -Rw -I {dataset}@{latest_common} {dataset}@{latest_local}"
-        receive_cmd = f"ssh {user}@{host} zfs receive -F {remote_dataset}"
+        receive_cmd = f"ssh {user}@{host} zfs receive -F -u {remote_dataset}"
 
         if not send_and_receive(send_cmd, receive_cmd):
             sys.exit(1)
