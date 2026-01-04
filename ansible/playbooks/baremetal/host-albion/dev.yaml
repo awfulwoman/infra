@@ -3,7 +3,7 @@
   gather_facts: false
   roles:
     # - role: compositions
-    - role: system-zfs-new
+    - role: backups-zfs-archive-offsite
 
   handlers:
     - name: Reboot host
