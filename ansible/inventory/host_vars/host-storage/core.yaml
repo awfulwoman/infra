@@ -145,7 +145,7 @@ compositions:
   - gitea
   - gitea-runners
   - syncthing
-  - musicassistant
+  # - musicassistant
   - karakeep
   - freshrss
   - tubesync
@@ -156,8 +156,8 @@ compositions:
   - libretranslate
 
 
-traefik_providers:
-  - musicassistant
+# traefik_providers:
+#   - musicassistant
 
 
 # -------------------------------------------------------------------
