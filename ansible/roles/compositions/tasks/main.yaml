@@ -6,7 +6,7 @@
 - name: Ensure composition dataset is present
   become: true
   community.general.zfs:
-    name: "{{ container_compositions_zfs_id }}"
+    name: "{{ compositions_dataset }}"
     state: present
     extra_zfs_properties:
       acltype: posix
@@ -14,10 +14,10 @@
   # when: compositions is defined is defined and zfs_pools is defined and zfs_pools is true
   when: compositions is defined
 
-- name: Ensure composition dataset is owned by user
+- name: Ensure composition dataset mount is owned by user
   become: true
   ansible.builtin.file:
-    path: "/{{ container_compositions_zfs_id }}"
+    path: "/{{ compositions_dataset }}"
     state: directory
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
@@ -25,10 +25,10 @@
   # when: compositions is defined is defined and zfs_pools is defined and zfs_pools is true
   when: compositions is defined
 
-- name: Ensure a ZFS dataset for each composition is present
+- name: Ensure a ZFS dataset for each composition role is present
   become: true
   community.general.zfs:
-    name: "{{ container_compositions_zfs_id }}/{{ item }}"
+    name: "{{ compositions_dataset }}/{{ item }}"
     state: present
     extra_zfs_properties:
       acltype: posix
@@ -37,10 +37,10 @@
   # when: compositions is defined is defined and zfs_pools is defined and zfs_pools is true
   when: compositions is defined
 
-- name: Ensure datasets are owned by user
+- name: Ensure composition dataset mounts are owned by user
   become: true
   ansible.builtin.file:
-    path: "/{{ container_compositions_zfs_id }}/{{ item }}"
+    path: "/{{ compositions_dataset }}/{{ item }}"
     state: directory
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
@@ -51,7 +51,7 @@
 
 - name: Ensure composition config dirs exist
   ansible.builtin.file:
-    path: "{{ compositions_config_dir }}/{{ item }}/config"
+    path: "/{{ compositions_dataset }}/{{ item }}/config"
     state: directory
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
@@ -59,19 +59,19 @@
   loop: "{{ compositions }}"
   when: compositions is defined
 
-- name: Ensure composition roles are run
+- name: Ensure defined composition roles are included
   ansible.builtin.include_role:
     name: "composition-{{ item }}"
   vars:
     composition_name: "{{ item }}"
-    composition_root: "{{ compositions_config_dir }}/{{ item }}"
-    composition_config: "{{ compositions_config_dir }}/{{ item }}/config"
+    composition_root: "/{{ compositions_dataset }}/{{ item }}"
+    composition_config: "/{{ compositions_dataset }}/{{ item }}/config"
   loop: "{{ compositions }}"
   when: compositions is defined
 
 - name: Ensure all composition containers are started
   community.docker.docker_compose_v2:
-    project_src: "{{ compositions_config_dir }}/{{ item }}"
+    project_src: "/{{ compositions_dataset }}/{{ item }}"
     state: present
     remove_orphans: true
   loop: "{{ compositions }}"
