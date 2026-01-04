@@ -58,6 +58,13 @@ The following roles form the core of the ZFS backup and replication system.
 
 A dedicated backup user is used to transmit snapshots.
 
+### Security Model
+
+- Backup user (UID 1099) with restricted SSH (restrict_commands.sh)
+- ZFS delegation: only send, snapshot, hold, release, destroy, mount
+- Why clients can't push (prevents lateral movement if compromised)
+- Tailscale-only network access
+
 ### Push vs Pull
 
 Note the _pulling_ and _pushing_ of datasets. The other hosts are deliberately never given the ability to directly connect to the backup host. Instead the backup host performs an SSH connection to each machine and either initiates a `zfs send` from that machine to itself using a locked-down user, or starts `zfs receive` and pushes directly to an off-site host.
