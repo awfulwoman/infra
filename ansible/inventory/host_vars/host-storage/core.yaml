@@ -64,83 +64,19 @@ zfs:
         importance: critical
         datasets:
           syncthing:
+            importance: critical
           photos:
       "{{ vault_wifey_name }}":
-
-
-# ZFS pools that should be present
-zfs_pools:
-  - slowpool
-  - fastpool
-
-# Named ZFS datasets (yes, the naming on these is terrible)
-container_compositions_zfs_id: fastpool/compositions
-charlie_data_path_zfs_id: slowpool/charlie
-charlie_syncthing_data_path_zfs_id: slowpool/charlie/syncthing
-zfs_dataset_wifey: "slowpool/{{vault_wifey_name}}"
-charlie_photos_data_path_zfs_id: slowpool/charlie/photos
-terraform_zfs_id: fastpool/terraform
-public_fileshares_zfs_id: slowpool/shared/publicfileshares
-
-# Define useful paths from ZFS datasets
-syncthing_data_path: "/{{ charlie_syncthing_data_path_zfs_id }}"
-wifey_data_path: "/{{ zfs_dataset_wifey }}"
-compositions_config_dir: "/{{ container_compositions_zfs_id }}"
-charlie_photos_data_path: "/{{ charlie_photos_data_path_zfs_id }}"
-terraform_working_dir: "/{{ terraform_zfs_id }}"
-public_fileshares_dir: "/{{ public_fileshares_zfs_id }}"
-
-# Datasets that should be present 
-zfs_datasets:
-  - "{{ container_compositions_zfs_id }}"
-  - slowpool/images
-  - "{{ zfs_dataset_wifey }}"
-  - slowpool/charlie
-  - "{{ charlie_photos_data_path_zfs_id }}"
-  - "{{ charlie_syncthing_data_path_zfs_id }}"
-  - slowpool/charlie/sync
-  - slowpool/shared
-  - slowpool/shared/syncthing
-  - slowpool/shared/media
-  - slowpool/shared/media/audiobooks
-  - slowpool/shared/media/books
-  - slowpool/shared/media/downloads # Has to be this to allow arr stack to work
-  - slowpool/shared/media/downloads/torrents # Has to be this to allow arr stack to work
-  - slowpool/shared/media/movies
-  - slowpool/shared/media/music
-  - slowpool/shared/media/podcasts
-  - slowpool/shared/media/shows
-  - slowpool/shared/media/youtube
-  - "{{ terraform_zfs_id }}"
-  - "{{ public_fileshares_zfs_id }}"
-
-# Datasets to be backed-up
-zfs_backup_datasets:
-  - slowpool/charlie
-  - "{{ container_compositions_zfs_id }}"
-  # - slowpool/images
-  - slowpool/shared/media
-  # - "{{ zfs_dataset_wifey }}"
-
-zfs_backup_datasets_exclude:
-  - slowpool/shared/media/shows
-  - slowpool/shared/media/movies
-  - slowpool/shared/media/youtube
-  - slowpool/shared/media/downloads
 
 # -------------------------------------------------------------------
 # MISC
 # -------------------------------------------------------------------
 
 # Media storage
-shared_media_path_zfs_id: slowpool/shared/media
-shared_media_path: "/slowpool/shared/media"
-
-tubeachivist_youtube_path: "{{ shared_media_path }}/youtube"
+shared_media_path: /slowpool/shared/media
 
 # syncthing_paths:
 #   data_default: "/slowpool/shared/syncthing"
-#   data_charlie: "{{ syncthing_data_path }}"
 
 # -------------------------------------------------------------------
 # NFS
@@ -150,19 +86,13 @@ tubeachivist_youtube_path: "{{ shared_media_path }}/youtube"
   # - "{{ shared_media_path }} *(rw,all_squash,anonuid=1000,anongid=1000)"
 
 zfs_nfs_exports:
-  - dataset: "{{ shared_media_path_zfs_id }}"
+  - dataset: slowpool/shared/media
     options: "rw=100.64.0.0/10,anonuid=1000,anongid=1000,no_root_squash,all_squash"
-  - dataset: "{{ public_fileshares_zfs_id }}"
-    options: "rw=100.64.0.0/10,anonuid=1000,anongid=1000,no_root_squash,all_squash"
-
 
 # -------------------------------------------------------------------
 # APPS
 # -------------------------------------------------------------------
 
-gokapi_data_dir: "{{ public_fileshares_dir }}"
-gokapi_domainname: "shared.{{ domain_name }}"
-gokapi_use_local_domain: true
 
 # -------------------------------------------------------------------
 # DRIVES
@@ -224,7 +154,7 @@ compositions:
   - piper
   - gotosocial
   - libretranslate
-  - gokapi
+
 
 traefik_providers:
   - musicassistant
@@ -256,4 +186,3 @@ cnames:
   - wallabag.{{ domain_name }}
   - jellyseerr.{{ domain_name }}
   - translate.{{ domain_name }}
-  - gokapi.{{ domain_name }}

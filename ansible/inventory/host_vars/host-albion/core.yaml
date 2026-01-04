@@ -61,6 +61,7 @@ zfs:
       #     permissions:
       #     local: true
       #     descendents:
+      downloads:
       composition:
         # importance: critical
         # properties:
@@ -68,26 +69,12 @@ zfs:
         #   keylocation: "{{ vault_zfs_default_encryption_passphrase_path }}"
         #   keyformat: passphrase
 
-zfs_pools:
-  - fastpool
 
-# Named ZFS datasets
-container_compositions_zfs_id: fastpool/compositions
-zfsid_downloads: fastpool/downloads
+# -------------------------------------------------------------------
+# DOWNLOADS
+# -------------------------------------------------------------------
 
-# Datasets that should be present 
-zfs_datasets:
-  - "{{ container_compositions_zfs_id }}"
-  - "{{ zfsid_downloads }}"
-
-# Datasets to be backed-up
-# These datasets will be pulled to a backup server
-zfs_backup_datasets:
-  - "{{ container_compositions_zfs_id }}"
-
-# Define useful paths from ZFS datasets
-compositions_config_dir: "/{{ container_compositions_zfs_id }}"
-zfspath_downloads: "/{{ zfsid_downloads }}"
+downloads_dir: "/fastpool/downloads"
 
 # -------------------------------------------------------------------
 # NFS

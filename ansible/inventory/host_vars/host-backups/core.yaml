@@ -38,5 +38,3 @@ zfs:
           keylocation: file:///root/zfs/passphrase
           keyformat: passphrase
 
-zfs_pools:
-  - backuppool

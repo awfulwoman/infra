@@ -34,38 +34,13 @@ zfs:
   fastpool:
     device: /dev/disk/by-id/scsi-SATA_INTENSO_SSD_AA000000000000001079
     datasets:
+      misc:
+        datasets:
+          syncthing:
+            importance: critical
       compositions:
         state: present
         importance: critical
-
-# -------------------------------------------------------------------
-# OLD ZFS (TODO: remove)
-# -------------------------------------------------------------------
-
-# ZFS pools
-zfs_pools:
-  - fastpool
-
-# Named ZFS datasets
-container_config_zfs_id: fastpool/containers
-container_compositions_zfs_id: fastpool/compositions
-syncthing_data_path_zfs_id: fastpool/misc/syncthing
-
-# Datasets present
-zfs_datasets:
-  - "{{ container_compositions_zfs_id }}"
-  - "{{ container_config_zfs_id }}"
-  - fastpool/misc
-  - "{{ syncthing_data_path_zfs_id }}"
-
-# Datasets to be backed-up
-# These datasets will be pulled to a backup server
-zfs_backup_datasets:
-  - "{{ container_compositions_zfs_id }}"
-
-# Define useful paths from ZFS datasets
-compositions_config_dir: "/{{ container_compositions_zfs_id }}"
-syncthing_data_path: "/{{ syncthing_data_path_zfs_id }}"
 
 # -------------------------------------------------------------------
 # MISC

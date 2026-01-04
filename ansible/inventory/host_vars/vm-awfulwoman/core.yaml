@@ -19,38 +19,20 @@ zfs:
     device: /dev/disk/by-id/scsi-0DO_Volume_site-storage
     datasets:
       compositions:
-        importance: high
+        importance: critical
       sites:
+        importance: critical
         datasets:
           awfulwoman:
+      shared:
 
-# ZFS pools that should be present
-zfs_pools_create: 
-  - name: fastpool
-    # command: "zpool create fastpool /dev/disk/by-id/scsi-0DO_Volume_site-storage"
-    command: "zpool import fastpool -f"
-
-zfs_pools:
-  - fastpool
-
-# Named ZFS datasets
-container_compositions_zfs_id: fastpool/compositions
-sites_zfs_id: fastpool/sites
-shared_zfs_id: fastpool/shared
-awfulwoman_sites_zfs_id: fastpool/sites/awfulwoman
+# -------------------------------------------------------------------
+# SITES
+# -------------------------------------------------------------------
 
 # Define useful paths from ZFS datasets
-compositions_config_dir: "/{{ container_compositions_zfs_id }}"
-sites_zfs_path: "/{{ sites_zfs_id }}"
-awfulwoman_sites_zfs_path: "/{{ awfulwoman_sites_zfs_id }}"
-shared_zfs_path: "/{{ shared_zfs_id }}"
-
-# Datasets that should be present 
-zfs_datasets:
-  - "{{ container_compositions_zfs_id }}"
-  - "{{ sites_zfs_id }}"
-  - "{{ awfulwoman_sites_zfs_id}}"
-  - "{{ shared_zfs_id }}"
+site_path_awfulwoman: "/fastpool/sites/awfulwoman"
+site_path_shared: "/fastpool/shared"
 
 traefik_providers:
   - gotosocial
