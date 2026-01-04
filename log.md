@@ -72,10 +72,17 @@ This log tracks significant changes, decisions, and progress across work session
 
 - **Cleanup over preservation**: Removed unused/commented-out code rather than leaving it for "just in case" scenarios. This included removing the backups-zfs-client role reference and unused pool definitions.
 
+- **Fail-fast over silent skip**: Rather than silently skipping all tasks when `zfs` variable is undefined, the role now explicitly asserts its presence and fails immediately with a clear error message. This reduces debugging time and makes role requirements explicit.
+
+- **Conditional encryption setup**: Encryption-related tasks (key directory, key files, systemd service) are now only executed when datasets with encryption are actually defined. This prevents unnecessary file operations and service management on hosts without encrypted datasets.
+
 ### Files Changed
 
 **Roles modified**:
-- `/Users/charlie/Code/infra/ansible/roles/system-zfs/tasks/main.yaml` - Major refactoring (96 insertions, 82 deletions)
+- `/Users/charlie/Code/infra/ansible/roles/system-zfs/tasks/main.yaml` - Major refactoring and improvements:
+  - Initial: 96 insertions, 82 deletions (consolidation)
+  - Added: `zfs` variable assertion task
+  - Added: Conditional block for encryption tasks (uncommitted)
 - `/Users/charlie/Code/infra/ansible/roles/system-zfs/defaults/main.yaml` - Cleanup (2 deletions)
 - `/Users/charlie/Code/infra/ansible/roles/system-zfs/templates/zfs-load-key.service` - Moved from system-zfs-new
 - `/Users/charlie/Code/infra/ansible/roles/compositions/tasks/main.yaml` - Variable updates
@@ -104,40 +111,65 @@ This log tracks significant changes, decisions, and progress across work session
 - `/Users/charlie/Code/infra/ansible/inventory/host_vars/host-storage/core.yaml` (79 lines removed)
 - `/Users/charlie/Code/infra/ansible/inventory/host_vars/vm-awfulwoman/core.yaml`
 
+- **Added assertion for required `zfs` variable** (commit `3c727c0e`):
+  - Added `ansible.builtin.assert` task at the start of `system-zfs` role to fail immediately if `zfs` variable is not defined
+  - Removed the now-redundant `when: zfs is defined` conditional from the main task block
+  - This provides fail-fast behavior with a clear error message: "The 'zfs' variable must be defined to use the system-zfs role"
+  - Instead of silently skipping all tasks, the role now explicitly fails with actionable guidance
+
+- **Added conditional for encryption tasks** (uncommitted):
+  - Wrapped the four encryption-related tasks in a conditional block:
+    - Create `/root/zfs/keys` directory
+    - Template encryption key files
+    - Template `zfs-load-key.service` systemd unit
+    - Enable `zfs-load-key.service`
+  - Condition: `when: zfs | zfs_datasets_with_config | selectattr('properties', 'defined') | selectattr('properties.encryption', 'defined') | list | length > 0`
+  - This prevents encryption setup from running (and potentially failing) on hosts without encrypted datasets
+  - Eliminates unnecessary file creation and service management on non-encryption hosts
+
 ### Current State
 
 - All ZFS configuration now uses the new declarative `zfs:` structure
 - The `system-zfs` role contains all ZFS functionality (system-zfs-new successfully merged and deleted)
 - All composition roles updated to use simplified, direct variable references
 - All host_vars files cleaned up with legacy ZFS variables removed
-- Repository is in a clean state (git status shows no uncommitted changes)
+- **`system-zfs` role improved with assertion and encryption conditionals**:
+  - Committed: Required `zfs` variable assertion (commit `3c727c0e`)
+  - Uncommitted: Encryption tasks conditional block
 - Net code reduction: Over 200 lines of configuration removed through consolidation and simplification
-- All changes committed across 6 commits (ecb3adc0 through 2ef30bb1)
+- All refactoring changes committed across 6 commits (ecb3adc0 through 2ef30bb1)
+- Latest improvement commit: `3c727c0e`
 
 ### Next Steps
 
-1. **Test the consolidated system-zfs role**:
+1. **Commit encryption conditional changes**:
+   - Review and commit the encryption tasks conditional block
+   - Test on a host without encrypted datasets to verify tasks are skipped
+   - Test on a host with encrypted datasets to verify tasks still execute
+
+2. **Test the consolidated system-zfs role**:
    - Run playbooks for hosts using ZFS (host-storage, host-homeassistant, host-backups, dns)
    - Verify pool imports work correctly with new logic
    - Test encryption key loading service on boot
    - Confirm ZFS event daemon (zed) is running properly
+   - Verify assertion catches missing `zfs` variable with clear error message
 
-2. **Verify composition role functionality**:
+3. **Verify composition role functionality**:
    - Test updated composition roles (awfulwoman, get-iplayer, immich, tubesync)
    - Confirm all path variables resolve correctly
    - Check that Docker Compose files are generated properly with new variable names
 
-3. **Monitor for issues**:
+4. **Monitor for issues**:
    - Watch for any missing variable errors in playbook runs
    - Verify all ZFS datasets are created/managed correctly
    - Check that the removal of musicassistant doesn't cause issues on host-storage
 
-4. **Consider further cleanup**:
+5. **Consider further cleanup**:
    - Review other roles that might still reference old variable patterns
    - Look for additional opportunities to simplify variable indirection
    - Consider documenting the new variable naming conventions
 
-5. **Documentation updates**:
+6. **Documentation updates**:
    - Update any documentation referencing the old `system-zfs-new` role
    - Document the new `zfs:` configuration structure format
    - Create migration guide if other similar infrastructure repos exist
@@ -164,6 +196,10 @@ This log tracks significant changes, decisions, and progress across work session
 - **Typo fix**: The get-iplayer role had a typo (`downlaods_dir`) that was corrected as part of this refactoring. This kind of cleanup is a good secondary benefit of systematic refactoring work.
 
 - **Composition count reduction**: The host-storage configuration went from 6 composition roles to 3, suggesting either consolidation or removal of unused services. The explicit removal of musicassistant was documented, but other removals may have occurred.
+
+- **Assertion benefits**: The addition of the `zfs` variable assertion transforms debugging from "Why aren't any ZFS tasks running?" to "Error: The 'zfs' variable must be defined to use the system-zfs role." This fail-fast approach is especially valuable in CI/CD pipelines where silent failures can be costly.
+
+- **Encryption conditional optimization**: By checking for encrypted datasets before setting up encryption infrastructure, the role avoids creating unnecessary directories, templating unused files, and managing systemd services that will never be used. This is both a performance optimization and a security improvement (fewer attack surfaces on non-encryption hosts).
 
 ### Code Snippets
 
@@ -231,6 +267,35 @@ zfs:
 - name: Ensure a ZFS dataset for each composition role is present
   community.general.zfs:
     name: "{{ compositions_dataset }}/{{ item.name }}"
+```
+
+**Fail-fast assertion (added)**:
+```yaml
+- name: Assert that zfs variable is defined
+  ansible.builtin.assert:
+    that:
+      - zfs is defined
+    fail_msg: "The 'zfs' variable must be defined to use the system-zfs role"
+    success_msg: "ZFS configuration is defined and ready"
+```
+
+**Encryption tasks conditional (uncommitted)**:
+```yaml
+# Block wrapper around all encryption tasks
+- name: Setup ZFS encryption key infrastructure
+  when: zfs | zfs_datasets_with_config | selectattr('properties', 'defined') | selectattr('properties.encryption', 'defined') | list | length > 0
+  block:
+    - name: Ensure /root/zfs/keys directory exists
+      # ... task definition
+
+    - name: Ensure ZFS encryption key files are present
+      # ... task definition
+
+    - name: Ensure zfs-load-key.service is present
+      # ... task definition
+
+    - name: Ensure zfs-load-key.service is enabled
+      # ... task definition
 ```
 
 ---
