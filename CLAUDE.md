@@ -76,6 +76,10 @@ Devices must define substitutions for secrets since secrets can't be used inside
 
 Located in various places for QEMU/libvirt virtual machine provisioning.
 
+### Documentation (`docs/`)
+
+Project documentation including architecture guides, runbooks, and reference material.
+
 ## Key Patterns
 
 - **Credentials**: Stored encrypted in repo using Ansible Vault
