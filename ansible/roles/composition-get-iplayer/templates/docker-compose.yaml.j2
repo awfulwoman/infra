@@ -14,7 +14,7 @@ services:
       - "traefik.http.services.iplayer.loadbalancer.server.port=1935"
     volumes:
       - "{{ composition_config }}:/config"
-      - "{{ zfspath_downloads }}/iplayer:/downloads"
+      - "{{ downloads_dir }}/iplayer:/downloads"
       - /etc/localtime:/etc/localtime:ro
     networks:
       - "{{ default_docker_network }}"

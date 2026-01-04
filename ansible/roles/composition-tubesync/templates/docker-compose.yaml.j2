@@ -10,7 +10,7 @@ services:
       - "127.0.0.1:4848:4848"
     volumes:
       - "{{ composition_config }}:/config"
-      - "{{ tubeachivist_youtube_path }}:/downloads"
+      - "{{ shared_media_path }}/youtube:/downloads"
       - /etc/localtime:/etc/localtime:ro
     labels:
       - "traefik.enable=true"

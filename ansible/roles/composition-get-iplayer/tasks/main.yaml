@@ -40,7 +40,7 @@
 
 - name: Ensure directories exist
   ansible.builtin.file:
-    path: "{{ zfsid_downloads }}/iplayer"
+    path: "{{ downloads_dir }}/iplayer"
     state: directory
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
