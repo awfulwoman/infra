@@ -38,6 +38,9 @@ zfs:
         state: present
         importance: critical
 
+# -------------------------------------------------------------------
+# OLD ZFS (TODO: remove)
+# -------------------------------------------------------------------
 
 # ZFS pools
 zfs_pools:
@@ -63,6 +66,10 @@ zfs_backup_datasets:
 # Define useful paths from ZFS datasets
 compositions_config_dir: "/{{ container_compositions_zfs_id }}"
 syncthing_data_path: "/{{ syncthing_data_path_zfs_id }}"
+
+# -------------------------------------------------------------------
+# MISC
+# -------------------------------------------------------------------
 
 composition_motioneye_usbdevice: /dev/video0
 
