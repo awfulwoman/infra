@@ -71,7 +71,7 @@ This log tracks significant changes, decisions, and progress across work session
 
 ### Files Changed
 
-- `/Users/charlie/Code/infra/ansible/roles/backups-zfs-server-new/templates/zfs-pull-backups.py` (9 commits total):
+- `/Users/charlie/Code/infra/ansible/roles/backups-zfs-server/templates/zfs-pull-backups.py` (9 commits total):
   - **Added three output helper functions** at module level: `info()`, `debug()`, `error()`
   - **Added module-level variables**: `_quiet` and `_debug` set in `main()`
   - **Converted all output statements** (~40+ print calls) to use appropriate helper function
@@ -217,7 +217,7 @@ def pulldatasets(host, dataset, user, destination):
 
 ### What Was Done
 
-- **Fixed memory consumption issue in ZFS backup script** (`ansible/roles/backups-zfs-server-new/templates/zfs-pull-backups.py`):
+- **Fixed memory consumption issue in ZFS backup script** (`ansible/roles/backups-zfs-server/templates/zfs-pull-backups.py`):
   - **Problem**: The `send_and_receive()` function was using `subprocess.run()` with `stdout=subprocess.PIPE`, which buffered the entire ZFS send stream in Python memory before passing it to `zfs receive`
   - **Impact**: For large datasets, this could consume gigabytes of RAM, potentially causing OOM errors or system instability
   - **Solution**: Replaced `subprocess.run()` with `subprocess.Popen` to create a true streaming pipeline where data flows directly from send to receive through the OS kernel's pipe buffer (~64KB)
@@ -235,7 +235,7 @@ def pulldatasets(host, dataset, user, destination):
 
 ### Files Changed
 
-- `/Users/charlie/Code/infra/ansible/roles/backups-zfs-server-new/templates/zfs-pull-backups.py`:
+- `/Users/charlie/Code/infra/ansible/roles/backups-zfs-server/templates/zfs-pull-backups.py`:
   - Modified `send_and_receive()` function (lines 149-188)
   - Replaced `subprocess.run()` with `subprocess.Popen` for both send and receive commands
   - Added `send_proc.stdout.close()` for proper SIGPIPE handling
@@ -334,7 +334,7 @@ def send_and_receive(send_cmd, receive_cmd, debug):
 
 ### What Was Done
 
-- **Fixed ZFS pull backup script for non-recursive sends** (`ansible/roles/backups-zfs-server-new/templates/zfs-pull-backups.py`):
+- **Fixed ZFS pull backup script for non-recursive sends** (`ansible/roles/backups-zfs-server/templates/zfs-pull-backups.py`):
   - **Problem**: Using `zfs send -R` (recursive) failed when child datasets didn't share the same snapshots as the parent dataset
   - **Solution**: Changed from recursive sends to individual dataset sends
   - Added `get_remote_child_datasets()` function that uses `zfs list -r` to enumerate all child datasets under a parent
@@ -367,14 +367,14 @@ def send_and_receive(send_cmd, receive_cmd, debug):
 
 ### Files Changed
 
-- `/Users/charlie/Code/infra/ansible/roles/backups-zfs-server-new/templates/zfs-pull-backups.py` - Major refactor:
+- `/Users/charlie/Code/infra/ansible/roles/backups-zfs-server/templates/zfs-pull-backups.py` - Major refactor:
   - Added `get_remote_child_datasets()` function (lines 44-68)
   - Modified `pulldatasets_init()` to expand and deduplicate datasets (lines 70-87)
   - Removed `-R` flag from `zfs send` commands
   - Added `-u` flag to `zfs receive` commands
   - Modified snapshot filtering to only get direct snapshots
 
-- `/Users/charlie/Code/infra/ansible/roles/backups-zfs-server-new/tasks/main.yaml`:
+- `/Users/charlie/Code/infra/ansible/roles/backups-zfs-server/tasks/main.yaml`:
   - Added task "Ensure backup parent dataset has canmount=off" (lines 73-79)
   - Added `canmount: off` to backup dataset properties (line 88)
 
