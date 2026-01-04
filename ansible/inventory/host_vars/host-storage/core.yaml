@@ -66,6 +66,7 @@ zfs:
           syncthing:
             importance: critical
           photos:
+            importance: critical
 
 # -------------------------------------------------------------------
 # MISC
