@@ -1,100 +1,114 @@
-- name: Ensure ZFS dependencies are installed
+# ###################################################################
+# NOTE: This role only applies ZFS properties on first creation, as
+# there's no distinction between mutable and static properties.
+# Meh, good enough for now.
+# https://support.tools/how-to-create-encrypted-zfs-pool/
+# https://github.com/BojanZelic/ansible-zfs-encrypted-datasets/blob/master/tasks/main.yml
+# https://arstechnica.com/gadgets/2021/06/a-quick-start-guide-to-openzfs-native-encryption/
+# https://github.com/ansible-collections/community.general/issues/4699
+# ###################################################################
+
+- name: Ensure ZFS package dependencies exist
   become: true
   ansible.builtin.apt:
     name:
       - zfsutils-linux
+      - zfs-zed
       - acl
     state: present
 
-- name: DEBUG zfs_pools_create
-  ansible.builtin.debug:
-    var: zfs_pools_create
-  when: (zfs_pools_create is defined)
-
-- name: Check if zpools exist
-  ansible.builtin.command: "zpool status {{ item.name }}"
-  ignore_errors: true
-  register: zpool_check
-  loop: "{{ zfs_pools_create }}"
-  changed_when: false
-  when: (zfs_pools_create is defined)
-
-# - name: DEBUG zpool_check
-#   ansible.builtin.debug:
-#     var: zpool_check
-
-- name: ZFS create...
-  when: (zfs_pools_create is defined) and (zfs_pools_create | bool)
+# Testing config stored in <reporoot>/ansible/inventory/host_vars/host-albion/core.yaml
+- name: New ZFS config testing
+  when: zfs is defined
   block:
-    - name: Ensure zpools have been initialised
-      become: true
+    - name: Check status of pools
       ansible.builtin.command:
-        cmd: "{{ item.item.command }}"
-      loop: "{{ zpool_check.results }}"
-      when: (item.rc != 0)
+        cmd: "zpool status {{ item }}"
+      register: zpool_check_result
+      loop: "{{ zfs | zfs_all_pools }}"
+      changed_when: false
+      ignore_errors: true
 
-- name: Ensure ZFS pools are present
-  ansible.builtin.command:
-    cmd: "zpool status {{ item }}"
-  loop: "{{ zfs_pools }}"
-  when: zfs_pools is defined
-  changed_when: false
-  tags: ['zfs']
+    - name: Address failed pools
+      when: zpool_check_result.failed is defined and zpool_check_result.failed
+      block:
+        - name: Attempt to import pool from block storage device
+          ansible.builtin.debug:
+            msg: "zpool import {{ item.item }}"
+          loop: "{{ zpool_check_result.results | selectattr('rc', '>', 0) | list }}"
 
-- name: Ensure ZFS datasets are present
+        - name: Check status of pools after import attempt
+          ansible.builtin.command:
+            cmd: "zpool status {{ item }}"
+          register: zpool_check_result_import
+          loop: "{{ zfs | zfs_all_pools }}"
+          changed_when: false
+          ignore_errors: true
+
+        - name: From remaining uninitialised pools get those with device specified
+          ansible.builtin.debug:
+            msg: "zpool create {{ item.item }} - {{ zfs[item.item].device }}"
+          when: zfs[item.item].device is defined
+          loop: "{{ zpool_check_result_import.results | selectattr('rc', '>', 0) | list }}"
+          register: zpool_check_result_create
+
+    - name: Ensure encryption dir exists in /root
+      become: true
+      ansible.builtin.file:
+        dest: "/root/zfs"
+        mode: "0644"
+        owner: root
+        group: root
+        state: directory
+
+    - name: Ensure encryption passphrase exists in /root
+      become: true
+      ansible.builtin.copy:
+        content: "{{ vault_zfs_passphrase }}"
+        dest: "/root/zfs/passphrase"
+        mode: "0640"
+        owner: root
+        group: root
+
+    # - name: Ensure datasets exist
+    #   become: true
+    #   ansible.builtin.command:
+    #     cmd: >-
+    #       zfs create
+    #       {% if item.properties is defined %}
+    #       {%- for key, value in item.properties.items() -%}
+    #       -o {{ key }}={%if value is sameas true or item is sameas false %}{{ value | ternary('on', 'off') }} {% else %}{{ value }} {% endif %}
+    #       {%- endfor -%}
+    #       {%- endif -%}
+    #       {{ item.dataset }}
+    #     creates: "/{{ item.dataset }}"
+    #   loop: "{{ zfs | zfs_datasets_with_config }}"
+    #   register: dataset_creation_result
+
+    - name: Ensure datasets exist
+      become: true
+      # This role does't cope with trying to apply properties that
+      # are static. Hence the Jinja mess below.
+      community.general.zfs:
+        name: "{{ item.dataset }}"
+        state: present
+        extra_zfs_properties: "{{ item.properties | default({}) }}"
+      loop: "{{ zfs | zfs_datasets_with_config }}"
+      register: dataset_creation_result
+
+- name: Ensure zfs-load-key.service exists
   become: true
-  community.general.zfs:
-    name: "{{ item }}"
-    state: present
-    extra_zfs_properties:
-      acltype: posix
-      xattr: sa
-  loop: "{{ zfs_datasets }}"
-  when: zfs_datasets is defined
-  tags: ['zfs']
+  ansible.builtin.template:
+    src: zfs-load-key.service
+    dest: /etc/systemd/system/zfs-load-key.service
+    owner: root
+    group: root
+    mode: "0664"
 
-- name: Ensure dataset roots are owned by user
+- name: Ensure zfs-load-key.service is running
   become: true
-  ansible.builtin.file:
-    path: "/{{ item }}"
-    state: directory
-    owner: "{{ ansible_user }}"
-    # group: "{{ ansible_user }}"
-    mode: "0775"
-  loop: "{{ zfs_datasets }}"
-  when: zfs_datasets is defined
-  tags: ['zfs']
-
-- name: Allow main user to sudo certain ZFS commands with no password
-  become: true
-  community.general.sudoers:
-    name: allow-sudo-zfs-commands-no-password
-    state: present
-    user: "{{ ansible_user }}"
-    nopassword: true
-    commands:
-      - "/usr/sbin/zfs send"
-      - "/usr/sbin/zfs receive"
-      - "/usr/sbin/zfs mount"
-      - "/usr/sbin/zfs unmount"
-      - "/sbin/mount"
-
-- name: "Ensure delegated permissions exist for {{ ansible_user }}"
-  become: true
-  community.general.zfs_delegate_admin:
-    name: fastpool/compositions
-    users: "{{ ansible_user }}"
-    permissions: mount,receive,hold,snapshot,create,mountpoint
-    local: true
-    descendents: true
-  when: zfs_datasets is defined
-
-# - name: "Ensure delegated permissions exist for {{ ansible_user }}"
-#   become: true
-#   community.general.zfs_delegate_admin:
-#     name: slowpool/charlie
-#     users: "{{ ansible_user }}"
-#     permissions: mount,receive,hold,snapshot,create,mountpoint
-#     local: true
-#     descendents: true
-#   when: zfs_datasets is defined
+  ansible.builtin.systemd_service:
+    state: started
+    name: zfs-load-key.service
+    enabled: true
+    no_block: true
