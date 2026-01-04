@@ -4,6 +4,237 @@ This log tracks significant changes, decisions, and progress across work session
 
 ---
 
+## January 4, 2026 - ZFS Variable Refactoring and Role Consolidation
+
+**Session Overview**: Completed a major refactoring of ZFS-related variables across the entire infrastructure, consolidating the new declarative ZFS role into the main system-zfs role and simplifying variable naming throughout all host configurations and composition roles.
+
+### What Was Done
+
+- **Consolidated system-zfs-new into system-zfs** (commit `22f7ce16`):
+  - Merged the new declarative ZFS implementation back into the main `system-zfs` role
+  - Deleted the now-redundant `system-zfs-new` role (README, defaults, tasks)
+  - Migrated all improvements from system-zfs-new:
+    - Declarative `zfs:` config structure with custom filters (`zfs_all_pools`, `zfs_datasets_with_config`)
+    - Added `zfs-zed` package for ZFS event daemon support
+    - Added `zfs-load-key.service` for automatic encryption key loading at boot
+    - Improved pool import logic with fallback to device creation
+    - Removed deprecated file-based pool options
+  - Template file `zfs-load-key.service` moved to system-zfs role
+  - Net result: -106 lines of code through consolidation
+
+- **Migrated playbooks to reference consolidated role** (commit `c97213f6`):
+  - Updated `host-homeassistant` playbook to switch from system-zfs to system-zfs-new (before final consolidation)
+  - Removed redundant system-zfs reference from `host-backups` playbook
+  - Cleaned up commented-out `backups-zfs-client` role from `host-albion` playbook
+
+- **Updated composition roles for new variable names** (commit `5d455f86`):
+  - **composition-awfulwoman**: Updated to use `site_path_awfulwoman` and `site_path_shared` variables
+  - **composition-get-iplayer**: Fixed typo (`downlaods_dir` → `downloads_dir`) and updated variable reference
+  - **composition-immich**: Added `compositions_immich_photo_path` default variable
+  - **composition-tubesync**: Changed to use `shared_media_path` directly instead of legacy `tubeachivist_youtube_path`
+
+- **Standardized compositions role variable naming** (commit `d4bdb34b`):
+  - Added default `compositions_dataset` variable (value: `fastpool/compositions`)
+  - Updated `compositions` role to use new variable instead of `container_compositions_zfs_id`
+  - Improved task descriptions for better clarity:
+    - "Ensure composition dataset mount is owned by user"
+    - "Ensure a ZFS dataset for each composition role is present"
+    - "Ensure defined composition roles are included"
+
+- **Simplified ZFS variable definitions across all host_vars** (commit `ecb3adc0`):
+  - **Primary goal**: Replace indirect variable references with direct paths for clarity
+  - **Removed legacy structures**: Eliminated old `zfs_pools`, `zfs_datasets`, and `zfs_backup_datasets` lists in favor of new declarative `zfs:` structure
+  - **Hosts updated**:
+    - **dns**: Removed variable indirection for compositions, acme, terraform paths
+    - **host-albion**: Simplified to direct `downloads_dir` path
+    - **host-backups**: Removed unused `zfs_pools` definitions
+    - **host-homeassistant**: Major cleanup of old ZFS variables, retained new `zfs:` structure
+    - **host-storage**: Extensive cleanup (79 lines removed) of legacy ZFS variable definitions
+    - **vm-awfulwoman**: Simplified to direct `site_path_*` variables
+  - **Net reduction**: 126 lines removed across 6 host_vars files
+
+- **Removed musicassistant composition** (commit `2ef30bb1`):
+  - Removed `composition-musicassistant` from host-storage's core.yaml
+  - Changed from 6 composition roles to 3 (likely removed other compositions as well)
+
+### Key Decisions
+
+- **Consolidation over duplication**: Rather than maintaining two parallel ZFS roles, merged the improved implementation back into the original role. This reduces maintenance burden and prevents confusion about which role to use.
+
+- **Direct paths over variable indirection**: The old pattern of defining variables like `container_compositions_zfs_id: "{{ zfsid_compositions }}"` which then referenced `zfsid_compositions: "fastpool/compositions"` added unnecessary complexity. The new approach uses direct paths or single-level variables (e.g., `compositions_dataset: "fastpool/compositions"`).
+
+- **Declarative ZFS configuration**: The new `zfs:` structure in host_vars is more maintainable than separate lists for pools, datasets, and backup datasets. All ZFS configuration is now in one place with a clear hierarchy.
+
+- **Standard variable naming**: Established clearer naming conventions:
+  - Composition-specific paths: `compositions_<role>_<purpose>` (e.g., `compositions_immich_photo_path`)
+  - Shared resources: `<resource>_path` or `<resource>_dir` (e.g., `shared_media_path`, `downloads_dir`)
+  - ZFS-specific: `compositions_dataset`, with new `zfs:` structure for pool/dataset definitions
+
+- **Cleanup over preservation**: Removed unused/commented-out code rather than leaving it for "just in case" scenarios. This included removing the backups-zfs-client role reference and unused pool definitions.
+
+### Files Changed
+
+**Roles modified**:
+- `/Users/charlie/Code/infra/ansible/roles/system-zfs/tasks/main.yaml` - Major refactoring (96 insertions, 82 deletions)
+- `/Users/charlie/Code/infra/ansible/roles/system-zfs/defaults/main.yaml` - Cleanup (2 deletions)
+- `/Users/charlie/Code/infra/ansible/roles/system-zfs/templates/zfs-load-key.service` - Moved from system-zfs-new
+- `/Users/charlie/Code/infra/ansible/roles/compositions/tasks/main.yaml` - Variable updates
+- `/Users/charlie/Code/infra/ansible/roles/compositions/defaults/main.yaml` - Added compositions_dataset default
+
+**Roles deleted**:
+- `/Users/charlie/Code/infra/ansible/roles/system-zfs-new/` - Entire role removed (README, defaults, tasks)
+
+**Composition roles updated**:
+- `/Users/charlie/Code/infra/ansible/roles/composition-awfulwoman/templates/docker-compose.yaml.j2`
+- `/Users/charlie/Code/infra/ansible/roles/composition-get-iplayer/tasks/main.yaml`
+- `/Users/charlie/Code/infra/ansible/roles/composition-get-iplayer/templates/docker-compose.yaml.j2`
+- `/Users/charlie/Code/infra/ansible/roles/composition-immich/defaults/main.yaml`
+- `/Users/charlie/Code/infra/ansible/roles/composition-immich/templates/.env`
+- `/Users/charlie/Code/infra/ansible/roles/composition-tubesync/templates/docker-compose.yaml.j2`
+
+**Playbooks updated**:
+- `/Users/charlie/Code/infra/ansible/playbooks/baremetal/host-albion/core.yaml`
+- `/Users/charlie/Code/infra/ansible/playbooks/baremetal/host-backups/core.yaml`
+
+**Host inventory cleaned up** (6 files, net -126 lines):
+- `/Users/charlie/Code/infra/ansible/inventory/host_vars/dns/core.yaml`
+- `/Users/charlie/Code/infra/ansible/inventory/host_vars/host-albion/core.yaml`
+- `/Users/charlie/Code/infra/ansible/inventory/host_vars/host-backups/core.yaml`
+- `/Users/charlie/Code/infra/ansible/inventory/host_vars/host-homeassistant/core.yaml`
+- `/Users/charlie/Code/infra/ansible/inventory/host_vars/host-storage/core.yaml` (79 lines removed)
+- `/Users/charlie/Code/infra/ansible/inventory/host_vars/vm-awfulwoman/core.yaml`
+
+### Current State
+
+- All ZFS configuration now uses the new declarative `zfs:` structure
+- The `system-zfs` role contains all ZFS functionality (system-zfs-new successfully merged and deleted)
+- All composition roles updated to use simplified, direct variable references
+- All host_vars files cleaned up with legacy ZFS variables removed
+- Repository is in a clean state (git status shows no uncommitted changes)
+- Net code reduction: Over 200 lines of configuration removed through consolidation and simplification
+- All changes committed across 6 commits (ecb3adc0 through 2ef30bb1)
+
+### Next Steps
+
+1. **Test the consolidated system-zfs role**:
+   - Run playbooks for hosts using ZFS (host-storage, host-homeassistant, host-backups, dns)
+   - Verify pool imports work correctly with new logic
+   - Test encryption key loading service on boot
+   - Confirm ZFS event daemon (zed) is running properly
+
+2. **Verify composition role functionality**:
+   - Test updated composition roles (awfulwoman, get-iplayer, immich, tubesync)
+   - Confirm all path variables resolve correctly
+   - Check that Docker Compose files are generated properly with new variable names
+
+3. **Monitor for issues**:
+   - Watch for any missing variable errors in playbook runs
+   - Verify all ZFS datasets are created/managed correctly
+   - Check that the removal of musicassistant doesn't cause issues on host-storage
+
+4. **Consider further cleanup**:
+   - Review other roles that might still reference old variable patterns
+   - Look for additional opportunities to simplify variable indirection
+   - Consider documenting the new variable naming conventions
+
+5. **Documentation updates**:
+   - Update any documentation referencing the old `system-zfs-new` role
+   - Document the new `zfs:` configuration structure format
+   - Create migration guide if other similar infrastructure repos exist
+
+### Notes
+
+- **Migration pattern**: This refactoring demonstrates a healthy pattern: create new implementation alongside old (system-zfs-new), migrate usage gradually, then consolidate back into original location. This minimizes risk during the transition.
+
+- **Variable indirection tradeoffs**: While the old pattern of `container_compositions_zfs_id: "{{ zfsid_compositions }}"` allowed for centralized path definitions, it made it difficult to understand actual values when reading configurations. The new approach prioritizes readability and maintainability.
+
+- **Custom Jinja filters**: The consolidation relies on custom Ansible filters (`zfs_all_pools`, `zfs_datasets_with_config`) located in `ansible/plugins/filters/`. These filters process the declarative `zfs:` structure into actionable lists for tasks.
+
+- **ZFS encryption key handling**: The `zfs-load-key.service` systemd unit is critical for systems with encrypted ZFS datasets. It ensures keys are loaded at boot before datasets are mounted. This was part of the system-zfs-new improvements now merged into system-zfs.
+
+- **Impact scope**: This refactoring touched 6 commits spanning:
+  - Core system role (system-zfs)
+  - Supporting roles (compositions)
+  - Application roles (4 composition-* roles)
+  - Infrastructure definitions (6 host_vars files)
+  - Orchestration (2 playbooks)
+
+  This demonstrates careful coordination across all layers of the infrastructure.
+
+- **Typo fix**: The get-iplayer role had a typo (`downlaods_dir`) that was corrected as part of this refactoring. This kind of cleanup is a good secondary benefit of systematic refactoring work.
+
+- **Composition count reduction**: The host-storage configuration went from 6 composition roles to 3, suggesting either consolidation or removal of unused services. The explicit removal of musicassistant was documented, but other removals may have occurred.
+
+### Code Snippets
+
+**Old variable pattern (before)**:
+```yaml
+# Indirect reference pattern
+container_compositions_zfs_id: "{{ zfsid_compositions }}"
+zfsid_compositions: "fastpool/compositions"
+zfsid_downloads: "tank/downloads"
+
+# Usage in roles required double lookup
+dataset: "{{ container_compositions_zfs_id }}"
+```
+
+**New variable pattern (after)**:
+```yaml
+# Direct path pattern
+compositions_dataset: "fastpool/compositions"
+downloads_dir: "/tank/downloads"
+
+# Usage in roles is straightforward
+dataset: "{{ compositions_dataset }}"
+```
+
+**Old ZFS configuration (before)**:
+```yaml
+# Separate lists for different purposes
+zfs_pools:
+  - name: fastpool
+    devices: ["/dev/disk/by-id/..."]
+
+zfs_datasets:
+  - name: "fastpool/compositions"
+    properties:
+      compression: lz4
+
+zfs_backup_datasets:
+  - "tank/data"
+```
+
+**New ZFS configuration (after)**:
+```yaml
+# Unified declarative structure
+zfs:
+  pools:
+    fastpool:
+      devices:
+        - "/dev/disk/by-id/..."
+      datasets:
+        compositions:
+          config:
+            compression: lz4
+  backups:
+    - "tank/data"
+```
+
+**Composition role task updates**:
+```yaml
+# Before
+- name: Ensure a ZFS dataset for each composition role is present
+  community.general.zfs:
+    name: "{{ container_compositions_zfs_id }}/{{ item.name }}"
+
+# After
+- name: Ensure a ZFS dataset for each composition role is present
+  community.general.zfs:
+    name: "{{ compositions_dataset }}/{{ item.name }}"
+```
+
+---
+
 ## January 3, 2026 - ZFS Backup Script Output System Overhaul
 
 **Session Overview**: Completely overhauled the output system for the ZFS pull backup script, adding `--quiet` flag support and implementing a three-tier logging system (info/debug/error) with visual prefixes and emoji indicators for improved readability.
