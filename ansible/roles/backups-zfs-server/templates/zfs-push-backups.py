@@ -22,8 +22,8 @@ def debug(message):
         print("ℹ️ " + message)
 
 def error(message):
-    """Print error messages."""
-    print("🚨 " + message)
+    """Print error messages to stderr."""
+    print("🚨 " + message, file=sys.stderr)
 
 
 def parse_size_to_bytes(size_str):

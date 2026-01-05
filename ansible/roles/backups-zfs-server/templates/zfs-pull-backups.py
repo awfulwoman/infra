@@ -19,8 +19,8 @@ def debug(message):
         print("ℹ️ " + message)
         
 def error(message):
-    """Print error messages."""
-    print("🚨 " + message)
+    """Print error messages to stderr."""
+    print("🚨 " + message, file=sys.stderr)
         
 def preflight(host, datasets, user, destination):
     try:
