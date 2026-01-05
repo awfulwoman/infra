@@ -1,0 +1,181 @@
+#!/usr/bin/env python3
+"""
+ZFS Prune Script - Removes old snapshots based on policy retention
+
+Usage:
+    zfs-prune [--debug] [--dry-run]
+"""
+import json
+import subprocess
+import sys
+import argparse
+import re
+
+# Policy definitions (injected by Ansible)
+POLICIES = json.loads(r'''{{ system_zfs_policy_definitions | to_json }}''')
+
+# Datasets with importance (injected by Ansible)
+DATASETS = json.loads(r'''{{ zfs | zfs_datasets_with_importance | to_json }}''')
+
+SNAPSHOT_PREFIX = "{{ system_zfs_policy_snapshot_prefix }}"
+
+# Regex to match our snapshot naming convention
+# autosnap_YYYY-MM-DD_HH:MM:SS_type
+SNAPSHOT_PATTERN = re.compile(
+    rf'^{SNAPSHOT_PREFIX}_(\d{{4}}-\d{{2}}-\d{{2}}_\d{{2}}:\d{{2}}:\d{{2}})_(hourly|monthly|yearly)$'
+)
+
+_debug = False
+_dry_run = False
+
+
+def info(message):
+    """Print informational message."""
+    print("* " + message)
+
+
+def debug(message):
+    """Print debug message if enabled."""
+    if _debug:
+        print("  " + message)
+
+
+def error(message):
+    """Print error message to stderr."""
+    print("! " + message, file=sys.stderr)
+
+
+def get_snapshots(dataset):
+    """Get all snapshots for a dataset, sorted by creation time."""
+    cmd = ["zfs", "list", "-t", "snapshot", "-H", "-o", "name", "-s", "creation", dataset]
+
+    try:
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            check=False
+        )
+        if result.returncode != 0:
+            # Dataset might not have any snapshots yet
+            return []
+
+        snapshots = result.stdout.decode().strip().splitlines()
+        # Filter to only direct snapshots of this dataset (not child datasets)
+        direct_snapshots = [s.split("@")[1] for s in snapshots if s.startswith(f"{dataset}@")]
+        return direct_snapshots
+    except Exception as e:
+        error(f"Could not list snapshots for {dataset}: {e}")
+        return []
+
+
+def parse_snapshot(snapshot_name):
+    """Parse a snapshot name and return (timestamp_str, type) or None if not matching pattern."""
+    match = SNAPSHOT_PATTERN.match(snapshot_name)
+    if match:
+        timestamp_str = match.group(1)
+        snap_type = match.group(2)
+        return (timestamp_str, snap_type)
+    return None
+
+
+def destroy_snapshot(dataset, snapshot_name):
+    """Destroy a ZFS snapshot."""
+    full_name = f"{dataset}@{snapshot_name}"
+    cmd = ["zfs", "destroy", full_name]
+
+    if _dry_run:
+        info(f"DRY-RUN: Would destroy snapshot {full_name}")
+        return True
+
+    try:
+        result = subprocess.run(cmd, capture_output=True, check=False)
+        if result.returncode != 0:
+            error(f"Failed to destroy snapshot {full_name}")
+            error(f"  zfs: {result.stderr.decode().strip()}")
+            return False
+        debug(f"Destroyed snapshot: {full_name}")
+        return True
+    except Exception as e:
+        error(f"Failed to destroy snapshot {full_name}: {e}")
+        return False
+
+
+def prune_dataset(dataset, importance):
+    """Prune snapshots for a single dataset based on its policy."""
+    policy = POLICIES.get(importance, POLICIES['none'])
+
+    if not policy.get('autoprune', False):
+        debug(f"Skipping {dataset} - autoprune disabled")
+        return 0, 0
+
+    snapshots = get_snapshots(dataset)
+    if not snapshots:
+        debug(f"No snapshots found for {dataset}")
+        return 0, 0
+
+    # Group snapshots by type
+    by_type = {'hourly': [], 'monthly': [], 'yearly': []}
+
+    for snap in snapshots:
+        parsed = parse_snapshot(snap)
+        if parsed:
+            timestamp_str, snap_type = parsed
+            by_type[snap_type].append((timestamp_str, snap))
+
+    destroyed = 0
+    kept = 0
+
+    for snap_type in ['hourly', 'monthly', 'yearly']:
+        retention = policy.get(snap_type, 0)
+        type_snaps = by_type[snap_type]
+
+        # Sort by timestamp descending (newest first)
+        # Since format is YYYY-MM-DD_HH:MM:SS, string sort works correctly
+        type_snaps.sort(key=lambda x: x[0], reverse=True)
+
+        debug(f"{dataset}: {len(type_snaps)} {snap_type} snapshots, retention={retention}")
+
+        for i, (timestamp_str, snap_name) in enumerate(type_snaps):
+            if i < retention:
+                debug(f"  Keeping {snap_name} (slot {i+1}/{retention})")
+                kept += 1
+            else:
+                if destroy_snapshot(dataset, snap_name):
+                    destroyed += 1
+
+    return destroyed, kept
+
+
+def main():
+    global _debug, _dry_run
+
+    parser = argparse.ArgumentParser(description='Prune ZFS snapshots based on policy retention')
+    parser.add_argument('--debug', action='store_true', help='Enable debug output')
+    parser.add_argument('--dry-run', action='store_true', help='Show what would be done')
+    args = parser.parse_args()
+
+    _debug = args.debug
+    _dry_run = args.dry_run
+
+    info("Starting snapshot pruning")
+
+    total_destroyed = 0
+    total_kept = 0
+
+    for ds_info in DATASETS:
+        dataset = ds_info['dataset']
+        importance = ds_info['importance']
+
+        destroyed, kept = prune_dataset(dataset, importance)
+        total_destroyed += destroyed
+        total_kept += kept
+
+    info(f"Pruning complete: {total_destroyed} destroyed, {total_kept} kept")
+
+    if total_destroyed > 0 or _dry_run:
+        # Only exit non-zero if we had actual failures (handled in destroy_snapshot)
+        pass
+
+
+if __name__ == "__main__":
+    main()

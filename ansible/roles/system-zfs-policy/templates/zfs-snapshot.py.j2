@@ -1,0 +1,128 @@
+#!/usr/bin/env python3
+"""
+ZFS Snapshot Script - Creates policy-driven snapshots
+
+Usage:
+    zfs-snapshot --type hourly|monthly|yearly [--debug] [--dry-run]
+"""
+import json
+import subprocess
+import sys
+import argparse
+from datetime import datetime
+
+# Policy definitions (injected by Ansible)
+POLICIES = json.loads(r'''{{ system_zfs_policy_definitions | to_json }}''')
+
+# Datasets with importance (injected by Ansible)
+DATASETS = json.loads(r'''{{ zfs | zfs_datasets_with_importance | to_json }}''')
+
+SNAPSHOT_PREFIX = "{{ system_zfs_policy_snapshot_prefix }}"
+
+_debug = False
+_dry_run = False
+
+
+def info(message):
+    """Print informational message."""
+    print("* " + message)
+
+
+def debug(message):
+    """Print debug message if enabled."""
+    if _debug:
+        print("  " + message)
+
+
+def error(message):
+    """Print error message to stderr."""
+    print("! " + message, file=sys.stderr)
+
+
+def get_snapshot_name(snap_type):
+    """Generate snapshot name with timestamp."""
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
+    return f"{SNAPSHOT_PREFIX}_{timestamp}_{snap_type}"
+
+
+def create_snapshot(dataset, snapshot_name):
+    """Create a ZFS snapshot."""
+    full_name = f"{dataset}@{snapshot_name}"
+    cmd = ["zfs", "snapshot", full_name]
+
+    if _dry_run:
+        info(f"DRY-RUN: Would create snapshot {full_name}")
+        return True
+
+    try:
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            check=False
+        )
+        if result.returncode != 0:
+            error(f"Failed to create snapshot {full_name}")
+            error(f"  zfs: {result.stderr.decode().strip()}")
+            return False
+        debug(f"Created snapshot: {full_name}")
+        return True
+    except Exception as e:
+        error(f"Failed to create snapshot {full_name}: {e}")
+        return False
+
+
+def should_snapshot(importance, snap_type):
+    """Check if a dataset with given importance should be snapshotted for this type."""
+    policy = POLICIES.get(importance, POLICIES['none'])
+
+    if not policy.get('autosnap', False):
+        return False
+
+    # Check if this type has retention > 0
+    retention = policy.get(snap_type, 0)
+    return retention > 0
+
+
+def main():
+    global _debug, _dry_run
+
+    parser = argparse.ArgumentParser(description='Create ZFS snapshots based on policy')
+    parser.add_argument('--type', required=True, choices=['hourly', 'monthly', 'yearly'],
+                        help='Snapshot type to create')
+    parser.add_argument('--debug', action='store_true', help='Enable debug output')
+    parser.add_argument('--dry-run', action='store_true', help='Show what would be done')
+    args = parser.parse_args()
+
+    _debug = args.debug
+    _dry_run = args.dry_run
+
+    snapshot_name = get_snapshot_name(args.type)
+    info(f"Creating {args.type} snapshots: {snapshot_name}")
+
+    success_count = 0
+    skip_count = 0
+    fail_count = 0
+
+    for ds_info in DATASETS:
+        dataset = ds_info['dataset']
+        importance = ds_info['importance']
+
+        debug(f"Checking {dataset} (importance: {importance})")
+
+        if should_snapshot(importance, args.type):
+            if create_snapshot(dataset, snapshot_name):
+                success_count += 1
+            else:
+                fail_count += 1
+        else:
+            debug(f"Skipping {dataset} - policy does not require {args.type} snapshots")
+            skip_count += 1
+
+    info(f"Summary: {success_count} created, {skip_count} skipped, {fail_count} failed")
+
+    if fail_count > 0:
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()

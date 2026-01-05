@@ -3,7 +3,6 @@
   become: true
   ansible.builtin.apt:
     name:
-      - sanoid
       - acl
       - moreutils # for ts (timestamp) util
       - lzop
@@ -45,42 +44,6 @@
     owner: root
     group: root
     mode: "0777"
-
-- name: Make sure destination dir exists
-  become: true
-  ansible.builtin.file:
-    path: /etc/sanoid
-    state: directory
-    owner: root
-    group: root
-    mode: "0664"
-
-- name: Create Sanoid config file
-  become: true
-  ansible.builtin.template:
-    src: sanoid.conf.j2
-    dest: "/etc/sanoid/sanoid.conf"
-    owner: root
-    group: root
-    mode: "0664"
-
-- name: Apply Sanoid cronjob
-  become: true
-  ansible.builtin.cron:
-    name: "Sanoid"
-    month: "*"
-    day: "*"
-    hour: "*"
-    minute: "*"
-    weekday: "*"
-    job: "/usr/sbin/sanoid --cron"
-    state: absent
-
-- name: Enable Sanoid timer unit
-  ansible.builtin.systemd_service:
-    name: sanoid.timer
-    state: started
-    enabled: true
 
 - name: List datasets to be given permissions on
   become: true

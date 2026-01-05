@@ -14,6 +14,7 @@ class FilterModule(object):
             'zfs_datasets_with_config': self.zfs_datasets_with_config,
             'zfs_critical_datasets': self.zfs_critical_datasets,
             'zfs_backup_datasets': self.zfs_backup_datasets,
+            'zfs_datasets_with_importance': self.zfs_datasets_with_importance,
         }
 
     def zfs_all_datasets(self, zfs_dict):
@@ -239,3 +240,53 @@ class FilterModule(object):
                     self._extract_backup_datasets(value, result, path_components + [key])
                 else:
                     self._extract_backup_datasets(value, result, path_components)
+
+    def zfs_datasets_with_importance(self, zfs_dict):
+        """
+        Extract all datasets with their importance level.
+
+        Returns an array where each item is a dictionary containing:
+        - dataset: The full dataset path (string)
+        - importance: The importance level (string, defaults to 'none')
+
+        Args:
+            zfs_dict: ZFS configuration dictionary
+        """
+        if not isinstance(zfs_dict, dict):
+            raise AnsibleFilterError('zfs_datasets_with_importance requires a dictionary')
+
+        result = []
+        self._walk_tree_with_importance(zfs_dict, result, [])
+        return result
+
+    def _walk_tree_with_importance(self, current_dict, result, path_components):
+        """
+        Recursively walk the dictionary tree to find all datasets with their importance.
+        """
+        if not isinstance(current_dict, dict):
+            return
+
+        for key, value in current_dict.items():
+            if key == 'datasets' and isinstance(value, dict):
+                for dataset_name, dataset_value in value.items():
+                    dataset_path = path_components + [dataset_name]
+
+                    # Extract importance, defaulting to 'none'
+                    importance = 'none'
+                    if isinstance(dataset_value, dict) and 'importance' in dataset_value:
+                        importance = dataset_value['importance']
+
+                    dataset_dict = {
+                        'dataset': '/'.join(dataset_path),
+                        'importance': importance,
+                    }
+
+                    result.append(dataset_dict)
+
+                    if isinstance(dataset_value, dict):
+                        self._walk_tree_with_importance(dataset_value, result, dataset_path)
+            elif isinstance(value, dict):
+                if 'datasets' in value:
+                    self._walk_tree_with_importance(value, result, path_components + [key])
+                else:
+                    self._walk_tree_with_importance(value, result, path_components)

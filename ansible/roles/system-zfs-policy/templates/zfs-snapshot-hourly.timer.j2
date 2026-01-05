@@ -1,0 +1,10 @@
+[Unit]
+Description=ZFS Hourly Snapshot Timer
+
+[Timer]
+OnCalendar={{ system_zfs_policy_timer_hourly }}
+Persistent=true
+RandomizedDelaySec=60
+
+[Install]
+WantedBy=timers.target
