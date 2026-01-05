@@ -87,7 +87,7 @@ def main():
     global _debug, _dry_run
 
     parser = argparse.ArgumentParser(description='Create ZFS snapshots based on policy')
-    parser.add_argument('--type', required=True, choices=['hourly', 'monthly', 'yearly'],
+    parser.add_argument('--type', required=True, choices=['hourly', 'daily', 'monthly', 'yearly'],
                         help='Snapshot type to create')
     parser.add_argument('--debug', action='store_true', help='Enable debug output')
     parser.add_argument('--dry-run', action='store_true', help='Show what would be done')

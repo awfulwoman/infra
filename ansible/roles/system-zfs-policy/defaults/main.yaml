@@ -14,24 +14,28 @@ system_zfs_policy_log_dir: /var/log/zfs-policy
 system_zfs_policy_definitions:
   none:
     hourly: 0
+    daily: 0
     monthly: 0
     yearly: 0
     autosnap: false
     autoprune: false
   low:
     hourly: 3
+    daily: 7
     monthly: 1
     yearly: 0
     autosnap: true
     autoprune: true
   high:
     hourly: 24
+    daily: 14
     monthly: 1
     yearly: 1
     autosnap: true
     autoprune: true
   critical:
     hourly: 36
+    daily: 30
     monthly: 3
     yearly: 5
     autosnap: true
@@ -39,6 +43,7 @@ system_zfs_policy_definitions:
 
 # Timer schedules (systemd OnCalendar format)
 system_zfs_policy_timer_hourly: "*:00"
-system_zfs_policy_timer_monthly: "*-*-01 00:05"
-system_zfs_policy_timer_yearly: "*-01-01 00:10"
+system_zfs_policy_timer_daily: "*-*-* 00:15"
+system_zfs_policy_timer_monthly: "*-*-01 00:20"
+system_zfs_policy_timer_yearly: "*-01-01 00:25"
 system_zfs_policy_timer_prune: "*:30"

@@ -17,12 +17,12 @@ This role configures automated ZFS snapshots based on dataset importance levels,
 
 Datasets are assigned an `importance` level which determines their snapshot schedule:
 
-| Policy     | Hourly | Monthly | Yearly | Description            |
-| ---------- | ------ | ------- | ------ | ---------------------- |
-| `none`     | 0      | 0       | 0      | No snapshots (default) |
-| `low`      | 3      | 1       | 0      | Light protection       |
-| `high`     | 24     | 1       | 1      | Standard protection    |
-| `critical` | 36     | 3       | 5      | Maximum protection     |
+| Policy     | Hourly | Daily | Monthly | Yearly | Description            |
+| ---------- | ------ | ----- | ------- | ------ | ---------------------- |
+| `none`     | 0      | 0     | 0       | 0      | No snapshots (default) |
+| `low`      | 3      | 7     | 1       | 0      | Light protection       |
+| `high`     | 24     | 14    | 1       | 1      | Standard protection    |
+| `critical` | 36     | 30    | 3       | 5      | Maximum protection     |
 
 ### Configuration
 
@@ -45,18 +45,20 @@ Snapshots follow a consistent naming convention:
 
 ```
 autosnap_YYYY-MM-DD_HH:MM:SS_hourly
+autosnap_YYYY-MM-DD_HH:MM:SS_daily
 autosnap_YYYY-MM-DD_HH:MM:SS_monthly
 autosnap_YYYY-MM-DD_HH:MM:SS_yearly
 ```
 
 ### Schedule
 
-| Timer | Schedule | Description |
-|-------|----------|-------------|
-| `zfs-snapshot-hourly.timer` | Every hour at :00 | Creates hourly snapshots |
-| `zfs-snapshot-monthly.timer` | 1st of month at 00:05 | Creates monthly snapshots |
-| `zfs-snapshot-yearly.timer` | Jan 1st at 00:10 | Creates yearly snapshots |
-| `zfs-prune.timer` | Every hour at :30 | Removes expired snapshots |
+| Timer                        | Schedule              | Description               |
+| ---------------------------- | --------------------- | ------------------------- |
+| `zfs-snapshot-hourly.timer`  | Every hour at :00     | Creates hourly snapshots  |
+| `zfs-snapshot-daily.timer`   | Daily at 00:15        | Creates daily snapshots   |
+| `zfs-snapshot-monthly.timer` | 1st of month at 00:20 | Creates monthly snapshots |
+| `zfs-snapshot-yearly.timer`  | Jan 1st at 00:25      | Creates yearly snapshots  |
+| `zfs-prune.timer`            | Every hour at :30     | Removes expired snapshots |
 
 ## Installed Components
 

@@ -22,7 +22,7 @@ SNAPSHOT_PREFIX = "{{ system_zfs_policy_snapshot_prefix }}"
 # Regex to match our snapshot naming convention
 # autosnap_YYYY-MM-DD_HH:MM:SS_type
 SNAPSHOT_PATTERN = re.compile(
-    rf'^{SNAPSHOT_PREFIX}_(\d{{4}}-\d{{2}}-\d{{2}}_\d{{2}}:\d{{2}}:\d{{2}})_(hourly|monthly|yearly)$'
+    rf'^{SNAPSHOT_PREFIX}_(\d{{4}}-\d{{2}}-\d{{2}}_\d{{2}}:\d{{2}}:\d{{2}})_(hourly|daily|monthly|yearly)$'
 )
 
 _debug = False
@@ -114,7 +114,7 @@ def prune_dataset(dataset, importance):
         return 0, 0
 
     # Group snapshots by type
-    by_type = {'hourly': [], 'monthly': [], 'yearly': []}
+    by_type = {'hourly': [], 'daily': [], 'monthly': [], 'yearly': []}
 
     for snap in snapshots:
         parsed = parse_snapshot(snap)
@@ -125,7 +125,7 @@ def prune_dataset(dataset, importance):
     destroyed = 0
     kept = 0
 
-    for snap_type in ['hourly', 'monthly', 'yearly']:
+    for snap_type in ['hourly', 'daily', 'monthly', 'yearly']:
         retention = policy.get(snap_type, 0)
         type_snaps = by_type[snap_type]
 
