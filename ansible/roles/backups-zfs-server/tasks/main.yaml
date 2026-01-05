@@ -157,5 +157,6 @@
       --host {{ item }}
       --user {{ vault_zfsbackups_user }}
       --datasets {{ _datasets | map(attribute='dataset') | join(' ') }}
+      >/dev/null
     state: "{{ 'present' if _has_datasets else 'absent' }}"
   loop: "{{ groups[backups_zfs_server_pull_group] }}"
