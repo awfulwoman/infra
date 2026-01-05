@@ -31,9 +31,9 @@ git clone git@github.com:awfulwoman/infra.git /opt/infra/
 
 Yeah, I'm currently using [Claude Code](https://claude.ai/code) to write portions of this infrastructure repo. I'm not entirely comfortable doing so, as the general push for "AI" is a wanking contest between Silicon Valley wankers and their techbro worshippers. It rides rampant over creativity, art, and all things that require a soul. But I do see some uses for LLMs in the non-creative space of coding (bite me, developers), and I want to understand the whole LLM space better.
 
-Claude seems better than the other AI shite companies. They aren't treating it like heroin, and charge realistic rates for what you get. The session limitations, even on the paid plans, have the effect of nulling the addiction cycle that other AIs seem intent on promoting.
+Claude seems better than the other AI shite companies. They aren't treating it like heroin, and charge realistic rates for what you get. The session limitations, even on the paid plans, have the effect of dampening the addiction cycle that other AIs seem intent on promoting.
 
-I use it in a way where I understand the code and config that it creates, and I absolutely refuse to engage in "vibe coding" (which is truly a manifistation of mediocrity if ever there was one). Claude has proved useful for writing informative and detailed commit messages, and has forced me to start documenting everything here.
+I use it in a way where I understand the code and config that it creates, and I absolutely refuse to engage in "vibe coding" (which is truly a manifestation of mediocrity if ever there was one). Claude has proved useful for writing informative and detailed commit messages, and has forced me to start documenting everything here.
 
 I intend to use Claude as progressive enhancement of skills. I will not use Claude unless I understand the underlying codebase and technology first. Claude is useful for doing arduous tasks that I would not otherwise engage in. I assume at all times that CLaude could disappear in a heartbeat, and that I could lose it as a tool (for that is all an LLM is: a useful tool).
 
