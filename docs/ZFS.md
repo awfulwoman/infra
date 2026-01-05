@@ -47,12 +47,20 @@ Another, as yet unbuilt role (likely to be called `system-zfs-policy`), wil set 
 
 ## Policy definitions
 
-| Policy ID  | Frequently | Hourly | Monthly | Yearly | Autosnap | Autoprune |
-| ---------- | ---------- | ------ | ------- | ------ | -------- | --------- |
-| `none`     | 0          | 0      | 0       | 0      | FALSE    | FALSE     |
-| `low`      | 0          | 3      | 1       | 0      | TRUE     | TRUE      |
-| `high`     | 0          | 24     | 1       | 1      | TRUE     | TRUE      |
-| `critical` | 0          | 36     | 3       | 5      | TRUE     | TRUE      |
+| Policy ID  | Frequently | Hourly | Monthly | Yearly | Autosnap | Autoprune | Backups                      |
+| ---------- | ---------- | ------ | ------- | ------ | -------- | --------- | ---------------------------- |
+| `none`     | 0          | 0      | 0       | 0      | FALSE    | FALSE     | None                         |
+| `low`      | 0          | 3      | 1       | 0      | TRUE     | TRUE      | Backup server                |
+| `high`     | 0          | 24     | 1       | 1      | TRUE     | TRUE      | Backup and onsite archive    |
+| `critical` | 0          | 36     | 3       | 5      | TRUE     | TRUE      | Backup, archive, and offsite |
+
+## Backup locations
+
+As per the policy definitions.
+
+- `Backup server` is the central backup server (currently [host-backups](../ansible/inventory/host_vars/host-backups/core.yaml)).
+- `Onsite Archive` does not yet exist
+- `Offsite archive` is a remote backup server located in another country (currently [host-albion](../ansible/inventory/host_vars/host-albion/core.yaml))
 
 ## Replication
 
