@@ -157,6 +157,12 @@ def main():
     _debug = args.debug
     _dry_run = args.dry_run
 
+    # Check for root privileges (required for zfs destroy)
+    import os
+    if os.geteuid() != 0 and not _dry_run:
+        error("This script must be run as root (use sudo)")
+        sys.exit(1)
+
     info("Starting snapshot pruning")
 
     total_destroyed = 0

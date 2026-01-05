@@ -96,6 +96,12 @@ def main():
     _debug = args.debug
     _dry_run = args.dry_run
 
+    # Check for root privileges (required for zfs snapshot)
+    import os
+    if os.geteuid() != 0 and not _dry_run:
+        error("This script must be run as root (use sudo)")
+        sys.exit(1)
+
     snapshot_name = get_snapshot_name(args.type)
     info(f"Creating {args.type} snapshots: {snapshot_name}")
 

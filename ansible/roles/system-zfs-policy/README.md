@@ -73,14 +73,19 @@ Services and timers are installed to `/etc/systemd/system/`.
 
 ## Manual Usage
 
-Both scripts support manual execution with debug and dry-run modes:
+Both scripts support manual execution with debug and dry-run modes.
+
+**Note:** Root privileges are required for actual snapshot operations. Use `sudo` or `--dry-run`:
 
 ```bash
-# Preview what snapshots would be created
+# Preview what snapshots would be created (no sudo needed)
 /opt/zfs-policy/zfs-snapshot --type hourly --dry-run --debug
 
-# Preview what would be pruned
+# Preview what would be pruned (no sudo needed)
 /opt/zfs-policy/zfs-prune --dry-run --debug
+
+# Actually create snapshots (requires sudo)
+sudo /opt/zfs-policy/zfs-snapshot --type hourly
 
 # Check timer status
 systemctl list-timers 'zfs-*'
