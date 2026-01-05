@@ -1,0 +1,12 @@
+[Unit]
+Description=ZFS Snapshot Prune
+After=zfs.target
+
+[Service]
+Type=oneshot
+ExecStart={{ system_zfs_policy_script_path }}/zfs-prune
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,9 @@
+[Unit]
+Description=ZFS Yearly Snapshot Timer
+
+[Timer]
+OnCalendar={{ system_zfs_policy_timer_yearly }}
+Persistent=true
+
+[Install]
+WantedBy=timers.target

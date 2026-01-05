@@ -1,0 +1,147 @@
+---
+- name: Assert that zfs variable is defined
+  ansible.builtin.assert:
+    that:
+      - zfs is defined
+    fail_msg: "The 'zfs' variable must be defined in host_vars to use this role"
+    quiet: true
+
+# Remove legacy Sanoid installation
+- name: Stop and disable Sanoid timer
+  become: true
+  ansible.builtin.systemd_service:
+    name: sanoid.timer
+    state: stopped
+    enabled: false
+  ignore_errors: true
+
+- name: Remove Sanoid package
+  become: true
+  ansible.builtin.apt:
+    name: sanoid
+    state: absent
+
+- name: Remove Sanoid configuration directory
+  become: true
+  ansible.builtin.file:
+    path: /etc/sanoid
+    state: absent
+
+- name: Ensure script directory exists
+  become: true
+  ansible.builtin.file:
+    path: "{{ system_zfs_policy_script_path }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Ensure log directory exists
+  become: true
+  ansible.builtin.file:
+    path: "{{ system_zfs_policy_log_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Deploy ZFS snapshot script
+  become: true
+  ansible.builtin.template:
+    src: zfs-snapshot.py.j2
+    dest: "{{ system_zfs_policy_script_path }}/zfs-snapshot"
+    owner: root
+    group: root
+    mode: "0755"
+  notify:
+    - Reload systemd daemon
+
+- name: Deploy ZFS prune script
+  become: true
+  ansible.builtin.template:
+    src: zfs-prune.py.j2
+    dest: "{{ system_zfs_policy_script_path }}/zfs-prune"
+    owner: root
+    group: root
+    mode: "0755"
+  notify:
+    - Reload systemd daemon
+
+- name: Deploy snapshot services
+  become: true
+  ansible.builtin.template:
+    src: "zfs-snapshot-{{ item }}.service.j2"
+    dest: "/etc/systemd/system/zfs-snapshot-{{ item }}.service"
+    owner: root
+    group: root
+    mode: "0644"
+  loop:
+    - hourly
+    - daily
+    - monthly
+    - yearly
+  notify:
+    - Reload systemd daemon
+
+- name: Deploy snapshot timers
+  become: true
+  ansible.builtin.template:
+    src: "zfs-snapshot-{{ item }}.timer.j2"
+    dest: "/etc/systemd/system/zfs-snapshot-{{ item }}.timer"
+    owner: root
+    group: root
+    mode: "0644"
+  loop:
+    - hourly
+    - daily
+    - monthly
+    - yearly
+  notify:
+    - Reload systemd daemon
+
+- name: Deploy prune service
+  become: true
+  ansible.builtin.template:
+    src: zfs-prune.service.j2
+    dest: /etc/systemd/system/zfs-prune.service
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - Reload systemd daemon
+
+- name: Deploy prune timer
+  become: true
+  ansible.builtin.template:
+    src: zfs-prune.timer.j2
+    dest: /etc/systemd/system/zfs-prune.timer
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - Reload systemd daemon
+
+# Flush handlers to ensure systemd is reloaded before enabling timers
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
+
+- name: Enable and start snapshot timers
+  become: true
+  ansible.builtin.systemd_service:
+    name: "zfs-snapshot-{{ item }}.timer"
+    state: started
+    enabled: true
+    daemon_reload: false
+  loop:
+    - hourly
+    - daily
+    - monthly
+    - yearly
+
+- name: Enable and start prune timer
+  become: true
+  ansible.builtin.systemd_service:
+    name: zfs-prune.timer
+    state: started
+    enabled: true
+    daemon_reload: false
