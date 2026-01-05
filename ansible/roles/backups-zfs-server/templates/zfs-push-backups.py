@@ -2,6 +2,7 @@
 import subprocess
 import sys
 import argparse
+from datetime import datetime
 
 DEFAULT_user="{{ vault_zfsbackups_user }}"
 DEFAULT_strip_prefix = "{{ backups_zfs_server_local_dataset }}"
@@ -308,7 +309,9 @@ def pushdatasets(host, dataset, user, destination, strip_prefix):
 
     if not common_snapshots:
         # Initial sync: no common snapshots, need full send
+        start_time = datetime.now()
         info(f"No remote snapshots found. Performing initial sync for {dataset}")
+        info(f"Started at {start_time.strftime('%Y-%m-%d %H:%M:%S')}")
         info(f"Local has {len(local_snapshots)} snapshots: {earliest_local} -> {latest_local}")
 
         # Step 1: Full send of earliest snapshot (raw for encrypted datasets)
@@ -330,6 +333,10 @@ def pushdatasets(host, dataset, user, destination, strip_prefix):
             info(f"Successfully pushed all snapshots up to '{latest_local}'")
         else:
             info("Only one snapshot exists, no incremental needed.")
+
+        end_time = datetime.now()
+        elapsed = end_time - start_time
+        info(f"Completed at {end_time.strftime('%Y-%m-%d %H:%M:%S')} (elapsed: {elapsed})")
 
     else:
         # Incremental sync: find latest common snapshot and sync from there
