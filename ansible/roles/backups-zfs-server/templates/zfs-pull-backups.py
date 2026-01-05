@@ -12,16 +12,16 @@ def info(message):
     """Print informational message unless quiet mode is enabled."""
     if not _quiet:
         print("* " + message)
-        
+
 def debug(message):
     """Print debug messages."""
     if _debug and not _quiet:
         print("ℹ️ " + message)
-        
+
 def error(message):
     """Print error messages to stderr."""
     print("🚨 " + message, file=sys.stderr)
-        
+
 def preflight(host, datasets, user, destination):
     info('Checking remote host is up')
     result = subprocess.run(['ssh', f'{user}@{host}', 'ls'],
@@ -103,7 +103,7 @@ def pulldatasets_init(host, datasets, user, destination):
     for dataset in unique_datasets:
         pulldatasets(host, dataset, user, destination)
     print('')
-        
+
 def get_remote_snapshots(host, dataset, user):
     """Get all snapshot names for a dataset on remote host, sorted by creation time."""
     command = f"ssh {user}@{host} zfs list -t snapshot -H -o name -s creation -r {dataset}"
@@ -157,7 +157,7 @@ def get_local_snapshots(dataset):
     except Exception as e:
         error(f"Could not get local snapshots: {e}")
         return []
-        
+
 
 def send_and_receive(send_cmd, receive_cmd):
     """Execute a zfs send | zfs receive pipeline using streaming (no memory buffering)."""

@@ -7,7 +7,7 @@
       href: "https://homeassistant.{{ domain_name }}"
       description: Home Orchestration
       server: homeautomation-docker
-      container: homeassistant 
+      container: homeassistant
 
   - Zigbee2MQTT:
       icon: sh-zigbee2mqtt.png

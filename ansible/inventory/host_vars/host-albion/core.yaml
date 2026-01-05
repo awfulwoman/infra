@@ -12,7 +12,7 @@ host_type: baremetal
 host_name: albion
 host_city: ldn
 host_location: camden
-# host_ipv4: 
+# host_ipv4:
 host_pfqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}"
 host_fqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}.{{ domain_name }}"
 
@@ -47,7 +47,7 @@ tailscale_exit_node: true
 
 zfs:
   fastpool:
-    # Only a single device right now, as this isn't being used to set 
+    # Only a single device right now, as this isn't being used to set
     # up complex storage devices, just single-use nodes
     # TODO: Make this a dictionary of vdevs and devices
     device: /dev/disk/by-id/scsi-SIntenso_SSD_SATAIII_512011020200

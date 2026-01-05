@@ -38,7 +38,7 @@ $ORIGIN {{ bind_iprange_reversed }}.IN-ADDR.ARPA.
       {% endif %}
     {% endif %}
   {% endfor %}
-{% endif %} 
+{% endif %}
 
 ; PTR records - from Ansible inventory
 {% for host in groups[bind_ansible_group] %}

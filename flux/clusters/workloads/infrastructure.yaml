@@ -11,4 +11,3 @@ spec:
   path: ./flux/infrastructure/workloads
   prune: true
   validation: client
-

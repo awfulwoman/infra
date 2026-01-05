@@ -17,7 +17,7 @@ http:
       middlewares:
         - secHeaders
         - https-redirect
-  
+
   middlewares:
     secHeaders:
       headers:

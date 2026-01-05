@@ -59,6 +59,6 @@ all:
         dns:
 
     # Necessary to handle deployment keys
-    sitedeployment: 
+    sitedeployment:
       hosts:
         vm-awfulwoman:

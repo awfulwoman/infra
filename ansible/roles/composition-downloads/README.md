@@ -1,3 +1,3 @@
 # The *arr stack
 
-arr me hearty. 
+arr me hearty.

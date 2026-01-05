@@ -47,4 +47,3 @@
   vars:
     configure_dns_subdomains:
       - freshrss
-

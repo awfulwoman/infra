@@ -5,7 +5,7 @@ services:
     container_name: piper
     ports:
       - "10200:10200"
-    image: rhasspy/wyoming-piper 
+    image: rhasspy/wyoming-piper
     restart: unless-stopped
     env_file: .environment_vars
     labels:

@@ -8,7 +8,7 @@ bootstrap_ubuntu_timezone: "Europe/Amsterdam"
 # -------------------------------------------------------------------
 # NETWORK
 # -------------------------------------------------------------------
-configure_dns_linkdevice_physical: "eth0" 
+configure_dns_linkdevice_physical: "eth0"
 
 # -------------------------------------------------------------------
 # ZFS

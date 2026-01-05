@@ -40,4 +40,3 @@
   vars:
     configure_dns_subdomains:
       - audiobookshelf
-

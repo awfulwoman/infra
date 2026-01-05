@@ -1,10 +1,10 @@
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# IMPORTANT NOTE! 
+# IMPORTANT NOTE!
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# Because we deploy this file via Ansible we must wrap all Jinja 
-# templates in raw blocks to prevent Ansible from greedily 
-# interpreting those cute curly brackets for itself. Yeah, we're 
-# templating templates here. 
+# Because we deploy this file via Ansible we must wrap all Jinja
+# templates in raw blocks to prevent Ansible from greedily
+# interpreting those cute curly brackets for itself. Yeah, we're
+# templating templates here.
 #
 # *Inception theme plays, disconcertingly*
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -12,12 +12,12 @@
 # -------------------------------------------------------------------
 # WET BULB CALCULATIONS
 # -------------------------------------------------------------------
-# Source: Roland Stull (2011) "Wet-Bulb Temperature from Relative 
+# Source: Roland Stull (2011) "Wet-Bulb Temperature from Relative
 # Humidity and Air Temperature"
 # - Journal of Applied Meteorology and Climatology, Vol. 50, No. 11
-# Formula: 
-# Tw = T × arctan[0.151977(RH% + 8.313659)^1/2] 
-# + arctan(T + RH%) - arctan(RH% - 1.676331) 
+# Formula:
+# Tw = T × arctan[0.151977(RH% + 8.313659)^1/2]
+# + arctan(T + RH%) - arctan(RH% - 1.676331)
 # + 0.00391838(RH%)^3/2×arctan(0.023101×RH%) - 4.686035
 # -------------------------------------------------------------------
 - sensor:

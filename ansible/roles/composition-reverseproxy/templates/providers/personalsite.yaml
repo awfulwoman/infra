@@ -19,7 +19,7 @@ http:
       middlewares:
         - secHeaders
         - https-redirect
-  
+
   middlewares:
     redirectOldDomains01:
       redirectRegex:

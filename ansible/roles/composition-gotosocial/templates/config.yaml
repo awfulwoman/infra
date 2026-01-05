@@ -262,7 +262,7 @@ db-sqlite-busy-timeout: "30m"
 # String. Full Database connection string
 #
 # This connection string is only applicable for Postgres. When this field is defined, all other database related configuration field will be ignored. This field allow you to fine tune connection with Postgres
-# 
+#
 # Examples: ["postgres://user:pass@localhost/db?search_path=gotosocial", "postgres://user:pass@localhost:9999/db"]
 # Default: ""
 db-postgres-connection-string: ""

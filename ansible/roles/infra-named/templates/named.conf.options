@@ -19,13 +19,13 @@ options {
   # -----------------------------------------------------------
 
   directory "/var/cache/bind";
-  
+
   # -----------------------------------------------------------
   # Queries
   # -----------------------------------------------------------
 
   # Allow basic DNS querying from these ACLs only
-  allow-query { 
+  allow-query {
     localhost;
     {% if bind_acl_groups is defined %}
       {% for item in bind_acl_groups %}
@@ -39,12 +39,12 @@ options {
   # Query recursion
   # -----------------------------------------------------------
 
-  # Allow this DNS server to recursively query other servers if 
+  # Allow this DNS server to recursively query other servers if
   # it doesn't have the answer in its cache.
   recursion yes;
 
   # Only allow recursion-related queries from these ACL groups
-  allow-recursion { 
+  allow-recursion {
   {% if bind_acl_groups is defined %}
     {% for item in bind_acl_groups %}
       {{ item.name }};
@@ -57,10 +57,10 @@ options {
   # Query forwarding
   # -----------------------------------------------------------
 
-  # Queries for anything but the authoritiative domain will be 
-  # forwarded to these DNS servers if this server does not have 
+  # Queries for anything but the authoritiative domain will be
+  # forwarded to these DNS servers if this server does not have
   # the answer in its cache.
-  forwarders { 
+  forwarders {
   {% if bind_forwarders is defined %}
     {% for item in bind_forwarders %}
       {{ item }};
@@ -68,8 +68,8 @@ options {
   {% endif %}
   };
 
-  # Don't try to resolve DNS queries via this NS - just forward 
-  # them. Beware! - if the forwarders are down, the NS will not 
+  # Don't try to resolve DNS queries via this NS - just forward
+  # them. Beware! - if the forwarders are down, the NS will not
   # answer non-authoritative queries at all!
   # forward only;
 
@@ -78,7 +78,7 @@ options {
 zone "{{ bind_domain }}" {
   type primary;
   file "/etc/bind/zones/db.{{ bind_domain }}.zone";
-  
+
   # -----------------------------------------------------------
   # DNSSEC
   # -----------------------------------------------------------
@@ -93,7 +93,7 @@ zone "{{ bind_domain }}" {
 
   # Allow zone info to be copied to a secondary NS
   allow-transfer {
-    localhost; 
+    localhost;
     {% if bind_acl_groups is defined %}
       {% for item in bind_acl_groups %}
         {{ item.name }};

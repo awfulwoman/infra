@@ -3,4 +3,3 @@
   ansible.builtin.apt:
     package:
       - isc-dhcp-server
-

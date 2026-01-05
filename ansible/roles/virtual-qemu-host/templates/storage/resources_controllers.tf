@@ -24,7 +24,7 @@ resource "libvirt_domain" "controllervm" {
       volume_id = libvirt_volume.controllervm-storage-volume-qcow2[disk.value].id
     }
   }
-  
+
   console {
     type = "pty"
     target_type = "serial"

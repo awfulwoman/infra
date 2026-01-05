@@ -1,6 +1,6 @@
 [Unit]
 Description="Run ansible-pull after wake from suspend or hibernate"
-After=basic.target network-online.target sleep.target hibernate.target suspend-then-hibernate.target hybrid-sleep.target 
+After=basic.target network-online.target sleep.target hibernate.target suspend-then-hibernate.target hybrid-sleep.target
 
 [Service]
 User={{ ansible_user }}
@@ -9,9 +9,8 @@ Group={{ ansible_user }}
 Environment="{{ env_item.key }}={{ env_item.value }}"
 {% endfor %}
 Type=oneshot
-ExecStart={{ ansiblepull_workdir }}/{{ ansiblepull_script_name }} 
+ExecStart={{ ansiblepull_workdir }}/{{ ansiblepull_script_name }}
 TimeoutSec=0
 
 [Install]
-WantedBy=sleep.target hibernate.target suspend-then-hibernate.target hybrid-sleep.target 
-
+WantedBy=sleep.target hibernate.target suspend-then-hibernate.target hybrid-sleep.target

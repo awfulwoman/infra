@@ -7,4 +7,3 @@ users:
     ssh_import_id:
       - gh:awfulwoman
     lock_passwd: false
-

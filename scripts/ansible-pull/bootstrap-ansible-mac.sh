@@ -26,8 +26,3 @@ which ansible
 if [[ $? != 0 ]] ; then
   brew install ansible
 fi
-
-
-
-
-

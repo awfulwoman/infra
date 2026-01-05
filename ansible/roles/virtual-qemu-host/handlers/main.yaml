@@ -1,6 +1,6 @@
 - name: Restart libvirtd
   become: true
-  service: 
+  service:
     name: libvirtd
     state: restarted
 

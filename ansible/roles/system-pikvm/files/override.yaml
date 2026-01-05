@@ -96,4 +96,3 @@ kvmd:
                 #- ["#Server 3", server2_led, server2_switch|Switch]
                 #- ["#Server 4", server3_led, server3_switch|Switch]
                 #- ["#Server 5", server0_led, server0_switch|Switch]
-

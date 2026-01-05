@@ -70,7 +70,7 @@
 
 - name: Get I2C status
   ansible.builtin.shell: "raspi-config nonint get_i2c"
-  register: i2c_status 
+  register: i2c_status
   changed_when: false
 
 - name: Enable I2C

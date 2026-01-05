@@ -23,15 +23,15 @@ variable "controllervm_vcpus" {
   default =  4
 }
 
-# Notes: 
-#   Needs to be within the `network_cidr` address space. 
+# Notes:
+#   Needs to be within the `network_cidr` address space.
 #   Can't be the gateway (normally .1) or the boradcast (normally .254) address in a /24 space.
 variable "controllervm_ip" {
   type    = list(string)
   description = "List of IP's to assign to the Guest VM."
   default = ["192.168.100.10"]
 }
- 
+
 variable "controllervm_storage_volume_size" {
   type    = number
   description = "The Guest VM will be provided additional storage (in bytes), so data is not saved to the base disk."

@@ -36,7 +36,7 @@ packages:
 Imported values can be overridden as necessary:
 
 ```yaml
-substitutions:  
+substitutions:
   name: "project-mcproject"
   friendly_name: "A PROJECT"
   comment: "A COMMENT"

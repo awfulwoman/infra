@@ -2,7 +2,7 @@
 
 Hello, good evening, etc. Welcome to the repo where I keep all my home infrastructure.
 
-Yes indeed, *everything* I have on my home infra is controlled by this repo. 
+Yes indeed, *everything* I have on my home infra is controlled by this repo.
 
 Most of it is Ansible, as it's great for configuring individual machines, but you'll find some Terraform, Kubernetes, and ESPhome configs in there as well.
 

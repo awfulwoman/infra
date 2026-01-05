@@ -1,5 +1,5 @@
 # https://www.jeffgeerling.com/blog/2020/ansible-best-practices-using-project-local-collections-and-roles
-# ansible-galaxy install -r ansible/meta/requirements.yaml 
+# ansible-galaxy install -r ansible/meta/requirements.yaml
 # ansible-galaxy collection install -r ansible/meta/requirements.yaml
 roles:
   - name: weareinteractive.environment

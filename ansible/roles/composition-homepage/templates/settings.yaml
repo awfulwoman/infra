@@ -3,7 +3,7 @@ description: Just some stuff.
 target: _blank
 color: slate
 useEqualHeights: true
-background: 
+background:
   image: /images/meteor.jpg
   blur: sm # sm, "", md, xl... see https://tailwindcss.com/docs/backdrop-blur
   saturate: 50 # 0, 50, 100... see https://tailwindcss.com/docs/backdrop-saturate

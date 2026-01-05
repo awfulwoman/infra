@@ -1,7 +1,7 @@
 - name: Add qemu-guest
   become: true
   ansible.builtin.apt:
-    name: 
+    name:
       - qemu-guest
     state: present
   notify: Reboot host

@@ -12,7 +12,7 @@
     longitude: 13.4050
     timezone: Europe/Berlin # optional
     units: metric # or imperial
-    cache: 15 
+    cache: 15
 
 - resources:
     memory: true

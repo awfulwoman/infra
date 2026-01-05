@@ -119,11 +119,11 @@ vault_ironwolfpro_16tb_beta: !vault |
 # smartmontools_drives:
 #   - /dev/disk/by-id/scsi-SATA_CT1000BX500SSD1_2216E629AC18
 #   - /dev/disk/by-id/scsi-SATA_SanDisk_SDSSDH3_22087N455301
-#   - /dev/disk/by-id/scsi-SATA_ST4000VN008-2DR1_ZDHAMGT1 
-#   - /dev/disk/by-id/scsi-SATA_ST4000VN008-2DR1_ZDHB6E35 
+#   - /dev/disk/by-id/scsi-SATA_ST4000VN008-2DR1_ZDHAMGT1
+#   - /dev/disk/by-id/scsi-SATA_ST4000VN008-2DR1_ZDHB6E35
 #   - /dev/disk/by-id/scsi-SATA_ST4000VN008-2DR1_ZDHB880S
 #   - /dev/disk/by-id/scsi-SATA_WDC_WD40EFZX-68A_WD-WX12DA08KR45
-#   - /dev/disk/by-id/scsi-SATA_WDC_WD40EFZX-68A_WD-WX12DA0R1V78 
+#   - /dev/disk/by-id/scsi-SATA_WDC_WD40EFZX-68A_WD-WX12DA0R1V78
 #   - /dev/disk/by-id/scsi-SATA_WDC_WD40EFZX-68A_WD-WX82DA1RHH08
 #   - "/dev/disk/by-id/{{ vault_ironwolfpro_16tb_alpha }}"
 #   - "/dev/disk/by-id/{{ vault_ironwolfpro_16tb_beta }}"

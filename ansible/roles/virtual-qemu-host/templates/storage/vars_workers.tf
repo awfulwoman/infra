@@ -22,8 +22,8 @@ variable "workervm_vcpus" {
   default =  2
 }
 
-# Notes: 
-#   Needs to be within the `network_cidr` address space. 
+# Notes:
+#   Needs to be within the `network_cidr` address space.
 #   Can't be the gateway (normally .1) or the broadcast (normally .254) address in a /24 space.
 variable "workervm_ip" {
   type    = list(string)

@@ -49,7 +49,7 @@ export GITHUB_TOKEN=<gh-token>
 Then bootstrap Flux into the cluster.
 
 ```bash
-flux bootstrap github \  
+flux bootstrap github \
   --token-auth \
   --owner=awfulwoman \
   --repository=infra \

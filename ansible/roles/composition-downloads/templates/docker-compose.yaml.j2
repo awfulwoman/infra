@@ -9,7 +9,7 @@ services:
     restart: unless-stopped
     env_file: .environment_vars
     environment:
-      - "TZ=Europe/Berlin"      
+      - "TZ=Europe/Berlin"
       - PUID=1000
       - PGID=1000
     labels:
@@ -52,7 +52,7 @@ services:
     restart: unless-stopped
     env_file: .environment_vars
     environment:
-      - "TZ=Europe/Berlin"      
+      - "TZ=Europe/Berlin"
       - "PUID=1000"
       - "PGID=1000"
       - "UMASK=002"
@@ -79,7 +79,7 @@ services:
     restart: unless-stopped
     env_file: .environment_vars
     environment:
-      - "TZ=Europe/Berlin"      
+      - "TZ=Europe/Berlin"
       - "PUID=1000"
       - "PGID=1000"
       - "UMASK=002"
@@ -106,7 +106,7 @@ services:
     restart: unless-stopped
     env_file: .environment_vars
     environment:
-      - "TZ=Europe/Berlin"      
+      - "TZ=Europe/Berlin"
       - PUID=1000
       - PGID=1000
     labels:
@@ -159,7 +159,7 @@ services:
     network_mode: "service:gluetun"
     depends_on:
       - gluetun
-  
+
   gluetun:
     container_name: gluetun
     ports:
@@ -167,9 +167,9 @@ services:
       - 127.0.0.1:8080:8080/tcp # Qbittorrent
       - 127.0.0.1:6881:6881/tcp # Qbittorrent
       - 127.0.0.1:6881:6881/udp # Qbittorrent
-      - 127.0.0.1:9091:9091 # Transmission 
-      - 127.0.0.1:51413:51413 # Transmission 
-      - 127.0.0.1:51413:51413/udp # Transmission 
+      - 127.0.0.1:9091:9091 # Transmission
+      - 127.0.0.1:51413:51413 # Transmission
+      - 127.0.0.1:51413:51413/udp # Transmission
     cap_add:
       - NET_ADMIN
     image: qmcgaw/gluetun
@@ -222,7 +222,7 @@ services:
     environment:
       - LIBRO_FM_USERNAME={{ vault_librofm_username }}
       - LIBRO_FM_PASSWORD={{ vault_librofm_password }}
-      # extra optional: setting these enables them, dont add them if you dont want them. 
+      # extra optional: setting these enables them, dont add them if you dont want them.
       - LOG_LEVEL=INFO
       - SYNC_INTERVAL=d
       - FORMAT=M4B_CONVERT_FALLBACK

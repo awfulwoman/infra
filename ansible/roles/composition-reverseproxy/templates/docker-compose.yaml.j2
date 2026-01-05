@@ -78,7 +78,7 @@ services:
 {% if reverseproxy_use_letsencrypt %}
       - "traefik.http.routers.api.tls=true"
       - "traefik.http.routers.api.tls.certresolver=letsencrypt"
-{% endif %}  
+{% endif %}
     volumes:
       - "{{ composition_config }}/providers:/etc/traefik/providers"
       - "{{ composition_config }}/traefik.yaml:/etc/traefik/traefik.yaml"

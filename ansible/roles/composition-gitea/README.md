@@ -1,3 +1,3 @@
 # Gitea
 
-Git repo storage and pipelines. 
+Git repo storage and pipelines.

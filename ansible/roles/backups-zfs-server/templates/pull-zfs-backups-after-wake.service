@@ -1,7 +1,7 @@
 [Unit]
 Description="Run zfs-backup-pull after wake from suspend or hibernate"
 Wants=network-online.target
-After=basic.target network-online.target sleep.target hibernate.target suspend-then-hibernate.target hybrid-sleep.target 
+After=basic.target network-online.target sleep.target hibernate.target suspend-then-hibernate.target hybrid-sleep.target
 
 [Service]
 User={{ ansible_user }}
@@ -11,5 +11,4 @@ ExecStart={{ backups_zfs_server_script_path }}
 TimeoutSec=0
 
 [Install]
-WantedBy=sleep.target hibernate.target suspend-then-hibernate.target hybrid-sleep.target 
-
+WantedBy=sleep.target hibernate.target suspend-then-hibernate.target hybrid-sleep.target

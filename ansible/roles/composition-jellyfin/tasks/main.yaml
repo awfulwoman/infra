@@ -44,4 +44,4 @@
   vars:
     configure_dns_subdomains:
       - jellyfin
-      - jellyfin-vue  
+      - jellyfin-vue

@@ -71,7 +71,7 @@ logbook:
     domains:
       - sun
 
-# Prevent these entities from being written to storage. 
+# Prevent these entities from being written to storage.
 # Quite useful on a Raspberry Pi SD card to save write wear.
 recorder:
   exclude:

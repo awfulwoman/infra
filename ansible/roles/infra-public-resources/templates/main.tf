@@ -49,9 +49,9 @@ resource "digitalocean_domain" "{{ item.id }}" {
 {% for item in infra_publicresources_domains %}
 {% if item.domain is defined %}
 {% for record in item.records %}
-{% if (item.domain is defined ) 
-   and (record.id is defined) 
-   and (record.type is defined) 
+{% if (item.domain is defined )
+   and (record.id is defined)
+   and (record.type is defined)
    and (record.value is defined) %}
 
 resource "digitalocean_record" "{{ record.id }}" {
@@ -156,7 +156,7 @@ resource "digitalocean_reserved_ip_assignment" "{{ ipassignment.id }}" {
 
 resource "digitalocean_firewall" "{{ firewall.id }}" {
   name = "{{ firewall.id }}"
-  
+
   {% if firewall.tags is defined %}
   tags = [
     {% for tag in firewall.tags %}

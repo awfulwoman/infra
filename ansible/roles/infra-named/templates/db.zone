@@ -23,7 +23,7 @@ $ORIGIN    {{ bind_domain }}.
       {{- '%-40s' | format(record.name) }}{% if record.ttl is defined %} {{ record.ttl }}{% endif %} IN      A         {{ record.ip }}
     {% endif %}
   {% endfor %}
-{% endif %} 
+{% endif %}
 {% if bind_records_a is defined %}
   {% for record in bind_records_a %}
     {% if record.ip is defined %}

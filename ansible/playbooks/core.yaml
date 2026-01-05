@@ -1,3 +1,2 @@
 - import_playbook: virtual/core.yaml
 - import_playbook: baremetal/core.yaml
-

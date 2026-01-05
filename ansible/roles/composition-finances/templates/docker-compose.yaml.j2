@@ -59,7 +59,7 @@ services:
       - "{{ default_docker_network }}"
     depends_on:
       - firefly_iii_core
-    
+
 networks:
   "{{ default_docker_network }}":
     external: true

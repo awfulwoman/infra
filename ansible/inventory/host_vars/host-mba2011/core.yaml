@@ -5,5 +5,4 @@ ansible_become_password: "{{ vault_personal_password }}"
 host_type: baremetal
 
 # --- NETWORK -------------
-configure_dns_linkdevice_physical: "wlp1s0" 
-
+configure_dns_linkdevice_physical: "wlp1s0"

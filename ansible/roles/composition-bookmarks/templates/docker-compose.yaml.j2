@@ -50,7 +50,7 @@ services:
     volumes:
       - "{{ composition_config }}/linkwarden/pgdata:/var/lib/postgresql/data"
     networks:
-      - "{{ default_docker_network }}"      
+      - "{{ default_docker_network }}"
   linkwarden-meilisearch:
     container_name: linkwarden-meilisearch
     image: getmeili/meilisearch:v1.12.8

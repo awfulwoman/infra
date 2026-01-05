@@ -37,4 +37,3 @@ zfs:
           encryption: aes-256-gcm
           keylocation: file:///root/zfs/passphrase
           keyformat: passphrase
-

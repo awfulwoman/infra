@@ -43,4 +43,3 @@ data "template_file" "controllervm_cloud_init_template" {
     libvirt_pool.pool,
   ]
 }
-
