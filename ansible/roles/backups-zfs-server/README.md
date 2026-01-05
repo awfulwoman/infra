@@ -8,11 +8,7 @@ Note the _pulling_ and _pushing_ of datasets. The other hosts are deliberately n
 
 ## Policy-driven backups
 
-In a host's `zfs` config each and every dataset can have the `importance` attribute marked. This indicates how to handle the backup and retention of that dataset.
-
-- `none` (default): this dataset will not have snapshots enabled and will not be pulled to the central backup server.
-- `low`: this dataset will enable daily snapshots and retain them for one week. The dataset and all snapshots will be pulled to the central backup server.
-- `critical`: this dataset will enable hourly snapshots and will retain them on a weekly, monthly, and year basis. The dataset and all snapshots will be pulled to the central backup server, and from there pushed to one or more off-site backup locations.
+In a host's `zfs` config each and every dataset can have the `importance` attribute marked. This is utilised by both the `backup-zfs-*` roles and the `system-zfs-policy` role.
 
 ## Commands
 

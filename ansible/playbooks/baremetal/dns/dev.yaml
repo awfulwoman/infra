@@ -1,4 +1,4 @@
-- name: DNS
+- name: DNS development playbook
   hosts: dns
   roles:
     # - role: weareinteractive.environment
@@ -6,8 +6,9 @@
     # - role: script-share-personal-site
     # - role: infra-named
     # - role: infra-dhcpd
-    - role: infothrill.nullmailer
-      become: true
+    # - role: infothrill.nullmailer
+    #   become: true
+    - role: system-zfs-policy
 
   handlers:
     - name: Reboot host
