@@ -31,20 +31,28 @@ The top level items underneath the `zfs` item are always pool names.
 
 Below each pool datasets are defined with the `dataset` item.
 
-
 ## Snapshots
 
 ZFS in this infrastructure is policy-driven. This means that policies are defined and then applied to datasets. Policies are assigned to datasets using the `importance` item.
 
 - `none` (default): this dataset will not have snapshots enabled and will not be pulled to the central backup server.
 - `low`: this dataset will enable daily snapshots and retain them for one week. The dataset and all snapshots will be pulled to the central backup server.
-- `critical`: this dataset will enable hourly snapshots and will retain them on a weekly, monthly, and year basis. The dataset and all snapshots will be pulled to the central backup server, and from there pushed to one or more off-site backup locations.
+- `critical`: this dataset will enable more frequent snapshots and will retain them for a longer duration. The dataset and all snapshots will be pulled to the central backup server, and from there pushed to one or more off-site backup locations.
 
 The `system-zfs` Ansible role reads the contents of a hosts `zfs` dictionary and creates pools and datasets.
 
-Another, as yet undefined role (likely to be called `system-zfs-snapshots`), sets up ZFS snapshots via the policy system.
+Another, as yet unbuilt role (likely to be called `system-zfs-policy`), wil set up ZFS snapshots via the policy system.
 
-Sanoid is currently being used but will soon be removed, in favour of the new role.
+`sanoid` is currently being used for policy setting but will soon be removed, in favour of the new role.
+
+## Policy definitions
+
+| Policy ID  | Frequently | Hourly | Monthly | Yearly | Autosnap | Autoprune |
+| ---------- | ---------- | ------ | ------- | ------ | -------- | --------- |
+| `none`     | 0          | 0      | 0       | 0      | FALSE    | FALSE     |
+| `low`      | 0          | 3      | 1       | 0      | TRUE     | TRUE      |
+| `high`     | 0          | 24     | 1       | 1      | TRUE     | TRUE      |
+| `critical` | 0          | 36     | 3       | 5      | TRUE     | TRUE      |
 
 ## Replication
 
