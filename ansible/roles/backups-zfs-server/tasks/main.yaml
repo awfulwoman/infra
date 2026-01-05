@@ -9,6 +9,7 @@
       - zfsutils-linux
       - acl
       - mosquitto-clients
+      - pv  # For bandwidth limiting in zfs-push-backups
     state: present
 
 # TODO: is this even needed?

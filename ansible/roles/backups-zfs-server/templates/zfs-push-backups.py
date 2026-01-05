@@ -7,6 +7,7 @@ DEFAULT_user="{{ vault_zfsbackups_user }}"
 DEFAULT_strip_prefix = "{{ backups_zfs_server_local_dataset }}"
 DEFAULT_debug = False
 DEFAULT_quiet = False
+DEFAULT_bwlimit = None  # No bandwidth limit by default
 
 def info(message):
     """Print informational message unless quiet mode is enabled."""
@@ -24,6 +25,19 @@ def error(message):
 
 def preflight(host, datasets, user, destination, strip_prefix):
     try:
+        # Check pv is available if bandwidth limiting is requested
+        if _bwlimit:
+            debug('Checking pv is installed for bandwidth limiting')
+            result = subprocess.run(['which', 'pv'],
+                    shell=False,
+                    check=False,
+                    capture_output=True
+                    )
+            if result.returncode != 0:
+                error('pv is required for bandwidth limiting but not found.')
+                sys.exit(1)
+            info(f'Bandwidth limit set to {_bwlimit}')
+
         info('Checking remote host is up')
         result = subprocess.run(['ssh', f'{user}@{host}', 'ls'],
                 shell=False,
@@ -176,12 +190,18 @@ def ensure_remote_parent_exists(host, dataset, user):
 
 
 def send_and_receive(send_cmd, receive_cmd):
-    """Execute a zfs send | ssh zfs receive pipeline using streaming (no memory buffering)."""
+    """Execute a zfs send | ssh zfs receive pipeline using streaming (no memory buffering).
+
+    If _bwlimit is set, inserts pv for bandwidth throttling:
+        zfs send | pv -L <rate> | ssh zfs receive
+    """
     try:
         debug(f"{send_cmd}")
+        if _bwlimit:
+            debug(f"pv -q -L {_bwlimit}")
         debug(f"{receive_cmd}")
 
-        # Create a true pipeline: send.stdout -> receive.stdin
+        # Create a true pipeline: send.stdout -> [pv ->] receive.stdin
         # This streams data directly without buffering in memory
         send_proc = subprocess.Popen(
             send_cmd.split(' '),
@@ -189,17 +209,43 @@ def send_and_receive(send_cmd, receive_cmd):
             stderr=subprocess.PIPE
         )
 
-        receive_proc = subprocess.Popen(
-            receive_cmd.split(' '),
-            stdin=send_proc.stdout,
-            stderr=subprocess.PIPE
-        )
+        # If bandwidth limiting is enabled, insert pv in the pipeline
+        if _bwlimit:
+            # pv -q (quiet) -L <rate> limits bandwidth
+            # Rate format: 100k, 10m, 1g for KB/s, MB/s, GB/s
+            pv_proc = subprocess.Popen(
+                ['pv', '-q', '-L', _bwlimit],
+                stdin=send_proc.stdout,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE
+            )
+            # Allow send_proc to receive SIGPIPE if pv exits
+            send_proc.stdout.close()
 
-        # Allow send_proc to receive SIGPIPE if receive_proc exits
-        send_proc.stdout.close()
+            receive_proc = subprocess.Popen(
+                receive_cmd.split(' '),
+                stdin=pv_proc.stdout,
+                stderr=subprocess.PIPE
+            )
+            # Allow pv_proc to receive SIGPIPE if receive_proc exits
+            pv_proc.stdout.close()
+        else:
+            pv_proc = None
+            receive_proc = subprocess.Popen(
+                receive_cmd.split(' '),
+                stdin=send_proc.stdout,
+                stderr=subprocess.PIPE
+            )
+            # Allow send_proc to receive SIGPIPE if receive_proc exits
+            send_proc.stdout.close()
 
         # Wait for receive to complete and capture stderr
         _, receive_stderr = receive_proc.communicate()
+
+        # Wait for pv if it was used
+        pv_stderr = None
+        if pv_proc:
+            _, pv_stderr = pv_proc.communicate()
 
         # Now wait for send to complete
         _, send_stderr = send_proc.communicate()
@@ -208,6 +254,12 @@ def send_and_receive(send_cmd, receive_cmd):
             error(f"zfs send failed with code {send_proc.returncode}")
             if send_stderr:
                 debug(send_stderr.decode())
+            return False
+
+        if pv_proc and pv_proc.returncode != 0:
+            error(f"pv (bandwidth limiter) failed with code {pv_proc.returncode}")
+            if pv_stderr:
+                debug(pv_stderr.decode())
             return False
 
         if receive_proc.returncode != 0:
@@ -307,10 +359,12 @@ if __name__ == "__main__":
     parser.add_argument('--strip-prefix', default=DEFAULT_strip_prefix, help='Prefix to strip from dataset paths (default: %(default)s)')
     parser.add_argument('--debug', default=DEFAULT_debug, help='Debug code', action=argparse.BooleanOptionalAction)
     parser.add_argument('--quiet', '-q', default=DEFAULT_quiet, help='Suppress informational output (errors still shown)', action=argparse.BooleanOptionalAction)
+    parser.add_argument('--bwlimit', default=DEFAULT_bwlimit, help='Bandwidth limit for transfers (requires pv). Format: 100k, 10m, 1g for KB/s, MB/s, GB/s')
     args = parser.parse_args()
 
     _quiet = args.quiet
     _debug = args.debug
+    _bwlimit = args.bwlimit
 
     if not args.user or not args.host or not args.datasets or not args.destination:
         print("Usage: zfs-push-backups --host <host> --datasets <space-separated list> --destination <remote-dataset> [--user <user>]", file=sys.stderr)
