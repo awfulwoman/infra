@@ -133,59 +133,53 @@ def get_send_size(dataset, snapshot, incremental_from=None):
 
 
 def preflight(host, datasets, user, destination, strip_prefix):
-    try:
-        # Check pv is available if bandwidth limiting is requested
-        if _bwlimit:
-            debug('Checking pv is installed for bandwidth limiting')
-            result = subprocess.run(['which', 'pv'],
-                    shell=False,
-                    check=False,
-                    capture_output=True
-                    )
-            if result.returncode != 0:
-                error('pv is required for bandwidth limiting but not found.')
-                sys.exit(1)
-            info(f'Bandwidth limit set to {_bwlimit}')
-
-        info('Checking remote host is up')
-        result = subprocess.run(['ssh', f'{user}@{host}', 'ls'],
+    # Check pv is available if bandwidth limiting is requested
+    if _bwlimit:
+        debug('Checking pv is installed for bandwidth limiting')
+        result = subprocess.run(['which', 'pv'],
                 shell=False,
-                check=True,
+                check=False,
                 capture_output=True
                 )
         if result.returncode != 0:
-            error(f'Could not connect to {host}')
-        else:
-            info(f'{host} is up')
+            error('pv is required for bandwidth limiting but not found.')
+            sys.exit(1)
+        info(f'Bandwidth limit set to {_bwlimit}')
 
-        for dataset in datasets:
-            debug(f'Checking local source {dataset} exists')
-            result = subprocess.run(
-                ['zfs', 'list', dataset],
-                shell=False,
-                check=True,
-                capture_output=True
-                )
-            if result.returncode != 0:
-                error(f'{dataset} does not exist')
-            else:
-                debug(f'{dataset} exists')
-
-        debug(f'Checking remote destination dataset {destination} exists')
-        result = subprocess.run(['ssh', f'{user}@{host}', f'zfs list {destination}'],
-                shell=False,
-                check=True,
-                capture_output=True
-                )
-        if result.returncode != 0:
-            error(f'Remote destination ({destination}) does not exist')
-        else:
-            debug(f'Destination {destination} exists')
-
-    except subprocess.CalledProcessError as e:
-        error("Errors detected in preflight checks. Aborting.")
-        debug(f"{e}")
+    info('Checking remote host is up')
+    result = subprocess.run(['ssh', f'{user}@{host}', 'ls'],
+            shell=False,
+            check=False,
+            capture_output=True
+            )
+    if result.returncode != 0:
+        error(f'Could not connect to {host}\n  ssh: {result.stderr.decode().strip()}')
         sys.exit(1)
+    info(f'{host} is up')
+
+    for dataset in datasets:
+        debug(f'Checking local source {dataset} exists')
+        result = subprocess.run(
+            ['zfs', 'list', dataset],
+            shell=False,
+            check=False,
+            capture_output=True
+            )
+        if result.returncode != 0:
+            error(f'Local dataset {dataset} does not exist\n  zfs: {result.stderr.decode().strip()}')
+            sys.exit(1)
+        debug(f'{dataset} exists')
+
+    debug(f'Checking remote destination dataset {destination} exists')
+    result = subprocess.run(['ssh', f'{user}@{host}', f'zfs list {destination}'],
+            shell=False,
+            check=False,
+            capture_output=True
+            )
+    if result.returncode != 0:
+        error(f'Remote destination {destination} does not exist\n  zfs: {result.stderr.decode().strip()}')
+        sys.exit(1)
+    debug(f'Destination {destination} exists')
 
     pushdatasets_init(host, datasets, user, destination, strip_prefix)
 
@@ -380,8 +374,7 @@ def send_and_receive(send_cmd, receive_cmd):
         return True
 
     except Exception as e:
-        error(f"Transfer failed!")
-        debug(f'{e}')
+        error(f"Transfer failed: {e}")
         return False
 
 

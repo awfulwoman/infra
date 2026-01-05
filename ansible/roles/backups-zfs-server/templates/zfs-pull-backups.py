@@ -23,45 +23,40 @@ def error(message):
     print("🚨 " + message, file=sys.stderr)
         
 def preflight(host, datasets, user, destination):
-    try:
-        
-        result = subprocess.run(['ssh', f'{user}@{host}', 'ls'],
-                shell=False, 
-                check=True,
-                capture_output=True
-                )
-        if result.returncode != 0:
-            error(f'Could not connect to {host}')
-        else:
-            info(f'{host} is up')
-    
-        for dataset in datasets:
-            result = subprocess.run(
-                ['ssh', f'{user}@{host}', f'zfs list {dataset}'],
-                shell=False, 
-                check=True,
-                capture_output=True
-                )
-        if result.returncode != 0:
-            error(f'{dataset} does not exist')
-        else:
-            debug(f'{dataset} exists')
-            
-        
-        result = subprocess.run(['zfs', 'list', f'{destination}'],
-                shell=False, 
-                check=True,
-                capture_output=True
-                )
-        if result.returncode != 0:
-            error(f'Local destination ({dataset}) does not exist')
-        else:
-            debug(f'Destination {destination} exists')
-            
-    except subprocess.CalledProcessError as e:        
-        error("Errors detected in preflight checks. Aborting.")
-        debug(f"{e}")
+    info('Checking remote host is up')
+    result = subprocess.run(['ssh', f'{user}@{host}', 'ls'],
+            shell=False,
+            check=False,
+            capture_output=True
+            )
+    if result.returncode != 0:
+        error(f'Could not connect to {host}\n  ssh: {result.stderr.decode().strip()}')
         sys.exit(1)
+    info(f'{host} is up')
+
+    for dataset in datasets:
+        debug(f'Checking remote source {dataset} exists')
+        result = subprocess.run(
+            ['ssh', f'{user}@{host}', f'zfs list {dataset}'],
+            shell=False,
+            check=False,
+            capture_output=True
+            )
+        if result.returncode != 0:
+            error(f'Remote dataset {dataset} does not exist\n  zfs: {result.stderr.decode().strip()}')
+            sys.exit(1)
+        debug(f'{dataset} exists')
+
+    debug(f'Checking local destination {destination} exists')
+    result = subprocess.run(['zfs', 'list', f'{destination}'],
+            shell=False,
+            check=False,
+            capture_output=True
+            )
+    if result.returncode != 0:
+        error(f'Local destination {destination} does not exist\n  zfs: {result.stderr.decode().strip()}')
+        sys.exit(1)
+    debug(f'Destination {destination} exists')
 
     pulldatasets_init(host, datasets, user, destination)
 
@@ -85,7 +80,7 @@ def get_remote_child_datasets(host, dataset, user):
         return datasets
 
     except subprocess.CalledProcessError as e:
-        error(f"Could not list remote datasets:\n", e.stderr.decode())
+        error(f"Could not list remote datasets:\n{e.stderr.decode()}")
         sys.exit(1)
 
 
@@ -131,7 +126,7 @@ def get_remote_snapshots(host, dataset, user):
         return direct_snapshots
 
     except subprocess.CalledProcessError as e:
-        error("Could not list remote snapshots:\n", e.stderr.decode())
+        error(f"Could not list remote snapshots:\n{e.stderr.decode()}")
         sys.exit(1)
 
 
@@ -208,8 +203,7 @@ def send_and_receive(send_cmd, receive_cmd):
         return True
 
     except Exception as e:
-        error(f"Transfer failed!")
-        debug(f'{e}')
+        error(f"Transfer failed: {e}")
         return False
 
 
