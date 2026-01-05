@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(head:*)",
+      "Bash(git -C /Users/charlie/Code/infra:*)",
+      "Bash(find:*)",
+      "Bash(wc:*)",
+      "Bash(mkdir:*)",
+      "Bash(done)",
+      "Bash(grep:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(ls:*)"
+    ]
+  },
+  "outputStyle": "Explanatory"
+}

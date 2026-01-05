@@ -38,7 +38,7 @@ The primary configuration management tool. Structure:
 - **`roles/`**: ~97 roles following naming conventions:
   - `bootstrap-*`: Roles to setup essential configurations of a host type (personal machines, Ubuntu servers)
   - `composition-*`: Docker Compose applications (roughly 39 roles - homeassistant, gitea, jellyfin, etc.)
-  - `backups-*`: The ZFS backup infrastructure
+  - `backups-zfs-*`: The ZFS backup infrastructure
   - `system-*`: System configurations (docker, zfs, security)
   - `server-*`: The server half of client-server pairs
   - `client-*`: The client half of client-server pairs
@@ -74,7 +74,7 @@ Devices must define substitutions for secrets since secrets can't be used inside
 
 ### Terraform
 
-Located in various places for QEMU/libvirt virtual machine provisioning.
+Located in various places for QEMU/libvirt virtual machine provisioning, both on the local network and on public hosting (Digital Ocean).
 
 ### Documentation (`docs/`)
 
