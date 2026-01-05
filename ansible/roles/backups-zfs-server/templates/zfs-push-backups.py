@@ -2,7 +2,8 @@
 import subprocess
 import sys
 import argparse
-from datetime import datetime
+from datetime import datetime, timedelta
+import re
 
 DEFAULT_user="{{ vault_zfsbackups_user }}"
 DEFAULT_strip_prefix = "{{ backups_zfs_server_local_dataset }}"
@@ -23,6 +24,113 @@ def debug(message):
 def error(message):
     """Print error messages."""
     print("🚨 " + message)
+
+
+def parse_size_to_bytes(size_str):
+    """Parse a human-readable size string to bytes.
+
+    Supports formats like: 1.5G, 500M, 100K, 1T, 1.2GiB, etc.
+    """
+    size_str = size_str.strip().upper()
+    match = re.match(r'^([\d.]+)\s*([KMGTP])?I?B?$', size_str)
+    if not match:
+        return None
+
+    value = float(match.group(1))
+    unit = match.group(2) or ''
+
+    multipliers = {
+        '': 1,
+        'K': 1024,
+        'M': 1024 ** 2,
+        'G': 1024 ** 3,
+        'T': 1024 ** 4,
+        'P': 1024 ** 5,
+    }
+    return int(value * multipliers.get(unit, 1))
+
+
+def format_bytes(size_bytes):
+    """Format bytes as human-readable string."""
+    for unit in ['B', 'KiB', 'MiB', 'GiB', 'TiB']:
+        if abs(size_bytes) < 1024:
+            return f"{size_bytes:.1f} {unit}"
+        size_bytes /= 1024
+    return f"{size_bytes:.1f} PiB"
+
+
+def format_duration(seconds):
+    """Format seconds as human-readable duration."""
+    if seconds < 60:
+        return f"{int(seconds)}s"
+    elif seconds < 3600:
+        mins = int(seconds // 60)
+        secs = int(seconds % 60)
+        return f"{mins}m {secs}s"
+    else:
+        hours = int(seconds // 3600)
+        mins = int((seconds % 3600) // 60)
+        return f"{hours}h {mins}m"
+
+
+def get_send_size(dataset, snapshot, incremental_from=None):
+    """Get estimated size of a zfs send operation using -nv (dry run).
+
+    Returns size in bytes, or None if estimation fails.
+
+    OpenZFS output format (stdout):
+        full    pool/data@snap    1234567890
+        size    1234567890
+    The 'size' line contains the total bytes to transfer.
+    """
+    if incremental_from:
+        cmd = f"zfs send -nv -Rw -I {dataset}@{incremental_from} {dataset}@{snapshot}"
+    else:
+        cmd = f"zfs send -nv -Rw {dataset}@{snapshot}"
+
+    debug(f"Estimating size: {cmd}")
+
+    try:
+        result = subprocess.run(
+            cmd.split(' '),
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=True
+        )
+        # OpenZFS outputs to stdout, some versions to stderr - check both
+        output = result.stdout.decode() + result.stderr.decode()
+        debug(f"Size estimation output: {output.strip()}")
+
+        # Look for "size\t<bytes>" line (OpenZFS format)
+        for line in output.strip().split('\n'):
+            parts = line.split()
+            if len(parts) >= 2 and parts[0] == 'size':
+                try:
+                    return int(parts[1])
+                except ValueError:
+                    pass
+
+        # Fallback: look for "total estimated size is X" (older format)
+        match = re.search(r'total estimated size is\s+([\d.]+\s*[KMGTP]?)', output, re.IGNORECASE)
+        if match:
+            return parse_size_to_bytes(match.group(1))
+
+        # Last resort: try last column of last non-empty line
+        lines = [l for l in output.strip().split('\n') if l.strip()]
+        if lines:
+            parts = lines[-1].split()
+            if parts:
+                try:
+                    return int(parts[-1])
+                except ValueError:
+                    return parse_size_to_bytes(parts[-1])
+
+        return None
+
+    except subprocess.CalledProcessError as e:
+        debug(f"Could not estimate send size: {e.stderr.decode()}")
+        return None
+
 
 def preflight(host, datasets, user, destination, strip_prefix):
     try:
@@ -313,6 +421,26 @@ def pushdatasets(host, dataset, user, destination, strip_prefix):
         info(f"No remote snapshots found. Performing initial sync for {dataset}")
         info(f"Started at {start_time.strftime('%Y-%m-%d %H:%M:%S')}")
         info(f"Local has {len(local_snapshots)} snapshots: {earliest_local} -> {latest_local}")
+
+        # Estimate total transfer size
+        total_size = 0
+        initial_size = get_send_size(dataset, earliest_local)
+        if initial_size:
+            total_size += initial_size
+
+        if earliest_local != latest_local:
+            incremental_size = get_send_size(dataset, latest_local, incremental_from=earliest_local)
+            if incremental_size:
+                total_size += incremental_size
+
+        if total_size > 0:
+            size_msg = f"Estimated total size: {format_bytes(total_size)}"
+            if _bwlimit:
+                bwlimit_bytes = parse_size_to_bytes(_bwlimit)
+                if bwlimit_bytes:
+                    estimated_seconds = total_size / bwlimit_bytes
+                    size_msg += f" (ETA: {format_duration(estimated_seconds)} at {_bwlimit}/s)"
+            info(size_msg)
 
         # Step 1: Full send of earliest snapshot (raw for encrypted datasets)
         info(f"Pushing earliest snapshot '{earliest_local}'")
