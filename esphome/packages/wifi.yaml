@@ -33,5 +33,3 @@ text_sensor:
     ip_address:
       name: IP Address
       entity_category: diagnostic
-
-
