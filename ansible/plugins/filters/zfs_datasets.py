@@ -249,6 +249,9 @@ class FilterModule(object):
         - dataset: The full dataset path (string)
         - importance: The importance level (string, defaults to 'none')
 
+        Supports policy inheritance via 'inherit_policy: true' on parent datasets.
+        When set, child datasets without explicit importance inherit from parent.
+
         Args:
             zfs_dict: ZFS configuration dictionary
         """
@@ -256,12 +259,18 @@ class FilterModule(object):
             raise AnsibleFilterError('zfs_datasets_with_importance requires a dictionary')
 
         result = []
-        self._walk_tree_with_importance(zfs_dict, result, [])
+        self._walk_tree_with_importance(zfs_dict, result, [], None)
         return result
 
-    def _walk_tree_with_importance(self, current_dict, result, path_components):
+    def _walk_tree_with_importance(self, current_dict, result, path_components, inherited_importance):
         """
         Recursively walk the dictionary tree to find all datasets with their importance.
+
+        Args:
+            current_dict: Current dictionary node being processed
+            result: List to append results to
+            path_components: Current path components (list of strings)
+            inherited_importance: Importance inherited from parent (or None)
         """
         if not isinstance(current_dict, dict):
             return
@@ -271,10 +280,13 @@ class FilterModule(object):
                 for dataset_name, dataset_value in value.items():
                     dataset_path = path_components + [dataset_name]
 
-                    # Extract importance, defaulting to 'none'
-                    importance = 'none'
+                    # Determine importance: explicit > inherited > 'none'
                     if isinstance(dataset_value, dict) and 'importance' in dataset_value:
                         importance = dataset_value['importance']
+                    elif inherited_importance is not None:
+                        importance = inherited_importance
+                    else:
+                        importance = 'none'
 
                     dataset_dict = {
                         'dataset': '/'.join(dataset_path),
@@ -283,10 +295,22 @@ class FilterModule(object):
 
                     result.append(dataset_dict)
 
+                    # Determine what importance to pass to children
+                    # If this dataset has inherit_policy: true, children inherit this importance
+                    child_inherited = None
+                    if isinstance(dataset_value, dict) and dataset_value.get('inherit_policy', False):
+                        child_inherited = importance
+                    elif inherited_importance is not None:
+                        # Continue passing inherited importance if parent had inherit_policy
+                        # but only if this dataset didn't explicitly set its own importance
+                        # which would "break the chain"
+                        if not (isinstance(dataset_value, dict) and 'importance' in dataset_value):
+                            child_inherited = inherited_importance
+
                     if isinstance(dataset_value, dict):
-                        self._walk_tree_with_importance(dataset_value, result, dataset_path)
+                        self._walk_tree_with_importance(dataset_value, result, dataset_path, child_inherited)
             elif isinstance(value, dict):
                 if 'datasets' in value:
-                    self._walk_tree_with_importance(value, result, path_components + [key])
+                    self._walk_tree_with_importance(value, result, path_components + [key], inherited_importance)
                 else:
-                    self._walk_tree_with_importance(value, result, path_components)
+                    self._walk_tree_with_importance(value, result, path_components, inherited_importance)
