@@ -1,0 +1,227 @@
+#!/usr/bin/env python3
+"""
+ZFS Snapshot Report - Reports on policy-driven snapshot status
+
+Displays each dataset with its policy and snapshot counts by type.
+
+Usage:
+    zfs-snapshot-report [--json] [--debug]
+"""
+import json
+import subprocess
+import sys
+import argparse
+import re
+
+# Policy definitions (injected by Ansible)
+POLICIES = json.loads(r'''{{ system_zfs_policy_definitions | to_json }}''')
+
+# Datasets with importance (injected by Ansible)
+DATASETS = json.loads(r'''{{ zfs | zfs_datasets_with_importance | to_json }}''')
+
+SNAPSHOT_PREFIX = "{{ system_zfs_policy_snapshot_prefix }}"
+
+# Regex to match our snapshot naming convention
+# autosnap_YYYY-MM-DD_HH:MM:SS_type
+SNAPSHOT_PATTERN = re.compile(
+    r'^' + SNAPSHOT_PREFIX + r'_(\d{4}-\d{2}-\d{2}_\d{2}:\d{2}:\d{2})_(hourly|daily|monthly|yearly)$'
+)
+
+SNAPSHOT_TYPES = ['hourly', 'daily', 'monthly', 'yearly']
+
+_debug = False
+
+
+def debug(message):
+    """Print debug message if enabled."""
+    if _debug:
+        print("  " + message, file=sys.stderr)
+
+
+def error(message):
+    """Print error message to stderr."""
+    print("! " + message, file=sys.stderr)
+
+
+def get_snapshots(dataset):
+    """Get all snapshots for a dataset, sorted by creation time."""
+    cmd = ["zfs", "list", "-t", "snapshot", "-H", "-o", "name", "-s", "creation", dataset]
+
+    debug(f"Running: {' '.join(cmd)}")
+
+    try:
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            check=False
+        )
+        if result.returncode != 0:
+            # Dataset might not exist or have no snapshots
+            debug(f"Could not list snapshots for {dataset}: {result.stderr.decode().strip()}")
+            return []
+
+        snapshots = result.stdout.decode().strip().splitlines()
+        # Filter to only direct snapshots of this dataset (not child datasets)
+        direct_snapshots = [s.split("@")[1] for s in snapshots if s.startswith(f"{dataset}@")]
+        return direct_snapshots
+    except Exception as e:
+        error(f"Could not list snapshots for {dataset}: {e}")
+        return []
+
+
+def parse_snapshot(snapshot_name):
+    """Parse a snapshot name and return (timestamp_str, type) or None if not matching pattern."""
+    match = SNAPSHOT_PATTERN.match(snapshot_name)
+    if match:
+        timestamp_str = match.group(1)
+        snap_type = match.group(2)
+        return (timestamp_str, snap_type)
+    return None
+
+
+def count_snapshots_by_type(snapshots):
+    """Count snapshots by type, only counting those matching the autosnap pattern."""
+    counts = {t: 0 for t in SNAPSHOT_TYPES}
+
+    for snap in snapshots:
+        parsed = parse_snapshot(snap)
+        if parsed:
+            _, snap_type = parsed
+            counts[snap_type] += 1
+
+    return counts
+
+
+def get_policy_name(importance):
+    """Map importance level to policy name for display."""
+    return importance if importance in POLICIES else 'none'
+
+
+def get_policy_retention(importance):
+    """Get retention counts for a policy."""
+    policy = POLICIES.get(importance, POLICIES['none'])
+    return {t: policy.get(t, 0) for t in SNAPSHOT_TYPES}
+
+
+def gather_report_data():
+    """Gather snapshot data for all datasets."""
+    report = []
+
+    for ds_info in DATASETS:
+        dataset = ds_info['dataset']
+        importance = ds_info['importance']
+        policy_name = get_policy_name(importance)
+
+        debug(f"Processing {dataset} (policy: {policy_name})")
+
+        snapshots = get_snapshots(dataset)
+        counts = count_snapshots_by_type(snapshots)
+        retention = get_policy_retention(importance)
+
+        report.append({
+            'dataset': dataset,
+            'policy': policy_name,
+            'counts': counts,
+            'retention': retention,
+        })
+
+    return report
+
+
+def output_json(report):
+    """Output report as JSON."""
+    print(json.dumps(report, indent=2))
+
+
+def output_table(report):
+    """Output report as a formatted table."""
+    if not report:
+        print("No datasets found.")
+        return
+
+    # Calculate column widths
+    dataset_width = max(len("Dataset"), max(len(r['dataset']) for r in report))
+    policy_width = max(len("Policy"), max(len(r['policy']) for r in report))
+
+    # Header format: Dataset | Policy | Hourly | Daily | Monthly | Yearly
+    # Each snapshot column shows count/retention
+    snap_col_width = 10  # Wide enough for "999/999"
+
+    # Build header
+    header = (
+        f"{'Dataset':<{dataset_width}} | "
+        f"{'Policy':<{policy_width}} | "
+        f"{'Hourly':>{snap_col_width}} | "
+        f"{'Daily':>{snap_col_width}} | "
+        f"{'Monthly':>{snap_col_width}} | "
+        f"{'Yearly':>{snap_col_width}}"
+    )
+
+    separator = "-" * len(header)
+
+    print(separator)
+    print(header)
+    print(separator)
+
+    for row in report:
+        dataset = row['dataset']
+        policy = row['policy']
+        counts = row['counts']
+        retention = row['retention']
+
+        # Format each snapshot column as "count/retention"
+        hourly = f"{counts['hourly']}/{retention['hourly']}"
+        daily = f"{counts['daily']}/{retention['daily']}"
+        monthly = f"{counts['monthly']}/{retention['monthly']}"
+        yearly = f"{counts['yearly']}/{retention['yearly']}"
+
+        line = (
+            f"{dataset:<{dataset_width}} | "
+            f"{policy:<{policy_width}} | "
+            f"{hourly:>{snap_col_width}} | "
+            f"{daily:>{snap_col_width}} | "
+            f"{monthly:>{snap_col_width}} | "
+            f"{yearly:>{snap_col_width}}"
+        )
+        print(line)
+
+    print(separator)
+
+    # Summary
+    total_datasets = len(report)
+    total_snapshots = sum(
+        sum(r['counts'].values()) for r in report
+    )
+    print(f"Total: {total_datasets} datasets, {total_snapshots} autosnap snapshots")
+
+
+def main():
+    global _debug
+
+    parser = argparse.ArgumentParser(
+        description='Report on ZFS snapshot status by policy'
+    )
+    parser.add_argument(
+        '--json',
+        action='store_true',
+        help='Output as JSON instead of table'
+    )
+    parser.add_argument(
+        '--debug',
+        action='store_true',
+        help='Enable debug output'
+    )
+    args = parser.parse_args()
+
+    _debug = args.debug
+
+    report = gather_report_data()
+
+    if args.json:
+        output_json(report)
+    else:
+        output_table(report)
+
+
+if __name__ == "__main__":
+    main()

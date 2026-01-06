@@ -67,6 +67,24 @@
   notify:
     - Reload systemd daemon
 
+- name: Deploy ZFS snapshot report script
+  become: true
+  ansible.builtin.template:
+    src: zfs-snapshot-report.py.j2
+    dest: "{{ system_zfs_policy_script_path }}/zfs-snapshot-report"
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Add ZFS policy scripts to system-wide PATH
+  become: true
+  ansible.builtin.copy:
+    dest: /etc/profile.d/zfs-policy-path.sh
+    content: 'PATH=$PATH:{{ system_zfs_policy_script_path }}'
+    owner: root
+    group: root
+    mode: "0644"
+
 - name: Deploy snapshot services
   become: true
   ansible.builtin.template:

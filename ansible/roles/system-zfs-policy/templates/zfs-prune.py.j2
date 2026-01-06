@@ -22,7 +22,7 @@ SNAPSHOT_PREFIX = "{{ system_zfs_policy_snapshot_prefix }}"
 # Regex to match our snapshot naming convention
 # autosnap_YYYY-MM-DD_HH:MM:SS_type
 SNAPSHOT_PATTERN = re.compile(
-    rf'^{SNAPSHOT_PREFIX}_(\d{{4}}-\d{{2}}-\d{{2}}_\d{{2}}:\d{{2}}:\d{{2}})_(hourly|daily|monthly|yearly)$'
+    r'^' + SNAPSHOT_PREFIX + r'_(\d{4}-\d{2}-\d{2}_\d{2}:\d{2}:\d{2})_(hourly|daily|monthly|yearly)$'
 )
 
 _debug = False
