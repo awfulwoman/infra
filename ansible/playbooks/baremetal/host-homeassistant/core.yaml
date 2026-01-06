@@ -3,6 +3,7 @@
   roles:
     - role: bootstrap-ubuntu-server
     - role: system-zfs
+    - role: system-zfs-policy
     - role: infothrill.nullmailer
       become: true
     - role: server-nut
