@@ -41,6 +41,14 @@ zfs:
     datasets:
       compositions:
         importance: critical
+        inherit_policy: true
+        datasets:
+          awfulwoman:
+            importance: none
+          container-management:
+            importance: none
+          reverseproxy:
+            importance: none
       acme:
         importance: critical
       terraform:
