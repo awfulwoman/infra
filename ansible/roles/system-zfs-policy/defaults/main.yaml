@@ -18,7 +18,7 @@ system_zfs_policy_definitions:
     monthly: 0
     yearly: 0
     autosnap: false
-    autoprune: false
+    autoprune: true
   low:
     hourly: 3
     daily: 7
