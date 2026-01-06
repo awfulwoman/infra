@@ -2,7 +2,7 @@
   hosts: host-backups
   gather_facts: true
   roles:
-    - role: backups-zfs-server
+    - role: system-zfs-policy
 
   handlers:
     - name: Reboot host
