@@ -2,3 +2,4 @@
 .vscode
 .terraform
 .lock
+.venv
