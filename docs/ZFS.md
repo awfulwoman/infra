@@ -132,6 +132,8 @@ Pool names are typically:
 
 ### Pool Configuration
 
+ZFS pools are configured from one of more `vdev` devices. These `vdev` devices are formed from one or more physical drives.
+
 ```yaml
 zfs:
   fastpool:
