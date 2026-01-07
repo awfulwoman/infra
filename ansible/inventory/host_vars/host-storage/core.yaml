@@ -47,7 +47,9 @@ zfs:
           media:
             datasets:
               shows:
+                importance: low
               movies:
+                importance: low
               music:
                 importance: critical
               books:
