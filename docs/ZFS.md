@@ -43,12 +43,12 @@ The `system-zfs-policy` role sets up ZFS snapshots via the policy system.
 
 ## Policy definitions
 
-| Policy ID        | Frequently | Hourly | Monthly | Yearly | Autosnap | Autoprune | Backups                      |
-| ---------------- | ---------- | ------ | ------- | ------ | -------- | --------- | ---------------------------- |
-| `none` (default) | 0          | 0      | 0       | 0      | FALSE    | FALSE     | None                         |
-| `low`            | 0          | 3      | 1       | 0      | TRUE     | TRUE      | Backup server                |
-| `high`           | 0          | 24     | 1       | 1      | TRUE     | TRUE      | Backup and onsite archive    |
-| `critical`       | 0          | 36     | 3       | 5      | TRUE     | TRUE      | Backup, archive, and offsite |
+| Policy ID        | Frequently | Hourly | Monthly | Yearly | Autosnap | Autoprune | Replication - local | Replication - archive | Replication - Offsite   |
+| ---------------- | ---------- | ------ | ------- | ------ | -------- | --------- | ------------------- | --------------------- | ----------------------- |
+| `none` (default) | 0          | 0      | 0       | 0      | FALSE    | FALSE     | FALSE               | FALSE                 | FALSE                   |
+| `low`            | 0          | 3      | 1       | 0      | TRUE     | TRUE      | TRUE                | FALSE                 | FALSE                   |
+| `high`           | 0          | 24     | 1       | 1      | TRUE     | TRUE      | TRUE                | TRUE                  | TRUE                    |
+| `critical`       | 0          | 36     | 3       | 5      | TRUE     | TRUE      | TRUE                | TRUE                  | TRUE                    |
 
 ## Backup locations
 
