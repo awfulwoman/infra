@@ -4,11 +4,6 @@
     compositions:
       - syncthing
   roles:
-    # - role: infra-private-resources
-    # - role: script-share-personal-site
-    # - role: system-pipx
-    # - role: infothrill.nullmailer
-    #   become: true
     - role: system-zfs-policy
   handlers:
     - name: Reboot host

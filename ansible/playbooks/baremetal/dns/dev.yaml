@@ -1,13 +1,6 @@
 - name: DNS development playbook
   hosts: dns
   roles:
-    # - role: weareinteractive.environment
-    #   become: true
-    # - role: script-share-personal-site
-    # - role: infra-named
-    # - role: infra-dhcpd
-    # - role: infothrill.nullmailer
-    #   become: true
     - role: system-zfs-policy
 
   handlers:

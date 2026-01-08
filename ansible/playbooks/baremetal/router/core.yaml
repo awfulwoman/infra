@@ -11,7 +11,6 @@
     # - role: infra-certbot
     # - role: compositions
     # - role: backups-zfs-client
-    # - role: script-share-personal-site
     - role: monitoring-healthchecksio
 
   handlers:
