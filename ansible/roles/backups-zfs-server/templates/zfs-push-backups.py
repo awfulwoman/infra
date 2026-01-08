@@ -380,8 +380,8 @@ def send_and_receive(send_cmd, receive_cmd):
 
 def pushdatasets(host, dataset, user, destination, strip_prefix):
     # Strip the local backup prefix from the dataset path
-    # e.g., if dataset is "backuppool/encryptedbackups/host-storage/fastpool/data"
-    # and strip_prefix is "backuppool/encryptedbackups", the relative path becomes
+    # e.g., if dataset is "slowpool/encryptedbackups/host-storage/fastpool/data"
+    # and strip_prefix is "slowpool/encryptedbackups", the relative path becomes
     # "host-storage/fastpool/data"
     if strip_prefix and dataset.startswith(strip_prefix + "/"):
         relative_path = dataset[len(strip_prefix) + 1:]

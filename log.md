@@ -1242,7 +1242,7 @@ receive_cmd = f"zfs receive -F -u {local_dataset}"
   - Added `-w` flag to all `zfs send` commands to support raw/encrypted dataset transfers
   - Implemented `--strip-prefix` argument (defaults to `{{ zfsbackup_dataset }}`) to simplify remote dataset paths
   - Added `ensure_remote_parent_exists()` function that creates parent datasets on remote using `zfs create -p`
-  - Remote path transformation: strips local backup prefix so `backuppool/encryptedbackups/host-storage/...` becomes `host-storage/...` on remote
+  - Remote path transformation: strips local backup prefix so `slowpool/encryptedbackups/host-storage/...` becomes `host-storage/...` on remote
   - Handles both initial sync (full + incremental) and subsequent syncs (incremental only) like the pull script
 
 - **Updated ZFS delegation permissions** in `ansible/roles/server-zbackups-new/tasks/main.yaml`:
@@ -1256,7 +1256,7 @@ receive_cmd = f"zfs receive -F -u {local_dataset}"
 
 ### Key Decisions
 
-- **Path stripping for cleaner remote structure**: Rather than replicating the full local path (e.g., `backuppool/encryptedbackups/host-storage/tank/data`), the script strips the backup pool prefix to create a cleaner remote hierarchy (`host-storage/tank/data`)
+- **Path stripping for cleaner remote structure**: Rather than replicating the full local path (e.g., `slowpool/encryptedbackups/host-storage/tank/data`), the script strips the backup pool prefix to create a cleaner remote hierarchy (`host-storage/tank/data`)
 
 - **Automatic parent dataset creation**: The script ensures all parent datasets exist on the remote before attempting to receive snapshots, preventing errors from missing intermediate datasets
 

@@ -29,11 +29,7 @@ wakeonlan_interface: enp3s0
 
 # Experimental
 zfs:
-  backuppool:
+  slowpool:
     datasets:
       encryptedbackups:
         state: present
-        properties:
-          encryption: aes-256-gcm
-          keylocation: file:///root/zfs/passphrase
-          keyformat: passphrase
