@@ -11,45 +11,45 @@
 
 - name: Check for existing CSR private key
   ansible.builtin.stat:
-    path: "{{ acmeeeeeeee_csr_private_key_filename }}/{{ acmeeeeeeee_csr_private_key_filename }}"
+    path: "{{ infra_certbot_csr_private_key_filename }}/{{ infra_certbot_csr_private_key_filename }}"
   register: csr_key
 
 - name: Generate CSR private key if not present
   community.crypto.openssl_privatekey:
-    path: "{{ acmeeeeeeee_csr_private_key_dir }}/{{ acmeeeeeeee_csr_private_key_filename }}"
+    path: "{{ infra_certbot_csr_private_key_dir }}/{{ infra_certbot_csr_private_key_filename }}"
     curve: secp521r1
     state: present
   when: not csr_key.stat.exists
 
 - name: Check for existing CSR file
   ansible.builtin.stat:
-    path: "{{ acmeeeeeeee_csr_dir }}/{{ domain_full }}.csr"
+    path: "{{ infra_certbot_csr_dir }}/{{ domain_full }}.csr"
   register: csr_file
 
 - name: Generate an OpenSSL CSR if not present
   community.crypto.openssl_csr:
-    path: "{{ acmeeeeeeee_csr_dir }}/{{ domain_full }}.csr"
-    privatekey_path: "{{ acmeeeeeeee_csr_private_key_dir }}/{{ acmeeeeeeee_csr_private_key_filename }}"
+    path: "{{ infra_certbot_csr_dir }}/{{ domain_full }}.csr"
+    privatekey_path: "{{ infra_certbot_csr_private_key_dir }}/{{ infra_certbot_csr_private_key_filename }}"
     common_name: "{{ domain_full }}"
   when: not csr_file.stat.exists
 
 - name: Check for existing cert
   ansible.builtin.stat:
-    path: "{{ acmeeeeeeee_cert_dir }}/{{ domain_full }}.crt"
+    path: "{{ infra_certbot_cert_dir }}/{{ domain_full }}.crt"
   register: cert_file
 
 - name: Retrieve renewal information for existing certificate
   community.crypto.acme_ari_info:
-    acme_directory: "{{ acmeeeeeeee_dir }}"
-    acme_version: "{{ acmeeeeeeee_version }}"
-    certificate_path: "{{ acmeeeeeeee_cert_dir }}/{{ domain_full }}.crt"
+    acme_directory: "{{ infra_certbot_dir }}"
+    acme_version: "{{ infra_certbot_version }}"
+    certificate_path: "{{ infra_certbot_cert_dir }}/{{ domain_full }}.crt"
   when: cert_file.stat.exists
   register: cert_data
 
 - name: Debug cert_data
   ansible.builtin.debug:
     var: cert_data
-  when: acmeeeeeeee_debug
+  when: infra_certbot_debug
 
 # - name: Set variables
 #   ansible.builtin.set_fact:

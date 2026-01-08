@@ -8,7 +8,7 @@
 - name: Ensure working dir exists
   become: true
   ansible.builtin.file:
-    dest: "{{ acmeeeeeeee_working_dir }}"
+    dest: "{{ infra_certbot_working_dir }}"
     state: directory
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
@@ -25,9 +25,9 @@
   loop_control:
     loop_var: dir
   loop:
-    - "{{ acmeeeeeeee_le_private_key_dir }}"
-    - "{{ acmeeeeeeee_csr_private_key_dir }}"
-    - "{{ acmeeeeeeee_csr_dir }}"
+    - "{{ infra_certbot_le_private_key_dir }}"
+    - "{{ infra_certbot_csr_private_key_dir }}"
+    - "{{ infra_certbot_csr_dir }}"
 
 - name: Ensure cert directories exist
   become: true
@@ -40,6 +40,6 @@
   loop_control:
     loop_var: dir
   loop:
-    - "{{ acmeeeeeeee_cert_dir }}"
-    # - "{{ acmeeeeeeee_fullchain_dir }}"
-    # - "{{ acmeeeeeeee_chain_dir }}"
+    - "{{ infra_certbot_cert_dir }}"
+    # - "{{ infra_certbot_fullchain_dir }}"
+    # - "{{ infra_certbot_chain_dir }}"

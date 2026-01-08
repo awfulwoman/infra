@@ -1,5 +1,5 @@
-# acmeeeeeeee_domain: "*.{{ vault_domain_test }}"
-acmeeeeeeee_domains:
+# infra_certbot_domain: "*.{{ vault_domain_test }}"
+infra_certbot_domains:
   # - domain: "{{ vault_domain_test }}"
     - domain: "{{ vault_domain_test }}"
       subdomain: "*.test03"
@@ -17,19 +17,19 @@ acmeeeeeeee_domains:
   #   subdomain: "pancake"
   # - domain: awfulwoman.com
   #   subdomain: www
-acmeeeeeeee_debug: true
-acmeeeeeeee_working_dir: "{{ acme_path }}"
-acmeeeeeeee_le_private_key_dir: "{{ acme_path }}/private"
-acmeeeeeeee_le_private_key_filename: le.key
-acmeeeeeeee_csr_private_key_dir: "{{ acme_path }}/private"
-acmeeeeeeee_csr_private_key_filename: csr.key
-acmeeeeeeee_csr_dir: "{{ acme_path }}/csr"
-acmeeeeeeee_email: "letsencrypt@{{ vault_personal_domain }}"
-acmeeeeeeee_version: 2
-acmeeeeeeee_cert_dir: "{{ acme_path }}/certs"
+infra_certbot_debug: false
+infra_certbot_working_dir: "{{ acme_path }}"
+infra_certbot_le_private_key_dir: "{{ acme_path }}/private"
+infra_certbot_le_private_key_filename: le.key
+infra_certbot_csr_private_key_dir: "{{ acme_path }}/private"
+infra_certbot_csr_private_key_filename: csr.key
+infra_certbot_csr_dir: "{{ acme_path }}/csr"
+infra_certbot_email: "letsencrypt@{{ vault_personal_domain }}"
+infra_certbot_version: 2
+infra_certbot_cert_dir: "{{ acme_path }}/certs"
 # Staging
-acmeeeeeeee_dir: https://acme-staging-v02.api.letsencrypt.org/directory
-acmeeeeeeee_order_uri: https://acme-staging-v02.api.letsencrypt.org/acme/acct/221838554
+infra_certbot_dir: https://acme-staging-v02.api.letsencrypt.org/directory
+infra_certbot_order_uri: https://acme-staging-v02.api.letsencrypt.org/acme/acct/221838554
 # Production
-# acmeeeeeeee_dir: https://acme-v02.api.letsencrypt.org/directory
-# acmeeeeeeee_order_uri: https://acme-v02.api.letsencrypt.org/acme/acct/2595600866
+# infra_certbot_dir: https://acme-v02.api.letsencrypt.org/directory
+# infra_certbot_order_uri: https://acme-v02.api.letsencrypt.org/acme/acct/2595600866

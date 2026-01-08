@@ -1,34 +1,34 @@
 - name: Check for existing LE private key
   ansible.builtin.stat:
-    path: "{{ acmeeeeeeee_le_private_key_dir }}/{{ acmeeeeeeee_le_private_key_filename }}"
+    path: "{{ infra_certbot_le_private_key_dir }}/{{ infra_certbot_le_private_key_filename }}"
   register: le_key
 
 - name: Generate LE private key if not present
   community.crypto.openssl_privatekey:
-    path: "{{ acmeeeeeeee_le_private_key_dir }}/{{ acmeeeeeeee_le_private_key_filename }}"
+    path: "{{ infra_certbot_le_private_key_dir }}/{{ infra_certbot_le_private_key_filename }}"
     curve: secp521r1
     state: present
   when: not le_key.stat.exists
 
 - name: Check whether the account exists and is accessible with our key
   community.crypto.acme_account_info:
-    acme_directory: "{{ acmeeeeeeee_dir }}"
-    acme_version: "{{ acmeeeeeeee_version }}"
-    account_key_src: "{{ acmeeeeeeee_le_private_key_dir }}/{{ acmeeeeeeee_le_private_key_filename }}"
-    # account_uri: "{{ acmeeeeeeee_order_uri }}"
+    acme_directory: "{{ infra_certbot_dir }}"
+    acme_version: "{{ infra_certbot_version }}"
+    account_key_src: "{{ infra_certbot_le_private_key_dir }}/{{ infra_certbot_le_private_key_filename }}"
+    # account_uri: "{{ infra_certbot_order_uri }}"
   register: account_data
 
 - name: Debug acme account
   ansible.builtin.debug:
     var: account_data
-  when: acmeeeeeeee_debug
+  when: infra_certbot_debug
 
 - name: Create ACME account if not present
   community.crypto.acme_account:
-    account_key_src: "{{ acmeeeeeeee_le_private_key_dir }}/{{ acmeeeeeeee_le_private_key_filename }}"
-    acme_directory: "{{ acmeeeeeeee_dir }}"
-    acme_version: "{{ acmeeeeeeee_version }}"
-    # account_uri: "{{ acmeeeeeeee_order_uri }}"
+    account_key_src: "{{ infra_certbot_le_private_key_dir }}/{{ infra_certbot_le_private_key_filename }}"
+    acme_directory: "{{ infra_certbot_dir }}"
+    acme_version: "{{ infra_certbot_version }}"
+    # account_uri: "{{ infra_certbot_order_uri }}"
     state: present
     terms_agreed: true
     contact:
@@ -39,4 +39,4 @@
 - name: Debug acme account
   ansible.builtin.debug:
     var: acme_account_creation
-  when: acmeeeeeeee_debug
+  when: infra_certbot_debug

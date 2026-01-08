@@ -11,7 +11,7 @@
 - name: "STEP 3: Certificates"
   ansible.builtin.include_tasks:
     file: cert.yaml
-  loop: "{{ acmeeeeeeee_domains }}"
+  loop: "{{ infra_certbot_domains }}"
   loop_control:
     loop_var: item
     extended: true

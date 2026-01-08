@@ -6,20 +6,20 @@
 - name: Request a DNS-01 challenge
   community.crypto.acme_certificate:
     validate_certs: true
-    account_key_src: "{{ acmeeeeeeee_le_private_key_dir }}/{{ acmeeeeeeee_le_private_key_filename }}"
-    account_email: "{{ acmeeeeeeee_email }}"
-    src: "{{ acmeeeeeeee_csr_dir }}/{{ dns01_domain_full }}.csr"
-    cert: "{{ acmeeeeeeee_cert_dir }}/{{ dns01_domain_full }}.crt"
+    account_key_src: "{{ infra_certbot_le_private_key_dir }}/{{ infra_certbot_le_private_key_filename }}"
+    account_email: "{{ infra_certbot_email }}"
+    src: "{{ infra_certbot_csr_dir }}/{{ dns01_domain_full }}.csr"
+    cert: "{{ infra_certbot_cert_dir }}/{{ dns01_domain_full }}.crt"
     challenge: dns-01
-    acme_directory: "{{ acmeeeeeeee_dir }}"
-    acme_version: "{{ acmeeeeeeee_version }}"
+    acme_directory: "{{ infra_certbot_dir }}"
+    acme_version: "{{ infra_certbot_version }}"
     remaining_days: 60
   register: domain_challenge
 
 - name: Debug DNS-01 challenge
   ansible.builtin.debug:
     var: domain_challenge
-  when: acmeeeeeeee_debug
+  when: infra_certbot_debug
 
 - name: Respond to DNS-01 challenge
   when: domain_challenge.authorizations[dns01_domain_full].challenges[0].status == "pending"
@@ -37,7 +37,7 @@
 - name: Debug txt verification
   ansible.builtin.debug:
     var: txt_response
-  when: (acmeeeeeeee_debug) and (txt_response is defined)
+  when: (infra_certbot_debug) and (txt_response is defined)
 
 - name: Extract and store the TXT record so we can delete it later
   ansible.builtin.set_fact:
@@ -48,17 +48,17 @@
   when: domain_challenge.authorizations[dns01_domain_full].challenges[0].status == "pending"
   community.crypto.acme_certificate:
     validate_certs: true
-    account_email: "{{ acmeeeeeeee_email }}"
-    src: "{{ acmeeeeeeee_csr_dir }}/{{ dns01_domain_full }}.csr"
-    cert: "{{ acmeeeeeeee_cert_dir }}/{{ dns01_domain_full }}.crt"
-    fullchain: "{{ acmeeeeeeee_cert_dir }}/{{ dns01_domain_full }}.fullchain.crt"
-    chain: "{{ acmeeeeeeee_cert_dir }}/{{ dns01_domain_full }}.intermediate.crt"
+    account_email: "{{ infra_certbot_email }}"
+    src: "{{ infra_certbot_csr_dir }}/{{ dns01_domain_full }}.csr"
+    cert: "{{ infra_certbot_cert_dir }}/{{ dns01_domain_full }}.crt"
+    fullchain: "{{ infra_certbot_cert_dir }}/{{ dns01_domain_full }}.fullchain.crt"
+    chain: "{{ infra_certbot_cert_dir }}/{{ dns01_domain_full }}.intermediate.crt"
     challenge: dns-01
     remaining_days: 60
     data: "{{ domain_challenge }}"
-    acme_directory: "{{ acmeeeeeeee_dir }}"
-    acme_version: "{{ acmeeeeeeee_version }}"
-    account_key_src: "{{ acmeeeeeeee_le_private_key_dir }}/{{ acmeeeeeeee_le_private_key_filename }}"
+    acme_directory: "{{ infra_certbot_dir }}"
+    acme_version: "{{ infra_certbot_version }}"
+    account_key_src: "{{ infra_certbot_le_private_key_dir }}/{{ infra_certbot_le_private_key_filename }}"
   register: lsresult
   until: "lsresult is not failed"
   retries: 12
@@ -67,7 +67,7 @@
 - name: Debug collected order
   ansible.builtin.debug:
     var: lsresult
-  when: acmeeeeeeee_debug
+  when: infra_certbot_debug
 
 - name: Remove TXT record
   community.digitalocean.digital_ocean_domain_record:
@@ -81,7 +81,7 @@
 - name: Debug txt_remove_response
   ansible.builtin.debug:
     var: txt_remove_response
-  when: acmeeeeeeee_debug and (txt_remove_response is defined)
+  when: infra_certbot_debug and (txt_remove_response is defined)
 
 - name: DNS01 Finished
   ansible.builtin.debug:
