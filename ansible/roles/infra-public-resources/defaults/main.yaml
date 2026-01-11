@@ -1,20 +1,17 @@
 infra_publicresources_terraform_working_dir: "{{ terraform_working_dir }}/public-resources"
-infra_publicresources_debug: false
-infra_publicresources_tf_apply: false
+infra_publicresources_debug: true
+infra_publicresources_tf_apply: true
 
-# digitalocean_reserved_ip
-infra_publicresources_digitalocean_reservedips:
+infra_publicresources_digitalocean_reservedip:
   - id: bonjo
     region: ams3
 
-# digitalocean_reserved_ip_assignment
-infra_publicresources_digitalocean_reservedip_assignments:
+infra_publicresources_digitalocean_reservedip_assignment:
   - id: mike
     reservedip: bonjo
     droplet: public26
 
-# digitalocean_firewall
-infra_publicresources_digitalocean_firewalls:
+infra_publicresources_digitalocean_firewall:
   - id: web
     tags:
       - secured
@@ -48,8 +45,7 @@ infra_publicresources_digitalocean_firewalls:
           - "::/0"
       - protocol: icmp
 
-# digitalocean_droplet
-infra_publicresources_digitalocean_droplets:
+infra_publicresources_digitalocean_droplet:
   - id: public26
     name: "public-server-01"
     description: >
@@ -62,15 +58,13 @@ infra_publicresources_digitalocean_droplets:
     volumes:
       - storage01
 
-# digitalocean_volume
-infra_publicresources_digitalocean_volumes:
+infra_publicresources_digitalocean_volume:
   - id: storage01
     name: site-storage
     size: 30
     region: ams3
 
-# digitalocean_project
-infra_publicresources_digitalocean_projects:
+infra_publicresources_digitalocean_project:
   - name: Personal
     description: Personal stuff
     id: personal
@@ -86,8 +80,7 @@ infra_publicresources_digitalocean_projects:
       - digitalocean_domain.ew
       - digitalocean_domain.rs
 
-# digitalocean_domain
-infra_publicresources_digitalocean_domains:
+infra_publicresources_digitalocean_domain:
   - domain: "{{ vault_infra_domain_name_ew }}"
     id: ew
     ipaddress: digitalocean_reserved_ip.bonjo.ip_address

@@ -1,5 +1,7 @@
-# Ensure all DO projects exist
-{% for project in infra_publicresources_digitalocean_projects %}
+#############################################################################
+# PROJECTS
+#############################################################################
+{% for project in infra_publicresources_digitalocean_project %}
 {% if project.id is defined %}
 resource "digitalocean_project" "{{ project.id }}" {
   name        = "{{ project.name }}"
@@ -24,9 +26,11 @@ resource "digitalocean_project_resources" "{{ project.id }}" {
 {% endfor %}
 
 
-# Ensure all domain zones are registered with Digital Ocean
-{% if (infra_publicresources_digitalocean_domains is iterable) and (infra_publicresources_digitalocean_domains | length > 0) %}
-{% for item in infra_publicresources_digitalocean_domains %}
+#############################################################################
+# ZONES
+#############################################################################
+{% if (infra_publicresources_digitalocean_domain is iterable) and (infra_publicresources_digitalocean_domain | length > 0) %}
+{% for item in infra_publicresources_digitalocean_domain %}
 {% if (item.domain is defined) and (item.id is defined) %}
 
 resource "digitalocean_domain" "{{ item.id }}" {
@@ -44,9 +48,11 @@ resource "digitalocean_domain" "{{ item.id }}" {
 {% endif %}
 
 
-# Ensure all records for domains exist
-{% if (infra_publicresources_digitalocean_domains is iterable) and (infra_publicresources_digitalocean_domains | length > 0) %}
-{% for item in infra_publicresources_digitalocean_domains %}
+#############################################################################
+# ZONE RECORDS
+#############################################################################
+{% if (infra_publicresources_digitalocean_domain is iterable) and (infra_publicresources_digitalocean_domain | length > 0) %}
+{% for item in infra_publicresources_digitalocean_domain %}
 {% if item.domain is defined %}
 {% for record in item.records %}
 {% if (item.domain is defined )
@@ -73,8 +79,10 @@ resource "digitalocean_record" "{{ record.id }}" {
 {% endif %}
 
 
-# Ensure Block storage exists
-{% for volume in infra_publicresources_digitalocean_volumes %}
+#############################################################################
+# BLOCK STORAGE
+#############################################################################
+{% for volume in infra_publicresources_digitalocean_volume %}
 {% if volume.id is defined %}
 
 resource "digitalocean_volume" "{{ volume.id }}" {
@@ -85,7 +93,9 @@ resource "digitalocean_volume" "{{ volume.id }}" {
 {% endif %}
 {% endfor %}
 
-# Ensure SSH keys exist
+#############################################################################
+# PUBLIC KEYS
+#############################################################################
 {% for key in github_keys_list %}
 
 resource "digitalocean_ssh_key" "githubkey{{ loop.index }}" {
@@ -94,8 +104,10 @@ resource "digitalocean_ssh_key" "githubkey{{ loop.index }}" {
 }
 {% endfor %}
 
-# Ensure all Droplets exist
-{% for droplet in infra_publicresources_digitalocean_droplets %}
+#############################################################################
+# COMPUTE INSTANCES
+#############################################################################
+{% for droplet in infra_publicresources_digitalocean_droplet %}
 {% if droplet.id is defined %}
 
 resource "digitalocean_droplet" "{{ droplet.id }}" {
@@ -129,8 +141,10 @@ resource "digitalocean_droplet" "{{ droplet.id }}" {
 {% endif %}
 {% endfor %}
 
-# Ensure all Reserved IPs exist
-{% for reservedip in infra_publicresources_digitalocean_reservedips %}
+#############################################################################
+# RESERVED IPS
+#############################################################################
+{% for reservedip in infra_publicresources_digitalocean_reservedip %}
 {% if reservedip.id is defined %}
 
 resource "digitalocean_reserved_ip" "{{ reservedip.id }}" {
@@ -140,7 +154,7 @@ resource "digitalocean_reserved_ip" "{{ reservedip.id }}" {
 {% endfor %}
 
 
-{% for ipassignment in infra_publicresources_digitalocean_reservedip_assignments %}
+{% for ipassignment in infra_publicresources_digitalocean_reservedip_assignment %}
 {% if ipassignment.id is defined %}
 
 resource "digitalocean_reserved_ip_assignment" "{{ ipassignment.id }}" {
@@ -150,8 +164,12 @@ resource "digitalocean_reserved_ip_assignment" "{{ ipassignment.id }}" {
 {% endif %}
 {% endfor %}
 
-{% if infra_publicresources_digitalocean_firewalls is defined %}
-{% for firewall in infra_publicresources_digitalocean_firewalls %}
+
+#############################################################################
+# FIREWALLS
+#############################################################################
+{% if infra_publicresources_digitalocean_firewall is defined %}
+{% for firewall in infra_publicresources_digitalocean_firewall %}
 {% if firewall.id is defined %}
 
 resource "digitalocean_firewall" "{{ firewall.id }}" {

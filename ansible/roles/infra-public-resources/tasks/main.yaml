@@ -66,14 +66,24 @@
     var: tf_files
   when: infra_publicresources_debug
 
-- name: Ensure Terraform plan is applied
-  community.general.terraform:
-    project_path: "{{ infra_publicresources_terraform_working_dir }}"
-    state: present
-  register: tf_plan
+- name: Run Terraform
   when: infra_publicresources_tf_apply
+  block:
+    - name: Ensure Terraform plan is tested
+      community.general.terraform:
+        project_path: "{{ infra_publicresources_terraform_working_dir }}"
+        state: present
+        force_init: true
+      register: tf_plan
+      check_mode: true
 
-- name: DEBUG TF plan
-  ansible.builtin.debug:
-    var: tf_plan
-  when: infra_publicresources_debug
+    - name: DEBUG TF plan
+      ansible.builtin.debug:
+        var: tf_plan
+      when: infra_publicresources_debug
+
+    - name: Ensure Terraform plan is applied
+      when: (tf_plan.changed) and (not tf_plan.failed)
+      community.general.terraform:
+        project_path: "{{ infra_publicresources_terraform_working_dir }}"
+        state: present
