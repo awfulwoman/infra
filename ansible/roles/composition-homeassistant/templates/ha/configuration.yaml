@@ -74,7 +74,6 @@ switch:
         payload: suspend
         topic: servers/host-backups
 
-
 #############################################################################
 # TIME/DATE SENSORS
 #############################################################################
@@ -100,29 +99,6 @@ logbook:
       - sensor.date
       - sensor.date_time
       - sensor.date_time_iso
-      - sensor.fritz_box_7412_ui_connection_uptime
-      - sensor.fritz_box_7412_ui_last_restart
-    entity_globs:
-      - sensor.weather_*
-    domains:
-      - sun
-
-#############################################################################
-# DO NOT STORE
-#############################################################################
-# Prevent these entities from being written to storage.
-# Quite useful on a Raspberry Pi SD card to save write wear.
-recorder:
-  exclude:
-    entities:
-      - sensor.time
-      - sensor.date
-      - sensor.date_time
-      - sensor.date_time_utc
-      - sensor.date_time_iso
-      - sensor.time_date
-      - sensor.time_utc
-      - sensor.beat
       - sensor.fritz_box_7412_ui_connection_uptime
       - sensor.fritz_box_7412_ui_last_restart
     entity_globs:
