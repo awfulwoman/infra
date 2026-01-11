@@ -3,3 +3,9 @@ variable "digitalocean_token" {
   sensitive = true
   default=""
 }
+
+variable "hcloud_token" {
+  type = string
+  sensitive = true
+  default=""
+}

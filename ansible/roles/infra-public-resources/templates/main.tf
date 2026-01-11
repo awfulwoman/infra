@@ -1,5 +1,5 @@
 # Ensure all DO projects exist
-{% for project in infra_publicresources_projects %}
+{% for project in infra_publicresources_digitalocean_projects %}
 {% if project.id is defined %}
 resource "digitalocean_project" "{{ project.id }}" {
   name        = "{{ project.name }}"
@@ -25,8 +25,8 @@ resource "digitalocean_project_resources" "{{ project.id }}" {
 
 
 # Ensure all domain zones are registered with Digital Ocean
-{% if (infra_publicresources_domains is iterable) and (infra_publicresources_domains | length > 0) %}
-{% for item in infra_publicresources_domains %}
+{% if (infra_publicresources_digitalocean_domains is iterable) and (infra_publicresources_digitalocean_domains | length > 0) %}
+{% for item in infra_publicresources_digitalocean_domains %}
 {% if (item.domain is defined) and (item.id is defined) %}
 
 resource "digitalocean_domain" "{{ item.id }}" {
@@ -45,8 +45,8 @@ resource "digitalocean_domain" "{{ item.id }}" {
 
 
 # Ensure all records for domains exist
-{% if (infra_publicresources_domains is iterable) and (infra_publicresources_domains | length > 0) %}
-{% for item in infra_publicresources_domains %}
+{% if (infra_publicresources_digitalocean_domains is iterable) and (infra_publicresources_digitalocean_domains | length > 0) %}
+{% for item in infra_publicresources_digitalocean_domains %}
 {% if item.domain is defined %}
 {% for record in item.records %}
 {% if (item.domain is defined )
@@ -74,7 +74,7 @@ resource "digitalocean_record" "{{ record.id }}" {
 
 
 # Ensure Block storage exists
-{% for volume in infra_publicresources_volumes %}
+{% for volume in infra_publicresources_digitalocean_volumes %}
 {% if volume.id is defined %}
 
 resource "digitalocean_volume" "{{ volume.id }}" {
@@ -95,7 +95,7 @@ resource "digitalocean_ssh_key" "githubkey{{ loop.index }}" {
 {% endfor %}
 
 # Ensure all Droplets exist
-{% for droplet in infra_publicresources_droplets %}
+{% for droplet in infra_publicresources_digitalocean_droplets %}
 {% if droplet.id is defined %}
 
 resource "digitalocean_droplet" "{{ droplet.id }}" {
@@ -130,7 +130,7 @@ resource "digitalocean_droplet" "{{ droplet.id }}" {
 {% endfor %}
 
 # Ensure all Reserved IPs exist
-{% for reservedip in infra_publicresources_reservedips %}
+{% for reservedip in infra_publicresources_digitalocean_reservedips %}
 {% if reservedip.id is defined %}
 
 resource "digitalocean_reserved_ip" "{{ reservedip.id }}" {
@@ -140,7 +140,7 @@ resource "digitalocean_reserved_ip" "{{ reservedip.id }}" {
 {% endfor %}
 
 
-{% for ipassignment in infra_publicresources_reservedip_assignments %}
+{% for ipassignment in infra_publicresources_digitalocean_reservedip_assignments %}
 {% if ipassignment.id is defined %}
 
 resource "digitalocean_reserved_ip_assignment" "{{ ipassignment.id }}" {
