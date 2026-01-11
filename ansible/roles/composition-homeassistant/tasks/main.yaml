@@ -30,7 +30,7 @@
     - esphome
     - homeassistant
 
-- name: "Copy over HA config files"
+- name: Copy over HA config files
   ansible.builtin.template:
     src: ha/{{ ha_config_file }}.yaml
     dest: "{{ composition_root }}/config/homeassistant/{{ ha_config_file }}.yaml"
@@ -44,6 +44,8 @@
     - secrets
     - template
     - input_select
+  notify:
+    - Restart HA
 
 - name: Run Configure DNS role
   ansible.builtin.include_role:
