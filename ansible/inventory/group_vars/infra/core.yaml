@@ -52,4 +52,3 @@ environment_config:
   ANSIBLE_COLLECTIONS_PATH: "{{ ansible_collections_path }}"
   HOME_REPO_DIR: "{{ home_repo_dir }}"
   TF_VAR_digitalocean_token: "{{ vault_ddns_digitalocean_token }}"
-  TF_VAR_hcloud_token: "{{ vault_hetzner_api_key_rw }}"
