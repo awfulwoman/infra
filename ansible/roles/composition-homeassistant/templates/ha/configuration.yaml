@@ -1,9 +1,19 @@
+#############################################################################
+# DEFAULTS
+#############################################################################
+
 # Loads default set of integrations. DO. NOT. REMOVE.
 default_config:
 
+#############################################################################
+# FRONTEND
+#############################################################################
 # frontend:
 #   themes: !include_dir_merge_named themes
 
+#############################################################################
+# HTTP
+#############################################################################
 http:
   use_x_forwarded_for: true
   trusted_proxies:
@@ -16,11 +26,29 @@ http:
     - fe00::/64
     - fd00::/64
 
-# Required by integration
+#############################################################################
+# REQUIRED BY AUTOMATION
+#############################################################################
+
 # https://github.com/bramstroker/homeassistant-powercalc
 powercalc:
 
-# Not supported yet in the UI
+#############################################################################
+# NOT SUPPORTED IN UI
+#############################################################################
+
+# https://community.home-assistant.io/t/automations-link-in-sidebar/412171/4
+panel_custom:
+  - name: Automations
+    sidebar_title: Automations
+    sidebar_icon: mdi:cog-transfer
+    js_url: /api/hassio/app/entrypoint.js
+    url_path: config/automation/dashboard
+    embed_iframe: true
+    require_admin: true
+    config:
+      ingress: core_configurator
+
 # https://www.home-assistant.io/integrations/wake_on_lan/
 switch:
   - platform: wake_on_lan
@@ -46,6 +74,11 @@ switch:
         payload: suspend
         topic: servers/host-backups
 
+
+#############################################################################
+# TIME/DATE SENSORS
+#############################################################################
+
 # Add some additional time date sensors for use in scripts
 sensor:
   - platform: time_date
@@ -55,6 +88,9 @@ sensor:
       - 'date_time'
       - 'date_time_iso'
 
+#############################################################################
+# CLEAN UP LOGBOOK
+#############################################################################
 # Exclude these entities from showing in the logbook/Activity stream
 # because they're quite spammy.
 logbook:
@@ -71,6 +107,9 @@ logbook:
     domains:
       - sun
 
+#############################################################################
+# DO NOT STORE
+#############################################################################
 # Prevent these entities from being written to storage.
 # Quite useful on a Raspberry Pi SD card to save write wear.
 recorder:
@@ -91,7 +130,9 @@ recorder:
     domains:
       - sun
 
-# Includes
+#############################################################################
+# INCLUDES
+#############################################################################
 automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
