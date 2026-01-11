@@ -4,9 +4,12 @@
     name: terraform
     types: deb
     uris: "https://apt.releases.hashicorp.com"
-    suites: "{{ ansible_distribution_release }}"
+    suites: "{{ ansible_facts['distribution_release'] }}"
     components: main
-    architectures: "{{ 'amd64' if ansible_architecture == 'x86_64' else 'arm64' if ansible_architecture == 'aarch64' else ansible_architecture }}"
+    architectures: >-
+      {% if ansible_facts['architecture'] == 'x86_64' %}amd64
+      {% elif ansible_facts['architecture'] == 'aarch64' %}arm64
+      {% else -%}ansible_facts['architecture']{% endif %}
     signed_by: "https://apt.releases.hashicorp.com/gpg"
 
 - name: Ensure Terraform is installed

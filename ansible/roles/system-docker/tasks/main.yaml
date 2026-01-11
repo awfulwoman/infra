@@ -2,13 +2,13 @@
   ansible.builtin.debug:
     msg: |-
       ansible_facts['os_family'] - {{ ansible_facts['os_family'] }}
-      ansible_distribution - {{ ansible_distribution }}
-      ansible_distribution_file_parsed - {{ ansible_distribution_file_parsed }}
-      ansible_distribution_file_path - {{ ansible_distribution_file_path }}
-      ansible_distribution_file_variety - {{ ansible_distribution_file_variety }}
-      ansible_distribution_major_version - {{ ansible_distribution_major_version }}
-      ansible_distribution_release - {{ ansible_distribution_release }}
-      ansible_distribution_version - {{ ansible_distribution_version }}
+      ansible_facts['distribution'] - {{ ansible_facts['distribution'] }}
+      ansible_facts['distribution_file_parsed'] - {{ ansible_facts['distribution_file_parsed'] }}
+      ansible_facts['distribution_file_path'] - {{ ansible_facts['distribution_file_path'] }}
+      ansible_facts['distribution_file_variety'] - {{ ansible_facts['distribution_file_variety'] }}
+      ansible_facts['distribution_major_version'] - {{ ansible_facts['distribution_major_version'] }}
+      ansible_facts['distribution_release'] - {{ ansible_facts['distribution_release'] }}
+      ansible_facts['distribution_version'] - {{ ansible_facts['distribution_version'] }}
 
 - name: Install python3 on Debian
   become: true
@@ -16,7 +16,7 @@
     name:
       - python3-debian
     state: present
-  when: ansible_distribution == "Debian"
+  when: ansible_facts['distribution'] == "Debian"
 
 - name: Add repo using key from URL (Debian)
   become: true
@@ -24,11 +24,14 @@
     name: docker
     types: deb
     uris: "https://download.docker.com/linux/debian"
-    suites: "{{ ansible_distribution_release }}"
+    suites: "{{ ansible_facts['distribution_release'] }}"
     components: stable
-    architectures: "{{ 'amd64' if ansible_architecture == 'x86_64' else 'arm64' if ansible_architecture == 'aarch64' else ansible_architecture }}"
+    architectures: >-
+      {% if ansible_facts['architecture'] == 'x86_64' %}amd64
+      {% elif ansible_facts['architecture'] == 'aarch64' %}arm64
+      {% else -%}ansible_facts['architecture']{% endif %}
     signed_by: "https://download.docker.com/linux/debian/gpg"
-  when: ansible_distribution == "Debian"
+  when: ansible_facts['distribution'] == "Debian"
 
 - name: Add repo using key from URL (Ubuntu)
   become: true
@@ -36,11 +39,14 @@
     name: docker
     types: deb
     uris: "https://download.docker.com/linux/ubuntu"
-    suites: "{{ ansible_distribution_release }}"
+    suites: "{{ ansible_facts['distribution_release'] }}"
     components: stable
-    architectures: "{{ 'amd64' if ansible_architecture == 'x86_64' else 'arm64' if ansible_architecture == 'aarch64' else ansible_architecture }}"
+    architectures: >-
+      {% if ansible_facts['architecture'] == 'x86_64' %}amd64
+      {% elif ansible_facts['architecture'] == 'aarch64' %}arm64
+      {% else -%}ansible_facts['architecture']{% endif %}
     signed_by: "https://download.docker.com/linux/ubuntu/gpg"
-  when: ansible_distribution == "Ubuntu"
+  when: ansible_facts['distribution'] == "Ubuntu"
 
 - name: Install Docker from Docker repository
   become: true

@@ -8,7 +8,7 @@
   become: true
   ansible.builtin.apt_repository:
     repo: 'ppa:ansible/ansible'
-    codename: "{{ ansible_distribution_release }}"
+    codename: "{{ ansible_facts['distribution_release'] }}"
     update_cache: true
 
 - name: Install Ansible from Ansible repository

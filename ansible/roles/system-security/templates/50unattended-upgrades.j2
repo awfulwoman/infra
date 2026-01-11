@@ -9,15 +9,15 @@ Unattended-Upgrade::MailOnlyOnError "true";
 {% endif %}
 
 Unattended-Upgrade::Allowed-Origins {
-    "{{ ansible_distribution }}:{{ ansible_distribution_release }}";
-    "{{ ansible_distribution }}:{{ ansible_distribution_release }}-security";
-    "{{ ansible_distribution }}:{{ ansible_distribution_release }}-updates";
+    "{{ ansible_facts['distribution'] }}:{{ ansible_facts['distribution_release'] }}";
+    "{{ ansible_facts['distribution'] }}:{{ ansible_facts['distribution_release'] }}-security";
+    "{{ ansible_facts['distribution'] }}:{{ ansible_facts['distribution_release'] }}-updates";
 {% if _ubuntupro_initial_registration_status %}
-    "{{ ansible_distribution }}ESM:{{ ansible_distribution_release }}";
-    "{{ ansible_distribution }}ESM:{{ ansible_distribution_release }}-updates";
-    "{{ ansible_distribution }}ESM:{{ ansible_distribution_release }}-security";
-    "{{ ansible_distribution }}ESM:{{ ansible_distribution_release }}-infra-security";
-    "{{ ansible_distribution }}ESMApps:{{ ansible_distribution_release }}-apps-security";
+    "{{ ansible_facts['distribution'] }}ESM:{{ ansible_facts['distribution_release'] }}";
+    "{{ ansible_facts['distribution'] }}ESM:{{ ansible_facts['distribution_release'] }}-updates";
+    "{{ ansible_facts['distribution'] }}ESM:{{ ansible_facts['distribution_release'] }}-security";
+    "{{ ansible_facts['distribution'] }}ESM:{{ ansible_facts['distribution_release'] }}-infra-security";
+    "{{ ansible_facts['distribution'] }}ESMApps:{{ ansible_facts['distribution_release'] }}-apps-security";
 {% endif %}
 {% for origin in security_autoupdate_additional_origins %}
     "{{ origin }}";
