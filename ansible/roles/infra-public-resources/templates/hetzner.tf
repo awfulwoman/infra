@@ -15,35 +15,52 @@ resource "hcloud_zone" "{{ item.id }}" {
 {% endif %}
 
 
-
 #############################################################################
 # ZONE RECORDS
+# Records are grouped by (hostname, type) into rrsets since Hetzner requires
+# all records sharing the same zone/name/type to be in a single resource.
 #############################################################################
 {% if (infra_publicresources_hetzner_domain is iterable) and (infra_publicresources_hetzner_domain | length > 0) %}
 {% for item in infra_publicresources_hetzner_domain %}
-{% if item.domain is defined %}
-{% for record in item.records %}
-{% if (item.domain is defined )
-   and (record.id is defined)
-   and (record.type is defined)
-   and (record.value is defined) %}
 
-resource "hcloud_zone_rrset" "{{ record.id }}" {
+{% if item.domain is defined and item.records is defined %}
+{% set ns = namespace(seen=[]) %}
+{% for record in item.records if record.type is defined and record.value is defined %}
+{% set hostname = record.hostname | default('@') %}
+{% set rrset_key = hostname ~ '|' ~ record.type %}
+{% if rrset_key not in ns.seen %}
+{% set ns.seen = ns.seen + [rrset_key] %}
+{% set rrset_id = item.id ~ '_' ~ (hostname | replace('.', '_') | replace('@', 'root') | replace('-', '_')) ~ '_' ~ (record.type | lower) %}
+
+resource "hcloud_zone_rrset" "{{ rrset_id }}" {
   zone = hcloud_zone.{{ item.id }}.name
-  type   = "{{ record.type }}"
-  name   = "{{ record.hostname | default('@') }}"
+  name = "{{ hostname }}"
+  type = "{{ record.type }}"
 
   records = [
-    { value = "{{ record.value }}" }
-  ]
+{% for r in item.records if r.type is defined and r.value is defined and r.type == record.type and (r.hostname | default('@')) == hostname %}
+    {% if r.type == "TXT" %}
+    { value = provider::hcloud::txt_record("{{ r.value }}") }{{ "," if not loop.last }}
+    {% elif r.type in ["MX", "SRV"] and r.priority is defined %}
+    { value = "{{ r.priority }} {{ r.value }}" }{{ "," if not loop.last }}
+    {% else %}
+    { value = "{{ r.value }}" }{{ "," if not loop.last }}
+    {% endif %}
+{% endfor %}
+            ]
+{# An rrset can only have one TTL value (it applies to the whole set), so grab the first one found #}
+{% for r in item.records if r.type == record.type and (r.hostname | default('@')) == hostname and r.ttl is defined %}
+{% if loop.first %}
 
-  {% if record.ttl is defined -%}
-  ttl = {{ record.ttl }}
-  {% endif -%}
+  ttl = {{ r.ttl }}
+{% endif %}
+{% endfor %}
 }
+
 {% endif %}
 {% endfor %}
 {% endif %}
+
 {% endfor %}
 {% endif %}
 
@@ -58,12 +75,12 @@ resource "hcloud_ssh_key" "githubkey{{ loop.index }}" {
 }
 {% endfor %}
 
+
 #############################################################################
 # COMPUTE INSTANCES
 #############################################################################
 {% for server in infra_publicresources_hcloud_server %}
 {% if server.id is defined %}
-
 
 resource "hcloud_server" "{{ server.id }}" {
   name        = "{{ server.name }}"
@@ -72,7 +89,7 @@ resource "hcloud_server" "{{ server.id }}" {
   user_data = file("{{ infra_publicresources_terraform_working_dir }}/cloud-init.yaml")
   ssh_keys = [
 {% for key in github_keys_list %}
-    digitalocean_ssh_key.githubkey{{ loop.index }}.fingerprint{{ "," if not loop.last }}
+    hcloud_ssh_key.githubkey{{ loop.index }}.id{{ "," if not loop.last }}
 {% endfor %}
   ]
   public_net {
@@ -81,9 +98,9 @@ resource "hcloud_server" "{{ server.id }}" {
   }
 }
 
-
 {% endif %}
 {% endfor %}
+
 
 #############################################################################
 # RESERVED IPS
@@ -95,6 +112,7 @@ resource "hcloud_floating_ip" "{{ reservedip.id }}" {
   home_location = "{{ reservedip.region }}"
   type = "{{ reservedip.type }}"
 }
+
 {% endif %}
 {% endfor %}
 
@@ -106,6 +124,7 @@ resource "hcloud_floating_ip_assignment" "{{ ipassignment.id }}" {
   floating_ip_id = hcloud_floating_ip.{{ ipassignment.reservedip }}.id
   server_id = hcloud_server.{{ ipassignment.server_id }}.id
 }
+
 {% endif %}
 {% endfor %}
 
@@ -113,12 +132,18 @@ resource "hcloud_floating_ip_assignment" "{{ ipassignment.id }}" {
 #############################################################################
 # FIREWALLS
 #############################################################################
-{% if infra_publicresources_digitalocean_firewall is defined %}
-{% for firewall in infra_publicresources_digitalocean_firewall %}
+{% if infra_publicresources_hcloud_firewall is defined %}
+{% for firewall in infra_publicresources_hcloud_firewall %}
 {% if firewall.id is defined %}
 
 resource "hcloud_firewall" "{{ firewall.id }}" {
   name = "{{ firewall.id }}"
+
+  apply_to {
+  {% for tag in firewall.tags %}
+      label_selector = "{{ tag }}"{{ "," if not loop.last }}
+  {% endfor %}
+        }
 
   {% if firewall.inbound is defined %}
   {% for inbound in firewall.inbound %}
@@ -151,7 +176,7 @@ resource "hcloud_firewall" "{{ firewall.id }}" {
     {% endif %}
 
     {% if outbound.ip_addresses is defined %}
-    source_ips = [
+    destination_ips = [
       {% for ipaddress in outbound.ip_addresses %}
       "{{ ipaddress }}"{{ "," if not loop.last }}
       {% endfor %}
@@ -161,6 +186,7 @@ resource "hcloud_firewall" "{{ firewall.id }}" {
   {% endfor %}
   {% endif %}
 }
+
 {% endif %}
 {% endfor %}
 {% endif %}

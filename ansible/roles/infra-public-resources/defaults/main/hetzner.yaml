@@ -13,7 +13,7 @@ infra_publicresources_hcloud_server:
 
 infra_publicresources_hcloud_floating_ip:
   - id: bonjo
-    region: nbg1-dc3
+    region: nbg1
     type: ipv4
 
 infra_publicresources_hcloud_floating_ip_assignment:
@@ -43,6 +43,9 @@ infra_publicresources_hcloud_firewall:
           - "0.0.0.0/0"
           - "::/0"
       - protocol: icmp
+        ip_addresses:
+          - "0.0.0.0/0"
+          - "::/0"
     outbound:
       - protocol: tcp
         port_range: 80
@@ -55,6 +58,9 @@ infra_publicresources_hcloud_firewall:
           - "0.0.0.0/0"
           - "::/0"
       - protocol: icmp
+        ip_addresses:
+          - "0.0.0.0/0"
+          - "::/0"
 
 
 
@@ -83,15 +89,15 @@ infra_publicresources_hetzner_domain:
     records: # digitalocean_record
       - type: CNAME
         hostname: www
-        value: "@"
+        value: "{{ vault_personal_domain }}"
         id: aw_a_www
       - type: CNAME
         hostname: shared
-        value: "@"
+        value: "{{ vault_personal_domain }}"
         id: aw_a_shared
       - type: CNAME
         hostname: gts
-        value: "@"
+        value: "{{ vault_personal_domain }}"
         id: aw_a_gts
       - type: TXT
         hostname: _dmarc
@@ -143,7 +149,7 @@ infra_publicresources_hetzner_domain:
     records: # digitalocean_record
       - type: CNAME
         hostname: www
-        value: "@"
+        # value: "@"
         id: se_a_www
       - type: MX
         value: aspmx.l.google.com.
@@ -180,7 +186,7 @@ infra_publicresources_hetzner_domain:
     records: # digitalocean_record
       - type: CNAME
         hostname: www
-        value: "@"
+        # value: "@"
         id: wc_a_www
       - type: TXT
         hostname: _dmarc
