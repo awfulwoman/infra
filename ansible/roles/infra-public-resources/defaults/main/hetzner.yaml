@@ -43,6 +43,9 @@ infra_publicresources_hcloud_firewall:
           - "0.0.0.0/0"
           - "::/0"
       - protocol: icmp
+        ip_addresses:
+          - "0.0.0.0/0"
+          - "::/0"
     outbound:
       - protocol: tcp
         port_range: 80
@@ -55,6 +58,9 @@ infra_publicresources_hcloud_firewall:
           - "0.0.0.0/0"
           - "::/0"
       - protocol: icmp
+        ip_addresses:
+          - "0.0.0.0/0"
+          - "::/0"
 
 
 

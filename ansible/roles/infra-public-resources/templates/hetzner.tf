@@ -132,12 +132,18 @@ resource "hcloud_floating_ip_assignment" "{{ ipassignment.id }}" {
 #############################################################################
 # FIREWALLS
 #############################################################################
-{% if infra_publicresources_digitalocean_firewall is defined %}
-{% for firewall in infra_publicresources_digitalocean_firewall %}
+{% if infra_publicresources_hcloud_firewall is defined %}
+{% for firewall in infra_publicresources_hcloud_firewall %}
 {% if firewall.id is defined %}
 
 resource "hcloud_firewall" "{{ firewall.id }}" {
   name = "{{ firewall.id }}"
+
+  apply_to {
+  {% for tag in firewall.tags %}
+      label_selector = "{{ tag }}"{{ "," if not loop.last }}
+  {% endfor %}
+        }
 
   {% if firewall.inbound is defined %}
   {% for inbound in firewall.inbound %}
@@ -170,7 +176,7 @@ resource "hcloud_firewall" "{{ firewall.id }}" {
     {% endif %}
 
     {% if outbound.ip_addresses is defined %}
-    source_ips = [
+    destination_ips = [
       {% for ipaddress in outbound.ip_addresses %}
       "{{ ipaddress }}"{{ "," if not loop.last }}
       {% endfor %}
