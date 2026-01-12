@@ -55,7 +55,8 @@
     group: "{{ ansible_user }}"
     mode: "0755"
   loop:
-    - main.tf
+    - digitalocean.tf
+    - hetzner.tf
     - provider.tf
     - variables.tf
     - versions.tf
@@ -76,8 +77,6 @@
         force_init: true
       register: tf_plan
       check_mode: true
-      environment:
-        TF_VAR_hcloud_token: "{{ vault_hetzner_api_key_rw }}"
 
     - name: DEBUG TF plan
       ansible.builtin.debug:
@@ -89,5 +88,3 @@
       community.general.terraform:
         project_path: "{{ infra_publicresources_terraform_working_dir }}"
         state: present
-      environment:
-        TF_VAR_hcloud_token: "{{ vault_hetzner_api_key_rw }}"

@@ -1,7 +1,3 @@
-infra_publicresources_terraform_working_dir: "{{ terraform_working_dir }}/public-resources"
-infra_publicresources_debug: false
-infra_publicresources_tf_apply: true
-
 infra_publicresources_digitalocean_reservedip:
   - id: bonjo
     region: ams3
@@ -115,6 +111,10 @@ infra_publicresources_digitalocean_domain:
         hostname: gts
         value: "@"
         id: aw_a_gts
+      - type: TXT
+        hostname: _atproto
+        value: "did=did:plc:fly2zmd5i47iy4mv7yqsc7x4"
+        id: aw_txt_atproto
       - type: TXT
         hostname: _dmarc
         value: "v=DMARC1;p=none;rua=mailto:postmaster@{{ vault_olddomain_wc }}"
