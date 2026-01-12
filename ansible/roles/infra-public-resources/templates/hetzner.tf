@@ -36,20 +36,20 @@ resource "hcloud_zone_rrset" "{{ rrset_id }}" {
   type = "{{ record.type }}"
 
   records = [
-{% for record in item.records if record.type is defined and record.value is defined and record.type == record.type and (record.hostname | default('@')) == hostname %}
-    {% if record.type == "TXT" %}
-    { value = provider::hcloud::txt_record("{{ record.value }}") }{{ "," if not loop.last }}
-    {% elif record.type in ["MX", "SRV"] and record.priority is defined %}
-    { value = "{{ record.priority }} {{ record.value }}" }{{ "," if not loop.last }}
+{% for r in item.records if r.type is defined and r.value is defined and r.type == record.type and (r.hostname | default('@')) == hostname %}
+    {% if r.type == "TXT" %}
+    { value = provider::hcloud::txt_record("{{ r.value }}") }{{ "," if not loop.last }}
+    {% elif r.type in ["MX", "SRV"] and r.priority is defined %}
+    { value = "{{ r.priority }} {{ r.value }}" }{{ "," if not loop.last }}
     {% else %}
-    { value = "{{ record.value }}" }{{ "," if not loop.last }}
+    { value = "{{ r.value }}" }{{ "," if not loop.last }}
     {% endif %}
 {% endfor %}
             ]
-{% for record in item.records if record.type == record.type and (record.hostname | default('@')) == hostname and record.ttl is defined %}
+{% for r in item.records if r.type == record.type and (r.hostname | default('@')) == hostname and r.ttl is defined %}
 {% if loop.first %}
 
-  ttl = {{ record.ttl }}
+  ttl = {{ r.ttl }}
 {% endif %}
 {% endfor %}
 }
