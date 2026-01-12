@@ -17,6 +17,8 @@ resource "hcloud_zone" "{{ item.id }}" {
 
 #############################################################################
 # ZONE RECORDS
+# Records are grouped by (hostname, type) into rrsets since Hetzner requires
+# all records sharing the same zone/name/type to be in a single resource.
 #############################################################################
 {% if (infra_publicresources_hetzner_domain is iterable) and (infra_publicresources_hetzner_domain | length > 0) %}
 {% for item in infra_publicresources_hetzner_domain %}
@@ -46,6 +48,7 @@ resource "hcloud_zone_rrset" "{{ rrset_id }}" {
     {% endif %}
 {% endfor %}
             ]
+{# An rrset can only have one TTL value (it applies to the whole set), so grab the first one found #}
 {% for r in item.records if r.type == record.type and (r.hostname | default('@')) == hostname and r.ttl is defined %}
 {% if loop.first %}
 
