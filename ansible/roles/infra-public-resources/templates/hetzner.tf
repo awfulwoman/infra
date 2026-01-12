@@ -35,10 +35,10 @@ resource "hcloud_zone_rrset" "{{ record.id }}" {
   records = [
     {% if record.type == "TXT" %}
     { value = provider::hcloud::txt_record("{{ record.value }}") }
-    {% elif record.priority is defined %}
+    {% elif record.type in ["MX", "SRV"] and record.priority is defined %}
     { value = "{{ record.priority }} {{ record.value }}" }
     {% else %}
-    { value = "{{ record.value | default(item.domain) }}" }
+    { value = "{{ record.value }}" }
     {% endif %}
   ]
 
@@ -78,7 +78,7 @@ resource "hcloud_server" "{{ server.id }}" {
   user_data = file("{{ infra_publicresources_terraform_working_dir }}/cloud-init.yaml")
   ssh_keys = [
 {% for key in github_keys_list %}
-    digitalocean_ssh_key.githubkey{{ loop.index }}.fingerprint{{ "," if not loop.last }}
+    hcloud_ssh_key.githubkey{{ loop.index }}.id{{ "," if not loop.last }}
 {% endfor %}
   ]
   public_net {
