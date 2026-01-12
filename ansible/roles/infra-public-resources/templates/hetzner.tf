@@ -15,7 +15,6 @@ resource "hcloud_zone" "{{ item.id }}" {
 {% endif %}
 
 
-
 #############################################################################
 # ZONE RECORDS
 #############################################################################
@@ -29,18 +28,25 @@ resource "hcloud_zone" "{{ item.id }}" {
    and (record.value is defined) %}
 
 resource "hcloud_zone_rrset" "{{ record.id }}" {
-  zone = hcloud_zone.{{ item.id }}.name
-  type   = "{{ record.type }}"
+  zone   = hcloud_zone.{{ item.id }}.name
   name   = "{{ record.hostname | default('@') }}"
+  type   = "{{ record.type }}"
 
   records = [
-    { value = "{{ record.value }}" }
+    {% if record.type == "TXT" %}
+    { value = provider::hcloud::txt_record("{{ record.value }}") }
+    {% elif record.priority is defined %}
+    { value = "{{ record.priority }} {{ record.value }}" }
+    {% else %}
+    { value = "{{ record.value | default(item.domain) }}" }
+    {% endif %}
   ]
 
   {% if record.ttl is defined -%}
   ttl = {{ record.ttl }}
-  {% endif -%}
+  {% endif %}
 }
+
 {% endif %}
 {% endfor %}
 {% endif %}
@@ -58,12 +64,12 @@ resource "hcloud_ssh_key" "githubkey{{ loop.index }}" {
 }
 {% endfor %}
 
+
 #############################################################################
 # COMPUTE INSTANCES
 #############################################################################
 {% for server in infra_publicresources_hcloud_server %}
 {% if server.id is defined %}
-
 
 resource "hcloud_server" "{{ server.id }}" {
   name        = "{{ server.name }}"
@@ -81,9 +87,9 @@ resource "hcloud_server" "{{ server.id }}" {
   }
 }
 
-
 {% endif %}
 {% endfor %}
+
 
 #############################################################################
 # RESERVED IPS
@@ -95,6 +101,7 @@ resource "hcloud_floating_ip" "{{ reservedip.id }}" {
   home_location = "{{ reservedip.region }}"
   type = "{{ reservedip.type }}"
 }
+
 {% endif %}
 {% endfor %}
 
@@ -106,6 +113,7 @@ resource "hcloud_floating_ip_assignment" "{{ ipassignment.id }}" {
   floating_ip_id = hcloud_floating_ip.{{ ipassignment.reservedip }}.id
   server_id = hcloud_server.{{ ipassignment.server_id }}.id
 }
+
 {% endif %}
 {% endfor %}
 
@@ -161,6 +169,7 @@ resource "hcloud_firewall" "{{ firewall.id }}" {
   {% endfor %}
   {% endif %}
 }
+
 {% endif %}
 {% endfor %}
 {% endif %}
