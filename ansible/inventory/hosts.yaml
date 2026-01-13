@@ -4,6 +4,7 @@ all:
     host-backups:
     host-storage:
     vm-awfulwoman:
+    vm-awfulwoman-hetzner:
     host-mba2011:
     host-albion:
     dns:
@@ -40,6 +41,7 @@ all:
         host-backups:
         host-storage:
         vm-awfulwoman:
+        vm-awfulwoman-hetzner:
         host-albion:
         dns:
         testrouter:
@@ -62,3 +64,4 @@ all:
     sitedeployment:
       hosts:
         vm-awfulwoman:
+        vm-awfulwoman-hetzner:
