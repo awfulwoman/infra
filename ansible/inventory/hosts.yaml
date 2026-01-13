@@ -3,7 +3,6 @@ all:
     host-homeassistant:
     host-backups:
     host-storage:
-    vm-awfulwoman:
     vm-awfulwoman-hetzner:
     host-mba2011:
     host-albion:
@@ -63,5 +62,4 @@ all:
     # Necessary to handle deployment keys
     sitedeployment:
       hosts:
-        vm-awfulwoman:
         vm-awfulwoman-hetzner:

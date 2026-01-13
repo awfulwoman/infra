@@ -1,5 +1,5 @@
 - name: Out on the internet server
-  hosts: vm-awfulwoman
+  hosts: vm-awfulwoman-hetzner
   # vars:
   #   compositions:
   #     - awfulwoman

@@ -2,10 +2,10 @@ infra_publicresources_digitalocean_reservedip:
   - id: bonjo
     region: ams3
 
-infra_publicresources_digitalocean_reservedip_assignment:
-  - id: mike
-    reservedip: bonjo
-    droplet: public26
+# infra_publicresources_digitalocean_reservedip_assignment:
+#   - id: mike
+#     reservedip: bonjo
+#     droplet: public26
 
 infra_publicresources_digitalocean_firewall:
   - id: web
@@ -41,18 +41,18 @@ infra_publicresources_digitalocean_firewall:
           - "::/0"
       - protocol: icmp
 
-infra_publicresources_digitalocean_droplet:
-  - id: public26
-    name: "public-server-01"
-    description: >
-      A general-purpose server for things out on the public internet.
-    image: ubuntu-24-04-x64
-    region: ams3
-    size: s-1vcpu-1gb-intel
-    tags:
-      - secured
-    volumes:
-      - storage01
+# infra_publicresources_digitalocean_droplet:
+#   - id: public26
+#     name: "public-server-01"
+#     description: >
+#       A general-purpose server for things out on the public internet.
+#     image: ubuntu-24-04-x64
+#     region: ams3
+#     size: s-1vcpu-1gb-intel
+#     tags:
+#       - secured
+#     volumes:
+#       - storage01
 
 infra_publicresources_digitalocean_volume:
   - id: storage01
@@ -68,7 +68,7 @@ infra_publicresources_digitalocean_project:
       - digitalocean_domain.se
       - digitalocean_domain.wc
       - digitalocean_domain.aw
-      - digitalocean_droplet.public26
+      # - digitalocean_droplet.public26
   - name: Infra
     description: Infra stuff
     id: infra

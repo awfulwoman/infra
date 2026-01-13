@@ -24,35 +24,40 @@
       - acl
     state: present
 
-- name: Check status of pools
+- name: Find inactive pools
   ansible.builtin.command:
     cmd: "zpool status {{ item }}"
-  register: zpool_check_result
+  register: zpools_down
   loop: "{{ zfs | zfs_all_pools }}"
   changed_when: false
   ignore_errors: true
 
 - name: Address failed pools
-  when: zpool_check_result.failed is defined and zpool_check_result.failed
+  when: zpools_down.failed is defined and zpools_down.failed
   block:
-    - name: Attempt to import pool from block storage device
-      ansible.builtin.debug:
-        msg: "zpool import {{ item.item }}"
-      loop: "{{ zpool_check_result.results | selectattr('rc', '>', 0) | list }}"
 
-    - name: Check status of pools after import attempt
+    - name: Import eligable pools from block storage device
+      become: true
+      ansible.builtin.command:
+        cmd: "zpool import {{ item.item }} -f"
+      loop: "{{ zpools_down.results | selectattr('rc', '>', 0) | list }}"
+      ignore_errors: true
+
+    - name: Find remaining inactive pools
       ansible.builtin.command:
         cmd: "zpool status {{ item }}"
-      register: zpool_check_result_import
+      register: zpools_down_after_import
       loop: "{{ zfs | zfs_all_pools }}"
       changed_when: false
       ignore_errors: true
 
-    - name: From remaining uninitialised pools get those with device specified
-      ansible.builtin.debug:
-        msg: "zpool create {{ item.item }} - {{ zfs[item.item].device }}"
-      when: zfs[item.item].device is defined
-      loop: "{{ zpool_check_result_import.results | selectattr('rc', '>', 0) | list }}"
+    - name: Create any remaining eligable pools
+      become: true
+      community.general.zpool:
+        name: "{{ item.item }}"
+        vdevs: "{{ zfs[item.item].vdevs }}"
+      when: zfs[item.item].vdevs is defined
+      loop: "{{ zpools_down_after_import.results | selectattr('rc', '>', 0) | list }}"
       register: zpool_check_result_create
 
 

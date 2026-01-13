@@ -7,9 +7,12 @@ users:
     ssh_import_id:
       - gh:awfulwoman
     lock_passwd: true
-# packages:
-#   - fail2ban
-#   - ufw
+packages:
+  - fail2ban
+  - ufw
+  - zfsutils-linux
+  - acl
+  - zfs-zed
 # package_update: true
 # package_upgrade: true
 # write_files:

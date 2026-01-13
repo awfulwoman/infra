@@ -5,7 +5,7 @@ infra_publicresources_hcloud_server:
       A general-purpose server for things out on the public internet.
     image: ubuntu-24.04
     region: nbg1
-    size: cx33
+    size: cx23
     labels:
       - key: secured
     volumes:
@@ -21,6 +21,11 @@ infra_publicresources_hcloud_floating_ip_assignment:
     reservedip: bonjo
     server_id: public26
 
+infra_publicresources_hcloud_volume:
+  - id: storage01
+    name: site-storage
+    size: 20
+    server_id: public26
 
 infra_publicresources_hcloud_firewall:
   - id: web

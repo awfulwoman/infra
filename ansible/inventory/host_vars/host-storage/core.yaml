@@ -36,10 +36,33 @@ ubuntupro_attach: true
 
 zfs:
   fastpool:
+    # pool_properties: {}
+    # vdevs:
+    #   - type: mirror
+    #     disks:
+    #       - /dev/disk/by-id/scsi-SATA_CT1000BX500SSD1_2216E629AC18
+    #       - /dev/disk/by-id/scsi-SATA_SanDisk_SDSSDH3_22087N455301
     datasets:
       compositions:
         importance: critical
   slowpool:
+    # vdevs:
+    #   - type: mirror
+    #     disks:
+    #       - /dev/disk/by-id/scsi-SATA_ST16000NT001-3LV_ZR61CRHS
+    #       - /dev/disk/by-id/scsi-SATA_WDC_WD40EFZX-68A_WD-WX12DA08KR45
+    #   - type: mirror
+    #     disks:
+    #       - /dev/disk/by-id/scsi-SATA_WDC_WD40EFZX-68A_WD-WX12DA0R1V78
+    #       - /dev/disk/by-id/scsi-SATA_WDC_WD40EFZX-68A_WD-WX82DA1RHH08
+    #   - type: mirror
+    #     disks:
+    #       - /dev/disk/by-id/scsi-SATA_ST4000VN008-2DR1_ZDHB6E35
+    #       - /dev/disk/by-id/scsi-SATA_ST4000VN008-2DR1_ZDHB880S
+    #   - type: mirror
+    #     disks:
+    #       - "/dev/disk/by-id/{{ vault_ironwolfpro_16tb_alpha }}"
+    #       - "/dev/disk/by-id/{{ vault_ironwolfpro_16tb_beta }}"
     datasets:
       shared:
         datasets:
@@ -117,19 +140,6 @@ vault_ironwolfpro_16tb_beta: !vault |
           6564366662636666620a303864346333343134636361343339326333336236353733383538323435
           63626561316564616235353266663536643634313664396564313564326137333237613461363365
           6433666534386334643163656536313830316266616363373430
-
-# smartmontools_drives:
-#   - /dev/disk/by-id/scsi-SATA_CT1000BX500SSD1_2216E629AC18
-#   - /dev/disk/by-id/scsi-SATA_SanDisk_SDSSDH3_22087N455301
-#   - /dev/disk/by-id/scsi-SATA_ST4000VN008-2DR1_ZDHAMGT1
-#   - /dev/disk/by-id/scsi-SATA_ST4000VN008-2DR1_ZDHB6E35
-#   - /dev/disk/by-id/scsi-SATA_ST4000VN008-2DR1_ZDHB880S
-#   - /dev/disk/by-id/scsi-SATA_WDC_WD40EFZX-68A_WD-WX12DA08KR45
-#   - /dev/disk/by-id/scsi-SATA_WDC_WD40EFZX-68A_WD-WX12DA0R1V78
-#   - /dev/disk/by-id/scsi-SATA_WDC_WD40EFZX-68A_WD-WX82DA1RHH08
-#   - "/dev/disk/by-id/{{ vault_ironwolfpro_16tb_alpha }}"
-#   - "/dev/disk/by-id/{{ vault_ironwolfpro_16tb_beta }}"
-
 
 # -------------------------------------------------------------------
 # COMPOSITIONS

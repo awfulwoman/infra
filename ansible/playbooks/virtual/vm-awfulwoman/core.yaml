@@ -1,7 +1,5 @@
 - name: Out on the internet server
-  hosts:
-    - vm-awfulwoman-hetzner
-    - vm-awfulwoman
+  hosts: vm-awfulwoman-hetzner
   roles:
     - role: bootstrap-ubuntu-server
     - role: user-site-deployment

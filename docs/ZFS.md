@@ -134,12 +134,30 @@ Pool names are typically:
 
 ZFS pools are configured from one of more `vdev` devices. These `vdev` devices are formed from one or more physical drives.
 
+See the Ansible [zpool documentation](https://docs.ansible.com/projects/ansible/latest/collections/community/general/zpool_module.html#ansible-collections-community-general-zpool-module) for more info.
+
 ```yaml
 zfs:
   fastpool:
     vdevs:
       - type: mirror
-        drives: 
-          - id: /dev/disk/by-id/scsi-SATA_CT1000BX500SSD1_2216E629AC18
-          - id: /dev/disk/by-id/scsi-SATA_SanDisk_SDSSDH3_22087N455301
+        disks: 
+          - /dev/disk/by-id/scsi-SATA_CT1000BX500SSD1_2216E629AC18
+          - /dev/disk/by-id/scsi-SATA_SanDisk_SDSSDH3_22087N455301
+```
+
+or
+
+```yaml
+zfs:
+  fastpool:
+    vdevs:
+      - type: mirror
+        disks:
+          - /dev/sda
+          - /dev/sdb
+      - type: mirror
+        disks:
+          - /dev/sdc
+          - /dev/sdd
 ```

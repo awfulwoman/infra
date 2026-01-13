@@ -47,10 +47,9 @@ tailscale_exit_node: true
 
 zfs:
   fastpool:
-    # Only a single device right now, as this isn't being used to set
-    # up complex storage devices, just single-use nodes
-    # TODO: Make this a dictionary of vdevs and devices
-    device: /dev/disk/by-id/scsi-SIntenso_SSD_SATAIII_512011020200
+    vdevs:
+      - type: stripe
+        disks: /dev/disk/by-id/scsi-SIntenso_SSD_SATAIII_512011020200
     datasets:
       # exampleset:
       #   infra:
@@ -63,11 +62,6 @@ zfs:
       #     descendents:
       downloads:
       compositions:
-        # importance: critical
-        # properties:
-        #   encryption: aes-256-gcm
-        #   keylocation: "{{ vault_zfs_default_encryption_passphrase_path }}"
-        #   keyformat: passphrase
 
 
 # -------------------------------------------------------------------

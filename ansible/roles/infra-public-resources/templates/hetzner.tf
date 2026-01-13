@@ -1,5 +1,6 @@
 #############################################################################
 # ZONES
+# Define name server zones that are to be managed (e.g. example.com)
 #############################################################################
 {% if (infra_publicresources_hetzner_domain is iterable) and (infra_publicresources_hetzner_domain | length > 0) %}
 {% for item in infra_publicresources_hetzner_domain %}
@@ -67,6 +68,7 @@ resource "hcloud_zone_rrset" "{{ rrset_id }}" {
 
 #############################################################################
 # PUBLIC KEYS
+# Public keys used to access compute instances
 #############################################################################
 {% for key in github_keys_list %}
 resource "hcloud_ssh_key" "githubkey{{ loop.index }}" {
@@ -116,8 +118,27 @@ resource "hcloud_server" "{{ server.id }}" {
 {% endfor %}
 
 
+
 #############################################################################
-# RESERVED IPS
+# BLOCK STORAGE VOLUMES
+# Block-level storage - can be attached to compute as a drive
+#############################################################################
+{% if infra_publicresources_hcloud_volume is defined %}
+{% for volume in infra_publicresources_hcloud_volume %}
+
+resource "hcloud_volume" "{{ volume.id }}" {
+  name = "{{ volume.name }}"
+  size = {{ volume.size }}
+  server_id = hcloud_server.{{ volume.server_id }}.id
+  automount = false
+}
+
+{% endfor %}
+{% endif %}
+
+#############################################################################
+# FLOATING IPS
+# Reserved IPs that don't change
 #############################################################################
 {% for reservedip in infra_publicresources_hcloud_floating_ip %}
 {% if reservedip.id is defined %}
@@ -145,6 +166,7 @@ resource "hcloud_floating_ip_assignment" "{{ ipassignment.id }}" {
 
 #############################################################################
 # FIREWALLS
+# Cloud-level firewalls that protect resources behind them
 #############################################################################
 {% if infra_publicresources_hcloud_firewall is defined %}
 {% for firewall in infra_publicresources_hcloud_firewall %}
