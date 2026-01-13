@@ -86,6 +86,7 @@ resource "hcloud_server" "{{ server.id }}" {
   name        = "{{ server.name }}"
   image       = "{{ server.image }}"
   server_type = "{{ server.size }}"
+  location    = "{{ server.region }}"
   user_data = file("{{ infra_publicresources_terraform_working_dir }}/cloud-init.yaml")
   ssh_keys = [
 {% for key in github_keys_list %}
@@ -96,6 +97,19 @@ resource "hcloud_server" "{{ server.id }}" {
     ipv4_enabled = true
     ipv6_enabled = true
   }
+
+{% if server.labels is defined %}
+  labels = {
+    {% for label in server.labels %}
+    {% if label.value is defined %}
+    "{{ label.key }}" : "{{ label.value }}"
+    {% else %}
+    "{{ label.key }}" : ""
+    {% endif %}
+    {% endfor %}
+  }
+{% endif %}
+
 }
 
 {% endif %}
@@ -138,12 +152,11 @@ resource "hcloud_floating_ip_assignment" "{{ ipassignment.id }}" {
 
 resource "hcloud_firewall" "{{ firewall.id }}" {
   name = "{{ firewall.id }}"
-
+{% if firewall.apply_to_label is defined %}
   apply_to {
-  {% for tag in firewall.tags %}
-      label_selector = "{{ tag }}"{{ "," if not loop.last }}
-  {% endfor %}
-        }
+    label_selector  = "{{ firewall.apply_to_label }}"
+  }
+{% endif %}
 
   {% if firewall.inbound is defined %}
   {% for inbound in firewall.inbound %}

@@ -4,10 +4,10 @@ infra_publicresources_hcloud_server:
     description: >
       A general-purpose server for things out on the public internet.
     image: ubuntu-24.04
-    region: nbg1-dc3
+    region: nbg1
     size: cx33
-    tags:
-      - secured
+    labels:
+      - key: secured
     volumes:
       - storage01
 
@@ -24,8 +24,7 @@ infra_publicresources_hcloud_floating_ip_assignment:
 
 infra_publicresources_hcloud_firewall:
   - id: web
-    tags:
-      - secured
+    apply_to_label: secured
     inbound:
       - protocol: tcp
         port_range: 22
