@@ -88,4 +88,4 @@ Project documentation including architecture guides, runbooks, and reference mat
 
 ## Session Logging
 
-A custom Claude agent (`session-logger`) maintains `log.md` for continuity across work sessions. Use it when ending sessions or reaching significant milestones.
+A custom Claude agent (`session-logger`) maintains session logs in `worklog/` for continuity across work sessions. Each file is named by date (`YYYY-MM-DD.md`). Use it when ending sessions or reaching significant milestones.
