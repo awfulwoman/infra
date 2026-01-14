@@ -35,6 +35,9 @@ systemd_service_path: /etc/systemd/system
 # Terraform
 terraform_working_dir: /opt/terraform
 
+# Hetzner
+hetzner_floating_ip: 78.47.163.140
+
 nullmailer_mail_recipient: "hardcoded@{{ vault_olddomain_wc }}"
 nullmailer_relay_host: "smtp.{{ vault_mailbox_domain }}"
 nullmailer_relay_port: 465

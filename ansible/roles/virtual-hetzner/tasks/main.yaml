@@ -1,0 +1,16 @@
+- name: Ensure netplan is present
+  become: true
+  ansible.builtin.apt:
+    name:
+      - netplan.io
+    state: present
+
+- name: Deploy floating IP netplan configuration
+  become: true
+  ansible.builtin.template:
+    src: 60-floating-ip.yaml
+    dest: /etc/netplan/60-floating-ip.yaml
+    owner: root
+    group: root
+    mode: "0600"
+  notify: Apply netplan

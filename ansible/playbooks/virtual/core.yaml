@@ -1,1 +1,1 @@
-- import_playbook: vm-awfulwoman/core.yaml
+- import_playbook: vm-awfulwoman-hetzner/core.yaml

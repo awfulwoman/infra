@@ -1,1 +1,1 @@
-- import_playbook: vm-awfulwoman/compositions.yaml
+- import_playbook: vm-awfulwoman-hetzner/compositions.yaml

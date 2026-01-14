@@ -2,6 +2,7 @@
   hosts: vm-awfulwoman-hetzner
   roles:
     - role: bootstrap-ubuntu-server
+    - role: virtual-hetzner
     - role: user-site-deployment
     - role: system-zfs
     - role: client-nfs

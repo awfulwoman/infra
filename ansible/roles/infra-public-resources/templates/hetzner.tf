@@ -45,7 +45,11 @@ resource "hcloud_zone_rrset" "{{ rrset_id }}" {
     {% elif r.type in ["MX", "SRV"] and r.priority is defined %}
     { value = "{{ r.priority }} {{ r.value }}" }{{ "," if not loop.last }}
     {% else %}
+    {% if '.ip_address' in r.value %}
+    { value = {{ r.value | replace('infra_publicresources_', '') }} }{{ "," if not loop.last }}
+    {% else %}
     { value = "{{ r.value }}" }{{ "," if not loop.last }}
+    {% endif %}
     {% endif %}
 {% endfor %}
             ]
