@@ -35,19 +35,24 @@ ansible-playbook ansible/playbooks/baremetal/host-storage/core.yaml
 The primary configuration management tool. Structure:
 
 - **`inventory/`**: Host definitions (`hosts.yaml`), `host_vars/`, `group_vars/`
-- **`roles/`**: ~97 roles following naming conventions:
-  - `bootstrap-*`: Roles to setup essential configurations of a host type (personal machines, Ubuntu servers)
-  - `composition-*`: Docker Compose applications (roughly 39 roles - homeassistant, gitea, jellyfin, etc.)
-  - `backups-zfs-*`: The ZFS backup infrastructure
-  - `system-*`: System configurations (docker, zfs, security)
-  - `server-*`: The server half of client-server pairs
-  - `client-*`: The client half of client-server pairs
+- **`roles/`**: ~93 roles following naming conventions:
+  - `bootstrap-*`: Essential configurations for a host type (personal machines, Ubuntu servers)
+  - `composition-*`: Docker Compose applications (~39 roles - homeassistant, gitea, jellyfin, etc.)
+  - `backups-zfs-*`: ZFS backup infrastructure (client, server, offsite)
+  - `system-*`: System configurations (docker, zfs, zfs-policy, security)
+  - `server-*`: Server half of client-server pairs (nfs, nut)
+  - `client-*`: Client half of client-server pairs (nfs, nut)
+  - `virtual-*`: Virtualisation roles (qemu-host, qemu-guest, hetzner)
+  - `hardware-*`: Hardware-specific configs (raspberry-pi, zigbee-conbee, rtl-433)
+  - `monitoring-*`: Monitoring integrations (healthchecksio, linux2mqtt)
+  - `network-*`: Network configuration (register-subdomain, ip-address-*)
+  - `infra-*`: Infrastructure resources provisioned via Terraform
 - **`playbooks/`**: Organized by target type (`baremetal/`, `clusters/`, `virtual/`, `personal/`, `utility/`)
   - Each target has several playbook files:
     - `core.yaml`: This configures the entire host, including Docker Compose
     - `compositions.yaml`: This configures just Docker Compose applications
     - `dev.yaml`: For adhoc and experimental tasks
-- **`plugins/filters/`**: Custom Ansible filter plugins
+- **`plugins/filters/`**: Custom Ansible filter plugins (e.g., `zfs_datasets.py` for processing declarative `zfs:` structures)
 
 **Ansible configuration** (`ansible.cfg`):
 
@@ -74,7 +79,16 @@ Devices must define substitutions for secrets since secrets can't be used inside
 
 ### Terraform
 
-Located in various places for QEMU/libvirt virtual machine provisioning, both on the local network and on public hosting (Hetzner).
+Located in `ansible/roles/infra-*/templates/` for provisioning infrastructure:
+
+- **Local**: QEMU/libvirt virtual machines
+- **Public**: Hetzner Cloud (servers, floating IPs, DNS, firewalls)
+
+Templates are split by provider (`digitalocean.tf`, `hetzner.tf`) and rendered by Ansible during playbook runs.
+
+### Scripts (`scripts/`)
+
+Utility shell scripts for common operations (e.g., `flush-dns.sh`).
 
 ### Documentation (`docs/`)
 
