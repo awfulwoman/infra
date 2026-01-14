@@ -2,4 +2,3 @@
 - import_playbook: host-storage/compositions.yaml
 - import_playbook: host-homeassistant/compositions.yaml
 - import_playbook: host-albion/compositions.yaml
-- import_playbook: host-backups/compositions.yaml

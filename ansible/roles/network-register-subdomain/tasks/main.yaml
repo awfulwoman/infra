@@ -1,17 +1,32 @@
-- name: Register tailscale subdomain(s)
-  community.digitalocean.digital_ocean_domain_record:
-    state: present
-    oauth_token: "{{ vault_digitalocean_domain_token }}"
-    domain: "{{ domain_name }}"
-    type: A
+# - name: Register subdomain to a Tailscale address via Digital Ocean's DNS
+#   community.digitalocean.digital_ocean_domain_record:
+#     state: present
+#     oauth_token: "{{ vault_digitalocean_domain_token }}"
+#     domain: "{{ domain_name }}"
+#     type: A
+#     name: "{{ domain_item }}"
+#     data: "{{ ansible_tailscale0.ipv4.address }}"
+#     force_update: true
+#   loop: "{{ configure_dns_subdomains }}"
+#   loop_control:
+#     loop_var: domain_item
+#   when: ansible_tailscale0.ipv4.address is defined
+
+
+- name: Register subdomain to a Tailscale address via Hetzner's DNS
+  hetzner.hcloud.zone_rrset:
+    api_token: "{{ vault_hetzner_api_key_rw }}"
+    zone: "{{ domain_name }}"
     name: "{{ domain_item }}"
-    data: "{{ ansible_tailscale0.ipv4.address }}"
-    force_update: true
+    type: "A"
+    records:
+      - value: "{{ ansible_tailscale0.ipv4.address }}"
+        comment: "Tailscale"
+    state: present
   loop: "{{ configure_dns_subdomains }}"
   loop_control:
     loop_var: domain_item
   when: ansible_tailscale0.ipv4.address is defined
-
 
 - name: Confirm DNS
   ansible.builtin.debug:
@@ -20,4 +35,5 @@
   loop_control:
     loop_var: domain_item
   when: ansible_tailscale0.ipv4.address is defined
-# - name: Register PiHole subdomain(s)
+
+# - name: Register a subdomain on the internal network

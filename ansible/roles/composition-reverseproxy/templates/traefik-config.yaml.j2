@@ -41,6 +41,10 @@ certificatesResolvers:
       # caserver: https://acme-staging-v02.api.letsencrypt.org/directory"
       dnschallenge:
         provider: hetzner
-        delaybeforecheck: 0
-        DisablePropagationCheck: true
+        resolvers:
+          - hydrogen.ns.hetzner.com
+          - helium.ns.hetzner.de
+          - oxygen.ns.hetzner.com
+        {# delaybeforecheck: 0 #}
+        {# DisablePropagationCheck: true #}
 {% endif %}

@@ -74,7 +74,7 @@ Devices must define substitutions for secrets since secrets can't be used inside
 
 ### Terraform
 
-Located in various places for QEMU/libvirt virtual machine provisioning, both on the local network and on public hosting (Digital Ocean).
+Located in various places for QEMU/libvirt virtual machine provisioning, both on the local network and on public hosting (Hetzner).
 
 ### Documentation (`docs/`)
 

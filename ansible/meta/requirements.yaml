@@ -22,3 +22,4 @@ collections:
   - name: community.docker
   - name: community.general
   - name: community.healthchecksio
+  - name: hetzner.hcloud

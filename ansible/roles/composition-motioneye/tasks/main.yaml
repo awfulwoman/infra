@@ -38,20 +38,12 @@
 #     src: filename.txt
 #     dest: "{{ composition_config }}/filename.txt
 
-- name: Register tailscale subdomain(s)
-  community.digitalocean.digital_ocean_domain_record:
-    state: present
-    oauth_token: "{{ vault_digitalocean_domain_token }}"
-    domain: "{{ domain_name }}"
-    type: A
-    name: "{{ domain_item }}"
-    data: "{{ ansible_tailscale0.ipv4.address }}"
-    force_update: true
-  loop_control:
-    loop_var: domain_item
-  loop:
-    - "motioneye.{{ ansible_facts['hostname'] }}"
-  when: ansible_tailscale0.ipv4.address is defined
+- name: Run Configure DNS role
+  ansible.builtin.include_role:
+    name: "network-register-subdomain"
+  vars:
+    configure_dns_subdomains:
+      - "motioneye.{{ ansible_facts['hostname'] }}"
 
 - name: Enact ZFS drive
   ansible.builtin.command: "zpool create fastpool {{ composition_motioneye_zfsdriveid }}"
