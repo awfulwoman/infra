@@ -53,7 +53,3 @@ If a specialised user is needed, one of these roles will install it.
 ## Virtual
 
 Anything related to virtualisation, either at a host or guest level.
-
-## ZFS
-
-ZFS is specialised enough to warrant its own role.
