@@ -1,0 +1,9 @@
+- name: ZFS and backup stuff
+  hosts: host-albion
+  roles:
+    - role: system-zfs
+    - role: backups-zfs-archive-offsite
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:

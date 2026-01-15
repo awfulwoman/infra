@@ -1,0 +1,5 @@
+- import_playbook: host-storage/zfs.yaml
+- import_playbook: host-backups/zfs.yaml
+- import_playbook: host-homeassistant/zfs.yaml
+- import_playbook: host-albion/zfs.yaml
+- import_playbook: dns/zfs.yaml

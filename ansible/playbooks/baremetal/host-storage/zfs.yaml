@@ -1,0 +1,10 @@
+- name: ZFS and backup stuff
+  hosts: host-storage
+  roles:
+    - role: system-zfs
+    - role: system-zfs-policy
+    - role: backups-zfs-client
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:
