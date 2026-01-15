@@ -84,9 +84,9 @@ def get_send_size(dataset, snapshot, incremental_from=None):
     The 'size' line contains the total bytes to transfer.
     """
     if incremental_from:
-        cmd = f"zfs send -nv -Rw -I {dataset}@{incremental_from} {dataset}@{snapshot}"
+        cmd = f"zfs send -nv -w -I {dataset}@{incremental_from} {dataset}@{snapshot}"
     else:
-        cmd = f"zfs send -nv -Rw {dataset}@{snapshot}"
+        cmd = f"zfs send -nv -w {dataset}@{snapshot}"
 
     debug(f"Estimating size: {cmd}")
 
@@ -183,9 +183,49 @@ def preflight(host, datasets, user, destination, strip_prefix):
 
     pushdatasets_init(host, datasets, user, destination, strip_prefix)
 
+def get_local_child_datasets(dataset):
+    """Get all datasets under a parent (including the parent itself)."""
+    command = f"zfs list -H -o name -r {dataset}"
+
+    debug(command)
+
+    try:
+        result = subprocess.run(
+            command.split(' '),
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=True
+        )
+        datasets = result.stdout.decode().strip().splitlines()
+
+        debug(f"Found {len(datasets)} datasets under {dataset}")
+
+        return datasets
+
+    except subprocess.CalledProcessError as e:
+        error(f"Could not list local datasets: {e.stderr.decode()}")
+        sys.exit(1)
+
+
 def pushdatasets_init(host, datasets, user, destination, strip_prefix):
+    # Expand each dataset to include all children (like pull script does)
+    all_datasets = []
     for dataset in datasets:
+        children = get_local_child_datasets(dataset)
+        all_datasets.extend(children)
+
+    # Remove duplicates while preserving order
+    seen = set()
+    unique_datasets = []
+    for ds in all_datasets:
+        if ds not in seen:
+            seen.add(ds)
+            unique_datasets.append(ds)
+
+    info(f"Pushing {len(unique_datasets)} datasets individually")
+    for dataset in unique_datasets:
         pushdatasets(host, dataset, user, destination, strip_prefix)
+    print('')
 
 
 def get_local_snapshots(dataset):
@@ -448,7 +488,7 @@ def pushdatasets(host, dataset, user, destination, strip_prefix):
 
         # Step 1: Full send of earliest snapshot (raw for encrypted datasets)
         info(f"Pushing earliest snapshot '{earliest_local}'")
-        send_cmd = f"zfs send -Rw {dataset}@{earliest_local}"
+        send_cmd = f"zfs send -w {dataset}@{earliest_local}"
         receive_cmd = f"ssh {user}@{host} zfs receive -F -u {remote_dataset}"
 
         if not send_and_receive(send_cmd, receive_cmd):
@@ -458,7 +498,7 @@ def pushdatasets(host, dataset, user, destination, strip_prefix):
         # Step 2: Incremental from earliest to latest (if more than one snapshot)
         if earliest_local != latest_local:
             info(f"Pushing incremental '{earliest_local}' -> '{latest_local}'")
-            send_cmd = f"zfs send -Rw -I {dataset}@{earliest_local} {dataset}@{latest_local}"
+            send_cmd = f"zfs send -w -I {dataset}@{earliest_local} {dataset}@{latest_local}"
 
             if not send_and_receive(send_cmd, receive_cmd):
                 sys.exit(1)
@@ -482,7 +522,7 @@ def pushdatasets(host, dataset, user, destination, strip_prefix):
 
         info(f"Pushing incremental snapshots.")
         debug(f"{latest_common}' -> '{latest_local}")
-        send_cmd = f"zfs send -Rw -I {dataset}@{latest_common} {dataset}@{latest_local}"
+        send_cmd = f"zfs send -w -I {dataset}@{latest_common} {dataset}@{latest_local}"
         receive_cmd = f"ssh {user}@{host} zfs receive -F -u {remote_dataset}"
 
         if not send_and_receive(send_cmd, receive_cmd):

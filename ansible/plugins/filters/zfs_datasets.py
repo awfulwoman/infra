@@ -264,9 +264,14 @@ class FilterModule(object):
         Returns an array where each item is a dictionary containing:
         - dataset: The full dataset path (string)
         - importance: The importance level (string, defaults to 'none')
+        - discover_children: Boolean flag for runtime child discovery (optional)
 
         Supports policy inheritance via 'inherit_policy: true' on parent datasets.
         When set, child datasets without explicit importance inherit from parent.
+
+        Supports runtime child discovery via 'discover_children: true' on datasets.
+        When set, the snapshot/prune scripts will query ZFS for child datasets
+        at runtime and apply the same policy to discovered children.
 
         Args:
             zfs_dict: ZFS configuration dictionary
@@ -308,6 +313,10 @@ class FilterModule(object):
                         'dataset': '/'.join(dataset_path),
                         'importance': importance,
                     }
+
+                    # Add discover_children flag if present
+                    if isinstance(dataset_value, dict) and dataset_value.get('discover_children', False):
+                        dataset_dict['discover_children'] = True
 
                     result.append(dataset_dict)
 

@@ -83,6 +83,61 @@ def should_snapshot(importance, snap_type):
     return retention > 0
 
 
+def get_zfs_children(dataset):
+    """Query ZFS for all child datasets under a parent (excluding the parent itself)."""
+    cmd = ["zfs", "list", "-H", "-o", "name", "-r", dataset]
+
+    try:
+        result = subprocess.run(cmd, capture_output=True, check=False)
+        if result.returncode != 0:
+            debug(f"Could not list children of {dataset}: {result.stderr.decode().strip()}")
+            return []
+
+        all_datasets = result.stdout.decode().strip().splitlines()
+        # Filter out the parent itself, return only children
+        children = [ds for ds in all_datasets if ds != dataset]
+        return children
+
+    except Exception as e:
+        debug(f"Error discovering children of {dataset}: {e}")
+        return []
+
+
+def expand_datasets_with_children(datasets):
+    """
+    Expand datasets that have discover_children=true by querying ZFS for children.
+
+    Children inherit the parent's importance unless they are explicitly declared
+    in the original datasets list.
+    """
+    # Build a set of explicitly declared datasets for quick lookup
+    declared_datasets = {ds['dataset'] for ds in datasets}
+
+    expanded = []
+    for ds_info in datasets:
+        expanded.append(ds_info)
+
+        if ds_info.get('discover_children', False):
+            dataset = ds_info['dataset']
+            importance = ds_info['importance']
+
+            debug(f"Discovering children of {dataset}")
+            children = get_zfs_children(dataset)
+
+            for child in children:
+                if child not in declared_datasets:
+                    debug(f"  Found child: {child} (inheriting importance: {importance})")
+                    expanded.append({
+                        'dataset': child,
+                        'importance': importance,
+                        '_discovered': True  # Mark as discovered for logging
+                    })
+                else:
+                    debug(f"  Skipping {child} - explicitly declared")
+
+    return expanded
+
+
 def main():
     global _debug, _dry_run
 
@@ -105,11 +160,17 @@ def main():
     snapshot_name = get_snapshot_name(args.type)
     info(f"Creating {args.type} snapshots: {snapshot_name}")
 
+    # Expand datasets with discovered children
+    all_datasets = expand_datasets_with_children(DATASETS)
+    discovered_count = sum(1 for ds in all_datasets if ds.get('_discovered', False))
+    if discovered_count > 0:
+        info(f"Discovered {discovered_count} child datasets at runtime")
+
     success_count = 0
     skip_count = 0
     fail_count = 0
 
-    for ds_info in DATASETS:
+    for ds_info in all_datasets:
         dataset = ds_info['dataset']
         importance = ds_info['importance']
 
