@@ -342,33 +342,44 @@ def send_and_receive(send_cmd, receive_cmd):
             # Allow send_proc to receive SIGPIPE if receive_proc exits
             send_proc.stdout.close()
 
-        # Wait for receive to complete and capture stderr
+        # Wait for all processes to complete and capture stderr
         _, receive_stderr = receive_proc.communicate()
 
-        # Wait for pv if it was used
         pv_stderr = None
         if pv_proc:
             _, pv_stderr = pv_proc.communicate()
 
-        # Now wait for send to complete
         _, send_stderr = send_proc.communicate()
 
-        if send_proc.returncode != 0:
-            error(f"zfs send failed with code {send_proc.returncode}")
-            if send_stderr:
-                debug(send_stderr.decode())
-            return False
+        # Check if any part of the pipeline failed
+        send_failed = send_proc.returncode != 0
+        pv_failed = pv_proc and pv_proc.returncode != 0
+        receive_failed = receive_proc.returncode != 0
 
-        if pv_proc and pv_proc.returncode != 0:
-            error(f"pv (bandwidth limiter) failed with code {pv_proc.returncode}")
-            if pv_stderr:
-                debug(pv_stderr.decode())
-            return False
+        if send_failed or pv_failed or receive_failed:
+            # Report which component(s) failed
+            if send_failed:
+                error(f"zfs send failed with code {send_proc.returncode}")
+            if pv_failed:
+                error(f"pv (bandwidth limiter) failed with code {pv_proc.returncode}")
+            if receive_failed:
+                error(f"zfs receive failed with code {receive_proc.returncode}")
 
-        if receive_proc.returncode != 0:
-            error(f"zfs receive failed with code {receive_proc.returncode}")
-            if receive_stderr:
-                debug(receive_stderr.decode())
+            # Report all captured stderr (the real error is often in receive)
+            if send_stderr and send_stderr.strip():
+                error(f"  send stderr: {send_stderr.decode().strip()}")
+            if pv_stderr and pv_stderr.strip():
+                error(f"  pv stderr: {pv_stderr.decode().strip()}")
+            if receive_stderr and receive_stderr.strip():
+                error(f"  receive stderr: {receive_stderr.decode().strip()}")
+
+            # If send failed but had no stderr, hint that the error is likely elsewhere
+            if send_failed and not (send_stderr and send_stderr.strip()):
+                if receive_stderr and receive_stderr.strip():
+                    error("  (send likely failed due to broken pipe from receive failure)")
+                else:
+                    error("  (no stderr captured - try running with --debug for more info)")
+
             return False
 
         return True
