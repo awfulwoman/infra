@@ -83,22 +83,21 @@ If `autoprune` is false then all created snapshots should be retained.
 
 ### ZFS Replication
 
-This table shows how each each policy dictates how widely snapshots are replicated across the infrastructure.
+This table shows how each policy dictates how widely snapshots are replicated across the infrastructure.
 
-| Policy ID        | Primary | Secondary | Offsite  |
-| ---------------- | ------- | --------- | -------- |
-| `none` (default) | FALSE   | FALSE     | FALSE    |
-| `low`            | TRUE    | FALSE     | FALSE    |
-| `high`           | TRUE    | TRUE      | TRUE     |
-| `critical`       | TRUE    | TRUE      | TRUE     |
+| Policy ID        | Onsite  | Offsite  |
+| ---------------- | ------- | -------- |
+| `none` (default) | FALSE   | FALSE    |
+| `low`            | FALSE   | FALSE    |
+| `high`           | TRUE    | FALSE    |
+| `critical`       | TRUE    | TRUE     |
 
-- `Primary`: Snapshots are replicated to the main onsite backup host via a pull action.
-- `Secondary`: Snapshots of that dataset on the backup host are _push_ replicated to a secondary onsite backup host.
+- `Onsite`: Snapshots are replicated to the main onsite backup host via a pull action.
 - `Offsite`: Snapshots of that dataset on the backup host are _push_ replicated to a remote backup host.
 
-Onsite replication hosts are trusted. Datasets on them are encrypted, but the ZFS key is loaded, allowing datasets to be accessed.
+**Onsite** replication hosts are trusted. Datasets on them are encrypted, but the ZFS key is loaded, allowing datasets to be accessed.
 
-Remote host are not trusted, and as such the datasets backed up to them are encrypted but the decryption key is not present on the remote shosterver.
+**Offsite** hosts are not trusted, and as such the datasets backed up to them are encrypted but the decryption key is not present on the remote host. This provides protection against data theft even if the offsite host is compromised.
 
 ## ZFS roles
 
