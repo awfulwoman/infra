@@ -12,7 +12,7 @@
       - pv  # For bandwidth limiting in zfs-push-backups
     state: present
 
-# TODO: is this even needed?
+# TODO: is this still needed?
 - name: Publish backup server public key as fact
   ansible.builtin.set_fact:
     public_key: "{{ vault_zfsbackups_public_key }}"
@@ -50,6 +50,7 @@
     mode: "0644"
 
 - name: DEBUG datasets raw
+  when: backups_zfs_server_debug
   ansible.builtin.debug:
     msg: >-
       {{ hostvars[item].zfs | zfs_critical_datasets }}
@@ -68,6 +69,7 @@
   loop: "{{ groups[backups_zfs_server_pull_group] }}"
 
 - name: DEBUG backup_datasets
+  when: backups_zfs_server_debug
   ansible.builtin.debug:
     msg: "{{ backup_datasets }}"
 
@@ -160,3 +162,47 @@
       >/dev/null
     state: "{{ 'present' if _has_datasets else 'absent' }}"
   loop: "{{ groups[backups_zfs_server_pull_group] }}"
+
+# ###################################################################
+# Offsite push - replicate critical datasets to offsite hosts
+# ###################################################################
+
+- name: Build list of local datasets eligible for offsite replication
+  when: backups_zfs_server_offsite_enabled
+  ansible.builtin.set_fact:
+    offsite_datasets: >-
+      {% set data = namespace(datasets=[]) %}
+      {%- for client in groups[backups_zfs_server_pull_group] -%}
+        {%- for ds in (hostvars[client].zfs | default({}) | zfs_offsite_datasets) -%}
+          {% set data.datasets = data.datasets + [backups_zfs_server_local_dataset ~ '/' ~ client ~ '/' ~ ds.dataset] %}
+        {%- endfor -%}
+      {%- endfor -%}
+      {{ data.datasets }}
+
+- name: DEBUG offsite_datasets
+  when: backups_zfs_server_offsite_enabled and backups_zfs_server_debug
+  ansible.builtin.debug:
+    msg: "{{ offsite_datasets }}"
+
+- name: Ensure that offsite push cronjobs are managed for each offsite host
+  become: true
+  vars:
+    _offsite_enabled: "{{ backups_zfs_server_offsite_enabled | default(false) }}"
+    _offsite_destination: "{{ hostvars[item].backups_zfs_archive_offsite_dataset | default('fastpool/encryptedbackups') }}"
+    _has_datasets: "{{ offsite_datasets | default([]) | length > 0 }}"
+    _bwlimit_arg: "{{ ('--bwlimit ' ~ backups_zfs_server_offsite_bwlimit) if backups_zfs_server_offsite_bwlimit else '' }}"
+    _should_enable: "{{ _offsite_enabled and _has_datasets }}"
+  ansible.builtin.cron:
+    name: "zfs-push-backups {{ item }}"
+    hour: "{{ backups_zfs_server_offsite_cron_hour }}"
+    minute: "{{ backups_zfs_server_offsite_cron_minute }}"
+    job: >-
+      {{ backups_zfs_server_script_path }}/zfs-push-backups
+      --host {{ item }}
+      --user {{ vault_zfsbackups_user }}
+      --destination {{ _offsite_destination }}
+      --datasets {{ offsite_datasets | default([]) | join(' ') }}
+      {{ _bwlimit_arg }}
+      >/dev/null
+    state: "{{ 'present' if _should_enable else 'absent' }}"
+  loop: "{{ groups[backups_zfs_server_offsite_group] | default([]) }}"

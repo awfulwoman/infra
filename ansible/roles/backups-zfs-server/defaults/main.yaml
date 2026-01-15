@@ -1,3 +1,4 @@
+backups_zfs_server_debug: false
 backups_zfs_server_cron_hour: "10,12,16,20,0"
 backups_zfs_server_cron_minute: "0"
 backups_zfs_server_logging_dir: /opt/zfsbackup/logs
@@ -6,3 +7,10 @@ backups_zfs_server_logging_errorfile: error.log
 backups_zfs_server_script_path: /opt/zfsbackup
 backups_zfs_server_local_dataset: slowpool/encryptedbackups
 backups_zfs_server_pull_group: zfs-backup-clients # The ansible group that we try to pull backup data from
+
+# Offsite push configuration
+backups_zfs_server_offsite_enabled: true # Set to true to enable offsite replication
+backups_zfs_server_offsite_group: zfs-backup-offsite # The ansible group containing offsite hosts
+backups_zfs_server_offsite_cron_hour: "2" # Run offsite push at 2 AM (after pull completes)
+backups_zfs_server_offsite_cron_minute: "30"
+backups_zfs_server_offsite_bwlimit: "" # Bandwidth limit (e.g., "10m" for 10MB/s), empty for unlimited

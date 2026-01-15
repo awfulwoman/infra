@@ -39,7 +39,6 @@ all:
         host-homeassistant:
         host-backups:
         host-storage:
-        vm-awfulwoman:
         vm-awfulwoman-hetzner:
         host-albion:
         dns:
@@ -51,15 +50,24 @@ all:
       hosts:
         host-homeassistant:
 
-    # Replication sources that will be backed up
+    # Hosts acting as replication sources
     zfs-backup-clients:
       hosts:
         host-storage:
         host-homeassistant:
-        host-albion:
         dns:
 
-    # Necessary to handle deployment keys
+    # Hosts acting as backup/replication server(s)
+    zfs-backup-servers:
+      hosts:
+        host-backups:
+
+    # Offsite replication destination
+    zfs-backup-offsite:
+      hosts:
+        host-albion:
+
+    # Hosts that static sites can be deployed to
     sitedeployment:
       hosts:
         vm-awfulwoman-hetzner:
