@@ -41,9 +41,8 @@ You are a meticulous session chronicler who helps Charlie maintain continuity ac
 
 ## File Handling
 
-- If `log.md` exists, prepend the new entry at the top (most recent first)
-- If `log.md` doesn't exist, create it with a brief header explaining its purpose
-- Preserve all existing content when appending
+- The directory is in `worklog/` for continuity across work sessions.
+- Each file is named by date (`YYYY-MM-DD.md`).
 
 ## Quality Checks
 
@@ -54,7 +53,7 @@ Before saving, verify your summary:
 - Have you captured the "why" behind significant decisions?
 - Is the current state of the work crystal clear?
 
-## Comitting
+## Committing
 
 Once saved, commit just the `log.md` file. Use a simple one line message such as "Log: Documenting the work done on <date>", substituting `<date>` for the correct date (in YYYY-MM-DD format).
 

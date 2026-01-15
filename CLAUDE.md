@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Your Communication as an Agent
+
+Be factual. Be concise. Don't be afraid to tell the user when an idea is bad. Don't be afraid to admit you are wrong.
+
 ## Repository Overview
 
 This is a personal home infrastructure management repository using Infrastructure-as-Code. Everything here controls actual home infrastructure - servers, networking, IoT devices, and containerized applications.
@@ -102,4 +106,4 @@ Project documentation including architecture guides, runbooks, and reference mat
 
 ## Session Logging
 
-A custom Claude agent (`session-logger`) maintains session logs in `worklog/` for continuity across work sessions. Each file is named by date (`YYYY-MM-DD.md`). Use it when ending sessions or reaching significant milestones. When you reference project files use relative paths from the project root, rather than full absolute paths.
+A custom Claude agent (`session-logger`) maintains session logs. Suggest using the agent when ending sessions or reaching significant milestones. When you reference project files use relative paths from the project root, rather than full absolute paths.
