@@ -1,3 +1,5 @@
-# DEFAULT PROJECT
+# Karakeep
 
-This is the readme for the template project.
+Bookmark and read-later content manager.
+
+* [Homepage](https://karakeep.app)

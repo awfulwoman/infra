@@ -1,3 +1,3 @@
-# DEFAULT PROJECT
+# Audio
 
-This is the readme for the template project.
+Audio streaming and playback services.

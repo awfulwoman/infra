@@ -1,3 +1,5 @@
-# DEFAULT PROJECT
+# get_iplayer
 
-This is the readme for the template project.
+BBC iPlayer programme downloader.
+
+* [Homepage](https://github.com/get-iplayer/get_iplayer)

@@ -1,3 +1,5 @@
-# DEFAULT PROJECT
+# TubeSync
 
-This is the readme for the template project.
+Automated YouTube channel archival to local media library.
+
+* [Homepage](https://github.com/meeb/tubesync)

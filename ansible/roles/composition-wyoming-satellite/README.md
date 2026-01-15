@@ -1,3 +1,5 @@
-# DEFAULT PROJECT
+# Wyoming Satellite
 
-This is the readme for the template project.
+Voice assistant satellite for Home Assistant.
+
+* [Homepage](https://github.com/rhasspy/wyoming-satellite)

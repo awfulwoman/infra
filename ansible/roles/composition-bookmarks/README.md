@@ -1,3 +1,3 @@
-# DEFAULT PROJECT
+# Bookmarks
 
-This is the readme for the template project.
+Self-hosted bookmark manager.

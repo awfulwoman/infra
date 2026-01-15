@@ -1,3 +1,5 @@
-# DEFAULT PROJECT
+# Ladder
 
-This is the readme for the template project.
+Privacy-preserving web proxy for bypassing paywalls.
+
+* [Homepage](https://github.com/everywall/ladder)

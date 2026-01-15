@@ -1,3 +1,5 @@
-# DEFAULT PROJECT
+# Immich ML
 
-This is the readme for the template project.
+Machine learning sidecar for Immich photo recognition.
+
+* [Homepage](https://immich.app)

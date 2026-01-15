@@ -1,3 +1,5 @@
-# DEFAULT PROJECT
+# Syncthing
 
-This is the readme for the template project.
+Continuous file synchronisation between devices.
+
+* [Homepage](https://syncthing.net)

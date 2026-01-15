@@ -1,3 +1,5 @@
-# DEFAULT PROJECT
+# Music Assistant
 
-This is the readme for the template project.
+Music library management and streaming for Home Assistant.
+
+* [Homepage](https://music-assistant.io)

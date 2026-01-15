@@ -1,3 +1,3 @@
-# DEFAULT PROJECT
+# Reverse Proxy
 
-This is the readme for the template project.
+Traefik-based ingress with automatic TLS certificates.

@@ -1,3 +1,5 @@
-# DEFAULT PROJECT
+# FreshRSS
 
-This is the readme for the template project.
+Self-hosted RSS feed aggregator.
+
+* [Homepage](https://freshrss.org)

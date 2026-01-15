@@ -1,3 +1,5 @@
-# DEFAULT PROJECT
+# Jellyfin
 
-This is the readme for the template project.
+Media server for movies, TV shows, and music.
+
+* [Homepage](https://jellyfin.org)

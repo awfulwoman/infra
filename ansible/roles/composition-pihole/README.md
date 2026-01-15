@@ -1,3 +1,5 @@
-# DEFAULT PROJECT
+# Pi-hole
 
-This is the readme for the template project.
+Network-wide DNS ad blocker and local DNS management.
+
+* [Homepage](https://pi-hole.net)

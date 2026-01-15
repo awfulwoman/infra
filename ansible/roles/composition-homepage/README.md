@@ -1,3 +1,5 @@
-# DEFAULT PROJECT
+# Homepage
 
-This is the readme for the template project.
+Application dashboard and service monitoring.
+
+* [Homepage](https://gethomepage.dev)

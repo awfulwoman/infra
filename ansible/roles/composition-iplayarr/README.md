@@ -1,3 +1,5 @@
-# DEFAULT PROJECT
+# iPlayarr
 
-This is the readme for the template project.
+Arr-style automation for BBC iPlayer content.
+
+* [Homepage](https://github.com/Zoggy/iern)

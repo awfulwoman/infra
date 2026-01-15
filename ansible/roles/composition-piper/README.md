@@ -1,3 +1,5 @@
-# DEFAULT PROJECT
+# Piper
 
-This is the readme for the template project.
+Neural text-to-speech engine for Home Assistant voice.
+
+* [Homepage](https://github.com/rhasspy/piper)

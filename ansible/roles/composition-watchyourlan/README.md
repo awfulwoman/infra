@@ -1,3 +1,5 @@
-# DEFAULT PROJECT
+# WatchYourLAN
 
-This is the readme for the template project.
+Network device discovery and monitoring.
+
+* [Homepage](https://github.com/aceberg/WatchYourLAN)

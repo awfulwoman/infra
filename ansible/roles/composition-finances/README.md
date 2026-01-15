@@ -1,3 +1,3 @@
-# DEFAULT PROJECT
+# Finances
 
-This is the readme for the template project.
+Personal finance tracking and budgeting.
