@@ -14,6 +14,7 @@ class FilterModule(object):
             'zfs_datasets_with_config': self.zfs_datasets_with_config,
             'zfs_critical_datasets': self.zfs_critical_datasets,
             'zfs_backup_datasets': self.zfs_backup_datasets,
+            'zfs_offsite_datasets': self.zfs_offsite_datasets,
             'zfs_datasets_with_importance': self.zfs_datasets_with_importance,
         }
 
@@ -240,6 +241,21 @@ class FilterModule(object):
                     self._extract_backup_datasets(value, result, path_components + [key])
                 else:
                     self._extract_backup_datasets(value, result, path_components)
+
+    def zfs_offsite_datasets(self, zfs_dict):
+        """
+        Extract datasets that should be replicated to offsite backup hosts.
+
+        Returns datasets with importance: critical. These are the only datasets
+        that warrant offsite replication for disaster recovery.
+
+        This is a semantic alias for zfs_critical_datasets, providing clearer
+        intent when used in backup replication contexts.
+
+        Args:
+            zfs_dict: ZFS configuration dictionary
+        """
+        return self.zfs_critical_datasets(zfs_dict)
 
     def zfs_datasets_with_importance(self, zfs_dict):
         """
