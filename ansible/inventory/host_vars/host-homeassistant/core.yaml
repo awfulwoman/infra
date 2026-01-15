@@ -61,11 +61,13 @@ compositions:
   - mqtt
   - zigbee2mqtt
   - watchyourlan
+  - uptime-kuma
 
 traefik_providers:
   - homeassistant
   - esphome
   - watchyourlan
+  - uptime
 
 cnames:
   - homeassistant.{{ domain_name }}
@@ -73,3 +75,4 @@ cnames:
   - esphome.{{ domain_name }}
   - mctest.{{ domain_name }}
   - lan.{{ domain_name }}
+  - uptime.{{ domain_name }}
