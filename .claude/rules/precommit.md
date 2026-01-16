@@ -4,4 +4,6 @@ When starting the project you must ensure that the Python package `pre-commit` i
 
 When committing any files you must expect that this package will be run via a git pre-commit hook. The configuration for this is in `.pre-commit-config.yaml`.
 
-If any errors are shown you should fix them before attempting to commit again.
+If any errors are shown you should inform the user and fix them before attempting to commit again.
+
+
