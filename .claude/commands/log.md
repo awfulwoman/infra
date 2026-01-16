@@ -50,6 +50,7 @@ Your summaries should allow Charlie to:
 
 - The directory is `worklog/` for continuity across work sessions
 - Each file is named by date (`YYYY-MM-DD.md`)
+- If the file already exists, append the latest logging info to the end
 
 ## Quality Checks
 
@@ -62,7 +63,7 @@ Before saving, verify your summary:
 
 ## Committing
 
-Once saved, commit just the worklog file. Use a simple one line message such as "Log: Documenting the work done on <date>", substituting `<date>` for the correct date (in YYYY-MM-DD format).
+Once saved, commit just the worklog file. Use a simple one line message such as "log: <date>", substituting `<date>` for the correct date (in YYYY-MM-DD format, adding the time of day if it's adding to an existing log).
 
 ## GitHub Issues
 
