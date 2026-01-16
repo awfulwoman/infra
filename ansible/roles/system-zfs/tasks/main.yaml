@@ -56,7 +56,7 @@
       community.general.zpool:
         name: "{{ item.item }}"
         vdevs: "{{ zfs[item.item].vdevs }}"
-      when: zfs[item.item].vdevs is defined
+      when: zfs[item.item].vdevs is defined and zfs_pools_create is true
       loop: "{{ zpools_down_after_import.results | selectattr('rc', '>', 0) | list }}"
       register: zpool_check_result_create
 
