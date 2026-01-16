@@ -19,7 +19,6 @@ Invoke agents by typing `@"agent-name (agent)"` in a message.
 
 | Agent | Description |
 |-------|-------------|
-| **session-logger** | Documents work sessions to `worklog/` for continuity across sessions |
 | **content-gap-reviewer** | Identifies missing content in documentation or configuration |
 
 ## Commands
@@ -29,6 +28,7 @@ Invoke commands by typing `/command-name` in a message.
 | Command | Description |
 |---------|-------------|
 | `/commit` | Analyse changes, draft a commit message following conventional commits format, stage files, and commit |
+| `/log` | Document the current work session to `worklog/` for continuity across sessions |
 
 ## Rules
 
