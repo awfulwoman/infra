@@ -10,9 +10,10 @@ Create a well-crafted git commit for the current changes.
    - Focuses on the "why" rather than the "what"
    - Uses imperative mood (e.g., "Add feature" not "Added feature")
    - Keeps the first line under 72 characters
-3. Stage all relevant changes with `git add`
-4. Commit with the message, ending with the standard Claude Code footer
-5. You may encounter errors from a pre-commit hook. If so, read the error messages and make the necessary changes before attempting to commit again.
+3. Run `pre-commit run --files` on the files that are to be committed. Ignore errors coming from the presence of `!vault` strings.
+4. Stage all relevant changes with `git add`
+5. Commit with the message, ending with the standard Claude Code footer
+6. You may encounter errors from a pre-commit hook. If so, read the error messages and make the necessary changes before attempting to commit again.
 
 ## Commit Message Format
 

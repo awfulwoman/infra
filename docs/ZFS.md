@@ -107,7 +107,7 @@ The following roles form the core of the ZFS snapshot and replication system.
 - `backups-zfs-server`
 - `backups-zfs-archive-offsite`
 
-A dedicated backup user is used to send snapshots from clients to the main onsite backup host. A similar user is used to receive snapshots on untrusted offsite hosts. 
+A dedicated backup user is used to send snapshots from clients to the main onsite backup host. A similar user is used to receive snapshots on untrusted offsite hosts.
 
 ## Security Model
 
@@ -140,7 +140,7 @@ zfs:
   fastpool:
     vdevs:
       - type: mirror
-        disks: 
+        disks:
           - /dev/disk/by-id/scsi-SATA_CT1000BX500SSD1_2216E629AC18
           - /dev/disk/by-id/scsi-SATA_SanDisk_SDSSDH3_22087N455301
 ```
