@@ -47,20 +47,25 @@
 
 - name: List datasets to be given permissions on
   become: true
+  vars:
+    _datasets: "{{ zfs | default({}) | zfs_backup_datasets }}"
   ansible.builtin.debug:
-    msg: "{{ item }}"
-  loop: "{{ zfs_backup_datasets }}"
-  when: zfs_backup_datasets is defined
+    msg: "{{ item.dataset }}"
+  loop: "{{ _datasets }}"
+  when: _datasets | length > 0
 
 - name: "Ensure backups of listed datasets can be sent via {{ vault_zfsbackups_user }}"
   become: true
+  vars:
+    _datasets: "{{ zfs | default({}) | zfs_backup_datasets }}"
   community.general.zfs_delegate_admin:
-    name: "{{ item }}"
+    name: "{{ item.dataset }}"
     users: "{{ vault_zfsbackups_user }}"
     permissions: mount,send,hold,snapshot,destroy,release
-    # descendents: true
-  loop: "{{ zfs_backup_datasets }}"
-  when: zfs_backup_datasets is defined
+    local: true
+    descendents: true
+  loop: "{{ _datasets }}"
+  when: _datasets | length > 0
 
 - name: Set authorized key and options
   become: true

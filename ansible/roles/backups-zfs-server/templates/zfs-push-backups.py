@@ -448,8 +448,8 @@ def pushdatasets(host, dataset, user, destination, strip_prefix):
 
     local_snapshots = get_local_snapshots(dataset)
     if not local_snapshots:
-        error(f"No snapshots found locally for {dataset}")
-        sys.exit(1)
+        info(f"Skipping {dataset} - no snapshots found locally")
+        return
 
     remote_snapshots = get_remote_snapshots(host, remote_dataset, user)
 

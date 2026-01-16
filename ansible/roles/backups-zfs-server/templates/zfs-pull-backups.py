@@ -226,8 +226,8 @@ def pulldatasets(host, dataset, user, destination):
 
     remote_snapshots = get_remote_snapshots(host, dataset, user)
     if not remote_snapshots:
-        print(f"ERROR: No snapshots found on remote for {dataset}")
-        sys.exit(1)
+        info(f"Skipping {dataset} - no snapshots found on remote")
+        return
 
     local_snapshots = get_local_snapshots(local_dataset)
 

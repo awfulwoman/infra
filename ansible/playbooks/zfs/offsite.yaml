@@ -1,0 +1,4 @@
+- name: ZFS backups offsite
+  hosts: zfs-backup-offsite
+  roles:
+    - role: backups-zfs-archive-offsite

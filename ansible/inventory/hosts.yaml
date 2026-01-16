@@ -50,7 +50,7 @@ all:
       hosts:
         host-homeassistant:
 
-    # Hosts acting as replication sources
+    # Hosts acting as replication sources/clients
     zfs-backup-clients:
       hosts:
         host-storage:

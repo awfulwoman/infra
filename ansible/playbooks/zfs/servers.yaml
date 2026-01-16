@@ -1,0 +1,4 @@
+- name: ZFS backup servers
+  hosts: zfs-backup-servers
+  roles:
+    - role: backups-zfs-server
