@@ -1,0 +1,4 @@
+- name: Run only system-zfs
+  hosts: zfs
+  roles:
+    - role: system-zfs

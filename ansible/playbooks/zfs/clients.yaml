@@ -1,4 +1,5 @@
 - name: ZFS backup clients
   hosts: zfs-backup-clients
   roles:
+    - role: system-zfs
     - role: backups-zfs-client
