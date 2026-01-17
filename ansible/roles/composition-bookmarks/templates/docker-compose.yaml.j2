@@ -53,7 +53,7 @@ services:
       - "{{ default_docker_network }}"
   linkwarden-meilisearch:
     container_name: linkwarden-meilisearch
-    image: getmeili/meilisearch:v1.12.8
+    image: getmeili/meilisearch:v1.32.2
     restart: always
     env_file: .environment_vars
     volumes:
