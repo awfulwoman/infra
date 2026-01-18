@@ -1,0 +1,10 @@
+- name: Backup Server (dev work)
+  hosts: belinda
+  gather_facts: true
+  roles:
+    - role: backups-zfs-server
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:

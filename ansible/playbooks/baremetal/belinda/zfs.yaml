@@ -1,0 +1,9 @@
+- name: ZFS and backup stuff
+  hosts: belinda
+  roles:
+    - role: system-zfs
+    - role: backups-zfs-server
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:

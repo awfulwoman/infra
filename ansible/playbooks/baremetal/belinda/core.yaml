@@ -1,0 +1,14 @@
+- name: Backup Server New
+  hosts: belinda
+  roles:
+    - role: bootstrap-ubuntu-server
+    - role: hardware-raspberry-pi
+    - role: client-nut
+    - role: infothrill.nullmailer
+      become: true
+    - role: monitoring-healthchecksio
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:

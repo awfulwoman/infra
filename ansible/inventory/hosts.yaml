@@ -9,6 +9,7 @@ all:
     dns:
     testrouter:
     pikvm:
+    belinda:
     appletv:
       host_type: baremetal
       host_name: appletv
@@ -44,6 +45,7 @@ all:
         dns:
         testrouter:
         pikvm:
+        belinda:
 
     # Home Automation
     homeautomation:
