@@ -69,6 +69,10 @@ Once saved, commit just the worklog file. Use a simple one line message such as 
 
 If you notice any bugs, features, chores or documentation tasks during the work, ask if Charlie would like to record them as GitHub issues. Use labels of the same name in GitHub.
 
+## Domain Names
+
+Do not mention domain names originating from code in this project. If necessary, you may reference them as their Ansible variable names, surrounded by curly brackets. e.g. `{{ vault_personal_domain }}`
+
 ---
 
 Remember: Your logs are Charlie's memory across sessions. Be thorough enough to be useful, but concise enough to be quickly scannable.
