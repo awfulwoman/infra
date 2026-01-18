@@ -6,6 +6,8 @@ including pools, datasets, snapshots, and backup status.
 """
 import os
 import logging
+import yaml
+from pathlib import Path
 from datetime import datetime
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -20,6 +22,15 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# Load custom OpenAPI schema from swagger.yaml
+def load_custom_openapi():
+    """Load custom OpenAPI specification from swagger.yaml"""
+    swagger_file = Path(__file__).parent / "swagger.yaml"
+    if swagger_file.exists():
+        with open(swagger_file, 'r') as f:
+            return yaml.safe_load(f)
+    return None
+
 # Create FastAPI application
 app = FastAPI(
     title="ZFS Status API",
@@ -29,6 +40,18 @@ app = FastAPI(
     redoc_url="/api/redoc",
     openapi_url="/api/openapi.json"
 )
+
+# Override OpenAPI schema with custom swagger.yaml
+custom_openapi_schema = load_custom_openapi()
+if custom_openapi_schema:
+    def custom_openapi():
+        if app.openapi_schema:
+            return app.openapi_schema
+        app.openapi_schema = custom_openapi_schema
+        return app.openapi_schema
+
+    app.openapi = custom_openapi
+    logger.info("Loaded custom OpenAPI schema from swagger.yaml")
 
 # CORS middleware configuration
 cors_origins = os.getenv("ZFS_API_CORS_ORIGINS", "*").split(",")
@@ -80,7 +103,7 @@ app.include_router(datasets.router, prefix="/api/v1/datasets", tags=["datasets"]
 app.include_router(snapshots.router, prefix="/api/v1/snapshots", tags=["snapshots"])
 app.include_router(backups.router, prefix="/api/v1/backups", tags=["backups"])
 
-@app.get("/api/v1/health")
+@app.get("/api/v1/health", tags=["health"])
 async def health_check():
     """
     API health check endpoint.

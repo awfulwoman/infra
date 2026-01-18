@@ -100,6 +100,15 @@
     - zfs_commands.py
     - parsers.py
 
+- name: "Create Swagger API documentation"
+  become: true
+  ansible.builtin.template:
+    src: swagger.yaml.j2
+    dest: "{{ composition_config }}/app/swagger.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"
+
 - name: "Create compose file"
   ansible.builtin.template:
     src: docker-compose.yaml.j2
@@ -113,4 +122,4 @@
     name: "network-register-subdomain"
   vars:
     configure_dns_subdomains:
-      - "zfs-api.{{ ansible_facts['hostname'] }}"
+      - "{{ composition_zfs_api_subdomain }}"

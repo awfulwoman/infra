@@ -1,0 +1,765 @@
+openapi: 3.0.3
+info:
+  title: ZFS Status API
+  description: |
+    REST API for monitoring ZFS pools, datasets, snapshots, and backups.
+
+    This API provides read-only access to ZFS system information including:
+    - **Pool health and capacity metrics**
+    - **Dataset space usage and properties**
+    - **Policy-aware snapshot compliance tracking**
+    - **Backup status monitoring**
+
+    All endpoints are read-only and integrate with the existing `system-zfs-policy`
+    infrastructure for snapshot policy compliance.
+  version: 1.0.0
+  contact:
+    name: ZFS API Support
+  license:
+    name: MIT
+
+servers:
+  - url: https://zfs-api.{{ ansible_facts['hostname'] }}.{{ domain_name }}
+    description: Production server (Traefik HTTPS)
+  - url: http://zfs-api:8000
+    description: Docker network (internal)
+
+tags:
+  - name: health
+    description: API health and status
+  - name: pools
+    description: ZFS pool operations
+  - name: datasets
+    description: ZFS dataset operations
+  - name: snapshots
+    description: ZFS snapshot monitoring and compliance
+  - name: backups
+    description: Backup status and logs
+
+paths:
+  /api/v1/health:
+    get:
+      tags:
+        - health
+      summary: Health check
+      description: Returns the health status of the API service
+      operationId: getHealth
+      responses:
+        '200':
+          description: API is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: healthy
+                  service:
+                    type: string
+                    example: zfs-api
+                  version:
+                    type: string
+                    example: 1.0.0
+                  timestamp:
+                    type: string
+                    format: date-time
+                    example: "2026-01-18T14:30:00Z"
+
+  /api/v1/pools:
+    get:
+      tags:
+        - pools
+      summary: List all pools
+      description: |
+        Returns a list of all ZFS pools with basic metrics including:
+        - Health status (ONLINE, DEGRADED, FAULTED, etc.)
+        - Capacity and usage statistics
+        - Fragmentation percentage
+
+        Useful for monitoring pool health and capacity planning.
+      operationId: listPools
+      responses:
+        '200':
+          description: List of pools
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  pools:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PoolInfo'
+                  count:
+                    type: integer
+                    example: 2
+              example:
+                pools:
+                  - name: fastpool
+                    health: ONLINE
+                    size_bytes: 996432412672
+                    allocated_bytes: 65307273216
+                    free_bytes: 931125139456
+                    capacity_percent: 6
+                    fragmentation_percent: 17
+                    size_human: "928.00 GB"
+                    allocated_human: "60.82 GB"
+                    free_human: "867.18 GB"
+                count: 1
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/v1/pools/{poolName}:
+    get:
+      tags:
+        - pools
+      summary: Get pool details
+      description: Returns detailed information for a specific pool
+      operationId: getPoolInfo
+      parameters:
+        - name: poolName
+          in: path
+          required: true
+          description: Name of the ZFS pool
+          schema:
+            type: string
+          example: fastpool
+      responses:
+        '200':
+          description: Pool information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PoolInfo'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/v1/pools/{poolName}/status:
+    get:
+      tags:
+        - pools
+      summary: Get detailed pool status
+      description: |
+        Returns comprehensive pool status from `zpool status` including:
+        - Pool state and configuration
+        - Device status (vdevs, mirrors, raidz)
+        - Scrub/resilver progress
+        - Error counts per device
+
+        This endpoint is useful for troubleshooting pool issues.
+      operationId: getPoolStatus
+      parameters:
+        - name: poolName
+          in: path
+          required: true
+          schema:
+            type: string
+          example: fastpool
+      responses:
+        '200':
+          description: Detailed pool status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  pool:
+                    type: string
+                    example: fastpool
+                  state:
+                    type: string
+                    example: ONLINE
+                  status:
+                    type: string
+                    nullable: true
+                  scan:
+                    type: object
+                    nullable: true
+                  errors:
+                    type: object
+                    nullable: true
+                  raw_output:
+                    type: string
+                    description: Raw output from zpool status command
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/v1/pools/{poolName}/iostat:
+    get:
+      tags:
+        - pools
+      summary: Get pool I/O statistics
+      description: Returns I/O statistics for the pool and its devices
+      operationId: getPoolIOStat
+      parameters:
+        - name: poolName
+          in: path
+          required: true
+          schema:
+            type: string
+          example: fastpool
+      responses:
+        '200':
+          description: I/O statistics
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  pool:
+                    type: string
+                  iostat:
+                    type: string
+                    description: Raw iostat output
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/v1/pools/_version:
+    get:
+      tags:
+        - pools
+      summary: Get ZFS version
+      description: Returns the installed ZFS version information
+      operationId: getZFSVersion
+      responses:
+        '200':
+          description: ZFS version
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  version:
+                    type: string
+                    example: "zfs-2.1.5-1ubuntu6~22.04.2"
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/v1/datasets:
+    get:
+      tags:
+        - datasets
+      summary: List all datasets
+      description: Returns a list of all ZFS datasets with space usage information
+      operationId: listDatasets
+      responses:
+        '200':
+          description: List of datasets
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  datasets:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DatasetInfo'
+                  count:
+                    type: integer
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/v1/datasets/{datasetPath}:
+    get:
+      tags:
+        - datasets
+      summary: Get dataset properties
+      description: |
+        Returns all ZFS properties for a specific dataset.
+
+        Dataset path can include slashes (e.g., `fastpool/data/documents`).
+      operationId: getDatasetProperties
+      parameters:
+        - name: datasetPath
+          in: path
+          required: true
+          description: Full dataset path (can contain slashes)
+          schema:
+            type: string
+          example: fastpool/compositions
+      responses:
+        '200':
+          description: Dataset properties
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  dataset:
+                    type: string
+                  properties:
+                    type: object
+                    additionalProperties:
+                      type: string
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/v1/datasets/{datasetPath}/snapshots:
+    get:
+      tags:
+        - datasets
+        - snapshots
+      summary: List dataset snapshots
+      description: Returns all snapshots for a specific dataset with creation times and space usage
+      operationId: getDatasetSnapshots
+      parameters:
+        - name: datasetPath
+          in: path
+          required: true
+          schema:
+            type: string
+          example: fastpool/compositions
+      responses:
+        '200':
+          description: Dataset snapshots
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  dataset:
+                    type: string
+                  snapshot_count:
+                    type: integer
+                  total_used_bytes:
+                    type: integer
+                  total_used_human:
+                    type: string
+                  snapshots:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SnapshotDetail'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/v1/snapshots:
+    get:
+      tags:
+        - snapshots
+      summary: Comprehensive snapshot report
+      description: |
+        Returns a comprehensive snapshot compliance report using the `zfs-snapshot-report` tool.
+
+        This endpoint provides:
+        - **Per-dataset snapshot counts** by type (hourly, daily, monthly, yearly)
+        - **Retention policy requirements** from zfs-policy configuration
+        - **Compliance percentages** showing how well each dataset meets its policy
+        - **Summary statistics** across all datasets
+        - **Alerts** for datasets with low compliance (<80%)
+
+        This is the primary endpoint for monitoring snapshot policy compliance.
+      operationId: getSnapshotReport
+      responses:
+        '200':
+          description: Snapshot compliance report
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SnapshotReport'
+              example:
+                hostname: {{ ansible_facts['hostname'] }}
+                timestamp: "2026-01-18T14:30:00Z"
+                datasets:
+                  - dataset: fastpool/compositions
+                    policy: critical
+                    counts:
+                      hourly: 32
+                      daily: 28
+                      monthly: 3
+                      yearly: 5
+                    retention:
+                      hourly: 36
+                      daily: 30
+                      monthly: 3
+                      yearly: 5
+                    compliance:
+                      hourly: 89
+                      daily: 93
+                      monthly: 100
+                      yearly: 100
+                    total_snapshots: 68
+                summary:
+                  total_datasets: 15
+                  total_snapshots: 572
+                  avg_compliance: 94
+                  low_compliance_count: 2
+                alerts:
+                  low_compliance_datasets:
+                    - dataset: slowpool/media/videos
+                      policy: important
+                      avg_compliance: 75
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/v1/snapshots/_all:
+    get:
+      tags:
+        - snapshots
+      summary: List all snapshots
+      description: |
+        Returns a complete list of all snapshots across all datasets.
+
+        Useful for global snapshot analysis and storage auditing.
+      operationId: getAllSnapshots
+      responses:
+        '200':
+          description: All snapshots
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  snapshot_count:
+                    type: integer
+                  dataset_count:
+                    type: integer
+                  total_used_bytes:
+                    type: integer
+                  total_used_human:
+                    type: string
+                  snapshots_by_dataset:
+                    type: object
+                    additionalProperties:
+                      type: integer
+                  snapshots:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SnapshotDetail'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/v1/backups:
+    get:
+      tags:
+        - backups
+      summary: Get backup status overview
+      description: Returns summary of backup operations and recent backup logs
+      operationId: getBackupStatus
+      responses:
+        '200':
+          description: Backup status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  hostname:
+                    type: string
+                  summary:
+                    type: object
+                  recent_logs:
+                    type: array
+                    items:
+                      type: object
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/v1/backups/logs:
+    get:
+      tags:
+        - backups
+      summary: List backup log files
+      description: Returns a list of available backup log files
+      operationId: listBackupLogs
+      responses:
+        '200':
+          description: List of backup logs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  log_directory:
+                    type: string
+                  logs:
+                    type: array
+                    items:
+                      type: object
+                  count:
+                    type: integer
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/v1/backups/logs/{filename}:
+    get:
+      tags:
+        - backups
+      summary: Get backup log content
+      description: Returns the content of a specific backup log file
+      operationId: getBackupLogContent
+      parameters:
+        - name: filename
+          in: path
+          required: true
+          description: Log filename
+          schema:
+            type: string
+          example: backup-2026-01-18.log
+      responses:
+        '200':
+          description: Log file content
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  filename:
+                    type: string
+                  content:
+                    type: string
+                  size_bytes:
+                    type: integer
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+components:
+  schemas:
+    PoolInfo:
+      type: object
+      description: ZFS pool information
+      properties:
+        name:
+          type: string
+          description: Pool name
+          example: fastpool
+        health:
+          type: string
+          description: Pool health status
+          enum: [ONLINE, DEGRADED, FAULTED, OFFLINE, UNAVAIL, REMOVED]
+          example: ONLINE
+        size_bytes:
+          type: integer
+          format: int64
+          description: Total pool size in bytes
+          example: 996432412672
+        allocated_bytes:
+          type: integer
+          format: int64
+          description: Allocated space in bytes
+          example: 65307273216
+        free_bytes:
+          type: integer
+          format: int64
+          description: Free space in bytes
+          example: 931125139456
+        capacity_percent:
+          type: integer
+          description: Capacity usage percentage (0-100)
+          minimum: 0
+          maximum: 100
+          example: 6
+        fragmentation_percent:
+          type: integer
+          description: Fragmentation percentage
+          minimum: 0
+          maximum: 100
+          example: 17
+        size_human:
+          type: string
+          description: Human-readable total size
+          example: "928.00 GB"
+        allocated_human:
+          type: string
+          description: Human-readable allocated space
+          example: "60.82 GB"
+        free_human:
+          type: string
+          description: Human-readable free space
+          example: "867.18 GB"
+
+    DatasetInfo:
+      type: object
+      description: ZFS dataset information
+      properties:
+        name:
+          type: string
+          description: Full dataset path
+          example: fastpool/compositions
+        used_bytes:
+          type: integer
+          format: int64
+          example: 32212254720
+        available_bytes:
+          type: integer
+          format: int64
+          example: 931125139456
+        referenced_bytes:
+          type: integer
+          format: int64
+          example: 32212254720
+        mountpoint:
+          type: string
+          example: /fastpool/compositions
+        used_human:
+          type: string
+          example: "30.00 GB"
+        available_human:
+          type: string
+          example: "867.18 GB"
+        referenced_human:
+          type: string
+          example: "30.00 GB"
+
+    SnapshotDetail:
+      type: object
+      description: Individual snapshot information
+      properties:
+        name:
+          type: string
+          example: "fastpool/data@autosnap_2026-01-18_14:00:00_hourly"
+        dataset:
+          type: string
+          example: fastpool/data
+        used_bytes:
+          type: integer
+          format: int64
+          example: 1048576
+        referenced_bytes:
+          type: integer
+          format: int64
+          example: 10737418240
+        creation_timestamp:
+          type: integer
+          format: int64
+          description: Unix timestamp
+          example: 1737208800
+        used_human:
+          type: string
+          example: "1.00 MB"
+        referenced_human:
+          type: string
+          example: "10.00 GB"
+        creation_iso:
+          type: string
+          format: date-time
+          example: "2026-01-18T14:00:00Z"
+
+    SnapshotReport:
+      type: object
+      description: Comprehensive snapshot compliance report
+      properties:
+        hostname:
+          type: string
+          example: host-storage
+        timestamp:
+          type: string
+          format: date-time
+        datasets:
+          type: array
+          items:
+            type: object
+            properties:
+              dataset:
+                type: string
+              policy:
+                type: string
+                enum: [critical, important, normal]
+              counts:
+                type: object
+                properties:
+                  hourly:
+                    type: integer
+                  daily:
+                    type: integer
+                  monthly:
+                    type: integer
+                  yearly:
+                    type: integer
+              retention:
+                type: object
+                properties:
+                  hourly:
+                    type: integer
+                  daily:
+                    type: integer
+                  monthly:
+                    type: integer
+                  yearly:
+                    type: integer
+              compliance:
+                type: object
+                properties:
+                  hourly:
+                    type: integer
+                    minimum: 0
+                    maximum: 100
+                  daily:
+                    type: integer
+                    minimum: 0
+                    maximum: 100
+                  monthly:
+                    type: integer
+                    minimum: 0
+                    maximum: 100
+                  yearly:
+                    type: integer
+                    minimum: 0
+                    maximum: 100
+              total_snapshots:
+                type: integer
+        summary:
+          type: object
+          properties:
+            total_datasets:
+              type: integer
+            total_snapshots:
+              type: integer
+            avg_compliance:
+              type: integer
+            low_compliance_count:
+              type: integer
+        alerts:
+          type: object
+          properties:
+            low_compliance_datasets:
+              type: array
+              items:
+                type: object
+                properties:
+                  dataset:
+                    type: string
+                  policy:
+                    type: string
+                  avg_compliance:
+                    type: integer
+
+  responses:
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              detail:
+                type: string
+                example: "Pool 'nonexistent' not found"
+
+    InternalError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              detail:
+                type: string
+                example: "An internal error occurred"
+
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: API key authentication (future enhancement)
+
+security: []
