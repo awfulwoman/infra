@@ -2,6 +2,7 @@
   hosts: router
   roles:
     - role: bootstrap-ubuntu-server
+    - role: network-netplan
     - role: infothrill.nullmailer
       become: true
     # - role: system-sshkey

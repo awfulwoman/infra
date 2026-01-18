@@ -3,6 +3,7 @@
   hosts: host-storage
   roles:
     - role: bootstrap-ubuntu-server
+    - role: network-netplan
     - role: hardware-host-bus-adapter
     - role: system-wakeonlan
     - role: client-nut

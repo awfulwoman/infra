@@ -20,6 +20,8 @@ host_fqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}.{{ domain_name }
 # -------------------------------------------------------------------
 # NETWORK
 # -------------------------------------------------------------------
+host_primary_interface: "enp3s0"
+host_ipv4_subnet: 24
 wakeonlan_mac_address: "34:60:f9:bb:3d:16"
 wakeonlan_interface: enp3s0
 configure_dns_linkdevice_physical: enp3s0

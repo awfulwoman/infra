@@ -1,0 +1,28 @@
+network:
+  version: 2
+  renderer: {{ network_netplan_renderer }}
+  ethernets:
+    {{ network_netplan_interface }}:
+{% if network_netplan_mode == 'static' %}
+      addresses:
+        - {{ host_ipv4 }}/{{ network_netplan_subnet }}
+      routes:
+        - to: default
+          via: {{ network_netplan_gateway }}
+{% if network_netplan_nameservers | length > 0 %}
+      nameservers:
+        addresses:
+{% for ns in network_netplan_nameservers %}
+          - {{ ns }}
+{% endfor %}
+{% endif %}
+{% else %}
+      dhcp4: true
+{% if network_netplan_nameservers | length > 0 %}
+      nameservers:
+        addresses:
+{% for ns in network_netplan_nameservers %}
+          - {{ ns }}
+{% endfor %}
+{% endif %}
+{% endif %}

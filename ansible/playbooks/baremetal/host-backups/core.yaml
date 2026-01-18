@@ -2,6 +2,7 @@
   hosts: host-backups
   roles:
     - role: bootstrap-ubuntu-server
+    - role: network-netplan
     - role: client-nut
     - role: infothrill.nullmailer
       become: true

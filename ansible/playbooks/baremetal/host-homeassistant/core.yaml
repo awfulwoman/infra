@@ -2,6 +2,7 @@
   hosts: host-homeassistant
   roles:
     - role: bootstrap-ubuntu-server
+    - role: network-netplan
     - role: system-zfs
     - role: system-zfs-policy
     - role: infothrill.nullmailer

@@ -1,6 +1,0 @@
-ip_address_static_conn_name: static_ethernet
-ip_address_static_if_name: eth0
-ip_address_static_type: ethernet
-ip_address_static_ip4: "192.168.1.254/24"
-ip_address_static_gw4: "192.168.1.1"
-ip_address_static_state: present

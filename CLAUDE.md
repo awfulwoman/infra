@@ -49,7 +49,10 @@ The primary configuration management tool. Structure:
   - `virtual-*`: Virtualisation roles (qemu-host, qemu-guest, hetzner)
   - `hardware-*`: Hardware-specific configs (raspberry-pi, zigbee-conbee, rtl-433)
   - `monitoring-*`: Monitoring integrations (healthchecksio, linux2mqtt)
-  - `network-*`: Network configuration (register-subdomain, ip-address-*)
+  - `network-*`: Network configuration
+    - `network-netplan`: Netplan-based network configuration for primary interface (supports static IP and DHCP)
+    - `network-register-subdomain`: DNS subdomain registration
+    - `network-ip-address-forwarding`: IPv4 forwarding via sysctl
   - `infra-*`: Infrastructure resources provisioned via Terraform
 - **`playbooks/`**: Organized by target type (`baremetal/`, `clusters/`, `virtual/`, `personal/`, `utility/`)
   - Each target has several playbook files:

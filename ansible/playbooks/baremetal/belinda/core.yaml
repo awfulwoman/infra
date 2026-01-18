@@ -2,6 +2,7 @@
   hosts: belinda
   roles:
     - role: bootstrap-ubuntu-server
+    - role: network-netplan
     - role: hardware-raspberry-pi
     - role: client-nut
     - role: infothrill.nullmailer

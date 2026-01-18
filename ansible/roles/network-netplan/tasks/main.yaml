@@ -1,0 +1,42 @@
+---
+- name: Ensure netplan is installed
+  become: true
+  ansible.builtin.apt:
+    name:
+      - netplan.io
+    state: present
+
+- name: Disable cloud-init network configuration
+  become: true
+  ansible.builtin.copy:
+    content: "network: {config: disabled}\n"
+    dest: /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Remove cloud-init netplan configuration if present
+  become: true
+  ansible.builtin.file:
+    path: /etc/netplan/50-cloud-init.yaml
+    state: absent
+  notify: Apply netplan
+
+- name: Deploy primary interface netplan configuration
+  become: true
+  ansible.builtin.template:
+    src: 50-primary-interface.yaml.j2
+    dest: /etc/netplan/50-primary-interface.yaml
+    owner: root
+    group: root
+    mode: "0600"
+  notify: Apply netplan
+
+- name: Ensure NetworkManager is not managing primary interface
+  become: true
+  ansible.builtin.systemd:
+    name: NetworkManager
+    state: stopped
+    enabled: false
+  when: ansible_facts.services['NetworkManager.service'] is defined
+  failed_when: false

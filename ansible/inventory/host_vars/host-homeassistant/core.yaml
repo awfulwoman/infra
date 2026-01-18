@@ -23,6 +23,8 @@ host_fqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}.{{ domain_name }
 ubuntupro_attach: true
 
 # --- NETWORK -------------
+host_primary_interface: "enp1s0"
+host_ipv4_subnet: 24
 # configure_dns_linkdevice_physical: "enp1s0"
 network_interface_primary: "enp1s0"
 

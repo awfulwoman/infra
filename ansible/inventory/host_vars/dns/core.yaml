@@ -11,7 +11,7 @@ host_type: baremetal
 host_name: dns
 host_city: ber
 host_location: xberg
-host_ipv4:
+host_ipv4: 192.168.1.2
 host_pfqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}"
 host_fqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}.{{ domain_name }}"
 
@@ -30,7 +30,8 @@ raspberry_pi_boot_config_location: /boot/firmware/config.txt
 # -------------------------------------------------------------------
 # NETWORK
 # -------------------------------------------------------------------
-configure_dns_linkdevice_physical: "eth0"
+host_primary_interface: "eth0"
+# configure_dns_linkdevice_physical: "eth0"
 
 # -------------------------------------------------------------------
 # ZFS

@@ -1,0 +1,20 @@
+---
+# Primary network interface (fallback)
+network_netplan_interface: "{{ host_primary_interface | default('eth0') }}"
+
+# Gateway for static configuration
+network_netplan_gateway: "192.168.1.1"
+
+# Netmask/CIDR for static configuration
+network_netplan_subnet: "{{ host_ipv4_subnet | default(24) }}"
+
+# Optional DNS nameservers (empty by default, systemd-resolved handles)
+network_netplan_nameservers: []
+
+# Renderer
+network_netplan_renderer: networkd
+
+# Configuration mode: auto-detect based on host_ipv4
+# - If host_ipv4 is defined and not empty: static
+# - Otherwise: dhcp
+network_netplan_mode: "{{ 'static' if (host_ipv4 | default('', true)) else 'dhcp' }}"

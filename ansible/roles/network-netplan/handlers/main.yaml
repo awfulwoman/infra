@@ -1,0 +1,7 @@
+---
+- name: Apply netplan
+  become: true
+  ansible.builtin.command:
+    cmd: netplan apply
+  # Note: Use changed_when: false to avoid spurious changes
+  changed_when: false

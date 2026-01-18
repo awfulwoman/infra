@@ -38,6 +38,8 @@ raspberry_pi_config_overrides:
 # -------------------------------------------------------------------
 # NETWORK
 # -------------------------------------------------------------------
+host_primary_interface: "eth0"
+host_ipv4_subnet: 24
 configure_dns_linkdevice_physical: "eth0"
 tailscale_exit_node: false
 
