@@ -3,7 +3,6 @@ services:
   zfs-api:
     build:
       context: "{{ composition_config }}/app"
-      # dockerfile: Dockerfile
     container_name: {{ composition_zfs_api_container_name }}
     restart: unless-stopped
     privileged: true  # Required for ZFS device access
@@ -18,9 +17,9 @@ services:
 {% if composition_zfs_api_traefik_enabled %}
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.{{ composition_zfs_api_container_name }}.rule=Host(`{{ composition_zfs_api_domain }}`)"
-      - "traefik.http.routers.{{ composition_zfs_api_container_name }}.entrypoints={{ composition_zfs_api_traefik_entrypoint }}"
-      - "traefik.http.routers.{{ composition_zfs_api_container_name }}.tls.certresolver={{ composition_zfs_api_traefik_certresolver }}"
+      - "traefik.http.routers.{{ composition_zfs_api_container_name }}.rule=Host(`zfs-api.{{ ansible_facts['hostname'] }}.{{ domain_name }}`)"
+      - "traefik.http.routers.{{ composition_zfs_api_container_name }}.tls=true"
+      - "traefik.http.routers.{{ composition_zfs_api_container_name }}.tls.certresolver=letsencrypt"
       - "traefik.http.services.{{ composition_zfs_api_container_name }}.loadbalancer.server.port={{ composition_zfs_api_port }}"
 {% endif %}
     networks:

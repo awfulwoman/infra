@@ -23,8 +23,6 @@ composition_zfs_api_zfs_log_path: "/var/log/zfs-policy"
 
 # Reverse proxy settings (Traefik)
 composition_zfs_api_traefik_enabled: true
-composition_zfs_api_traefik_entrypoint: "websecure"
-composition_zfs_api_traefik_certresolver: "letsencrypt"
 
 # Authentication settings (future enhancement)
 composition_zfs_api_auth_enabled: false

@@ -53,10 +53,10 @@
     - app/routers
     - app/utils
 
-- name: Copy main.py
+- name: Copy app files
   become: true
   ansible.builtin.copy:
-    src: app/main.py
+    src: "app/{{ app_module }}"
     dest: "{{ composition_config }}/app/{{ app_module }}"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
@@ -107,3 +107,10 @@
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0774"
+
+- name: Run Configure DNS role
+  ansible.builtin.include_role:
+    name: "network-register-subdomain"
+  vars:
+    configure_dns_subdomains:
+      - "zfs-api.{{ ansible_facts['hostname'] }}"
