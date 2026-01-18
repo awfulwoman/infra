@@ -2,9 +2,9 @@
   hosts: host-storage
   vars:
     compositions:
-      - syncthing
+      - zfs-api
   roles:
-    - role: system-zfs-policy
+    - role: compositions
   handlers:
     - name: Reboot host
       become: true

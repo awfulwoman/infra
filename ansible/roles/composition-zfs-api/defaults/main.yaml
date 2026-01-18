@@ -1,0 +1,37 @@
+---
+# ZFS API Composition Role Defaults
+
+# Enable/disable the composition
+composition_zfs_api_enabled: true
+
+# Application settings
+composition_zfs_api_host: "0.0.0.0"
+composition_zfs_api_port: 8000
+composition_zfs_api_log_level: "info"
+
+# Domain configuration
+composition_zfs_api_subdomain: "zfs-api"
+composition_zfs_api_domain: "{{ composition_zfs_api_subdomain }}.{{ domain_name }}"
+
+# Container settings
+composition_zfs_api_container_name: "zfs-api"
+
+# Paths
+composition_zfs_api_base_path: "{{ compositions_base_path }}/zfs-api"
+composition_zfs_api_zfs_policy_path: "/opt/zfs-policy"
+composition_zfs_api_zfs_log_path: "/var/log/zfs-policy"
+
+# Reverse proxy settings (Traefik)
+composition_zfs_api_traefik_enabled: true
+composition_zfs_api_traefik_entrypoint: "websecure"
+composition_zfs_api_traefik_certresolver: "letsencrypt"
+
+# Authentication settings (future enhancement)
+composition_zfs_api_auth_enabled: false
+composition_zfs_api_api_key: "{{ vault_zfs_api_key | default('') }}"
+
+# CORS settings
+composition_zfs_api_cors_origins: "*"
+
+# ZFS command timeout (seconds)
+composition_zfs_api_command_timeout: 30

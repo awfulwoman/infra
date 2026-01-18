@@ -87,7 +87,7 @@ zfs:
                 importance: critical
               youtube:
       charlie:
-        importance: critical
+        # importance: critical
         datasets:
           syncthing:
             importance: critical
@@ -126,6 +126,7 @@ zfs_nfs_exports:
 # -------------------------------------------------------------------
 
 compositions:
+  - zfs-api
   - reverseproxy
   - container-management
   - audio

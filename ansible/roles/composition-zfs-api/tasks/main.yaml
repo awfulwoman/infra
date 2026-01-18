@@ -1,0 +1,109 @@
+# code: language=ansible
+
+- name: Ensure composition is enabled
+  ansible.builtin.assert:
+    that:
+      - composition_zfs_api_enabled
+    fail_msg: "composition-zfs-api is not enabled"
+    quiet: true
+
+- name: Ensure ZFS is configured on host
+  ansible.builtin.assert:
+    that:
+      - zfs is defined
+    fail_msg: "ZFS must be configured (zfs variable) to use this composition"
+    quiet: true
+
+# ----------------------------
+# Core tasks
+# ----------------------------
+
+- name: "Create compose file"
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ composition_root }}/docker-compose.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"
+
+- name: "Create .env file"
+  ansible.builtin.template:
+    src: environment_vars.j2
+    dest: "{{ composition_root }}/.environment_vars"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"
+
+# ----------------------------
+# Specific tasks
+# ----------------------------
+
+- name: Create directories
+  become: true
+  ansible.builtin.file:
+    path: "{{ composition_config }}/{{ dir_item }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"
+  loop_control:
+    loop_var: dir_item
+  loop:
+    - app
+    - app/routers
+    - app/utils
+
+- name: Copy main.py
+  become: true
+  ansible.builtin.copy:
+    src: app/main.py
+    dest: "{{ composition_config }}/app/{{ app_module }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"
+  loop_control:
+    loop_var: app_module
+  loop:
+    - main.py
+    - Dockerfile
+    - requirements.txt
+
+- name: Copy router modules
+  become: true
+  ansible.builtin.copy:
+    src: "app/routers/{{ router_module }}"
+    dest: "{{ composition_config }}/app/routers/{{ router_module }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"
+  loop_control:
+    loop_var: router_module
+  loop:
+    - __init__.py
+    - pools.py
+    - datasets.py
+    - snapshots.py
+    - backups.py
+
+- name: Copy utils modules
+  become: true
+  ansible.builtin.copy:
+    src: "app/utils/{{ util_module }}"
+    dest: "{{ composition_config }}/app/utils/{{ util_module }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"
+  loop_control:
+    loop_var: util_module
+  loop:
+    - __init__.py
+    - zfs_commands.py
+    - parsers.py
+
+- name: "Create compose file"
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ composition_root }}/docker-compose.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"

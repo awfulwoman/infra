@@ -1,0 +1,31 @@
+name: "{{ composition_name }}"
+services:
+  zfs-api:
+    build:
+      context: "{{ composition_config }}/app"
+      # dockerfile: Dockerfile
+    container_name: {{ composition_zfs_api_container_name }}
+    restart: unless-stopped
+    privileged: true  # Required for ZFS device access
+    volumes:
+      # ZFS device access (read-only)
+      - /dev/zfs:/dev/zfs:ro
+      # ZFS policy scripts (zfs-snapshot-report)
+      - {{ composition_zfs_api_zfs_policy_path }}:{{ composition_zfs_api_zfs_policy_path }}:ro
+      # ZFS policy logs
+      - {{ composition_zfs_api_zfs_log_path }}:{{ composition_zfs_api_zfs_log_path }}:ro
+    env_file: .environment_vars
+{% if composition_zfs_api_traefik_enabled %}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.{{ composition_zfs_api_container_name }}.rule=Host(`{{ composition_zfs_api_domain }}`)"
+      - "traefik.http.routers.{{ composition_zfs_api_container_name }}.entrypoints={{ composition_zfs_api_traefik_entrypoint }}"
+      - "traefik.http.routers.{{ composition_zfs_api_container_name }}.tls.certresolver={{ composition_zfs_api_traefik_certresolver }}"
+      - "traefik.http.services.{{ composition_zfs_api_container_name }}.loadbalancer.server.port={{ composition_zfs_api_port }}"
+{% endif %}
+    networks:
+      - "{{ default_docker_network }}"
+
+networks:
+  "{{ default_docker_network }}":
+    external: true
