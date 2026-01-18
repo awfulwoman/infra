@@ -1,4 +1,3 @@
----
 - name: Run compositions
   hosts: host-storage
   roles:

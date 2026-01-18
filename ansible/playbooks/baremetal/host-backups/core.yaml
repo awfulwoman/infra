@@ -12,6 +12,7 @@
     - role: backups-zfs-server
       zfsbackup_pushover: false
       zfsbackup_run_after_wake: false
+    - role: compositions
     - role: monitoring-healthchecksio
 
   handlers:

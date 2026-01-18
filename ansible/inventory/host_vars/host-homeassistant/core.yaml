@@ -61,6 +61,7 @@ compositions:
   - mqtt
   - zigbee2mqtt
   - watchyourlan
+  - zfs-api
 
 traefik_providers:
   - homeassistant

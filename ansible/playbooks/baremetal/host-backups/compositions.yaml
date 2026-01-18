@@ -1,0 +1,4 @@
+- name: Backups - Compositions
+  hosts: host-backups
+  roles:
+    - role: compositions

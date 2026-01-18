@@ -85,4 +85,4 @@ nfs_mounts:
 compositions:
   - reverseproxy
   - container-management
-  - iplayarr
+  - zfs-api
