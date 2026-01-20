@@ -4,3 +4,6 @@
 .lock
 .venv
 .ansible
+__pycache__
+*.pyc
+*.pyo
