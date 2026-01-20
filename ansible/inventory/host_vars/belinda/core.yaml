@@ -5,14 +5,14 @@ host_type: baremetal
 host_name: belinda
 host_city: ber
 host_location: kberg
-host_ipv4: 192.168.1.150
+host_ipv4: 192.168.1.173
 host_pfqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}"
 host_fqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}.{{ domain_name }}"
 
 # -------------------------------------------------------------------
 # ANSIBLE
 # -------------------------------------------------------------------
-ansible_host: 192.168.1.150
+ansible_host: 192.168.1.173
 ansible_user: "{{ vault_server_username }}"
 ansible_become_password: "{{ vault_password }}"
 
