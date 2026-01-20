@@ -4,12 +4,23 @@ import sys
 import argparse
 from datetime import datetime, timedelta
 import re
+import os
+import atexit
+import signal
 
 DEFAULT_user="{{ vault_zfsbackups_user }}"
 DEFAULT_strip_prefix = "{{ backups_zfs_server_local_dataset }}"
 DEFAULT_debug = False
 DEFAULT_quiet = False
 DEFAULT_bwlimit = None  # No bandwidth limit by default
+
+# Lockfile to prevent concurrent executions
+LOCKFILE = "/var/run/zfs-push-backups.lock"
+
+# Module-level variables for output control (set by main)
+_quiet = False
+_debug = False
+_bwlimit = None
 
 def info(message):
     """Print informational message unless quiet mode is enabled."""
@@ -24,6 +35,76 @@ def debug(message):
 def error(message):
     """Print error messages to stderr."""
     print("🚨 " + message, file=sys.stderr)
+
+
+def acquire_lock():
+    """Acquire lockfile to prevent concurrent executions.
+
+    Uses PID-based locking to detect and clean up stale locks.
+    Returns True if lock acquired successfully, False otherwise.
+    """
+    if os.path.exists(LOCKFILE):
+        # Lockfile exists - check if it's stale
+        try:
+            with open(LOCKFILE, 'r') as f:
+                old_pid = int(f.read().strip())
+
+            # Check if process with that PID is still running
+            try:
+                os.kill(old_pid, 0)  # Signal 0 just checks if process exists
+                # Process exists - lock is valid
+                error(f"Another instance is already running (PID {old_pid})")
+                error("If you believe this is an error, remove the lockfile: " + LOCKFILE)
+                return False
+            except (OSError, ProcessLookupError):
+                # Process doesn't exist - stale lockfile
+                debug(f"Removing stale lockfile (PID {old_pid} not running)")
+                os.remove(LOCKFILE)
+        except (ValueError, IOError) as e:
+            # Corrupted lockfile - remove it
+            debug(f"Removing corrupted lockfile: {e}")
+            try:
+                os.remove(LOCKFILE)
+            except OSError:
+                pass
+
+    # Create lockfile with current PID
+    try:
+        with open(LOCKFILE, 'w') as f:
+            f.write(str(os.getpid()))
+        debug(f"Acquired lock (PID {os.getpid()})")
+        return True
+    except IOError as e:
+        error(f"Failed to create lockfile: {e}")
+        return False
+
+
+def release_lock():
+    """Release the lockfile."""
+    try:
+        if os.path.exists(LOCKFILE):
+            # Verify it's our lockfile before removing
+            with open(LOCKFILE, 'r') as f:
+                pid = int(f.read().strip())
+            if pid == os.getpid():
+                os.remove(LOCKFILE)
+                debug(f"Released lock (PID {os.getpid()})")
+            else:
+                debug(f"Not removing lockfile - belongs to PID {pid}, not {os.getpid()}")
+    except (ValueError, IOError, OSError) as e:
+        debug(f"Error releasing lock: {e}")
+
+
+def signal_handler(signum, frame):
+    """Handle termination signals by cleaning up lockfile."""
+    signal_names = {
+        signal.SIGTERM: 'SIGTERM',
+        signal.SIGINT: 'SIGINT',
+        signal.SIGHUP: 'SIGHUP'
+    }
+    debug(f"Received {signal_names.get(signum, signum)}, cleaning up...")
+    release_lock()
+    sys.exit(1)
 
 
 def parse_size_to_bytes(size_str):
@@ -548,5 +629,15 @@ if __name__ == "__main__":
     if not args.user or not args.host or not args.datasets or not args.destination:
         print("Usage: zfs-push-backups --host <host> --datasets <space-separated list> --destination <remote-dataset> [--user <user>]", file=sys.stderr)
         sys.exit(1)
+
+    # Acquire lockfile to prevent concurrent executions
+    if not acquire_lock():
+        sys.exit(1)
+
+    # Register cleanup handlers
+    atexit.register(release_lock)
+    signal.signal(signal.SIGTERM, signal_handler)
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGHUP, signal_handler)
 
     preflight(args.host, args.datasets, args.user, args.destination, args.strip_prefix)
