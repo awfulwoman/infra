@@ -9,7 +9,9 @@ network_netplan_gateway: "192.168.1.1"
 network_netplan_subnet: "{{ host_ipv4_subnet | default(24) }}"
 
 # Optional DNS nameservers (empty by default, systemd-resolved handles)
-network_netplan_nameservers: []
+network_netplan_nameservers: [
+  192.168.1.1
+]
 
 # Renderer
 network_netplan_renderer: networkd
