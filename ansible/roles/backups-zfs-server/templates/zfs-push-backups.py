@@ -14,13 +14,24 @@ DEFAULT_debug = False
 DEFAULT_quiet = False
 DEFAULT_bwlimit = None  # No bandwidth limit by default
 
-# Lockfile to prevent concurrent executions
-LOCKFILE = "/var/run/zfs-push-backups.lock"
+# Lockfile to prevent concurrent executions (set dynamically per host)
+_lockfile = None
 
 # Module-level variables for output control (set by main)
 _quiet = False
 _debug = False
 _bwlimit = None
+
+
+def get_lockfile_path(host):
+    """Generate a host-specific lockfile path.
+
+    Sanitizes the hostname to create a safe filesystem path.
+    This allows parallel pushes to different hosts.
+    """
+    # Sanitize hostname: replace non-alphanumeric chars with hyphens
+    safe_host = re.sub(r'[^a-zA-Z0-9.-]', '-', host)
+    return f"/var/run/zfs-push-backups-{safe_host}.lock"
 
 def info(message):
     """Print informational message unless quiet mode is enabled."""
@@ -43,10 +54,10 @@ def acquire_lock():
     Uses PID-based locking to detect and clean up stale locks.
     Returns True if lock acquired successfully, False otherwise.
     """
-    if os.path.exists(LOCKFILE):
+    if os.path.exists(_lockfile):
         # Lockfile exists - check if it's stale
         try:
-            with open(LOCKFILE, 'r') as f:
+            with open(_lockfile, 'r') as f:
                 old_pid = int(f.read().strip())
 
             # Check if process with that PID is still running
@@ -54,25 +65,25 @@ def acquire_lock():
                 os.kill(old_pid, 0)  # Signal 0 just checks if process exists
                 # Process exists - lock is valid
                 error(f"Another instance is already running (PID {old_pid})")
-                error("If you believe this is an error, remove the lockfile: " + LOCKFILE)
+                error("If you believe this is an error, remove the lockfile: " + _lockfile)
                 return False
             except (OSError, ProcessLookupError):
                 # Process doesn't exist - stale lockfile
                 debug(f"Removing stale lockfile (PID {old_pid} not running)")
-                os.remove(LOCKFILE)
+                os.remove(_lockfile)
         except (ValueError, IOError) as e:
             # Corrupted lockfile - remove it
             debug(f"Removing corrupted lockfile: {e}")
             try:
-                os.remove(LOCKFILE)
+                os.remove(_lockfile)
             except OSError:
                 pass
 
     # Create lockfile with current PID
     try:
-        with open(LOCKFILE, 'w') as f:
+        with open(_lockfile, 'w') as f:
             f.write(str(os.getpid()))
-        debug(f"Acquired lock (PID {os.getpid()})")
+        debug(f"Acquired lock for {_lockfile} (PID {os.getpid()})")
         return True
     except IOError as e:
         error(f"Failed to create lockfile: {e}")
@@ -82,13 +93,13 @@ def acquire_lock():
 def release_lock():
     """Release the lockfile."""
     try:
-        if os.path.exists(LOCKFILE):
+        if os.path.exists(_lockfile):
             # Verify it's our lockfile before removing
-            with open(LOCKFILE, 'r') as f:
+            with open(_lockfile, 'r') as f:
                 pid = int(f.read().strip())
             if pid == os.getpid():
-                os.remove(LOCKFILE)
-                debug(f"Released lock (PID {os.getpid()})")
+                os.remove(_lockfile)
+                debug(f"Released lock for {_lockfile} (PID {os.getpid()})")
             else:
                 debug(f"Not removing lockfile - belongs to PID {pid}, not {os.getpid()}")
     except (ValueError, IOError, OSError) as e:
@@ -630,7 +641,10 @@ if __name__ == "__main__":
         print("Usage: zfs-push-backups --host <host> --datasets <space-separated list> --destination <remote-dataset> [--user <user>]", file=sys.stderr)
         sys.exit(1)
 
-    # Acquire lockfile to prevent concurrent executions
+    # Set host-specific lockfile to allow parallel pushes to different hosts
+    _lockfile = get_lockfile_path(args.host)
+
+    # Acquire lockfile to prevent concurrent executions to this host
     if not acquire_lock():
         sys.exit(1)
 
