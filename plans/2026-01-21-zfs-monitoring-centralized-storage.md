@@ -173,7 +173,6 @@ ansible/roles/composition-victoriametrics/
 composition_victoriametrics_enabled: true
 composition_victoriametrics_port: 8428
 composition_victoriametrics_ui_port: 8429  # vmui interface
-composition_victoriametrics_subdomain: "metrics"
 composition_victoriametrics_retention: "1y"  # 1 year retention
 
 # Data storage

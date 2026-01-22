@@ -8,7 +8,7 @@ services:
       - "{{ composition_victoriametrics_port }}:8428"
     volumes:
       - "{{ composition_config }}/config/prometheus.yaml:/etc/prometheus/prometheus.yaml"
-      - "/shared/metrics/zfs:{{ composition_victoriametrics_storage_path }}"
+      - "/slowpool/shared/metrics/zfs:{{ composition_victoriametrics_storage_path }}"
     command:
       - "--storageDataPath={{ composition_victoriametrics_storage_path }}"
       - "--retentionPeriod={{ composition_victoriametrics_retention }}"
