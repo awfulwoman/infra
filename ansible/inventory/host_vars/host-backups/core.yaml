@@ -29,7 +29,6 @@ wakeonlan_interface: enp3s0
 # ZFS
 # -------------------------------------------------------------------
 
-# Experimental
 zfs:
   slowpool:
     vdevs:
@@ -49,5 +48,9 @@ zfs:
 # -------------------------------------------------------------------
 # COMPOSITIONS
 # -------------------------------------------------------------------
+
+compositions_dataset: slowpool/compositions
 compositions:
+  - container-management
+  - reverseproxy
   - zfs-api
