@@ -61,3 +61,12 @@ zfs:
       backups:
         datasets:
           raw:
+
+# -------------------------------------------------------------------
+# COMPOSITIONS
+# -------------------------------------------------------------------
+compositions_dataset: slowpool/compositions
+compositions:
+  - container-management
+  - reverseproxy
+  - zfs-api
