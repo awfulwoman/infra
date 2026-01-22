@@ -19,9 +19,9 @@ zfs:
     device: /dev/disk/by-id/scsi-0DO_Volume_site-storage
     datasets:
       compositions:
-        importance: critical
+        policy: critical
       sites:
-        importance: critical
+        policy: critical
         datasets:
           awfulwoman:
       shared:

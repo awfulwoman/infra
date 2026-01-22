@@ -16,8 +16,8 @@ import re
 # Policy definitions (injected by Ansible)
 POLICIES = json.loads(r'''{{ system_zfs_policy_definitions | to_json }}''')
 
-# Datasets with importance (injected by Ansible)
-DATASETS = json.loads(r'''{{ zfs | zfs_datasets_with_importance | to_json }}''')
+# Datasets with policy (injected by Ansible)
+DATASETS = json.loads(r'''{{ zfs | zfs_datasets_with_policy | to_json }}''')
 
 SNAPSHOT_PREFIX = "{{ system_zfs_policy_snapshot_prefix }}"
 
@@ -92,14 +92,14 @@ def count_snapshots_by_type(snapshots):
     return counts
 
 
-def get_policy_name(importance):
-    """Map importance level to policy name for display."""
-    return importance if importance in POLICIES else 'none'
+def get_policy_name(policy):
+    """Map policy level to policy name for display."""
+    return policy if policy in POLICIES else 'none'
 
 
-def get_policy_retention(importance):
+def get_policy_retention(policy):
     """Get retention counts for a policy."""
-    policy = POLICIES.get(importance, POLICIES['none'])
+    policy = POLICIES.get(policy, POLICIES['none'])
     return {t: policy.get(t, 0) for t in SNAPSHOT_TYPES}
 
 
@@ -109,14 +109,14 @@ def gather_report_data():
 
     for ds_info in DATASETS:
         dataset = ds_info['dataset']
-        importance = ds_info['importance']
-        policy_name = get_policy_name(importance)
+        policy = ds_info['policy']
+        policy_name = get_policy_name(policy)
 
         debug(f"Processing {dataset} (policy: {policy_name})")
 
         snapshots = get_snapshots(dataset)
         counts = count_snapshots_by_type(snapshots)
-        retention = get_policy_retention(importance)
+        retention = get_policy_retention(policy)
 
         report.append({
             'dataset': dataset,

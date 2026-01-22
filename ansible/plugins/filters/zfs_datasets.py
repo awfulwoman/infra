@@ -15,7 +15,7 @@ class FilterModule(object):
             'zfs_critical_datasets': self.zfs_critical_datasets,
             'zfs_backup_datasets': self.zfs_backup_datasets,
             'zfs_offsite_datasets': self.zfs_offsite_datasets,
-            'zfs_datasets_with_importance': self.zfs_datasets_with_importance,
+            'zfs_datasets_with_policy': self.zfs_datasets_with_policy,
         }
 
     def zfs_all_datasets(self, zfs_dict):
@@ -121,7 +121,7 @@ class FilterModule(object):
         """
         Extract all datasets marked as 'critical' from a ZFS configuration dictionary.
 
-        Processes the zfs dictionary and extracts all datasets that have importance: critical.
+        Processes the zfs dictionary and extracts all datasets that have policy: critical.
 
         Args:
             zfs_dict: ZFS configuration dictionary
@@ -149,8 +149,8 @@ class FilterModule(object):
 
                     # Check if this dataset is marked as critical
                     is_critical = False
-                    if isinstance(dataset_value, dict) and 'importance' in dataset_value:
-                        if dataset_value['importance'] == 'critical':
+                    if isinstance(dataset_value, dict) and 'policy' in dataset_value:
+                        if dataset_value['policy'] == 'critical':
                             is_critical = True
 
                     if is_critical:
@@ -187,7 +187,7 @@ class FilterModule(object):
         """
         Extract all datasets marked for backup from a ZFS configuration dictionary.
 
-        Returns datasets that have importance: high or importance: critical.
+        Returns datasets that have policy: high or policy: critical.
 
         Args:
             zfs_dict: ZFS configuration dictionary
@@ -201,7 +201,7 @@ class FilterModule(object):
 
     def _extract_backup_datasets(self, current_dict, result, path_components):
         """
-        Recursively extract datasets marked as high or critical importance.
+        Recursively extract datasets marked as high or critical policy.
         """
         if not isinstance(current_dict, dict):
             return
@@ -213,8 +213,8 @@ class FilterModule(object):
 
                     # Check if this dataset is marked as high or critical
                     should_backup = False
-                    if isinstance(dataset_value, dict) and 'importance' in dataset_value:
-                        if dataset_value['importance'] in ('high', 'critical'):
+                    if isinstance(dataset_value, dict) and 'policy' in dataset_value:
+                        if dataset_value['policy'] in ('high', 'critical'):
                             should_backup = True
 
                     if should_backup:
@@ -246,7 +246,7 @@ class FilterModule(object):
         """
         Extract datasets that should be replicated to offsite backup hosts.
 
-        Returns datasets with importance: critical. These are the only datasets
+        Returns datasets with policy: critical. These are the only datasets
         that warrant offsite replication for disaster recovery.
 
         This is a semantic alias for zfs_critical_datasets, providing clearer
@@ -257,24 +257,24 @@ class FilterModule(object):
         """
         return self.zfs_critical_datasets(zfs_dict)
 
-    def zfs_datasets_with_importance(self, zfs_dict):
+    def zfs_datasets_with_policy(self, zfs_dict):
         """
-        Extract all datasets with their importance level.
+        Extract all datasets with their policy level.
 
         Returns an array where each item is a dictionary containing:
         - dataset: The full dataset path (string)
-        - importance: The importance level (string, defaults to 'none')
+        - policy: The policy level (string, defaults to 'none')
         - snapshots_discover_children: Boolean flag for runtime child discovery (optional)
 
         Feature: Policy Inheritance (Configuration-Time)
         ------------------------------------------------
         Supports policy inheritance via 'children_inherit_policy: true' on parent datasets.
-        When set, declared child datasets without explicit importance inherit the
-        parent's importance value. This is processed during Ansible execution.
+        When set, declared child datasets without explicit policy inherit the
+        parent's policy value. This is processed during Ansible execution.
 
         Use cases:
         - Docker Compose parent datasets with mixed-priority applications
-        - Media libraries where most content shares the same importance
+        - Media libraries where most content shares the same policy
         - Setting defaults with selective overrides
 
         Example:
@@ -282,12 +282,12 @@ class FilterModule(object):
               fastpool:
                 datasets:
                   compositions:
-                    importance: critical
+                    policy: critical
                     children_inherit_policy: true
                     datasets:
                       gitea:                    # Inherits 'critical'
                       logs:
-                        importance: none        # Explicit override
+                        policy: none        # Explicit override
 
         Feature: Runtime Child Discovery
         --------------------------------
@@ -306,7 +306,7 @@ class FilterModule(object):
               fastpool:
                 datasets:
                   compositions:
-                    importance: critical
+                    policy: critical
                     snapshots_discover_children: true     # Docker creates children at runtime
 
         Note: These features are complementary and can be used together to handle
@@ -316,21 +316,21 @@ class FilterModule(object):
             zfs_dict: ZFS configuration dictionary
         """
         if not isinstance(zfs_dict, dict):
-            raise AnsibleFilterError('zfs_datasets_with_importance requires a dictionary')
+            raise AnsibleFilterError('zfs_datasets_with_policy requires a dictionary')
 
         result = []
-        self._walk_tree_with_importance(zfs_dict, result, [], None)
+        self._walk_tree_with_policy(zfs_dict, result, [], None)
         return result
 
-    def _walk_tree_with_importance(self, current_dict, result, path_components, inherited_importance):
+    def _walk_tree_with_policy(self, current_dict, result, path_components, inherited_policy):
         """
-        Recursively walk the dictionary tree to find all datasets with their importance.
+        Recursively walk the dictionary tree to find all datasets with their policy.
 
         Args:
             current_dict: Current dictionary node being processed
             result: List to append results to
             path_components: Current path components (list of strings)
-            inherited_importance: Importance inherited from parent (or None)
+            inherited_policy: Importance inherited from parent (or None)
         """
         if not isinstance(current_dict, dict):
             return
@@ -340,17 +340,17 @@ class FilterModule(object):
                 for dataset_name, dataset_value in value.items():
                     dataset_path = path_components + [dataset_name]
 
-                    # Determine importance: explicit > inherited > 'none'
-                    if isinstance(dataset_value, dict) and 'importance' in dataset_value:
-                        importance = dataset_value['importance']
-                    elif inherited_importance is not None:
-                        importance = inherited_importance
+                    # Determine policy: explicit > inherited > 'none'
+                    if isinstance(dataset_value, dict) and 'policy' in dataset_value:
+                        policy = dataset_value['policy']
+                    elif inherited_policy is not None:
+                        policy = inherited_policy
                     else:
-                        importance = 'none'
+                        policy = 'none'
 
                     dataset_dict = {
                         'dataset': '/'.join(dataset_path),
-                        'importance': importance,
+                        'policy': policy,
                     }
 
                     # Add snapshots_discover_children flag if present
@@ -359,14 +359,14 @@ class FilterModule(object):
 
                     result.append(dataset_dict)
 
-                    # Determine what importance to pass to children
+                    # Determine what policy to pass to children
                     # This implements the inheritance chain logic with "chain breaking"
                     #
                     # Inheritance can start in two ways:
-                    # 1. This dataset has children_inherit_policy: true → children inherit this importance
-                    # 2. This dataset received inherited_importance from parent → continue chain
+                    # 1. This dataset has children_inherit_policy: true → children inherit this policy
+                    # 2. This dataset received inherited_policy from parent → continue chain
                     #
-                    # Chain breaking: If a dataset explicitly sets its own importance,
+                    # Chain breaking: If a dataset explicitly sets its own policy,
                     # it "breaks the chain" and doesn't pass that inherited value down
                     # (unless it also sets children_inherit_policy: true to start a new chain)
                     #
@@ -374,22 +374,22 @@ class FilterModule(object):
                     #   parent (critical, children_inherit_policy: true)
                     #     ├─ child1 (inherits 'critical')
                     #     │   └─ grandchild1 (gets 'none' - chain broken)
-                    #     └─ child2 (importance: high, children_inherit_policy: true)
+                    #     └─ child2 (policy: high, children_inherit_policy: true)
                     #         └─ grandchild2 (inherits 'high' - new chain)
                     child_inherited = None
                     if isinstance(dataset_value, dict) and dataset_value.get('children_inherit_policy', False):
                         # Start a new inheritance chain from this dataset
-                        child_inherited = importance
-                    elif inherited_importance is not None:
+                        child_inherited = policy
+                    elif inherited_policy is not None:
                         # Continue an existing chain, but only if this dataset didn't
-                        # explicitly set its own importance (which would break the chain)
-                        if not (isinstance(dataset_value, dict) and 'importance' in dataset_value):
-                            child_inherited = inherited_importance
+                        # explicitly set its own policy (which would break the chain)
+                        if not (isinstance(dataset_value, dict) and 'policy' in dataset_value):
+                            child_inherited = inherited_policy
 
                     if isinstance(dataset_value, dict):
-                        self._walk_tree_with_importance(dataset_value, result, dataset_path, child_inherited)
+                        self._walk_tree_with_policy(dataset_value, result, dataset_path, child_inherited)
             elif isinstance(value, dict):
                 if 'datasets' in value:
-                    self._walk_tree_with_importance(value, result, path_components + [key], inherited_importance)
+                    self._walk_tree_with_policy(value, result, path_components + [key], inherited_policy)
                 else:
-                    self._walk_tree_with_importance(value, result, path_components, inherited_importance)
+                    self._walk_tree_with_policy(value, result, path_components, inherited_policy)

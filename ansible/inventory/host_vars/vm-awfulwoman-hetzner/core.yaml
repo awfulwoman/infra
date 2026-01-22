@@ -16,16 +16,16 @@ configure_dns_linkdevice_physical: "eth0"
 
 zfs:
   fastpool:
-    device: 
+    device:
     vdevs:
       - type: stripe
         disks:
           - /dev/disk/by-id/scsi-0HC_Volume_104390137
     datasets:
       compositions:
-        importance: critical
+        policy: critical
       sites:
-        importance: critical
+        policy: critical
         datasets:
           awfulwoman:
       shared:

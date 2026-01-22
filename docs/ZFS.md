@@ -13,14 +13,14 @@ zfs:
   fastpool:
     datasets:
       compositions:
-        importance: critical
+        policy: critical
   slowpool:
     datasets:
       shared:
         datasets:
           syncthing:
     encrypteddataset:
-      importance: critical
+      policy: critical
       properties:
         encryption: aes-256-gcm
         keylocation: "{{ vault_zfs_default_encryption_passphrase_path }}"
@@ -35,7 +35,7 @@ Each dataset can have further child datasets defined. They also use the `dataset
 
 ## Policy-driven snapshots and replication
 
-ZFS snapshotting and replication in this infrastructure is policy-driven. This means that policies are defined and then applied to datasets. Policies are assigned to datasets using the `importance` key.
+ZFS snapshotting and replication in this infrastructure is policy-driven. This means that policies are defined and then applied to datasets. Policies are assigned to datasets using the `policy` key.
 
 Relevant roles:
 
@@ -47,15 +47,15 @@ Relevant roles:
 
 ## Advanced Dataset Policy Management
 
-ZFS policy management includes two powerful features for managing dataset importance at scale: **policy inheritance** and **runtime child discovery**. These features solve different but complementary problems in infrastructure management.
+ZFS policy management includes two powerful features for managing dataset policy at scale: **policy inheritance** and **runtime child discovery**. These features solve different but complementary problems in infrastructure management.
 
 ### Policy Inheritance with `children_inherit_policy`
 
-Policy inheritance is a **configuration-time** feature that allows parent datasets to automatically pass their importance value to child datasets declared in your Ansible inventory.
+Policy inheritance is a **configuration-time** feature that allows parent datasets to automatically pass their policy value to child datasets declared in your Ansible inventory.
 
 #### How It Works
 
-When a dataset has `children_inherit_policy: true`, all its child datasets automatically inherit the parent's importance level **unless** they explicitly define their own importance. This inheritance happens during Ansible's configuration processing, before any scripts run.
+When a dataset has `children_inherit_policy: true`, all its child datasets automatically inherit the parent's policy level **unless** they explicitly define their own policy. This inheritance happens during Ansible's configuration processing, before any scripts run.
 
 #### Use Case: Mixed-Priority Docker Compose Applications
 
@@ -68,32 +68,32 @@ zfs:
   fastpool:
     datasets:
       compositions:
-        importance: critical
+        policy: critical
         children_inherit_policy: true
         datasets:
           awfulwoman:
-            importance: none        # Explicitly override to skip backups
+            policy: none        # Explicitly override to skip backups
           container-management:
-            importance: none        # Explicitly override to skip backups
+            policy: none        # Explicitly override to skip backups
           reverseproxy:
-            importance: none        # Explicitly override to skip backups
+            policy: none        # Explicitly override to skip backups
           # Other compositions inherit 'critical' automatically
 ```
 
 **What Happens:**
 
 - `fastpool/compositions` is marked `critical` with `children_inherit_policy: true`
-- `fastpool/compositions/awfulwoman` explicitly sets `importance: none` → gets `none` (override)
-- `fastpool/compositions/container-management` explicitly sets `importance: none` → gets `none` (override)
-- `fastpool/compositions/reverseproxy` explicitly sets `importance: none` → gets `none` (override)
+- `fastpool/compositions/awfulwoman` explicitly sets `policy: none` → gets `none` (override)
+- `fastpool/compositions/container-management` explicitly sets `policy: none` → gets `none` (override)
+- `fastpool/compositions/reverseproxy` explicitly sets `policy: none` → gets `none` (override)
 - Any other composition datasets declared would inherit `critical` from their parent
 
-This pattern is cleaner than explicitly setting `importance: critical` on every composition dataset.
+This pattern is cleaner than explicitly setting `policy: critical` on every composition dataset.
 
 #### When to Use `children_inherit_policy`
 
 - **Docker Compose parent datasets** where most containers should have the same backup level
-- **Media libraries** with consistent importance (e.g., all music folders are critical, all TV shows are low)
+- **Media libraries** with consistent policy (e.g., all music folders are critical, all TV shows are low)
 - **Shared datasets** where you want a default policy but occasional overrides
 - **Development environments** with a baseline policy and specific exceptions
 
@@ -103,7 +103,7 @@ Runtime child discovery is a **runtime** feature that enables automatic discover
 
 #### How It Works
 
-When a dataset has `snapshots_discover_children: true`, the snapshot and pruning scripts query ZFS at runtime to find all child datasets that actually exist on the system. Discovered children automatically receive the same importance policy as their parent.
+When a dataset has `snapshots_discover_children: true`, the snapshot and pruning scripts query ZFS at runtime to find all child datasets that actually exist on the system. Discovered children automatically receive the same policy policy as their parent.
 
 This happens every time the scripts run, meaning newly-created children are immediately included in the next snapshot cycle.
 
@@ -118,13 +118,13 @@ zfs:
   fastpool:
     datasets:
       compositions:
-        importance: critical
+        policy: critical
         snapshots_discover_children: true
 ```
 
 **What Happens:**
 
-1. Ansible creates `fastpool/compositions` with `importance: critical`
+1. Ansible creates `fastpool/compositions` with `policy: critical`
 2. Docker Compose applications run and Docker creates child datasets:
    - `fastpool/compositions/jellyfin_config`
    - `fastpool/compositions/immich_pgdata`
@@ -133,7 +133,7 @@ zfs:
 3. When `zfs-snapshot` runs, it:
    - Queries ZFS: `zfs list -H -o name -r fastpool/compositions`
    - Discovers all Docker-created children
-   - Applies `importance: critical` to each discovered child
+   - Applies `policy: critical` to each discovered child
    - Creates snapshots for all of them
 
 **Observing Discoveries:**
@@ -146,7 +146,7 @@ sudo /opt/zfs-policy/zfs-snapshot --type hourly --dry-run --debug
 
 Example output:
 ```
-[DEBUG] Processing dataset: fastpool/compositions (importance: critical, snapshots_discover_children: true)
+[DEBUG] Processing dataset: fastpool/compositions (policy: critical, snapshots_discover_children: true)
 [DEBUG] Discovered children for fastpool/compositions:
 [DEBUG]   - fastpool/compositions/jellyfin_config
 [DEBUG]   - fastpool/compositions/immich_pgdata
@@ -177,12 +177,12 @@ zfs:
   fastpool:
     datasets:
       compositions:
-        importance: critical
+        policy: critical
         children_inherit_policy: true
         snapshots_discover_children: true
         datasets:
           logs:
-            importance: none        # Declared child with override
+            policy: none        # Declared child with override
           # Docker will create many more children at runtime
 ```
 
@@ -194,7 +194,7 @@ zfs:
 
 2. **Runtime** (snapshot scripts execute):
    - Scripts query ZFS and discover: `jellyfin_config`, `immich_pgdata`, `gitea_data`, etc.
-   - Discovered children get `critical` (parent's importance)
+   - Discovered children get `critical` (parent's policy)
    - Declared `logs` child gets `none` (already configured)
 
 ### Feature Comparison
@@ -204,7 +204,7 @@ zfs:
 | **When processed** | Configuration time (Ansible) | Runtime (every script execution) |
 | **What it affects** | Declared child datasets in inventory | Undeclared datasets found via ZFS query |
 | **Primary use case** | Setting defaults for known children | Capturing Docker volumes and dynamic datasets |
-| **Overrides** | Children can override with explicit `importance` | No override possible (uses parent's value) |
+| **Overrides** | Children can override with explicit `policy` | No override possible (uses parent's value) |
 | **Performance impact** | None (processed once during deployment) | Minimal (one `zfs list` command per parent) |
 | **Debugging** | Check Ansible facts/output | Use `--debug --dry-run` on scripts |
 | **Requirements** | Child datasets must be declared in inventory | Parent dataset must exist in ZFS |
@@ -213,7 +213,7 @@ zfs:
 
 - **Use `children_inherit_policy`** when you know what child datasets will exist and want to set a default with occasional overrides
 - **Use `snapshots_discover_children`** when children are created dynamically and you want to capture everything
-- **Use both** when you have a mix of known (with varying importance) and unknown children
+- **Use both** when you have a mix of known (with varying policy) and unknown children
 
 ### Troubleshooting
 
@@ -230,34 +230,34 @@ zfs:
 
 2. Does the parent have `children_inherit_policy: true`? (For declared children)
    ```bash
-   # Check the processed importance values
+   # Check the processed policy values
    ansible-playbook ansible/playbooks/baremetal/core.yaml --tags system-zfs-policy --check --diff
    ```
 
-3. Did the child explicitly set `importance: none`?
+3. Did the child explicitly set `policy: none`?
    ```yaml
    # This overrides inheritance:
    datasets:
      skip-me:
-       importance: none
+       policy: none
    ```
 
 #### Too Many Snapshots
 
 **Problem:** Discovery is capturing datasets you don't want snapshotted.
 
-**Solution:** Explicitly set `importance: none` on unwanted children:
+**Solution:** Explicitly set `policy: none` on unwanted children:
 
 ```yaml
 zfs:
   fastpool:
     datasets:
       compositions:
-        importance: critical
+        policy: critical
         snapshots_discover_children: true
         datasets:
           temp-data:
-            importance: none        # Explicitly exclude this one
+            policy: none        # Explicitly exclude this one
 ```
 
 #### Performance with Many Children

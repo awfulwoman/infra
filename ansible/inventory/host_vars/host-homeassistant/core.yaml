@@ -41,10 +41,10 @@ zfs:
       misc:
         datasets:
           syncthing:
-            importance: critical
+            policy: critical
       compositions:
         state: present
-        importance: critical
+        policy: critical
 
 # -------------------------------------------------------------------
 # MISC

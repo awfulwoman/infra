@@ -15,9 +15,9 @@ Filters for processing the declarative `zfs` dictionary structure defined in hos
 | `zfs_all_datasets` | Returns a list of all dataset paths |
 | `zfs_all_pools` | Returns a list of top-level pool names |
 | `zfs_datasets_with_config` | Returns datasets with their properties and delegation settings |
-| `zfs_critical_datasets` | Returns datasets with `importance: critical` |
-| `zfs_backup_datasets` | Returns datasets with `importance: high` or `critical` |
-| `zfs_datasets_with_importance` | Returns all datasets with their importance level (supports inheritance) |
+| `zfs_critical_datasets` | Returns datasets with `policy: critical` |
+| `zfs_backup_datasets` | Returns datasets with `policy: high` or `critical` |
+| `zfs_datasets_with_policy` | Returns all datasets with their policy level (supports inheritance) |
 
 **Example usage:**
 

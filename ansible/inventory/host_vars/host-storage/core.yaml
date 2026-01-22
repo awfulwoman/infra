@@ -46,7 +46,7 @@ zfs:
           - /dev/disk/by-id/scsi-SATA_SanDisk_SDSSDH3_22087N455301
     datasets:
       compositions:
-        importance: critical
+        policy: critical
         snapshots_discover_children: true
   slowpool:
     # vdevs:
@@ -73,32 +73,32 @@ zfs:
           metrics:
             datasets:
               zfs:
-                importance: high
+                policy: high
           media:
             datasets:
               shows:
-                importance: low
+                policy: low
               movies:
-                importance: low
+                policy: low
               music:
-                importance: critical
+                policy: critical
               books:
-                importance: critical
+                policy: critical
               audiobooks:
-                importance: critical
+                policy: critical
               downloads:
                 datasets:
                   torrents:
               podcasts:
-                importance: critical
+                policy: critical
               youtube:
       charlie:
-        # importance: critical
+        # policy: critical
         datasets:
           syncthing:
-            importance: critical
+            policy: critical
           photos:
-            importance: critical
+            policy: critical
 
 # -------------------------------------------------------------------
 # MISC

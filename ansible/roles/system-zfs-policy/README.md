@@ -4,7 +4,7 @@ Policy-driven ZFS snapshot management using systemd timers.
 
 ## Overview
 
-This role configures automated ZFS snapshots based on dataset importance levels, integrating with the existing `zfs` host variable structure.
+This role configures automated ZFS snapshots based on dataset policy levels, integrating with the existing `zfs` host variable structure.
 
 ## Requirements
 
@@ -15,7 +15,7 @@ This role configures automated ZFS snapshots based on dataset importance levels,
 
 ### Policy System
 
-Datasets are assigned an `importance` level which determines their snapshot schedule:
+Datasets are assigned an `policy` level which determines their snapshot schedule:
 
 | Policy     | Hourly | Daily | Monthly | Yearly | Description            |
 | ---------- | ------ | ----- | ------- | ------ | ---------------------- |
@@ -26,37 +26,37 @@ Datasets are assigned an `importance` level which determines their snapshot sche
 
 ### Configuration
 
-Set importance on datasets in your `host_vars`:
+Set policy on datasets in your `host_vars`:
 
 ```yaml
 zfs:
   fastpool:
     datasets:
       compositions:
-        importance: critical    # Gets 36 hourly, 3 monthly, 5 yearly
-      scratch:                  # No importance = 'none', no snapshots
+        policy: critical    # Gets 36 hourly, 3 monthly, 5 yearly
+      scratch:                  # No policy = 'none', no snapshots
       media:
-        importance: low         # Gets 3 hourly, 1 monthly
+        policy: low         # Gets 3 hourly, 1 monthly
 ```
 
 ### Advanced Features
 
 #### Policy Inheritance (`children_inherit_policy`)
 
-Parent datasets can pass their importance to declared children, reducing configuration duplication:
+Parent datasets can pass their policy to declared children, reducing configuration duplication:
 
 ```yaml
 zfs:
   fastpool:
     datasets:
       compositions:
-        importance: critical
+        policy: critical
         children_inherit_policy: true
         datasets:
           gitea:              # Inherits 'critical'
           jellyfin:           # Inherits 'critical'
           logs:
-            importance: none  # Override with explicit value
+            policy: none  # Override with explicit value
 ```
 
 **Use case:** Docker Compose parent datasets where most containers share the same backup policy, with occasional exceptions.
@@ -70,11 +70,11 @@ zfs:
   fastpool:
     datasets:
       compositions:
-        importance: critical
+        policy: critical
         snapshots_discover_children: true  # Snapshots all Docker-created children
 ```
 
-When `snapshots_discover_children: true`, the snapshot scripts query ZFS at runtime to find all child datasets and apply the parent's importance policy to them. This is essential for Docker environments where volume datasets are created dynamically.
+When `snapshots_discover_children: true`, the snapshot scripts query ZFS at runtime to find all child datasets and apply the parent's policy policy to them. This is essential for Docker environments where volume datasets are created dynamically.
 
 **Observing discoveries:**
 ```bash
@@ -90,12 +90,12 @@ zfs:
   fastpool:
     datasets:
       compositions:
-        importance: critical
+        policy: critical
         children_inherit_policy: true        # For declared children
         snapshots_discover_children: true     # For Docker volumes
         datasets:
           logs:
-            importance: none        # Explicitly skip this one
+            policy: none        # Explicitly skip this one
 ```
 
 **For detailed documentation**, including use cases, troubleshooting, and feature comparisons, see [docs/zfs.md](../../docs/zfs.md#advanced-dataset-policy-management).

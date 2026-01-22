@@ -14,8 +14,8 @@ import re
 # Policy definitions (injected by Ansible)
 POLICIES = json.loads(r'''{{ system_zfs_policy_definitions | to_json }}''')
 
-# Datasets with importance (injected by Ansible)
-DATASETS = json.loads(r'''{{ zfs | zfs_datasets_with_importance | to_json }}''')
+# Datasets with policy (injected by Ansible)
+DATASETS = json.loads(r'''{{ zfs | zfs_datasets_with_policy | to_json }}''')
 
 SNAPSHOT_PREFIX = "{{ system_zfs_policy_snapshot_prefix }}"
 
@@ -124,7 +124,7 @@ def expand_datasets_with_children(datasets):
     """
     Expand datasets that have snapshots_discover_children=true by querying ZFS for children.
 
-    Children inherit the parent's importance unless they are explicitly declared
+    Children inherit the parent's policy unless they are explicitly declared
     in the original datasets list.
     """
     # Build a set of explicitly declared datasets for quick lookup
@@ -136,17 +136,17 @@ def expand_datasets_with_children(datasets):
 
         if ds_info.get('snapshots_discover_children', False):
             dataset = ds_info['dataset']
-            importance = ds_info['importance']
+            policy = ds_info['policy']
 
             debug(f"Discovering children of {dataset}")
             children = get_zfs_children(dataset)
 
             for child in children:
                 if child not in declared_datasets:
-                    debug(f"  Found child: {child} (inheriting importance: {importance})")
+                    debug(f"  Found child: {child} (inheriting policy: {policy})")
                     expanded.append({
                         'dataset': child,
-                        'importance': importance,
+                        'policy': policy,
                         '_discovered': True  # Mark as discovered for logging
                     })
                 else:
@@ -155,9 +155,9 @@ def expand_datasets_with_children(datasets):
     return expanded
 
 
-def prune_dataset(dataset, importance):
+def prune_dataset(dataset, policy):
     """Prune snapshots for a single dataset based on its policy."""
-    policy = POLICIES.get(importance, POLICIES['none'])
+    policy = POLICIES.get(policy, POLICIES['none'])
 
     if not policy.get('autoprune', False):
         debug(f"Skipping {dataset} - autoprune disabled")
@@ -231,9 +231,9 @@ def main():
 
     for ds_info in all_datasets:
         dataset = ds_info['dataset']
-        importance = ds_info['importance']
+        policy = ds_info['policy']
 
-        destroyed, kept = prune_dataset(dataset, importance)
+        destroyed, kept = prune_dataset(dataset, policy)
         total_destroyed += destroyed
         total_kept += kept
 

@@ -41,19 +41,19 @@ zfs:
   fastpool:
     datasets:
       compositions:
-        importance: critical
+        policy: critical
         children_inherit_policy: true
         datasets:
           awfulwoman:
-            importance: none
+            policy: none
           container-management:
-            importance: none
+            policy: none
           reverseproxy:
-            importance: none
+            policy: none
       acme:
-        importance: critical
+        policy: critical
       terraform:
-        importance: critical
+        policy: critical
 
 # -------------------------------------------------------------------
 # MISC
