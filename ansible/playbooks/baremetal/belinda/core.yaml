@@ -4,6 +4,9 @@
     - role: bootstrap-ubuntu-server
     - role: network-netplan
     - role: hardware-raspberry-pi
+    - role: system-zfs
+    - role: backups-zfs-server
+    - role: compositions
     - role: client-nut
     - role: infothrill.nullmailer
       become: true

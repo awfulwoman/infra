@@ -34,6 +34,7 @@ raspberry_pi_wifi: false
 raspberry_pi_boot_config_location: /boot/firmware/config.txt
 raspberry_pi_config_overrides:
   - "dtoverlay=cooling_fan"
+  - "dtparam=pciex1"
 
 # -------------------------------------------------------------------
 # NETWORK
@@ -47,4 +48,17 @@ tailscale_exit_node: false
 # ZFS
 # -------------------------------------------------------------------
 
-# zfs:
+zfs:
+  slowpool:
+    vdevs:
+      - type: mirror
+        disks:
+          - /dev/disk/by-id/scsi-SATA_WDC_WD20SPZX-22U_WD-WX12A6317XCK
+          - /dev/disk/by-id/scsi-SATA_WDC_WD20SPZX-22U_WD-WX82E2125JHD
+    datasets:
+      compositions:
+      backups:
+        datasets:
+          raw:
+
+
