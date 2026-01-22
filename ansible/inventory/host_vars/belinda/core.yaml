@@ -35,7 +35,7 @@ raspberry_pi_boot_config_location: /boot/firmware/config.txt
 raspberry_pi_config_overrides:
   - "dtoverlay=cooling_fan"
   - "dtparam=pciex1"
-  - "dtparam=pciex1_gen=3"
+  - "dtparam=pciex1_gen=3" # https://docs.radxa.com/en/accessories/storage/penta-sata-hat/penta-for-rpi5
 
 # -------------------------------------------------------------------
 # NETWORK
