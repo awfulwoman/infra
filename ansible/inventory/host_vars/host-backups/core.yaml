@@ -32,7 +32,17 @@ wakeonlan_interface: enp3s0
 # Experimental
 zfs:
   slowpool:
+    vdevs:
+      - type: mirror
+        disks:
+          - /dev/disk/by-id/scsi-SATA_ST2000DM008-2FR1_ZK308FPE
+          - /dev/disk/by-id/scsi-SATA_ST2000DM008-2FR1_ZK308GLF
+      - type: mirror
+        disks:
+          - /dev/disk/by-id/scsi-SATA_ST2000DM008-2FR1_ZK308JA0
+          - /dev/disk/by-id/scsi-SATA_WDC_WD20EZAZ-00L_WD-WX82AB005EXH
     datasets:
+      compositions:
       encryptedbackups:
         state: present
 
