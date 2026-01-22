@@ -61,6 +61,7 @@ all:
         host-backups:
         host-albion:
         vm-awfulwoman-hetzner:
+        belinda:
 
     # Hosts acting as replication sources/clients
     zfs-backup-clients:
@@ -73,6 +74,7 @@ all:
     zfs-backup-servers:
       hosts:
         host-backups:
+        belinda:
 
     # Offsite replication destination
     zfs-backup-offsite:
