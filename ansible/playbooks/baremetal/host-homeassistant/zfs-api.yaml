@@ -1,0 +1,12 @@
+- name: Home Automation Server - Compositions
+  hosts: host-homeassistant
+  vars:
+    compositions:
+      - zfs-api
+  roles:
+    - role: compositions
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:

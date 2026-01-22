@@ -12,7 +12,7 @@ from datetime import datetime
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from routers import pools, datasets, snapshots, backups
+from routers import pools, datasets, snapshots, backups, metrics
 
 # Configure logging
 log_level = os.getenv("ZFS_API_LOG_LEVEL", "info").upper()
@@ -102,6 +102,7 @@ app.include_router(pools.router, prefix="/api/v1/pools", tags=["pools"])
 app.include_router(datasets.router, prefix="/api/v1/datasets", tags=["datasets"])
 app.include_router(snapshots.router, prefix="/api/v1/snapshots", tags=["snapshots"])
 app.include_router(backups.router, prefix="/api/v1/backups", tags=["backups"])
+app.include_router(metrics.router, tags=["metrics"])
 
 @app.get("/api/v1/health", tags=["health"])
 async def health_check():

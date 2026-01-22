@@ -72,6 +72,22 @@ def run_zfs_snapshot_report() -> List[Dict]:
         raise RuntimeError("Invalid JSON from snapshot report")
 
 
+def get_snapshot_report() -> Optional[Dict]:
+    """
+    Get snapshot policy compliance report from zfs-snapshot-report.
+
+    Returns:
+        Dictionary containing snapshot compliance report, or None on error
+    """
+    try:
+        report_data = run_zfs_snapshot_report()
+        # The report returns a list, we need to wrap it in a dict with 'datasets' key
+        return {"datasets": report_data}
+    except Exception as e:
+        logger.error(f"Failed to get snapshot report: {e}")
+        return None
+
+
 def get_pool_list() -> List[Dict]:
     """
     Get list of all ZFS pools with basic metrics.

@@ -84,6 +84,7 @@
     - datasets.py
     - snapshots.py
     - backups.py
+    - metrics.py
 
 - name: Copy utils modules
   become: true

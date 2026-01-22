@@ -11,6 +11,7 @@ This composition provides a FastAPI-based REST API that exposes read-only ZFS st
 - Dataset space usage and properties
 - Policy-aware snapshot compliance tracking
 - Backup status overview
+- **Prometheus metrics endpoint** for VictoriaMetrics/Prometheus integration
 - Interactive API documentation (Swagger UI)
 - Automatic SSL via Traefik reverse proxy
 
@@ -62,6 +63,10 @@ The container runs in privileged mode with access to `/dev/zfs` for read-only ZF
 - `GET /api/v1/health` - API health check
 - `GET /api/docs` - Interactive API documentation (Swagger UI)
 - `GET /api/redoc` - Alternative API documentation (ReDoc)
+
+### Monitoring
+
+- `GET /metrics` - Prometheus metrics endpoint (for VictoriaMetrics/Prometheus scraping)
 
 ## Configuration
 
@@ -165,6 +170,19 @@ curl -s https://zfs-api.storage.xberg.ber.yourdomain.com/api/v1/snapshots | \
 curl -s https://zfs-api.storage.xberg.ber.yourdomain.com/api/v1/datasets/fastpool/compositions | jq
 ```
 
+### Query Prometheus Metrics
+
+```bash
+# View all Prometheus metrics
+curl https://zfs-api.storage.xberg.ber.yourdomain.com/metrics
+
+# Filter specific metrics
+curl -s https://zfs-api.storage.xberg.ber.yourdomain.com/metrics | grep zfs_pool_capacity
+
+# Check metric format
+curl -s https://zfs-api.storage.xberg.ber.yourdomain.com/metrics | head -20
+```
+
 ### Monitor with Shell Script
 
 ```bash
@@ -212,28 +230,57 @@ sensor:
     unit_of_measurement: "%"
 ```
 
-### Prometheus
+### Prometheus / VictoriaMetrics
 
-Use the JSON exporter or write a simple exporter script:
+The API natively exposes Prometheus metrics at `/metrics`:
 
-```python
-import requests
-from prometheus_client import Gauge, start_http_server
+**Scrape Configuration:**
+```yaml
+scrape_configs:
+  - job_name: 'zfs-metrics'
+    scrape_interval: 60s
+    static_configs:
+      - targets:
+          - 'zfs-api.host-storage.xberg.ber.domain.com:8000'
+          - 'zfs-api.host-homeassistant.xberg.ber.domain.com:8000'
+          - 'zfs-api.dns.xberg.ber.domain.com:8000'
+          - 'zfs-api.host-backups.xberg.ber.domain.com:8000'
+          - 'zfs-api.host-albion.location.city.domain.com:8000'
+        labels:
+          job: 'zfs'
+          environment: 'homelab'
+```
 
-pool_health = Gauge('zfs_pool_health', 'ZFS Pool Health', ['pool'])
-pool_capacity = Gauge('zfs_pool_capacity_percent', 'ZFS Pool Capacity', ['pool'])
+**Available Metrics:**
+- `zfs_pool_health` - Pool health status (1=ONLINE, 0=other)
+- `zfs_pool_capacity_percent` - Pool capacity percentage
+- `zfs_pool_size_bytes` - Pool total size in bytes
+- `zfs_pool_allocated_bytes` - Pool allocated bytes
+- `zfs_pool_free_bytes` - Pool free bytes
+- `zfs_pool_fragmentation_percent` - Pool fragmentation percentage
+- `zfs_dataset_used_bytes` - Dataset used space
+- `zfs_dataset_available_bytes` - Dataset available space
+- `zfs_dataset_referenced_bytes` - Dataset referenced space
+- `zfs_snapshot_count` - Number of snapshots
+- `zfs_snapshot_retention` - Retention target
+- `zfs_snapshot_compliance_percent` - Compliance percentage
 
-def collect():
-    response = requests.get('https://zfs-api.storage.../api/v1/pools')
-    data = response.json()
-    for pool in data['pools']:
-        pool_capacity.labels(pool=pool['name']).set(pool['capacity_percent'])
+**PromQL Query Examples:**
+```promql
+# Pool capacity across all hosts
+zfs_pool_capacity_percent
 
-if __name__ == '__main__':
-    start_http_server(9100)
-    while True:
-        collect()
-        time.sleep(60)
+# Pools over 80% capacity
+zfs_pool_capacity_percent > 80
+
+# Average snapshot compliance by policy
+avg by (policy, interval) (zfs_snapshot_compliance_percent)
+
+# Datasets with low compliance
+zfs_snapshot_compliance_percent{interval="daily"} < 90
+
+# Storage growth rate (bytes per day)
+rate(zfs_pool_allocated_bytes[7d]) * 86400
 ```
 
 ## Security
