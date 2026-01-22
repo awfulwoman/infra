@@ -54,7 +54,7 @@ zfs:
     vdevs:
       - type: mirror
         disks:
-          - /dev/disk/by-id/scsi-SATA_WDC_WD20SPZX-22U_WD-WX12A6317XCK
+          - /dev/disk/by-id/scsi-SATA_WDC_WeD20SPZX-22U_WD-WX12A6317XCK
           - /dev/disk/by-id/scsi-SATA_WDC_WD20SPZX-22U_WD-WX82E2125JHD
     datasets:
       compositions:
