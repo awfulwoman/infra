@@ -39,6 +39,67 @@ zfs:
         importance: low         # Gets 3 hourly, 1 monthly
 ```
 
+### Advanced Features
+
+#### Policy Inheritance (`children_inherit_policy`)
+
+Parent datasets can pass their importance to declared children, reducing configuration duplication:
+
+```yaml
+zfs:
+  fastpool:
+    datasets:
+      compositions:
+        importance: critical
+        children_inherit_policy: true
+        datasets:
+          gitea:              # Inherits 'critical'
+          jellyfin:           # Inherits 'critical'
+          logs:
+            importance: none  # Override with explicit value
+```
+
+**Use case:** Docker Compose parent datasets where most containers share the same backup policy, with occasional exceptions.
+
+#### Runtime Child Discovery (`snapshots_discover_children`)
+
+Automatically discover and snapshot child datasets created outside of Ansible (e.g., Docker volumes):
+
+```yaml
+zfs:
+  fastpool:
+    datasets:
+      compositions:
+        importance: critical
+        snapshots_discover_children: true  # Snapshots all Docker-created children
+```
+
+When `snapshots_discover_children: true`, the snapshot scripts query ZFS at runtime to find all child datasets and apply the parent's importance policy to them. This is essential for Docker environments where volume datasets are created dynamically.
+
+**Observing discoveries:**
+```bash
+sudo /opt/zfs-policy/zfs-snapshot --type hourly --dry-run --debug
+```
+
+#### Combining Both Features
+
+You can use both together to handle declared children (with inheritance) and undeclared children (with discovery):
+
+```yaml
+zfs:
+  fastpool:
+    datasets:
+      compositions:
+        importance: critical
+        children_inherit_policy: true        # For declared children
+        snapshots_discover_children: true     # For Docker volumes
+        datasets:
+          logs:
+            importance: none        # Explicitly skip this one
+```
+
+**For detailed documentation**, including use cases, troubleshooting, and feature comparisons, see [docs/zfs.md](../../docs/zfs.md#advanced-dataset-policy-management).
+
 ### Snapshot Naming
 
 Snapshots follow a consistent naming convention:

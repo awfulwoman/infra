@@ -122,7 +122,7 @@ def get_zfs_children(dataset):
 
 def expand_datasets_with_children(datasets):
     """
-    Expand datasets that have discover_children=true by querying ZFS for children.
+    Expand datasets that have snapshots_discover_children=true by querying ZFS for children.
 
     Children inherit the parent's importance unless they are explicitly declared
     in the original datasets list.
@@ -134,7 +134,7 @@ def expand_datasets_with_children(datasets):
     for ds_info in datasets:
         expanded.append(ds_info)
 
-        if ds_info.get('discover_children', False):
+        if ds_info.get('snapshots_discover_children', False):
             dataset = ds_info['dataset']
             importance = ds_info['importance']
 

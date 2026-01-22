@@ -47,7 +47,7 @@ zfs:
     datasets:
       compositions:
         importance: critical
-        discover_children: true
+        snapshots_discover_children: true
   slowpool:
     # vdevs:
     #   - type: mirror

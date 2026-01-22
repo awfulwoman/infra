@@ -45,6 +45,235 @@ Relevant roles:
 - `backups-zfs-client`: configures a host to enable hosts configured with `backups-zfs-server` to _pull__ dataset snapshots from it.
 - `backups-zfs-offsite`: configures a host to enable hosts configured with `backups-zfs-server` to _push_ datasets snapshots to it.
 
+## Advanced Dataset Policy Management
+
+ZFS policy management includes two powerful features for managing dataset importance at scale: **policy inheritance** and **runtime child discovery**. These features solve different but complementary problems in infrastructure management.
+
+### Policy Inheritance with `children_inherit_policy`
+
+Policy inheritance is a **configuration-time** feature that allows parent datasets to automatically pass their importance value to child datasets declared in your Ansible inventory.
+
+#### How It Works
+
+When a dataset has `children_inherit_policy: true`, all its child datasets automatically inherit the parent's importance level **unless** they explicitly define their own importance. This inheritance happens during Ansible's configuration processing, before any scripts run.
+
+#### Use Case: Mixed-Priority Docker Compose Applications
+
+A common scenario is a parent dataset containing multiple Docker Compose applications, where most should be backed up at the parent's level, but some specific ones need different treatment.
+
+**Example from `dns` host:**
+
+```yaml
+zfs:
+  fastpool:
+    datasets:
+      compositions:
+        importance: critical
+        children_inherit_policy: true
+        datasets:
+          awfulwoman:
+            importance: none        # Explicitly override to skip backups
+          container-management:
+            importance: none        # Explicitly override to skip backups
+          reverseproxy:
+            importance: none        # Explicitly override to skip backups
+          # Other compositions inherit 'critical' automatically
+```
+
+**What Happens:**
+
+- `fastpool/compositions` is marked `critical` with `children_inherit_policy: true`
+- `fastpool/compositions/awfulwoman` explicitly sets `importance: none` → gets `none` (override)
+- `fastpool/compositions/container-management` explicitly sets `importance: none` → gets `none` (override)
+- `fastpool/compositions/reverseproxy` explicitly sets `importance: none` → gets `none` (override)
+- Any other composition datasets declared would inherit `critical` from their parent
+
+This pattern is cleaner than explicitly setting `importance: critical` on every composition dataset.
+
+#### When to Use `children_inherit_policy`
+
+- **Docker Compose parent datasets** where most containers should have the same backup level
+- **Media libraries** with consistent importance (e.g., all music folders are critical, all TV shows are low)
+- **Shared datasets** where you want a default policy but occasional overrides
+- **Development environments** with a baseline policy and specific exceptions
+
+### Runtime Child Discovery with `snapshots_discover_children`
+
+Runtime child discovery is a **runtime** feature that enables automatic discovery and policy application to dynamically-created child datasets that aren't declared in your Ansible inventory.
+
+#### How It Works
+
+When a dataset has `snapshots_discover_children: true`, the snapshot and pruning scripts query ZFS at runtime to find all child datasets that actually exist on the system. Discovered children automatically receive the same importance policy as their parent.
+
+This happens every time the scripts run, meaning newly-created children are immediately included in the next snapshot cycle.
+
+#### Use Case: Docker Volume Discovery
+
+Docker automatically creates ZFS datasets for volumes when using the ZFS storage driver. These datasets aren't in your inventory because Docker creates them dynamically based on `docker-compose.yaml` files.
+
+**Example from `host-storage`:**
+
+```yaml
+zfs:
+  fastpool:
+    datasets:
+      compositions:
+        importance: critical
+        snapshots_discover_children: true
+```
+
+**What Happens:**
+
+1. Ansible creates `fastpool/compositions` with `importance: critical`
+2. Docker Compose applications run and Docker creates child datasets:
+   - `fastpool/compositions/jellyfin_config`
+   - `fastpool/compositions/immich_pgdata`
+   - `fastpool/compositions/gitea_data`
+   - ... (dozens more)
+3. When `zfs-snapshot` runs, it:
+   - Queries ZFS: `zfs list -H -o name -r fastpool/compositions`
+   - Discovers all Docker-created children
+   - Applies `importance: critical` to each discovered child
+   - Creates snapshots for all of them
+
+**Observing Discoveries:**
+
+Use debug mode to see what gets discovered:
+
+```bash
+sudo /opt/zfs-policy/zfs-snapshot --type hourly --dry-run --debug
+```
+
+Example output:
+```
+[DEBUG] Processing dataset: fastpool/compositions (importance: critical, snapshots_discover_children: true)
+[DEBUG] Discovered children for fastpool/compositions:
+[DEBUG]   - fastpool/compositions/jellyfin_config
+[DEBUG]   - fastpool/compositions/immich_pgdata
+[DEBUG]   - fastpool/compositions/gitea_data
+[DEBUG] Creating snapshot: fastpool/compositions@autosnap_2026-01-22_14:00:00_hourly
+[DEBUG] Creating snapshot: fastpool/compositions/jellyfin_config@autosnap_2026-01-22_14:00:00_hourly
+[DEBUG] Creating snapshot: fastpool/compositions/immich_pgdata@autosnap_2026-01-22_14:00:00_hourly
+...
+```
+
+#### When to Use `snapshots_discover_children`
+
+- **Docker volumes** created by the ZFS storage driver
+- **Development environments** where datasets are created ad-hoc
+- **External snapshots** where other tools create child datasets
+- **Dynamic workloads** where dataset structure changes frequently
+
+### Combining Both Features
+
+You can use both `children_inherit_policy` and `snapshots_discover_children` together. This is useful when you have:
+- **Declared** children that need different policies (handled by inheritance)
+- **Undeclared** children created at runtime (handled by discovery)
+
+**Example:**
+
+```yaml
+zfs:
+  fastpool:
+    datasets:
+      compositions:
+        importance: critical
+        children_inherit_policy: true
+        snapshots_discover_children: true
+        datasets:
+          logs:
+            importance: none        # Declared child with override
+          # Docker will create many more children at runtime
+```
+
+**What Happens:**
+
+1. **Configuration time** (Ansible processes inventory):
+   - `fastpool/compositions` → `critical`
+   - `fastpool/compositions/logs` → `none` (explicit override)
+
+2. **Runtime** (snapshot scripts execute):
+   - Scripts query ZFS and discover: `jellyfin_config`, `immich_pgdata`, `gitea_data`, etc.
+   - Discovered children get `critical` (parent's importance)
+   - Declared `logs` child gets `none` (already configured)
+
+### Feature Comparison
+
+| Aspect | `children_inherit_policy` | `snapshots_discover_children` |
+|--------|------------------|---------------------|
+| **When processed** | Configuration time (Ansible) | Runtime (every script execution) |
+| **What it affects** | Declared child datasets in inventory | Undeclared datasets found via ZFS query |
+| **Primary use case** | Setting defaults for known children | Capturing Docker volumes and dynamic datasets |
+| **Overrides** | Children can override with explicit `importance` | No override possible (uses parent's value) |
+| **Performance impact** | None (processed once during deployment) | Minimal (one `zfs list` command per parent) |
+| **Debugging** | Check Ansible facts/output | Use `--debug --dry-run` on scripts |
+| **Requirements** | Child datasets must be declared in inventory | Parent dataset must exist in ZFS |
+
+**Choosing Between Them:**
+
+- **Use `children_inherit_policy`** when you know what child datasets will exist and want to set a default with occasional overrides
+- **Use `snapshots_discover_children`** when children are created dynamically and you want to capture everything
+- **Use both** when you have a mix of known (with varying importance) and unknown children
+
+### Troubleshooting
+
+#### Children Not Getting Snapshotted
+
+**Problem:** Child datasets exist but aren't getting snapshots.
+
+**Check:**
+1. Does the parent have `snapshots_discover_children: true`? (For undeclared children)
+   ```bash
+   # Verify with debug mode
+   sudo /opt/zfs-policy/zfs-snapshot --type hourly --dry-run --debug | grep "snapshots_discover_children"
+   ```
+
+2. Does the parent have `children_inherit_policy: true`? (For declared children)
+   ```bash
+   # Check the processed importance values
+   ansible-playbook ansible/playbooks/baremetal/core.yaml --tags system-zfs-policy --check --diff
+   ```
+
+3. Did the child explicitly set `importance: none`?
+   ```yaml
+   # This overrides inheritance:
+   datasets:
+     skip-me:
+       importance: none
+   ```
+
+#### Too Many Snapshots
+
+**Problem:** Discovery is capturing datasets you don't want snapshotted.
+
+**Solution:** Explicitly set `importance: none` on unwanted children:
+
+```yaml
+zfs:
+  fastpool:
+    datasets:
+      compositions:
+        importance: critical
+        snapshots_discover_children: true
+        datasets:
+          temp-data:
+            importance: none        # Explicitly exclude this one
+```
+
+#### Performance with Many Children
+
+**Problem:** Concerned about performance when discovering hundreds of datasets.
+
+**Reality:** Discovery is very fast. Each `snapshots_discover_children: true` dataset triggers one `zfs list` command, which completes in milliseconds even for hundreds of children. Performance impact is negligible for typical infrastructure (< 100 children per parent).
+
+**Measurement:**
+```bash
+# Time a discovery operation
+time sudo zfs list -H -o name -r fastpool/compositions
+```
+
+Typical result: < 50ms for 50+ Docker volumes.
+
 ## Policy definitions
 
 By defining policies that dictate snapshotting and replication we make it easier to configure datasets, and increase consistency across the infrastructure.

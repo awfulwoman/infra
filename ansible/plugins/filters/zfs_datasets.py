@@ -264,14 +264,53 @@ class FilterModule(object):
         Returns an array where each item is a dictionary containing:
         - dataset: The full dataset path (string)
         - importance: The importance level (string, defaults to 'none')
-        - discover_children: Boolean flag for runtime child discovery (optional)
+        - snapshots_discover_children: Boolean flag for runtime child discovery (optional)
 
-        Supports policy inheritance via 'inherit_policy: true' on parent datasets.
-        When set, child datasets without explicit importance inherit from parent.
+        Feature: Policy Inheritance (Configuration-Time)
+        ------------------------------------------------
+        Supports policy inheritance via 'children_inherit_policy: true' on parent datasets.
+        When set, declared child datasets without explicit importance inherit the
+        parent's importance value. This is processed during Ansible execution.
 
-        Supports runtime child discovery via 'discover_children: true' on datasets.
-        When set, the snapshot/prune scripts will query ZFS for child datasets
-        at runtime and apply the same policy to discovered children.
+        Use cases:
+        - Docker Compose parent datasets with mixed-priority applications
+        - Media libraries where most content shares the same importance
+        - Setting defaults with selective overrides
+
+        Example:
+            zfs:
+              fastpool:
+                datasets:
+                  compositions:
+                    importance: critical
+                    children_inherit_policy: true
+                    datasets:
+                      gitea:                    # Inherits 'critical'
+                      logs:
+                        importance: none        # Explicit override
+
+        Feature: Runtime Child Discovery
+        --------------------------------
+        Supports runtime child discovery via 'snapshots_discover_children: true'
+        on datasets. When set, this flag is passed through to the snapshot/prune scripts,
+        which will query ZFS for undeclared child datasets at execution time and apply
+        the parent's policy to them.
+
+        Use cases:
+        - Docker volumes created dynamically by Docker Compose
+        - Development datasets created ad-hoc
+        - External tools that create child datasets
+
+        Example:
+            zfs:
+              fastpool:
+                datasets:
+                  compositions:
+                    importance: critical
+                    snapshots_discover_children: true     # Docker creates children at runtime
+
+        Note: These features are complementary and can be used together to handle
+        both declared children (inheritance) and undeclared children (discovery).
 
         Args:
             zfs_dict: ZFS configuration dictionary
@@ -314,21 +353,36 @@ class FilterModule(object):
                         'importance': importance,
                     }
 
-                    # Add discover_children flag if present
-                    if isinstance(dataset_value, dict) and dataset_value.get('discover_children', False):
-                        dataset_dict['discover_children'] = True
+                    # Add snapshots_discover_children flag if present
+                    if isinstance(dataset_value, dict) and dataset_value.get('snapshots_discover_children', False):
+                        dataset_dict['snapshots_discover_children'] = True
 
                     result.append(dataset_dict)
 
                     # Determine what importance to pass to children
-                    # If this dataset has inherit_policy: true, children inherit this importance
+                    # This implements the inheritance chain logic with "chain breaking"
+                    #
+                    # Inheritance can start in two ways:
+                    # 1. This dataset has children_inherit_policy: true → children inherit this importance
+                    # 2. This dataset received inherited_importance from parent → continue chain
+                    #
+                    # Chain breaking: If a dataset explicitly sets its own importance,
+                    # it "breaks the chain" and doesn't pass that inherited value down
+                    # (unless it also sets children_inherit_policy: true to start a new chain)
+                    #
+                    # Example:
+                    #   parent (critical, children_inherit_policy: true)
+                    #     ├─ child1 (inherits 'critical')
+                    #     │   └─ grandchild1 (gets 'none' - chain broken)
+                    #     └─ child2 (importance: high, children_inherit_policy: true)
+                    #         └─ grandchild2 (inherits 'high' - new chain)
                     child_inherited = None
-                    if isinstance(dataset_value, dict) and dataset_value.get('inherit_policy', False):
+                    if isinstance(dataset_value, dict) and dataset_value.get('children_inherit_policy', False):
+                        # Start a new inheritance chain from this dataset
                         child_inherited = importance
                     elif inherited_importance is not None:
-                        # Continue passing inherited importance if parent had inherit_policy
-                        # but only if this dataset didn't explicitly set its own importance
-                        # which would "break the chain"
+                        # Continue an existing chain, but only if this dataset didn't
+                        # explicitly set its own importance (which would break the chain)
                         if not (isinstance(dataset_value, dict) and 'importance' in dataset_value):
                             child_inherited = inherited_importance
 
