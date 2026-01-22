@@ -1,5 +1,9 @@
 - name: ZFS backup clients
   hosts: zfs-backup-clients
+  vars:
+    compositions:
+      - zfs-api
   roles:
     - role: system-zfs
     - role: backups-zfs-client
+    - role: compositions
