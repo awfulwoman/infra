@@ -1,0 +1,31 @@
+name: "{{ composition_name }}"
+services:
+  victoriametrics:
+    image: victoriametrics/victoria-metrics:latest
+    container_name: {{ composition_victoriametrics_container_name }}
+    restart: unless-stopped
+    ports:
+      - "{{ composition_victoriametrics_port }}:8428"
+    volumes:
+      - "{{ composition_config }}/config/prometheus.yaml:/etc/prometheus/prometheus.yaml"
+      - "/shared/metrics/zfs:{{ composition_victoriametrics_storage_path }}"
+    command:
+      - "--storageDataPath={{ composition_victoriametrics_storage_path }}"
+      - "--retentionPeriod={{ composition_victoriametrics_retention }}"
+      - "--promscrape.config=/etc/prometheus/prometheus.yaml"
+      - "--httpListenAddr=:8428"
+    env_file: .environment_vars
+{% if composition_victoriametrics_traefik_enabled %}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.{{ composition_victoriametrics_container_name }}.rule=Host(`{{ composition_victoriametrics_subdomain }}.{{ domain_name }}`)"
+      - "traefik.http.routers.{{ composition_victoriametrics_container_name }}.tls=true"
+      - "traefik.http.routers.{{ composition_victoriametrics_container_name }}.tls.certresolver=letsencrypt"
+      - "traefik.http.services.{{ composition_victoriametrics_container_name }}.loadbalancer.server.port={{ composition_victoriametrics_port }}"
+{% endif %}
+    networks:
+      - "{{ default_docker_network }}"
+
+networks:
+  "{{ default_docker_network }}":
+    external: true

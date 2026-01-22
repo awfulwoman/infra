@@ -1,0 +1,12 @@
+- name: Storage NAS - ZFS API
+  hosts: host-storage
+  vars:
+    compositions:
+      - zfs-api
+  roles:
+    - role: compositions
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:

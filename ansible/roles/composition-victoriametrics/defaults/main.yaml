@@ -1,0 +1,36 @@
+# Enable/disable the composition
+composition_victoriametrics_enabled: true
+
+# Application settings
+composition_victoriametrics_port: 8428
+composition_victoriametrics_ui_port: 8428  # vmui accessible via same port
+composition_victoriametrics_retention: "1y"  # 1 year retention
+
+# Container settings
+composition_victoriametrics_container_name: "victoriametrics"
+
+# Paths
+composition_victoriametrics_base_path: "{{ compositions_base_path }}/victoriametrics"
+
+# Storage
+composition_victoriametrics_storage_path: "/victoriametrics-data"
+
+# Scrape configuration
+composition_victoriametrics_scrape_interval: "60s"
+composition_victoriametrics_scrape_timeout: "30s"
+
+# Domain configuration
+composition_victoriametrics_subdomain: "zfs.metrics"
+composition_victoriametrics_domain: "{{ composition_victoriametrics_subdomain }}.{{ domain_name }}"
+
+# Traefik integration
+composition_victoriametrics_traefik_enabled: true
+
+# ZFS API endpoints to scrape
+# Format: zfs-api.{ansible_host}.{domain_name}
+composition_victoriametrics_scrape_targets:
+  - ansible_host: "host-storage"
+  - ansible_host: "host-homeassistant"
+  - ansible_host: "dns"
+  - ansible_host: "host-backups"
+  - ansible_host: "host-albion"

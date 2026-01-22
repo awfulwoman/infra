@@ -1,0 +1,12 @@
+- name: Storage NAS - VictoriaMetrics
+  hosts: host-storage
+  vars:
+    compositions:
+      - victoriametrics
+  roles:
+    - role: compositions
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:

@@ -1,0 +1,12 @@
+- name: Albion Server - ZFS API
+  hosts: host-albion
+  vars:
+    compositions:
+      - zfs-api
+  roles:
+    - role: compositions
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:

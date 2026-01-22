@@ -70,6 +70,10 @@ zfs:
       shared:
         datasets:
           syncthing:
+          metrics:
+            datasets:
+              zfs:
+                importance: high
           media:
             datasets:
               shows:
@@ -129,6 +133,7 @@ zfs_nfs_exports:
 
 compositions:
   - zfs-api
+  - victoriametrics
   - reverseproxy
   - container-management
   - audio

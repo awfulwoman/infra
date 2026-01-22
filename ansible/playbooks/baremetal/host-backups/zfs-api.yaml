@@ -1,0 +1,12 @@
+- name: Backups Server - ZFS API
+  hosts: host-backups
+  vars:
+    compositions:
+      - zfs-api
+  roles:
+    - role: compositions
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:
