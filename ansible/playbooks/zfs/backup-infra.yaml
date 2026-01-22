@@ -1,3 +1,5 @@
+- name: ZFS Basics
+  import_playbook: basics.yaml
 - name: ZFS Backup Clients
   import_playbook: clients.yaml
 - name: ZFS Offsite Servers
