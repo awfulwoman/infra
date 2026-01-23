@@ -6,7 +6,7 @@ global:
     monitor: 'victoriametrics'
 
 scrape_configs:
-  # ZFS API metrics from all hosts
+  # ZFS API metrics from all hosts in the 'zfs' inventory group
   - job_name: 'zfs-metrics'
     scrape_interval: {{ composition_victoriametrics_scrape_interval }}
     metrics_path: '/metrics'
@@ -15,8 +15,8 @@ scrape_configs:
       insecure_skip_verify: true
     static_configs:
       - targets:
-{% for target in composition_victoriametrics_scrape_targets %}
-          - 'zfs-api.{{ target.ansible_host }}.{{ domain_name }}:443'
+{% for host in composition_victoriametrics_scrape_targets %}
+          - 'zfs-api.{{ host }}.{{ domain_name }}:443'
 {% endfor %}
         labels:
           job: 'zfs'

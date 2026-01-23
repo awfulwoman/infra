@@ -27,10 +27,6 @@ composition_victoriametrics_domain: "{{ composition_victoriametrics_subdomain }}
 composition_victoriametrics_traefik_enabled: true
 
 # ZFS API endpoints to scrape
-# Format: zfs-api.{ansible_host}.{domain_name}
-composition_victoriametrics_scrape_targets:
-  - ansible_host: "host-storage"
-  - ansible_host: "host-homeassistant"
-  - ansible_host: "dns"
-  - ansible_host: "host-backups"
-  - ansible_host: "host-albion"
+# Automatically scrapes all hosts in the 'zfs' inventory group
+# Format: zfs-api.{hostname}.{domain_name}
+composition_victoriametrics_scrape_targets: "{{ groups['zfs'] | default([]) }}"
