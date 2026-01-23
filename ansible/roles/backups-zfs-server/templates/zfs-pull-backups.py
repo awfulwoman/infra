@@ -315,6 +315,53 @@ def send_and_receive(send_cmd, receive_cmd):
         return False
 
 
+def ensure_parent_datasets_exist(dataset_path):
+    """Create all parent datasets if they don't exist.
+
+    For example, if dataset_path is "pool/backups/raw/host/pool/dataset",
+    this ensures that all parents exist:
+      - pool/backups
+      - pool/backups/raw
+      - pool/backups/raw/host
+      - pool/backups/raw/host/pool
+    """
+    parts = dataset_path.split('/')
+
+    # Build list of all parent paths (excluding the leaf dataset itself)
+    parents = []
+    for i in range(1, len(parts)):
+        parent = '/'.join(parts[:i])
+        parents.append(parent)
+
+    # Check and create each parent in order
+    for parent in parents:
+        # Check if dataset exists
+        result = subprocess.run(
+            ['zfs', 'list', '-H', '-o', 'name', parent],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=False
+        )
+
+        if result.returncode != 0:
+            # Dataset doesn't exist, create it
+            debug(f"Creating missing parent dataset: {parent}")
+
+            create_result = subprocess.run(
+                ['zfs', 'create', '-o', 'canmount=off', '-o', 'acltype=posix', '-o', 'xattr=sa', parent],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                check=False
+            )
+
+            if create_result.returncode != 0:
+                error(f"Failed to create parent dataset {parent}")
+                error(f"  zfs create: {create_result.stderr.decode().strip()}")
+                sys.exit(1)
+
+            info(f"Created parent dataset: {parent}")
+
+
 def pulldatasets(host, dataset, user, destination):
     local_dataset = f"{destination}/{host}/{dataset}"
 
@@ -335,6 +382,9 @@ def pulldatasets(host, dataset, user, destination):
         # Initial sync: no common snapshots, need full send
         info(f"No common snapshots found. Performing initial sync for {host} - {dataset}")
         info(f"Remote has {len(remote_snapshots)} snapshots: {earliest_remote} -> {latest_remote}")
+
+        # Ensure all parent datasets exist before receiving
+        ensure_parent_datasets_exist(local_dataset)
 
         # Step 1: Full send of earliest snapshot
         info(f"Pulling earliest snapshot from {host} - '{dataset}@{earliest_remote}'")
