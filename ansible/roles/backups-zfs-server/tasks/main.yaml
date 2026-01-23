@@ -105,8 +105,8 @@
       canmount: "off"
     state: present
 
-# NOTE: Backup datasets are created dynamically by the backup script with encryption=off
-# to prevent inheriting encryption from the parent dataset when receiving unencrypted streams
+# NOTE: Backup datasets are created dynamically by the backup script, allowing them
+# to inherit encryption from the parent dataset when receiving unencrypted streams
 
 # TODO: remove this if not needed
 - name: "Ensure user can sudo without password"
