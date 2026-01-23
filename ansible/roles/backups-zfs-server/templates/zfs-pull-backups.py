@@ -193,10 +193,10 @@ def pulldatasets_init(host, datasets, user, destination):
             seen.add(ds)
             unique_datasets.append(ds)
 
-    info(f"Backing up {len(unique_datasets)} datasets individually")
+    info(f"Datasets in queue: {len(unique_datasets)}")
     for dataset in unique_datasets:
+        info(f'{host}:{dataset}')
         pulldatasets(host, dataset, user, destination)
-    print('')
 
 def get_remote_snapshots(host, dataset, user):
     """Get all snapshot names for a dataset on remote host, sorted by creation time."""
@@ -347,8 +347,10 @@ def ensure_parent_datasets_exist(dataset_path):
             # Dataset doesn't exist, create it
             debug(f"Creating missing parent dataset: {parent}")
 
+            # Explicitly disable encryption to prevent inheriting from encrypted parents
+            # This allows us to receive unencrypted streams from source systems
             create_result = subprocess.run(
-                ['zfs', 'create', '-o', 'canmount=off', '-o', 'acltype=posix', '-o', 'xattr=sa', parent],
+                ['zfs', 'create', '-o', 'canmount=off', '-o', 'acltype=posix', '-o', 'xattr=sa', '-o', 'encryption=off', parent],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 check=False
@@ -380,20 +382,21 @@ def pulldatasets(host, dataset, user, destination):
 
     if not common_snapshots:
         # Initial sync: no common snapshots, need full send
-        info(f"No common snapshots found. Performing initial sync for {host} - {dataset}")
+        info(f"No common snapshots found.")
         info(f"Remote has {len(remote_snapshots)} snapshots: {earliest_remote} -> {latest_remote}")
-
+        info(f"Performing initial sync.")
+        
         # Ensure all parent datasets exist before receiving
         ensure_parent_datasets_exist(local_dataset)
 
         # Step 1: Full send of earliest snapshot
-        info(f"Pulling earliest snapshot from {host} - '{dataset}@{earliest_remote}'")
+        info(f"{dataset} is new. Pulling the earliest snapshot: '@{earliest_remote}'")
         send_cmd = f"ssh {user}@{host} zfs send {dataset}@{earliest_remote}"
         receive_cmd = f"zfs receive -F -u {local_dataset}"
 
         if not send_and_receive(send_cmd, receive_cmd):
             sys.exit(1)
-        info(f"Successfully received earliest snapshot from {host}")
+        info(f"Success! Received earliest snapshot.")
         debug(f"{dataset}@{earliest_remote}")
 
         # Step 2: Incremental from earliest to latest (if more than one snapshot)
@@ -403,7 +406,7 @@ def pulldatasets(host, dataset, user, destination):
 
             if not send_and_receive(send_cmd, receive_cmd):
                 sys.exit(1)
-            info(f"Successfully received all snapshots up to '{latest_remote}'")
+            info(f"Success! Latest snapshot is '{latest_remote}'")
         else:
             info("Only one snapshot exists, no incremental receive needed.")
 
@@ -412,18 +415,20 @@ def pulldatasets(host, dataset, user, destination):
         latest_common = common_snapshots[-1]
 
         if latest_common == latest_remote:
-            info(f"Up-to-date - {dataset}")
+            info(f"Up-to-date!")
             debug(f"Latest is {dataset}@{latest_remote}")
             return
 
-        info(f"Calculating incremental snapshots for {host} - {dataset}")
-        info(f"Updating from {latest_common}' to '{latest_remote}")
+        info(f"Partially synced.")
+        info(f"Updating from {latest_common}' to '{latest_remote}'.")
         send_cmd = f"ssh {user}@{host} zfs send -I {dataset}@{latest_common} {dataset}@{latest_remote}"
         receive_cmd = f"zfs receive -F -u {local_dataset}"
 
         if not send_and_receive(send_cmd, receive_cmd):
             sys.exit(1)
-        info(f"Latest snapshot for {host} - {dataset} is now {latest_remote}")
+        info(f"Success. Latest snapshot is now '{latest_remote}'.")
+
+    print('\n')
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Backup ZFS datasets from a remote host.')
