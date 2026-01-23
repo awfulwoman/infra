@@ -417,13 +417,13 @@ def pulldatasets(host, dataset, user, destination):
             return
 
         info(f"Calculating incremental snapshots for {host} - {dataset}")
-        debug(f"{latest_common}' -> '{latest_remote}")
+        info(f"Updating from {latest_common}' to '{latest_remote}")
         send_cmd = f"ssh {user}@{host} zfs send -I {dataset}@{latest_common} {dataset}@{latest_remote}"
         receive_cmd = f"zfs receive -F -u {local_dataset}"
 
         if not send_and_receive(send_cmd, receive_cmd):
             sys.exit(1)
-        info(f"Successfully synced up to '{latest_remote}'")
+        info(f"Latest snapshot for {host} - {dataset} is now {latest_remote}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Backup ZFS datasets from a remote host.')
