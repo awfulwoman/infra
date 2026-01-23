@@ -416,7 +416,7 @@ def pulldatasets(host, dataset, user, destination):
             debug(f"Latest is {dataset}@{latest_remote}")
             return
 
-        info(f"Pulling incremental snapshots.")
+        info(f"Calculating incremental snapshots for {host} - {dataset}")
         debug(f"{latest_common}' -> '{latest_remote}")
         send_cmd = f"ssh {user}@{host} zfs send -I {dataset}@{latest_common} {dataset}@{latest_remote}"
         receive_cmd = f"zfs receive -F -u {local_dataset}"
