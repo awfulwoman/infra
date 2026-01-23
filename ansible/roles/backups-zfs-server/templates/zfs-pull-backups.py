@@ -347,10 +347,8 @@ def ensure_parent_datasets_exist(dataset_path):
             # Dataset doesn't exist, create it
             debug(f"Creating missing parent dataset: {parent}")
 
-            # Explicitly disable encryption to prevent inheriting from encrypted parents
-            # This allows us to receive unencrypted streams from source systems
             create_result = subprocess.run(
-                ['zfs', 'create', '-o', 'canmount=off', '-o', 'acltype=posix', '-o', 'xattr=sa', '-o', 'encryption=off', parent],
+                ['zfs', 'create', '-o', 'canmount=off', '-o', 'acltype=posix', '-o', 'xattr=sa', parent],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 check=False
@@ -385,14 +383,15 @@ def pulldatasets(host, dataset, user, destination):
         info(f"No common snapshots found.")
         info(f"Remote has {len(remote_snapshots)} snapshots: {earliest_remote} -> {latest_remote}")
         info(f"Performing initial sync.")
-        
+
         # Ensure all parent datasets exist before receiving
         ensure_parent_datasets_exist(local_dataset)
 
         # Step 1: Full send of earliest snapshot
+        # Don't use -F for initial receive - let dataset be created with inherited properties
         info(f"{dataset} is new. Pulling the earliest snapshot: '@{earliest_remote}'")
         send_cmd = f"ssh {user}@{host} zfs send {dataset}@{earliest_remote}"
-        receive_cmd = f"zfs receive -F -u {local_dataset}"
+        receive_cmd = f"zfs receive -u {local_dataset}"
 
         if not send_and_receive(send_cmd, receive_cmd):
             sys.exit(1)
@@ -403,8 +402,10 @@ def pulldatasets(host, dataset, user, destination):
         if earliest_remote != latest_remote:
             info(f"Pulling incremental snapshots between '{earliest_remote}' and '{latest_remote}'")
             send_cmd = f"ssh {user}@{host} zfs send -I {dataset}@{earliest_remote} {dataset}@{latest_remote}"
+            # Only use -F for incrementals once dataset exists
+            receive_cmd_incremental = f"zfs receive -F -u {local_dataset}"
 
-            if not send_and_receive(send_cmd, receive_cmd):
+            if not send_and_receive(send_cmd, receive_cmd_incremental):
                 sys.exit(1)
             info(f"Success! Latest snapshot is '{latest_remote}'")
         else:

@@ -102,19 +102,11 @@
   community.general.zfs:
     name: "{{ backups_zfs_server_local_dataset }}"
     extra_zfs_properties:
-      canmount: off
+      canmount: "off"
     state: present
 
-- name: Ensure backup datasets exist
-  become: true
-  community.general.zfs:
-    name: "{{ backups_zfs_server_local_dataset }}/{{ item.dataset }}"
-    extra_zfs_properties:
-      acltype: posix
-      xattr: sa
-      canmount: off
-    state: present
-  loop: "{{ backup_datasets }}"
+# NOTE: Backup datasets are created dynamically by the backup script with encryption=off
+# to prevent inheriting encryption from the parent dataset when receiving unencrypted streams
 
 # TODO: remove this if not needed
 - name: "Ensure user can sudo without password"
