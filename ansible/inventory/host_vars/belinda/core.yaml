@@ -5,7 +5,7 @@ host_type: baremetal
 host_name: belinda
 host_city: ber
 host_location: kberg
-host_ipv4: 192.168.1.173
+host_ipv4: 192.168.1.117
 host_pfqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}"
 host_fqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}.{{ domain_name }}"
 
@@ -61,6 +61,10 @@ zfs:
       backups:
         datasets:
           raw:
+            properties:
+              encryption: aes-256-gcm
+              keylocation: "{{ vault_zfs_default_encryption_passphrase_path }}"
+              keyformat: passphrase
 
 # -------------------------------------------------------------------
 # COMPOSITIONS
