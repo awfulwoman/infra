@@ -8,9 +8,9 @@
       become: true
     - role: system-sshkey
     - role: system-zfs
+    - role: backups-zfs-archive-offsite
     - role: network-ip-address-forwarding
     - role: client-nfs
-    - role: backups-zfs-archive-offsite
     - role: compositions
     - role: monitoring-healthchecksio
 

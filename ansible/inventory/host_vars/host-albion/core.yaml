@@ -73,7 +73,7 @@ zfs:
 # -------------------------------------------------------------------
 # BACKUPS
 # -------------------------------------------------------------------
-backups_zfs_archive_offsite_dataset: fastpool/encryptedbackups
+backups_zfs_archive_offsite_dataset: fastpool/backups/raw
 
 # -------------------------------------------------------------------
 # DOWNLOADS

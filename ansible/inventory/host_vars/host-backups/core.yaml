@@ -45,6 +45,9 @@ zfs:
       encryptedbackups:
         state: present
 
+# Backups
+backups_zfs_server_local_dataset: slowpool/encryptedbackups
+
 # -------------------------------------------------------------------
 # COMPOSITIONS
 # -------------------------------------------------------------------
