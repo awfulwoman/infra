@@ -48,6 +48,7 @@
   when: raspberry_pi_bluetooth is true
 
 # Useful when not powering via USB-C e.g. certain HATs
+# https://pemmican.readthedocs.io/en/stable/pemmican-cli.html
 - name: Supress undervoltage warnings
   become: true
   ansible.builtin.file:
