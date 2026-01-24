@@ -107,6 +107,7 @@ Project documentation including architecture guides, runbooks, and reference mat
 - **Networking**: Everything accessed via Tailscale
 - **Docker Compose apps**: Templated with Jinja2 (`.yaml.j2` files), deployed via `composition-*` roles
 
-## Saving plans
+## Plans
 
-Whenever a plan is requested, ALWAYS save a copy of it as a markdown file in @plans/.
+- Whenever a plan is requested, ALWAYS save a copy of it as a markdown file in @plans/.
+- When you are implementing a plan, always ask if the user wants to create a pull request, rather than automatically committing to main.
