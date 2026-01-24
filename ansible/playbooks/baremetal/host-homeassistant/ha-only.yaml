@@ -7,7 +7,15 @@
     compositions:
       - homeassistant
   roles:
-    - role: compositions
+    - role: composition-reverseproxy
+    - role: composition-container-management
+    - role: composition-homeassistant
+    - role: composition-matter
+    - role: composition-owntracks
+    - role: composition-mqtt
+    - role: composition-zigbee2mqtt
+    - role: composition-watchyourlan
+    - role: composition-zfs-api
 
   handlers:
     - name: Reboot host

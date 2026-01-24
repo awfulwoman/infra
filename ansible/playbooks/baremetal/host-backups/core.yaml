@@ -13,7 +13,9 @@
     - role: backups-zfs-server
       zfsbackup_pushover: false
       zfsbackup_run_after_wake: false
-    - role: compositions
+    - role: composition-container-management
+    - role: composition-reverseproxy
+    - role: composition-zfs-api
     - role: monitoring-healthchecksio
 
   handlers:

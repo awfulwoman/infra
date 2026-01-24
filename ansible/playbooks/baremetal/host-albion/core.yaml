@@ -11,7 +11,9 @@
     - role: backups-zfs-archive-offsite
     - role: network-ip-address-forwarding
     - role: client-nfs
-    - role: compositions
+    - role: composition-reverseproxy
+    - role: composition-container-management
+    - role: composition-zfs-api
     - role: monitoring-healthchecksio
 
   handlers:

@@ -4,7 +4,9 @@
     compositions:
       - zfs-api
   roles:
-    - role: compositions
+    - role: composition-reverseproxy
+    - role: composition-container-management
+    - role: composition-zfs-api
 
   handlers:
     - name: Reboot host

@@ -14,7 +14,26 @@
       become: true
     - role: server-nfs
     - role: backups-zfs-client
-    - role: compositions
+    - role: composition-zfs-api
+    - role: composition-victoriametrics
+    - role: composition-reverseproxy
+    - role: composition-container-management
+    - role: composition-audio
+    - role: composition-jellyfin
+    - role: composition-immich
+    - role: composition-downloads
+    - role: composition-finances
+    - role: composition-gitea
+    - role: composition-gitea-runners
+    - role: composition-syncthing
+    - role: composition-karakeep
+    - role: composition-freshrss
+    - role: composition-tubesync
+    - role: composition-homepage
+    - role: composition-bookmarks
+    - role: composition-piper
+    - role: composition-gotosocial
+    - role: composition-libretranslate
     - role: system-smartmontools
     - role: monitoring-healthchecksio
     # - role: system-sleepuntil

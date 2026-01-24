@@ -1,9 +1,6 @@
 - name: ZFS backup servers
   hosts: zfs-backup-servers
-  vars:
-    compositions:
-      - zfs-api
   roles:
     - role: system-zfs
     - role: backups-zfs-server
-    - role: compositions
+    - role: composition-zfs-api

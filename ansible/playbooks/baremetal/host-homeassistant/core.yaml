@@ -14,7 +14,15 @@
     - role: system-beep
     - role: system-shoutrrr
       become: true
-    - role: compositions
+    - role: composition-reverseproxy
+    - role: composition-container-management
+    - role: composition-homeassistant
+    - role: composition-matter
+    - role: composition-owntracks
+    - role: composition-mqtt
+    - role: composition-zigbee2mqtt
+    - role: composition-watchyourlan
+    - role: composition-zfs-api
     - role: monitoring-healthchecksio
 
   handlers:

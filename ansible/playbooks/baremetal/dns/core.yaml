@@ -11,7 +11,9 @@
     - role: infra-public-resources
     - role: infra-named
     - role: infra-certbot
-    - role: compositions
+    - role: composition-reverseproxy
+    - role: composition-container-management
+    - role: composition-zfs-api
     - role: backups-zfs-client
     - role: script-share-personal-site
     - role: monitoring-healthchecksio

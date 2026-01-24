@@ -7,7 +7,9 @@
     - role: system-zfs
     - role: system-zfs-policy
     - role: backups-zfs-server
-    - role: compositions
+    - role: composition-container-management
+    - role: composition-reverseproxy
+    - role: composition-zfs-api
     - role: client-nut
     - role: infothrill.nullmailer
       become: true

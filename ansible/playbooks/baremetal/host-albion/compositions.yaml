@@ -2,7 +2,9 @@
 - name: UK Server (compositions only)
   hosts: host-albion
   roles:
-    - role: compositions
+    - role: composition-reverseproxy
+    - role: composition-container-management
+    - role: composition-zfs-api
 
   handlers:
     - name: Reboot host
