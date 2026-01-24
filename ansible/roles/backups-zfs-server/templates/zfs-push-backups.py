@@ -646,7 +646,8 @@ if __name__ == "__main__":
 
     # Acquire lockfile to prevent concurrent executions to this host
     if not acquire_lock():
-        sys.exit(1)
+        # Exit with 0 (success) to prevent cron email alerts when another instance is running
+        sys.exit(0)
 
     # Register cleanup handlers
     atexit.register(release_lock)
