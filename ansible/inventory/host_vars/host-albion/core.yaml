@@ -63,6 +63,11 @@ zfs:
       #     descendents:
       downloads:
       compositions:
+      encryptedbackups:
+        properties:
+          encryption: aes-256-gcm
+          keylocation: "{{ vault_zfs_default_encryption_passphrase_path }}"
+          keyformat: passphrase
 
 
 # -------------------------------------------------------------------
