@@ -1,5 +1,6 @@
 raspberry_pi_wifi: true
 raspberry_pi_bluetooth: true
+raspberry_pi_hide_undervoltage_warnings: false
 raspberry_pi_boot_config_location: /boot/config.txt
 raspberry_pi_cmdline_txt: "/boot/cmdline.txt"
 raspberry_pi_i2c: false
