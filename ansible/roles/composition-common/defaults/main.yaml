@@ -1,0 +1,10 @@
+# Default dataset location for compositions (inherited from group_vars)
+compositions_dataset: fastpool/compositions
+
+# Composition name must be provided by the parent role
+# This is typically set in the composition-* role's defaults/main.yaml
+# composition_name: <name>
+
+# These are calculated automatically based on composition_name
+# composition_root: "/{{ compositions_dataset }}/{{ composition_name }}"
+# composition_config: "/{{ compositions_dataset }}/{{ composition_name }}/config"

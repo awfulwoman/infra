@@ -1,0 +1,72 @@
+---
+# ###################################################################
+# Common infrastructure setup for Docker Compose compositions
+#
+# This role is used as a dependency by all composition-* roles to:
+# - Create the shared Docker network
+# - Create ZFS datasets for composition data
+# - Set up directory structure
+# - Calculate composition paths
+# ###################################################################
+
+- name: Assert that composition_name is defined
+  ansible.builtin.assert:
+    that:
+      - composition_name is defined
+      - composition_name | length > 0
+    fail_msg: "composition_name must be provided by the parent composition role"
+    quiet: true
+
+- name: Set composition paths
+  ansible.builtin.set_fact:
+    composition_root: "/{{ compositions_dataset }}/{{ composition_name }}"
+    composition_config: "/{{ compositions_dataset }}/{{ composition_name }}/config"
+
+- name: Create shared Docker bridge network
+  community.docker.docker_network:
+    name: "{{ default_docker_network }}"
+    state: present
+
+- name: Ensure parent compositions dataset exists
+  become: true
+  community.general.zfs:
+    name: "{{ compositions_dataset }}"
+    state: present
+    extra_zfs_properties:
+      acltype: posix
+      xattr: sa
+
+- name: Ensure parent compositions dataset ownership
+  become: true
+  ansible.builtin.file:
+    path: "/{{ compositions_dataset }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"
+
+- name: Ensure composition ZFS dataset exists
+  become: true
+  community.general.zfs:
+    name: "{{ compositions_dataset }}/{{ composition_name }}"
+    state: present
+    extra_zfs_properties:
+      acltype: posix
+      xattr: sa
+
+- name: Ensure composition dataset ownership
+  become: true
+  ansible.builtin.file:
+    path: "{{ composition_root }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"
+
+- name: Ensure composition config directory exists
+  ansible.builtin.file:
+    path: "{{ composition_config }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"

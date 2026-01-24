@@ -1,6 +1,9 @@
 ---
 # ZFS API Composition Role Defaults
 
+# Composition name (used by composition-common dependency)
+composition_name: zfs-api
+
 # Enable/disable the composition
 composition_zfs_api_enabled: true
 
