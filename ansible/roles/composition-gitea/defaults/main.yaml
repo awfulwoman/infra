@@ -1,1 +1,4 @@
+# Composition name (used by composition-common dependency)
+composition_name: gitea
+
 gitea_runner_registration: "{{ vault_gitea_runner_registration }}"

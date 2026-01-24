@@ -1,1 +1,4 @@
+# Composition name (used by composition-common dependency)
+composition_name: watchyourlan
+
 watchyourlan_interface: "{{ network_interface_primary }}"

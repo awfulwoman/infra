@@ -28,3 +28,14 @@
   vars:
     configure_dns_subdomains:
       - zigbee2mqtt
+
+# ----------------------------
+# Start composition
+# ----------------------------
+
+- name: Start Docker Compose project
+  community.docker.docker_compose_v2:
+    project_src: "{{ composition_root }}"
+    state: present
+    build: always
+    remove_orphans: true

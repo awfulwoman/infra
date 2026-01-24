@@ -1,1 +1,4 @@
+# Composition name (used by composition-common dependency)
+composition_name: syncthing
+
 syncthing_paths: false

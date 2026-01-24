@@ -1,2 +1,5 @@
+# Composition name (used by composition-common dependency)
+composition_name: motioneye
+
 composition_motioneye_usbdevice: false
 composition_motioneye_zfsdriveid: false

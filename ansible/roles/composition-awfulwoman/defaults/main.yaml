@@ -1,3 +1,6 @@
+# Composition name (used by composition-common dependency)
+composition_name: awfulwoman
+
 awfulwoman_base: /fastpool/sites
 awfulwoman_path: "{{ awfulwoman_base }}/awfulwoman"
 awfulwoman_deploy_group: nginx

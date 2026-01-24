@@ -1,3 +1,6 @@
+# Composition name (used by composition-common dependency)
+composition_name: finances
+
 firefly_cron_token: null
 firefly_db_password: null
 firefly_app_key: null
