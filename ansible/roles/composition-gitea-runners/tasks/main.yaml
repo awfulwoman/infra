@@ -37,11 +37,11 @@
 - name: Create tmp directories
   become: true
   ansible.builtin.file:
-    path: "/opt/gitea/{{ item }}"
+    path: "/opt/gitea/{{ tmp_item }}"
     state: directory
     mode: "0775"
   loop_control:
-    loop_var: dir_item
+    loop_var: tmp_item
   loop:
     - cache
     - hostedtoolcache
