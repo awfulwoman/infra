@@ -1,4 +1,8 @@
 ---
+# Enable or disable automatic snapshots
+# When false, timers are stopped and disabled but scripts remain installed
+system_zfs_policy_snapshots_enable: true
+
 # Snapshot naming prefix
 # Format: {prefix}_YYYY-MM-DD_HH:MM:SS_{type}
 system_zfs_policy_snapshot_prefix: "autosnap"

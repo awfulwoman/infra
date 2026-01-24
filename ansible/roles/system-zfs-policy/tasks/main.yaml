@@ -155,6 +155,21 @@
     - daily
     - monthly
     - yearly
+  when: system_zfs_policy_snapshots_enable
+
+- name: Disable and stop snapshot timers
+  become: true
+  ansible.builtin.systemd_service:
+    name: "zfs-snapshot-{{ item }}.timer"
+    state: stopped
+    enabled: false
+    daemon_reload: false
+  loop:
+    - hourly
+    - daily
+    - monthly
+    - yearly
+  when: not system_zfs_policy_snapshots_enable
 
 - name: Enable and start prune timer
   become: true
@@ -163,3 +178,13 @@
     state: started
     enabled: true
     daemon_reload: false
+  when: system_zfs_policy_snapshots_enable
+
+- name: Disable and stop prune timer
+  become: true
+  ansible.builtin.systemd_service:
+    name: zfs-prune.timer
+    state: stopped
+    enabled: false
+    daemon_reload: false
+  when: not system_zfs_policy_snapshots_enable

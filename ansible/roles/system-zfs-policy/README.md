@@ -163,6 +163,7 @@ All variables are defined in `defaults/main.yaml`:
 
 | Variable | Default | Description |
 |----------|---------|-------------|
+| `system_zfs_policy_snapshots_enable` | `true` | Enable/disable automatic snapshots |
 | `system_zfs_policy_snapshot_prefix` | `autosnap` | Prefix for snapshot names |
 | `system_zfs_policy_script_path` | `/opt/zfs-policy` | Script installation path |
 | `system_zfs_policy_log_dir` | `/var/log/zfs-policy` | Log directory |
