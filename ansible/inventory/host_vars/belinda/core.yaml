@@ -80,7 +80,7 @@ compositions:
 # BACKUPS
 # -------------------------------------------------------------------
 backups_zfs_server_local_dataset: slowpool/backups/raw
-backups_zfs_server_offsite_enabled: false # TODO: Remove this once Belinda has replaced host-backups
+backups_zfs_server_offsite_enabled: true
 backups_zfs_server_offsite_bwlimit: 3M
 
 # -------------------------------------------------------------------
