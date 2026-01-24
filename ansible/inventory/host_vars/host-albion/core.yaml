@@ -89,8 +89,3 @@ nfs_mounts:
     remote_path: "/slowpool/shared/media"
     local_path: "/fastpool/storage-share"
     # mount_options: "defaults,_netdev,x-systemd.after=network-online.target"
-
-# -------------------------------------------------------------------
-# COMPOSITIONS
-# -------------------------------------------------------------------
-# compositions list moved to playbook (see playbooks/baremetal/host-albion/core.yaml)
