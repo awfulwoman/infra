@@ -52,6 +52,7 @@
     key_options: 'restrict,command="/usr/local/bin/restrict_commands.sh"'
   when: vault_zfsbackups_public_key is defined
 
+# TODO: This should be an assert as to if the dataset exists - it should not create the dataset.
 - name: Ensure destination dataset exists
   become: true
   community.general.zfs:
