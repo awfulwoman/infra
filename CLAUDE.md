@@ -107,10 +107,6 @@ Project documentation including architecture guides, runbooks, and reference mat
 - **Networking**: Everything accessed via Tailscale
 - **Docker Compose apps**: Templated with Jinja2 (`.yaml.j2` files), deployed via `composition-*` roles
 
-## saving plans
+## Saving plans
 
 Whenever a plan is requested, ALWAYS save a copy of it as a markdown file in @plans/.
-
-## Session Logging
-
-A custom Claude agent (`session-logger`) maintains session logs. Suggest using the agent when ending sessions or reaching significant milestones. When you reference project files use relative paths from the project root, rather than full absolute paths.
