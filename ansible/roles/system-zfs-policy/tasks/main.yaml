@@ -6,27 +6,6 @@
     fail_msg: "The 'zfs' variable must be defined in host_vars to use this role"
     quiet: true
 
-# Remove legacy Sanoid installation
-- name: Stop and disable Sanoid timer
-  become: true
-  ansible.builtin.systemd_service:
-    name: sanoid.timer
-    state: stopped
-    enabled: false
-  ignore_errors: true
-
-- name: Remove Sanoid package
-  become: true
-  ansible.builtin.apt:
-    name: sanoid
-    state: absent
-
-- name: Remove Sanoid configuration directory
-  become: true
-  ansible.builtin.file:
-    path: /etc/sanoid
-    state: absent
-
 - name: Ensure script directory exists
   become: true
   ansible.builtin.file:
