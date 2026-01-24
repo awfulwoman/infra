@@ -52,15 +52,23 @@
     key_options: 'restrict,command="/usr/local/bin/restrict_commands.sh"'
   when: vault_zfsbackups_public_key is defined
 
-# TODO: This should be an assert as to if the dataset exists - it should not create the dataset.
-- name: Ensure destination dataset exists
+- name: Check if destination dataset exists
   become: true
-  community.general.zfs:
-    name: "{{ backups_zfs_archive_offsite_dataset }}"
-    extra_zfs_properties:
-      acltype: posix
-      xattr: sa
-    state: present
+  ansible.builtin.command:
+    cmd: "zfs list {{ backups_zfs_archive_offsite_dataset }}"
+  register: dataset_check
+  changed_when: false
+  failed_when: false
+
+- name: Assert that destination dataset exists
+  ansible.builtin.assert:
+    that:
+      - dataset_check.rc == 0
+    fail_msg: >
+      Dataset {{ backups_zfs_archive_offsite_dataset }} does not exist.
+      This dataset must be created via the system-zfs role with proper encryption
+      configuration in the host's zfs: variable before running this role.
+    quiet: true
 
 - name: Ensure that backup user has ZFS receive permissions
   become: true
