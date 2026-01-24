@@ -3,7 +3,6 @@ services:
   zfs-api:
     build:
       context: "{{ composition_config }}/app"
-      no_cache: true
     container_name: {{ composition_zfs_api_container_name }}
     restart: unless-stopped
     privileged: true  # Required for ZFS device access
