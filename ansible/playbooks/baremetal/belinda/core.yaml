@@ -5,6 +5,7 @@
     - role: network-netplan
     - role: hardware-raspberry-pi
     - role: system-zfs
+    - role: system-zfs-policy
     - role: backups-zfs-server
     - role: compositions
     - role: client-nut

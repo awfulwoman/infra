@@ -2,6 +2,7 @@
   hosts: belinda
   roles:
     - role: system-zfs
+    - role: system-zfs-policy
     - role: backups-zfs-server
   handlers:
     - name: Reboot host
