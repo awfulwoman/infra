@@ -285,6 +285,146 @@ Playbook
 5. **Better IDE Support:** Jump to definition, autocomplete for role names
 6. **Easier Testing:** Can test individual compositions in isolation
 
+## Handling Composition Removal
+
+### Problem Statement
+When a composition role is removed from a playbook (or a composition name removed from the `compositions:` list in the old system), the Docker containers continue running. There is no automatic cleanup mechanism.
+
+### Current Behavior
+- Remove `- role: composition-gitea` from playbook → Gitea containers keep running
+- The composition's ZFS dataset, config files, and data persist
+- No indication that the composition is "orphaned" or unwanted
+
+### Options
+
+#### Option 1: Manual Cleanup (Recommended)
+**Approach:** Document the manual process for removing compositions.
+
+**Process:**
+1. Remove the composition role from the playbook
+2. SSH to the host
+3. Stop and remove containers: `cd /{{ compositions_dataset }}/{{ composition_name }} && docker compose down`
+4. Optionally remove data: `zfs destroy -r {{ pool }}/{{ compositions_dataset }}/{{ composition_name }}`
+
+**Pros:**
+- Simple, explicit, no surprises
+- Users have full control over when data is deleted
+- No risk of accidentally destroying data
+- Aligns with Ansible's declarative model (playbook declares desired state, doesn't enforce absence)
+
+**Cons:**
+- Requires manual intervention
+- Containers keep running until manually stopped
+- Could accumulate orphaned compositions if forgotten
+
+#### Option 2: Automated Cleanup via State Tracking
+**Approach:** Track which compositions should exist and remove others automatically.
+
+**Implementation:**
+1. Create a `composition-cleanup` role that runs after all composition roles
+2. Generate a list of expected compositions from the playbook
+3. Query Docker for running compose projects
+4. Stop any projects not in the expected list
+5. Optionally mark datasets for manual review/deletion
+
+**Example Implementation:**
+```yaml
+# composition-cleanup/tasks/main.yaml
+- name: Get list of running compose projects
+  ansible.builtin.command:
+    cmd: docker compose ls --format json
+  register: running_projects
+  changed_when: false
+
+- name: Parse running projects
+  ansible.builtin.set_fact:
+    running_composition_names: "{{ running_projects.stdout | from_json | map(attribute='Name') | list }}"
+
+- name: Identify orphaned compositions
+  ansible.builtin.set_fact:
+    orphaned_compositions: "{{ running_composition_names | difference(expected_compositions) }}"
+
+- name: Stop orphaned compositions
+  ansible.builtin.command:
+    cmd: "docker compose -f /{{ compositions_dataset }}/{{ item }}/docker-compose.yaml down"
+  loop: "{{ orphaned_compositions }}"
+  when: composition_cleanup_stop_orphans | default(false)
+
+- name: Report orphaned compositions
+  ansible.builtin.debug:
+    msg: "Orphaned compositions detected (not stopped): {{ orphaned_compositions }}"
+  when:
+    - orphaned_compositions | length > 0
+    - not (composition_cleanup_stop_orphans | default(false))
+```
+
+**Pros:**
+- Automated cleanup
+- Prevents orphaned containers
+- Clear visibility into what's running vs configured
+
+**Cons:**
+- More complex implementation
+- Risk of accidentally stopping wanted containers if playbook is incomplete
+- Doesn't handle data cleanup (datasets would still exist)
+- Requires passing list of expected compositions to cleanup role
+- Could stop containers during troubleshooting if role temporarily removed
+
+#### Option 3: Explicit Absence Declaration
+**Approach:** Use a `state: absent` parameter in composition roles.
+
+**Usage:**
+```yaml
+# To remove a composition
+- role: composition-gitea
+  vars:
+    composition_state: absent
+```
+
+**Pros:**
+- Explicit intent to remove
+- Less risk of accidents
+- Aligns with Ansible patterns (state: present/absent)
+
+**Cons:**
+- Verbose (must keep role in playbook to remove it)
+- Doesn't help with orphaned compositions from old system
+- Still requires deciding what to do with data
+
+### Recommendation: Option 1 (Manual Cleanup)
+
+**Rationale:**
+1. **Safety First:** Compositions often contain important data. Requiring manual cleanup prevents accidental data loss.
+2. **Simplicity:** No complex tracking or state management needed.
+3. **Ansible Philosophy:** Ansible declares desired state. Removing a role means "don't manage this anymore," not "destroy this."
+4. **Clear Process:** Easy to document and understand.
+
+**Documentation to Provide:**
+Create a runbook documenting:
+- How to list running compositions: `docker compose ls`
+- How to stop a composition: `cd /path/to/composition && docker compose down`
+- How to remove composition data: `zfs destroy -r pool/compositions/name`
+- How to identify orphaned compositions (compare `docker compose ls` output to playbook)
+
+**Future Enhancement:**
+Could add a utility script or playbook that helps identify orphaned compositions for manual review:
+```bash
+# scripts/list-orphaned-compositions.sh
+# Compares running Docker Compose projects against configured compositions
+```
+
+### Implementation in Refactoring
+
+**During Migration:**
+1. Document the manual cleanup process in role README files
+2. Add a section to CLAUDE.md about composition lifecycle
+3. Create a helper script to list running vs configured compositions
+4. Add to success criteria: "Orphaned composition detection documented"
+
+**After Migration:**
+- Consider adding Ansible check mode warnings if orphaned compositions detected
+- Could implement Option 2 as an opt-in feature with `composition_cleanup_enabled: false` default
+
 ## Risks and Mitigations
 
 | Risk | Impact | Mitigation |
@@ -294,24 +434,32 @@ Playbook
 | Forgotten migrations | Low | Script to identify all uses of `compositions:` |
 | Reverseproxy specific issues | Medium | Test this role first, it's the most complex |
 | Docker network race conditions | Low | Network creation is idempotent, safe for parallel runs |
+| Orphaned compositions after role removal | Medium | Document manual cleanup process, create helper script |
+| Accidental data loss from automated cleanup | High | Use manual cleanup (Option 1), require explicit deletion |
 
-## Open Questions
+## Resolved Questions
 
 1. **Should image pruning remain automated?**
-   - Recommendation: No, remove from automation. Run manually when needed.
-   - It's a maintenance operation that doesn't need to run on every playbook execution
+   - **Decision:** No, remove from automation. Run manually when needed.
+   - **Rationale:** It's a maintenance operation that doesn't need to run on every playbook execution
 
 2. **How to handle compositions that need to run in specific order?**
-   - Recommendation: Order them explicitly in playbooks (now possible!)
-   - Example: `composition-reverseproxy` should run before other web services
+   - **Decision:** Order them explicitly in playbooks (now possible!)
+   - **Example:** `composition-reverseproxy` should run before other web services
 
 3. **Should `compositions_dataset` variable remain global?**
-   - Recommendation: Yes, keep in group_vars
-   - All compositions use the same parent dataset
+   - **Decision:** Yes, keep in group_vars
+   - **Rationale:** All compositions use the same parent dataset
 
 4. **What about Docker Compose project naming?**
-   - Currently: `composition_name` is used as project name in docker-compose.yaml
-   - Keep this behavior in new structure
+   - **Decision:** Keep current behavior - `composition_name` is used as project name
+   - **Rationale:** Maintains compatibility, no breaking changes needed
+
+5. **How to handle composition removal (when role removed from playbook)?**
+   - **Decision:** Manual cleanup process (Option 1)
+   - **Rationale:** Safety first - prevents accidental data loss, aligns with Ansible philosophy
+   - **Implementation:** Document process, create helper script to identify orphans
+   - See "Handling Composition Removal" section above for full details
 
 ## Success Criteria
 
@@ -321,5 +469,7 @@ Playbook
 - [ ] All host_vars `compositions:` lists removed
 - [ ] `composition-reverseproxy` specifically verified working
 - [ ] No Docker containers recreated during migration (no downtime)
-- [ ] Documentation updated
+- [ ] Documentation updated (README files, CLAUDE.md)
 - [ ] Old `compositions` role deprecated with clear migration guide
+- [ ] Composition removal process documented (how to stop/remove unwanted compositions)
+- [ ] Helper script created to identify orphaned compositions
