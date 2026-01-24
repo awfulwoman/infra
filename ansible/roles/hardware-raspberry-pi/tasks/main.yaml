@@ -47,6 +47,23 @@
     state: absent
   when: raspberry_pi_bluetooth is true
 
+# Useful when not powering via USB-C e.g. certain HATs
+- name: Supress undervoltage warnings
+  become: true
+  ansible.builtin.file:
+    dest: /etc/xdg/pemmican/brownout.inhibit
+    state: touch
+    owner: root
+    group: root
+    mode: "0664"
+  when: raspberry_pi_hide_undervoltage_warnings is true
+
+- name: Supress undervoltage warnings
+  become: true
+  ansible.builtin.file:
+    dest: /etc/xdg/pemmican/brownout.inhibit
+    state: absent
+  when: raspberry_pi_hide_undervoltage_warnings is false
 
 - name: Ensure Raspi-config exists
   become: true
