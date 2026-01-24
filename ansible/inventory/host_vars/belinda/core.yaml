@@ -12,14 +12,13 @@ host_fqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}.{{ domain_name }
 # -------------------------------------------------------------------
 # ANSIBLE
 # -------------------------------------------------------------------
-ansible_host: belinda
+ansible_host: belinda # TODO: Replace this with `host_fqdn` once DNS infra is up and running
 ansible_user: "{{ vault_server_username }}"
 ansible_become_password: "{{ vault_password }}"
 
 # -------------------------------------------------------------------
 # UBUNTU
 # -------------------------------------------------------------------
-
 ubuntupro_attach: false
 
 # -------------------------------------------------------------------
@@ -81,5 +80,5 @@ compositions:
 # BACKUPS
 # -------------------------------------------------------------------
 backups_zfs_server_local_dataset: slowpool/backups/raw
-backups_zfs_server_offsite_enabled: false # for now
+backups_zfs_server_offsite_enabled: false # TODO: Remove this once Belinda has replaced host-backups
 backups_zfs_server_offsite_bwlimit: 3M
