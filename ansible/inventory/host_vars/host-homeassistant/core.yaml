@@ -54,16 +54,7 @@ composition_motioneye_usbdevice: /dev/video0
 
 docker_port_open: true
 
-compositions:
-  - reverseproxy
-  - container-management
-  - homeassistant
-  - matter
-  - owntracks
-  - mqtt
-  - zigbee2mqtt
-  - watchyourlan
-  - zfs-api
+# compositions list moved to playbook (see playbooks/baremetal/host-homeassistant/core.yaml)
 
 traefik_providers:
   - homeassistant

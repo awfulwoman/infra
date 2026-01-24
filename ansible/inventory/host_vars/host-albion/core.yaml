@@ -93,7 +93,4 @@ nfs_mounts:
 # -------------------------------------------------------------------
 # COMPOSITIONS
 # -------------------------------------------------------------------
-compositions:
-  - reverseproxy
-  - container-management
-  - zfs-api
+# compositions list moved to playbook (see playbooks/baremetal/host-albion/core.yaml)

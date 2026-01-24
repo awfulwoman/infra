@@ -41,7 +41,4 @@ site_path_shared: "/fastpool/shared"
 traefik_providers:
   - gotosocial
 
-compositions:
-  - reverseproxy
-  - container-management
-  - awfulwoman
+# compositions list moved to playbook (see playbooks/virtual/vm-awfulwoman-hetzner/core.yaml)

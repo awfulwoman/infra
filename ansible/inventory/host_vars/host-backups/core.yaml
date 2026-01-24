@@ -53,7 +53,4 @@ backups_zfs_server_local_dataset: slowpool/encryptedbackups
 # -------------------------------------------------------------------
 
 compositions_dataset: slowpool/compositions
-compositions:
-  - container-management
-  - reverseproxy
-  - zfs-api
+# compositions list moved to playbook (see playbooks/baremetal/host-backups/core.yaml)

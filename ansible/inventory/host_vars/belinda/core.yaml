@@ -71,10 +71,7 @@ zfs:
 # COMPOSITIONS
 # -------------------------------------------------------------------
 compositions_dataset: slowpool/compositions
-compositions:
-  - container-management
-  - reverseproxy
-  - zfs-api
+# compositions list moved to playbook (see playbooks/baremetal/belinda/core.yaml)
 
 # -------------------------------------------------------------------
 # BACKUPS

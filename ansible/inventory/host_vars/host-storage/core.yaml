@@ -131,28 +131,8 @@ zfs_nfs_exports:
 # Containers to run on this machine.
 # -------------------------------------------------------------------
 
-compositions:
-  - zfs-api
-  - victoriametrics
-  - reverseproxy
-  - container-management
-  - audio
-  - jellyfin
-  - immich
-  - downloads
-  - finances
-  - gitea
-  - gitea-runners
-  - syncthing
+# compositions list moved to playbook (see playbooks/baremetal/host-storage/core.yaml)
   # - musicassistant
-  - karakeep
-  - freshrss
-  - tubesync
-  - homepage
-  - bookmarks
-  - piper
-  - gotosocial
-  - libretranslate
 
 
 # traefik_providers:
