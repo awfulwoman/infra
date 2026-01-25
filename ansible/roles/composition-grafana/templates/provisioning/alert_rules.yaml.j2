@@ -81,7 +81,7 @@ groups:
         execErrState: Alerting
         for: 2m
         annotations:
-          description: "ZFS pool {{ "{{" }} $labels.pool {{ "}}" }} on {{ "{{" }} $labels.hostname {{ "}}" }} is {{ "{{" }} $labels.state {{ "}}" }} (not ONLINE)"
+          description: "ZFS pool {% raw %}{{ $labels.pool }}{% endraw %} on {% raw %}{{ $labels.hostname }}{% endraw %} is {% raw %}{{ $labels.state }}{% endraw %} (not ONLINE)"
           summary: "ZFS pool health issue detected"
         labels:
           severity: critical
