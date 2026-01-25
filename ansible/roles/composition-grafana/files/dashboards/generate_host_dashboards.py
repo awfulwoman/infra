@@ -287,12 +287,13 @@ def create_host_dashboard(hostname: str) -> dict:
                 "title": "Snapshots",
                 "type": "row"
             },
-            # Policy Compliance Stats
+            # Snapshot Compliance Table
             {
                 "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
                 "fieldConfig": {
                     "defaults": {
                         "color": {"mode": "thresholds"},
+                        "custom": {"align": "auto", "cellOptions": {"type": "auto"}, "inspect": False},
                         "mappings": [],
                         "max": 100,
                         "min": 0,
@@ -305,201 +306,18 @@ def create_host_dashboard(hostname: str) -> dict:
                             ]
                         },
                         "unit": "percent"
-                    }
+                    },
+                    "overrides": [{
+                        "matcher": {"id": "byName", "options": "Compliance %"},
+                        "properties": [{"id": "custom.cellOptions", "value": {"type": "color-background"}}]
+                    }]
                 },
-                "gridPos": {"h": 4, "w": 8, "x": 0, "y": 29},
+                "gridPos": {"h": 12, "w": 24, "x": 0, "y": 29},
                 "id": 6,
                 "options": {
-                    "colorMode": "background",
-                    "graphMode": "none",
-                    "justifyMode": "auto",
-                    "orientation": "auto",
-                    "reduceOptions": {"calcs": ["mean"], "fields": "", "values": False},
-                    "textMode": "auto"
-                },
-                "targets": [{
-                    "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
-                    "expr": f"avg(zfs_snapshot_compliance_percent{{hostname=\"{hostname}\",policy=\"critical\"}})",
-                    "refId": "A"
-                }],
-                "title": "Critical Policy Compliance",
-                "type": "stat"
-            },
-            {
-                "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
-                "fieldConfig": {
-                    "defaults": {
-                        "color": {"mode": "thresholds"},
-                        "mappings": [],
-                        "max": 100,
-                        "min": 0,
-                        "thresholds": {
-                            "mode": "absolute",
-                            "steps": [
-                                {"color": "red", "value": None},
-                                {"color": "yellow", "value": 80},
-                                {"color": "green", "value": 95}
-                            ]
-                        },
-                        "unit": "percent"
-                    }
-                },
-                "gridPos": {"h": 4, "w": 8, "x": 8, "y": 29},
-                "id": 10,
-                "options": {
-                    "colorMode": "background",
-                    "graphMode": "none",
-                    "justifyMode": "auto",
-                    "orientation": "auto",
-                    "reduceOptions": {"calcs": ["mean"], "fields": "", "values": False},
-                    "textMode": "auto"
-                },
-                "targets": [{
-                    "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
-                    "expr": f"avg(zfs_snapshot_compliance_percent{{hostname=\"{hostname}\",policy=\"important\"}})",
-                    "refId": "A"
-                }],
-                "title": "Important Policy Compliance",
-                "type": "stat"
-            },
-            {
-                "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
-                "fieldConfig": {
-                    "defaults": {
-                        "color": {"mode": "thresholds"},
-                        "mappings": [],
-                        "max": 100,
-                        "min": 0,
-                        "thresholds": {
-                            "mode": "absolute",
-                            "steps": [
-                                {"color": "red", "value": None},
-                                {"color": "yellow", "value": 80},
-                                {"color": "green", "value": 95}
-                            ]
-                        },
-                        "unit": "percent"
-                    }
-                },
-                "gridPos": {"h": 4, "w": 8, "x": 16, "y": 29},
-                "id": 11,
-                "options": {
-                    "colorMode": "background",
-                    "graphMode": "none",
-                    "justifyMode": "auto",
-                    "orientation": "auto",
-                    "reduceOptions": {"calcs": ["mean"], "fields": "", "values": False},
-                    "textMode": "auto"
-                },
-                "targets": [{
-                    "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
-                    "expr": f"avg(zfs_snapshot_compliance_percent{{hostname=\"{hostname}\",policy=\"standard\"}})",
-                    "refId": "A"
-                }],
-                "title": "Standard Policy Compliance",
-                "type": "stat"
-            },
-            # Compliance by Dataset & Policy
-            {
-                "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
-                "fieldConfig": {
-                    "defaults": {
-                        "color": {"mode": "thresholds"},
-                        "custom": {"align": "auto", "cellOptions": {"type": "auto"}, "inspect": False},
-                        "mappings": [],
-                        "max": 100,
-                        "min": 0,
-                        "thresholds": {
-                            "mode": "absolute",
-                            "steps": [
-                                {"color": "red", "value": None},
-                                {"color": "yellow", "value": 80},
-                                {"color": "green", "value": 95}
-                            ]
-                        },
-                        "unit": "percent"
-                    },
-                    "overrides": [
-                        {
-                            "matcher": {"id": "byName", "options": "Avg Compliance"},
-                            "properties": [{"id": "custom.cellOptions", "value": {"type": "color-background"}}]
-                        },
-                        {
-                            "matcher": {"id": "byName", "options": "Dataset"},
-                            "properties": [{"id": "custom.width", "value": 350}]
-                        }
-                    ]
-                },
-                "gridPos": {"h": 10, "w": 24, "x": 0, "y": 33},
-                "id": 8,
-                "options": {
                     "cellHeight": "sm",
                     "footer": {"countRows": False, "fields": "", "reducer": ["sum"], "show": False},
-                    "showHeader": True,
-                    "sortBy": [{"desc": False, "displayName": "Dataset"}]
-                },
-                "targets": [{
-                    "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
-                    "expr": f"avg by (pool, dataset, policy) (zfs_snapshot_compliance_percent{{hostname=\"{hostname}\"}})",
-                    "format": "table",
-                    "instant": True,
-                    "legendFormat": "__auto",
-                    "refId": "A"
-                }],
-                "title": "Compliance by Dataset & Policy",
-                "transformations": [{
-                    "id": "organize",
-                    "options": {
-                        "excludeByName": {"Time": True, "hostname": True, "__name__": True},
-                        "indexByName": {"pool": 0, "dataset": 1, "policy": 2, "Value": 3},
-                        "renameByName": {
-                            "Value": "Avg Compliance",
-                            "dataset": "Dataset",
-                            "policy": "Policy",
-                            "pool": "Pool"
-                        }
-                    }
-                }],
-                "type": "table"
-            },
-            # Detailed Compliance by Interval
-            {
-                "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
-                "fieldConfig": {
-                    "defaults": {
-                        "color": {"mode": "thresholds"},
-                        "custom": {"align": "auto", "cellOptions": {"type": "auto"}, "inspect": False},
-                        "mappings": [],
-                        "max": 100,
-                        "min": 0,
-                        "thresholds": {
-                            "mode": "absolute",
-                            "steps": [
-                                {"color": "red", "value": None},
-                                {"color": "yellow", "value": 80},
-                                {"color": "green", "value": 95}
-                            ]
-                        },
-                        "unit": "percent"
-                    },
-                    "overrides": [
-                        {
-                            "matcher": {"id": "byName", "options": "Compliance %"},
-                            "properties": [{"id": "custom.cellOptions", "value": {"type": "color-background"}}]
-                        },
-                        {
-                            "matcher": {"id": "byName", "options": "Dataset"},
-                            "properties": [{"id": "custom.width", "value": 350}]
-                        }
-                    ]
-                },
-                "gridPos": {"h": 12, "w": 24, "x": 0, "y": 43},
-                "id": 9,
-                "options": {
-                    "cellHeight": "sm",
-                    "footer": {"countRows": False, "fields": "", "reducer": ["sum"], "show": False},
-                    "showHeader": True,
-                    "sortBy": [{"desc": False, "displayName": "Dataset"}]
+                    "showHeader": True
                 },
                 "targets": [{
                     "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
@@ -509,7 +327,7 @@ def create_host_dashboard(hostname: str) -> dict:
                     "legendFormat": "__auto",
                     "refId": "A"
                 }],
-                "title": "Detailed Compliance by Interval",
+                "title": "Snapshot Compliance",
                 "transformations": [{
                     "id": "organize",
                     "options": {
@@ -559,7 +377,7 @@ def create_host_dashboard(hostname: str) -> dict:
                         "unit": "short"
                     }
                 },
-                "gridPos": {"h": 10, "w": 24, "x": 0, "y": 55},
+                "gridPos": {"h": 10, "w": 24, "x": 0, "y": 41},
                 "id": 7,
                 "options": {
                     "legend": {
