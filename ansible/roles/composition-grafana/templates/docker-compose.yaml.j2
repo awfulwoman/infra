@@ -1,0 +1,27 @@
+name: "{{ composition_name }}"
+services:
+  grafana:
+    image: grafana/grafana-oss:latest
+    container_name: {{ composition_grafana_container_name }}
+    restart: unless-stopped
+    user: "{{ ansible_user_uid }}:{{ ansible_user_gid }}"
+    ports:
+      - "{{ composition_grafana_port }}:3000"
+    volumes:
+      - "{{ composition_config }}/data:/var/lib/grafana"
+      - "{{ composition_config }}/provisioning:/etc/grafana/provisioning"
+    env_file: .environment_vars
+{% if composition_grafana_traefik_enabled %}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.{{ composition_grafana_container_name }}.rule=Host(`{{ composition_grafana_subdomain }}.{{ domain_name }}`)"
+      - "traefik.http.routers.{{ composition_grafana_container_name }}.tls=true"
+      - "traefik.http.routers.{{ composition_grafana_container_name }}.tls.certresolver=letsencrypt"
+      - "traefik.http.services.{{ composition_grafana_container_name }}.loadbalancer.server.port=3000"
+{% endif %}
+    networks:
+      - "{{ default_docker_network }}"
+
+networks:
+  "{{ default_docker_network }}":
+    external: true

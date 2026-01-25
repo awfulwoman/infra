@@ -1,0 +1,20 @@
+# Grafana Configuration
+
+# Admin credentials
+GF_SECURITY_ADMIN_USER={{ composition_grafana_admin_user }}
+GF_SECURITY_ADMIN_PASSWORD={{ composition_grafana_admin_password }}
+
+# Server settings
+GF_SERVER_ROOT_URL=https://{{ composition_grafana_subdomain }}.{{ domain_name }}
+GF_SERVER_SERVE_FROM_SUB_PATH=false
+
+# UI preferences
+GF_USERS_DEFAULT_THEME={{ composition_grafana_default_theme }}
+
+# Disable telemetry
+GF_ANALYTICS_REPORTING_ENABLED=false
+GF_ANALYTICS_CHECK_FOR_UPDATES=false
+
+# Security
+GF_SECURITY_DISABLE_GRAVATAR=true
+GF_SNAPSHOTS_EXTERNAL_ENABLED=false

@@ -1,0 +1,33 @@
+# Composition name (used by composition-common dependency)
+composition_name: grafana
+
+# Enable/disable the composition
+composition_grafana_enabled: true
+
+# Application settings
+composition_grafana_port: 3100
+
+# Container settings
+composition_grafana_container_name: "grafana"
+
+# Paths
+composition_grafana_base_path: "{{ compositions_base_path }}/grafana"
+
+# Domain configuration
+composition_grafana_subdomain: "grafana"
+composition_grafana_domain: "{{ composition_grafana_subdomain }}.{{ domain_name }}"
+
+# Traefik integration
+composition_grafana_traefik_enabled: true
+
+# VictoriaMetrics datasource configuration
+composition_grafana_victoriametrics_url: "https://zfs.metrics.{{ domain_name }}"
+composition_grafana_victoriametrics_name: "VictoriaMetrics"
+
+# Admin credentials (should be vault-encrypted)
+composition_grafana_admin_user: "{{ vault_grafana_admin_user | default('admin') }}"
+composition_grafana_admin_password: "{{ vault_grafana_admin_password }}"
+
+# Dashboard settings
+composition_grafana_dashboards_enabled: true
+composition_grafana_default_theme: "dark"
