@@ -93,7 +93,7 @@ zfs:
                 policy: critical
               youtube:
       charlie:
-        # policy: critical
+        policy: none
         datasets:
           syncthing:
             policy: critical
