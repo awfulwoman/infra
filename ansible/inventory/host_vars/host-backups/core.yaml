@@ -47,6 +47,7 @@ zfs:
 
 # Backups
 backups_zfs_server_local_dataset: slowpool/encryptedbackups
+backups_zfs_server_offsite_enabled: false
 
 # -------------------------------------------------------------------
 # COMPOSITIONS
