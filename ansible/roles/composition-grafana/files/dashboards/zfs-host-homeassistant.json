@@ -23,6 +23,23 @@
   "liveNow": false,
   "panels": [
     {
+      "collapsed": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "VictoriaMetrics"
+      },
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 100,
+      "panels": [],
+      "title": "Pool Status",
+      "type": "row"
+    },
+    {
       "datasource": {
         "type": "prometheus",
         "uid": "VictoriaMetrics"
@@ -53,14 +70,13 @@
             ]
           },
           "unit": "percent"
-        },
-        "overrides": []
+        }
       },
       "gridPos": {
-        "h": 8,
-        "w": 12,
+        "h": 6,
+        "w": 8,
         "x": 0,
-        "y": 0
+        "y": 1
       },
       "id": 1,
       "options": {
@@ -75,15 +91,14 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "10.0.0",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "VictoriaMetrics"
           },
-          "expr": "zfs_pool_capacity_percent",
-          "legendFormat": "{{hostname}}/{{pool}}",
+          "expr": "zfs_pool_capacity_percent{hostname=\"host-homeassistant\"}",
+          "legendFormat": "{{{{pool}}}}",
           "refId": "A"
         }
       ],
@@ -128,14 +143,13 @@
               }
             ]
           }
-        },
-        "overrides": []
+        }
       },
       "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 0
+        "h": 6,
+        "w": 8,
+        "x": 8,
+        "y": 1
       },
       "id": 2,
       "options": {
@@ -152,20 +166,209 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "10.0.0",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "VictoriaMetrics"
           },
-          "expr": "zfs_pool_health",
-          "legendFormat": "{{hostname}}/{{pool}} ({{state}})",
+          "expr": "zfs_pool_health{hostname=\"host-homeassistant\"}",
+          "legendFormat": "{{{{pool}}}} ({{{{state}}}})",
           "refId": "A"
         }
       ],
-      "title": "Pool Health Status",
+      "title": "Pool Health",
       "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "VictoriaMetrics"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 30
+              },
+              {
+                "color": "red",
+                "value": 50
+              }
+            ]
+          },
+          "unit": "percent"
+        }
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 16,
+        "y": 1
+      },
+      "id": 3,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "VictoriaMetrics"
+          },
+          "expr": "zfs_pool_fragmentation_percent{hostname=\"host-homeassistant\"}",
+          "legendFormat": "{{{{pool}}}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Pool Fragmentation",
+      "type": "gauge"
+    },
+    {
+      "collapsed": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "VictoriaMetrics"
+      },
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 7
+      },
+      "id": 101,
+      "panels": [],
+      "title": "Datasets",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "VictoriaMetrics"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "bytes"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Dataset"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 400
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 8
+      },
+      "id": 4,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Value"
+          }
+        ]
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "VictoriaMetrics"
+          },
+          "expr": "zfs_dataset_used_bytes{hostname=\"host-homeassistant\"}",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "__auto",
+          "refId": "A"
+        }
+      ],
+      "title": "Dataset Usage",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "hostname": true,
+              "__name__": true
+            },
+            "indexByName": {
+              "pool": 0,
+              "dataset": 1,
+              "Value": 2
+            },
+            "renameByName": {
+              "Value": "Used",
+              "dataset": "Dataset",
+              "pool": "Pool"
+            }
+          }
+        }
+      ],
+      "type": "table"
     },
     {
       "datasource": {
@@ -184,7 +387,7 @@
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
-            "fillOpacity": 20,
+            "fillOpacity": 10,
             "gradientMode": "none",
             "hideFrom": {
               "tooltip": false,
@@ -201,7 +404,7 @@
             "spanNulls": false,
             "stacking": {
               "group": "A",
-              "mode": "normal"
+              "mode": "none"
             },
             "thresholdsStyle": {
               "mode": "off"
@@ -218,20 +421,20 @@
             ]
           },
           "unit": "bytes"
-        },
-        "overrides": []
+        }
       },
       "gridPos": {
-        "h": 8,
+        "h": 10,
         "w": 24,
         "x": 0,
-        "y": 8
+        "y": 18
       },
-      "id": 3,
+      "id": 5,
       "options": {
         "legend": {
           "calcs": [
-            "lastNotNull"
+            "lastNotNull",
+            "max"
           ],
           "displayMode": "table",
           "placement": "right",
@@ -239,92 +442,39 @@
         },
         "tooltip": {
           "mode": "multi",
-          "sort": "none"
+          "sort": "desc"
         }
       },
-      "pluginVersion": "10.0.0",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "VictoriaMetrics"
           },
-          "expr": "sum by (hostname) (zfs_pool_allocated_bytes)",
-          "legendFormat": "{{hostname}}",
+          "expr": "topk(10, zfs_dataset_used_bytes{hostname=\"host-homeassistant\"})",
+          "legendFormat": "{{{{pool}}}}/{{{{dataset}}}}",
           "refId": "A"
         }
       ],
-      "title": "Dataset Space by Host",
+      "title": "Top 10 Datasets - Usage Over Time",
       "type": "timeseries"
     },
     {
+      "collapsed": false,
       "datasource": {
         "type": "prometheus",
         "uid": "VictoriaMetrics"
       },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "hideFrom": {
-              "tooltip": false,
-              "viz": false,
-              "legend": false
-            }
-          },
-          "mappings": [],
-          "unit": "bytes"
-        },
-        "overrides": []
-      },
       "gridPos": {
-        "h": 8,
-        "w": 12,
+        "h": 1,
+        "w": 24,
         "x": 0,
-        "y": 16
+        "y": 28
       },
-      "id": 4,
-      "options": {
-        "displayLabels": [
-          "percent"
-        ],
-        "legend": {
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true,
-          "values": [
-            "value"
-          ]
-        },
-        "pieType": "pie",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "10.0.0",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "VictoriaMetrics"
-          },
-          "expr": "topk(10, zfs_dataset_used_bytes)",
-          "legendFormat": "{{hostname}}/{{pool}}/{{dataset}}",
-          "refId": "A"
-        }
-      ],
-      "title": "Top 10 Datasets by Space Usage",
-      "type": "piechart"
+      "id": 102,
+      "panels": [],
+      "title": "Snapshots",
+      "type": "row"
     },
     {
       "datasource": {
@@ -383,12 +533,12 @@
         ]
       },
       "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 16
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 29
       },
-      "id": 5,
+      "id": 6,
       "options": {
         "cellHeight": "sm",
         "footer": {
@@ -401,39 +551,42 @@
         },
         "showHeader": true
       },
-      "pluginVersion": "10.0.0",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "VictoriaMetrics"
           },
-          "expr": "avg by (hostname, policy, interval) (zfs_snapshot_compliance_percent)",
+          "expr": "zfs_snapshot_compliance_percent{hostname=\"host-homeassistant\"}",
           "format": "table",
           "instant": true,
           "legendFormat": "__auto",
           "refId": "A"
         }
       ],
-      "title": "Snapshot Compliance by Policy",
+      "title": "Snapshot Compliance",
       "transformations": [
         {
           "id": "organize",
           "options": {
             "excludeByName": {
-              "Time": true
+              "Time": true,
+              "hostname": true,
+              "__name__": true
             },
             "indexByName": {
-              "hostname": 0,
-              "policy": 1,
-              "interval": 2,
-              "Value": 3
+              "pool": 0,
+              "dataset": 1,
+              "policy": 2,
+              "interval": 3,
+              "Value": 4
             },
             "renameByName": {
               "Value": "Compliance %",
-              "hostname": "Host",
+              "dataset": "Dataset",
               "interval": "Interval",
-              "policy": "Policy"
+              "policy": "Policy",
+              "pool": "Pool"
             }
           }
         }
@@ -474,7 +627,7 @@
             "spanNulls": false,
             "stacking": {
               "group": "A",
-              "mode": "none"
+              "mode": "normal"
             },
             "thresholdsStyle": {
               "mode": "off"
@@ -491,16 +644,15 @@
             ]
           },
           "unit": "short"
-        },
-        "overrides": []
+        }
       },
       "gridPos": {
-        "h": 8,
-        "w": 12,
+        "h": 10,
+        "w": 24,
         "x": 0,
-        "y": 24
+        "y": 41
       },
-      "id": 6,
+      "id": 7,
       "options": {
         "legend": {
           "calcs": [
@@ -515,88 +667,19 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "10.0.0",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "VictoriaMetrics"
           },
-          "expr": "sum by (hostname, policy) (zfs_snapshot_count)",
-          "legendFormat": "{{hostname}} ({{policy}})",
+          "expr": "sum by (policy, interval) (zfs_snapshot_count{hostname=\"host-homeassistant\"})",
+          "legendFormat": "{{{{policy}}}} - {{{{interval}}}}",
           "refId": "A"
         }
       ],
-      "title": "Snapshot Count Trends",
+      "title": "Snapshot Counts by Policy & Interval",
       "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "VictoriaMetrics"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "max": 100,
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "yellow",
-                "value": 30
-              },
-              {
-                "color": "red",
-                "value": 50
-              }
-            ]
-          },
-          "unit": "percent"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 24
-      },
-      "id": 7,
-      "options": {
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true
-      },
-      "pluginVersion": "10.0.0",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "VictoriaMetrics"
-          },
-          "expr": "zfs_pool_fragmentation_percent",
-          "legendFormat": "{{hostname}}/{{pool}}",
-          "refId": "A"
-        }
-      ],
-      "title": "Pool Fragmentation",
-      "type": "gauge"
     }
   ],
   "refresh": "1m",
@@ -604,8 +687,7 @@
   "style": "dark",
   "tags": [
     "zfs",
-    "storage",
-    "monitoring"
+    "host-detail"
   ],
   "templating": {
     "list": []
@@ -616,8 +698,8 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "ZFS Overview",
-  "uid": "zfs-overview",
+  "title": "ZFS: host-homeassistant",
+  "uid": "zfs-hosthomeassistant",
   "version": 1,
   "weekStart": ""
 }

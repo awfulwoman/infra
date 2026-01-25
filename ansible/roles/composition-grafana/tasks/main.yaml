@@ -57,11 +57,11 @@
     group: "{{ ansible_user }}"
     mode: "0774"
 
-- name: "Copy ZFS dashboard"
+- name: "Copy ZFS dashboards"
   become: true
   ansible.builtin.copy:
-    src: dashboards/zfs-overview.json
-    dest: "{{ composition_config }}/provisioning/dashboards/zfs-overview.json"
+    src: dashboards/
+    dest: "{{ composition_config }}/provisioning/dashboards/"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0774"

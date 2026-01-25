@@ -1,0 +1,430 @@
+#!/usr/bin/env python3
+"""Generate per-host ZFS dashboards for Grafana"""
+
+import json
+from pathlib import Path
+
+HOSTS = [
+    "host-storage",
+    "host-homeassistant",
+    "dns",
+    "host-backups",
+    "host-albion",
+    "belinda",
+    "vm-awfulwoman-hetzner"
+]
+
+def create_host_dashboard(hostname: str) -> dict:
+    """Create detailed ZFS dashboard for a specific host"""
+
+    # Clean hostname for UID (remove hyphens)
+    uid = f"zfs-{hostname.replace('-', '')}"
+
+    return {
+        "annotations": {
+            "list": [{
+                "builtIn": 1,
+                "datasource": {"type": "grafana", "uid": "-- Grafana --"},
+                "enable": True,
+                "hide": True,
+                "iconColor": "rgba(0, 211, 255, 1)",
+                "name": "Annotations & Alerts",
+                "type": "dashboard"
+            }]
+        },
+        "editable": True,
+        "fiscalYearStartMonth": 0,
+        "graphTooltip": 0,
+        "id": None,
+        "links": [],
+        "liveNow": False,
+        "panels": [
+            # Row: Pool Status
+            {
+                "collapsed": False,
+                "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
+                "gridPos": {"h": 1, "w": 24, "x": 0, "y": 0},
+                "id": 100,
+                "panels": [],
+                "title": "Pool Status",
+                "type": "row"
+            },
+            # Pool Capacity Gauges
+            {
+                "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
+                "fieldConfig": {
+                    "defaults": {
+                        "color": {"mode": "thresholds"},
+                        "mappings": [],
+                        "max": 100,
+                        "min": 0,
+                        "thresholds": {
+                            "mode": "absolute",
+                            "steps": [
+                                {"color": "green", "value": None},
+                                {"color": "yellow", "value": 70},
+                                {"color": "red", "value": 85}
+                            ]
+                        },
+                        "unit": "percent"
+                    }
+                },
+                "gridPos": {"h": 6, "w": 8, "x": 0, "y": 1},
+                "id": 1,
+                "options": {
+                    "orientation": "auto",
+                    "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": False},
+                    "showThresholdLabels": False,
+                    "showThresholdMarkers": True
+                },
+                "targets": [{
+                    "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
+                    "expr": f"zfs_pool_capacity_percent{{hostname=\"{hostname}\"}}",
+                    "legendFormat": "{{{{pool}}}}",
+                    "refId": "A"
+                }],
+                "title": "Pool Capacity",
+                "type": "gauge"
+            },
+            # Pool Health
+            {
+                "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
+                "fieldConfig": {
+                    "defaults": {
+                        "color": {"mode": "thresholds"},
+                        "mappings": [{
+                            "options": {
+                                "0": {"color": "red", "text": "OFFLINE"},
+                                "1": {"color": "green", "text": "ONLINE"}
+                            },
+                            "type": "value"
+                        }],
+                        "thresholds": {
+                            "mode": "absolute",
+                            "steps": [
+                                {"color": "red", "value": None},
+                                {"color": "green", "value": 1}
+                            ]
+                        }
+                    }
+                },
+                "gridPos": {"h": 6, "w": 8, "x": 8, "y": 1},
+                "id": 2,
+                "options": {
+                    "colorMode": "background",
+                    "graphMode": "none",
+                    "justifyMode": "auto",
+                    "orientation": "auto",
+                    "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": False},
+                    "textMode": "auto"
+                },
+                "targets": [{
+                    "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
+                    "expr": f"zfs_pool_health{{hostname=\"{hostname}\"}}",
+                    "legendFormat": "{{{{pool}}}} ({{{{state}}}})",
+                    "refId": "A"
+                }],
+                "title": "Pool Health",
+                "type": "stat"
+            },
+            # Pool Fragmentation
+            {
+                "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
+                "fieldConfig": {
+                    "defaults": {
+                        "color": {"mode": "thresholds"},
+                        "mappings": [],
+                        "max": 100,
+                        "min": 0,
+                        "thresholds": {
+                            "mode": "absolute",
+                            "steps": [
+                                {"color": "green", "value": None},
+                                {"color": "yellow", "value": 30},
+                                {"color": "red", "value": 50}
+                            ]
+                        },
+                        "unit": "percent"
+                    }
+                },
+                "gridPos": {"h": 6, "w": 8, "x": 16, "y": 1},
+                "id": 3,
+                "options": {
+                    "orientation": "auto",
+                    "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": False},
+                    "showThresholdLabels": False,
+                    "showThresholdMarkers": True
+                },
+                "targets": [{
+                    "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
+                    "expr": f"zfs_pool_fragmentation_percent{{hostname=\"{hostname}\"}}",
+                    "legendFormat": "{{{{pool}}}}",
+                    "refId": "A"
+                }],
+                "title": "Pool Fragmentation",
+                "type": "gauge"
+            },
+            # Row: Datasets
+            {
+                "collapsed": False,
+                "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
+                "gridPos": {"h": 1, "w": 24, "x": 0, "y": 7},
+                "id": 101,
+                "panels": [],
+                "title": "Datasets",
+                "type": "row"
+            },
+            # Top Datasets Table
+            {
+                "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
+                "fieldConfig": {
+                    "defaults": {
+                        "color": {"mode": "thresholds"},
+                        "custom": {"align": "auto", "cellOptions": {"type": "auto"}, "inspect": False},
+                        "mappings": [],
+                        "thresholds": {
+                            "mode": "absolute",
+                            "steps": [{"color": "green", "value": None}]
+                        },
+                        "unit": "bytes"
+                    },
+                    "overrides": [{
+                        "matcher": {"id": "byName", "options": "Dataset"},
+                        "properties": [{"id": "custom.width", "value": 400}]
+                    }]
+                },
+                "gridPos": {"h": 10, "w": 24, "x": 0, "y": 8},
+                "id": 4,
+                "options": {
+                    "cellHeight": "sm",
+                    "footer": {"countRows": False, "fields": "", "reducer": ["sum"], "show": False},
+                    "showHeader": True,
+                    "sortBy": [{"desc": True, "displayName": "Value"}]
+                },
+                "targets": [{
+                    "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
+                    "expr": f"zfs_dataset_used_bytes{{hostname=\"{hostname}\"}}",
+                    "format": "table",
+                    "instant": True,
+                    "legendFormat": "__auto",
+                    "refId": "A"
+                }],
+                "title": "Dataset Usage",
+                "transformations": [{
+                    "id": "organize",
+                    "options": {
+                        "excludeByName": {"Time": True, "hostname": True, "__name__": True},
+                        "indexByName": {"pool": 0, "dataset": 1, "Value": 2},
+                        "renameByName": {
+                            "Value": "Used",
+                            "dataset": "Dataset",
+                            "pool": "Pool"
+                        }
+                    }
+                }],
+                "type": "table"
+            },
+            # Dataset Usage Over Time
+            {
+                "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
+                "fieldConfig": {
+                    "defaults": {
+                        "color": {"mode": "palette-classic"},
+                        "custom": {
+                            "axisCenteredZero": False,
+                            "axisColorMode": "text",
+                            "axisLabel": "",
+                            "axisPlacement": "auto",
+                            "barAlignment": 0,
+                            "drawStyle": "line",
+                            "fillOpacity": 10,
+                            "gradientMode": "none",
+                            "hideFrom": {"tooltip": False, "viz": False, "legend": False},
+                            "lineInterpolation": "linear",
+                            "lineWidth": 1,
+                            "pointSize": 5,
+                            "scaleDistribution": {"type": "linear"},
+                            "showPoints": "never",
+                            "spanNulls": False,
+                            "stacking": {"group": "A", "mode": "none"},
+                            "thresholdsStyle": {"mode": "off"}
+                        },
+                        "mappings": [],
+                        "thresholds": {
+                            "mode": "absolute",
+                            "steps": [{"color": "green", "value": None}]
+                        },
+                        "unit": "bytes"
+                    }
+                },
+                "gridPos": {"h": 10, "w": 24, "x": 0, "y": 18},
+                "id": 5,
+                "options": {
+                    "legend": {
+                        "calcs": ["lastNotNull", "max"],
+                        "displayMode": "table",
+                        "placement": "right",
+                        "showLegend": True
+                    },
+                    "tooltip": {"mode": "multi", "sort": "desc"}
+                },
+                "targets": [{
+                    "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
+                    "expr": f"topk(10, zfs_dataset_used_bytes{{hostname=\"{hostname}\"}})",
+                    "legendFormat": "{{{{pool}}}}/{{{{dataset}}}}",
+                    "refId": "A"
+                }],
+                "title": "Top 10 Datasets - Usage Over Time",
+                "type": "timeseries"
+            },
+            # Row: Snapshots
+            {
+                "collapsed": False,
+                "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
+                "gridPos": {"h": 1, "w": 24, "x": 0, "y": 28},
+                "id": 102,
+                "panels": [],
+                "title": "Snapshots",
+                "type": "row"
+            },
+            # Snapshot Compliance Table
+            {
+                "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
+                "fieldConfig": {
+                    "defaults": {
+                        "color": {"mode": "thresholds"},
+                        "custom": {"align": "auto", "cellOptions": {"type": "auto"}, "inspect": False},
+                        "mappings": [],
+                        "max": 100,
+                        "min": 0,
+                        "thresholds": {
+                            "mode": "absolute",
+                            "steps": [
+                                {"color": "red", "value": None},
+                                {"color": "yellow", "value": 80},
+                                {"color": "green", "value": 95}
+                            ]
+                        },
+                        "unit": "percent"
+                    },
+                    "overrides": [{
+                        "matcher": {"id": "byName", "options": "Compliance %"},
+                        "properties": [{"id": "custom.cellOptions", "value": {"type": "color-background"}}]
+                    }]
+                },
+                "gridPos": {"h": 12, "w": 24, "x": 0, "y": 29},
+                "id": 6,
+                "options": {
+                    "cellHeight": "sm",
+                    "footer": {"countRows": False, "fields": "", "reducer": ["sum"], "show": False},
+                    "showHeader": True
+                },
+                "targets": [{
+                    "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
+                    "expr": f"zfs_snapshot_compliance_percent{{hostname=\"{hostname}\"}}",
+                    "format": "table",
+                    "instant": True,
+                    "legendFormat": "__auto",
+                    "refId": "A"
+                }],
+                "title": "Snapshot Compliance",
+                "transformations": [{
+                    "id": "organize",
+                    "options": {
+                        "excludeByName": {"Time": True, "hostname": True, "__name__": True},
+                        "indexByName": {"pool": 0, "dataset": 1, "policy": 2, "interval": 3, "Value": 4},
+                        "renameByName": {
+                            "Value": "Compliance %",
+                            "dataset": "Dataset",
+                            "interval": "Interval",
+                            "policy": "Policy",
+                            "pool": "Pool"
+                        }
+                    }
+                }],
+                "type": "table"
+            },
+            # Snapshot Counts
+            {
+                "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
+                "fieldConfig": {
+                    "defaults": {
+                        "color": {"mode": "palette-classic"},
+                        "custom": {
+                            "axisCenteredZero": False,
+                            "axisColorMode": "text",
+                            "axisLabel": "",
+                            "axisPlacement": "auto",
+                            "barAlignment": 0,
+                            "drawStyle": "line",
+                            "fillOpacity": 10,
+                            "gradientMode": "none",
+                            "hideFrom": {"tooltip": False, "viz": False, "legend": False},
+                            "lineInterpolation": "linear",
+                            "lineWidth": 1,
+                            "pointSize": 5,
+                            "scaleDistribution": {"type": "linear"},
+                            "showPoints": "never",
+                            "spanNulls": False,
+                            "stacking": {"group": "A", "mode": "normal"},
+                            "thresholdsStyle": {"mode": "off"}
+                        },
+                        "mappings": [],
+                        "thresholds": {
+                            "mode": "absolute",
+                            "steps": [{"color": "green", "value": None}]
+                        },
+                        "unit": "short"
+                    }
+                },
+                "gridPos": {"h": 10, "w": 24, "x": 0, "y": 41},
+                "id": 7,
+                "options": {
+                    "legend": {
+                        "calcs": ["lastNotNull"],
+                        "displayMode": "table",
+                        "placement": "right",
+                        "showLegend": True
+                    },
+                    "tooltip": {"mode": "multi", "sort": "none"}
+                },
+                "targets": [{
+                    "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
+                    "expr": f"sum by (policy, interval) (zfs_snapshot_count{{hostname=\"{hostname}\"}})",
+                    "legendFormat": "{{{{policy}}}} - {{{{interval}}}}",
+                    "refId": "A"
+                }],
+                "title": "Snapshot Counts by Policy & Interval",
+                "type": "timeseries"
+            }
+        ],
+        "refresh": "1m",
+        "schemaVersion": 38,
+        "style": "dark",
+        "tags": ["zfs", "host-detail"],
+        "templating": {"list": []},
+        "time": {"from": "now-24h", "to": "now"},
+        "timepicker": {},
+        "timezone": "",
+        "title": f"ZFS: {hostname}",
+        "uid": uid,
+        "version": 1,
+        "weekStart": ""
+    }
+
+def main():
+    """Generate all host dashboards"""
+    script_dir = Path(__file__).parent
+
+    for hostname in HOSTS:
+        dashboard = create_host_dashboard(hostname)
+        filename = f"zfs-{hostname}.json"
+        filepath = script_dir / filename
+
+        with open(filepath, 'w') as f:
+            json.dump(dashboard, f, indent=2)
+
+        print(f"Created: {filename}")
+
+if __name__ == "__main__":
+    main()

@@ -15,8 +15,9 @@ Deploys Grafana OSS edition with:
 **Host:** host-storage (same as VictoriaMetrics)
 
 **Components:**
+
 - Grafana OSS container
-- VictoriaMetrics datasource (HTTPS via `zfs.metrics.{{ domain_name }}`)
+- VictoriaMetrics datasource at `zfs.metrics.{{ domain_name }}`
 - ZFS Overview dashboard with 7 panels
 - Traefik reverse proxy integration
 
@@ -41,11 +42,11 @@ See `defaults/main.yaml` for all configurable options:
 - Datasource: VictoriaMetrics at `https://zfs.metrics.{{ domain_name }}`
 - Telemetry: disabled
 
-## Dashboard
+## Dashboards
 
 ### ZFS Overview
 
-Pre-provisioned dashboard with 7 panels:
+Cluster-wide ZFS overview dashboard with 7 panels:
 
 1. **Pool Capacity** - Gauge showing capacity % per pool
    - Green: <70%, Yellow: 70-85%, Red: >85%
@@ -72,6 +73,23 @@ Pre-provisioned dashboard with 7 panels:
 **Auto-refresh:** 1 minute
 **Default time range:** Last 24 hours
 **Location:** ZFS folder in Grafana
+
+### Per-Host Detailed Dashboards
+
+Individual dashboards for each ZFS host with detailed breakdown:
+
+**Hosts:** host-storage, host-homeassistant, dns, host-backups, host-albion,
+belinda, vm-awfulwoman-hetzner
+
+**Sections:**
+
+1. **Pool Status** - Capacity gauges, health status, fragmentation per pool
+2. **Datasets** - Sortable table of all datasets with usage, top 10 trending
+3. **Snapshots** - Compliance table per dataset/policy/interval, count trends
+
+**Auto-refresh:** 1 minute
+**Location:** ZFS folder in Grafana
+**UIDs:** `zfs-{hostname}` (e.g., `zfs-hoststorage`)
 
 ## Deployment
 
@@ -146,26 +164,31 @@ From VictoriaMetrics datasource:
 - `zfs_snapshot_retention` - Retention target
 - `zfs_snapshot_compliance_percent` - Compliance %
 
-All metrics labeled with: `hostname`, `pool`, `dataset`, `policy`, `interval`
+All metrics labeled with: `hostname`, `pool`, `dataset`, `policy`,
+`interval`
 
 ## Query Examples
 
 ### Pool Capacity Above 80%
+
 ```promql
 zfs_pool_capacity_percent > 80
 ```
 
 ### Average Snapshot Compliance by Policy
+
 ```promql
 avg by (policy) (zfs_snapshot_compliance_percent)
 ```
 
 ### Total Dataset Usage Per Host
+
 ```promql
 sum by (hostname) (zfs_dataset_used_bytes)
 ```
 
 ### Pools Not ONLINE
+
 ```promql
 zfs_pool_health{state!="ONLINE"}
 ```
@@ -214,7 +237,7 @@ ssh host-storage 'ls -la /opt/compositions/grafana/config/data/'
 
 ## File Structure
 
-```
+```text
 ansible/roles/composition-grafana/
 ├── README.md
 ├── defaults/main.yaml              # Configuration variables
