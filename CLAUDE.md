@@ -109,7 +109,7 @@ Project documentation including architecture guides, runbooks, and reference mat
 
 ## Plans
 
-- Whenever a plan is requested, ALWAYS save a copy of it as a markdown file in @plans/.
+- Whenever a plan is requested, ALWAYS save a copy of it as a markdown file in plans/.
 - When you are implementing a plan, always ask if the user wants to create a pull request, rather than automatically committing to main.
 
 ## MCP Servers
