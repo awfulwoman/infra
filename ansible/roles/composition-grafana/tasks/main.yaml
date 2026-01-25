@@ -38,6 +38,7 @@
     - data
     - provisioning/datasources
     - provisioning/dashboards
+    - provisioning/alerting
 
 - name: "Provision VictoriaMetrics datasource"
   become: true
@@ -53,6 +54,24 @@
   ansible.builtin.template:
     src: provisioning/dashboards.yaml.j2
     dest: "{{ composition_config }}/provisioning/dashboards/default.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"
+
+- name: "Provision alerting contact points"
+  become: true
+  ansible.builtin.template:
+    src: provisioning/alerting.yaml.j2
+    dest: "{{ composition_config }}/provisioning/alerting/contactpoints.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"
+
+- name: "Provision alert rules"
+  become: true
+  ansible.builtin.template:
+    src: provisioning/alert_rules.yaml.j2
+    dest: "{{ composition_config }}/provisioning/alerting/rules.yaml"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0774"

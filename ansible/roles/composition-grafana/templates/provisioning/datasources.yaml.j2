@@ -4,6 +4,7 @@ datasources:
   - name: {{ composition_grafana_victoriametrics_name }}
     type: prometheus
     access: proxy
+    uid: VictoriaMetrics
     url: {{ composition_grafana_victoriametrics_url }}
     isDefault: true
     editable: false

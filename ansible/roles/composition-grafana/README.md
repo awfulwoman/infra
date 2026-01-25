@@ -35,6 +35,15 @@ vault_grafana_admin_user: "admin"
 vault_grafana_admin_password: "<secure-password>"
 ```
 
+Add to `ansible/inventory/group_vars/infra/vault_misc.yaml` for alerting:
+
+```yaml
+vault_smtp_host: "<smtp-server>"
+vault_smtp_user: "<smtp-username>"
+vault_smtp_password: "<smtp-password>"
+vault_personal_domain: "<your-domain>"
+```
+
 ### Default Settings
 
 See `defaults/main.yaml` for all configurable options:
@@ -42,6 +51,7 @@ See `defaults/main.yaml` for all configurable options:
 - Default theme: dark
 - Datasource: VictoriaMetrics at `https://zfs.metrics.{{ domain_name }}`
 - Telemetry: disabled
+- SMTP: enabled for alerting (port 587)
 
 ## Dashboards
 
@@ -136,6 +146,33 @@ Dashboard provisioning via `/etc/grafana/provisioning/dashboards/`:
   group
 - Updates applied on Grafana restart
 - User modifications allowed (`allowUiUpdates: true`)
+
+### Alerting
+
+Alerting provisioning via `/etc/grafana/provisioning/alerting/`:
+
+- Email contact point configured with `alert@{{ vault_personal_domain }}`
+- SMTP enabled using vault credentials (`vault_smtp_*`)
+- Contact point name: "Email"
+- Default notification policy routes all alerts to Email contact point
+- Notification policy settings:
+  - Group by: grafana_folder, alertname
+  - Group wait: 30s
+  - Group interval: 5m
+  - Repeat interval: 4h
+
+### Alert Rules
+
+Provisioned alert rules:
+
+#### ZFS Pool Not ONLINE
+
+- Folder: ZFS Alerts
+- Condition: `zfs_pool_health < 1` (fires when pool status is not ONLINE)
+- Evaluation interval: 1m
+- For: 2m (alert must be active for 2 minutes before firing)
+- Severity: critical
+- Notification: Includes pool name, hostname, and current state
 
 ## Adding Custom Dashboards
 
@@ -269,7 +306,9 @@ ansible/roles/composition-grafana/
 │   ├── generate_host_dashboards.py.j2   # Per-host dashboard generator
 │   └── provisioning/
 │       ├── datasources.yaml.j2          # VictoriaMetrics datasource
-│       └── dashboards.yaml.j2           # Dashboard provider config
+│       ├── dashboards.yaml.j2           # Dashboard provider config
+│       ├── alerting.yaml.j2             # Alerting contact points
+│       └── alert_rules.yaml.j2          # Alert rules
 └── files/
     └── dashboards/
         └── zfs-overview.json            # ZFS Overview dashboard
