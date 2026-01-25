@@ -203,7 +203,7 @@ def create_host_dashboard(hostname: str) -> dict:
                 },
                 "targets": [{
                     "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
-                    "expr": f"zfs_dataset_used_bytes{{hostname=\"{hostname}\"}}",
+                    "expr": f"zfs_dataset_used_bytes{{hostname=\"{hostname}\",dataset!=\"\"}}",
                     "format": "table",
                     "instant": True,
                     "legendFormat": "__auto",
@@ -270,7 +270,7 @@ def create_host_dashboard(hostname: str) -> dict:
                 },
                 "targets": [{
                     "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
-                    "expr": f"topk(10, zfs_dataset_used_bytes{{hostname=\"{hostname}\"}})",
+                    "expr": f"topk(10, zfs_dataset_used_bytes{{hostname=\"{hostname}\",dataset!=\"\"}})",
                     "legendFormat": "{{pool}}/{{dataset}}",
                     "refId": "A"
                 }],

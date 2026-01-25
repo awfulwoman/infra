@@ -338,7 +338,7 @@
             "type": "prometheus",
             "uid": "VictoriaMetrics"
           },
-          "expr": "zfs_dataset_used_bytes{hostname=\"dns\"}",
+          "expr": "zfs_dataset_used_bytes{hostname=\"dns\",dataset!=\"\"}",
           "format": "table",
           "instant": true,
           "legendFormat": "__auto",
@@ -451,7 +451,7 @@
             "type": "prometheus",
             "uid": "VictoriaMetrics"
           },
-          "expr": "topk(10, zfs_dataset_used_bytes{hostname=\"dns\"})",
+          "expr": "topk(10, zfs_dataset_used_bytes{hostname=\"dns\",dataset!=\"\"})",
           "legendFormat": "{{pool}}/{{dataset}}",
           "refId": "A"
         }
