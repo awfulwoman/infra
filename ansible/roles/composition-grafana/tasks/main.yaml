@@ -57,14 +57,36 @@
     group: "{{ ansible_user }}"
     mode: "0774"
 
-- name: "Copy ZFS dashboards"
+- name: "Copy ZFS overview dashboard"
   become: true
   ansible.builtin.copy:
-    src: dashboards/
-    dest: "{{ composition_config }}/provisioning/dashboards/"
+    src: dashboards/zfs-overview.json
+    dest: "{{ composition_config }}/provisioning/dashboards/zfs-overview.json"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0774"
+
+- name: "Template dashboard generator script"
+  become: true
+  ansible.builtin.template:
+    src: generate_host_dashboards.py.j2
+    dest: "{{ composition_config }}/provisioning/dashboards/generate_host_dashboards.py"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"
+
+- name: "Execute dashboard generator script"
+  become: true
+  ansible.builtin.command:
+    cmd: python3 generate_host_dashboards.py
+    chdir: "{{ composition_config }}/provisioning/dashboards/"
+  changed_when: true
+
+- name: "Remove generator script"
+  become: true
+  ansible.builtin.file:
+    path: "{{ composition_config }}/provisioning/dashboards/generate_host_dashboards.py"
+    state: absent
 
 - name: Run Configure DNS role
   ansible.builtin.include_role:

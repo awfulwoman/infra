@@ -182,6 +182,20 @@ async def metrics():
     - Dataset space usage
     - Snapshot policy compliance
     """
+    # Clear all ZFS metrics to prevent stale data from deleted datasets/pools
+    pool_health_metric.clear()
+    pool_capacity_percent.clear()
+    pool_size_bytes.clear()
+    pool_allocated_bytes.clear()
+    pool_free_bytes.clear()
+    pool_fragmentation_percent.clear()
+    dataset_used_bytes.clear()
+    dataset_available_bytes.clear()
+    dataset_referenced_bytes.clear()
+    snapshot_count.clear()
+    snapshot_retention.clear()
+    snapshot_compliance_percent.clear()
+
     # Collect all metrics
     collect_pool_metrics()
     collect_dataset_metrics()

@@ -4,16 +4,13 @@
 import json
 from pathlib import Path
 
+# Hosts from Ansible 'zfs' inventory group
 HOSTS = [
-    "host-storage",
-    "host-homeassistant",
-    "dns",
-    "host-backups",
-    "host-albion",
-    "belinda",
-    "vm-awfulwoman-hetzner"
+{% for host in groups['zfs'] %}
+    "{{ host }}",
+{% endfor %}
 ]
-
+{% raw %}
 def create_host_dashboard(hostname: str) -> dict:
     """Create detailed ZFS dashboard for a specific host"""
 
@@ -127,43 +124,6 @@ def create_host_dashboard(hostname: str) -> dict:
                 "title": "Pool Health",
                 "type": "stat"
             },
-            # Pool Fragmentation
-            {
-                "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
-                "fieldConfig": {
-                    "defaults": {
-                        "color": {"mode": "thresholds"},
-                        "mappings": [],
-                        "max": 100,
-                        "min": 0,
-                        "thresholds": {
-                            "mode": "absolute",
-                            "steps": [
-                                {"color": "green", "value": None},
-                                {"color": "yellow", "value": 30},
-                                {"color": "red", "value": 50}
-                            ]
-                        },
-                        "unit": "percent"
-                    }
-                },
-                "gridPos": {"h": 6, "w": 8, "x": 16, "y": 1},
-                "id": 3,
-                "options": {
-                    "orientation": "auto",
-                    "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": False},
-                    "showThresholdLabels": False,
-                    "showThresholdMarkers": True
-                },
-                "targets": [{
-                    "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
-                    "expr": f"zfs_pool_fragmentation_percent{{hostname=\"{hostname}\"}}",
-                    "legendFormat": "{{pool}}",
-                    "refId": "A"
-                }],
-                "title": "Pool Fragmentation",
-                "type": "gauge"
-            },
             # Row: Datasets
             {
                 "collapsed": False,
@@ -270,7 +230,7 @@ def create_host_dashboard(hostname: str) -> dict:
                 },
                 "targets": [{
                     "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
-                    "expr": f"topk(10, zfs_dataset_used_bytes{{hostname=\"{hostname}\",dataset!=\"\"}})",
+                    "expr": f"topk(10, zfs_dataset_used_bytes{{hostname=\"{hostname}\",dataset!=\"\",dataset!~\".*backups/.*\"}})",
                     "legendFormat": "{{pool}}/{{dataset}}",
                     "refId": "A"
                 }],
@@ -428,3 +388,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+{% endraw %}

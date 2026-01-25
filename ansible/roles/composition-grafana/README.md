@@ -5,6 +5,7 @@ Grafana visualization platform for ZFS metrics collected by VictoriaMetrics.
 ## Overview
 
 Deploys Grafana OSS edition with:
+
 - Pre-configured VictoriaMetrics datasource
 - Provisioned ZFS Overview dashboard
 - HTTPS access via Traefik
@@ -46,7 +47,7 @@ See `defaults/main.yaml` for all configurable options:
 
 ### ZFS Overview
 
-Cluster-wide ZFS overview dashboard with 7 panels:
+Cluster-wide ZFS overview dashboard with 6 panels:
 
 1. **Pool Capacity** - Gauge showing capacity % per pool
    - Green: <70%, Yellow: 70-85%, Red: >85%
@@ -67,23 +68,19 @@ Cluster-wide ZFS overview dashboard with 7 panels:
 6. **Snapshot Count Trends** - Time series
    - Snapshot counts by host and policy over time
 
-7. **Pool Fragmentation** - Gauge per pool
-   - Green: <30%, Yellow: 30-50%, Red: >50%
-
 **Auto-refresh:** 1 minute
 **Default time range:** Last 24 hours
 **Location:** ZFS folder in Grafana
 
 ### Per-Host Detailed Dashboards
 
-Individual dashboards for each ZFS host with detailed breakdown:
+Individual dashboards for each ZFS host with detailed breakdown.
 
-**Hosts:** host-storage, host-homeassistant, dns, host-backups, host-albion,
-belinda, vm-awfulwoman-hetzner
+**Hosts:** Dynamically generated from Ansible `zfs` inventory group
 
 **Sections:**
 
-1. **Pool Status** - Capacity gauges, health status, fragmentation per pool
+1. **Pool Status** - Capacity gauges, health status per pool
 2. **Datasets** - Sortable table of all datasets with usage, top 10 trending
 3. **Snapshots** - Compliance table per dataset/policy/interval, count trends
 
@@ -129,10 +126,14 @@ Datasource provisioning via `/etc/grafana/provisioning/datasources/`:
 - HTTPS connection to `https://zfs.metrics.{{ domain_name }}`
 - 60s scrape interval alignment
 
-### Dashboards
+### Dashboard Provisioning
 
 Dashboard provisioning via `/etc/grafana/provisioning/dashboards/`:
-- Auto-loaded from `files/dashboards/zfs-overview.json`
+
+- ZFS Overview: Static dashboard from `files/dashboards/zfs-overview.json`
+- Per-Host Dashboards: Generated dynamically from
+  `templates/generate_host_dashboards.py.j2` using Ansible `zfs` inventory
+  group
 - Updates applied on Grafana restart
 - User modifications allowed (`allowUiUpdates: true`)
 
@@ -141,6 +142,22 @@ Dashboard provisioning via `/etc/grafana/provisioning/dashboards/`:
 1. Create dashboard JSON in `files/dashboards/`
 2. Grafana will auto-load on next provisioning refresh (10s interval)
 3. Or restart container: `docker restart grafana`
+
+## Dynamic Dashboard Generation
+
+Per-host ZFS dashboards are generated dynamically during deployment:
+
+1. `generate_host_dashboards.py.j2` template reads hosts from Ansible `zfs` group
+2. Ansible templates the script to target host
+3. Script executes to generate dashboard JSON for each host
+4. Generated dashboards are provisioned to Grafana
+5. Script is removed after generation
+
+To regenerate dashboards (e.g., after adding hosts to `zfs` group):
+
+```bash
+ansible-playbook ansible/playbooks/baremetal/host-storage/victoriametrics.yaml
+```
 
 ## Metrics Available
 
@@ -152,7 +169,6 @@ From VictoriaMetrics datasource:
 - `zfs_pool_size_bytes` - Total pool size
 - `zfs_pool_allocated_bytes` - Allocated space
 - `zfs_pool_free_bytes` - Free space
-- `zfs_pool_fragmentation_percent` - Fragmentation %
 
 **Dataset Metrics:**
 - `zfs_dataset_used_bytes` - Used space
@@ -202,24 +218,28 @@ zfs_pool_health{state!="ONLINE"}
 ssh host-storage 'docker logs grafana | grep provisioning'
 
 # Verify dashboard file exists
-ssh host-storage 'ls -la /opt/compositions/grafana/config/provisioning/dashboards/'
+ssh host-storage \
+  'ls -la /opt/compositions/grafana/config/provisioning/dashboards/'
 ```
 
 ### Datasource Connection Failed
 
 ```bash
 # Test VictoriaMetrics accessibility from Grafana container
-ssh host-storage 'docker exec grafana curl -I https://zfs.metrics.{{ domain_name }}'
+ssh host-storage \
+  'docker exec grafana curl -I https://zfs.metrics.{{ domain_name }}'
 
 # Check datasource provisioning
-ssh host-storage 'cat /opt/compositions/grafana/config/provisioning/datasources/victoriametrics.yaml'
+ssh host-storage \
+  'cat /opt/compositions/grafana/config/provisioning/datasources/victoriametrics.yaml'
 ```
 
 ### No Data in Panels
 
 ```bash
 # Verify VictoriaMetrics has data
-curl -s 'https://zfs.metrics.{{ domain_name }}/api/v1/query?query=zfs_pool_capacity_percent' | jq
+curl -s 'https://zfs.metrics.{{ domain_name }}/api/v1/query' \
+  --data-urlencode 'query=zfs_pool_capacity_percent' | jq
 
 # Check time range - ensure it matches data retention
 # Default: 24h, VictoriaMetrics retention: 1y
@@ -240,18 +260,19 @@ ssh host-storage 'ls -la /opt/compositions/grafana/config/data/'
 ```text
 ansible/roles/composition-grafana/
 ├── README.md
-├── defaults/main.yaml              # Configuration variables
-├── meta/main.yaml                  # Role dependencies
-├── tasks/main.yaml                 # Ansible tasks
+├── defaults/main.yaml                   # Configuration variables
+├── meta/main.yaml                       # Role dependencies
+├── tasks/main.yaml                      # Ansible tasks
 ├── templates/
-│   ├── docker-compose.yaml.j2      # Container definition
-│   ├── environment_vars.j2         # Grafana env vars
+│   ├── docker-compose.yaml.j2           # Container definition
+│   ├── environment_vars.j2              # Grafana env vars
+│   ├── generate_host_dashboards.py.j2   # Per-host dashboard generator
 │   └── provisioning/
-│       ├── datasources.yaml.j2     # VictoriaMetrics datasource
-│       └── dashboards.yaml.j2      # Dashboard provider config
+│       ├── datasources.yaml.j2          # VictoriaMetrics datasource
+│       └── dashboards.yaml.j2           # Dashboard provider config
 └── files/
     └── dashboards/
-        └── zfs-overview.json       # ZFS Overview dashboard
+        └── zfs-overview.json            # ZFS Overview dashboard
 ```
 
 ## Dependencies
