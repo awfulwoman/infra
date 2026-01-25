@@ -204,7 +204,7 @@
   become: true
   vars:
     _offsite_enabled: "{{ backups_zfs_server_offsite_enabled | default(false) }}"
-    _offsite_destination: "{{ hostvars[item].backups_zfs_archive_offsite_dataset | default('fastpool/encryptedbackups') }}"
+    _offsite_destination: "{{ hostvars[item].backups_zfs_archive_offsite_dataset | default('fastpool/backups/raw') }}"
     _has_datasets: "{{ offsite_datasets | default([]) | length > 0 }}"
     _bwlimit_arg: "{{ ('--bwlimit ' ~ backups_zfs_server_offsite_bwlimit) if backups_zfs_server_offsite_bwlimit else '' }}"
     _should_enable: "{{ _offsite_enabled and _has_datasets }}"
