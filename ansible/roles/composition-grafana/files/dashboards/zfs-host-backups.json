@@ -98,7 +98,7 @@
             "uid": "VictoriaMetrics"
           },
           "expr": "zfs_pool_capacity_percent{hostname=\"host-backups\"}",
-          "legendFormat": "{{{{pool}}}}",
+          "legendFormat": "{{pool}}",
           "refId": "A"
         }
       ],
@@ -173,7 +173,7 @@
             "uid": "VictoriaMetrics"
           },
           "expr": "zfs_pool_health{hostname=\"host-backups\"}",
-          "legendFormat": "{{{{pool}}}} ({{{{state}}}})",
+          "legendFormat": "{{pool}} ({{state}})",
           "refId": "A"
         }
       ],
@@ -239,7 +239,7 @@
             "uid": "VictoriaMetrics"
           },
           "expr": "zfs_pool_fragmentation_percent{hostname=\"host-backups\"}",
-          "legendFormat": "{{{{pool}}}}",
+          "legendFormat": "{{pool}}",
           "refId": "A"
         }
       ],
@@ -452,7 +452,7 @@
             "uid": "VictoriaMetrics"
           },
           "expr": "topk(10, zfs_dataset_used_bytes{hostname=\"host-backups\"})",
-          "legendFormat": "{{{{pool}}}}/{{{{dataset}}}}",
+          "legendFormat": "{{pool}}/{{dataset}}",
           "refId": "A"
         }
       ],
@@ -674,7 +674,7 @@
             "uid": "VictoriaMetrics"
           },
           "expr": "sum by (policy, interval) (zfs_snapshot_count{hostname=\"host-backups\"})",
-          "legendFormat": "{{{{policy}}}} - {{{{interval}}}}",
+          "legendFormat": "{{policy}} - {{interval}}",
           "refId": "A"
         }
       ],

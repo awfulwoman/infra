@@ -80,7 +80,7 @@ def create_host_dashboard(hostname: str) -> dict:
                 "targets": [{
                     "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
                     "expr": f"zfs_pool_capacity_percent{{hostname=\"{hostname}\"}}",
-                    "legendFormat": "{{{{pool}}}}",
+                    "legendFormat": "{{pool}}",
                     "refId": "A"
                 }],
                 "title": "Pool Capacity",
@@ -121,7 +121,7 @@ def create_host_dashboard(hostname: str) -> dict:
                 "targets": [{
                     "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
                     "expr": f"zfs_pool_health{{hostname=\"{hostname}\"}}",
-                    "legendFormat": "{{{{pool}}}} ({{{{state}}}})",
+                    "legendFormat": "{{pool}} ({{state}})",
                     "refId": "A"
                 }],
                 "title": "Pool Health",
@@ -158,7 +158,7 @@ def create_host_dashboard(hostname: str) -> dict:
                 "targets": [{
                     "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
                     "expr": f"zfs_pool_fragmentation_percent{{hostname=\"{hostname}\"}}",
-                    "legendFormat": "{{{{pool}}}}",
+                    "legendFormat": "{{pool}}",
                     "refId": "A"
                 }],
                 "title": "Pool Fragmentation",
@@ -271,7 +271,7 @@ def create_host_dashboard(hostname: str) -> dict:
                 "targets": [{
                     "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
                     "expr": f"topk(10, zfs_dataset_used_bytes{{hostname=\"{hostname}\"}})",
-                    "legendFormat": "{{{{pool}}}}/{{{{dataset}}}}",
+                    "legendFormat": "{{pool}}/{{dataset}}",
                     "refId": "A"
                 }],
                 "title": "Top 10 Datasets - Usage Over Time",
@@ -391,7 +391,7 @@ def create_host_dashboard(hostname: str) -> dict:
                 "targets": [{
                     "datasource": {"type": "prometheus", "uid": "VictoriaMetrics"},
                     "expr": f"sum by (policy, interval) (zfs_snapshot_count{{hostname=\"{hostname}\"}})",
-                    "legendFormat": "{{{{policy}}}} - {{{{interval}}}}",
+                    "legendFormat": "{{policy}} - {{interval}}",
                     "refId": "A"
                 }],
                 "title": "Snapshot Counts by Policy & Interval",
