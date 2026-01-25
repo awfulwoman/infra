@@ -9,6 +9,7 @@
     - role: composition-reverseproxy
     - role: composition-container-management
     - role: composition-awfulwoman
+    - role: composition-zfs-api
     - role: monitoring-healthchecksio
 
   handlers:
