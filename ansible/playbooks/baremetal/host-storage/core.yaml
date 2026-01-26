@@ -17,6 +17,7 @@
     - role: composition-zfs-api
     - role: composition-victoriametrics
     - role: composition-loki
+      tags: loki
     - role: composition-reverseproxy
     - role: composition-container-management
     - role: composition-audio

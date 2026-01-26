@@ -5,7 +5,7 @@ composition_name: loki
 composition_loki_enabled: true
 
 # Application settings
-composition_loki_port: 3100
+composition_loki_port: 3101
 composition_loki_retention_period: "720h"  # 30 days
 
 # Container settings

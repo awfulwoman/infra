@@ -4,8 +4,6 @@ services:
     image: {{ composition_loki_image }}
     container_name: {{ composition_loki_container_name }}
     restart: unless-stopped
-    ports:
-      - "{{ composition_loki_port }}:3100"
     volumes:
       - "{{ composition_config }}/config/loki-config.yaml:/etc/loki/local-config.yaml"
       - "{{ composition_loki_storage_path }}:/loki"
@@ -18,7 +16,7 @@ services:
       - "traefik.http.routers.{{ composition_loki_container_name }}.rule=Host(`{{ composition_loki_subdomain }}.{{ domain_name }}`)"
       - "traefik.http.routers.{{ composition_loki_container_name }}.tls=true"
       - "traefik.http.routers.{{ composition_loki_container_name }}.tls.certresolver=letsencrypt"
-      - "traefik.http.services.{{ composition_loki_container_name }}.loadbalancer.server.port={{ composition_loki_port }}"
+      - "traefik.http.services.{{ composition_loki_container_name }}.loadbalancer.server.port=3100"
 {% endif %}
     networks:
       - "{{ default_docker_network }}"

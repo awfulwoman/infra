@@ -42,6 +42,16 @@
     group: "{{ ansible_user }}"
     mode: "0774"
 
+- name: Ensure Loki storage directory has correct ownership
+  become: true
+  ansible.builtin.file:
+    path: "{{ composition_loki_storage_path }}"
+    state: directory
+    owner: "10001"
+    group: "10001"
+    mode: "0755"
+    recurse: true
+
 - name: Run Configure DNS role
   ansible.builtin.include_role:
     name: "network-register-subdomain"
