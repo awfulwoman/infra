@@ -39,6 +39,7 @@
     - role: system-smartmontools
     - role: monitoring-healthchecksio
     - role: system-promtail
+      tags: promtail
     # - role: system-sleepuntil
     #   become: true
     # - role: system-powertop
