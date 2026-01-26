@@ -85,6 +85,19 @@
     group: "{{ ansible_user }}"
     mode: "0774"
 
+- name: "Copy Loki dashboards"
+  become: true
+  ansible.builtin.copy:
+    src: "dashboards/{{ item }}"
+    dest: "{{ composition_config }}/provisioning/dashboards/{{ item }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"
+  loop:
+    - loki-infrastructure-overview.json
+    - loki-docker-health.json
+    - loki-security-audit.json
+
 - name: "Template dashboard generator script"
   become: true
   ansible.builtin.template:
