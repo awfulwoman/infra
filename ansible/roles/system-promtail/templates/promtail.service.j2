@@ -15,6 +15,8 @@ NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=strict
 ReadWritePaths={{ promtail_positions_path }}
+ReadOnlyPaths={{ promtail_docker_log_path }}
+SupplementaryGroups=docker
 
 [Install]
 WantedBy=multi-user.target

@@ -1,5 +1,5 @@
 # Promtail version
-promtail_version: "2.9.3"
+promtail_version: "2.9.17"
 
 # Binary paths
 promtail_binary_path: "/usr/local/bin/promtail"
