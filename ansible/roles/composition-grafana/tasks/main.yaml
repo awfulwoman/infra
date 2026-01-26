@@ -100,6 +100,7 @@
     - loki-infrastructure-overview.json
     - loki-docker-health.json
     - loki-security-audit.json
+    - nginx-web-traffic.json
 
 - name: "Remove old dashboard files from parent directory"
   become: true
