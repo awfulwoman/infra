@@ -12,3 +12,13 @@ datasources:
       timeInterval: "60s"
       httpMethod: POST
       tlsSkipVerify: false
+
+  - name: {{ composition_grafana_loki_name }}
+    type: loki
+    access: proxy
+    uid: Loki
+    url: {{ composition_grafana_loki_url }}
+    isDefault: false
+    editable: false
+    jsonData:
+      maxLines: 1000

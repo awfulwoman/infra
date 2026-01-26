@@ -15,6 +15,7 @@
     - role: composition-container-management
     - role: composition-zfs-api
     - role: monitoring-healthchecksio
+    - role: system-promtail
 
   handlers:
     - name: Reboot host

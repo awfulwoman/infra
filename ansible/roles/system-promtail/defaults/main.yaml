@@ -1,0 +1,25 @@
+# Promtail version
+promtail_version: "2.9.3"
+
+# Binary paths
+promtail_binary_path: "/usr/local/bin/promtail"
+promtail_config_path: "/etc/promtail"
+promtail_config_file: "{{ promtail_config_path }}/promtail-config.yaml"
+promtail_positions_path: "/var/lib/promtail"
+promtail_positions_file: "{{ promtail_positions_path }}/positions.yaml"
+
+# Loki server URL
+promtail_loki_url: "https://loki.{{ domain_name }}/loki/api/v1/push"
+
+# Log paths
+promtail_docker_log_path: "/var/lib/docker/containers"
+
+# Journald scraping
+promtail_journald_enabled: true
+promtail_journald_max_age: "12h"
+
+# Systemd service
+promtail_service_path: "/etc/systemd/system/promtail.service"
+
+# Download URL
+promtail_download_url: "https://github.com/grafana/loki/releases/download/v{{ promtail_version }}/promtail-linux-amd64.zip"

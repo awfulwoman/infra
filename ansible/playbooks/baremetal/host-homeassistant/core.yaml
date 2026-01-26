@@ -24,6 +24,7 @@
     - role: composition-watchyourlan
     - role: composition-zfs-api
     - role: monitoring-healthchecksio
+    - role: system-promtail
 
   handlers:
     - name: Reboot host

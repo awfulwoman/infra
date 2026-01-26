@@ -11,6 +11,7 @@
     - role: composition-awfulwoman
     - role: composition-zfs-api
     - role: monitoring-healthchecksio
+    - role: system-promtail
 
   handlers:
     - name: Reboot host

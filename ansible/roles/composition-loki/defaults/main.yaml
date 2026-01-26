@@ -1,0 +1,32 @@
+# Composition name (used by composition-common dependency)
+composition_name: loki
+
+# Enable/disable the composition
+composition_loki_enabled: true
+
+# Application settings
+composition_loki_port: 3100
+composition_loki_retention_period: "720h"  # 30 days
+
+# Container settings
+composition_loki_container_name: "loki"
+composition_loki_image: "grafana/loki:2.9.3"
+
+# Paths
+composition_loki_base_path: "{{ compositions_base_path }}/loki"
+
+# Storage
+composition_loki_storage_path: "/slowpool/shared/logs/loki"
+
+# Domain configuration
+composition_loki_subdomain: "loki"
+composition_loki_domain: "{{ composition_loki_subdomain }}.{{ domain_name }}"
+
+# Traefik integration
+composition_loki_traefik_enabled: true
+
+# Loki configuration
+composition_loki_ingestion_rate_mb: 64
+composition_loki_ingestion_burst_mb: 128
+composition_loki_chunk_idle_period: "1h"
+composition_loki_max_chunk_age: "2h"

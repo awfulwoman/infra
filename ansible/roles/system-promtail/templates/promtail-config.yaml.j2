@@ -1,0 +1,79 @@
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: {{ promtail_positions_file }}
+
+clients:
+  - url: {{ promtail_loki_url }}
+
+scrape_configs:
+  # Docker container logs
+  - job_name: docker
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: docker
+          host: {{ inventory_hostname }}
+          __path__: {{ promtail_docker_log_path }}/*/*-json.log
+
+    pipeline_stages:
+      # Parse JSON log format
+      - json:
+          expressions:
+            output: log
+            stream: stream
+            attrs: attrs
+            tag: attrs.tag
+
+      # Extract composition name from container tag (docker-compose label)
+      - regex:
+          source: tag
+          expression: '^(?P<composition>[^_]+)_'
+
+      # Extract labels
+      - labels:
+          stream:
+          composition:
+
+      # Extract container name from file path
+      - regex:
+          source: filename
+          expression: '/var/lib/docker/containers/[a-f0-9]+/(?P<container_id>[a-f0-9]+)-json.log'
+
+      # Add container name label from container ID (basename)
+      - static_labels:
+          container_name: unknown
+
+      # Output the log line
+      - output:
+          source: output
+
+{% if promtail_journald_enabled %}
+  # System journald logs
+  - job_name: systemd
+    journal:
+      max_age: {{ promtail_journald_max_age }}
+      labels:
+        job: systemd
+        host: {{ inventory_hostname }}
+
+    pipeline_stages:
+      # Extract systemd unit
+      - json:
+          expressions:
+            unit: _SYSTEMD_UNIT
+            priority: PRIORITY
+            message: MESSAGE
+
+      # Add labels
+      - labels:
+          unit:
+          priority:
+
+      # Output message
+      - output:
+          source: message
+{% endif %}

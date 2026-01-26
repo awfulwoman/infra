@@ -70,6 +70,13 @@ zfs:
       shared:
         datasets:
           syncthing:
+          logs:
+            datasets:
+              loki:
+                policy: high
+                extra_zfs_properties:
+                  compression: lz4
+                  recordsize: 128K
           metrics:
             datasets:
               zfs:
@@ -165,3 +172,4 @@ cnames:
   - wallabag.{{ domain_name }}
   - jellyseerr.{{ domain_name }}
   - translate.{{ domain_name }}
+  - loki.{{ domain_name }}
