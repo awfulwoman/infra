@@ -46,7 +46,7 @@
 - name: Move Promtail binary to final location
   become: true
   ansible.builtin.copy:
-    src: "/tmp/promtail-linux-amd64"
+    src: "/tmp/{{ promtail_binary_name }}"
     dest: "{{ promtail_binary_path }}"
     owner: root
     group: root
@@ -60,7 +60,7 @@
     state: absent
   loop:
     - "/tmp/promtail.zip"
-    - "/tmp/promtail-linux-amd64"
+    - "/tmp/{{ promtail_binary_name }}"
 
 # ----------------------------
 # Configure Promtail

@@ -15,6 +15,7 @@
       become: true
     - role: monitoring-healthchecksio
     - role: system-promtail
+      tags: promtail
 
   handlers:
     - name: Reboot host

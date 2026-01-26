@@ -21,5 +21,13 @@ promtail_journald_max_age: "12h"
 # Systemd service
 promtail_service_path: "/etc/systemd/system/promtail.service"
 
-# Download URL
-promtail_download_url: "https://github.com/grafana/loki/releases/download/v{{ promtail_version }}/promtail-linux-amd64.zip"
+# Architecture mapping
+promtail_arch_map:
+  x86_64: "amd64"
+  aarch64: "arm64"
+  armv7l: "arm"
+
+# Download URL (architecture determined at runtime)
+promtail_arch: "{{ promtail_arch_map[ansible_architecture] | default('amd64') }}"
+promtail_download_url: "https://github.com/grafana/loki/releases/download/v{{ promtail_version }}/promtail-linux-{{ promtail_arch }}.zip"
+promtail_binary_name: "promtail-linux-{{ promtail_arch }}"

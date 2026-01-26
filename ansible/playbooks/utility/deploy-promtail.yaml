@@ -1,0 +1,13 @@
+---
+- name: Deploy Promtail to all Docker hosts
+  hosts:
+    - host-storage
+    - host-homeassistant
+    - dns
+    - host-backups
+    - host-albion
+    - belinda
+    - vm-awfulwoman-hetzner
+
+  roles:
+    - role: system-promtail
