@@ -262,7 +262,7 @@ services:
     networks:
       - "{{ default_docker_network }}"
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8000/v1/publicip/ip"]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "-O", "/dev/null", "http://localhost:9999"]
       interval: 1m
       timeout: 10s
       retries: 3
