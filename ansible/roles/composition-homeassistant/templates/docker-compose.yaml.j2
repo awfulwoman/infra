@@ -16,7 +16,7 @@ services:
       - /var/run/dbus:/run/dbus:ro
       - /etc/localtime:/etc/localtime:ro
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8123/api/"]
+      test: ["CMD", "curl", "-f", "-s", "-o", "/dev/null", "http://localhost:8123/"]
       interval: 1m
       timeout: 10s
       retries: 3
@@ -37,7 +37,7 @@ services:
       - "{{ composition_config }}/esphome:/config"
       - "/etc/localtime:/etc/localtime:ro"
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:6052/"]
+      test: ["CMD", "curl", "-f", "-s", "-o", "/dev/null", "http://localhost:6052/"]
       interval: 30s
       timeout: 10s
       retries: 3
