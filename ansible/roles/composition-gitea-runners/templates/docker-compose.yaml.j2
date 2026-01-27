@@ -22,6 +22,12 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - "{{ default_docker_network }}"
+    healthcheck:
+      test: ["CMD-SHELL", "pgrep -f act_runner || exit 1"]
+      interval: 1m
+      timeout: 5s
+      retries: 3
+      start_period: 30s
 
   # runner02:
   #   container_name: runner02

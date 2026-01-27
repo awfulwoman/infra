@@ -18,6 +18,12 @@ services:
     volumes:
       - "{{ composition_config }}/wyl:/data/WatchYourLAN"
       - /etc/localtime:/etc/localtime:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pgrep -f watchyourlan || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
 
 networks:
   "{{ default_docker_network }}":

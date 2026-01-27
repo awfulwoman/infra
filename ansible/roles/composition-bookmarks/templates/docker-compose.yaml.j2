@@ -38,8 +38,10 @@ services:
     volumes:
       - "{{ composition_config }}/linkwarden/data:/data/data"
     depends_on:
-      - linkwarden-postgres
-      - linkwarden-meilisearch
+      linkwarden-postgres:
+        condition: service_healthy
+      linkwarden-meilisearch:
+        condition: service_healthy
     networks:
       - "{{ default_docker_network }}"
   linkwarden-postgres:
@@ -51,6 +53,12 @@ services:
       - "{{ composition_config }}/linkwarden/pgdata:/var/lib/postgresql/data"
     networks:
       - "{{ default_docker_network }}"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
   linkwarden-meilisearch:
     container_name: linkwarden-meilisearch
     image: getmeili/meilisearch:v1.12.8
@@ -60,6 +68,12 @@ services:
       - "{{ composition_config }}/linkwarden/meili_data:/meili_data"
     networks:
       - "{{ default_docker_network }}"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:7700/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
 networks:
   "{{ default_docker_network }}":

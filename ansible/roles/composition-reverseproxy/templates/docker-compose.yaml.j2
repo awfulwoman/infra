@@ -14,6 +14,12 @@ services:
       - "traefik.http.routers.catch-all-router.rule=HostRegexp(`{host:.+}`)"
       - "traefik.http.routers.catch-all-router.priority=1"
       - "traefik.http.routers.catch-all-router.entryPoints=web"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 {% endif %}
 
 {% if reverseproxy_statuspage %}
@@ -31,6 +37,12 @@ services:
       - "traefik.http.middlewares.status-pages-middleware.errors.status=400,401,403-405,407-413,416,418,429,500,502-505"
       - "traefik.http.middlewares.status-pages-middleware.errors.service=status-pages-service"
       - "traefik.http.middlewares.status-pages-middleware.errors.query=/{status}.html"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 {% endif %}
 
 {% if reverseproxy_whoami %}
@@ -50,6 +62,12 @@ services:
       - /etc/localtime:/etc/localtime:ro
     networks:
       - "{{ default_docker_network }}"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 {% endif %}
 
   reverseproxy:
@@ -89,6 +107,12 @@ services:
       - "/etc/localtime:/etc/localtime:ro"
     networks:
       - "{{ default_docker_network }}"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:80/ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
 
 networks:
   "{{ default_docker_network }}":

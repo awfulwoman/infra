@@ -16,6 +16,12 @@ services:
     restart: always
     networks:
       - "{{ default_docker_network }}"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
   valkey:
     image: valkey/valkey:8-alpine
@@ -23,6 +29,12 @@ services:
       - "6379:6379"
     networks:
       - "{{ default_docker_network }}"
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
   pinepods:
     image: madeofpendletonwool/pinepods:latest
@@ -66,8 +78,16 @@ services:
     networks:
       - "{{ default_docker_network }}"
     depends_on:
-      - db
-      - valkey
+      db:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8040/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
 
 networks:
   "{{ default_docker_network }}":
