@@ -2,4 +2,3 @@
   hosts: host-storage
   roles:
     - role: composition-downloads
-

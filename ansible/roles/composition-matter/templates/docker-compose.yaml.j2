@@ -21,7 +21,7 @@ services:
     network_mode: host
     command: --storage-path /data --paa-root-cert-dir /data/credentials --bluetooth-adapter 0
     healthcheck:
-      test: ["CMD-SHELL", "pgrep -f python || exit 1"]
+      test: ["CMD-SHELL", "test -f /proc/1/cmdline && grep -q python /proc/1/cmdline"]
       interval: 30s
       timeout: 5s
       retries: 3
