@@ -1,0 +1,22 @@
+[Unit]
+Description=Promtail log aggregation system
+After=network.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+ExecStart={{ promtail_binary_path }} -config.file={{ promtail_config_file }}
+Restart=on-failure
+RestartSec=10s
+
+# Hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths={{ promtail_positions_path }}
+ReadOnlyPaths={{ promtail_docker_log_path }}
+SupplementaryGroups=docker
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,8 @@
+# code: language=ansible
+
+- name: Restart promtail
+  become: true
+  ansible.builtin.systemd:
+    name: promtail
+    state: restarted
+    daemon_reload: true

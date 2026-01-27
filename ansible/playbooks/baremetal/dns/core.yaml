@@ -17,6 +17,8 @@
     - role: backups-zfs-client
     - role: script-share-personal-site
     - role: monitoring-healthchecksio
+    - role: system-promtail
+      tags: promtail
 
   handlers:
     - name: Reboot host

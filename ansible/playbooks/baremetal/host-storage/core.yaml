@@ -16,6 +16,8 @@
     - role: backups-zfs-client
     - role: composition-zfs-api
     - role: composition-victoriametrics
+    - role: composition-loki
+      tags: loki
     - role: composition-reverseproxy
     - role: composition-container-management
     - role: composition-audio
@@ -36,6 +38,8 @@
     - role: composition-libretranslate
     - role: system-smartmontools
     - role: monitoring-healthchecksio
+    - role: system-promtail
+      tags: promtail
     # - role: system-sleepuntil
     #   become: true
     # - role: system-powertop

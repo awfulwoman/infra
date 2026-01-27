@@ -375,11 +375,12 @@ def create_host_dashboard(hostname: str) -> dict:
 def main():
     """Generate all host dashboards"""
     script_dir = Path(__file__).parent
+    zfs_dir = script_dir / "zfs"
 
     for hostname in HOSTS:
         dashboard = create_host_dashboard(hostname)
         filename = f"zfs-{hostname}.json"
-        filepath = script_dir / filename
+        filepath = zfs_dir / filename
 
         with open(filepath, 'w') as f:
             json.dump(dashboard, f, indent=2)

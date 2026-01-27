@@ -17,6 +17,8 @@
     - role: composition-reverseproxy
     - role: composition-zfs-api
     - role: monitoring-healthchecksio
+    - role: system-promtail
+      tags: promtail
 
   handlers:
     - name: Reboot host

@@ -1,0 +1,99 @@
+# code: language=ansible
+
+# ----------------------------
+# Download and install Promtail
+# ----------------------------
+
+- name: Create Promtail config directory
+  become: true
+  ansible.builtin.file:
+    path: "{{ promtail_config_path }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Create Promtail positions directory
+  become: true
+  ansible.builtin.file:
+    path: "{{ promtail_positions_path }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Download Promtail binary
+  become: true
+  ansible.builtin.get_url:
+    url: "{{ promtail_download_url }}"
+    dest: "/tmp/promtail.zip"
+    mode: "0644"
+
+- name: Install unzip (if not present)
+  become: true
+  ansible.builtin.apt:
+    name: unzip
+    state: present
+    update_cache: false
+
+- name: Extract Promtail binary
+  become: true
+  ansible.builtin.unarchive:
+    src: "/tmp/promtail.zip"
+    dest: "/tmp"
+    remote_src: true
+
+- name: Move Promtail binary to final location
+  become: true
+  ansible.builtin.copy:
+    src: "/tmp/{{ promtail_binary_name }}"
+    dest: "{{ promtail_binary_path }}"
+    owner: root
+    group: root
+    mode: "0755"
+    remote_src: true
+
+- name: Clean up downloaded files
+  become: true
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - "/tmp/promtail.zip"
+    - "/tmp/{{ promtail_binary_name }}"
+
+# ----------------------------
+# Configure Promtail
+# ----------------------------
+
+- name: Create Promtail configuration file
+  become: true
+  ansible.builtin.template:
+    src: promtail-config.yaml.j2
+    dest: "{{ promtail_config_file }}"
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart promtail
+
+- name: Create Promtail systemd service
+  become: true
+  ansible.builtin.template:
+    src: promtail.service.j2
+    dest: "{{ promtail_service_path }}"
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart promtail
+
+# ----------------------------
+# Start Promtail service
+# ----------------------------
+
+- name: Enable and start Promtail service
+  become: true
+  ansible.builtin.systemd:
+    name: promtail
+    state: started
+    enabled: true
+    daemon_reload: true
