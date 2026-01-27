@@ -22,6 +22,12 @@ services:
     depends_on:
       firefly_iii_db:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 1m
 
   firefly_iii_db:
     container_name: firefly_iii_db
@@ -48,6 +54,12 @@ services:
     command: sh -c "echo \"0 3 * * * wget -qO- http://app:8983/api/v1/cron/{{ firefly_cron_token }}\" | crontab - && crond -f -L /dev/stdout"
     networks:
       - "{{ default_docker_network }}"
+    healthcheck:
+      test: ["CMD-SHELL", "pgrep crond || exit 1"]
+      interval: 5m
+      timeout: 5s
+      retries: 1
+      start_period: 10s
 
   importer:
     container_name: firefly_iii_importer
@@ -65,7 +77,14 @@ services:
     networks:
       - "{{ default_docker_network }}"
     depends_on:
-      - firefly_iii_core
+      firefly_iii_core:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
 
 networks:
   "{{ default_docker_network }}":

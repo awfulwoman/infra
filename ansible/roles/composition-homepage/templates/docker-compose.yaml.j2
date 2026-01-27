@@ -23,6 +23,12 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - "{{ default_docker_network }}"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
 
 networks:
   "{{ default_docker_network }}":
