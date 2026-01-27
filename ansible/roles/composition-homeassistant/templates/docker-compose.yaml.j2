@@ -15,6 +15,12 @@ services:
       - "{{ composition_config }}/media:/media"
       - /var/run/dbus:/run/dbus:ro
       - /etc/localtime:/etc/localtime:ro
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8123/api/"]
+      interval: 1m
+      timeout: 10s
+      retries: 3
+      start_period: 2m
 
   esphome:
     container_name: esphome
@@ -30,6 +36,12 @@ services:
     volumes:
       - "{{ composition_config }}/esphome:/config"
       - "/etc/localtime:/etc/localtime:ro"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:6052/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
 
 networks:
   "{{ default_docker_network }}":

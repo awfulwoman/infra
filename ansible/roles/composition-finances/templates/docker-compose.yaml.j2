@@ -20,7 +20,8 @@ services:
     networks:
       - "{{ default_docker_network }}"
     depends_on:
-      - firefly_iii_db
+      firefly_iii_db:
+        condition: service_healthy
 
   firefly_iii_db:
     container_name: firefly_iii_db
@@ -33,6 +34,12 @@ services:
       - /etc/localtime:/etc/localtime:ro
     networks:
       - "{{ default_docker_network }}"
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
   cron:
     container_name: firefly_iii_cron
