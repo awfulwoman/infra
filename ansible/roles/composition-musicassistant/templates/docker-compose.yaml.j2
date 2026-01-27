@@ -24,6 +24,12 @@ services:
       - "{{ composition_config }}:/data"
       - "/slowpool/shared/media/music:/media"
       - /etc/localtime:/etc/localtime:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pgrep -f mass || exit 1"]
+      interval: 1m
+      timeout: 5s
+      retries: 3
+      start_period: 1m
 
 networks:
   "{{ default_docker_network }}":

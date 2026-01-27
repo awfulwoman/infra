@@ -15,6 +15,12 @@ services:
       - "--debug"
     networks:
       - "{{ default_docker_network }}"
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z localhost 10600 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
   playback:
     image: "rhasspy/wyoming-snd-external"
@@ -30,6 +36,12 @@ services:
       - "--debug"
     networks:
       - "{{ default_docker_network }}"
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z localhost 10601 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
   satellite:
     image: "rhasspy/wyoming-satellite"
@@ -45,6 +57,17 @@ services:
       - "--debug"
     networks:
       - "{{ default_docker_network }}"
+    depends_on:
+      microphone:
+        condition: service_healthy
+      playback:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z localhost 10700 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
 networks:
   "{{ default_docker_network }}":
