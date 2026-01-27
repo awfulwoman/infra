@@ -1,0 +1,4 @@
+- name: Run compositions
+  hosts: host-storage
+  roles:
+    - role: composition-bookmarks
