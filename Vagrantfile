@@ -59,39 +59,51 @@ Vagrant.configure("2") do |config|
   echo "#########################################"
   echo "# NVM SETUP"
   echo "#########################################"
+  if [ ! -f ~/.vagrant_nvm_install ]; then
   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
   export NVM_DIR="$HOME/.nvm"
   [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
   nvm install --lts
   nvm alias default lts/*
+  touch ~/.vagrant_nvm_install
+  fi
   SCRIPT_NVM
 
   $script_claude = <<-SCRIPT_CLAUDE
   echo "#########################################"
   echo "# CLAUDE SETUP"
   echo "#########################################"
+  if [ ! -f ~/.vagrant_claude_install ]; then
   curl -fsSL https://claude.ai/install.sh | bash
   echo 'export PATH="$HOME/.local/bin:$PATH"' >> $HOME/.bashrc
+  touch ~/.vagrant_claude_install
+  fi
   SCRIPT_CLAUDE
 
   $script_user = <<-SCRIPT_USER
   echo "#########################################"
   echo "# CUSTOMISE USER"
   echo "#########################################"
+  if [ ! -f ~/.vagrant_switch_paths ]; then
   echo "cd #{workspace_path}" >> $HOME/.bashrc
+  touch ~/.vagrant_switch_paths
+  fi
   SCRIPT_USER
   
   # The weird indentation is, sadly, important here
   # https://stackoverflow.com/a/75320225
   $script_ssh_agent = <<-'SCRIPT_SSHAGENT'
     cat >> $HOME/.bashrc << 'EOF'
-if [ ! -f ~/.ssh_reminder_shown ]; then
+if [ ! -f ~/.vagrant_ssh_reminder_shown ]; then
   eval "$(ssh-agent -s)" > /dev/null
   echo "==> SSH agent started. Add your key:"
-  ssh-add ~/.ssh/id_ed25519 && touch ~/.ssh_reminder_shown
+  ssh-add ~/.ssh/id_ed25519 && touch ~/.vagrant_ssh_reminder_shown
 fi
 EOF
   SCRIPT_SSHAGENT
+
+
+  $script_add_default_ssh_user =
 
   # Run defined scripts
   config.vm.provision "shell", inline: $script_nvm, privileged: false
