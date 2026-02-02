@@ -103,9 +103,55 @@ def get_policy_retention(policy):
     return {t: policy.get(t, 0) for t in SNAPSHOT_TYPES}
 
 
+def get_all_system_datasets():
+    """Get all datasets from the system."""
+    cmd = ["zfs", "list", "-H", "-o", "name", "-t", "filesystem,volume"]
+
+    debug(f"Running: {' '.join(cmd)}")
+
+    try:
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            check=True
+        )
+        datasets = result.stdout.decode().strip().splitlines()
+        return datasets
+    except subprocess.CalledProcessError as e:
+        error(f"Failed to list ZFS datasets: {e.stderr.decode().strip()}")
+        return []
+    except Exception as e:
+        error(f"Failed to list ZFS datasets: {e}")
+        return []
+
+
+def get_unmanaged_datasets():
+    """Get datasets that exist on the system but are not in policy structure."""
+    system_datasets = get_all_system_datasets()
+    managed_datasets = {ds['dataset'] for ds in DATASETS}
+
+    unmanaged = []
+    for dataset in system_datasets:
+        if dataset not in managed_datasets:
+            debug(f"Found unmanaged dataset: {dataset}")
+            snapshots = get_snapshots(dataset)
+            counts = count_snapshots_by_type(snapshots)
+            total_snapshots = len(snapshots)
+            autosnap_total = sum(counts.values())
+
+            unmanaged.append({
+                'dataset': dataset,
+                'total_snapshots': total_snapshots,
+                'autosnap_snapshots': autosnap_total,
+                'counts': counts,
+            })
+
+    return unmanaged
+
+
 def gather_report_data():
     """Gather snapshot data for all datasets."""
-    report = []
+    managed = []
 
     for ds_info in DATASETS:
         dataset = ds_info['dataset']
@@ -118,81 +164,137 @@ def gather_report_data():
         counts = count_snapshots_by_type(snapshots)
         retention = get_policy_retention(policy)
 
-        report.append({
+        managed.append({
             'dataset': dataset,
             'policy': policy_name,
             'counts': counts,
             'retention': retention,
         })
 
-    return report
+    unmanaged = get_unmanaged_datasets()
+
+    return {
+        'managed': managed,
+        'unmanaged': unmanaged,
+    }
 
 
-def output_json(report):
+def output_json(data):
     """Output report as JSON."""
-    print(json.dumps(report, indent=2))
+    print(json.dumps(data, indent=2))
 
 
-def output_table(report):
+def output_table(data):
     """Output report as a formatted table."""
-    if not report:
+    managed = data['managed']
+    unmanaged = data['unmanaged']
+
+    if not managed and not unmanaged:
         print("No datasets found.")
         return
 
-    # Calculate column widths
-    dataset_width = max(len("Dataset"), max(len(r['dataset']) for r in report))
-    policy_width = max(len("Policy"), max(len(r['policy']) for r in report))
+    # Managed datasets section
+    if managed:
+        print("\n=== MANAGED DATASETS (with policy) ===\n")
 
-    # Header format: Dataset | Policy | Hourly | Daily | Monthly | Yearly
-    # Each snapshot column shows count/retention
-    snap_col_width = 10  # Wide enough for "999/999"
+        # Calculate column widths
+        dataset_width = max(len("Dataset"), max(len(r['dataset']) for r in managed))
+        policy_width = max(len("Policy"), max(len(r['policy']) for r in managed))
 
-    # Build header
-    header = (
-        f"{'Dataset':<{dataset_width}} | "
-        f"{'Policy':<{policy_width}} | "
-        f"{'Hourly':>{snap_col_width}} | "
-        f"{'Daily':>{snap_col_width}} | "
-        f"{'Monthly':>{snap_col_width}} | "
-        f"{'Yearly':>{snap_col_width}}"
-    )
+        # Header format: Dataset | Policy | Hourly | Daily | Monthly | Yearly
+        # Each snapshot column shows count/retention
+        snap_col_width = 10  # Wide enough for "999/999"
 
-    separator = "-" * len(header)
-
-    print(separator)
-    print(header)
-    print(separator)
-
-    for row in report:
-        dataset = row['dataset']
-        policy = row['policy']
-        counts = row['counts']
-        retention = row['retention']
-
-        # Format each snapshot column as "count/retention"
-        hourly = f"{counts['hourly']}/{retention['hourly']}"
-        daily = f"{counts['daily']}/{retention['daily']}"
-        monthly = f"{counts['monthly']}/{retention['monthly']}"
-        yearly = f"{counts['yearly']}/{retention['yearly']}"
-
-        line = (
-            f"{dataset:<{dataset_width}} | "
-            f"{policy:<{policy_width}} | "
-            f"{hourly:>{snap_col_width}} | "
-            f"{daily:>{snap_col_width}} | "
-            f"{monthly:>{snap_col_width}} | "
-            f"{yearly:>{snap_col_width}}"
+        # Build header
+        header = (
+            f"{'Dataset':<{dataset_width}} | "
+            f"{'Policy':<{policy_width}} | "
+            f"{'Hourly':>{snap_col_width}} | "
+            f"{'Daily':>{snap_col_width}} | "
+            f"{'Monthly':>{snap_col_width}} | "
+            f"{'Yearly':>{snap_col_width}}"
         )
-        print(line)
 
-    print(separator)
+        separator = "-" * len(header)
 
-    # Summary
-    total_datasets = len(report)
-    total_snapshots = sum(
-        sum(r['counts'].values()) for r in report
-    )
-    print(f"Total: {total_datasets} datasets, {total_snapshots} autosnap snapshots")
+        print(separator)
+        print(header)
+        print(separator)
+
+        for row in managed:
+            dataset = row['dataset']
+            policy = row['policy']
+            counts = row['counts']
+            retention = row['retention']
+
+            # Format each snapshot column as "count/retention"
+            hourly = f"{counts['hourly']}/{retention['hourly']}"
+            daily = f"{counts['daily']}/{retention['daily']}"
+            monthly = f"{counts['monthly']}/{retention['monthly']}"
+            yearly = f"{counts['yearly']}/{retention['yearly']}"
+
+            line = (
+                f"{dataset:<{dataset_width}} | "
+                f"{policy:<{policy_width}} | "
+                f"{hourly:>{snap_col_width}} | "
+                f"{daily:>{snap_col_width}} | "
+                f"{monthly:>{snap_col_width}} | "
+                f"{yearly:>{snap_col_width}}"
+            )
+            print(line)
+
+        print(separator)
+
+        # Summary for managed
+        total_managed = len(managed)
+        total_autosnap = sum(
+            sum(r['counts'].values()) for r in managed
+        )
+        print(f"Total: {total_managed} datasets, {total_autosnap} autosnap snapshots")
+
+    # Unmanaged datasets section
+    if unmanaged:
+        print("\n=== UNMANAGED DATASETS (no policy) ===\n")
+
+        # Calculate column widths for unmanaged
+        dataset_width = max(len("Dataset"), max(len(r['dataset']) for r in unmanaged))
+        total_col_width = 15
+        autosnap_col_width = 15
+
+        # Build header
+        header = (
+            f"{'Dataset':<{dataset_width}} | "
+            f"{'Total Snapshots':>{total_col_width}} | "
+            f"{'Autosnap':>{autosnap_col_width}}"
+        )
+
+        separator = "-" * len(header)
+
+        print(separator)
+        print(header)
+        print(separator)
+
+        for row in unmanaged:
+            dataset = row['dataset']
+            total_snapshots = row['total_snapshots']
+            autosnap_snapshots = row['autosnap_snapshots']
+
+            line = (
+                f"{dataset:<{dataset_width}} | "
+                f"{total_snapshots:>{total_col_width}} | "
+                f"{autosnap_snapshots:>{autosnap_col_width}}"
+            )
+            print(line)
+
+        print(separator)
+
+        # Summary for unmanaged
+        total_unmanaged = len(unmanaged)
+        total_unmanaged_snapshots = sum(r['total_snapshots'] for r in unmanaged)
+        total_unmanaged_autosnap = sum(r['autosnap_snapshots'] for r in unmanaged)
+        print(f"Total: {total_unmanaged} datasets, {total_unmanaged_snapshots} snapshots ({total_unmanaged_autosnap} autosnap)")
+
+    print()
 
 
 def main():
