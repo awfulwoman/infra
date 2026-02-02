@@ -1,6 +1,16 @@
 # code: language=ansible
+
+# Vault variables
+vault_server_username: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          30393036363965616337393739376633353433383939303765333234313263326338396634633732
+          6263303266396665613361656434613563626633346131390a646536376336643538393536393262
+          31666365326164373534306366613936316261366339663864386665326363323862356266656533
+          3464623731653966390a623964626431313364613630346365323634363934326230343663303363
+          3639
+
 security_autoupdate_mail_on_error: true
-security_autoupdate_mail_to: "unattended@{{ vault_olddomain_wc }}"
+security_autoupdate_mail_to: "unattended@localhost"
 security_autoupdate_reboot: true
 security_autoupdate_reboot_time: 03:00
 security_sudoers_passwordless:
@@ -21,14 +31,17 @@ default_docker_network: guineanet
 default_bin_path: /usr/local/bin
 systemd_service_path: /etc/systemd/system
 
+# SSH config for Vagrant
+bootstrap_ubuntu_ssh_config_local_networks:
+  - host: "192.168.0.*"
+    user: "{{ vault_server_username }}"
+    strict_host_key_checking: false
+    user_known_hosts_file: "/dev/null"
+  - host: "100.*.*.*"
+    user: "{{ vault_server_username }}"
+    strict_host_key_checking: false
+    user_known_hosts_file: "/dev/null"
+
 # Environment Variables
-environment_config:
-  ANSIBLE_FORCE_COLOR: true
-  ANSIBLE_PATH: "{{ ansible_path }}"
-  ANSIBLE_LOG_PATH: "{{ ansible_log_path }}"
-  ANSIBLE_VAULT_PASSWORD_FILE: "{{ ansible_vault_password_file }}"
-  ANSIBLE_ROLES_PATH: "{{ ansible_roles_path }}"
-  ANSIBLE_COLLECTIONS_PATH: "{{ ansible_collections_path }}"
-  HOME_REPO_DIR: "{{ home_repo_dir }}"
-  TF_VAR_digitalocean_token: "{{ vault_ddns_digitalocean_token }}"
-  TF_VAR_hcloud_token: "{{ vault_hetzner_api_key_rw }}"
+# Vagrant VMs don't need production environment variables
+environment_config: {}

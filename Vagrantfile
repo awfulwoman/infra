@@ -64,13 +64,20 @@ Vagrant.configure("2") do |config|
   config.vm.provision "file", source: "~/.claude/settings.json", destination: ".claude/settings.json"
   config.vm.provision "file", source: "/opt/ansible/.vaultpassword", destination: "/opt/ansible/.vaultpassword"
 
+  # Install galaxy roles first
+  config.vm.provision "shell", privileged: false, inline: <<-SHELL
+    cd #{workspace_path}
+    ansible-galaxy install -r ansible/meta/requirements.yaml --roles-path=/opt/ansible/galaxy/roles
+  SHELL
+
   # Provision using Ansible
-  config.vm.provision "ansible" do |ansible|
-    ansible.playbook = "ansible/playbooks/virtual/vagrant-wrapper/core.yaml"
-    ansible.verbose = true
-    ansible.extra_vars = {
-      VAGRANT_WORKSPACE_PATH: workspace_path
-    }
-  end
+  config.vm.provision "shell", privileged: false, inline: <<-SHELL
+    cd #{workspace_path}
+    export ANSIBLE_ROLES_PATH=#{workspace_path}/ansible/roles:/opt/ansible/galaxy/roles
+    ansible-playbook ansible/playbooks/virtual/vagrant-wrapper/core.yaml \
+      -i ansible/inventory/hosts.yaml \
+      --limit=vagrant-wrapper \
+      -e "VAGRANT_WORKSPACE_PATH=#{workspace_path}"
+  SHELL
 
 end
