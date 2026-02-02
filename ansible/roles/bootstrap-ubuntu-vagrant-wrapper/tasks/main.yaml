@@ -69,18 +69,6 @@
   ansible.builtin.command: localectl set-locale LANG={{ config_system_locale }} LANGUAGE={{ config_system_language }}
   changed_when: locale_lang != config_system_locale or locale_language != config_system_language
 
-- name: Ensure hostname is correct
-  become: true
-  ansible.builtin.hostname:
-    name: "{{ inventory_hostname }}"
-
-- name: Ensure 127.0.1.1 is correct
-  become: true
-  ansible.builtin.lineinfile:
-    path: /etc/hosts
-    regexp: '^127\.0\.1\.1'
-    line: "127.0.1.1 {{ inventory_hostname }}"
-
 - name: Pipx
   ansible.builtin.include_role:
     name: system-pipx
@@ -101,7 +89,6 @@
 - name: Configure SSH agent auto-start
   when: bootstrap_ubuntu_ssh_agent_enable
   block:
-
     - name: Check if SSH agent block already exists in .bashrc
       ansible.builtin.lineinfile:
         path: "{{ ansible_facts.user_dir }}/.bashrc"
