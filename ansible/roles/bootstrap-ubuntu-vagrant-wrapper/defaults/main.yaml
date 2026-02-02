@@ -1,0 +1,48 @@
+bootstrap_ubuntu_timezone: "Europe/Berlin"
+bootstrap_ubuntu_apt_packages:
+  - curl
+  - dirmngr
+  - e2fsprogs
+  - ffmpeg
+  - git
+  - htop
+  - iptables
+  - lm-sensors
+  - mosh
+  - netplan.io
+  - python-is-python3
+  - python3
+  - python3-docker
+  - python3-pip
+  - python3-virtualenv
+  - restic
+  - retry
+  - smartmontools
+  - sqlite3
+  - timg
+  - tmux
+  - unzip
+  - uptimed
+  - util-linux-extra
+  - vim
+  - wget
+  - zsh
+
+# SSH agent configuration
+bootstrap_ubuntu_ssh_agent_enable: true
+bootstrap_ubuntu_ssh_key_path: "~/.ssh/id_ed25519"
+
+# SSH config for local networks
+bootstrap_ubuntu_ssh_config_enable: true
+bootstrap_ubuntu_ssh_config_local_networks:
+  - host: "192.168.0.*"
+    user: "{{ vault_server_username }}"
+    strict_host_key_checking: false
+    user_known_hosts_file: "/dev/null"
+  - host: "100.*.*.*"
+    user: "{{ vault_server_username }}"
+    strict_host_key_checking: false
+    user_known_hosts_file: "/dev/null"
+
+# Workspace path to cd into on login
+bootstrap_ubuntu_workspace_path: ""

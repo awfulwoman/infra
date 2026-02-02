@@ -1,0 +1,54 @@
+---
+- name: Check if nvm is already installed
+  ansible.builtin.stat:
+    path: "{{ ansible_facts.user_dir }}/.nvm/nvm.sh"
+  register: nvm_installed
+
+- name: Install nvm
+  when: not nvm_installed.stat.exists
+  block:
+
+    - name: Download and execute nvm install script
+      ansible.builtin.shell: >
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/{{ system_nvm_version }}/install.sh | bash
+      args:
+        creates: "{{ ansible_facts.user_dir }}/.nvm/nvm.sh"
+        executable: /bin/bash
+      environment:
+        HOME: "{{ ansible_facts.user_dir }}"
+
+- name: Check if Node.js is already installed
+  ansible.builtin.shell: |
+    export NVM_DIR="{{ ansible_facts.user_dir }}/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+    nvm list {{ system_nvm_node_version }}
+  args:
+    executable: /bin/bash
+  environment:
+    HOME: "{{ ansible_facts.user_dir }}"
+  register: node_installed
+  changed_when: false
+  failed_when: false
+
+- name: Install Node.js via nvm
+  ansible.builtin.shell: |
+    export NVM_DIR="{{ ansible_facts.user_dir }}/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+    nvm install {{ system_nvm_node_version }}
+  args:
+    executable: /bin/bash
+  environment:
+    HOME: "{{ ansible_facts.user_dir }}"
+  when: node_installed.rc != 0
+
+- name: Set default Node.js version
+  ansible.builtin.shell: |
+    export NVM_DIR="{{ ansible_facts.user_dir }}/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+    nvm alias default {{ system_nvm_node_version }}
+  args:
+    executable: /bin/bash
+  environment:
+    HOME: "{{ ansible_facts.user_dir }}"
+  when: system_nvm_set_default
+  changed_when: false

@@ -1,0 +1,39 @@
+---
+- name: Check if Claude CLI is already installed
+  ansible.builtin.stat:
+    path: "{{ ansible_facts.user_dir }}/.local/bin/claude"
+  register: claude_installed
+
+- name: Install Claude CLI
+  when: not claude_installed.stat.exists
+  block:
+
+    - name: Download and execute Claude CLI install script
+      ansible.builtin.shell: >
+        curl -fsSL {{ system_claude_install_url }} | bash
+      args:
+        creates: "{{ ansible_facts.user_dir }}/.local/bin/claude"
+        executable: /bin/bash
+      environment:
+        HOME: "{{ ansible_facts.user_dir }}"
+
+- name: Ensure .local/bin is in PATH
+  when: system_claude_ensure_path
+  block:
+
+    - name: Check if PATH export already exists in profile
+      ansible.builtin.lineinfile:
+        path: "{{ ansible_facts.user_dir }}/{{ system_claude_profile_file }}"
+        regexp: '^export PATH="\$HOME/\.local/bin:\$PATH"'
+        state: absent
+      check_mode: true
+      register: path_check
+      changed_when: false
+
+    - name: Add .local/bin to PATH in shell profile
+      ansible.builtin.lineinfile:
+        path: "{{ ansible_facts.user_dir }}/{{ system_claude_profile_file }}"
+        line: 'export PATH="$HOME/.local/bin:$PATH"'
+        create: true
+        mode: '0644'
+      when: path_check.found == 0

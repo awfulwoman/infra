@@ -1,0 +1,179 @@
+# Bootstraps an Ubuntu machine
+
+- name: Naming facts
+  ansible.builtin.debug:
+    msg: |
+      * Inventory hostname
+        inventory_hostname: "{{ inventory_hostname }}"
+        Obtained from the Ansible inventory configuration. Can be different than the machine's hostname.
+      * Ansible's hostname
+        ansible_facts['hostname']: "{{ ansible_facts['hostname'] }}"
+        Obtained via gather_facts. Short version of the hostname.
+      * Ansible's FQDN
+        ansible_fqdn: "{{ ansible_facts['fqdn'] }}"
+        Obtained via gather_facts. Long version of the hostname, including the domain.
+      * Ansible connection address
+        ansible_host: "{{ ansible_host }}"
+        The IP address or hostname used to connect to the machine. Can be different than the machine's hostname.
+      * Default IP address
+        ansible_default_ipv4.address: "{{ ansible_default_ipv4.address }}"
+        The default IPv4 address of the machine, used for network communication.
+
+- name: Ensure core apt packages are installed
+  become: true
+  ansible.builtin.apt:
+    name: "{{ bootstrap_ubuntu_apt_packages }}"
+    state: present
+
+- name: Ensure user has bash as default shell
+  become: true
+  ansible.builtin.user:
+    name: "{{ ansible_user }}"
+    shell: /bin/bash
+
+- name: Ensure timezone is correct
+  become: true
+  community.general.timezone:
+    name: "{{ bootstrap_ubuntu_timezone }}"
+
+- name: Ensure locale files are available
+  become: true
+  community.general.locale_gen:
+    name: "{{ config_system_locale }}"
+    state: present
+
+- name: Ensure language files are available
+  become: true
+  community.general.locale_gen:
+    name: "{{ config_system_language }}"
+    state: present
+
+- name: Get current locale and language configuration
+  become: true
+  ansible.builtin.command: localectl status
+  register: locale_status
+  changed_when: false
+
+- name: Parse 'LANG' from current locale and language configuration
+  become: true
+  ansible.builtin.set_fact:
+    locale_lang: "{{ locale_status.stdout | regex_search('LANG=([^\n]+)', '\\1') | first }}"
+
+- name: Parse 'LANGUAGE' from current locale and language configuration
+  become: true
+  ansible.builtin.set_fact:
+    locale_language: "{{ locale_status.stdout | regex_search('LANGUAGE=([^\n]+)', '\\1') | default([locale_lang], true) | first }}"
+
+- name: Configure locale and language
+  become: true
+  ansible.builtin.command: localectl set-locale LANG={{ config_system_locale }} LANGUAGE={{ config_system_language }}
+  changed_when: locale_lang != config_system_locale or locale_language != config_system_language
+
+- name: Ensure hostname is correct
+  become: true
+  ansible.builtin.hostname:
+    name: "{{ inventory_hostname }}"
+
+- name: Ensure 127.0.1.1 is correct
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/hosts
+    regexp: '^127\.0\.1\.1'
+    line: "127.0.1.1 {{ inventory_hostname }}"
+
+- name: Pipx
+  ansible.builtin.include_role:
+    name: system-pipx
+
+- name: Env vars
+  no_log: true
+  ansible.builtin.include_role:
+    name: weareinteractive.environment
+  vars:
+    ansible_become: true
+
+- name: Security
+  ansible.builtin.include_role:
+    name: system-security
+  vars:
+    security_fail2ban_enabled: false
+
+- name: Configure SSH agent auto-start
+  when: bootstrap_ubuntu_ssh_agent_enable
+  block:
+
+    - name: Check if SSH agent block already exists in .bashrc
+      ansible.builtin.lineinfile:
+        path: "{{ ansible_facts.user_dir }}/.bashrc"
+        regexp: '# SSH agent auto-start'
+        state: absent
+      check_mode: true
+      register: ssh_agent_check
+      changed_when: false
+
+    - name: Add SSH agent auto-start block to .bashrc
+      ansible.builtin.blockinfile:
+        path: "{{ ansible_facts.user_dir }}/.bashrc"
+        marker: "# {mark} SSH agent auto-start"
+        block: |
+          if [ ! -f ~/.vagrant_ssh_reminder_shown ]; then
+            eval "$(ssh-agent -s)" > /dev/null
+            echo "==> SSH agent started. Add your key:"
+            ssh-add {{ bootstrap_ubuntu_ssh_key_path }} && touch ~/.vagrant_ssh_reminder_shown
+          fi
+        create: true
+        mode: '0644'
+      when: ssh_agent_check.found == 0
+
+- name: Configure SSH config for local networks
+  when: bootstrap_ubuntu_ssh_config_enable
+  block:
+
+    - name: Ensure .ssh directory exists
+      ansible.builtin.file:
+        path: "{{ ansible_facts.user_dir }}/.ssh"
+        state: directory
+        mode: '0700'
+
+    - name: Add SSH config entries for local networks
+      ansible.builtin.blockinfile:
+        path: "{{ ansible_facts.user_dir }}/.ssh/config"
+        marker: "# {mark} Vagrant local network config"
+        block: |
+          # See: https://superuser.com/a/628801
+          {% for network in bootstrap_ubuntu_ssh_config_local_networks %}
+          Host {{ network.host }}
+            StrictHostKeyChecking {{ 'no' if not network.strict_host_key_checking else 'yes' }}
+            UserKnownHostsFile={{ network.user_known_hosts_file }}
+            User {{ network.user }}
+
+          {% endfor %}
+        create: true
+        mode: '0600'
+
+- name: Configure workspace path auto-cd
+  when: bootstrap_ubuntu_workspace_path | length > 0
+  block:
+
+    - name: Check if workspace cd already exists in .bashrc
+      ansible.builtin.lineinfile:
+        path: "{{ ansible_facts.user_dir }}/.bashrc"
+        regexp: '^cd {{ bootstrap_ubuntu_workspace_path | regex_escape() }}$'
+        state: absent
+      check_mode: true
+      register: workspace_cd_check
+      changed_when: false
+
+    - name: Add workspace cd to .bashrc
+      ansible.builtin.lineinfile:
+        path: "{{ ansible_facts.user_dir }}/.bashrc"
+        line: "cd {{ bootstrap_ubuntu_workspace_path }}"
+        create: true
+        mode: '0644'
+      when: workspace_cd_check.found == 0
+
+- name: MOTD
+  ansible.builtin.include_role:
+    name: system-motd
+  vars:
+    ansible_become: true

@@ -1,0 +1,18 @@
+# Vagrant VM provisioning playbook
+# Used by Vagrantfile to provision development VMs
+- name: Provision Vagrant VM
+  hosts: all
+  gather_facts: true
+
+  vars:
+    # Workspace path passed from Vagrantfile
+    vagrant_workspace_path: "{{ lookup('env', 'VAGRANT_WORKSPACE_PATH') }}"
+
+  roles:
+    - role: bootstrap-ubuntu-vagrant-wrapper
+      vars:
+        bootstrap_ubuntu_workspace_path: "{{ vagrant_workspace_path }}"
+        bootstrap_ubuntu_ssh_agent_enable: true
+        bootstrap_ubuntu_ssh_config_enable: true
+    - role: system-nvm
+    - role: system-claude

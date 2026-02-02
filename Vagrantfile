@@ -1,5 +1,5 @@
-# This Vagrantfile is used to wrap a VM around instances of Claude Code. 
-# This enables Claude to be run with much more relaxed permissions, 
+# This Vagrantfile is used to wrap a VM around instances of Claude Code.
+# This enables Claude to be run with much more relaxed permissions,
 # without worrying about it going mental and trashing your laptop or leaking
 # personal info.
 
@@ -55,62 +55,6 @@ end
 
 # Provision system as vagrant user
 Vagrant.configure("2") do |config|
-  $script_nvm = <<-SCRIPT_NVM
-  echo "#########################################"
-  echo "# NVM SETUP"
-  echo "#########################################"
-  if [ ! -f ~/.vagrant_nvm_install ]; then
-  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
-  export NVM_DIR="$HOME/.nvm"
-  [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-  nvm install --lts
-  nvm alias default lts/*
-  touch ~/.vagrant_nvm_install
-  fi
-  SCRIPT_NVM
-
-  $script_claude = <<-SCRIPT_CLAUDE
-  echo "#########################################"
-  echo "# CLAUDE SETUP"
-  echo "#########################################"
-  if [ ! -f ~/.vagrant_claude_install ]; then
-  curl -fsSL https://claude.ai/install.sh | bash
-  echo 'export PATH="$HOME/.local/bin:$PATH"' >> $HOME/.bashrc
-  touch ~/.vagrant_claude_install
-  fi
-  SCRIPT_CLAUDE
-
-  $script_user = <<-SCRIPT_USER
-  echo "#########################################"
-  echo "# CUSTOMISE USER"
-  echo "#########################################"
-  if [ ! -f ~/.vagrant_switch_paths ]; then
-  echo "cd #{workspace_path}" >> $HOME/.bashrc
-  touch ~/.vagrant_switch_paths
-  fi
-  SCRIPT_USER
-  
-  # The weird indentation is, sadly, important here
-  # https://stackoverflow.com/a/75320225
-  $script_ssh_agent = <<-'SCRIPT_SSHAGENT'
-    cat >> $HOME/.bashrc << 'EOF'
-if [ ! -f ~/.vagrant_ssh_reminder_shown ]; then
-  eval "$(ssh-agent -s)" > /dev/null
-  echo "==> SSH agent started. Add your key:"
-  ssh-add ~/.ssh/id_ed25519 && touch ~/.vagrant_ssh_reminder_shown
-fi
-EOF
-  SCRIPT_SSHAGENT
-
-
-  $script_add_default_ssh_user =
-
-  # Run defined scripts
-  config.vm.provision "shell", inline: $script_nvm, privileged: false
-  config.vm.provision "shell", inline: $script_claude, privileged: false
-  config.vm.provision "shell", inline: $script_user, privileged: false
-  config.vm.provision "shell", inline: $script_ssh_agent, privileged: false
-
   # Copy over credentials to working VM
   config.vm.provision "file", source: "~/.gitconfig", destination: ".gitconfig"
   config.vm.provision "file", source: "~/.ssh/id_ed25519", destination: ".ssh/id_ed25519"
@@ -119,5 +63,14 @@ EOF
   config.vm.provision "file", source: "~/.claude/CLAUDE.md", destination: ".claude/CLAUDE.md"
   config.vm.provision "file", source: "~/.claude/settings.json", destination: ".claude/settings.json"
   config.vm.provision "file", source: "/opt/ansible/.vaultpassword", destination: "/opt/ansible/.vaultpassword"
+
+  # Provision using Ansible
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "ansible/playbooks/virtual/vagrant-wrapper/core.yaml"
+    ansible.verbose = true
+    ansible.extra_vars = {
+      VAGRANT_WORKSPACE_PATH: workspace_path
+    }
+  end
 
 end

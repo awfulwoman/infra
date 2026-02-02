@@ -1,0 +1,9 @@
+---
+# Claude CLI installation URL
+system_claude_install_url: "https://claude.ai/install.sh"
+
+# Ensure PATH is set in shell profile
+system_claude_ensure_path: true
+
+# Shell profile file to update (default: .bashrc)
+system_claude_profile_file: ".bashrc"

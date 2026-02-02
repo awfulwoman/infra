@@ -1,0 +1,9 @@
+---
+# NVM version to install
+system_nvm_version: "v0.40.1"
+
+# Node.js version to install (use 'lts' for latest LTS)
+system_nvm_node_version: "lts/*"
+
+# Set as default Node.js version
+system_nvm_set_default: true
