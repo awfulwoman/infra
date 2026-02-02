@@ -27,6 +27,30 @@
     - 10periodic
     - 50unattended-upgrades
 
+- name: Add configured user accounts to passwordless sudoers
+  become: true
+  ansible.builtin.lineinfile:
+    dest: /etc/sudoers
+    regexp: '^{{ item }}'
+    line: '{{ item }} ALL=(ALL) NOPASSWD: ALL'
+    state: present
+    validate: 'visudo -cf %s'
+    mode: "0440"
+  with_items: "{{ security_sudoers_passwordless }}"
+  when: security_sudoers_passwordless | length > 0
+
+- name: Add configured user accounts to passworded sudoers.
+  become: true
+  ansible.builtin.lineinfile:
+    dest: /etc/sudoers
+    regexp: '^{{ item }}'
+    line: '{{ item }} ALL=(ALL) ALL'
+    state: present
+    validate: 'visudo -cf %s'
+    mode: "0440"
+  with_items: "{{ security_sudoers_passworded }}"
+  when: security_sudoers_passworded | length > 0
+
 - name: Ensure SSH daemon is running
   become: true
   ansible.builtin.service:
@@ -88,29 +112,6 @@
   when: security_ssh_allowed_groups | length > 0
   notify: Restart SSH
 
-- name: Add configured user accounts to passwordless sudoers
-  become: true
-  ansible.builtin.lineinfile:
-    dest: /etc/sudoers
-    regexp: '^{{ item }}'
-    line: '{{ item }} ALL=(ALL) NOPASSWD: ALL'
-    state: present
-    validate: 'visudo -cf %s'
-    mode: "0440"
-  with_items: "{{ security_sudoers_passwordless }}"
-  when: security_sudoers_passwordless | length > 0
-
-- name: Add configured user accounts to passworded sudoers.
-  become: true
-  ansible.builtin.lineinfile:
-    dest: /etc/sudoers
-    regexp: '^{{ item }}'
-    line: '{{ item }} ALL=(ALL) ALL'
-    state: present
-    validate: 'visudo -cf %s'
-    mode: "0440"
-  with_items: "{{ security_sudoers_passworded }}"
-  when: security_sudoers_passworded | length > 0
 
 - name: Ensure any jail custom configurations exist
   become: true
