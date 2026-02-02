@@ -1,0 +1,5 @@
+composition_name: github2karakeep
+github2karakeep_schedule: "@daily"
+github2karakeep_gh_token: "{{ vault_github_stars_token }}"
+github2karakeep_kk_url: "https://karakeep.{{ domain_name }}"
+github2karakeep_kk_token: "{{ vault_github2karakeep_token }}"

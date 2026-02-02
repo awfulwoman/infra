@@ -5,6 +5,7 @@
     - role: composition-victoriametrics
     - role: composition-reverseproxy
     - role: composition-container-management
+    - role: composition-github2karakeep
     - role: composition-audio
     - role: composition-jellyfin
     - role: composition-immich

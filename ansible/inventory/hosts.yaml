@@ -10,6 +10,7 @@ all:
     testrouter:
     pikvm:
     belinda:
+    vagrant-wrapper:
     appletv:
       host_type: baremetal
       host_name: appletv
@@ -28,6 +29,12 @@ all:
       host_fqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}.{{ domain_name }}"
 
   children:
+
+    # Vagrant Wrappers
+    vagrant:
+      hosts:
+        vagrant-wrapper:
+
     # Devices
     devices:
       hosts:

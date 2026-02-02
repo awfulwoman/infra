@@ -1,0 +1,30 @@
+# code: language=ansible
+
+# ----------------------------
+# Core tasks
+# ----------------------------
+
+- name: "Create compose file"
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ composition_root }}/docker-compose.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
+- name: "Create .env file"
+  ansible.builtin.template:
+    src: environment_vars.j2
+    dest: "{{ composition_root }}/.environment_vars"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
+# ----------------------------
+# Start composition
+# ----------------------------
+
+- name: Start Docker Compose project
+  community.docker.docker_compose_v2:
+    project_src: "{{ composition_root }}"
+    state: present
+    build: always
+    remove_orphans: true
