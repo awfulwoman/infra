@@ -76,6 +76,7 @@ all:
         host-storage:
         host-homeassistant:
         dns:
+        vm-awfulwoman-hetzner:
 
     # Hosts acting as backup/replication server(s)
     zfs-backup-servers:

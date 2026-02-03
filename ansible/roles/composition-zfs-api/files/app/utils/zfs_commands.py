@@ -53,7 +53,10 @@ def run_command(cmd: List[str], timeout: Optional[int] = None) -> Optional[str]:
 
 def run_zfs_snapshot_report() -> List[Dict]:
     """
-    Run zfs-snapshot-report and return parsed JSON.
+    Get snapshot report data from cache file or run zfs-snapshot-report.
+
+    Tries to read from cache file first for performance. Falls back to
+    running the command if cache is missing or invalid.
 
     Returns:
         List of dataset snapshot information dictionaries
@@ -61,12 +64,33 @@ def run_zfs_snapshot_report() -> List[Dict]:
     Raises:
         RuntimeError: If the command fails or output cannot be parsed
     """
+    cache_file = os.getenv("ZFS_SNAPSHOT_REPORT_CACHE", "/var/cache/zfs-snapshot-report.json")
+
+    # Try reading from cache first
+    try:
+        if os.path.exists(cache_file):
+            logger.debug(f"Reading snapshot report from cache: {cache_file}")
+            with open(cache_file, 'r') as f:
+                data = json.load(f)
+                # Cache file contains full report structure
+                if 'managed' in data:
+                    return data['managed']
+                return data
+    except (IOError, json.JSONDecodeError) as e:
+        logger.warning(f"Failed to read cache file {cache_file}: {e}. Falling back to command.")
+
+    # Fallback to running command
+    logger.debug("Running zfs-snapshot-report command")
     output = run_command(["/opt/zfs-policy/zfs-snapshot-report", "--json"])
     if not output:
         raise RuntimeError("Failed to get snapshot report")
 
     try:
-        return json.loads(output)
+        data = json.loads(output)
+        # Command returns full report structure
+        if 'managed' in data:
+            return data['managed']
+        return data
     except json.JSONDecodeError as e:
         logger.error(f"Failed to parse snapshot report JSON: {e}")
         raise RuntimeError("Invalid JSON from snapshot report")

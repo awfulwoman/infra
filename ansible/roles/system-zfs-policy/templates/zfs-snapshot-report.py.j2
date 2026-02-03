@@ -43,8 +43,54 @@ def error(message):
     print("! " + message, file=sys.stderr)
 
 
-def get_snapshots(dataset):
-    """Get all snapshots for a dataset, sorted by creation time."""
+def get_all_snapshots_grouped():
+    """Get all snapshots for all datasets in a single command, grouped by dataset.
+
+    Returns a dict mapping dataset name to list of snapshot names (without @ prefix).
+    This is much faster than calling 'zfs list' once per dataset.
+    """
+    cmd = ["zfs", "list", "-t", "snapshot", "-H", "-o", "name", "-s", "creation"]
+
+    debug(f"Running: {' '.join(cmd)}")
+
+    try:
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            check=True
+        )
+        snapshots = result.stdout.decode().strip().splitlines()
+
+        # Group snapshots by dataset
+        grouped = {}
+        for full_name in snapshots:
+            if "@" not in full_name:
+                continue
+            dataset, snapshot_name = full_name.split("@", 1)
+            if dataset not in grouped:
+                grouped[dataset] = []
+            grouped[dataset].append(snapshot_name)
+
+        return grouped
+    except subprocess.CalledProcessError as e:
+        error(f"Failed to list ZFS snapshots: {e.stderr.decode().strip()}")
+        return {}
+    except Exception as e:
+        error(f"Failed to list ZFS snapshots: {e}")
+        return {}
+
+
+def get_snapshots(dataset, all_snapshots_grouped=None):
+    """Get all snapshots for a dataset.
+
+    If all_snapshots_grouped is provided, use it as a cache.
+    Otherwise, fall back to per-dataset query (legacy behavior).
+    """
+    if all_snapshots_grouped is not None:
+        # Use cached data
+        return all_snapshots_grouped.get(dataset, [])
+
+    # Legacy per-dataset query (kept for compatibility)
     cmd = ["zfs", "list", "-t", "snapshot", "-H", "-o", "name", "-s", "creation", dataset]
 
     debug(f"Running: {' '.join(cmd)}")
@@ -125,8 +171,12 @@ def get_all_system_datasets():
         return []
 
 
-def get_unmanaged_datasets():
-    """Get datasets that exist on the system but are not in policy structure."""
+def get_unmanaged_datasets(all_snapshots_grouped):
+    """Get datasets that exist on the system but are not in policy structure.
+
+    Args:
+        all_snapshots_grouped: Dict mapping dataset name to list of snapshots
+    """
     system_datasets = get_all_system_datasets()
     managed_datasets = {ds['dataset'] for ds in DATASETS}
 
@@ -134,7 +184,7 @@ def get_unmanaged_datasets():
     for dataset in system_datasets:
         if dataset not in managed_datasets:
             debug(f"Found unmanaged dataset: {dataset}")
-            snapshots = get_snapshots(dataset)
+            snapshots = get_snapshots(dataset, all_snapshots_grouped)
             counts = count_snapshots_by_type(snapshots)
             total_snapshots = len(snapshots)
             autosnap_total = sum(counts.values())
@@ -151,6 +201,9 @@ def get_unmanaged_datasets():
 
 def gather_report_data():
     """Gather snapshot data for all datasets."""
+    # Get all snapshots in a single command for performance
+    all_snapshots_grouped = get_all_snapshots_grouped()
+
     managed = []
 
     for ds_info in DATASETS:
@@ -160,7 +213,7 @@ def gather_report_data():
 
         debug(f"Processing {dataset} (policy: {policy_name})")
 
-        snapshots = get_snapshots(dataset)
+        snapshots = get_snapshots(dataset, all_snapshots_grouped)
         counts = count_snapshots_by_type(snapshots)
         retention = get_policy_retention(policy)
 
@@ -171,7 +224,7 @@ def gather_report_data():
             'retention': retention,
         })
 
-    unmanaged = get_unmanaged_datasets()
+    unmanaged = get_unmanaged_datasets(all_snapshots_grouped)
 
     return {
         'managed': managed,
@@ -313,13 +366,50 @@ def main():
         action='store_true',
         help='Enable debug output'
     )
+    parser.add_argument(
+        '--cache-file',
+        type=str,
+        metavar='PATH',
+        help='Write JSON output to cache file (for API consumption)'
+    )
     args = parser.parse_args()
 
     _debug = args.debug
 
     report = gather_report_data()
 
-    if args.json:
+    # If cache file specified, write JSON to it atomically
+    if args.cache_file:
+        import tempfile
+        import os
+        try:
+            # Write to temp file first, then atomic rename
+            cache_dir = os.path.dirname(args.cache_file)
+            with tempfile.NamedTemporaryFile(
+                mode='w',
+                dir=cache_dir,
+                delete=False,
+                prefix='.zfs-snapshot-report-',
+                suffix='.tmp'
+            ) as tmp:
+                tmp.write(json.dumps(report, indent=2))
+                tmp_path = tmp.name
+
+            # Atomic rename
+            os.rename(tmp_path, args.cache_file)
+            # Set readable permissions so Docker container can read it
+            os.chmod(args.cache_file, 0o644)
+            debug(f"Wrote cache to {args.cache_file}")
+        except Exception as e:
+            error(f"Failed to write cache file: {e}")
+            # Clean up temp file if it exists
+            try:
+                if 'tmp_path' in locals():
+                    os.unlink(tmp_path)
+            except:
+                pass
+            sys.exit(1)
+    elif args.json:
         output_json(report)
     else:
         output_table(report)

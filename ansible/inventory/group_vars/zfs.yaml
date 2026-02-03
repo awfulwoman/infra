@@ -1,0 +1,8 @@
+---
+# ZFS Group Variables
+# Applied to all hosts in the 'zfs' inventory group
+
+# ZFS Policy - Cache file location
+# Used by system-zfs-policy role and composition-zfs-api role
+# Roles can override this in their defaults/main.yaml if needed
+system_zfs_policy_cache_file: /var/cache/zfs-snapshot-report.json

@@ -1,0 +1,12 @@
+[Unit]
+Description=ZFS Snapshot Report Cache Update
+After=zfs.target
+
+[Service]
+Type=oneshot
+ExecStart={{ system_zfs_policy_script_path }}/zfs-snapshot-report --cache-file {{ system_zfs_policy_cache_file }}
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

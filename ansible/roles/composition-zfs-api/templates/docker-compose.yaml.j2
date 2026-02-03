@@ -13,6 +13,8 @@ services:
       - {{ composition_zfs_api_zfs_policy_path }}:{{ composition_zfs_api_zfs_policy_path }}:ro
       # ZFS policy logs
       - {{ composition_zfs_api_zfs_log_path }}:{{ composition_zfs_api_zfs_log_path }}:ro
+      # Snapshot report cache (read-only)
+      - {{ system_zfs_policy_cache_file }}:{{ system_zfs_policy_cache_file }}:ro
     env_file: .environment_vars
 {% if composition_zfs_api_traefik_enabled %}
     labels:

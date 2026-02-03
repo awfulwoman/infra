@@ -13,6 +13,9 @@ system_zfs_policy_script_path: /opt/zfs-policy
 # Log directory
 system_zfs_policy_log_dir: /var/log/zfs-policy
 
+# Cache file for API consumption
+system_zfs_policy_cache_file: /var/cache/zfs-snapshot-report.json
+
 # Policy definitions (retention counts)
 # See docs/zfs.md for policy details
 system_zfs_policy_definitions:
@@ -51,3 +54,4 @@ system_zfs_policy_timer_daily: "*-*-* 00:15"
 system_zfs_policy_timer_monthly: "*-*-01 00:20"
 system_zfs_policy_timer_yearly: "*-01-01 00:25"
 system_zfs_policy_timer_prune: "*:30"
+system_zfs_policy_timer_cache: "*:0/5"  # Every 5 minutes

@@ -1,0 +1,10 @@
+[Unit]
+Description=ZFS Snapshot Report Cache Update Timer
+
+[Timer]
+OnCalendar={{ system_zfs_policy_timer_cache }}
+Persistent=true
+# No randomized delay - we want consistent cache refresh times
+
+[Install]
+WantedBy=timers.target

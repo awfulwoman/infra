@@ -13,7 +13,7 @@ composition_zfs_api_port: 8000
 composition_zfs_api_log_level: "info"
 
 # Domain configuration
-composition_zfs_api_subdomain: "zfs-api.{{ ansible_host }}"
+composition_zfs_api_subdomain: "zfs-api.{{ inventory_hostname }}"
 composition_zfs_api_domain: "{{ composition_zfs_api_subdomain }}.{{ domain_name }}"
 
 # Container settings

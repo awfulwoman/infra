@@ -5,6 +5,7 @@ Exposes ZFS metrics in Prometheus text exposition format.
 """
 import os
 import logging
+import time
 from fastapi import APIRouter, Response
 from prometheus_client import Gauge, generate_latest, CONTENT_TYPE_LATEST, REGISTRY
 from utils.zfs_commands import get_pool_list, get_zfs_version
@@ -15,6 +16,11 @@ router = APIRouter()
 
 # Get hostname for metric labels
 HOSTNAME = os.getenv("HOSTNAME", "unknown")
+
+# Cache configuration
+CACHE_TTL_SECONDS = 300  # 5 minutes
+_cached_metrics = None
+_cache_timestamp = 0
 
 # Define Prometheus metrics
 # Pool metrics
@@ -181,7 +187,22 @@ async def metrics():
     - Pool health, capacity, and fragmentation
     - Dataset space usage
     - Snapshot policy compliance
+
+    Metrics are cached for 5 minutes to improve performance.
     """
+    global _cached_metrics, _cache_timestamp
+
+    current_time = time.time()
+    cache_age = current_time - _cache_timestamp
+
+    # Return cached metrics if still valid
+    if _cached_metrics is not None and cache_age < CACHE_TTL_SECONDS:
+        logger.debug(f"Returning cached metrics (age: {cache_age:.1f}s)")
+        return Response(content=_cached_metrics, media_type=CONTENT_TYPE_LATEST)
+
+    # Cache miss or expired - regenerate metrics
+    logger.info(f"Regenerating metrics (cache age: {cache_age:.1f}s)")
+
     # Clear all ZFS metrics to prevent stale data from deleted datasets/pools
     pool_health_metric.clear()
     pool_capacity_percent.clear()
@@ -203,5 +224,9 @@ async def metrics():
 
     # Generate Prometheus text format
     metrics_output = generate_latest(REGISTRY)
+
+    # Update cache
+    _cached_metrics = metrics_output
+    _cache_timestamp = current_time
 
     return Response(content=metrics_output, media_type=CONTENT_TYPE_LATEST)
