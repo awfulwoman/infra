@@ -1,8 +1,20 @@
-- name: Restart SSH
+- name: Restart SSH service
+  listen: Restart SSH
   ansible.builtin.service:
-    daemon_reload: true
     name: "{{ security_sshd_name }}"
     state: "{{ security_ssh_restart_handler_state }}"
+  async: 10
+  poll: 0
+
+- name: Reset SSH connection after restart
+  listen: Restart SSH
+  ansible.builtin.meta: reset_connection
+
+- name: Wait for SSH to come back up after restart
+  listen: Restart SSH
+  ansible.builtin.wait_for_connection:
+    delay: 2
+    timeout: 60
 
 - name: Reload fail2ban
   ansible.builtin.service:
