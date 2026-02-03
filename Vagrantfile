@@ -26,34 +26,20 @@ Vagrant.configure("2") do |config|
   # Provision system as root
   config.vm.provision "shell", inline: <<-SHELL
     export DEBIAN_FRONTEND=noninteractive
-
-    echo "#########################################"
-    echo "# APT INSTALL"
-    echo "#########################################"
     apt update
-    apt -q install -y docker.io git unzip jq curl gh wget htop ansible
-
-    echo "#########################################"
-    echo "# APT UPGRADE"
-    echo "#########################################"
-    apt -q upgrade -y
-
-    echo "#########################################"
-    echo "# USER SETUP"
-    echo "#########################################"
+    # apt -q upgrade -y
+    apt -q install -y docker.io git unzip jq curl gh wget htop pipx software-properties-common
+    add-apt-repository --yes --update ppa:ansible/ansible
+    apt install ansible -y
     usermod -aG docker vagrant
     chown -R vagrant:vagrant #{workspace_path}
-
-    echo "#########################################"
-    echo "# ANSIBLE VAULT SETUP"
-    echo "#########################################"
     mkdir -p /opt/ansible
     chown vagrant:vagrant /opt/ansible
   SHELL
 end
 
 
-# Provision system as vagrant user
+# Provision system as vagrant
 Vagrant.configure("2") do |config|
   # Copy over credentials to working VM
   config.vm.provision "file", source: "~/.gitconfig", destination: ".gitconfig"
