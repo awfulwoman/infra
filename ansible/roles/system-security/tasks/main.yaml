@@ -122,7 +122,7 @@
     group: root
     mode: "0644"
   notify:
-    - Reload fail2ban
+    - Restart fail2ban
 
 - name: Ensure fail2ban configuration exists
   become: true
@@ -133,7 +133,7 @@
     group: root
     mode: "0644"
   notify:
-    - Reload fail2ban
+    - Restart fail2ban
 
 - name: Ensure fail2ban is running and enabled
   become: true
