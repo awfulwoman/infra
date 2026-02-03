@@ -10,7 +10,7 @@
 
     - name: Download and execute Claude CLI install script
       ansible.builtin.shell: >
-        curl -fsSL {{ system_claude_install_url }} | bash
+        curl -fsSL {{ system_claude_install_url }} | bash -s -- {{ system_claude_channel }}
       args:
         creates: "{{ ansible_facts.user_dir }}/.local/bin/claude"
         executable: /bin/bash

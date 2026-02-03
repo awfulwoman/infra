@@ -2,6 +2,9 @@
 # Claude CLI installation URL
 system_claude_install_url: "https://claude.ai/install.sh"
 
+# Claude CLI version channel (stable, latest, or specific version)
+system_claude_channel: "latest"
+
 # Ensure PATH is set in shell profile
 system_claude_ensure_path: true
 
