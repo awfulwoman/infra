@@ -1,3 +1,3 @@
-# Static Site Server
+# awfulwoman.com
 
-For serving static HTML sites
+An nginx container for serving the [awfulwoman.com](https://awfulwoman.com) site.
