@@ -5,7 +5,7 @@ infra_publicresources_hcloud_server:
       A general-purpose server for things out on the public internet.
     image: ubuntu-24.04
     region: nbg1
-    size: cx23
+    size: cax21
     labels:
       - key: secured
     volumes:
@@ -58,6 +58,11 @@ infra_publicresources_hcloud_firewall:
           - "::/0"
       - protocol: tcp
         port_range: 443
+        ip_addresses:
+          - "0.0.0.0/0"
+          - "::/0"
+      - protocol: udp
+        port_range: 53
         ip_addresses:
           - "0.0.0.0/0"
           - "::/0"
