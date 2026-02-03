@@ -22,45 +22,68 @@
     group: root
     mode: "0755"
 
-- name: Download Promtail binary
-  become: true
-  ansible.builtin.get_url:
-    url: "{{ promtail_download_url }}"
-    dest: "/tmp/promtail.zip"
-    mode: "0644"
+- name: Check if Promtail binary exists
+  ansible.builtin.stat:
+    path: "{{ promtail_binary_path }}"
+  register: promtail_binary_stat
 
-- name: Install unzip (if not present)
-  become: true
-  ansible.builtin.apt:
-    name: unzip
-    state: present
-    update_cache: false
+- name: Get installed Promtail version
+  ansible.builtin.command: "{{ promtail_binary_path }} --version"
+  register: promtail_installed_version
+  changed_when: false
+  failed_when: false
+  when: promtail_binary_stat.stat.exists
 
-- name: Extract Promtail binary
-  become: true
-  ansible.builtin.unarchive:
-    src: "/tmp/promtail.zip"
-    dest: "/tmp"
-    remote_src: true
+- name: Set Promtail installation needed fact
+  ansible.builtin.set_fact:
+    promtail_needs_install: >-
+      {{
+        not promtail_binary_stat.stat.exists or
+        promtail_version not in promtail_installed_version.stdout | default('')
+      }}
 
-- name: Move Promtail binary to final location
-  become: true
-  ansible.builtin.copy:
-    src: "/tmp/{{ promtail_binary_name }}"
-    dest: "{{ promtail_binary_path }}"
-    owner: root
-    group: root
-    mode: "0755"
-    remote_src: true
+- name: Install Promtail binary
+  when: promtail_needs_install
+  block:
+    - name: Install unzip (if not present)
+      become: true
+      ansible.builtin.apt:
+        name: unzip
+        state: present
+        update_cache: false
 
-- name: Clean up downloaded files
-  become: true
-  ansible.builtin.file:
-    path: "{{ item }}"
-    state: absent
-  loop:
-    - "/tmp/promtail.zip"
-    - "/tmp/{{ promtail_binary_name }}"
+    - name: Download Promtail binary
+      become: true
+      ansible.builtin.get_url:
+        url: "{{ promtail_download_url }}"
+        dest: "/tmp/promtail.zip"
+        mode: "0644"
+
+    - name: Extract Promtail binary
+      become: true
+      ansible.builtin.unarchive:
+        src: "/tmp/promtail.zip"
+        dest: "/tmp"
+        remote_src: true
+
+    - name: Move Promtail binary to final location
+      become: true
+      ansible.builtin.copy:
+        src: "/tmp/{{ promtail_binary_name }}"
+        dest: "{{ promtail_binary_path }}"
+        owner: root
+        group: root
+        mode: "0755"
+        remote_src: true
+
+    - name: Clean up downloaded files
+      become: true
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - "/tmp/promtail.zip"
+        - "/tmp/{{ promtail_binary_name }}"
 
 # ----------------------------
 # Configure Promtail
