@@ -1,7 +1,7 @@
 # Composition name (used by composition-common dependency)
 composition_name: awfulwoman
 
-awfulwoman_base: /fastpool/sites
-awfulwoman_path: "{{ awfulwoman_base }}/awfulwoman"
+awfulwoman_sites_base: /fastpool/sites
+awfulwoman_path: "{{ awfulwoman_sites_base }}/awfulwoman"
 awfulwoman_deploy_group: nginx
 awfulwoman_deploy_user: "{{ vault_sitedeployer_user }}"
