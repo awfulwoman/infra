@@ -27,7 +27,7 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", inline: <<-SHELL
     export DEBIAN_FRONTEND=noninteractive
     apt update
-    # apt -q upgrade -y
+    apt -q upgrade -y
     apt -q install -y docker.io git unzip jq curl gh wget htop pipx software-properties-common
     add-apt-repository --yes --update ppa:ansible/ansible
     apt install ansible -y
