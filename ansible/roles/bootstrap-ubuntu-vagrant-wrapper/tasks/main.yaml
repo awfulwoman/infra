@@ -142,22 +142,12 @@
   when: bootstrap_ubuntu_workspace_path | length > 0
   block:
 
-    - name: Check if workspace cd already exists in .bashrc
-      ansible.builtin.lineinfile:
-        path: "{{ ansible_facts.user_dir }}/.bashrc"
-        regexp: '^cd {{ bootstrap_ubuntu_workspace_path | regex_escape() }}$'
-        state: absent
-      check_mode: true
-      register: workspace_cd_check
-      changed_when: false
-
     - name: Add workspace cd to .bashrc
       ansible.builtin.lineinfile:
         path: "{{ ansible_facts.user_dir }}/.bashrc"
         line: "cd {{ bootstrap_ubuntu_workspace_path }}"
         create: true
         mode: '0644'
-      when: workspace_cd_check.found == 0
 
 - name: MOTD
   ansible.builtin.include_role:

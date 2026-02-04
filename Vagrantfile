@@ -60,10 +60,10 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", privileged: false, inline: <<-SHELL
     cd #{workspace_path}
     export ANSIBLE_ROLES_PATH=#{workspace_path}/ansible/roles:/opt/ansible/galaxy/roles
+    export VAGRANT_WORKSPACE_PATH=#{workspace_path}
     ansible-playbook ansible/playbooks/virtual/vagrant-wrapper/core.yaml \
       -i ansible/inventory/hosts.yaml \
-      --limit=vagrant-wrapper \
-      -e "VAGRANT_WORKSPACE_PATH=#{workspace_path}"
+      --limit=vagrant-wrapper
   SHELL
 
 end

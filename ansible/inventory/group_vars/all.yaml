@@ -45,3 +45,6 @@ vault_olddomain_wc: !vault |
           3362
 
 domain_name: "{{ vault_infra_domain_name_ew }}"
+
+# vault_vagrant_public_key:
+# vault_vagrant_private_key:
