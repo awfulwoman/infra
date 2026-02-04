@@ -37,3 +37,9 @@
         create: true
         mode: '0644'
       when: path_check.found == 0
+
+- name: Add claude to .bashrc
+  ansible.builtin.lineinfile:
+    path: "{{ ansible_facts.user_dir }}/.bashrc"
+    line: "/home/vagrant/.local/bin/claude"
+    insertafter: EOF

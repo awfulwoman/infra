@@ -104,8 +104,6 @@
         marker: "# {mark} SSH agent auto-start"
         block: |
           eval $(keychain --eval --quiet {{ bootstrap_ubuntu_ssh_key_path }})
-        create: true
-        mode: '0644'
       when: ssh_agent_check.found == 0
 
 - name: Configure SSH config for local networks
@@ -142,8 +140,6 @@
       ansible.builtin.lineinfile:
         path: "{{ ansible_facts.user_dir }}/.bashrc"
         line: "cd {{ bootstrap_ubuntu_workspace_path }}"
-        create: true
-        mode: '0644'
 
 - name: MOTD
   ansible.builtin.include_role:
