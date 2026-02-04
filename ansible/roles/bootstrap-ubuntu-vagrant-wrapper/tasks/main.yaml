@@ -103,11 +103,7 @@
         path: "{{ ansible_facts.user_dir }}/.bashrc"
         marker: "# {mark} SSH agent auto-start"
         block: |
-          if [ ! -f ~/.vagrant_ssh_reminder_shown ]; then
-            eval "$(ssh-agent -s)" > /dev/null
-            echo "==> SSH agent started. Add your key:"
-            ssh-add {{ bootstrap_ubuntu_ssh_key_path }} && touch ~/.vagrant_ssh_reminder_shown
-          fi
+          eval $(keychain --eval --quiet {{ bootstrap_ubuntu_ssh_key_path }})
         create: true
         mode: '0644'
       when: ssh_agent_check.found == 0

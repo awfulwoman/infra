@@ -7,6 +7,7 @@ bootstrap_ubuntu_apt_packages:
   - git
   - htop
   - iptables
+  - keychain
   - mosh
   - netplan.io
   - python-is-python3
