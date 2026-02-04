@@ -28,17 +28,12 @@ bootstrap_ubuntu_apt_packages:
 bootstrap_ubuntu_ssh_agent_enable: true
 bootstrap_ubuntu_ssh_key_path: "~/.ssh/id_ed25519"
 
-# SSH config for local networks
+# SSH config for infra hosts
 bootstrap_ubuntu_ssh_config_enable: true
-bootstrap_ubuntu_ssh_config_local_networks:
-  - host: "192.168.0.*"
-    user: "{{ vault_server_username }}"
-    strict_host_key_checking: false
-    user_known_hosts_file: "/dev/null"
-  - host: "100.*.*.*"
-    user: "{{ vault_server_username }}"
-    strict_host_key_checking: false
-    user_known_hosts_file: "/dev/null"
+bootstrap_ubuntu_ssh_config_infra_group: "infra"
+bootstrap_ubuntu_ssh_config_user: "{{ vault_server_username }}"
+bootstrap_ubuntu_ssh_config_strict_host_key_checking: false
+bootstrap_ubuntu_ssh_config_user_known_hosts_file: "/dev/null"
 
 # Workspace path to cd into on login
 bootstrap_ubuntu_workspace_path: ""

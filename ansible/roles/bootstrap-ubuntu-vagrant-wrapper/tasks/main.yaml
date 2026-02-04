@@ -122,17 +122,17 @@
         state: directory
         mode: '0700'
 
-    - name: Add SSH config entries for local networks
+    - name: Add SSH config entries for infra hosts
       ansible.builtin.blockinfile:
         path: "{{ ansible_facts.user_dir }}/.ssh/config"
-        marker: "# {mark} Vagrant local network config"
+        marker: "# {mark} Vagrant infra hosts config"
         block: |
-          # See: https://superuser.com/a/628801
-          {% for network in bootstrap_ubuntu_ssh_config_local_networks %}
-          Host {{ network.host }}
-            StrictHostKeyChecking {{ 'no' if not network.strict_host_key_checking else 'yes' }}
-            UserKnownHostsFile={{ network.user_known_hosts_file }}
-            User {{ network.user }}
+          # Auto-generated SSH config for infra group hosts
+          {% for host in groups[bootstrap_ubuntu_ssh_config_infra_group] %}
+          Host {{ host }}
+            StrictHostKeyChecking {{ 'no' if not bootstrap_ubuntu_ssh_config_strict_host_key_checking else 'yes' }}
+            UserKnownHostsFile={{ bootstrap_ubuntu_ssh_config_user_known_hosts_file }}
+            User {{ bootstrap_ubuntu_ssh_config_user }}
 
           {% endfor %}
         create: true
