@@ -8,11 +8,11 @@ resource "libvirt_pool" "{{ vm.id }}_pool" {
   path = "{{ infra_privateresources_pool_path }}/{{ vm.name }}"
 }
 
-# Base disk volume from cloud image
+# Base disk volume from cached cloud image
 resource "libvirt_volume" "{{ vm.id }}_base" {
   name   = "{{ vm.name }}.qcow2"
   pool   = libvirt_pool.{{ vm.id }}_pool.name
-  source = "{{ vm.source_image }}"
+  source = "/slowpool/images/ubuntu/{{ vm.source_image | basename }}"
   format = "qcow2"
 }
 
@@ -31,9 +31,9 @@ resource "libvirt_domain" "{{ vm.id }}" {
 
   cloudinit = libvirt_cloudinit_disk.{{ vm.id }}_cloudinit.id
 
-  # Bridge networking with static IP
+  # Macvtap networking with static IP
   network_interface {
-    bridge         = var.bridge_interface
+    macvtap        = var.bridge_interface
     hostname       = "{{ vm.name }}"
     addresses      = ["{{ vm.ip_address }}"]
     mac            = "{{ vm.mac_address }}"

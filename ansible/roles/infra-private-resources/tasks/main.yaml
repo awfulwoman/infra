@@ -27,6 +27,7 @@
       - libvirt-daemon-system
       - libvirt-clients
       - bridge-utils
+      - genisoimage
 
 - name: Ensure main user is in libvirt group
   become: true
@@ -62,6 +63,17 @@
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0644"
+
+- name: Cache Ubuntu cloud images locally
+  ansible.builtin.get_url:
+    url: "{{ item.source_image }}"
+    dest: "/slowpool/images/ubuntu/{{ item.source_image | basename }}"
+    mode: "0644"
+    timeout: 300
+  loop: "{{ infra_privateresources_vms }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when: item.source_image is defined
 
 - name: Ensure Terraform templates exist
   ansible.builtin.template:
