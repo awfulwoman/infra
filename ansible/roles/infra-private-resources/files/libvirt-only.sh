@@ -25,7 +25,7 @@ case "$SSH_ORIGINAL_COMMAND" in
         ;;
 
     # Libvirt daemon socket connection (used by terraform provider)
-    nc\ -U\ /var/run/libvirt/libvirt-sock)
+    *nc\ -U\ /var/run/libvirt/libvirt-sock*)
         exec nc -U /var/run/libvirt/libvirt-sock
         ;;
     socat\ *)

@@ -16,8 +16,9 @@ resource "libvirt_volume" "{{ vm.id }}_base" {
   name = "{{ vm.name }}.qcow2"
   pool = libvirt_pool.{{ vm.id }}_pool.name
 
-  # Explicit disk size (cloud image is only 3.5GB, too small for production)
-  capacity = {{ vm.disk_size_gb * 1073741824 }}  # {{ vm.disk_size_gb }}GB in bytes
+  # NOTE: capacity cannot be specified with create.content.url in v0.9.x
+  # Volume will be created at source image size (3.7GB) - TODO: implement resize
+  # Desired size: {{ vm.disk_size_gb }}GB
 
   target = {
     format = {
@@ -27,7 +28,7 @@ resource "libvirt_volume" "{{ vm.id }}_base" {
 
   create = {
     content = {
-      url = "{{ vm.source_image_cached }}"
+      url = "{{ vm.source_image_url }}"
     }
   }
 }
@@ -120,12 +121,8 @@ resource "libvirt_domain" "{{ vm.id }}" {
         mac = {
           address = "{{ vm.mac_address }}"
         }
-        ip = [
-          {
-            address = "{{ vm.ip_address }}"
-            family  = "ipv4"
-          }
-        ]
+        # NOTE: Static IP configured via cloud-init, not libvirt
+        # QEMU doesn't support setting guest-side IPs in domain XML
       }
     ]
 

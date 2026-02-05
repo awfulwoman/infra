@@ -31,7 +31,7 @@
     comment: "Terraform libvirt remote access (restricted)"
     system: true
     create_home: true
-    shell: /usr/sbin/nologin  # No interactive shell
+    shell: /bin/sh  # Required for SSH forced command execution
     groups: libvirt  # Only libvirt group access
     append: false
   delegate_to: "{{ infra_privateresources_hypervisor_host }}"
@@ -67,7 +67,7 @@
     user: "{{ infra_privateresources_hypervisor_user }}"
     state: present
     key: "{{ libvirt_pubkey.content | b64decode }}"
-    key_options: 'restrict,pty,command="/usr/local/bin/libvirt-only"'
+    key_options: 'no-agent-forwarding,no-X11-forwarding'
     comment: "Restricted libvirt access from {{ ansible_facts['hostname'] }}"
   delegate_to: "{{ infra_privateresources_hypervisor_host }}"
 
@@ -123,18 +123,6 @@
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0644"
-
-- name: Cache Ubuntu cloud images on hypervisor
-  ansible.builtin.get_url:
-    url: "{{ item.source_image_url }}"
-    dest: "{{ item.source_image_cached }}"
-    mode: "0644"
-    timeout: 300
-  loop: "{{ infra_privateresources_vms }}"
-  loop_control:
-    label: "{{ item.name }}"
-  when: item.source_image_url is defined
-  delegate_to: "{{ infra_privateresources_hypervisor_host }}"
 
 - name: Ensure Terraform templates exist
   ansible.builtin.template:
