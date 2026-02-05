@@ -3,11 +3,16 @@ infra_privateresources_terraform_working_dir: "{{ terraform_working_dir }}/priva
 infra_privateresources_debug: false
 infra_privateresources_tf_apply: false
 
-# Network configuration
-infra_privateresources_bridge_interface: "{{ host_primary_interface }}"
+# Hypervisor connection (Terraform runs on dns, connects to host-storage via SSH)
+infra_privateresources_hypervisor_host: "host-storage"
+infra_privateresources_hypervisor_user: "{{ ansible_user }}"
+infra_privateresources_hypervisor_ssh_uri: "qemu+ssh://{{ infra_privateresources_hypervisor_user }}@{{ infra_privateresources_hypervisor_host }}/system"
+
+# Network configuration (on hypervisor)
+infra_privateresources_bridge_interface: "enp2s0"  # host-storage primary interface
 infra_privateresources_network_mode: "bridge"
 
-# Storage configuration
+# Storage configuration (on hypervisor)
 infra_privateresources_pool_path: "/fastpool/pools/vms"
 
 # VM definitions

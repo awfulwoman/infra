@@ -19,23 +19,7 @@
     name:
       - terraform
 
-- name: Ensure libvirt packages are installed
-  become: true
-  ansible.builtin.apt:
-    name:
-      - qemu-kvm
-      - libvirt-daemon-system
-      - libvirt-clients
-      - bridge-utils
-      - genisoimage
-
-- name: Ensure main user is in libvirt group
-  become: true
-  ansible.builtin.user:
-    user: "{{ ansible_user }}"
-    groups: libvirt
-    append: true
-
+# Image caching happens on hypervisor, not on dns (control plane)
 - name: Read Github authorized keys as string
   ansible.builtin.uri:
     url: https://github.com/awfulwoman.keys
@@ -64,7 +48,7 @@
     group: "{{ ansible_user }}"
     mode: "0644"
 
-- name: Cache Ubuntu cloud images locally
+- name: Cache Ubuntu cloud images on hypervisor
   ansible.builtin.get_url:
     url: "{{ item.source_image_url }}"
     dest: "{{ item.source_image_cached }}"
@@ -74,6 +58,7 @@
   loop_control:
     label: "{{ item.name }}"
   when: item.source_image_url is defined
+  delegate_to: "{{ infra_privateresources_hypervisor_host }}"
 
 - name: Ensure Terraform templates exist
   ansible.builtin.template:
@@ -103,6 +88,7 @@
         state: present
         force_init: true
         variables:
+          hypervisor_uri: "{{ infra_privateresources_hypervisor_ssh_uri }}"
           bridge_interface: "{{ infra_privateresources_bridge_interface }}"
       register: tf_plan
       check_mode: true
@@ -118,4 +104,5 @@
         project_path: "{{ infra_privateresources_terraform_working_dir }}"
         state: present
         variables:
+          hypervisor_uri: "{{ infra_privateresources_hypervisor_ssh_uri }}"
           bridge_interface: "{{ infra_privateresources_bridge_interface }}"

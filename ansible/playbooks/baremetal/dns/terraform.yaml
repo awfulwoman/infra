@@ -2,6 +2,7 @@
   hosts: dns
   roles:
     - role: infra-public-resources
+    - role: infra-private-resources
 
   handlers:
     - name: Reboot host

@@ -1,0 +1,24 @@
+---
+# Test playbook for VM infrastructure
+# - Configures libvirt on host-storage (hypervisor)
+# - Manages VMs from dns (control plane) via SSH
+
+- name: Configure hypervisor
+  hosts: host-storage
+  roles:
+    - role: virtual-qemu-host
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:
+
+- name: Manage VMs via Terraform
+  hosts: dns
+  roles:
+    - role: infra-private-resources
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:
