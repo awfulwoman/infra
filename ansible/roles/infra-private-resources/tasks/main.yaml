@@ -12,12 +12,13 @@
       {% else -%}ansible_facts['architecture']{% endif %}
     signed_by: "https://apt.releases.hashicorp.com/gpg"
 
-- name: Ensure Terraform itself is installed
+- name: Ensure Terraform and libvirt client installed
   become: true
   ansible.builtin.apt:
     update_cache: true
     name:
       - terraform
+      - libvirt-clients  # For qemu+ssh:// connection to hypervisor
 
 # Image caching happens on hypervisor, not on dns (control plane)
 - name: Read Github authorized keys as string
