@@ -66,14 +66,14 @@
 
 - name: Cache Ubuntu cloud images locally
   ansible.builtin.get_url:
-    url: "{{ item.source_image }}"
-    dest: "/slowpool/images/ubuntu/{{ item.source_image | basename }}"
+    url: "{{ item.source_image_url }}"
+    dest: "{{ item.source_image_cached }}"
     mode: "0644"
     timeout: 300
   loop: "{{ infra_privateresources_vms }}"
   loop_control:
     label: "{{ item.name }}"
-  when: item.source_image is defined
+  when: item.source_image_url is defined
 
 - name: Ensure Terraform templates exist
   ansible.builtin.template:

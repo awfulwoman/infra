@@ -12,7 +12,7 @@ resource "libvirt_pool" "{{ vm.id }}_pool" {
 resource "libvirt_volume" "{{ vm.id }}_base" {
   name   = "{{ vm.name }}.qcow2"
   pool   = libvirt_pool.{{ vm.id }}_pool.name
-  source = "/slowpool/images/ubuntu/{{ vm.source_image | basename }}"
+  source = "{{ vm.source_image_cached }}"
   format = "qcow2"
 }
 
