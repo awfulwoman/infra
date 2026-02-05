@@ -1,0 +1,6 @@
+---
+- name: Test VM provisioning on host-storage
+  hosts: host-storage
+  roles:
+    - role: virtual-qemu-host
+    - role: infra-private-resources
