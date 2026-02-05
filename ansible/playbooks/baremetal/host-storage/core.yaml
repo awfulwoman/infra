@@ -14,7 +14,6 @@
       become: true
     - role: server-nfs
     - role: virtual-qemu-host
-    - role: infra-private-resources
     - role: backups-zfs-client
     - role: composition-zfs-api
     - role: composition-victoriametrics
