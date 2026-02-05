@@ -5,7 +5,10 @@
 resource "libvirt_pool" "{{ vm.id }}_pool" {
   name = "{{ vm.name }}"
   type = "dir"
-  path = "{{ infra_privateresources_pool_path }}/{{ vm.name }}"
+
+  target = {
+    path = "{{ infra_privateresources_pool_path }}/{{ vm.name }}"
+  }
 }
 
 # Base disk volume from cached cloud image
@@ -30,6 +33,10 @@ resource "libvirt_volume" "{{ vm.id }}_base" {
 resource "libvirt_cloudinit_disk" "{{ vm.id }}_cloudinit" {
   name      = "{{ vm.name }}_cloudinit"
   user_data = file("${path.module}/cloud-init.yaml")
+  meta_data = <<-EOF
+    instance-id: {{ vm.id }}
+    local-hostname: {{ vm.name }}
+  EOF
 }
 
 # Upload cloud-init ISO as volume
