@@ -10,58 +10,141 @@ resource "libvirt_pool" "{{ vm.id }}_pool" {
 
 # Base disk volume from cached cloud image
 resource "libvirt_volume" "{{ vm.id }}_base" {
-  name   = "{{ vm.name }}.qcow2"
-  pool   = libvirt_pool.{{ vm.id }}_pool.name
-  source = "{{ vm.source_image_cached }}"
-  format = "qcow2"
+  name = "{{ vm.name }}.qcow2"
+  pool = libvirt_pool.{{ vm.id }}_pool.name
+
+  target = {
+    format = {
+      type = "qcow2"
+    }
+  }
+
+  create = {
+    content = {
+      url = "{{ vm.source_image_cached }}"
+    }
+  }
 }
 
-# Cloud-init disk
+# Cloud-init configuration
 resource "libvirt_cloudinit_disk" "{{ vm.id }}_cloudinit" {
-  name      = "{{ vm.name }}_cloudinit.iso"
-  pool      = libvirt_pool.{{ vm.id }}_pool.name
+  name      = "{{ vm.name }}_cloudinit"
   user_data = file("${path.module}/cloud-init.yaml")
+}
+
+# Upload cloud-init ISO as volume
+resource "libvirt_volume" "{{ vm.id }}_cloudinit_volume" {
+  name = "{{ vm.name }}_cloudinit.iso"
+  pool = libvirt_pool.{{ vm.id }}_pool.name
+
+  create = {
+    content = {
+      url = libvirt_cloudinit_disk.{{ vm.id }}_cloudinit.path
+    }
+  }
 }
 
 # VM domain
 resource "libvirt_domain" "{{ vm.id }}" {
   name   = "{{ vm.name }}"
-  memory = {{ vm.memory }}
+  memory = {{ vm.memory * 1024 }}  # Convert MiB to KiB
   vcpu   = {{ vm.vcpus }}
+  type   = "kvm"
 
-  cloudinit = libvirt_cloudinit_disk.{{ vm.id }}_cloudinit.id
-
-  # Macvtap networking with static IP
-  network_interface {
-    macvtap        = var.bridge_interface
-    hostname       = "{{ vm.name }}"
-    addresses      = ["{{ vm.ip_address }}"]
-    mac            = "{{ vm.mac_address }}"
-    wait_for_lease = false
+  # OS configuration
+  os = {
+    type         = "hvm"
+    type_arch    = "x86_64"
+    type_machine = "q35"
   }
 
-  # Boot disk
-  disk {
-    volume_id = libvirt_volume.{{ vm.id }}_base.id
+  # Devices configuration
+  devices = {
+    # Disks
+    disks = [
+      # Main boot disk
+      {
+        source = {
+          volume = {
+            pool   = libvirt_pool.{{ vm.id }}_pool.name
+            volume = libvirt_volume.{{ vm.id }}_base.name
+          }
+        }
+        target = {
+          bus = "virtio"
+          dev = "vda"
+        }
+        driver = {
+          type = "qcow2"
+        }
+      },
+      # Cloud-init config disk
+      {
+        device = "cdrom"
+        source = {
+          volume = {
+            pool   = libvirt_pool.{{ vm.id }}_pool.name
+            volume = libvirt_volume.{{ vm.id }}_cloudinit_volume.name
+          }
+        }
+        target = {
+          bus = "sata"
+          dev = "sda"
+        }
+      }
+    ]
+
+    # Network interfaces
+    interfaces = [
+      {
+        type = "direct"
+        model = {
+          type = "virtio"
+        }
+        source = {
+          direct = {
+            dev  = var.bridge_interface
+            mode = "bridge"
+          }
+        }
+        mac = {
+          address = "{{ vm.mac_address }}"
+        }
+        ip = [
+          {
+            address = "{{ vm.ip_address }}"
+            family  = "ipv4"
+          }
+        ]
+      }
+    ]
+
+    # Serial console
+    consoles = [
+      {
+        type = "pty"
+        target = {
+          type = "serial"
+          port = 0
+        }
+      }
+    ]
+
+    {% if vm.graphics | default(false) %}
+    # Graphics (SPICE)
+    graphics = [
+      {
+        spice = {
+          auto_port = true
+          listen    = "127.0.0.1"
+        }
+      }
+    ]
+    {% endif %}
   }
 
-  # Serial console
-  console {
-    type        = "pty"
-    target_type = "serial"
-    target_port = "0"
-  }
-
-  {% if vm.graphics | default(false) %}
-  # Graphics (SPICE)
-  graphics {
-    type        = "spice"
-    listen_type = "address"
-    autoport    = true
-  }
-  {% endif %}
-
-  # Autostart on host boot
+  # Start after creation and on host boot
+  running   = true
   autostart = true
 }
 {% endfor %}
