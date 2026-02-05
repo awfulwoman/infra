@@ -80,10 +80,10 @@
 - name: DEBUG TF files
   ansible.builtin.debug:
     var: tf_files
-  when: infra_privateresources_debug
+  when: infra_privateresources_debug | bool
 
 - name: Run Terraform
-  when: infra_privateresources_tf_apply
+  when: infra_privateresources_tf_apply | bool
   block:
     - name: Ensure Terraform plan is tested
       community.general.terraform:
@@ -98,7 +98,7 @@
     - name: DEBUG TF plan
       ansible.builtin.debug:
         var: tf_plan
-      when: infra_privateresources_debug
+      when: infra_privateresources_debug | bool
 
     - name: Ensure Terraform plan is applied
       when: (tf_plan.changed) and (not tf_plan.failed)

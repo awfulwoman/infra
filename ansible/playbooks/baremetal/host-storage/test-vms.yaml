@@ -4,3 +4,8 @@
   roles:
     - role: virtual-qemu-host
     - role: infra-private-resources
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:
