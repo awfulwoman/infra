@@ -1,26 +1,28 @@
 #cloud-config
+# Minimal cloud-init for VM bootstrap
+# Application configuration (Docker, Tailscale, etc.) handled by Ansible
+
 disable_root: true
+
 users:
   - name: {{ ansible_user }}
     sudo: "ALL=(ALL) NOPASSWD:ALL"
-    groups: users, adm, sudo, docker
+    groups: users, adm, sudo
     ssh_import_id:
       - gh:awfulwoman
     lock_passwd: false
 
+# Only essential utilities - applications installed via Ansible roles
 packages:
   - curl
   - vim
   - git
-  - docker.io
-  - docker-compose
+  - python3-apt  # Required for Ansible apt module
 
 package_update: true
 package_upgrade: true
 
+# Enable SSH for Ansible access
 runcmd:
-  # Install Tailscale
-  - curl -fsSL https://tailscale.com/install.sh | sh
-  # Enable Docker service
-  - systemctl enable docker
-  - systemctl start docker
+  - systemctl enable ssh
+  - systemctl start ssh
