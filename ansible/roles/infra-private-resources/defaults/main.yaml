@@ -5,8 +5,13 @@ infra_privateresources_tf_apply: false
 
 # Hypervisor connection (Terraform runs on dns, connects to host-storage via SSH)
 infra_privateresources_hypervisor_host: "host-storage"
-infra_privateresources_hypervisor_user: "{{ ansible_user }}"
+# Dedicated service account with restricted libvirt-only access (least privilege)
+infra_privateresources_hypervisor_user: "libvirt-remote"
 infra_privateresources_hypervisor_ssh_uri: "qemu+ssh://{{ infra_privateresources_hypervisor_user }}@{{ infra_privateresources_hypervisor_host }}/system"
+
+# SSH key paths for service account on control plane (dns)
+infra_privateresources_ssh_key_path: "/home/{{ ansible_user }}/.ssh/libvirt-remote_ed25519"
+infra_privateresources_ssh_pubkey_path: "{{ infra_privateresources_ssh_key_path }}.pub"
 
 # Network configuration (on hypervisor)
 infra_privateresources_bridge_interface: "enp2s0"  # host-storage primary interface
