@@ -16,6 +16,9 @@ resource "libvirt_volume" "{{ vm.id }}_base" {
   name = "{{ vm.name }}.qcow2"
   pool = libvirt_pool.{{ vm.id }}_pool.name
 
+  # Explicit disk size (cloud image is only 3.5GB, too small for production)
+  capacity = {{ vm.disk_size_gb * 1073741824 }}  # {{ vm.disk_size_gb }}GB in bytes
+
   target = {
     format = {
       type = "qcow2"

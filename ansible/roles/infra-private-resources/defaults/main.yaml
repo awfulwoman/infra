@@ -19,6 +19,7 @@ infra_privateresources_vms:
     source_image_cached: "/slowpool/images/ubuntu/noble-server-cloudimg-amd64.img"
     memory: 8192  # 8GB
     vcpus: 4
+    disk_size_gb: 100  # Docker images, source code, build artifacts
     ip_address: "192.168.1.200"
     mac_address: "52:54:00:00:02:00"
     graphics: false
@@ -30,6 +31,7 @@ infra_privateresources_vms:
     source_image_cached: "/slowpool/images/ubuntu/noble-server-cloudimg-amd64.img"
     memory: 2048  # 2GB
     vcpus: 2
+    disk_size_gb: 50  # HA database, config, snapshots, recordings
     ip_address: "192.168.1.201"
     mac_address: "52:54:00:00:02:01"
     graphics: false
@@ -41,6 +43,7 @@ infra_privateresources_vms:
     source_image_cached: "/slowpool/images/ubuntu/noble-server-cloudimg-amd64.img"
     memory: 4096  # 4GB
     vcpus: 4
+    disk_size_gb: 50  # Torrent temp, Arr databases (media on NFS)
     ip_address: "192.168.1.202"
     mac_address: "52:54:00:00:02:02"
     graphics: false
@@ -52,6 +55,7 @@ infra_privateresources_vms:
     source_image_cached: "/slowpool/images/ubuntu/noble-server-cloudimg-amd64.img"
     memory: 6144  # 6GB
     vcpus: 4
+    disk_size_gb: 100  # Metadata, transcode cache, thumbnails
     ip_address: "192.168.1.203"
     mac_address: "52:54:00:00:02:03"
     graphics: false
