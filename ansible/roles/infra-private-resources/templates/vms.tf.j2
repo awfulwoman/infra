@@ -1,0 +1,67 @@
+{% for vm in infra_privateresources_vms %}
+# {{ vm.name }} - {{ vm.description }}
+
+# Dedicated storage pool for this VM (uses ZFS dataset)
+resource "libvirt_pool" "{{ vm.id }}_pool" {
+  name = "{{ vm.name }}"
+  type = "dir"
+  path = "{{ infra_privateresources_pool_path }}/{{ vm.name }}"
+}
+
+# Base disk volume from cloud image
+resource "libvirt_volume" "{{ vm.id }}_base" {
+  name   = "{{ vm.name }}.qcow2"
+  pool   = libvirt_pool.{{ vm.id }}_pool.name
+  source = "{{ vm.source_image }}"
+  format = "qcow2"
+}
+
+# Cloud-init disk
+resource "libvirt_cloudinit_disk" "{{ vm.id }}_cloudinit" {
+  name      = "{{ vm.name }}_cloudinit.iso"
+  pool      = libvirt_pool.{{ vm.id }}_pool.name
+  user_data = file("${path.module}/cloud-init.yaml")
+}
+
+# VM domain
+resource "libvirt_domain" "{{ vm.id }}" {
+  name   = "{{ vm.name }}"
+  memory = {{ vm.memory }}
+  vcpu   = {{ vm.vcpus }}
+
+  cloudinit = libvirt_cloudinit_disk.{{ vm.id }}_cloudinit.id
+
+  # Bridge networking with static IP
+  network_interface {
+    bridge         = var.bridge_interface
+    hostname       = "{{ vm.name }}"
+    addresses      = ["{{ vm.ip_address }}"]
+    mac            = "{{ vm.mac_address }}"
+    wait_for_lease = false
+  }
+
+  # Boot disk
+  disk {
+    volume_id = libvirt_volume.{{ vm.id }}_base.id
+  }
+
+  # Serial console
+  console {
+    type        = "pty"
+    target_type = "serial"
+    target_port = "0"
+  }
+
+  {% if vm.graphics | default(false) %}
+  # Graphics (SPICE)
+  graphics {
+    type        = "spice"
+    listen_type = "address"
+    autoport    = true
+  }
+  {% endif %}
+
+  # Autostart on host boot
+  autostart = true
+}
+{% endfor %}

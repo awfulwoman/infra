@@ -62,3 +62,48 @@
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0644"
+
+- name: Ensure Terraform templates exist
+  ansible.builtin.template:
+    src: "{{ item }}"
+    dest: "{{ infra_privateresources_terraform_working_dir }}/{{ item | regex_replace('\\.j2$', '') }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0644"
+  loop:
+    - main.tf
+    - provider.tf
+    - variables.tf
+    - vms.tf.j2
+  register: tf_files
+
+- name: DEBUG TF files
+  ansible.builtin.debug:
+    var: tf_files
+  when: infra_privateresources_debug
+
+- name: Run Terraform
+  when: infra_privateresources_tf_apply
+  block:
+    - name: Ensure Terraform plan is tested
+      community.general.terraform:
+        project_path: "{{ infra_privateresources_terraform_working_dir }}"
+        state: present
+        force_init: true
+        variables:
+          bridge_interface: "{{ infra_privateresources_bridge_interface }}"
+      register: tf_plan
+      check_mode: true
+
+    - name: DEBUG TF plan
+      ansible.builtin.debug:
+        var: tf_plan
+      when: infra_privateresources_debug
+
+    - name: Ensure Terraform plan is applied
+      when: (tf_plan.changed) and (not tf_plan.failed)
+      community.general.terraform:
+        project_path: "{{ infra_privateresources_terraform_working_dir }}"
+        state: present
+        variables:
+          bridge_interface: "{{ infra_privateresources_bridge_interface }}"

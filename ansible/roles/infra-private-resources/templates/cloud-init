@@ -3,7 +3,24 @@ disable_root: true
 users:
   - name: {{ ansible_user }}
     sudo: "ALL=(ALL) NOPASSWD:ALL"
-    groups: users, adm, sudo
+    groups: users, adm, sudo, docker
     ssh_import_id:
       - gh:awfulwoman
     lock_passwd: false
+
+packages:
+  - curl
+  - vim
+  - git
+  - docker.io
+  - docker-compose
+
+package_update: true
+package_upgrade: true
+
+runcmd:
+  # Install Tailscale
+  - curl -fsSL https://tailscale.com/install.sh | sh
+  # Enable Docker service
+  - systemctl enable docker
+  - systemctl start docker

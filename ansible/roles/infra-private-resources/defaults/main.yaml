@@ -1,3 +1,11 @@
+---
 infra_privateresources_terraform_working_dir: "{{ terraform_working_dir }}/private-resources"
 infra_privateresources_debug: false
 infra_privateresources_tf_apply: false
+
+# Network configuration
+infra_privateresources_bridge_interface: "{{ host_primary_interface }}"
+infra_privateresources_network_mode: "bridge"
+
+# Storage configuration
+infra_privateresources_pool_path: "/fastpool/pools/vms"

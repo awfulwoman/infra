@@ -1,0 +1,41 @@
+---
+infra_privateresources_vms:
+  - id: claude_dev
+    name: "vm-claude-dev"
+    description: "Claude Code development machine"
+    source_image: "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64-disk-kvm.img"
+    memory: 8192  # 8GB
+    vcpus: 4
+    ip_address: "192.168.1.200"
+    mac_address: "52:54:00:00:02:00"
+    graphics: false
+
+  - id: homeassistant_fallback
+    name: "vm-homeassistant"
+    description: "Fallback for host-homeassistant"
+    source_image: "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64-disk-kvm.img"
+    memory: 2048  # 2GB
+    vcpus: 2
+    ip_address: "192.168.1.201"
+    mac_address: "52:54:00:00:02:01"
+    graphics: false
+
+  - id: downloads
+    name: "vm-downloads"
+    description: "Downloads and Arr stack compositions"
+    source_image: "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64-disk-kvm.img"
+    memory: 4096  # 4GB
+    vcpus: 4
+    ip_address: "192.168.1.202"
+    mac_address: "52:54:00:00:02:02"
+    graphics: false
+
+  - id: media
+    name: "vm-media"
+    description: "Jellyfin, Immich, MusicAssistant, Audiobookshelf"
+    source_image: "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64-disk-kvm.img"
+    memory: 6144  # 6GB
+    vcpus: 4
+    ip_address: "192.168.1.203"
+    mac_address: "52:54:00:00:02:03"
+    graphics: false
