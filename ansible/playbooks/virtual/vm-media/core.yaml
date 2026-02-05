@@ -1,0 +1,18 @@
+---
+- name: Media applications VM
+  hosts: vm-media
+  roles:
+    - role: bootstrap-ubuntu-server
+    - role: virtual-qemu-guest
+    - role: system-docker
+    # - role: composition-jellyfin
+    # - role: composition-immich
+    # - role: composition-audio
+    - role: monitoring-healthchecksio
+    - role: system-promtail
+      tags: promtail
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:

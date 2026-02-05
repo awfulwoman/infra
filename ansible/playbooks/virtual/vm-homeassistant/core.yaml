@@ -1,0 +1,19 @@
+---
+- name: Home Assistant fallback VM
+  hosts: vm-homeassistant
+  roles:
+    - role: bootstrap-ubuntu-server
+    - role: virtual-qemu-guest
+    - role: system-docker
+    # - role: composition-homeassistant
+    # - role: composition-matter
+    # - role: composition-mqtt
+    # - role: composition-zigbee2mqtt
+    - role: monitoring-healthchecksio
+    - role: system-promtail
+      tags: promtail
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:
