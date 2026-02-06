@@ -138,6 +138,14 @@
     - vms.tf.j2
   register: tf_files
 
+- name: Deploy terraform wrapper script
+  ansible.builtin.template:
+    src: tf.sh
+    dest: "{{ infra_privateresources_terraform_working_dir }}/tf"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0755"
+
 - name: DEBUG TF files
   ansible.builtin.debug:
     var: tf_files
