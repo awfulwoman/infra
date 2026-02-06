@@ -1,0 +1,16 @@
+---
+- name: Claude Code development VM
+  hosts: vm-claude-dev
+  roles:
+    - role: bootstrap-ubuntu-server
+    - role: virtual-qemu-guest
+    - role: system-docker
+    - role: system-claude
+    - role: monitoring-healthchecksio
+    - role: system-promtail
+      tags: promtail
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:

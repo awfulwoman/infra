@@ -1,0 +1,18 @@
+---
+# -------------------------------------------------------------------
+# ANSIBLE
+# -------------------------------------------------------------------
+ansible_host: 192.168.1.201
+ansible_user: "{{ vault_server_username }}"
+ansible_become_password: "{{ vault_password }}"
+
+# -------------------------------------------------------------------
+# INFRA
+# -------------------------------------------------------------------
+host_type: virtual
+host_name: homeassistant
+host_city: ber
+host_location: xberg
+host_ipv4: 192.168.1.201
+host_pfqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}"
+host_fqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}.{{ domain_name }}"

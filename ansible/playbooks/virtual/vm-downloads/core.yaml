@@ -1,0 +1,16 @@
+---
+- name: Downloads and Arr stack VM
+  hosts: vm-downloads
+  roles:
+    - role: bootstrap-ubuntu-server
+    - role: virtual-qemu-guest
+    - role: system-docker
+    - role: composition-downloads
+    - role: monitoring-healthchecksio
+    - role: system-promtail
+      tags: promtail
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:

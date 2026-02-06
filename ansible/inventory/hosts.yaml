@@ -4,6 +4,10 @@ all:
     host-backups:
     host-storage:
     vm-awfulwoman-hetzner:
+    vm-claude-dev:
+    vm-homeassistant:
+    vm-downloads:
+    vm-media:
     host-mba2011:
     host-albion:
     dns:
@@ -48,6 +52,10 @@ all:
         host-backups:
         host-storage:
         vm-awfulwoman-hetzner:
+        vm-claude-dev:
+        vm-homeassistant:
+        vm-downloads:
+        vm-media:
         host-albion:
         dns:
         testrouter:

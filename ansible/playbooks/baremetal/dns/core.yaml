@@ -9,6 +9,7 @@
     - role: system-sshkey
     - role: system-zfs
     - role: infra-public-resources
+    - role: infra-private-resources
     - role: infra-named
     - role: infra-certbot
     - role: composition-reverseproxy

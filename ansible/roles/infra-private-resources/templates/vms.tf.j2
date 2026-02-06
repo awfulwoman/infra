@@ -1,0 +1,157 @@
+{% for vm in infra_privateresources_vms %}
+# {{ vm.name }} - {{ vm.description }}
+
+# Dedicated storage pool for this VM (uses ZFS dataset)
+resource "libvirt_pool" "{{ vm.id }}_pool" {
+  name = "{{ vm.name }}"
+  type = "dir"
+
+  target = {
+    path = "{{ infra_privateresources_pool_path }}/{{ vm.name }}"
+  }
+}
+
+# Base disk volume from cached cloud image
+resource "libvirt_volume" "{{ vm.id }}_base" {
+  name = "{{ vm.name }}.qcow2"
+  pool = libvirt_pool.{{ vm.id }}_pool.name
+
+  # NOTE: capacity cannot be specified with create.content.url in v0.9.x
+  # Volume will be created at source image size (3.7GB) - TODO: implement resize
+  # Desired size: {{ vm.disk_size_gb }}GB
+
+  target = {
+    format = {
+      type = "qcow2"
+    }
+  }
+
+  create = {
+    content = {
+      url = "{{ vm.source_image_url }}"
+    }
+  }
+}
+
+# Cloud-init configuration
+resource "libvirt_cloudinit_disk" "{{ vm.id }}_cloudinit" {
+  name      = "{{ vm.name }}_cloudinit"
+  user_data = file("${path.module}/cloud-init.yaml")
+  meta_data = <<-EOF
+    instance-id: {{ vm.id }}
+    local-hostname: {{ vm.name }}
+  EOF
+}
+
+# Upload cloud-init ISO as volume
+resource "libvirt_volume" "{{ vm.id }}_cloudinit_volume" {
+  name = "{{ vm.name }}_cloudinit.iso"
+  pool = libvirt_pool.{{ vm.id }}_pool.name
+
+  create = {
+    content = {
+      url = libvirt_cloudinit_disk.{{ vm.id }}_cloudinit.path
+    }
+  }
+}
+
+# VM domain
+resource "libvirt_domain" "{{ vm.id }}" {
+  name   = "{{ vm.name }}"
+  memory = {{ vm.memory * 1024 }}  # Convert MiB to KiB
+  vcpu   = {{ vm.vcpus }}
+  type   = "kvm"
+
+  # OS configuration
+  os = {
+    type         = "hvm"
+    type_arch    = "x86_64"
+    type_machine = "q35"
+  }
+
+  # Devices configuration
+  devices = {
+    # Disks
+    disks = [
+      # Main boot disk
+      {
+        source = {
+          volume = {
+            pool   = libvirt_pool.{{ vm.id }}_pool.name
+            volume = libvirt_volume.{{ vm.id }}_base.name
+          }
+        }
+        target = {
+          bus = "virtio"
+          dev = "vda"
+        }
+        driver = {
+          type = "qcow2"
+        }
+      },
+      # Cloud-init config disk
+      {
+        device = "cdrom"
+        source = {
+          volume = {
+            pool   = libvirt_pool.{{ vm.id }}_pool.name
+            volume = libvirt_volume.{{ vm.id }}_cloudinit_volume.name
+          }
+        }
+        target = {
+          bus = "sata"
+          dev = "sda"
+        }
+      }
+    ]
+
+    # Network interfaces
+    interfaces = [
+      {
+        type = "direct"
+        model = {
+          type = "virtio"
+        }
+        source = {
+          direct = {
+            dev  = var.bridge_interface
+            mode = "bridge"
+          }
+        }
+        mac = {
+          address = "{{ vm.mac_address }}"
+        }
+        # NOTE: Static IP configured via cloud-init, not libvirt
+        # QEMU doesn't support setting guest-side IPs in domain XML
+      }
+    ]
+
+    # Serial console
+    consoles = [
+      {
+        type = "pty"
+        target = {
+          type = "serial"
+          port = 0
+        }
+      }
+    ]
+
+    {% if vm.graphics | default(false) %}
+    # Graphics (SPICE)
+    graphics = [
+      {
+        spice = {
+          auto_port = true
+          listen    = "127.0.0.1"
+        }
+      }
+    ]
+    {% endif %}
+  }
+
+  # Start after creation and on host boot
+  running   = true
+  autostart = true
+}
+{% endfor %}

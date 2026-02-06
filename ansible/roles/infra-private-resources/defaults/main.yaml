@@ -1,3 +1,67 @@
+---
 infra_privateresources_terraform_working_dir: "{{ terraform_working_dir }}/private-resources"
 infra_privateresources_debug: false
 infra_privateresources_tf_apply: false
+
+# Hypervisor connection (Terraform runs on dns, connects to host-storage via SSH)
+infra_privateresources_hypervisor_host: "host-storage"
+# Dedicated service account with restricted libvirt-only access (least privilege)
+infra_privateresources_hypervisor_user: "libvirt-remote"
+infra_privateresources_hypervisor_ssh_uri: "qemu+ssh://{{ infra_privateresources_hypervisor_user }}@{{ infra_privateresources_hypervisor_host }}/system?keyfile={{ infra_privateresources_ssh_key_path }}"
+
+# SSH key paths for service account on control plane (dns)
+infra_privateresources_ssh_key_path: "/home/{{ ansible_user }}/.ssh/libvirt-remote_ed25519"
+infra_privateresources_ssh_pubkey_path: "{{ infra_privateresources_ssh_key_path }}.pub"
+
+# Network configuration (on hypervisor)
+infra_privateresources_bridge_interface: "enp3s0"  # host-storage primary interface
+infra_privateresources_network_mode: "bridge"
+
+# Storage configuration (on hypervisor)
+infra_privateresources_pool_path: "/fastpool/pools/vms"
+
+# VM definitions
+infra_privateresources_vms:
+  - id: claude_dev
+    name: "vm-claude-dev"
+    description: "Claude Code development machine"
+    source_image_url: "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img"
+    memory: 8192  # 8GB
+    vcpus: 4
+    disk_size_gb: 100  # Docker images, source code, build artifacts
+    ip_address: "192.168.1.200"
+    mac_address: "52:54:00:00:02:00"
+    graphics: false
+
+  - id: homeassistant_fallback
+    name: "vm-homeassistant"
+    description: "Fallback for host-homeassistant"
+    source_image_url: "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img"
+    memory: 2048  # 2GB
+    vcpus: 2
+    disk_size_gb: 50  # HA database, config, snapshots, recordings
+    ip_address: "192.168.1.201"
+    mac_address: "52:54:00:00:02:01"
+    graphics: false
+
+  - id: downloads
+    name: "vm-downloads"
+    description: "Downloads and Arr stack compositions"
+    source_image_url: "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img"
+    memory: 4096  # 4GB
+    vcpus: 4
+    disk_size_gb: 50  # Torrent temp, Arr databases (media on NFS)
+    ip_address: "192.168.1.202"
+    mac_address: "52:54:00:00:02:02"
+    graphics: false
+
+  - id: media
+    name: "vm-media"
+    description: "Jellyfin, Immich, MusicAssistant, Audiobookshelf"
+    source_image_url: "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img"
+    memory: 6144  # 6GB
+    vcpus: 4
+    disk_size_gb: 100  # Metadata, transcode cache, thumbnails
+    ip_address: "192.168.1.203"
+    mac_address: "52:54:00:00:02:03"
+    graphics: false

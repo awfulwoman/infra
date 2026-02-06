@@ -48,6 +48,19 @@ zfs:
       compositions:
         policy: critical
         snapshots_discover_children: true
+      pools:
+        datasets:
+          vms:
+            policy: critical
+            datasets:
+              vm-claude-dev:
+                policy: critical
+              vm-homeassistant:
+                policy: critical
+              vm-downloads:
+                policy: critical
+              vm-media:
+                policy: critical
   slowpool:
     # vdevs:
     #   - type: mirror

@@ -2,6 +2,11 @@
   hosts: dns
   roles:
     - role: infra-public-resources
+      tags:
+        terraform-public
+    - role: infra-private-resources
+      tags:
+        terraform-private
 
   handlers:
     - name: Reboot host
