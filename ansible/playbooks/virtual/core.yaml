@@ -1,1 +1,5 @@
+- import_playbook: vm-media/core.yaml
+- import_playbook: vm-homeautomation/core.yaml
+- import_playbook: vm-downloads/core.yaml
+- import_playbook: vm-claude-dev/core.yaml
 - import_playbook: vm-awfulwoman-hetzner/core.yaml

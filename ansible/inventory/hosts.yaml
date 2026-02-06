@@ -5,7 +5,7 @@ all:
     host-storage:
     vm-awfulwoman-hetzner:
     vm-claude-dev:
-    vm-homeassistant:
+    vm-homeautomation:
     vm-downloads:
     vm-media:
     host-mba2011:
@@ -53,7 +53,7 @@ all:
         host-storage:
         vm-awfulwoman-hetzner:
         vm-claude-dev:
-        vm-homeassistant:
+        vm-homeautomation:
         vm-downloads:
         vm-media:
         host-albion:

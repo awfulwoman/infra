@@ -1,6 +1,6 @@
 ---
 - name: Home Assistant fallback VM
-  hosts: vm-homeassistant
+  hosts: vm-homeautomation
   roles:
     - role: bootstrap-ubuntu-server
     - role: virtual-qemu-guest
