@@ -16,3 +16,13 @@ host_location: xberg
 host_ipv4: 192.168.1.203
 host_pfqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}"
 host_fqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}.{{ domain_name }}"
+
+# -------------------------------------------------------------------
+# STORAGE
+# -------------------------------------------------------------------
+shared_media_path: /slowpool/shared/media
+
+nfs_mounts:
+  - remote_server: 192.168.1.116  # host-storage local IP (avoid Tailscale overhead)
+    remote_path: /slowpool/shared/media
+    local_path: /slowpool/shared/media
