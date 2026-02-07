@@ -1,2 +1,3 @@
-system_pipx_packages:
-  - bitwarden-sdk
+system_pipx_packages: []
+# Note: bitwarden-sdk removed - it's a library, not a CLI app
+# If needed, install it via pip instead of pipx

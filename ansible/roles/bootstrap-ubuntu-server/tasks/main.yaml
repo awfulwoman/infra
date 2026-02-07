@@ -24,6 +24,8 @@
   ansible.builtin.apt:
     name: "{{ bootstrap_ubuntu_apt_packages }}"
     state: present
+    update_cache: true
+    cache_valid_time: 3600  # Don't update if cache is less than 1 hour old
 
 - name: Ensure Github SSH keys are present
   become: true

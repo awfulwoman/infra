@@ -11,14 +11,10 @@ resource "libvirt_pool" "{{ vm.id }}_pool" {
   }
 }
 
-# Base disk volume from cached cloud image
-resource "libvirt_volume" "{{ vm.id }}_base" {
-  name = "{{ vm.name }}.qcow2"
+# Base cloud image (cached, shared backing store)
+resource "libvirt_volume" "{{ vm.id }}_base_image" {
+  name = "{{ vm.name }}_base.qcow2"
   pool = libvirt_pool.{{ vm.id }}_pool.name
-
-  # NOTE: capacity cannot be specified with create.content.url in v0.9.x
-  # Volume will be created at source image size (3.7GB) - TODO: implement resize
-  # Desired size: {{ vm.disk_size_gb }}GB
 
   target = {
     format = {
@@ -33,10 +29,43 @@ resource "libvirt_volume" "{{ vm.id }}_base" {
   }
 }
 
+# Resized disk volume from base image
+resource "libvirt_volume" "{{ vm.id }}_disk" {
+  name     = "{{ vm.name }}.qcow2"
+  pool     = libvirt_pool.{{ vm.id }}_pool.name
+  capacity = {{ vm.disk_size_gb }} * 1024 * 1024 * 1024  # Convert GB to bytes
+
+  target = {
+    format = {
+      type = "qcow2"
+    }
+  }
+
+  backing_store = {
+    path = libvirt_volume.{{ vm.id }}_base_image.path
+    format = {
+      type = "qcow2"
+    }
+  }
+}
+
 # Cloud-init configuration
 resource "libvirt_cloudinit_disk" "{{ vm.id }}_cloudinit" {
   name      = "{{ vm.name }}_cloudinit"
   user_data = file("${path.module}/cloud-init.yaml")
+  network_config = <<-EOF
+    version: 2
+    ethernets:
+      net0:
+        match:
+          macaddress: "{{ vm.mac_address }}"
+        addresses: ["{{ vm.ip_address }}/24"]
+        routes:
+          - to: default
+            via: 192.168.1.1
+        nameservers:
+          addresses: [192.168.1.1]
+  EOF
   meta_data = <<-EOF
     instance-id: {{ vm.id }}
     local-hostname: {{ vm.name }}
@@ -52,6 +81,10 @@ resource "libvirt_volume" "{{ vm.id }}_cloudinit_volume" {
     content = {
       url = libvirt_cloudinit_disk.{{ vm.id }}_cloudinit.path
     }
+  }
+
+  lifecycle {
+    replace_triggered_by = [libvirt_cloudinit_disk.{{ vm.id }}_cloudinit.id]
   }
 }
 
@@ -78,7 +111,7 @@ resource "libvirt_domain" "{{ vm.id }}" {
         source = {
           volume = {
             pool   = libvirt_pool.{{ vm.id }}_pool.name
-            volume = libvirt_volume.{{ vm.id }}_base.name
+            volume = libvirt_volume.{{ vm.id }}_disk.name
           }
         }
         target = {

@@ -1,7 +1,7 @@
-- name: Add qemu-guest
+- name: Add qemu-guest-agent
   become: true
   ansible.builtin.apt:
     name:
-      - qemu-guest
+      - qemu-guest-agent
     state: present
   notify: Reboot host

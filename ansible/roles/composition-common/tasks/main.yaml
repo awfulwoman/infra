@@ -27,6 +27,12 @@
     name: "{{ default_docker_network }}"
     state: present
 
+- name: Check if ZFS is available
+  ansible.builtin.command: which zfs
+  register: zfs_check
+  changed_when: false
+  failed_when: false
+
 - name: Ensure parent compositions dataset exists
   become: true
   community.general.zfs:
@@ -35,6 +41,7 @@
     extra_zfs_properties:
       acltype: posix
       xattr: sa
+  when: zfs_check.rc == 0
 
 - name: Ensure parent compositions dataset ownership
   become: true
@@ -53,6 +60,7 @@
     extra_zfs_properties:
       acltype: posix
       xattr: sa
+  when: zfs_check.rc == 0
 
 - name: Ensure composition dataset ownership
   become: true

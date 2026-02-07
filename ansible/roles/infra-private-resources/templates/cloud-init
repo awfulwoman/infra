@@ -1,6 +1,6 @@
 #cloud-config
-# Minimal cloud-init for VM bootstrap
-# Application configuration (Docker, Tailscale, etc.) handled by Ansible
+# Absolute minimal cloud-init - just user and SSH
+# Everything else handled by Ansible
 
 disable_root: true
 
@@ -8,21 +8,12 @@ users:
   - name: {{ ansible_user }}
     sudo: "ALL=(ALL) NOPASSWD:ALL"
     groups: users, adm, sudo
-    ssh_import_id:
-      - gh:awfulwoman
+    shell: /bin/bash
+    ssh_authorized_keys: {{ github_keys_list | to_json }}
     lock_passwd: false
 
-# Only essential utilities - applications installed via Ansible roles
-packages:
-  - curl
-  - vim
-  - git
-  - python3-apt  # Required for Ansible apt module
-
-package_update: true
-package_upgrade: true
-
-# Enable SSH for Ansible access
+# Ensure SSH is enabled and started
+ssh_pwauth: false
 runcmd:
   - systemctl enable ssh
   - systemctl start ssh

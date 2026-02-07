@@ -33,9 +33,9 @@ infra_privateresources_vms:
     mac_address: "52:54:00:00:02:00"
     graphics: false
 
-  - id: homeassistant_fallback
-    name: "vm-homeassistant"
-    description: "Fallback for host-homeassistant"
+  - id: homeautomation
+    name: "vm-homeautomation"
+    description: "Home automation VM"
     source_image_url: "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img"
     memory: 2048  # 2GB
     vcpus: 2
