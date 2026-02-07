@@ -14,8 +14,8 @@ infra_privateresources_ssh_key_path: "/home/{{ ansible_user }}/.ssh/libvirt-remo
 infra_privateresources_ssh_pubkey_path: "{{ infra_privateresources_ssh_key_path }}.pub"
 
 # Network configuration (on hypervisor)
-infra_privateresources_bridge_interface: "enp3s0"  # host-storage primary interface
-infra_privateresources_network_mode: "bridge"
+# VMs use libvirt default NAT network (192.168.122.0/24)
+infra_privateresources_network_mode: "nat"
 
 # Storage configuration (on hypervisor)
 infra_privateresources_pool_path: "/fastpool/pools/vms"
@@ -29,7 +29,9 @@ infra_privateresources_vms:
     memory: 8192  # 8GB
     vcpus: 4
     disk_size_gb: 100  # Docker images, source code, build artifacts
-    ip_address: "192.168.1.200"
+    ip_address: "192.168.122.10"
+    gateway: "192.168.122.1"
+    dns: "192.168.122.1"
     mac_address: "52:54:00:00:02:00"
     graphics: false
 
@@ -40,7 +42,9 @@ infra_privateresources_vms:
     memory: 2048  # 2GB
     vcpus: 2
     disk_size_gb: 50  # HA database, config, snapshots, recordings
-    ip_address: "192.168.1.201"
+    ip_address: "192.168.122.11"
+    gateway: "192.168.122.1"
+    dns: "192.168.122.1"
     mac_address: "52:54:00:00:02:01"
     graphics: false
 
@@ -51,7 +55,9 @@ infra_privateresources_vms:
     memory: 4096  # 4GB
     vcpus: 4
     disk_size_gb: 50  # Torrent temp, Arr databases (media on NFS)
-    ip_address: "192.168.1.202"
+    ip_address: "192.168.122.12"
+    gateway: "192.168.122.1"
+    dns: "192.168.122.1"
     mac_address: "52:54:00:00:02:02"
     graphics: false
 
@@ -62,6 +68,8 @@ infra_privateresources_vms:
     memory: 6144  # 6GB
     vcpus: 4
     disk_size_gb: 100  # Metadata, transcode cache, thumbnails
-    ip_address: "192.168.1.203"
+    ip_address: "192.168.122.13"
+    gateway: "192.168.122.1"
+    dns: "192.168.122.1"
     mac_address: "52:54:00:00:02:03"
     graphics: false

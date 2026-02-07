@@ -2,9 +2,10 @@
 # -------------------------------------------------------------------
 # ANSIBLE
 # -------------------------------------------------------------------
-ansible_host: 192.168.1.200
+ansible_host: 192.168.122.10  # Internal NAT network
 ansible_user: "{{ vault_server_username }}"
 ansible_become_password: "{{ vault_password }}"
+ansible_ssh_common_args: '-o ProxyJump=host-storage'
 
 # -------------------------------------------------------------------
 # INFRA

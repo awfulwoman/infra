@@ -161,7 +161,6 @@
         force_init: true
         variables:
           hypervisor_uri: "{{ infra_privateresources_hypervisor_ssh_uri }}"
-          bridge_interface: "{{ infra_privateresources_bridge_interface }}"
       register: tf_plan
       check_mode: true
 
@@ -177,4 +176,3 @@
         state: present
         variables:
           hypervisor_uri: "{{ infra_privateresources_hypervisor_ssh_uri }}"
-          bridge_interface: "{{ infra_privateresources_bridge_interface }}"

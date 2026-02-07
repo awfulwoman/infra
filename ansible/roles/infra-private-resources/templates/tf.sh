@@ -8,7 +8,6 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Variables configured by Ansible
 HYPERVISOR_URI="{{ infra_privateresources_hypervisor_ssh_uri }}"
-BRIDGE_INTERFACE="{{ infra_privateresources_bridge_interface }}"
 
 # Pass subcommand first, then variables, then any additional args
 # Usage: ./tf plan, ./tf apply, etc.
@@ -21,5 +20,4 @@ fi
 
 exec terraform "$1" \
   -var="hypervisor_uri=${HYPERVISOR_URI}" \
-  -var="bridge_interface=${BRIDGE_INTERFACE}" \
   "${@:2}"

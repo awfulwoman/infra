@@ -62,9 +62,9 @@ resource "libvirt_cloudinit_disk" "{{ vm.id }}_cloudinit" {
         addresses: ["{{ vm.ip_address }}/24"]
         routes:
           - to: default
-            via: 192.168.1.1
+            via: {{ vm.gateway }}
         nameservers:
-          addresses: [192.168.1.1]
+          addresses: [{{ vm.dns }}]
   EOF
   meta_data = <<-EOF
     instance-id: {{ vm.id }}
@@ -141,21 +141,20 @@ resource "libvirt_domain" "{{ vm.id }}" {
     # Network interfaces
     interfaces = [
       {
-        type = "direct"
+        type = "network"
         model = {
           type = "virtio"
         }
         source = {
-          direct = {
-            dev  = var.bridge_interface
-            mode = "bridge"
+          network = {
+            network = "default"  # libvirt default NAT network
           }
         }
         mac = {
           address = "{{ vm.mac_address }}"
         }
         # NOTE: Static IP configured via cloud-init, not libvirt
-        # QEMU doesn't support setting guest-side IPs in domain XML
+        # VMs use internal NAT network (192.168.122.x) for host communication
       }
     ]
 

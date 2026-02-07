@@ -2,9 +2,10 @@
 # -------------------------------------------------------------------
 # ANSIBLE
 # -------------------------------------------------------------------
-ansible_host: 192.168.1.203
+ansible_host: 192.168.122.13  # Internal NAT network
 ansible_user: "{{ vault_server_username }}"
 ansible_become_password: "{{ vault_password }}"
+ansible_ssh_common_args: '-o ProxyJump=host-storage'
 
 # -------------------------------------------------------------------
 # INFRA
@@ -23,6 +24,6 @@ host_fqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}.{{ domain_name }
 shared_media_path: /slowpool/shared/media
 
 nfs_mounts:
-  - remote_server: 192.168.1.116  # host-storage local IP (avoid Tailscale overhead)
+  - remote_server: 192.168.122.1  # host-storage NAT gateway IP (internal network)
     remote_path: /slowpool/shared/media
     local_path: /slowpool/shared/media
