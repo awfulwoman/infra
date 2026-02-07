@@ -4,7 +4,11 @@
   ansible.builtin.apt:
     name:
       - netplan.io
+      - bridge-utils
     state: present
+  tags:
+    - network-netplan
+    - netplan
 
 - name: Disable cloud-init network configuration
   become: true
@@ -14,6 +18,9 @@
     owner: root
     group: root
     mode: "0644"
+  tags:
+    - network-netplan
+    - netplan
 
 - name: Remove cloud-init netplan configuration if present
   become: true
@@ -21,6 +28,9 @@
     path: /etc/netplan/50-cloud-init.yaml
     state: absent
   notify: Apply netplan
+  tags:
+    - network-netplan
+    - netplan
 
 - name: Deploy primary interface netplan configuration
   become: true
@@ -31,6 +41,9 @@
     group: root
     mode: "0600"
   notify: Apply netplan
+  tags:
+    - network-netplan
+    - netplan
 
 - name: Ensure NetworkManager is not managing primary interface
   become: true
@@ -40,3 +53,6 @@
     enabled: false
   when: ansible_facts.services['NetworkManager.service'] is defined
   failed_when: false
+  tags:
+    - network-netplan
+    - netplan

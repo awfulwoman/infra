@@ -20,3 +20,12 @@ network_netplan_renderer: networkd
 # - If host_ipv4 is defined and not empty: static
 # - Otherwise: dhcp
 network_netplan_mode: "{{ 'static' if (host_ipv4 | default('', true)) else 'dhcp' }}"
+
+# Bridge configuration (opt-in, for VM host networking)
+network_netplan_bridge_enable: false
+network_netplan_bridge_name: "br0"
+network_netplan_bridge_stp: true  # Spanning Tree Protocol
+network_netplan_bridge_forward_delay: 4  # seconds
+
+# Auto-apply via handler (disable for bridge configs - use manual netplan try)
+network_netplan_auto_apply: "{{ not network_netplan_bridge_enable }}"
