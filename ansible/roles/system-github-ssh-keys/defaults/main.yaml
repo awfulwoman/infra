@@ -1,0 +1,12 @@
+# GitHub username to fetch SSH keys from
+system_github_ssh_keys_username: "awfulwoman"
+
+# User account to update authorized_keys for
+system_github_ssh_keys_target_user: "{{ ansible_user }}"
+
+# Cron schedule - runs daily at 3:15 AM by default
+system_github_ssh_keys_cron_hour: "8,18"
+system_github_ssh_keys_cron_minute: "17"
+
+# Script installation path
+system_github_ssh_keys_script_path: "/usr/local/bin/update-github-ssh-keys"

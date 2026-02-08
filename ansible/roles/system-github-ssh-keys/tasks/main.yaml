@@ -1,0 +1,31 @@
+---
+# Manages periodic fetching of SSH public keys from GitHub
+
+- name: Ensure update script is installed
+  become: true
+  ansible.builtin.template:
+    src: update-github-ssh-keys.sh
+    dest: "{{ system_github_ssh_keys_script_path }}"
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Ensure GitHub SSH keys are fetched immediately
+  become: true
+  ansible.builtin.command: "{{ system_github_ssh_keys_script_path }}"
+  changed_when: true
+  register: initial_run
+
+- name: Display initial run output
+  ansible.builtin.debug:
+    var: initial_run.stdout_lines
+
+- name: Ensure cron job updates GitHub SSH keys regularly
+  become: true
+  ansible.builtin.cron:
+    name: "update-github-ssh-keys-{{ system_github_ssh_keys_username }}"
+    hour: "{{ system_github_ssh_keys_cron_hour }}"
+    minute: "{{ system_github_ssh_keys_cron_minute }}"
+    job: "{{ system_github_ssh_keys_script_path }} >/dev/null 2>&1"
+    user: root
+    state: present

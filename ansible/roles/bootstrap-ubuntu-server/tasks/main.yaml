@@ -27,13 +27,9 @@
     update_cache: true
     cache_valid_time: 3600  # Don't update if cache is less than 1 hour old
 
-- name: Ensure Github SSH keys are present
-  become: true
-  ansible.posix.authorized_key:
-    user: "{{ ansible_user }}"
-    key: https://github.com/awfulwoman.keys
-    comment: github.com/awfulwoman
-    state: present
+- name: Github SSH keys
+  ansible.builtin.include_role:
+    name: system-github-ssh-keys
 
 - name: Ensure user has bash as default shell
   become: true
