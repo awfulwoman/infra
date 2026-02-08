@@ -4,7 +4,6 @@
   roles:
     - role: bootstrap-ubuntu-server
     - role: virtual-qemu-guest
-    - role: system-docker
     # - role: composition-homeassistant
     # - role: composition-matter
     # - role: composition-mqtt

@@ -35,41 +35,41 @@ infra_privateresources_vms:
     mac_address: "52:54:00:00:02:00"
     graphics: false
 
-  - id: homeautomation
-    name: "vm-homeautomation"
-    description: "Home automation VM"
-    source_image_url: "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img"
-    memory: 2048  # 2GB
-    vcpus: 2
-    disk_size_gb: 50  # HA database, config, snapshots, recordings
-    ip_address: "192.168.122.11"
-    gateway: "192.168.122.1"
-    dns: "192.168.122.1"
-    mac_address: "52:54:00:00:02:01"
-    graphics: false
+  # - id: homeautomation
+  #   name: "vm-homeautomation"
+  #   description: "Home automation VM"
+  #   source_image_url: "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img"
+  #   memory: 2048  # 2GB
+  #   vcpus: 2
+  #   disk_size_gb: 50  # HA database, config, snapshots, recordings
+  #   ip_address: "192.168.122.11"
+  #   gateway: "192.168.122.1"
+  #   dns: "192.168.122.1"
+  #   mac_address: "52:54:00:00:02:01"
+  #   graphics: false
 
-  - id: downloads
-    name: "vm-downloads"
-    description: "Downloads and Arr stack compositions"
-    source_image_url: "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img"
-    memory: 4096  # 4GB
-    vcpus: 4
-    disk_size_gb: 50  # Torrent temp, Arr databases (media on NFS)
-    ip_address: "192.168.122.12"
-    gateway: "192.168.122.1"
-    dns: "192.168.122.1"
-    mac_address: "52:54:00:00:02:02"
-    graphics: false
+  # - id: downloads
+  #   name: "vm-downloads"
+  #   description: "Downloads and Arr stack compositions"
+  #   source_image_url: "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img"
+  #   memory: 4096  # 4GB
+  #   vcpus: 4
+  #   disk_size_gb: 50  # Torrent temp, Arr databases (media on NFS)
+  #   ip_address: "192.168.122.12"
+  #   gateway: "192.168.122.1"
+  #   dns: "192.168.122.1"
+  #   mac_address: "52:54:00:00:02:02"
+  #   graphics: false
 
-  - id: media
-    name: "vm-media"
-    description: "Jellyfin, Immich, MusicAssistant, Audiobookshelf"
-    source_image_url: "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img"
-    memory: 6144  # 6GB
-    vcpus: 4
-    disk_size_gb: 100  # Metadata, transcode cache, thumbnails
-    ip_address: "192.168.122.13"
-    gateway: "192.168.122.1"
-    dns: "192.168.122.1"
-    mac_address: "52:54:00:00:02:03"
-    graphics: false
+  # - id: media
+  #   name: "vm-media"
+  #   description: "Jellyfin, Immich, MusicAssistant, Audiobookshelf"
+  #   source_image_url: "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img"
+  #   memory: 6144  # 6GB
+  #   vcpus: 4
+  #   disk_size_gb: 100  # Metadata, transcode cache, thumbnails
+  #   ip_address: "192.168.122.13"
+  #   gateway: "192.168.122.1"
+  #   dns: "192.168.122.1"
+  #   mac_address: "52:54:00:00:02:03"
+  #   graphics: false

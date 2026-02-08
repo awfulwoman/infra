@@ -4,9 +4,8 @@
   roles:
     - role: bootstrap-ubuntu-server
     - role: virtual-qemu-guest
-    - role: system-docker
     - role: client-nfs
-    - role: composition-downloads
+    # - role: composition-downloads
     - role: monitoring-healthchecksio
     - role: system-promtail
       tags: promtail

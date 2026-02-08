@@ -25,6 +25,10 @@
     - role: composition-finances
     - role: composition-gitea
     - role: composition-gitea-runners
+    - role: composition-jellyfin
+    - role: composition-immich
+    - role: composition-audiobookshelf
+    - role: composition-downloads
     - role: composition-syncthing
     - role: composition-karakeep
     - role: composition-freshrss
