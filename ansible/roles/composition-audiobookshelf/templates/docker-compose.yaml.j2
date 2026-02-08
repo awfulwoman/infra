@@ -14,10 +14,9 @@ services:
       - "traefik.http.routers.audiobookshelf.tls=true"
       - "traefik.http.routers.audiobookshelf.tls.certresolver=letsencrypt"
     volumes:
-      - "{{ shared_media_path }}/podcasts:/podcasts"
       - "{{ shared_media_path }}/audiobooks:/audiobooks"
-      - "{{ composition_config }}/audiobookshelf/config:/config"
-      - "{{ composition_config }}/audiobookshelf/metadata:/metadata"
+      - "{{ composition_config }}/config:/config"
+      - "{{ composition_config }}/metadata:/metadata"
     networks:
       - "{{ default_docker_network }}"
     healthcheck:

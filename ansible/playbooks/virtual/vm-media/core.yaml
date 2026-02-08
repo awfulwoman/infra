@@ -9,7 +9,7 @@
     - role: composition-reverseproxy
     - role: composition-jellyfin
     - role: composition-immich
-    - role: composition-audio
+    - role: composition-audiobookshelf
     - role: monitoring-healthchecksio
     - role: system-promtail
       tags: promtail

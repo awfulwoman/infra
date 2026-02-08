@@ -31,8 +31,8 @@
   loop_control:
     loop_var: dir_item
   loop:
-    - audiobookshelf/config
-    - audiobookshelf/metadata
+    - config
+    - metadata
 
 - name: Run Configure DNS role
   ansible.builtin.include_role:

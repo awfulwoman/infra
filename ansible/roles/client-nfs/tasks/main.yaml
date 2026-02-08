@@ -25,4 +25,4 @@
   rescue:
     - name: Debug remote mount failure
       ansible.builtin.debug:
-        msg: "Could not mount {{ nfsclientnfs_mount.remote_server_remote_server }}:{{ nfs_mount.remote_path }}. Non-fatal. Proceeding."
+        msg: "Could not mount {{ nfs_mount.remote_server }}:{{ nfs_mount.remote_path }}. Non-fatal. Proceeding."

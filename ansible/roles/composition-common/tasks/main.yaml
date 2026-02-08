@@ -72,6 +72,7 @@
     mode: "0774"
 
 - name: Ensure composition config directory exists
+  become: true
   ansible.builtin.file:
     path: "{{ composition_config }}"
     state: directory
