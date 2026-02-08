@@ -6,3 +6,14 @@ reverseproxy_catchall: false
 reverseproxy_statuspage: false
 reverseproxy_whoami: false
 reverseproxy_traefik_domain: "traefik.{{ ansible_facts['hostname'] }}.{{ domain_name }}"
+
+# VM routes - Proxy to services running on VMs (internal NAT network)
+# reverseproxy_vm_routes:
+#   - name: jellyfin
+#     host: "jellyfin.{{ domain_name }}"
+#     backend: "http://192.168.122.13:8096"
+#   - name: sonarr
+#     host: "sonarr.{{ domain_name }}"
+#     backend: "http://192.168.122.12:8989"
+#     middlewares:
+#       - auth@file

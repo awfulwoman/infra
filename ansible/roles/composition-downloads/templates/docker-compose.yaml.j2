@@ -4,7 +4,7 @@ services:
   prowlarr:
     container_name: prowlarr
     ports:
-      - "127.0.0.1:9696:9696"
+      - "9696:9696"
     image: lscr.io/linuxserver/prowlarr:latest
     restart: unless-stopped
     env_file: .environment_vars
@@ -59,7 +59,7 @@ services:
   radarr:
     container_name: radarr
     ports:
-      - "127.0.0.1:7878:7878"
+      - "7878:7878"
     image: lscr.io/linuxserver/radarr:latest
     restart: unless-stopped
     env_file: .environment_vars
@@ -129,7 +129,7 @@ services:
   sonarr:
     container_name: sonarr
     ports:
-      - "127.0.0.1:8989:8989"
+      - "8989:8989"
     image: lscr.io/linuxserver/sonarr:latest
     restart: unless-stopped
     env_file: .environment_vars
@@ -331,7 +331,7 @@ services:
       - "traefik.http.routers.jellyseerr.tls=true"
       - "traefik.http.routers.jellyseerr.tls.certresolver=letsencrypt"
     ports:
-      - "127.0.0.1:5055:5055"
+      - "5055:5055"
     volumes:
       - "{{ shared_media_path }}/jellyseerr:/app/config"
     restart: unless-stopped

@@ -14,7 +14,7 @@ host_type: virtual
 host_name: downloads
 host_city: ber
 host_location: xberg
-host_ipv4: 192.168.1.202
+host_ipv4: 192.168.122.12
 host_pfqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}"
 host_fqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}.{{ domain_name }}"
 

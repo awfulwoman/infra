@@ -6,9 +6,10 @@
     - role: virtual-qemu-guest
     - role: system-docker
     - role: client-nfs
-    # - role: composition-jellyfin
-    # - role: composition-immich
-    # - role: composition-audio
+    - role: composition-reverseproxy
+    - role: composition-jellyfin
+    - role: composition-immich
+    - role: composition-audio
     - role: monitoring-healthchecksio
     - role: system-promtail
       tags: promtail

@@ -43,6 +43,16 @@
     loop_var: traefik_provider
   when: traefik_providers is defined
 
+- name: "Template out VM routes provider file"
+  become: true
+  ansible.builtin.template:
+    src: "providers/vm-routes.yaml.j2"
+    dest: "{{ composition_config }}/providers/vm-routes.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0644'
+  when: reverseproxy_vm_routes is defined
+
 - name: "Create letsencrypt dir"
   become: true
   ansible.builtin.file:

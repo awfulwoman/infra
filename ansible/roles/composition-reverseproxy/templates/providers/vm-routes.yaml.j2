@@ -1,0 +1,38 @@
+# VM Routes - Static configuration for services running on VMs
+# VMs are on internal NAT network (192.168.122.x), proxied via Traefik on host
+
+http:
+{% if reverseproxy_vm_routes is defined and reverseproxy_vm_routes | length > 0 %}
+  routers:
+{% for route in reverseproxy_vm_routes %}
+    {{ route.name }}-router:
+      rule: "Host(`{{ route.host }}`)"
+      service: {{ route.name }}-service
+      entryPoints:
+        - websecure
+{% if reverseproxy_use_letsencrypt %}
+      tls:
+        certResolver: letsencrypt
+{% endif %}
+{% if route.middlewares is defined %}
+      middlewares:
+{% for middleware in route.middlewares %}
+        - {{ middleware }}
+{% endfor %}
+{% endif %}
+
+{% endfor %}
+  services:
+{% for route in reverseproxy_vm_routes %}
+    {{ route.name }}-service:
+      loadBalancer:
+        servers:
+          - url: "{{ route.backend }}"
+{% if route.passHostHeader is defined %}
+        passHostHeader: {{ route.passHostHeader | lower }}
+{% endif %}
+
+{% endfor %}
+{% else %}
+  # No VM routes configured yet
+{% endif %}
