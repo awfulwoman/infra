@@ -1,6 +1,3 @@
-# Composition name (used by composition-common dependency)
-composition_name: emailbackup
-
 # Email sync configuration
 emailbackup_sync_schedule: "daily"  # How often to sync (hourly/daily/weekly)
 emailbackup_imap_host: "imap.{{ vault_mailbox_domain }}"

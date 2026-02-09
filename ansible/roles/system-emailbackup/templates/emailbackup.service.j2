@@ -1,0 +1,10 @@
+[Unit]
+Description=Email Backup Sync Service
+
+[Service]
+Type=oneshot
+User={{ ansible_user }}
+Group={{ ansible_user }}
+ExecStart=/usr/bin/mbsync -c /home/{{ ansible_user }}/.mbsyncrc -V main
+StandardOutput=journal
+StandardError=journal

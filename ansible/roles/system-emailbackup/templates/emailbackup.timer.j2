@@ -3,7 +3,6 @@ Description=Email Backup Sync Timer
 Requires=emailbackup.service
 
 [Timer]
-# Run based on configuration (daily by default)
 {% if emailbackup_sync_schedule == "hourly" %}
 OnCalendar=hourly
 {% elif emailbackup_sync_schedule == "weekly" %}

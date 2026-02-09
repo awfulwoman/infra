@@ -4,15 +4,15 @@ IMAPAccount main
 Host {{ emailbackup_imap_host }}
 User {{ emailbackup_imap_user }}
 Pass {{ emailbackup_imap_password }}
-TLSType IMAPS
+SSLType IMAPS
 CertificateFile /etc/ssl/certs/ca-certificates.crt
 
 IMAPStore main-remote
 Account main
 
 MaildirStore main-local
-Path /data/
-Inbox /data/INBOX
+Path {{ emailbackup_storage_path }}/
+Inbox {{ emailbackup_storage_path }}/INBOX
 SubFolders Verbatim
 
 Channel main
@@ -21,4 +21,4 @@ Near :main-local:
 Patterns *
 Create Near
 Expunge None
-SyncState /data/.mbsync/
+SyncState {{ emailbackup_storage_path }}/.mbsync/

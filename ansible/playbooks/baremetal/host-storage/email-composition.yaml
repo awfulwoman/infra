@@ -1,0 +1,5 @@
+- name: Email backup
+  hosts: host-storage
+  roles:
+    - role: system-zfs
+    - role: system-emailbackup

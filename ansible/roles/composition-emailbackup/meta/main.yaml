@@ -1,4 +1,0 @@
-dependencies:
-  - role: composition-common
-    vars:
-      composition_name: emailbackup
