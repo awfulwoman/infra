@@ -1,0 +1,65 @@
+# code: language=ansible
+
+- name: "Install isync (mbsync)"
+  become: true
+  ansible.builtin.apt:
+    name: isync
+    state: present
+
+- name: "Verify email backup storage path exists (provisioned by system-zfs)"
+  ansible.builtin.stat:
+    path: "{{ emailbackup_storage_path }}"
+  register: emailbackup_storage_check
+
+- name: "Fail if email backup storage path does not exist"
+  ansible.builtin.fail:
+    msg: "{{ emailbackup_storage_path }} does not exist. Ensure system-zfs has provisioned the dataset."
+  when: not emailbackup_storage_check.stat.exists
+
+- name: "Ensure email backup storage ownership"
+  become: true
+  ansible.builtin.file:
+    path: "{{ emailbackup_storage_path }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
+- name: "Ensure mbsync state directory exists"
+  ansible.builtin.file:
+    path: "{{ emailbackup_storage_path }}/.mbsync"
+    state: directory
+    mode: "0755"
+
+- name: "Create mbsync config"
+  ansible.builtin.template:
+    src: mbsyncrc.j2
+    dest: "/home/{{ ansible_user }}/.mbsyncrc"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0600"
+
+- name: "Create systemd service"
+  become: true
+  ansible.builtin.template:
+    src: emailbackup.service.j2
+    dest: /etc/systemd/system/emailbackup.service
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: "Create systemd timer"
+  become: true
+  ansible.builtin.template:
+    src: emailbackup.timer.j2
+    dest: /etc/systemd/system/emailbackup.timer
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: "Enable and start systemd timer"
+  become: true
+  ansible.builtin.systemd:
+    name: emailbackup.timer
+    enabled: true
+    state: started
+    daemon_reload: true

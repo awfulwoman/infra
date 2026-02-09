@@ -1,0 +1,24 @@
+# mbsync configuration for email backup
+
+IMAPAccount main
+Host {{ emailbackup_imap_host }}
+User {{ emailbackup_imap_user }}
+Pass {{ emailbackup_imap_password }}
+SSLType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+IMAPStore main-remote
+Account main
+
+MaildirStore main-local
+Path {{ emailbackup_storage_path }}/
+Inbox {{ emailbackup_storage_path }}/INBOX
+SubFolders Verbatim
+
+Channel main
+Far :main-remote:
+Near :main-local:
+Patterns *
+Create Near
+Expunge None
+SyncState {{ emailbackup_storage_path }}/.mbsync/

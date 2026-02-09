@@ -1,0 +1,6 @@
+# Email sync configuration
+emailbackup_sync_schedule: "daily"  # How often to sync (hourly/daily/weekly)
+emailbackup_imap_host: "imap.{{ vault_mailbox_domain }}"
+emailbackup_imap_user: "{{ vault_mailbox_user }}"
+emailbackup_imap_password: "{{ vault_mailbox_password }}"
+emailbackup_storage_path: "/slowpool/charlie/email"
