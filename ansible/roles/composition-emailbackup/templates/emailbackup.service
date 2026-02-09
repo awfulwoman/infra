@@ -1,0 +1,16 @@
+[Unit]
+Description=Email Backup Sync Service
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+User={{ ansible_user }}
+Group={{ ansible_user }}
+WorkingDirectory={{ composition_root }}
+ExecStart=/usr/bin/docker compose up --build
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

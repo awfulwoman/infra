@@ -119,6 +119,8 @@ zfs:
             policy: critical
           photos:
             policy: critical
+          email:
+            policy: critical
 
 # -------------------------------------------------------------------
 # MISC

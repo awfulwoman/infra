@@ -1,0 +1,75 @@
+# code: language=ansible
+
+# ----------------------------
+# Core tasks
+# ----------------------------
+
+- name: "Create compose file"
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ composition_root }}/docker-compose.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0644"
+
+- name: "Create .env file"
+  ansible.builtin.template:
+    src: environment_vars.j2
+    dest: "{{ composition_root }}/.environment_vars"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0600"  # Contains credentials
+
+# ----------------------------
+# Specific tasks
+# ----------------------------
+
+- name: "Create mbsync config"
+  ansible.builtin.template:
+    src: mbsyncrc
+    dest: "{{ composition_config }}/mbsyncrc"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0600"  # Contains credentials
+
+- name: "Create sync script"
+  ansible.builtin.template:
+    src: sync-script.sh
+    dest: "{{ composition_config }}/sync-script.sh"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0755"
+
+- name: "Ensure email backup storage directory exists"
+  ansible.builtin.file:
+    path: "{{ emailbackup_storage_path }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0755"
+
+- name: "Create systemd service"
+  become: true
+  ansible.builtin.template:
+    src: emailbackup.service
+    dest: /etc/systemd/system/emailbackup.service
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: "Create systemd timer"
+  become: true
+  ansible.builtin.template:
+    src: emailbackup.timer
+    dest: /etc/systemd/system/emailbackup.timer
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: "Enable and start systemd timer"
+  become: true
+  ansible.builtin.systemd:
+    name: emailbackup.timer
+    enabled: true
+    state: started
+    daemon_reload: true

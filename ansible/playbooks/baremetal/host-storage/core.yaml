@@ -38,6 +38,7 @@
     - role: composition-piper
     - role: composition-gotosocial
     - role: composition-libretranslate
+    - role: composition-emailbackup
     - role: system-smartmontools
     - role: monitoring-healthchecksio
     - role: system-promtail
