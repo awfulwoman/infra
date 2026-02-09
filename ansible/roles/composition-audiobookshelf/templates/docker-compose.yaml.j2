@@ -13,6 +13,7 @@ services:
       - "traefik.http.routers.audiobookshelf.rule=Host(`audiobookshelf.{{ domain_name }}`)"
       - "traefik.http.routers.audiobookshelf.tls=true"
       - "traefik.http.routers.audiobookshelf.tls.certresolver=letsencrypt"
+      - "traefik.http.services.audiobookshelf.loadbalancer.server.port=80"
     volumes:
       - "{{ shared_media_path }}/audiobooks:/audiobooks"
       - "{{ composition_config }}/config:/config"

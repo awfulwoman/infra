@@ -196,36 +196,36 @@ cnames:
 # Proxy services running on VMs (internal NAT network)
 # -------------------------------------------------------------------
 
-reverseproxy_vm_routes:
-  # vm-media (192.168.122.13) - Media services
-  - name: jellyfin
-    host: "jellyfin.{{ domain_name }}"
-    backend: "http://192.168.122.13:8096"
-  - name: immich
-    host: "immich.{{ domain_name }}"
-    backend: "http://192.168.122.13:2283"
-  - name: musicassistant
-    host: "musicassistant.{{ domain_name }}"
-    backend: "http://192.168.122.13:8095"
-  - name: audiobookshelf
-    host: "audiobookshelf.{{ domain_name }}"
-    backend: "http://192.168.122.13:13378"
+# reverseproxy_vm_routes:
+#   # vm-media (192.168.122.13) - Media services
+#   - name: jellyfin
+#     host: "jellyfin.{{ domain_name }}"
+#     backend: "http://192.168.122.13:8096"
+#   - name: immich
+#     host: "immich.{{ domain_name }}"
+#     backend: "http://192.168.122.13:2283"
+#   - name: musicassistant
+#     host: "musicassistant.{{ domain_name }}"
+#     backend: "http://192.168.122.13:8095"
+#   - name: audiobookshelf
+#     host: "audiobookshelf.{{ domain_name }}"
+#     backend: "http://192.168.122.13:13378"
 
-  # vm-downloads (192.168.122.12) - Arr stack
-  - name: sonarr
-    host: "sonarr.{{ domain_name }}"
-    backend: "http://192.168.122.12:8989"
-  - name: radarr
-    host: "radarr.{{ domain_name }}"
-    backend: "http://192.168.122.12:7878"
-  - name: prowlarr
-    host: "prowlarr.{{ domain_name }}"
-    backend: "http://192.168.122.12:9696"
-  - name: jellyseerr
-    host: "jellyseerr.{{ domain_name }}"
-    backend: "http://192.168.122.12:5055"
+#   # vm-downloads (192.168.122.12) - Arr stack
+#   - name: sonarr
+#     host: "sonarr.{{ domain_name }}"
+#     backend: "http://192.168.122.12:8989"
+#   - name: radarr
+#     host: "radarr.{{ domain_name }}"
+#     backend: "http://192.168.122.12:7878"
+#   - name: prowlarr
+#     host: "prowlarr.{{ domain_name }}"
+#     backend: "http://192.168.122.12:9696"
+#   - name: jellyseerr
+#     host: "jellyseerr.{{ domain_name }}"
+#     backend: "http://192.168.122.12:5055"
 
-  # vm-homeautomation (192.168.122.11) - Home Assistant
-  - name: homeassistant
-    host: "homeassistant-backup.{{ domain_name }}"
-    backend: "http://192.168.122.11:8123"
+#   # vm-homeautomation (192.168.122.11) - Home Assistant
+#   - name: homeassistant
+#     host: "homeassistant-backup.{{ domain_name }}"
+#     backend: "http://192.168.122.11:8123"
