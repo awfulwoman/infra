@@ -77,7 +77,7 @@ compositions_dataset: slowpool/compositions
 # BACKUPS
 # -------------------------------------------------------------------
 backups_zfs_server_local_dataset: slowpool/backups/raw
-backups_zfs_server_offsite_enabled: true
+backups_zfs_server_offsite_enabled: false
 backups_zfs_server_offsite_bwlimit: 3M
 
 # -------------------------------------------------------------------
