@@ -4,7 +4,7 @@ IMAPAccount main
 Host {{ emailbackup_imap_host }}
 User {{ emailbackup_imap_user }}
 Pass {{ emailbackup_imap_password }}
-SSLType IMAPS
+TLSType IMAPS
 CertificateFile /etc/ssl/certs/ca-certificates.crt
 
 IMAPStore main-remote

@@ -11,9 +11,3 @@ services:
       - "{{ composition_config }}/sync-script.sh:/sync-script.sh:ro"
     restart: "no"  # Run manually via systemd timer
     command: /bin/sh /sync-script.sh
-    networks:
-      - "{{ default_docker_network }}"
-
-networks:
-  "{{ default_docker_network }}":
-    external: true
