@@ -8,7 +8,7 @@
     - role: composition-victoriametrics
     - role: composition-reverseproxy
     - role: composition-container-management
-    - role: composition-audio
+    - role: composition-audiobookshelf
     - role: composition-jellyfin
     - role: composition-immich
     - role: composition-downloads
