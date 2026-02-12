@@ -3,7 +3,7 @@ name: "{{ composition_name }}"
 services:
   github2karakeep:
     container_name: github2karakeep
-    image: ghcr.io/sidoshi/karakeep-sync:latest
+    image: ghcr.io/hasansino/github2karakeep:latest
     restart: unless-stopped
     env_file: .environment_vars
     networks:

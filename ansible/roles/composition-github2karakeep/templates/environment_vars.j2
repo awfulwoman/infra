@@ -1,5 +1,12 @@
 TZ="Europe/Berlin"
-KS_GITHUB_TOKEN="{{ github2karakeep_gh_token }}"
-KS_KARAKEEP_AUTH="{{ github2karakeep_kk_token }}"
-KS_KARAKEEP_URL="{{ github2karakeep_kk_url }}"
-KS_GITHUB_SCHEDULE="{{ github2karakeep_schedule }}"
+TIMEOUT=10s
+GH_USERNAME=awfulwoman
+GH_TOKEN="{{ github2karakeep_gh_token }}"
+GH_PER_PAGE=100
+GH_EXTRACT_TOPICS=true
+KK_HOST="{{ github2karakeep_kk_url }}"
+KK_TOKEN="{{ github2karakeep_kk_token }}"
+KK_LIST=github2karakeep
+UPDATE_INTERVAL=12h
+EXPORT_LIMIT=10
+DEFAULT_TAG=github2karakeep
