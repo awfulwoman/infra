@@ -2,6 +2,7 @@
 name: "{{ composition_name }}"
 services:
   karakeep:
+    container_name: karakeep
     image: ghcr.io/karakeep-app/karakeep:0.30.0
     restart: unless-stopped
     ports:
