@@ -87,6 +87,13 @@
     scope: global
     value: "github@whalecoiner.com"
 
+- name: Enable tmux mouse mode
+  ansible.builtin.lineinfile:
+    path: "{{ ansible_facts.user_dir }}/.tmux.conf"
+    line: 'set -g mouse on'
+    create: true
+    mode: '0644'
+
 - name: Add claude to .bashrc
   ansible.builtin.lineinfile:
     path: "{{ ansible_facts.user_dir }}/.bashrc"
