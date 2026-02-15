@@ -45,7 +45,8 @@ ansible-playbook ansible/playbooks/baremetal/host-storage/core.yaml
 
 ## Github
 
-- Your primary method of interacting with GitHub should be the GitHub CLI tool, `gh`.
+- Your primary method of interacting with GitHub should be the GitHub
+  CLI tool, `gh`.
 - If the GitHub CLI tool is not installed, alert the user.
 
 ## Architecture
@@ -54,7 +55,8 @@ ansible-playbook ansible/playbooks/baremetal/host-storage/core.yaml
 
 The primary configuration management tool. Structure:
 
-- **`inventory/`**: Host definitions (`hosts.yaml`), `host_vars/`, `group_vars/`
+- **`inventory/`**: Host definitions (`hosts.yaml`), `host_vars/`,
+  `group_vars/`
 - **`roles/`**: ~93 roles following naming conventions:
   - `bootstrap-*`: Essential configurations for a host type (personal
     machines, Ubuntu servers)
@@ -65,7 +67,8 @@ The primary configuration management tool. Structure:
   - `server-*`: Server half of client-server pairs (nfs, nut)
   - `client-*`: Client half of client-server pairs (nfs, nut)
   - `virtual-*`: Virtualisation roles (qemu-host, qemu-guest, hetzner)
-  - `hardware-*`: Hardware-specific configs (raspberry-pi, zigbee-conbee, rtl-433)
+  - `hardware-*`: Hardware-specific configs (raspberry-pi, zigbee-conbee,
+    rtl-433)
   - `monitoring-*`: Monitoring integrations (healthchecksio, linux2mqtt)
   - `network-*`: Network configuration
     - `network-netplan`: Netplan-based network configuration for primary
@@ -126,7 +129,8 @@ Utility shell scripts for common operations (e.g., `flush-dns.sh`).
 
 ### Documentation (`docs/`)
 
-Project documentation including architecture guides, runbooks, and reference material.
+Project documentation including architecture guides, runbooks, and reference
+material.
 
 ## Key Patterns
 
@@ -137,7 +141,8 @@ Project documentation including architecture guides, runbooks, and reference mat
 
 ## Plans
 
-- Whenever a plan is requested, ALWAYS save a copy of it as a markdown file in plans/.
+- Whenever a plan is requested, ALWAYS save a copy of it as a markdown file
+  in plans/.
 - When you are implementing a plan, always ask if the user wants to create
   a pull request, rather than automatically committing to main.
 
