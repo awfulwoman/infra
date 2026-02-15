@@ -20,8 +20,6 @@ services:
       - /etc/localtime:/etc/localtime:ro
     env_file:
       - .env
-    ports:
-      - "2283:2283"
     depends_on:
       - redis
       - database
@@ -31,6 +29,7 @@ services:
       - "traefik.http.routers.immich.rule=Host(`immich.{{ domain_name }}`)"
       - "traefik.http.routers.immich.tls=true"
       - "traefik.http.routers.immich.tls.certresolver=letsencrypt"
+      - "traefik.http.services.immich.loadbalancer.server.port=2283"
     healthcheck:
       disable: false
     networks:
