@@ -10,6 +10,7 @@
     ],
     "docker-compose": {
         "managerFilePatterns": [
+            "/docker-compose.yaml/",
             "/docker-compose.yaml.j2/"
         ]
     }
