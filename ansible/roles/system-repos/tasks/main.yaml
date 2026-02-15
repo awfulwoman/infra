@@ -15,12 +15,17 @@
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
 
+- name: Check if git host is in known_hosts
+  ansible.builtin.command:
+    cmd: "ssh-keygen -F {{ repos_git_host }}"
+  register: known_hosts_check
+  changed_when: false
+  failed_when: false
+
 - name: Add git host to known_hosts
-  ansible.builtin.known_hosts:
-    name: "{{ repos_git_host }}"
-    key: "{{ lookup('pipe', 'ssh-keyscan -t rsa ' + repos_git_host) }}"
-    path: "{{ ansible_facts.user_dir }}/.ssh/known_hosts"
-    state: present
+  ansible.builtin.shell: |
+    ssh-keyscan {{ repos_git_host }} >> {{ ansible_facts.user_dir }}/.ssh/known_hosts
+  when: known_hosts_check.rc != 0
 
 - name: Clone/update repositories
   ansible.builtin.git:
