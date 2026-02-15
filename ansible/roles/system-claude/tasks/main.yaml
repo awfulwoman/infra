@@ -68,6 +68,25 @@
         mode: '0644'
       when: path_check.found == 0
 
+- name: Disable Claude Code prompt suggestions
+  ansible.builtin.lineinfile:
+    path: "{{ ansible_facts.user_dir }}/{{ system_claude_profile_file }}"
+    line: 'export CLAUDE_CODE_ENABLE_PROMPT_SUGGESTION=false'
+    create: true
+    mode: '0644'
+
+- name: Configure git user name
+  community.general.git_config:
+    name: user.name
+    scope: global
+    value: "Charlie O'Hara"
+
+- name: Configure git user email
+  community.general.git_config:
+    name: user.email
+    scope: global
+    value: "github@whalecoiner.com"
+
 - name: Add claude to .bashrc
   ansible.builtin.lineinfile:
     path: "{{ ansible_facts.user_dir }}/.bashrc"
