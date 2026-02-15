@@ -1,0 +1,23 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  mcp-youtube-transcript:
+    container_name: mcp-youtube-transcript
+    build:
+      context: "{{ composition_config }}/src"
+      dockerfile: ./Dockerfile
+    restart: unless-stopped
+    env_file: .environment_vars
+    stdin_open: true
+    tty: true
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+    # MCP servers typically use stdio transport by default
+    # For network access via SSE, additional configuration needed
+    # command: ["--response-limit", "50000"]
+
+networks:
+  "{{ default_docker_network }}":
+    external: true
