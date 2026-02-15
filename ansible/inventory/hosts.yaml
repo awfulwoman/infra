@@ -10,7 +10,7 @@ all:
     vm-media:
     host-mba2011:
     # host-albion:
-    dns:
+    deedee:
     samson:
     testrouter:
     pikvm:
@@ -56,7 +56,7 @@ all:
         vm-claude-dev:
         samson:
         # host-albion:
-        dns:
+        deedee:
         testrouter:
         pikvm:
         belinda:
@@ -71,7 +71,7 @@ all:
       hosts:
         host-storage:
         host-homeassistant:
-        dns:
+        deedee:
         host-backups:
         # host-albion: # Has died
         samson:
@@ -83,7 +83,7 @@ all:
       hosts:
         host-storage:
         host-homeassistant:
-        dns:
+        deedee:
         vm-awfulwoman-hetzner:
         samson:
 
