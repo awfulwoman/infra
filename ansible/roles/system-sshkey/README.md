@@ -1,3 +1,3 @@
 # Generate SSH Key
 
-Force this hos to generate an SSH key for itself.
+Tell the host to generate an SSH key.

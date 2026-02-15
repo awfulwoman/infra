@@ -1,5 +1,7 @@
 # system-github-ssh-keys
 
+TODO: remane to `automation-key-updater`
+
 Fetches SSH public keys from a GitHub user account and keeps them updated via cron.
 
 ## Purpose
