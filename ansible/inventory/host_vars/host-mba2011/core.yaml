@@ -6,6 +6,7 @@ host_type: baremetal
 host_name: mba2011
 host_city: ber
 host_location: personal
+host_ipv4: 192.168.1.27
 host_pfqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}"
 host_fqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}.{{ domain_name }}"
 host_description: "Personal MacBook Air 2011"
