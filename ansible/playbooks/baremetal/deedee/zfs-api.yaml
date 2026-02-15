@@ -1,5 +1,5 @@
 - name: DNS Server - ZFS API
-  hosts: dns
+  hosts: deedee
   vars:
     compositions:
       - zfs-api

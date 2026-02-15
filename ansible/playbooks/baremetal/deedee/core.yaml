@@ -1,5 +1,5 @@
-- name: DNS
-  hosts: dns
+- name: DeeDee - we're off to Yonkers
+  hosts: deedee
   roles:
     - role: hardware-raspberry-pi
     - role: bootstrap-ubuntu-server

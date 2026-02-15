@@ -1,5 +1,5 @@
 - name: ZFS and backup stuff
-  hosts: dns
+  hosts: deedee
   roles:
     - role: system-zfs
     - role: system-zfs-policy

@@ -1,5 +1,5 @@
-- name: DNS
-  hosts: dns
+- name: DDS
+  hosts: deedee
   roles:
     - role: composition-reverseproxy
     - role: composition-container-management

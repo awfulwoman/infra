@@ -1,5 +1,5 @@
 - name: Update Terraform
-  hosts: dns
+  hosts: deedee
   roles:
     - role: infra-public-resources
       tags:
