@@ -41,5 +41,5 @@
 - name: Add claude to .bashrc
   ansible.builtin.lineinfile:
     path: "{{ ansible_facts.user_dir }}/.bashrc"
-    line: "/home/vagrant/.local/bin/claude"
+    line: "$HOME/.local/bin/claude"
     insertafter: EOF
