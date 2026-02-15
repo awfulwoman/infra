@@ -2,6 +2,13 @@ ansible_host: 188.245.37.81
 ansible_user: "{{ vault_server_username }}"
 
 host_type: virtual
+host_name: awfulwoman
+host_city: fsn
+host_location: hetzner
+host_ipv4: 188.245.37.81
+host_pfqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}"
+host_fqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}.{{ domain_name }}"
+host_description: "Hetzner cloud server for public services"
 
 bootstrap_ubuntu_timezone: "Europe/Berlin"
 

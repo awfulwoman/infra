@@ -4,3 +4,14 @@
 ansible_host: localhost
 ansible_connection: local
 ansible_user: vagrant
+
+# -------------------------------------------------------------------
+# INFRA
+# -------------------------------------------------------------------
+host_type: virtual
+host_name: vagrant-wrapper
+host_city: local
+host_location: dev
+host_pfqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}"
+host_fqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}.{{ domain_name }}"
+host_description: "Local Vagrant development VM"
