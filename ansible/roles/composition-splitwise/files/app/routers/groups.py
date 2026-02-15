@@ -1,17 +1,34 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Request
 from typing import List
 from datetime import datetime
 
 from models import Group, GroupCreate, GroupResponse, UserInDB
 from services import FileStorage, calculate_balances
-from routers.auth import get_current_user_from_token, get_storage
+from routers.auth import get_current_user_from_token, get_current_user_from_session, get_storage
 
 router = APIRouter(prefix="/api/v1/groups", tags=["groups"])
 
 
+async def get_current_user(
+    request: Request,
+    token_user: UserInDB = Depends(get_current_user_from_token),
+    session_user: UserInDB = Depends(get_current_user_from_session),
+) -> UserInDB:
+    """Get current user from either token or session."""
+    # Try session first (for web), then token (for API)
+    if session_user:
+        return session_user
+    if token_user:
+        return token_user
+    raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Not authenticated",
+    )
+
+
 @router.get("", response_model=List[Group])
 async def list_groups(
-    current_user: UserInDB = Depends(get_current_user_from_token),
+    current_user: UserInDB = Depends(get_current_user),
     storage: FileStorage = Depends(get_storage),
 ):
     """List all groups."""
@@ -24,7 +41,7 @@ async def list_groups(
 @router.post("", response_model=Group, status_code=status.HTTP_201_CREATED)
 async def create_group(
     group: GroupCreate,
-    current_user: UserInDB = Depends(get_current_user_from_token),
+    current_user: UserInDB = Depends(get_current_user),
     storage: FileStorage = Depends(get_storage),
 ):
     """Create a new group."""
@@ -75,7 +92,7 @@ async def create_group(
 @router.get("/{group_id}", response_model=GroupResponse)
 async def get_group(
     group_id: str,
-    current_user: UserInDB = Depends(get_current_user_from_token),
+    current_user: UserInDB = Depends(get_current_user),
     storage: FileStorage = Depends(get_storage),
 ):
     """Get group details with calculated balances."""

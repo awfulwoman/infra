@@ -1,12 +1,28 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Request
 from typing import List
 from datetime import datetime
 
 from models import Transaction, TransactionCreate, TransactionUpdate, UserInDB
 from services import FileStorage, calculate_split, calculate_balances
-from routers.auth import get_current_user_from_token, get_storage
+from routers.auth import get_current_user, get_current_user_from_session, get_storage
 
 router = APIRouter(prefix="/api/v1", tags=["transactions"])
+
+
+async def get_current_user(
+    request: Request,
+    token_user: UserInDB = Depends(get_current_user),
+    session_user: UserInDB = Depends(get_current_user_from_session),
+) -> UserInDB:
+    """Get current user from either token or session."""
+    if session_user:
+        return session_user
+    if token_user:
+        return token_user
+    raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Not authenticated",
+    )
 
 
 def _publish_balance_update(storage: FileStorage, group_id: str):
@@ -24,7 +40,7 @@ def _publish_balance_update(storage: FileStorage, group_id: str):
 @router.get("/groups/{group_id}/transactions", response_model=List[Transaction])
 async def list_transactions(
     group_id: str,
-    current_user: UserInDB = Depends(get_current_user_from_token),
+    current_user: UserInDB = Depends(get_current_user),
     storage: FileStorage = Depends(get_storage),
 ):
     """List all transactions for a group."""
@@ -50,7 +66,7 @@ async def list_transactions(
 async def create_transaction(
     group_id: str,
     transaction: TransactionCreate,
-    current_user: UserInDB = Depends(get_current_user_from_token),
+    current_user: UserInDB = Depends(get_current_user),
     storage: FileStorage = Depends(get_storage),
 ):
     """Create a new transaction."""
@@ -106,7 +122,7 @@ async def create_transaction(
 async def update_transaction(
     transaction_id: str,
     transaction_update: TransactionUpdate,
-    current_user: UserInDB = Depends(get_current_user_from_token),
+    current_user: UserInDB = Depends(get_current_user),
     storage: FileStorage = Depends(get_storage),
 ):
     """Update a transaction."""
@@ -173,7 +189,7 @@ async def update_transaction(
 @router.delete("/transactions/{transaction_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_transaction(
     transaction_id: str,
-    current_user: UserInDB = Depends(get_current_user_from_token),
+    current_user: UserInDB = Depends(get_current_user),
     storage: FileStorage = Depends(get_storage),
 ):
     """Delete a transaction."""
