@@ -7,7 +7,7 @@ Wants=network-online.target
 Type=oneshot
 User=root
 Group=root
-WorkingDirectory={{ home_repo_dir }}
+WorkingDirectory={{ ansible_infra_dir }}
 ExecStart=/usr/bin/ansible-playbook \
   {{ automation_infra_playbook }} \
   --inventory {{ automation_infra_inventory }} \

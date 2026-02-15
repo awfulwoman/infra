@@ -46,7 +46,7 @@ Variables (see `defaults/main.yaml`):
 Override variables in host_vars or group_vars to customize:
 
 ```yaml
-automation_infra_playbook: "{{ home_repo_dir }}/ansible/playbooks/custom.yaml"
+automation_infra_playbook: "{{ ansible_infra_dir }}/ansible/playbooks/custom.yaml"
 automation_infra_schedule: "hourly"
 ```
 

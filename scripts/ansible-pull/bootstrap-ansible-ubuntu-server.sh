@@ -12,9 +12,9 @@ read -sp "Playbook to use: " ANSIBLEPULL_PLAYBOOK
 
 # Check for defined paths
 
-if [[ -z "${HOME_REPO_DIR}" ]]; then
-#   HOME_REPO_DIR="$ANSIBLE_PATH/home"
-  HOME_REPO_DIR="/opt/infra.git"
+if [[ -z "${ANSIBLE_INFRA_DIR}" ]]; then
+#   ANSIBLE_INFRA_DIR="$ANSIBLE_PATH/home"
+  ANSIBLE_INFRA_DIR="/opt/infra.git"
 fi
 
 if [[ -z "${ANSIBLE_PATH}" ]]; then
@@ -39,7 +39,7 @@ echo "ANSIBLEPULL_REPO_URL = $ANSIBLEPULL_REPO_URL"
 echo "ANSIBLE_VAULT_PASSWORD = $ANSIBLE_VAULT_PASSWORD"
 echo "ANSIBLE_COLLECTIONS_PATH = $ANSIBLE_COLLECTIONS_PATH"
 echo "ANSIBLE_ROLES_PATH = $ANSIBLE_ROLES_PATH"
-echo "HOME_REPO_DIR = $HOME_REPO_DIR"
+echo "ANSIBLE_INFRA_DIR = $ANSIBLE_INFRA_DIR"
 echo "ANSIBLE_VAULT_PASSWORD_FILE = $ANSIBLE_VAULT_PASSWORD_FILE"
 
 # Import keys
@@ -58,16 +58,16 @@ fi
 echo " "
 echo "UPDATE LOCAL REPO"
 echo "************************************"
-if [ ! -d "$HOME_REPO_DIR" ]; then
-    echo "$HOME_REPO_DIR does not exist. Creating."
-    sudo mkdir -p $HOME_REPO_DIR
-    sudo chown -R $BOOTSTRAP_USER_ID:$BOOTSTRAP_GROUP_ID $HOME_REPO_DIR
+if [ ! -d "$ANSIBLE_INFRA_DIR" ]; then
+    echo "$ANSIBLE_INFRA_DIR does not exist. Creating."
+    sudo mkdir -p $ANSIBLE_INFRA_DIR
+    sudo chown -R $BOOTSTRAP_USER_ID:$BOOTSTRAP_GROUP_ID $ANSIBLE_INFRA_DIR
 else
-    echo "$HOME_REPO_DIR exists. Destroying and recreating."
-		sudo rm -rf $HOME_REPO_DIR
-		sudo mkdir -p $HOME_REPO_DIR
-    sudo chown -R $BOOTSTRAP_USER_ID:$BOOTSTRAP_GROUP_ID $HOME_REPO_DIR
-		git clone $ANSIBLEPULL_REPO_URL $HOME_REPO_DIR
+    echo "$ANSIBLE_INFRA_DIR exists. Destroying and recreating."
+		sudo rm -rf $ANSIBLE_INFRA_DIR
+		sudo mkdir -p $ANSIBLE_INFRA_DIR
+    sudo chown -R $BOOTSTRAP_USER_ID:$BOOTSTRAP_GROUP_ID $ANSIBLE_INFRA_DIR
+		git clone $ANSIBLEPULL_REPO_URL $ANSIBLE_INFRA_DIR
 fi
 
 # Ensure ansible vault password is present
@@ -92,7 +92,7 @@ fi
 
 
 
-cd $HOME_REPO_DIR
+cd $ANSIBLE_INFRA_DIR
 
 # Satisfy Ansible role dependencies
 echo " "
@@ -100,14 +100,14 @@ echo "UPDATE ANSIBLE GALAXY ROLES"
 echo "************************************"
 sudo mkdir -p $ANSIBLE_ROLES_PATH
 sudo chown -R awful:awful $ANSIBLE_ROLES_PATH
-ansible-galaxy install -r $HOME_REPO_DIR/ansible/meta/requirements.yaml -p $ANSIBLE_ROLES_PATH
+ansible-galaxy install -r $ANSIBLE_INFRA_DIR/ansible/meta/requirements.yaml -p $ANSIBLE_ROLES_PATH
 
 echo " "
 echo "UPDATE ANSIBLE GALAXY COLLECTIONS"
 echo "************************************"
 sudo mkdir -p $ANSIBLE_COLLECTIONS_PATH
 sudo chown -R awful:awful $ANSIBLE_COLLECTIONS_PATH
-ansible-galaxy collection install -r $HOME_REPO_DIR/ansible/meta/requirements.yaml -p $ANSIBLE_COLLECTIONS_PATH
+ansible-galaxy collection install -r $ANSIBLE_INFRA_DIR/ansible/meta/requirements.yaml -p $ANSIBLE_COLLECTIONS_PATH
 
 
 # Run Ansible Pull

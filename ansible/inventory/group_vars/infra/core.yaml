@@ -20,13 +20,13 @@ repo_name: infra
 # Docker
 default_docker_network: guineanet
 
-# Ansible-pull
+# Ansible
 ansible_path: "/opt/ansible"
 ansible_log_path: "{{ ansible_path }}/logs"
 ansible_vault_password_file: "{{ ansible_path }}/.vaultpassword"
 ansible_roles_path: "{{ ansible_path }}/galaxy/roles:./ansible/roles"
 ansible_collections_path: "{{ ansible_path }}/galaxy/collections"
-home_repo_dir: "/opt/repos/infra"
+ansible_infra_dir: "/opt/repos/infra"
 
 # Python
 default_bin_path: /usr/local/bin
@@ -53,6 +53,6 @@ environment_config:
   ANSIBLE_VAULT_PASSWORD_FILE: "{{ ansible_vault_password_file }}"
   ANSIBLE_ROLES_PATH: "{{ ansible_roles_path }}"
   ANSIBLE_COLLECTIONS_PATH: "{{ ansible_collections_path }}"
-  HOME_REPO_DIR: "{{ home_repo_dir }}"
+  ANSIBLE_INFRA_DIR: "{{ ansible_infra_dir }}"
   TF_VAR_digitalocean_token: "{{ vault_ddns_digitalocean_token }}"
   TF_VAR_hcloud_token: "{{ vault_hetzner_api_key_rw }}"
