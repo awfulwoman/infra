@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Response, Cookie
+from fastapi import APIRouter, Depends, HTTPException, status, Response, Cookie, Form
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from typing import Optional
 from datetime import datetime
@@ -79,9 +79,9 @@ async def register(user: UserCreate, storage: FileStorage = Depends(get_storage)
 
 @router.post("/login")
 async def login(
-    username: str,
-    password: str,
-    response: Response,
+    username: str = Form(...),
+    password: str = Form(...),
+    response: Response = None,
     storage: FileStorage = Depends(get_storage),
 ):
     """Login with username and password."""
