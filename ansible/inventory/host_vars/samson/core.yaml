@@ -45,9 +45,9 @@ tailscale_exit_node: true
 # REPOS
 # -------------------------------------------------------------------
 repos:
-  - url: https://github.com/awfulwoman/infra
+  - repo: awfulwoman/infra
     name: infra
-  - url: https://github.com/awfulwoman/obsidian
+  - repo: awfulwoman/obsidian
     name: obsidian
 
 # -------------------------------------------------------------------

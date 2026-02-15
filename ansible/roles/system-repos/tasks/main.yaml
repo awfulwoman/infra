@@ -1,20 +1,33 @@
----
 - name: Ensure repos base directory exists
   become: true
   ansible.builtin.file:
     path: "{{ repos_base_dir }}"
     state: directory
     mode: "0755"
-    owner: root
-    group: root
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
+- name: Ensure .ssh directory exists
+  ansible.builtin.file:
+    path: "{{ ansible_facts.user_dir }}/.ssh"
+    state: directory
+    mode: "0700"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
+- name: Add git host to known_hosts
+  ansible.builtin.known_hosts:
+    name: "{{ repos_git_host }}"
+    key: "{{ lookup('pipe', 'ssh-keyscan -t rsa ' + repos_git_host) }}"
+    path: "{{ ansible_facts.user_dir }}/.ssh/known_hosts"
+    state: present
 
 - name: Clone/update repositories
-  become: true
   ansible.builtin.git:
-    repo: "{{ item.url }}"
-    dest: "{{ repos_base_dir }}/{{ item.name | default(item.url | basename | regex_replace('\\.git$', '')) }}"
+    repo: "git@{{ repos_git_host }}:{{ item.repo }}.git"
+    dest: "{{ repos_base_dir }}/{{ item.name | default(item.repo.split('/')[-1]) }}"
     version: "{{ item.version | default('HEAD') }}"
     update: "{{ repos_update }}"
   loop: "{{ repos }}"
   loop_control:
-    label: "{{ item.name | default(item.url | basename | regex_replace('\\.git$', '')) }}"
+    label: "{{ item.name | default(item.repo.split('/')[-1]) }}"

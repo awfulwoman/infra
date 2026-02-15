@@ -1,7 +1,8 @@
 - name: samson development playbook
   hosts: samson
   roles:
-    - role: system-zfs-policy
+    - role: system-sshkey
+    - role: system-repos
 
   handlers:
     - name: Reboot host
