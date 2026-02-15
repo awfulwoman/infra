@@ -33,4 +33,4 @@ git -C {{ ansiblepull_repo_path }} pull
 echo " "
 echo "RUN ANSIBLE PLAYBOOKS"
 echo "************************************"
-ansible-pull --url {{ ansiblepull_repo_url }} --directory {{ ansiblepull_repo_path }} ansible/playbooks/{{ host_type }}/{{ inventory_hostname }}/{{ ansiblepull_playbook }}.yaml
+ansible-pull --url {{ ansiblepull_repo_url }} --directory {{ ansiblepull_repo_path }} ansible/playbooks/{{ host_type }}/{{ host_name }}/{{ ansiblepull_playbook }}.yaml

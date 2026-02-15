@@ -23,4 +23,4 @@ exlock_now || exit 1
 echo " "
 echo "RUN ANSIBLE PLAYBOOKS"
 echo "************************************"
-ansible-pull -U {{ ansiblepull_repo_url }} ansible/playbooks/{{ host_type }}/{{ inventory_hostname }}/compositions.yaml
+ansible-pull -U {{ ansiblepull_repo_url }} ansible/playbooks/{{ host_type }}/{{ host_name }}/compositions.yaml

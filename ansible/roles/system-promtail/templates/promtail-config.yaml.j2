@@ -19,7 +19,7 @@ scrape_configs:
       # Add host label
       - source_labels: ['__meta_docker_container_id']
         target_label: host
-        replacement: {{ inventory_hostname }}
+        replacement: {{ host_name }}
 
       # Container name without leading slash
       - source_labels: ['__meta_docker_container_name']
@@ -66,7 +66,7 @@ scrape_configs:
       max_age: {{ promtail_journald_max_age }}
       labels:
         job: systemd
-        host: {{ inventory_hostname }}
+        host: {{ host_name }}
 
     pipeline_stages:
       # Extract systemd unit
