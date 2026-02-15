@@ -1,0 +1,33 @@
+- name: Ensure /opt/ansible directory exists
+  become: true
+  ansible.builtin.file:
+    path: /opt/ansible
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0755'
+
+- name: Ensure .ssh directory exists
+  ansible.builtin.file:
+    path: "/home/{{ ansible_user }}/.ssh"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0700'
+
+- name: Configure SSH config for infra hosts
+  ansible.builtin.blockinfile:
+    path: "/home/{{ ansible_user }}/.ssh/config"
+    create: true
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0600'
+    marker: "# {mark} ANSIBLE MANAGED: infra hosts"
+    block: |
+      {% for host in groups['infra'] %}
+      Host {{ host }}
+        User awful
+        StrictHostKeyChecking no
+        UserKnownHostsFile /dev/null
+
+      {% endfor %}
