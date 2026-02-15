@@ -1,10 +1,11 @@
 ---
-- name: Ensure GitHub CLI dependencies are installed
+- name: Ensure dependencies are installed
   become: true
   ansible.builtin.apt:
     name:
       - curl
       - gpg
+      - yt-dlp
     state: present
     update_cache: true
 
@@ -37,7 +38,6 @@
 - name: Install Claude CLI
   when: not claude_installed.stat.exists
   block:
-
     - name: Download and execute Claude CLI install script
       ansible.builtin.shell: >
         curl -fsSL {{ system_claude_install_url }} | bash -s -- {{ system_claude_channel }}
@@ -50,7 +50,6 @@
 - name: Ensure .local/bin is in PATH
   when: system_claude_ensure_path
   block:
-
     - name: Check if PATH export already exists in profile
       ansible.builtin.lineinfile:
         path: "{{ ansible_facts.user_dir }}/{{ system_claude_profile_file }}"
