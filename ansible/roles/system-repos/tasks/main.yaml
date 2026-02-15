@@ -1,0 +1,20 @@
+---
+- name: Ensure repos base directory exists
+  become: true
+  ansible.builtin.file:
+    path: "{{ repos_base_dir }}"
+    state: directory
+    mode: "0755"
+    owner: root
+    group: root
+
+- name: Clone/update repositories
+  become: true
+  ansible.builtin.git:
+    repo: "{{ item.url }}"
+    dest: "{{ repos_base_dir }}/{{ item.name | default(item.url | basename | regex_replace('\\.git$', '')) }}"
+    version: "{{ item.version | default('HEAD') }}"
+    update: "{{ repos_update }}"
+  loop: "{{ repos }}"
+  loop_control:
+    label: "{{ item.name | default(item.url | basename | regex_replace('\\.git$', '')) }}"

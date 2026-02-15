@@ -42,6 +42,15 @@ host_primary_interface: "eth0"
 tailscale_exit_node: true
 
 # -------------------------------------------------------------------
+# REPOS
+# -------------------------------------------------------------------
+repos:
+  - url: https://github.com/awfulwoman/infra
+    name: infra
+  - url: https://github.com/awfulwoman/obsidian
+    name: obsidian
+
+# -------------------------------------------------------------------
 # ZFS
 # -------------------------------------------------------------------
 
@@ -52,4 +61,3 @@ zfs:
         disks: /dev/disk/by-id/usb-USB_SanDisk_3.2Gen1_0501f56e8b204d273e4fefdd60408eefbbb1a99d524666fc3243c7d31f73791ef10200000000000000000000708c093200920b10915581071f2f4514-0:0
     datasets:
       compositions:
-

@@ -1,0 +1,13 @@
+---
+# List of repositories to clone
+# Each item should have:
+#   - url: Git repository URL
+#   - name: Directory name (optional, defaults to repo name from URL)
+#   - version: Branch/tag/commit (optional, defaults to HEAD)
+repos: []
+
+# Base directory for all repos
+repos_base_dir: /opt/repos
+
+# Update repos if they already exist
+repos_update: true
