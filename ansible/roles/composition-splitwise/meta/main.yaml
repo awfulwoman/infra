@@ -1,5 +1,3 @@
 ---
 dependencies:
   - role: composition-common
-    vars:
-      composition_name: "{{ composition_name }}"
