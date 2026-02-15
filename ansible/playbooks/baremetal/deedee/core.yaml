@@ -7,6 +7,7 @@
     - role: infothrill.nullmailer
       become: true
     - role: system-sshkey
+    - role: system-repos
     - role: system-zfs
     - role: infra-public-resources
     - role: infra-private-resources
