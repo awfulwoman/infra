@@ -9,8 +9,9 @@ all:
     vm-downloads:
     vm-media:
     host-mba2011:
-    host-albion:
+    # host-albion:
     dns:
+    samson:
     testrouter:
     pikvm:
     belinda:
@@ -53,10 +54,8 @@ all:
         host-storage:
         vm-awfulwoman-hetzner:
         vm-claude-dev:
-        vm-homeautomation:
-        vm-downloads:
-        vm-media:
-        host-albion:
+        samson:
+        # host-albion:
         dns:
         testrouter:
         pikvm:
@@ -74,7 +73,8 @@ all:
         host-homeassistant:
         dns:
         host-backups:
-        host-albion:
+        # host-albion: # Has died
+        samson:
         vm-awfulwoman-hetzner:
         belinda:
 
@@ -85,6 +85,7 @@ all:
         host-homeassistant:
         dns:
         vm-awfulwoman-hetzner:
+        samson:
 
     # Hosts acting as backup/replication server(s)
     zfs-backup-servers:
@@ -93,9 +94,9 @@ all:
         belinda:
 
     # Offsite replication destination
-    zfs-backup-offsite:
-      hosts:
-        host-albion:
+    # zfs-backup-offsite:
+    #   hosts:
+    #     host-albion:
 
     # Hosts that static sites can be deployed to
     sitedeployment:

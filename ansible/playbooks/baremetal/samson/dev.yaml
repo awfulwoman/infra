@@ -1,0 +1,9 @@
+- name: samson development playbook
+  hosts: samson
+  roles:
+    - role: system-zfs-policy
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:

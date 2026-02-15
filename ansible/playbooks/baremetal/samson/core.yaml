@@ -1,0 +1,22 @@
+- name: Samson
+  hosts: samson
+  roles:
+    - role: hardware-raspberry-pi
+    - role: bootstrap-ubuntu-server
+    - role: network-netplan
+    - role: infothrill.nullmailer
+      become: true
+    - role: system-zfs
+    - role: composition-reverseproxy
+    - role: composition-container-management
+    - role: composition-zfs-api
+    - role: system-claude
+    - role: backups-zfs-client
+    - role: monitoring-healthchecksio
+    - role: system-promtail
+      tags: promtail
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:

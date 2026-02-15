@@ -1,0 +1,11 @@
+- name: Samson
+  hosts: samson
+  roles:
+    - role: composition-reverseproxy
+    - role: composition-container-management
+    - role: composition-zfs-api
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:
