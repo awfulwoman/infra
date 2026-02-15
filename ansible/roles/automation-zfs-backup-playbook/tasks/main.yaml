@@ -1,0 +1,47 @@
+# code: language=ansible
+
+- name: "Check if ansible-playbook is available"
+  ansible.builtin.command: which ansible-playbook
+  register: ansible_check
+  changed_when: false
+  failed_when: ansible_check.rc != 0
+
+- name: "Verify playbook path exists"
+  ansible.builtin.stat:
+    path: "{{ zfs_backup_playbook_path }}"
+  register: playbook_check
+  failed_when: not playbook_check.stat.exists
+
+- name: "Verify inventory path exists"
+  ansible.builtin.stat:
+    path: "{{ zfs_backup_playbook_inventory }}"
+  register: inventory_check
+  failed_when: not inventory_check.stat.exists
+
+- name: "Create systemd service"
+  become: true
+  ansible.builtin.template:
+    src: zfs-backup-playbook.service.j2
+    dest: /etc/systemd/system/zfs-backup-playbook.service
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Reload systemd
+
+- name: "Create systemd timer"
+  become: true
+  ansible.builtin.template:
+    src: zfs-backup-playbook.timer.j2
+    dest: /etc/systemd/system/zfs-backup-playbook.timer
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Reload systemd
+
+- name: "Enable and start systemd timer"
+  become: true
+  ansible.builtin.systemd:
+    name: zfs-backup-playbook.timer
+    enabled: true
+    state: started
+    daemon_reload: true

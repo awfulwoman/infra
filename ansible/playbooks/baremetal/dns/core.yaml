@@ -18,6 +18,7 @@
     - role: backups-zfs-client
     - role: script-share-personal-site
     - role: monitoring-healthchecksio
+    - role: automation-zfs-backup-playbook
     - role: system-promtail
       tags: promtail
 

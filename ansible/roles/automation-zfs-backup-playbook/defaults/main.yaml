@@ -1,0 +1,5 @@
+# ZFS Backup Playbook Automation Configuration
+zfs_backup_playbook_schedule: "daily"  # How often to run (hourly/daily/weekly)
+zfs_backup_playbook_path: "{{ home_repo_dir }}/ansible/playbooks/zfs/backup-infra.yaml"
+zfs_backup_playbook_inventory: "{{ home_repo_dir }}/ansible/inventory/hosts.yaml"
+zfs_backup_playbook_vault_password_file: "{{ ansible_vault_password_file }}"
