@@ -1,5 +1,5 @@
 [Unit]
-Description=ZFS Backup Infrastructure Playbook Service
+Description=Infrastructure Automation Playbook Service
 After=network-online.target
 Wants=network-online.target
 
@@ -9,9 +9,9 @@ User=root
 Group=root
 WorkingDirectory={{ home_repo_dir }}
 ExecStart=/usr/bin/ansible-playbook \
-  {{ zfs_backup_playbook_path }} \
-  --inventory {{ zfs_backup_playbook_inventory }} \
-  --vault-password-file {{ zfs_backup_playbook_vault_password_file }}
+  {{ automation_infra_playbook }} \
+  --inventory {{ automation_infra_inventory }} \
+  --vault-password-file {{ automation_infra_vault_password_file }}
 StandardOutput=journal
 StandardError=journal
 TimeoutStartSec=3600

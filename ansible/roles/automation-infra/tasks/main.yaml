@@ -8,21 +8,21 @@
 
 - name: "Verify playbook path exists"
   ansible.builtin.stat:
-    path: "{{ zfs_backup_playbook_path }}"
+    path: "{{ automation_infra_playbook }}"
   register: playbook_check
   failed_when: not playbook_check.stat.exists
 
 - name: "Verify inventory path exists"
   ansible.builtin.stat:
-    path: "{{ zfs_backup_playbook_inventory }}"
+    path: "{{ automation_infra_inventory }}"
   register: inventory_check
   failed_when: not inventory_check.stat.exists
 
 - name: "Create systemd service"
   become: true
   ansible.builtin.template:
-    src: zfs-backup-playbook.service.j2
-    dest: /etc/systemd/system/zfs-backup-playbook.service
+    src: automation-infra.service.j2
+    dest: /etc/systemd/system/{{ automation_infra_service_name }}.service
     owner: root
     group: root
     mode: "0644"
@@ -31,8 +31,8 @@
 - name: "Create systemd timer"
   become: true
   ansible.builtin.template:
-    src: zfs-backup-playbook.timer.j2
-    dest: /etc/systemd/system/zfs-backup-playbook.timer
+    src: automation-infra.timer.j2
+    dest: /etc/systemd/system/{{ automation_infra_service_name }}.timer
     owner: root
     group: root
     mode: "0644"
@@ -41,7 +41,7 @@
 - name: "Enable and start systemd timer"
   become: true
   ansible.builtin.systemd:
-    name: zfs-backup-playbook.timer
+    name: "{{ automation_infra_service_name }}.timer"
     enabled: true
     state: started
     daemon_reload: true

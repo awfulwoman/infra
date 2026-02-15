@@ -1,0 +1,17 @@
+[Unit]
+Description=Infrastructure Automation Playbook Timer
+Requires={{ automation_infra_service_name }}.service
+
+[Timer]
+{% if automation_infra_schedule == "hourly" %}
+OnCalendar=hourly
+{% elif automation_infra_schedule == "weekly" %}
+OnCalendar=weekly
+{% else %}
+OnCalendar=daily
+{% endif %}
+RandomizedDelaySec=600
+Persistent=true
+
+[Install]
+WantedBy=timers.target
