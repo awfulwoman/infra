@@ -1,0 +1,54 @@
+---
+- name: Create compose file
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ composition_root }}/docker-compose.yaml"
+    mode: "0774"
+
+- name: Create environment vars
+  ansible.builtin.template:
+    src: environment_vars.j2
+    dest: "{{ composition_root }}/.environment_vars"
+    mode: "0774"
+
+- name: Create app directories
+  ansible.builtin.file:
+    path: "{{ composition_config }}/{{ item }}"
+    state: directory
+    mode: "0775"
+  loop:
+    - app
+    - app/models
+    - app/routers
+    - app/services
+    - app/templates
+    - app/static
+    - data
+    - data/groups
+
+- name: Copy application files
+  ansible.builtin.copy:
+    src: "app/"
+    dest: "{{ composition_config }}/app/"
+    mode: "0774"
+
+- name: Initialize users.json
+  ansible.builtin.copy:
+    content: '{"users": []}'
+    dest: "{{ composition_config }}/data/users.json"
+    mode: "0664"
+    force: false
+
+- name: Register DNS subdomain
+  ansible.builtin.include_role:
+    name: network-register-subdomain
+  vars:
+    configure_dns_subdomains:
+      - "{{ composition_splitwise_subdomain }}"
+
+- name: Start Docker Compose
+  community.docker.docker_compose_v2:
+    project_src: "{{ composition_root }}"
+    state: present
+    build: always
+    remove_orphans: true

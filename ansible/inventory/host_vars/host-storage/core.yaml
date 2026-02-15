@@ -48,6 +48,9 @@ zfs:
       compositions:
         policy: critical
         snapshots_discover_children: true
+        datasets:
+          splitwise:
+            policy: critical
       pools:
         datasets:
           vms:
