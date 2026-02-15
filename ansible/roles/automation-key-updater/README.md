@@ -1,6 +1,4 @@
-# system-github-ssh-keys
-
-TODO: remane to `automation-key-updater`
+# automation-key-updater
 
 Fetches SSH public keys from a GitHub user account and keeps them updated via cron.
 
@@ -21,20 +19,20 @@ long as you can push new keys to your GitHub account.
 ## Configuration
 
 ```yaml
-# GitHub username to fetch keys from
-system_github_ssh_keys_username: "awfulwoman"
+# GitHub username to fetch keys from (currently fetched from GitHub)
+automation_key_updater_username: "awfulwoman"
 
 # Target user account
-system_github_ssh_keys_target_user: "{{ ansible_user }}"
+automation_key_updater_target_user: "{{ ansible_user }}"
 
 # Cron schedule
-system_github_ssh_keys_cron_hour: "3"
-system_github_ssh_keys_cron_minute: "15"
+automation_key_updater_cron_hour: "3"
+automation_key_updater_cron_minute: "15"
 ```
 
 ## Implementation
 
-- Installs script to `/usr/local/bin/update-github-ssh-keys`
+- Installs script to `/usr/local/bin/update-automation-keys`
 - Creates cron job running as root
 - Keys are marked with `# BEGIN/END GITHUB KEYS` comments
 - Previous GitHub keys are replaced on each run

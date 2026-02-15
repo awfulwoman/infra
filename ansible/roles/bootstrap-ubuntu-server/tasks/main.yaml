@@ -34,9 +34,9 @@
     update_cache: true
     cache_valid_time: 3600  # Don't update if cache is less than 1 hour old
 
-- name: Github SSH keys
+- name: Automation key updater (GitHub SSH keys)
   ansible.builtin.include_role:
-    name: system-github-ssh-keys
+    name: automation-key-updater
 
 - name: Ensure user has bash as default shell
   become: true

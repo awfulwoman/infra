@@ -1,0 +1,12 @@
+# GitHub username to fetch SSH keys from
+automation_key_updater_username: "awfulwoman"
+
+# User account to update authorized_keys for
+automation_key_updater_target_user: "{{ ansible_user }}"
+
+# Cron schedule - runs daily at 3:15 AM by default
+automation_key_updater_cron_hour: "8,18"
+automation_key_updater_cron_minute: "17"
+
+# Script installation path
+automation_key_updater_script_path: "/usr/local/bin/update-automation-keys"

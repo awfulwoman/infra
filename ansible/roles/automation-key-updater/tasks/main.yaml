@@ -1,0 +1,43 @@
+---
+# Manages periodic fetching of SSH public keys from GitHub
+
+- name: Ensure update script is installed
+  become: true
+  ansible.builtin.template:
+    src: update-automation-keys.sh
+    dest: "{{ automation_key_updater_script_path }}"
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Ensure GitHub SSH keys are fetched immediately
+  become: true
+  ansible.builtin.command: "{{ automation_key_updater_script_path }}"
+  changed_when: true
+  register: initial_run
+
+- name: Display initial run output
+  ansible.builtin.debug:
+    var: initial_run.stdout_lines
+
+- name: Ensure cron job updates GitHub SSH keys regularly
+  become: true
+  ansible.builtin.cron:
+    name: "update-automation-keys-{{ automation_key_updater_username }}"
+    hour: "{{ automation_key_updater_cron_hour }}"
+    minute: "{{ automation_key_updater_cron_minute }}"
+    job: "{{ automation_key_updater_script_path }} >/dev/null 2>&1"
+    user: root
+    state: present
+
+- name: Remove old cron job from previous role name
+  become: true
+  ansible.builtin.cron:
+    name: "update-github-ssh-keys-{{ automation_key_updater_username }}"
+    state: absent
+
+- name: Remove old script from previous role name
+  become: true
+  ansible.builtin.file:
+    path: /usr/local/bin/update-github-ssh-keys
+    state: absent
