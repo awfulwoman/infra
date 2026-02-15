@@ -6,7 +6,10 @@
 <div class="auth-container">
     <div class="auth-box">
         <h2>Login</h2>
-        <form action="/auth/login" method="post" class="auth-form">
+        {% if error %}
+        <div class="error-message">{{ error }}</div>
+        {% endif %}
+        <form action="/login" method="post" class="auth-form">
             <div class="form-group">
                 <label for="username">Username</label>
                 <input type="text" id="username" name="username" required autofocus>

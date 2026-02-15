@@ -1,10 +1,10 @@
-from fastapi import APIRouter, Depends, Request, Form, HTTPException, status
+from fastapi import APIRouter, Depends, Request, Form, HTTPException, status, Response
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from typing import Optional
 
 from models import UserInDB, GroupCreate, TransactionCreate
-from services import FileStorage, calculate_balances
+from services import FileStorage, calculate_balances, verify_password
 from routers.auth import get_current_user_from_session, get_storage
 
 router = APIRouter(tags=["web"])
@@ -36,6 +36,42 @@ async def index(
 async def login_page(request: Request):
     """Login page."""
     return templates.TemplateResponse("login.html", {"request": request})
+
+
+@router.post("/login", response_class=HTMLResponse)
+async def login_submit(
+    request: Request,
+    username: str = Form(...),
+    password: str = Form(...),
+    response: Response = None,
+    storage: FileStorage = Depends(get_storage),
+):
+    """Handle login form submission."""
+    user_data = storage.get_user_by_username(username)
+
+    if not user_data or not verify_password(password, user_data["password_hash"]):
+        return templates.TemplateResponse(
+            "login.html",
+            {"request": request, "error": "Incorrect username or password"},
+            status_code=400,
+        )
+
+    user = UserInDB(**user_data)
+
+    # Create redirect response
+    redirect = RedirectResponse(url="/groups", status_code=status.HTTP_303_SEE_OTHER)
+
+    # Set session cookie
+    redirect.set_cookie(
+        key="session_token",
+        value=user.api_token,
+        httponly=True,
+        secure=True,
+        samesite="lax",
+        max_age=30 * 24 * 60 * 60,  # 30 days
+    )
+
+    return redirect
 
 
 @router.get("/register", response_class=HTMLResponse)
