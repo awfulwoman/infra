@@ -87,6 +87,12 @@
     scope: global
     value: "github@whalecoiner.com"
 
+- name: Configure git pull to use rebase
+  community.general.git_config:
+    name: pull.rebase
+    scope: global
+    value: 'true'
+
 - name: Enable tmux mouse mode
   ansible.builtin.lineinfile:
     path: "{{ ansible_facts.user_dir }}/.tmux.conf"
