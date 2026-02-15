@@ -1,4 +1,34 @@
 ---
+- name: Ensure GitHub CLI dependencies are installed
+  become: true
+  ansible.builtin.apt:
+    name:
+      - curl
+      - gpg
+    state: present
+    update_cache: true
+
+- name: Add GitHub CLI repository key
+  become: true
+  ansible.builtin.apt_key:
+    url: https://cli.github.com/packages/githubcli-archive-keyring.gpg
+    keyring: /usr/share/keyrings/githubcli-archive-keyring.gpg
+    state: present
+
+- name: Add GitHub CLI repository
+  become: true
+  ansible.builtin.apt_repository:
+    repo: "deb [arch=amd64 signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main"
+    filename: github-cli
+    state: present
+
+- name: Install GitHub CLI
+  become: true
+  ansible.builtin.apt:
+    name: gh
+    state: present
+    update_cache: true
+
 - name: Check if Claude CLI is already installed
   ansible.builtin.stat:
     path: "{{ ansible_facts.user_dir }}/.local/bin/claude"
