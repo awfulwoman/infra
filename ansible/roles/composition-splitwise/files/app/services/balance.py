@@ -1,14 +1,15 @@
 from typing import Dict, List
 
 
-def calculate_split(amount: float, members: List[str], split_type: str = "equal", recipient_id: str = None) -> Dict[str, float]:
+def calculate_split(amount: float, members: List[str], split_type: str = "equal", recipient_id: str = None, custom_splits: Dict[str, float] = None) -> Dict[str, float]:
     """Calculate how an expense should be split among members.
 
     Args:
         amount: Total amount to split
         members: List of member IDs
-        split_type: Type of split ("equal" or "payment")
+        split_type: Type of split ("equal", "percentage", "custom", or "payment")
         recipient_id: For payment type, the person receiving the payment
+        custom_splits: For percentage/custom types, dict of member_id to percentage/amount
 
     Returns:
         Dictionary mapping member_id to their share amount
@@ -21,6 +22,51 @@ def calculate_split(amount: float, members: List[str], split_type: str = "equal"
         if recipient_id not in members:
             raise ValueError("Recipient must be a member of the group")
         return {recipient_id: amount}
+
+    if split_type == "percentage":
+        if not custom_splits:
+            raise ValueError("custom_splits required for percentage type")
+
+        # Validate percentages sum to 100
+        total_percentage = sum(custom_splits.values())
+        if abs(total_percentage - 100.0) > 0.01:
+            raise ValueError(f"Percentages must sum to 100, got {total_percentage}")
+
+        # Calculate amounts from percentages
+        split_details = {}
+        total_assigned = 0.0
+        member_list = list(custom_splits.keys())
+
+        for i, (member_id, percentage) in enumerate(custom_splits.items()):
+            if member_id not in members:
+                raise ValueError(f"Member {member_id} not in group")
+
+            if i == len(member_list) - 1:
+                # Last member gets remainder to handle rounding
+                split_details[member_id] = round(amount - total_assigned, 2)
+            else:
+                share = round(amount * percentage / 100, 2)
+                split_details[member_id] = share
+                total_assigned += share
+
+        return split_details
+
+    if split_type == "custom":
+        if not custom_splits:
+            raise ValueError("custom_splits required for custom type")
+
+        # Validate amounts sum to total
+        total_custom = sum(custom_splits.values())
+        if abs(total_custom - amount) > 0.01:
+            raise ValueError(f"Custom amounts must sum to {amount}, got {total_custom}")
+
+        # Validate all members exist
+        for member_id in custom_splits:
+            if member_id not in members:
+                raise ValueError(f"Member {member_id} not in group")
+
+        # Round to 2 decimal places
+        return {k: round(v, 2) for k, v in custom_splits.items()}
 
     if split_type == "equal":
         if not members:

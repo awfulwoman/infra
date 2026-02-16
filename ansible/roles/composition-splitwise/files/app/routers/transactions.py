@@ -124,6 +124,7 @@ async def create_transaction(
         group_data["members"],
         transaction.split_type,
         transaction.recipient_id,
+        transaction.custom_splits,
     )
 
     # Create transaction
@@ -181,15 +182,11 @@ async def update_transaction(
         )
 
     # Update fields
+    needs_recalculation = False
+
     if transaction_update.amount is not None:
         tx_data["amount"] = transaction_update.amount
-        # Recalculate split
-        tx_data["split_details"] = calculate_split(
-            transaction_update.amount,
-            group_data["members"],
-            tx_data["split_type"],
-            tx_data.get("recipient_id"),
-        )
+        needs_recalculation = True
 
     if transaction_update.description is not None:
         tx_data["description"] = transaction_update.description
@@ -201,6 +198,23 @@ async def update_transaction(
                 detail="Payer must be a member of the group",
             )
         tx_data["payer_id"] = transaction_update.payer_id
+
+    if transaction_update.split_type is not None:
+        tx_data["split_type"] = transaction_update.split_type
+        needs_recalculation = True
+
+    if transaction_update.custom_splits is not None:
+        needs_recalculation = True
+
+    # Recalculate split if needed
+    if needs_recalculation:
+        tx_data["split_details"] = calculate_split(
+            tx_data["amount"],
+            group_data["members"],
+            tx_data["split_type"],
+            tx_data.get("recipient_id"),
+            transaction_update.custom_splits,
+        )
 
     tx_data["updated_at"] = datetime.utcnow().isoformat()
     storage.update_transaction(group_id, transaction_id, tx_data)

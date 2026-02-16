@@ -392,7 +392,51 @@ a:hover {
     font-weight: 500;
 }
 
+.badge-custom {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    background: #fff3cd;
+    color: #856404;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.badge-split-equal {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    background: #e7f3ff;
+    color: #0056b3;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.badge-split-custom {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    background: #fff3cd;
+    color: #856404;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.badge-split-full {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    background: #f8d7da;
+    color: #721c24;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
 .actions-cell {
+    white-space: nowrap;
+}
+
+.split-cell {
     white-space: nowrap;
 }
 
@@ -448,6 +492,51 @@ a:hover {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+}
+
+/* Custom splits */
+.custom-splits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+
+.split-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.split-input-group label {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.split-input-group input {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.split-unit {
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+    pointer-events: none;
+}
+
+.split-input-group {
+    position: relative;
+}
+
+.split-input-group input {
+    padding-right: 2rem;
 }
 
 /* Empty state */

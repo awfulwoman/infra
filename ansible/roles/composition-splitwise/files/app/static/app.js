@@ -95,6 +95,22 @@ function hideAddTransactionModal() {
     document.getElementById('addTransactionModal').style.display = 'none';
 }
 
+function toggleCustomSplit() {
+    const splitType = document.getElementById('split_type').value;
+    const container = document.getElementById('custom_splits_container');
+    const splitUnit = document.querySelectorAll('.split-unit');
+
+    if (splitType === 'equal') {
+        container.style.display = 'none';
+    } else {
+        container.style.display = 'block';
+        // Update unit labels
+        splitUnit.forEach(unit => {
+            unit.textContent = splitType === 'percentage' ? '%' : '€';
+        });
+    }
+}
+
 // Record payment modal
 function showRecordPaymentModal() {
     document.getElementById('recordPaymentModal').style.display = 'flex';
@@ -107,14 +123,29 @@ function hideRecordPaymentModal() {
 document.getElementById('addTransactionForm')?.addEventListener('submit', async (e) => {
     e.preventDefault();
 
+    const splitType = document.getElementById('split_type').value;
     const formData = {
         group_id: GROUP_ID,
         description: document.getElementById('description').value,
         amount: parseFloat(document.getElementById('amount').value),
         payer_id: document.getElementById('payer_id').value,
         currency: 'EUR',
-        split_type: 'equal',
+        split_type: splitType,
     };
+
+    // Collect custom splits if not equal
+    if (splitType !== 'equal') {
+        const customSplits = {};
+        const splitInputs = document.querySelectorAll('.split-input');
+        splitInputs.forEach(input => {
+            const memberId = input.id.replace('split_', '');
+            const value = parseFloat(input.value) || 0;
+            if (value > 0) {
+                customSplits[memberId] = value;
+            }
+        });
+        formData.custom_splits = customSplits;
+    }
 
     const errorMessage = document.getElementById('transaction-error-message');
 
@@ -200,11 +231,53 @@ function hideEditTransactionModal() {
     document.getElementById('editTransactionModal').style.display = 'none';
 }
 
-function editTransaction(transactionId, description, amount, payerId) {
+function toggleEditCustomSplit() {
+    const splitType = document.getElementById('edit_split_type').value;
+    const container = document.getElementById('edit_custom_splits_container');
+    const splitUnit = container.querySelectorAll('.split-unit');
+
+    if (splitType === 'equal') {
+        container.style.display = 'none';
+    } else {
+        container.style.display = 'block';
+        // Update unit labels
+        splitUnit.forEach(unit => {
+            unit.textContent = splitType === 'percentage' ? '%' : '€';
+        });
+    }
+}
+
+function editTransaction(transactionId, description, amount, payerId, splitType, splitDetails) {
     document.getElementById('edit_transaction_id').value = transactionId;
     document.getElementById('edit_description').value = description;
     document.getElementById('edit_amount').value = amount;
     document.getElementById('edit_payer_id').value = payerId;
+    document.getElementById('edit_split_type').value = splitType || 'equal';
+
+    // Clear all split inputs first
+    document.querySelectorAll('.edit-split-input').forEach(input => {
+        input.value = 0;
+    });
+
+    // Populate split details if custom/percentage
+    if (splitType && splitType !== 'equal' && splitType !== 'payment' && splitDetails) {
+        const splits = typeof splitDetails === 'string' ? JSON.parse(splitDetails) : splitDetails;
+        Object.entries(splits).forEach(([memberId, splitAmount]) => {
+            const input = document.getElementById(`edit_split_${memberId}`);
+            if (input) {
+                if (splitType === 'percentage') {
+                    // Convert amount back to percentage
+                    const percentage = (splitAmount / amount) * 100;
+                    input.value = percentage.toFixed(2);
+                } else {
+                    // Custom amounts - use as-is
+                    input.value = splitAmount;
+                }
+            }
+        });
+    }
+
+    toggleEditCustomSplit();
     showEditTransactionModal();
 }
 
@@ -212,11 +285,27 @@ document.getElementById('editTransactionForm')?.addEventListener('submit', async
     e.preventDefault();
 
     const transactionId = document.getElementById('edit_transaction_id').value;
+    const splitType = document.getElementById('edit_split_type').value;
     const formData = {
         description: document.getElementById('edit_description').value,
         amount: parseFloat(document.getElementById('edit_amount').value),
         payer_id: document.getElementById('edit_payer_id').value,
+        split_type: splitType,
     };
+
+    // Collect custom splits if not equal
+    if (splitType !== 'equal') {
+        const customSplits = {};
+        const splitInputs = document.querySelectorAll('.edit-split-input');
+        splitInputs.forEach(input => {
+            const memberId = input.id.replace('edit_split_', '');
+            const value = parseFloat(input.value) || 0;
+            if (value > 0) {
+                customSplits[memberId] = value;
+            }
+        });
+        formData.custom_splits = customSplits;
+    }
 
     const errorMessage = document.getElementById('edit-transaction-error-message');
 

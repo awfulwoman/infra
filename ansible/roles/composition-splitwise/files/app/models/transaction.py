@@ -9,18 +9,21 @@ class TransactionBase(BaseModel):
     currency: str = Field(default="EUR", max_length=3)
     payer_id: str
     description: str = Field(..., min_length=1, max_length=500)
-    split_type: Literal["equal", "payment"] = "equal"
+    split_type: Literal["equal", "percentage", "custom", "payment"] = "equal"
     recipient_id: str | None = None  # For payment type only
 
 
 class TransactionCreate(TransactionBase):
     group_id: str
+    custom_splits: Dict[str, float] | None = None  # For percentage/custom splits
 
 
 class TransactionUpdate(BaseModel):
     amount: float | None = Field(None, gt=0)
     description: str | None = Field(None, min_length=1, max_length=500)
     payer_id: str | None = None
+    split_type: Literal["equal", "percentage", "custom", "payment"] | None = None
+    custom_splits: Dict[str, float] | None = None
 
 
 class Transaction(TransactionBase):

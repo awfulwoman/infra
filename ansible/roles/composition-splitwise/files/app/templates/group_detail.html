@@ -53,6 +53,7 @@
                     <th>Paid By</th>
                     <th>Amount</th>
                     <th>Type</th>
+                    <th>Split</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -74,8 +75,21 @@
                             <span class="badge-expense">Expense</span>
                         {% endif %}
                     </td>
+                    <td class="split-cell">
+                        {% if tx.split_type == "equal" %}
+                            <span class="badge-split-equal">Equal</span>
+                        {% elif tx.split_type == "percentage" %}
+                            <span class="badge-split-custom">Percentage</span>
+                        {% elif tx.split_type == "custom" %}
+                            <span class="badge-split-custom">Custom</span>
+                        {% elif tx.split_type == "payment" %}
+                            <span class="badge-split-full">Full</span>
+                        {% else %}
+                            <span class="badge-split-equal">Equal</span>
+                        {% endif %}
+                    </td>
                     <td class="actions-cell">
-                        <button class="btn-icon" onclick="editTransaction('{{ tx.id }}', '{{ tx.description }}', {{ tx.amount }}, '{{ tx.payer_id }}')" title="Edit">✏️</button>
+                        <button class="btn-icon" onclick='editTransaction("{{ tx.id }}", "{{ tx.description }}", {{ tx.amount }}, "{{ tx.payer_id }}", "{{ tx.split_type }}", {{ tx.split_details|tojson }})' title="Edit">✏️</button>
                         <button class="btn-icon" onclick="deleteTransaction('{{ tx.id }}')" title="Delete">🗑️</button>
                     </td>
                 </tr>
@@ -110,6 +124,26 @@
                     {% endfor %}
                 </select>
             </div>
+            <div class="form-group">
+                <label for="split_type">Split method</label>
+                <select id="split_type" name="split_type" onchange="toggleCustomSplit()">
+                    <option value="equal">Equal split</option>
+                    <option value="percentage">By percentage</option>
+                    <option value="custom">Custom amounts</option>
+                </select>
+            </div>
+            <div id="custom_splits_container" style="display: none;">
+                <div class="custom-splits-grid">
+                    {% for member in members %}
+                    <div class="split-input-group">
+                        <label for="split_{{ member.id }}">{{ member.display_name }}</label>
+                        <input type="number" id="split_{{ member.id }}" name="split_{{ member.id }}"
+                               step="0.01" min="0" value="0" class="split-input">
+                        <span class="split-unit">%</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
             <div class="form-actions">
                 <button type="button" class="btn btn-secondary" onclick="hideAddTransactionModal()">Cancel</button>
                 <button type="submit" class="btn btn-primary">Add Expense</button>
@@ -142,6 +176,26 @@
                     </option>
                     {% endfor %}
                 </select>
+            </div>
+            <div class="form-group">
+                <label for="edit_split_type">Split method</label>
+                <select id="edit_split_type" name="split_type" onchange="toggleEditCustomSplit()">
+                    <option value="equal">Equal split</option>
+                    <option value="percentage">By percentage</option>
+                    <option value="custom">Custom amounts</option>
+                </select>
+            </div>
+            <div id="edit_custom_splits_container" style="display: none;">
+                <div class="custom-splits-grid">
+                    {% for member in members %}
+                    <div class="split-input-group">
+                        <label for="edit_split_{{ member.id }}">{{ member.display_name }}</label>
+                        <input type="number" id="edit_split_{{ member.id }}" name="edit_split_{{ member.id }}"
+                               step="0.01" min="0" value="0" class="split-input edit-split-input">
+                        <span class="split-unit">%</span>
+                    </div>
+                    {% endfor %}
+                </div>
             </div>
             <div class="form-actions">
                 <button type="button" class="btn btn-secondary" onclick="hideEditTransactionModal()">Cancel</button>
