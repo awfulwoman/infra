@@ -1,4 +1,4 @@
-ansible_host: 188.245.37.81
+ansible_host: awfulwoman.com
 ansible_user: "{{ vault_server_username }}"
 
 host_type: virtual
