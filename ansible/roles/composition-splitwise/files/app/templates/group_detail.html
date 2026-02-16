@@ -71,6 +71,7 @@
                     {% endif %}
                 </div>
                 <div class="transaction-actions">
+                    <button class="btn-link" onclick="editTransaction('{{ tx.id }}', '{{ tx.description }}', {{ tx.amount }}, '{{ tx.payer_id }}')">Edit</button>
                     <button class="btn-link" onclick="deleteTransaction('{{ tx.id }}')">Delete</button>
                 </div>
             </div>
@@ -109,6 +110,39 @@
                 <button type="submit" class="btn btn-primary">Add Expense</button>
             </div>
             <div id="transaction-error-message" class="error-message" style="display: none;"></div>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Transaction Modal -->
+<div id="editTransactionModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <h3>Edit Transaction</h3>
+        <form id="editTransactionForm">
+            <input type="hidden" id="edit_transaction_id" name="transaction_id">
+            <div class="form-group">
+                <label for="edit_description">Description</label>
+                <input type="text" id="edit_description" name="description" required>
+            </div>
+            <div class="form-group">
+                <label for="edit_amount">Amount (€)</label>
+                <input type="number" id="edit_amount" name="amount" step="0.01" min="0.01" required>
+            </div>
+            <div class="form-group">
+                <label for="edit_payer_id">Paid by</label>
+                <select id="edit_payer_id" name="payer_id" required>
+                    {% for member in members %}
+                    <option value="{{ member.id }}">
+                        {{ member.display_name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" onclick="hideEditTransactionModal()">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </div>
+            <div id="edit-transaction-error-message" class="error-message" style="display: none;"></div>
         </form>
     </div>
 </div>

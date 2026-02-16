@@ -191,6 +191,58 @@ document.getElementById('recordPaymentForm')?.addEventListener('submit', async (
     }
 });
 
+// Edit transaction modal
+function showEditTransactionModal() {
+    document.getElementById('editTransactionModal').style.display = 'flex';
+}
+
+function hideEditTransactionModal() {
+    document.getElementById('editTransactionModal').style.display = 'none';
+}
+
+function editTransaction(transactionId, description, amount, payerId) {
+    document.getElementById('edit_transaction_id').value = transactionId;
+    document.getElementById('edit_description').value = description;
+    document.getElementById('edit_amount').value = amount;
+    document.getElementById('edit_payer_id').value = payerId;
+    showEditTransactionModal();
+}
+
+document.getElementById('editTransactionForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const transactionId = document.getElementById('edit_transaction_id').value;
+    const formData = {
+        description: document.getElementById('edit_description').value,
+        amount: parseFloat(document.getElementById('edit_amount').value),
+        payer_id: document.getElementById('edit_payer_id').value,
+    };
+
+    const errorMessage = document.getElementById('edit-transaction-error-message');
+
+    try {
+        const response = await fetch(`/api/v1/transactions/${transactionId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify(formData),
+        });
+
+        if (response.ok) {
+            window.location.reload();
+        } else {
+            const error = await response.json();
+            errorMessage.textContent = error.detail || 'Failed to update transaction';
+            errorMessage.style.display = 'block';
+        }
+    } catch (error) {
+        errorMessage.textContent = 'Network error. Please try again.';
+        errorMessage.style.display = 'block';
+    }
+});
+
 // Delete transaction
 async function deleteTransaction(transactionId) {
     if (!confirm('Are you sure you want to delete this transaction?')) {
