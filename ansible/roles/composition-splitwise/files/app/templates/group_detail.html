@@ -43,40 +43,45 @@
 
 <!-- Transactions Section -->
 <div class="transactions-section">
-    <h3>Recent Transactions</h3>
+    <h3>Transaction History</h3>
     {% if transactions %}
-        <div class="transactions-list">
-            {% for tx in transactions %}
-            <div class="transaction-card">
-                <div class="transaction-header">
-                    <span class="transaction-description">{{ tx.description }}</span>
-                    <span class="transaction-amount">€{{ "%.2f"|format(tx.amount) }}</span>
-                </div>
-                <div class="transaction-meta">
-                    {% if tx.split_type == "payment" %}
-                        Payment from
+        <table class="transactions-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th>Paid By</th>
+                    <th>Amount</th>
+                    <th>Type</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tx in transactions %}
+                <tr>
+                    <td class="date-cell">{{ tx.created_at[:10] }}</td>
+                    <td class="description-cell">{{ tx.description }}</td>
+                    <td class="payer-cell">
                         {% for member in members %}
                             {% if member.id == tx.payer_id %}{{ member.display_name }}{% endif %}
                         {% endfor %}
-                        to
-                        {% for member in members %}
-                            {% if member.id == tx.recipient_id %}{{ member.display_name }}{% endif %}
-                        {% endfor %}
-                    {% else %}
-                        Paid by
-                        {% for member in members %}
-                            {% if member.id == tx.payer_id %}{{ member.display_name }}{% endif %}
-                        {% endfor %}
-                        • Split {{ members|length }} ways
-                    {% endif %}
-                </div>
-                <div class="transaction-actions">
-                    <button class="btn-link" onclick="editTransaction('{{ tx.id }}', '{{ tx.description }}', {{ tx.amount }}, '{{ tx.payer_id }}')">Edit</button>
-                    <button class="btn-link" onclick="deleteTransaction('{{ tx.id }}')">Delete</button>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
+                    </td>
+                    <td class="amount-cell">€{{ "%.2f"|format(tx.amount) }}</td>
+                    <td class="type-cell">
+                        {% if tx.split_type == "payment" %}
+                            <span class="badge-payment">Payment</span>
+                        {% else %}
+                            <span class="badge-expense">Expense</span>
+                        {% endif %}
+                    </td>
+                    <td class="actions-cell">
+                        <button class="btn-icon" onclick="editTransaction('{{ tx.id }}', '{{ tx.description }}', {{ tx.amount }}, '{{ tx.payer_id }}')" title="Edit">✏️</button>
+                        <button class="btn-icon" onclick="deleteTransaction('{{ tx.id }}')" title="Delete">🗑️</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     {% else %}
         <p class="empty-state">No transactions yet. Add an expense to get started!</p>
     {% endif %}

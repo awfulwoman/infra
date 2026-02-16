@@ -314,6 +314,102 @@ a:hover {
     gap: 1rem;
 }
 
+/* Transactions table */
+.transactions-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.transactions-table thead {
+    background: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.transactions-table th {
+    padding: 0.75rem;
+    text-align: left;
+    font-weight: 600;
+    color: #495057;
+    font-size: 0.9rem;
+}
+
+.transactions-table tbody tr {
+    border-bottom: 1px solid #e9ecef;
+    transition: background-color 0.15s;
+}
+
+.transactions-table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+.transactions-table td {
+    padding: 0.75rem;
+    vertical-align: middle;
+}
+
+.date-cell {
+    color: #6c757d;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.description-cell {
+    font-weight: 500;
+}
+
+.payer-cell {
+    color: #495057;
+}
+
+.amount-cell {
+    font-weight: 600;
+    color: #00a699;
+    white-space: nowrap;
+}
+
+.type-cell {
+    white-space: nowrap;
+}
+
+.badge-expense {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    background: #d4edda;
+    color: #155724;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.badge-payment {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    background: #cce5ff;
+    color: #004085;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.actions-cell {
+    white-space: nowrap;
+}
+
+.btn-icon {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.25rem;
+    opacity: 0.6;
+    transition: opacity 0.15s;
+}
+
+.btn-icon:hover {
+    opacity: 1;
+}
+
 /* Modal */
 .modal {
     position: fixed;
