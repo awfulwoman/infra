@@ -6,7 +6,7 @@ import uuid
 
 class TransactionBase(BaseModel):
     amount: float = Field(..., gt=0)
-    currency: str = Field(default="GBP", max_length=3)
+    currency: str = Field(default="EUR", max_length=3)
     payer_id: str
     description: str = Field(..., min_length=1, max_length=500)
     split_type: Literal["equal"] = "equal"

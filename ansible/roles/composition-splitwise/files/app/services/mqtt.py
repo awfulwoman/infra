@@ -89,7 +89,7 @@ class MQTTPublisher:
                 "value_template": f"{{{{ value_json.balances.{user_id} | default(0) }}}}",
                 "unit_of_measurement": currency,
                 "device_class": "monetary",
-                "icon": "mdi:currency-gbp" if currency == "GBP" else "mdi:cash",
+                "icon": "mdi:currency-eur" if currency == "EUR" else "mdi:cash",
                 "device": {
                     "identifiers": [f"splitwise_{group_id}"],
                     "name": group_name,

@@ -103,7 +103,7 @@ document.getElementById('addTransactionForm')?.addEventListener('submit', async 
         description: document.getElementById('description').value,
         amount: parseFloat(document.getElementById('amount').value),
         payer_id: document.getElementById('payer_id').value,
-        currency: 'GBP',
+        currency: 'EUR',
         split_type: 'equal',
     };
 

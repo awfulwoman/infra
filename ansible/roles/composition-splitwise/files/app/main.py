@@ -58,7 +58,7 @@ async def lifespan(app: FastAPI):
                     group_id=group_data["id"],
                     group_name=group_data["name"],
                     members=members_map,
-                    currency=group_data.get("currency", "GBP"),
+                    currency=group_data.get("currency", "EUR"),
                 )
 
                 # Publish current balances

@@ -87,7 +87,7 @@ async def create_group(
             group_id=new_group.id,
             group_name=new_group.name,
             members=members_map,
-            currency="GBP",
+            currency="EUR",
         )
 
         # Publish initial zero balances
