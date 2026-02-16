@@ -188,6 +188,7 @@ async def update_transaction(
             transaction_update.amount,
             group_data["members"],
             tx_data["split_type"],
+            tx_data.get("recipient_id"),
         )
 
     if transaction_update.description is not None:
