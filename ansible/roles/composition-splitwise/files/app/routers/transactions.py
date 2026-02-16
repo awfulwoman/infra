@@ -100,11 +100,30 @@ async def create_transaction(
             detail="Payer must be a member of the group",
         )
 
+    # Validate payment type
+    if transaction.split_type == "payment":
+        if not transaction.recipient_id:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="recipient_id required for payment type",
+            )
+        if transaction.recipient_id not in group_data.get("members", []):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Recipient must be a member of the group",
+            )
+        if transaction.recipient_id == transaction.payer_id:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Cannot pay yourself",
+            )
+
     # Calculate split
     split_details = calculate_split(
         transaction.amount,
         group_data["members"],
         transaction.split_type,
+        transaction.recipient_id,
     )
 
     # Create transaction

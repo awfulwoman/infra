@@ -9,7 +9,8 @@ class TransactionBase(BaseModel):
     currency: str = Field(default="EUR", max_length=3)
     payer_id: str
     description: str = Field(..., min_length=1, max_length=500)
-    split_type: Literal["equal"] = "equal"
+    split_type: Literal["equal", "payment"] = "equal"
+    recipient_id: str | None = None  # For payment type only
 
 
 class TransactionCreate(TransactionBase):

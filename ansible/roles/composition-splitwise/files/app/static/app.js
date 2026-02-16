@@ -95,6 +95,15 @@ function hideAddTransactionModal() {
     document.getElementById('addTransactionModal').style.display = 'none';
 }
 
+// Record payment modal
+function showRecordPaymentModal() {
+    document.getElementById('recordPaymentModal').style.display = 'flex';
+}
+
+function hideRecordPaymentModal() {
+    document.getElementById('recordPaymentModal').style.display = 'none';
+}
+
 document.getElementById('addTransactionForm')?.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -124,6 +133,56 @@ document.getElementById('addTransactionForm')?.addEventListener('submit', async 
         } else {
             const error = await response.json();
             errorMessage.textContent = error.detail || 'Failed to add transaction';
+            errorMessage.style.display = 'block';
+        }
+    } catch (error) {
+        errorMessage.textContent = 'Network error. Please try again.';
+        errorMessage.style.display = 'block';
+    }
+});
+
+document.getElementById('recordPaymentForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const payerId = document.getElementById('payment_payer').value;
+    const recipientId = document.getElementById('payment_recipient').value;
+
+    if (payerId === recipientId) {
+        const errorMessage = document.getElementById('payment-error-message');
+        errorMessage.textContent = 'Cannot pay yourself';
+        errorMessage.style.display = 'block';
+        return;
+    }
+
+    const description = document.getElementById('payment_description').value || 'Payment';
+
+    const formData = {
+        group_id: GROUP_ID,
+        description: description,
+        amount: parseFloat(document.getElementById('payment_amount').value),
+        payer_id: payerId,
+        recipient_id: recipientId,
+        currency: 'EUR',
+        split_type: 'payment',
+    };
+
+    const errorMessage = document.getElementById('payment-error-message');
+
+    try {
+        const response = await fetch(`/api/v1/groups/${GROUP_ID}/transactions`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify(formData),
+        });
+
+        if (response.ok) {
+            window.location.reload();
+        } else {
+            const error = await response.json();
+            errorMessage.textContent = error.detail || 'Failed to record payment';
             errorMessage.style.display = 'block';
         }
     } catch (error) {

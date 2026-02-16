@@ -5,7 +5,10 @@
 {% block content %}
 <div class="page-header">
     <h2>{{ group.name }}</h2>
-    <button class="btn btn-primary" onclick="showAddTransactionModal()">Add Expense</button>
+    <div>
+        <button class="btn btn-primary" onclick="showAddTransactionModal()">Add Expense</button>
+        <button class="btn btn-secondary" onclick="showRecordPaymentModal()">Record Payment</button>
+    </div>
 </div>
 
 <!-- Balances Section -->
@@ -50,11 +53,22 @@
                     <span class="transaction-amount">€{{ "%.2f"|format(tx.amount) }}</span>
                 </div>
                 <div class="transaction-meta">
-                    Paid by
-                    {% for member in members %}
-                        {% if member.id == tx.payer_id %}{{ member.display_name }}{% endif %}
-                    {% endfor %}
-                    • Split {{ members|length }} ways
+                    {% if tx.split_type == "payment" %}
+                        Payment from
+                        {% for member in members %}
+                            {% if member.id == tx.payer_id %}{{ member.display_name }}{% endif %}
+                        {% endfor %}
+                        to
+                        {% for member in members %}
+                            {% if member.id == tx.recipient_id %}{{ member.display_name }}{% endif %}
+                        {% endfor %}
+                    {% else %}
+                        Paid by
+                        {% for member in members %}
+                            {% if member.id == tx.payer_id %}{{ member.display_name }}{% endif %}
+                        {% endfor %}
+                        • Split {{ members|length }} ways
+                    {% endif %}
                 </div>
                 <div class="transaction-actions">
                     <button class="btn-link" onclick="deleteTransaction('{{ tx.id }}')">Delete</button>
@@ -95,6 +109,48 @@
                 <button type="submit" class="btn btn-primary">Add Expense</button>
             </div>
             <div id="transaction-error-message" class="error-message" style="display: none;"></div>
+        </form>
+    </div>
+</div>
+
+<!-- Record Payment Modal -->
+<div id="recordPaymentModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <h3>Record Payment</h3>
+        <form id="recordPaymentForm">
+            <div class="form-group">
+                <label for="payment_payer">From (who paid)</label>
+                <select id="payment_payer" name="payer_id" required>
+                    {% for member in members %}
+                    <option value="{{ member.id }}" {% if member.id == current_user.id %}selected{% endif %}>
+                        {{ member.display_name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="payment_recipient">To (who received)</label>
+                <select id="payment_recipient" name="recipient_id" required>
+                    {% for member in members %}
+                    <option value="{{ member.id }}">
+                        {{ member.display_name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="payment_amount">Amount (€)</label>
+                <input type="number" id="payment_amount" name="amount" step="0.01" min="0.01" required>
+            </div>
+            <div class="form-group">
+                <label for="payment_description">Description (optional)</label>
+                <input type="text" id="payment_description" name="description" placeholder="Payment">
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" onclick="hideRecordPaymentModal()">Cancel</button>
+                <button type="submit" class="btn btn-primary">Record Payment</button>
+            </div>
+            <div id="payment-error-message" class="error-message" style="display: none;"></div>
         </form>
     </div>
 </div>
