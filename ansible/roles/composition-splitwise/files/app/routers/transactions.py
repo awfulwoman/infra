@@ -1,24 +1,33 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Request
+from fastapi import APIRouter, Depends, HTTPException, status, Cookie
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from typing import List
 from datetime import datetime
 
 from models import Transaction, TransactionCreate, TransactionUpdate, UserInDB
 from services import FileStorage, calculate_split, calculate_balances
-from routers.auth import get_current_user, get_current_user_from_session, get_storage
+from routers.auth import get_storage
 
 router = APIRouter(prefix="/api/v1", tags=["transactions"])
 
 
 async def get_current_user(
-    request: Request,
-    token_user: UserInDB = Depends(get_current_user),
-    session_user: UserInDB = Depends(get_current_user_from_session),
+    storage: FileStorage = Depends(get_storage),
+    credentials: HTTPAuthorizationCredentials = Depends(HTTPBearer(auto_error=False)),
+    session_token: str = Cookie(None),
 ) -> UserInDB:
     """Get current user from either token or session."""
-    if session_user:
-        return session_user
-    if token_user:
-        return token_user
+    # Try session first (for web)
+    if session_token:
+        user_data = storage.get_user_by_token(session_token)
+        if user_data:
+            return UserInDB(**user_data)
+
+    # Try Bearer token (for API)
+    if credentials:
+        user_data = storage.get_user_by_token(credentials.credentials)
+        if user_data:
+            return UserInDB(**user_data)
+
     raise HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Not authenticated",
