@@ -20,20 +20,14 @@ def get_storage() -> FileStorage:
 async def get_current_user_from_token(
     credentials: Optional[HTTPAuthorizationCredentials] = Depends(security),
     storage: FileStorage = Depends(get_storage),
-) -> UserInDB:
+) -> Optional[UserInDB]:
     """Get current user from Bearer token."""
     if not credentials:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Missing authentication token",
-        )
+        return None
 
     user_data = storage.get_user_by_token(credentials.credentials)
     if not user_data:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid authentication token",
-        )
+        return None
 
     return UserInDB(**user_data)
 
