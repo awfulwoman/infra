@@ -555,3 +555,350 @@ a:hover {
     border-radius: 4px;
     margin-top: 1rem;
 }
+
+/* Account page */
+.account-page {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.account-page h1 {
+    color: #00a699;
+    margin-bottom: 2rem;
+}
+
+.account-section {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+.account-section h2 {
+    color: #00a699;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #00a699;
+    padding-bottom: 0.5rem;
+}
+
+.account-section p {
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.info-row {
+    display: flex;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.info-row:last-child {
+    border-bottom: none;
+}
+
+.info-label {
+    font-weight: 600;
+    width: 150px;
+    color: #495057;
+}
+
+.info-value {
+    flex: 1;
+    color: #333;
+}
+
+.info-value code {
+    background: #f8f9fa;
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+    font-size: 0.9rem;
+}
+
+.token-container {
+    margin: 1.5rem 0;
+}
+
+.token-container label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #495057;
+}
+
+.token-display {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.token-display input {
+    flex: 1;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+    font-size: 0.9rem;
+    background: #f8f9fa;
+}
+
+.warning-box {
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 4px;
+    padding: 1rem;
+    margin-top: 1rem;
+}
+
+.warning-box strong {
+    color: #856404;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.warning-box p {
+    margin: 0;
+    color: #856404;
+    font-size: 0.9rem;
+}
+
+.account-section pre {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 1rem;
+    overflow-x: auto;
+    margin: 1rem 0;
+}
+
+.account-section code {
+    font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+    font-size: 0.9rem;
+}
+
+.account-section pre code {
+    color: #333;
+}
+
+/* Help page */
+.help-page {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.help-page h1 {
+    color: #00a699;
+    margin-bottom: 2rem;
+}
+
+.help-section {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+.help-section h2 {
+    color: #00a699;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #00a699;
+    padding-bottom: 0.5rem;
+}
+
+.help-topic {
+    margin-bottom: 2rem;
+}
+
+.help-topic:last-child {
+    margin-bottom: 0;
+}
+
+.help-topic h3 {
+    color: #333;
+    margin-bottom: 0.75rem;
+}
+
+.help-topic h4 {
+    color: #495057;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.help-topic p {
+    margin-bottom: 0.75rem;
+    line-height: 1.6;
+}
+
+.help-topic ol,
+.help-topic ul {
+    margin-left: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.help-topic li {
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+}
+
+.help-topic pre {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 1rem;
+    overflow-x: auto;
+    margin: 1rem 0;
+}
+
+.help-topic code {
+    font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+    font-size: 0.9rem;
+    color: #e83e8c;
+}
+
+.help-topic pre code {
+    color: #333;
+}
+
+.help-topic em {
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* Mobile responsive styles */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 10px;
+    }
+
+    .navbar .container {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+
+    .nav-links {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .page-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+
+    .page-header div {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    /* Convert table to card layout on mobile */
+    .transactions-table {
+        display: block;
+    }
+
+    .transactions-table thead {
+        display: none;
+    }
+
+    .transactions-table tbody {
+        display: block;
+    }
+
+    .transactions-table tr {
+        display: block;
+        margin-bottom: 1rem;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 1rem;
+        background: white;
+    }
+
+    .transactions-table td {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        border: none;
+    }
+
+    .transactions-table td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        margin-right: 1rem;
+    }
+
+    .date-cell::before {
+        content: "Date: ";
+    }
+
+    .description-cell::before {
+        content: "Description: ";
+    }
+
+    .payer-cell::before {
+        content: "Paid By: ";
+    }
+
+    .amount-cell::before {
+        content: "Amount: ";
+    }
+
+    .type-cell::before {
+        content: "Type: ";
+    }
+
+    .split-cell::before {
+        content: "Split: ";
+    }
+
+    .actions-cell {
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 0.5rem;
+        padding-top: 0.5rem;
+        border-top: 1px solid #e9ecef;
+    }
+
+    .actions-cell::before {
+        content: none;
+    }
+
+    .btn-icon {
+        font-size: 1.5rem;
+        padding: 0.5rem;
+    }
+
+    /* Balances grid */
+    .balances-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Groups grid */
+    .groups-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Custom splits grid */
+    .custom-splits-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Modal adjustments */
+    .modal-content {
+        width: 95%;
+        padding: 1.5rem;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    /* Form adjustments */
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .form-actions button {
+        width: 100%;
+    }
+}

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Splitwise Clone{% endblock %}</title>
-    <link rel="stylesheet" href="/static/style.css?v=20260216e">
+    <link rel="stylesheet" href="/static/style.css?v=20260216h">
 </head>
 <body>
     <nav class="navbar">
@@ -14,6 +14,8 @@
             <div class="nav-links">
                 <span class="user-name">{{ current_user.display_name }}</span>
                 <a href="/groups">Groups</a>
+                <a href="/account">Account</a>
+                <a href="/help">Help</a>
                 <form action="/auth/logout" method="post" style="display: inline;">
                     <button type="submit" class="btn-link">Logout</button>
                 </form>

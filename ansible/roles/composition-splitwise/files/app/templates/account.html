@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Account - Splitwise{% endblock %}
+
+{% block content %}
+<div class="account-page">
+    <h1>Account Settings</h1>
+
+    <div class="account-section">
+        <h2>Profile</h2>
+        <div class="info-row">
+            <span class="info-label">Username:</span>
+            <span class="info-value">{{ current_user.username }}</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">Display Name:</span>
+            <span class="info-value">{{ current_user.display_name }}</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">User ID:</span>
+            <span class="info-value"><code>{{ current_user.id }}</code></span>
+        </div>
+    </div>
+
+    <div class="account-section">
+        <h2>API Access</h2>
+        <p>Use this token to authenticate API requests. Include it in the Authorization header:</p>
+        <pre><code>Authorization: Bearer YOUR_TOKEN</code></pre>
+
+        <div class="token-container">
+            <label for="api_token">Your API Token:</label>
+            <div class="token-display">
+                <input type="text" id="api_token" value="{{ current_user.api_token }}" readonly>
+                <button class="btn btn-secondary" onclick="copyToken()">Copy</button>
+            </div>
+        </div>
+
+        <div class="warning-box">
+            <strong>⚠️ Keep your token secret!</strong>
+            <p>Anyone with your token can access your account via the API. Don't share it or commit it to version control.</p>
+        </div>
+    </div>
+
+    <div class="account-section">
+        <h2>Quick Start</h2>
+        <p>Test your API access with this example:</p>
+        <pre><code>curl -H "Authorization: Bearer {{ current_user.api_token }}" \
+  https://{{ request.url.netloc }}/api/v1/groups</code></pre>
+    </div>
+</div>
+
+<script>
+function copyToken() {
+    const tokenInput = document.getElementById('api_token');
+    tokenInput.select();
+    tokenInput.setSelectionRange(0, 99999); // For mobile devices
+
+    navigator.clipboard.writeText(tokenInput.value).then(() => {
+        const button = event.target;
+        const originalText = button.textContent;
+        button.textContent = 'Copied!';
+        setTimeout(() => {
+            button.textContent = originalText;
+        }, 2000);
+    }).catch(err => {
+        alert('Failed to copy token');
+    });
+}
+</script>
+{% endblock %}

@@ -161,3 +161,46 @@ async def group_detail_page(
             "balances": balances,
         },
     )
+
+
+@router.get("/account", response_class=HTMLResponse)
+async def account_page(
+    request: Request,
+    storage: FileStorage = Depends(get_storage),
+):
+    """User account settings page."""
+    current_user = await get_current_user_from_session(
+        session_token=request.cookies.get("session_token"),
+        storage=storage,
+    )
+
+    if not current_user:
+        return RedirectResponse(url="/login", status_code=status.HTTP_303_SEE_OTHER)
+
+    return templates.TemplateResponse(
+        "account.html",
+        {
+            "request": request,
+            "current_user": current_user,
+        },
+    )
+
+
+@router.get("/help", response_class=HTMLResponse)
+async def help_page(
+    request: Request,
+    storage: FileStorage = Depends(get_storage),
+):
+    """Help and documentation page."""
+    current_user = await get_current_user_from_session(
+        session_token=request.cookies.get("session_token"),
+        storage=storage,
+    )
+
+    return templates.TemplateResponse(
+        "help.html",
+        {
+            "request": request,
+            "current_user": current_user,
+        },
+    )
