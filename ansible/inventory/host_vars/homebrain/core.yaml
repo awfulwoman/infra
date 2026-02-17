@@ -54,7 +54,7 @@ composition_motioneye_usbdevice: /dev/video0
 
 docker_port_open: true
 
-# compositions list moved to playbook (see playbooks/baremetal/host-homeassistant/core.yaml)
+# compositions list moved to playbook (see playbooks/baremetal/homebrain/core.yaml)
 
 traefik_providers:
   - homeassistant

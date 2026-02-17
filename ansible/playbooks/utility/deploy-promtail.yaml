@@ -2,8 +2,8 @@
 - name: Deploy Promtail to all Docker hosts
   hosts:
     - host-storage
-    - host-homeassistant
-    - dns
+    - homebrain
+    - deedee
     - host-backups
     - host-albion
     - belinda

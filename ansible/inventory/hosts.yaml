@@ -1,6 +1,6 @@
 all:
   hosts:
-    host-homeassistant:
+    homebrain:
     host-backups:
     host-storage:
     vm-awfulwoman-hetzner:
@@ -49,7 +49,7 @@ all:
     # Infrastructure
     infra:
       hosts:
-        host-homeassistant:
+        homebrain:
         host-backups:
         host-storage:
         vm-awfulwoman-hetzner:
@@ -64,13 +64,13 @@ all:
     # Home Automation
     homeautomation:
       hosts:
-        host-homeassistant:
+        homebrain:
 
     # Hosts that use ZFS in any way
     zfs:
       hosts:
         host-storage:
-        host-homeassistant:
+        homebrain:
         deedee:
         host-backups:
         # host-albion: # Has died
@@ -82,7 +82,7 @@ all:
     zfs-backup-clients:
       hosts:
         host-storage:
-        host-homeassistant:
+        homebrain:
         deedee:
         vm-awfulwoman-hetzner:
         samson:
