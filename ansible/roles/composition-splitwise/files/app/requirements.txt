@@ -1,0 +1,8 @@
+fastapi==0.128.0
+uvicorn[standard]==0.40.0
+pydantic==2.12.5
+python-multipart==0.0.18
+jinja2==3.1.5
+bcrypt==4.1.2
+paho-mqtt==2.1.0
+aiofiles==24.1.0

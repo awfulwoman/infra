@@ -1,29 +1,7 @@
 - name: Storage NAS
   hosts: host-storage
-  vars:
-    compositions:
-      - zfs-api
   roles:
-    - role: composition-zfs-api
-    - role: composition-victoriametrics
-    - role: composition-reverseproxy
-    - role: composition-container-management
-    - role: composition-audiobookshelf
-    - role: composition-jellyfin
-    - role: composition-immich
-    - role: composition-downloads
-    - role: composition-finances
-    - role: composition-gitea
-    - role: composition-gitea-runners
-    - role: composition-syncthing
-    - role: composition-karakeep
-    - role: composition-freshrss
-    - role: composition-tubesync
-    - role: composition-homepage
-    - role: composition-bookmarks
-    - role: composition-piper
-    - role: composition-gotosocial
-    - role: composition-libretranslate
+    - role: composition-splitwise
   handlers:
     - name: Reboot host
       become: true

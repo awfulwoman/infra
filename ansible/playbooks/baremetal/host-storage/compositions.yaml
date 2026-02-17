@@ -4,6 +4,7 @@
     - role: composition-zfs-api
     - role: composition-victoriametrics
     - role: composition-reverseproxy
+    - role: composition-splitwise
     - role: composition-container-management
     - role: composition-github2karakeep
     - role: composition-audiobookshelf

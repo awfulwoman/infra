@@ -1,0 +1,11 @@
+---
+composition_name: splitwise
+composition_splitwise_enabled: true
+composition_splitwise_port: 8000
+composition_splitwise_subdomain: "splitwise.{{ host_name }}"
+composition_splitwise_domain: "{{ composition_splitwise_subdomain }}.{{ domain_name }}"
+composition_splitwise_mqtt_broker: "mqtt.{{ domain_name }}"
+composition_splitwise_mqtt_port: 1883
+composition_splitwise_admin_username: "admin"
+composition_splitwise_admin_password: "{{ vault_splitwise_admin_password }}"
+composition_splitwise_default_currency: "EUR"

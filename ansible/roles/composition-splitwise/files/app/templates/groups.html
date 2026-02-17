@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Groups - Splitwise{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>My Groups</h2>
+    <button class="btn btn-primary" onclick="showCreateGroupModal()">Create Group</button>
+</div>
+
+<div class="groups-grid">
+    {% if groups %}
+        {% for group in groups %}
+        <a href="/groups/{{ group.id }}" class="group-card">
+            <h3>{{ group.name }}</h3>
+            <p class="group-meta">{{ group.members|length }} members</p>
+        </a>
+        {% endfor %}
+    {% else %}
+        <p class="empty-state">No groups yet. Create your first group to get started!</p>
+    {% endif %}
+</div>
+
+<!-- Create Group Modal -->
+<div id="createGroupModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <h3>Create New Group</h3>
+        <form id="createGroupForm">
+            <div class="form-group">
+                <label for="group_name">Group Name</label>
+                <input type="text" id="group_name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label>Members</label>
+                <div class="member-checkboxes">
+                    {% for user in all_users %}
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="members" value="{{ user.id }}"
+                               {% if user.id == current_user.id %}checked disabled{% endif %}>
+                        {{ user.display_name }}
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" onclick="hideCreateGroupModal()">Cancel</button>
+                <button type="submit" class="btn btn-primary">Create</button>
+            </div>
+            <div id="group-error-message" class="error-message" style="display: none;"></div>
+        </form>
+    </div>
+</div>
+{% endblock %}
