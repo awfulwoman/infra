@@ -1,5 +1,5 @@
 - name: Home Automation Server
-  hosts: host-homeassistant
+  hosts: homebrain
   roles:
     - role: bootstrap-ubuntu-server
     - role: network-netplan

@@ -1,6 +1,6 @@
 ---
 - name: Home Automation Server - Compositions
-  hosts: host-homeassistant
+  hosts: homebrain
   roles:
     - role: composition-reverseproxy
     - role: composition-container-management
