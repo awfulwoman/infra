@@ -1,6 +1,6 @@
 ---
 - name: Dev stuff
-  hosts: host-homeassistant
+  hosts: homebrain
   vars:
     compositions:
       - container-management

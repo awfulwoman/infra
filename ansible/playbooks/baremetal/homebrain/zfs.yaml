@@ -1,5 +1,5 @@
 - name: ZFS and backup stuff
-  hosts: host-homeassistant
+  hosts: homebrain
   roles:
     - role: system-zfs
     - role: system-zfs-policy

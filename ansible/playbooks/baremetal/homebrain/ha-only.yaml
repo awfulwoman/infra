@@ -1,5 +1,5 @@
 - name: Home Automation Server NEW
-  hosts: host-homeassistant
+  hosts: homebrain
   roles:
     - role: composition-homeassistant
     - role: composition-matter
