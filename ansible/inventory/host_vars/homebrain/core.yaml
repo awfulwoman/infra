@@ -1,7 +1,7 @@
 # -------------------------------------------------------------------
 # ANSIBLE
 # -------------------------------------------------------------------
-ansible_host: host-homeassistant
+ansible_host: homebrain
 ansible_user: "{{ vault_server_username }}"
 ansible_become_password: "{{ vault_password }}"
 

@@ -1,6 +1,6 @@
 - import_playbook: deedee/core.yaml
 - import_playbook: host-storage/core.yaml
-- import_playbook: host-homeassistant/core.yaml
+- import_playbook: homebrain/core.yaml
 # - import_playbook: host-albion/core.yaml
 - import_playbook: host-backups/core.yaml
 - import_playbook: router/core.yaml
