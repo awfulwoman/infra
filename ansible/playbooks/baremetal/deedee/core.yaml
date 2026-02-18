@@ -13,6 +13,7 @@
     - role: infra-private-resources
     - role: infra-named
     - role: infra-certbot
+    - role: system-claude
     - role: composition-reverseproxy
     - role: composition-container-management
     - role: composition-zfs-api

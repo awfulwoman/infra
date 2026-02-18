@@ -13,7 +13,6 @@
     - role: composition-reverseproxy
     - role: composition-container-management
     - role: composition-zfs-api
-    - role: system-claude
     - role: backups-zfs-client
     - role: monitoring-healthchecksio
     - role: system-promtail
