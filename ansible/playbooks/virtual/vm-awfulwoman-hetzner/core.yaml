@@ -5,6 +5,7 @@
     - role: virtual-hetzner
     - role: user-site-deployment
     - role: system-zfs
+    - role: system-zfs-policy
     - role: client-nfs
     - role: composition-reverseproxy
     - role: composition-container-management
