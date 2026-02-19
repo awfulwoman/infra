@@ -85,6 +85,8 @@ zfs:
     datasets:
       shared:
         datasets:
+          photos:
+            policy: critical
           syncthing:
           logs:
             datasets:
