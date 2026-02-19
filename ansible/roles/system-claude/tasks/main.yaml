@@ -98,9 +98,3 @@
     line: 'set -g mouse on'
     create: true
     mode: '0644'
-
-- name: Add claude to .bashrc
-  ansible.builtin.lineinfile:
-    path: "{{ ansible_facts.user_dir }}/.bashrc"
-    line: "$HOME/.local/bin/claude"
-    insertafter: EOF
