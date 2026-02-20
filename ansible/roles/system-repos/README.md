@@ -21,7 +21,7 @@ repos:
 
 - `repos_base_dir`: Base directory for clones (default: `/opt/repos`)
 - `repos_git_host`: Git host (default: `github.com`)
-- `repos_update`: Update existing repos (default: `true`)
+- `repos_update`: Update existing repos (default: `false`)
 
 ### Per-repo
 

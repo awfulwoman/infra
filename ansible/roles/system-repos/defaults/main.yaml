@@ -13,4 +13,4 @@ repos_base_dir: /opt/repos
 repos_git_host: github.com
 
 # Update repos if they already exist
-repos_update: true
+repos_update: false
