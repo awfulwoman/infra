@@ -5,6 +5,9 @@
       - curl
       - gpg
       - yt-dlp
+      - bubblewrap
+      - socat
+      - libonig-dev
     state: present
 
 - name: Add GitHub CLI repository key
