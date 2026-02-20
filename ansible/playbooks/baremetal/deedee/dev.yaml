@@ -1,5 +1,5 @@
-- name: DNS development playbook
-  hosts: dns
+- name: DeeDee development playbook
+  hosts: deedee
   roles:
     - role: system-zfs-policy
 

@@ -1,4 +1,4 @@
-- name: DNS Server - ZFS API
+- name: DeeDee Server - ZFS API
   hosts: deedee
   vars:
     compositions:
