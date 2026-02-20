@@ -12,9 +12,9 @@
 
 - name: Ensure GitHub SSH keys are fetched immediately
   become: true
-  ansible.builtin.command: "{{ automation_key_updater_script_path }}"
-  changed_when: true
+  ansible.builtin.command: "ssh-import-id-gh {{ automation_key_updater_username }}"
   register: initial_run
+  changed_when: "'added' in initial_run.stdout"
 
 - name: Display initial run output
   ansible.builtin.debug:
