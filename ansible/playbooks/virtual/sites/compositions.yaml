@@ -4,7 +4,6 @@
     - role: composition-reverseproxy
     - role: composition-container-management
     - role: composition-awfulwoman
-    - role: composition-pixelfed
     - role: composition-zfs-api
 
   handlers:
