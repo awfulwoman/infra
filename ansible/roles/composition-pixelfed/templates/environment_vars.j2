@@ -7,6 +7,8 @@ APP_KEY="{{ pixelfed_app_key }}"
 APP_URL="{{ pixelfed_app_url }}"
 APP_DOMAIN="{{ pixelfed_app_domain }}"
 ADMIN_DOMAIN="{{ pixelfed_admin_domain }}"
+SESSION_DOMAIN="{{ pixelfed_app_domain }}"
+TRUST_PROXIES="*"
 LOG_CHANNEL="stderr"
 
 # Database
@@ -32,9 +34,27 @@ QUEUE_DRIVER="redis"
 PHP_POST_MAX_SIZE="500M"
 PHP_UPLOAD_MAX_FILE_SIZE="500M"
 
+# Laravel auto-run
+SSL_MODE="off"
+AUTORUN_LARAVEL_MIGRATION="true"
+AUTORUN_LARAVEL_MIGRATION_ISOLATION="true"
+AUTORUN_LARAVEL_STORAGE_LINK="true"
+AUTORUN_LARAVEL_ROUTE_CACHE="true"
+AUTORUN_LARAVEL_CONFIG_CACHE="true"
+AUTORUN_LARAVEL_VIEW_CACHE="true"
+
+# Instance
+OPEN_REGISTRATION="false"
+ENFORCE_EMAIL_VERIFICATION="true"
+OAUTH_ENABLED="true"
+INSTANCE_DISCOVER_PUBLIC="true"
+
 # ActivityPub
 ACTIVITY_PUB="true"
 AP_REMOTE_FOLLOW="true"
+AP_INBOX="true"
+AP_OUTBOX="true"
+AP_SHAREDINBOX="true"
 
 # Storage
 FILESYSTEM_DRIVER="local"

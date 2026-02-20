@@ -127,9 +127,9 @@ infra_publicresources_hetzner_domain:
         hostname: gts
         value: "{{ vault_personal_domain }}"
         id: aw_a_gts
-      - type: CNAME
+      - type: A
         hostname: photos
-        value: "{{ vault_personal_domain }}"
+        value: infra_publicresources_hcloud_floating_ip.bonjo.ip_address
         id: aw_a_px
       - type: TXT
         hostname: _dmarc

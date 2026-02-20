@@ -37,6 +37,13 @@
     - storage
     - cache
 
+- name: Clone Pixelfed repository
+  ansible.builtin.git:
+    repo: https://github.com/pixelfed/pixelfed.git
+    dest: "{{ composition_root }}/src"
+    version: v0.12.7
+    force: false
+
 - name: Run Configure DNS role
   ansible.builtin.include_role:
     name: "network-register-subdomain"
