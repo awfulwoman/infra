@@ -1,5 +1,9 @@
 composition_name: pixelfed
 
+pixelfed_app_url: "https://pixelfed.{{ domain_name }}"
+pixelfed_app_domain: "pixelfed.{{ domain_name }}"
+pixelfed_admin_domain: "pixelfed.{{ domain_name }}"
+
 pixelfed_app_key: "{{ vault_pixelfed_app_key }}"
 pixelfed_db_password: "{{ vault_pixelfed_db_password }}"
 pixelfed_db_root_password: "{{ vault_pixelfed_db_root_password }}"
