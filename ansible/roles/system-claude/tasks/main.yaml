@@ -70,9 +70,12 @@
 - name: Disable Claude Code prompt suggestions
   ansible.builtin.lineinfile:
     path: "{{ ansible_facts.user_dir }}/{{ system_claude_profile_file }}"
-    line: 'export CLAUDE_CODE_ENABLE_PROMPT_SUGGESTION=false'
+    line: "{{ item }}"
     create: true
     mode: '0644'
+  loop:
+    - export ANTHROPIC_MODEL="claude-sonnet-4-6"
+    - export CLAUDE_CODE_ENABLE_PROMPT_SUGGESTION=false
 
 - name: Configure git user name
   community.general.git_config:
