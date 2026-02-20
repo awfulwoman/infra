@@ -1,5 +1,5 @@
 fastapi==0.129.0
-uvicorn[standard]==0.40.0
+uvicorn[standard]==0.41.0
 pydantic==2.12.5
 python-dateutil==2.9.0.post0
 pyyaml==6.0.3
