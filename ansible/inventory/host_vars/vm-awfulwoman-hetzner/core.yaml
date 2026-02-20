@@ -41,10 +41,6 @@ zfs:
 # SITES
 # -------------------------------------------------------------------
 
-# Define useful paths from ZFS datasets
-site_path_awfulwoman: "/fastpool/sites/awfulwoman"
-site_path_shared: "/fastpool/shared"
-
 traefik_providers:
   - gotosocial
 
