@@ -32,13 +32,13 @@ zfs:
       compositions:
         policy: critical
       sites:
-        policy: critical
         datasets:
           awfulwoman:
-      pixelfed:
-        policy: critical
-      gotosocial:
-        policy: critical
+            policy: critical
+          pixelfed:
+            policy: critical
+          gotosocial:
+            policy: critical
 
 # -------------------------------------------------------------------
 # SITES
