@@ -1,0 +1,40 @@
+TZ="Europe/Berlin"
+
+# App
+APP_NAME="Pixelfed"
+APP_ENV="production"
+APP_KEY="{{ pixelfed_app_key }}"
+APP_URL="https://pixelfed.{{ domain_name }}"
+APP_DOMAIN="pixelfed.{{ domain_name }}"
+ADMIN_DOMAIN="pixelfed.{{ domain_name }}"
+LOG_CHANNEL="stderr"
+
+# Database
+DB_CONNECTION="mysql"
+DB_HOST="db"
+DB_PORT="3306"
+DB_DATABASE="pixelfed"
+DB_USERNAME="pixelfed"
+DB_PASSWORD="{{ pixelfed_db_password }}"
+MYSQL_ROOT_PASSWORD="{{ pixelfed_db_root_password }}"
+MYSQL_DATABASE="pixelfed"
+MYSQL_USER="pixelfed"
+MYSQL_PASSWORD="{{ pixelfed_db_password }}"
+
+# Redis
+REDIS_HOST="redis"
+REDIS_PORT="6379"
+CACHE_DRIVER="redis"
+SESSION_DRIVER="redis"
+QUEUE_DRIVER="redis"
+
+# Upload limits
+PHP_POST_MAX_SIZE="500M"
+PHP_UPLOAD_MAX_FILE_SIZE="500M"
+
+# ActivityPub
+ACTIVITY_PUB="true"
+AP_REMOTE_FOLLOW="true"
+
+# Storage
+FILESYSTEM_DRIVER="local"

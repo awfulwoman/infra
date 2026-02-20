@@ -1,0 +1,109 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  db:
+    container_name: pixelfed-db
+    image: mysql:9
+    restart: unless-stopped
+    env_file: .environment_vars
+    volumes:
+      - "{{ composition_config }}/mysql:/var/lib/mysql"
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 1m
+      timeout: 10s
+      retries: 3
+      start_period: 2m
+
+  redis:
+    container_name: pixelfed-redis
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - "{{ composition_config }}/redis:/data"
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 1m
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  pixelfed:
+    container_name: pixelfed-app
+    image: ghcr.io/pixelfed/pixelfed:latest
+    restart: unless-stopped
+    env_file: .environment_vars
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.pixelfed.rule=Host(`pixelfed.{{ domain_name }}`)"
+      - "traefik.http.routers.pixelfed.tls=true"
+      - "traefik.http.routers.pixelfed.tls.certresolver=letsencrypt"
+      - "traefik.http.services.pixelfed.loadbalancer.server.port=80"
+    volumes:
+      - "{{ composition_config }}/storage:/var/www/storage"
+      - "{{ composition_config }}/cache:/var/www/bootstrap/cache"
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "-s", "-o", "/dev/null", "http://localhost/"]
+      interval: 1m
+      timeout: 10s
+      retries: 3
+      start_period: 2m
+
+  horizon:
+    container_name: pixelfed-horizon
+    image: ghcr.io/pixelfed/pixelfed:latest
+    restart: unless-stopped
+    env_file: .environment_vars
+    command: ["php", "artisan", "horizon"]
+    volumes:
+      - "{{ composition_config }}/storage:/var/www/storage"
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "php", "artisan", "horizon:status"]
+      interval: 1m
+      timeout: 10s
+      retries: 3
+      start_period: 2m
+
+  scheduler:
+    container_name: pixelfed-scheduler
+    image: ghcr.io/pixelfed/pixelfed:latest
+    restart: unless-stopped
+    env_file: .environment_vars
+    command: ["php", "artisan", "schedule:work"]
+    volumes:
+      - "{{ composition_config }}/storage:/var/www/storage"
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+networks:
+  "{{ default_docker_network }}":
+    external: true
