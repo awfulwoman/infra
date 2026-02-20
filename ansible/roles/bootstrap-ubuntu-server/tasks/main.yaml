@@ -183,6 +183,10 @@
     tailscale_args: "--advertise-exit-node"
   when: tailscale_exit_node is defined and tailscale_exit_node is true
 
+- name: Git
+  ansible.builtin.include_role:
+    name: system-git
+
 - name: "Allow the user to sudo rsync with no password"
   become: true
   community.general.sudoers:

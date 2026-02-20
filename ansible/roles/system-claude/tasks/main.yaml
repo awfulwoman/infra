@@ -77,27 +77,9 @@
     - export ANTHROPIC_MODEL="claude-sonnet-4-6"
     - export CLAUDE_CODE_ENABLE_PROMPT_SUGGESTION=false
 
-- name: Configure git user name
-  community.general.git_config:
-    name: user.name
-    scope: global
-    value: "Charlie O'Hara"
-
-- name: Configure git user email
-  community.general.git_config:
-    name: user.email
-    scope: global
-    value: "github@whalecoiner.com"
-
-- name: Configure git pull to use rebase
-  community.general.git_config:
-    name: pull.rebase
-    scope: global
-    value: 'true'
-
 - name: Enable tmux mouse mode
   ansible.builtin.lineinfile:
     path: "{{ ansible_facts.user_dir }}/.tmux.conf"
-    line: 'set -g mouse on'
+    line: "set -g mouse on"
     create: true
-    mode: '0644'
+    mode: "0644"

@@ -1,0 +1,20 @@
+---
+- name: Configure git user name
+  when: system_git_user_name | length > 0
+  community.general.git_config:
+    name: user.name
+    scope: global
+    value: "{{ system_git_user_name }}"
+
+- name: Configure git user email
+  when: system_git_user_email | length > 0
+  community.general.git_config:
+    name: user.email
+    scope: global
+    value: "{{ system_git_user_email }}"
+
+- name: Configure git pull to use rebase
+  community.general.git_config:
+    name: pull.rebase
+    scope: global
+    value: "{{ system_git_pull_rebase }}"
