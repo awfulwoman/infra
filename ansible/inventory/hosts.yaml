@@ -3,11 +3,7 @@ all:
     homebrain:
     host-backups:
     host-storage:
-    vm-awfulwoman-hetzner:
-    vm-claude-dev:
-    vm-homeautomation:
-    vm-downloads:
-    vm-media:
+    sites:
     host-mba2011:
     # host-albion:
     deedee:
@@ -52,12 +48,11 @@ all:
         homebrain:
         host-backups:
         host-storage:
-        vm-awfulwoman-hetzner:
-        vm-claude-dev:
+        sites:
         samson:
         # host-albion:
         deedee:
-        testrouter:
+        # testrouter:
         pikvm:
         belinda:
 
@@ -75,7 +70,7 @@ all:
         host-backups:
         # host-albion: # Has died
         samson:
-        vm-awfulwoman-hetzner:
+        sites:
         belinda:
 
     # Hosts acting as replication sources/clients
@@ -84,7 +79,7 @@ all:
         host-storage:
         homebrain:
         deedee:
-        vm-awfulwoman-hetzner:
+        sites:
         samson:
 
     # Hosts acting as backup/replication server(s)
@@ -101,4 +96,4 @@ all:
     # Hosts that static sites can be deployed to
     sitedeployment:
       hosts:
-        vm-awfulwoman-hetzner:
+        sites:

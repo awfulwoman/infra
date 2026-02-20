@@ -1,4 +1,4 @@
 - name: VM Hetzner
-  import_playbook: vm-awfulwoman-hetzner/core.yaml
+  import_playbook: sites/core.yaml
   tags:
     - public-infra

@@ -7,7 +7,7 @@
     - host-backups
     - host-albion
     - belinda
-    - vm-awfulwoman-hetzner
+    - sites
 
   roles:
     - role: system-promtail
