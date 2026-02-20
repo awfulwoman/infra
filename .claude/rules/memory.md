@@ -1,15 +1,15 @@
 # Project Memory
 
-A shared, committed project memory file exists at `.claude/memory.md`.
+A shared, committed project memory file exists at `<project root>/.claude/memory.md`.
 
 ## Reading
 
-At the start of every session, read `.claude/memory.md` to load project
+At the start of every session, read `<project root>/.claude/memory.md` to load project
 context accumulated from previous sessions.
 
 ## Writing
 
-Update `.claude/memory.md` when you:
+Update `<project root>/.claude/memory.md` when you:
 
 - Discover a non-obvious architectural pattern or constraint
 - Solve a recurring or tricky debugging problem
