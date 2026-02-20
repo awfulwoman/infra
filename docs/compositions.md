@@ -46,7 +46,6 @@ Tools for managing code, staying informed, and organising personal data.
 | `composition-gitea-runners`  | CI/CD runners for Gitea Actions                 |
 | `composition-freshrss`       | Self-hosted RSS feed aggregator                 |
 | `composition-syncthing`      | Continuous file synchronisation between devices |
-| `composition-bookmarks`      | Self-hosted bookmark manager                    |
 | `composition-karakeep`       | Bookmark and read-later content manager         |
 | `composition-finances`       | Personal finance tracking and budgeting         |
 | `composition-libretranslate` | Self-hosted translation service                 |

@@ -19,7 +19,6 @@
     - role: composition-freshrss
     - role: composition-tubesync
     - role: composition-homepage
-    - role: composition-bookmarks
     - role: composition-piper
     - role: composition-gotosocial
     - role: composition-libretranslate
