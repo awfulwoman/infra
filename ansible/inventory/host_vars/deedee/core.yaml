@@ -68,12 +68,6 @@ terraform_working_dir: "/fastpool/terraform"
 reverseproxy_use_letsencrypt: false
 
 # -------------------------------------------------------------------
-# GIT
-# -------------------------------------------------------------------
-system_git_user_name: "Charlie O'Hara"
-system_git_user_email: "github@whalecoiner.com"
-
-# -------------------------------------------------------------------
 # REPOS
 # -------------------------------------------------------------------
 
