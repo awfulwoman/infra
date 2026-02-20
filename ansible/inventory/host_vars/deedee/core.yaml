@@ -54,6 +54,8 @@ zfs:
         policy: critical
       terraform:
         policy: critical
+      claude:
+        policy: critical
 
 # -------------------------------------------------------------------
 # MISC

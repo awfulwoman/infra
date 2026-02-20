@@ -10,3 +10,5 @@ system_claude_ensure_path: true
 
 # Shell profile file to update (default: .bashrc)
 system_claude_profile_file: ".bashrc"
+
+system_claude_settings_path: "/fastpool/claude/settings"
