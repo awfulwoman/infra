@@ -67,11 +67,12 @@ terraform_working_dir: "/fastpool/terraform"
 # COMPOSITIONS
 # -------------------------------------------------------------------
 reverseproxy_use_letsencrypt: false
-# compositions list moved to playbook (see playbooks/baremetal/dns/core.yaml)
 
 # -------------------------------------------------------------------
 # REPOS
 # -------------------------------------------------------------------
+
+# The following repos will be pulled and made available at /opt/repos
 repos:
   - repo: awfulwoman/infra
     name: infra
