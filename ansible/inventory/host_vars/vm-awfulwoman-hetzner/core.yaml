@@ -35,7 +35,10 @@ zfs:
         policy: critical
         datasets:
           awfulwoman:
-      shared:
+      pixelfed:
+        policy: critical
+      gotosocial:
+        policy: critical
 
 # -------------------------------------------------------------------
 # SITES
@@ -43,5 +46,3 @@ zfs:
 
 traefik_providers:
   - gotosocial
-
-# compositions list moved to playbook (see playbooks/virtual/vm-awfulwoman-hetzner/core.yaml)
