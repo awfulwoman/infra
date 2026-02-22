@@ -183,6 +183,28 @@
 # Offsite push - replicate critical datasets to offsite hosts
 # ###################################################################
 
+- name: Get existing root crontab
+  become: true
+  ansible.builtin.command: crontab -l
+  register: _existing_crontab
+  failed_when: _existing_crontab.rc not in [0, 1]
+  changed_when: false
+
+- name: Extract hosts from existing zfs-push-backups cronjobs
+  ansible.builtin.set_fact:
+    _existing_push_hosts: >-
+      {{ _existing_crontab.stdout_lines
+         | select('match', '^# Ansible: zfs-push-backups ')
+         | map('regex_replace', '^# Ansible: zfs-push-backups (.+)$', '\1')
+         | list }}
+
+- name: Remove stale zfs-push-backups cronjobs whose host is not in the offsite inventory group
+  become: true
+  ansible.builtin.cron:
+    name: "zfs-push-backups {{ item }}"
+    state: absent
+  loop: "{{ _existing_push_hosts | reject('in', groups[backups_zfs_server_offsite_group] | default([])) | list }}"
+
 - name: Build list of local datasets eligible for offsite replication
   when: backups_zfs_server_offsite_enabled
   ansible.builtin.set_fact:
