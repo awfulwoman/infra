@@ -18,79 +18,79 @@
     update_cache: true
     name:
       - terraform
-      - libvirt-clients  # For qemu+ssh:// connection to hypervisor
+      # - libvirt-clients  # For qemu+ssh:// connection to hypervisor
 
 # ===================================================================
 # SECURITY: Dedicated service account with restricted libvirt access
 # ===================================================================
 
-- name: Create libvirt-remote service account on hypervisor
-  become: true
-  ansible.builtin.user:
-    name: "{{ infra_privateresources_hypervisor_user }}"
-    comment: "Terraform libvirt remote access (restricted)"
-    system: true
-    create_home: true
-    shell: /bin/sh  # Required for SSH forced command execution
-    groups: libvirt  # Only libvirt group access
-    append: false
-  delegate_to: "{{ infra_privateresources_hypervisor_host }}"
+# - name: Create libvirt-remote service account on hypervisor
+#   become: true
+#   ansible.builtin.user:
+#     name: "{{ infra_privateresources_hypervisor_user }}"
+#     comment: "Terraform libvirt remote access (restricted)"
+#     system: true
+#     create_home: true
+#     shell: /bin/sh  # Required for SSH forced command execution
+#     groups: libvirt  # Only libvirt group access
+#     append: false
+#   delegate_to: "{{ infra_privateresources_hypervisor_host }}"
 
-- name: Deploy forced command script on hypervisor
-  become: true
-  ansible.builtin.copy:
-    src: libvirt-only.sh
-    dest: /usr/local/bin/libvirt-only
-    owner: root
-    group: root
-    mode: '0755'
-  delegate_to: "{{ infra_privateresources_hypervisor_host }}"
+# - name: Deploy forced command script on hypervisor
+#   become: true
+#   ansible.builtin.copy:
+#     src: libvirt-only.sh
+#     dest: /usr/local/bin/libvirt-only
+#     owner: root
+#     group: root
+#     mode: '0755'
+#   delegate_to: "{{ infra_privateresources_hypervisor_host }}"
 
-- name: Generate dedicated SSH key pair for libvirt connection on control plane
-  community.crypto.openssh_keypair:
-    type: ed25519
-    path: "{{ infra_privateresources_ssh_key_path }}"
-    comment: "{{ infra_privateresources_hypervisor_user }}@{{ ansible_facts['hostname'] }}"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    mode: '0600'
-  register: libvirt_keypair
+# - name: Generate dedicated SSH key pair for libvirt connection on control plane
+#   community.crypto.openssh_keypair:
+#     type: ed25519
+#     path: "{{ infra_privateresources_ssh_key_path }}"
+#     comment: "{{ infra_privateresources_hypervisor_user }}@{{ ansible_facts['hostname'] }}"
+#     owner: "{{ ansible_user }}"
+#     group: "{{ ansible_user }}"
+#     mode: '0600'
+#   register: libvirt_keypair
 
-- name: Read generated public key
-  ansible.builtin.slurp:
-    src: "{{ infra_privateresources_ssh_pubkey_path }}"
-  register: libvirt_pubkey
+# - name: Read generated public key
+#   ansible.builtin.slurp:
+#     src: "{{ infra_privateresources_ssh_pubkey_path }}"
+#   register: libvirt_pubkey
 
-- name: Configure restricted SSH access on hypervisor
-  become: true
-  ansible.posix.authorized_key:
-    user: "{{ infra_privateresources_hypervisor_user }}"
-    state: present
-    key: "{{ libvirt_pubkey.content | b64decode }}"
-    key_options: 'no-agent-forwarding,no-X11-forwarding'
-    comment: "Restricted libvirt access from {{ ansible_facts['hostname'] }}"
-  delegate_to: "{{ infra_privateresources_hypervisor_host }}"
+# - name: Configure restricted SSH access on hypervisor
+#   become: true
+#   ansible.posix.authorized_key:
+#     user: "{{ infra_privateresources_hypervisor_user }}"
+#     state: present
+#     key: "{{ libvirt_pubkey.content | b64decode }}"
+#     key_options: 'no-agent-forwarding,no-X11-forwarding'
+#     comment: "Restricted libvirt access from {{ ansible_facts['hostname'] }}"
+#   delegate_to: "{{ infra_privateresources_hypervisor_host }}"
 
-- name: Configure SSH client to use dedicated key for hypervisor
-  ansible.builtin.blockinfile:
-    path: "/home/{{ ansible_user }}/.ssh/config"
-    create: true
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    mode: '0600'
-    marker: "# {mark} ANSIBLE MANAGED: libvirt-remote for {{ infra_privateresources_hypervisor_host }}"
-    block: |
-      Host {{ infra_privateresources_hypervisor_host }}
-        User {{ infra_privateresources_hypervisor_user }}
-        IdentityFile {{ infra_privateresources_ssh_key_path }}
-        IdentitiesOnly yes
+# - name: Configure SSH client to use dedicated key for hypervisor
+#   ansible.builtin.blockinfile:
+#     path: "/home/{{ ansible_user }}/.ssh/config"
+#     create: true
+#     owner: "{{ ansible_user }}"
+#     group: "{{ ansible_user }}"
+#     mode: '0600'
+#     marker: "# {mark} ANSIBLE MANAGED: libvirt-remote for {{ infra_privateresources_hypervisor_host }}"
+#     block: |
+#       Host {{ infra_privateresources_hypervisor_host }}
+#         User {{ infra_privateresources_hypervisor_user }}
+#         IdentityFile {{ infra_privateresources_ssh_key_path }}
+#         IdentitiesOnly yes
 
-- name: Add hypervisor to known_hosts
-  ansible.builtin.known_hosts:
-    name: "{{ infra_privateresources_hypervisor_host }}"
-    key: "{{ lookup('pipe', 'ssh-keyscan -H ' + infra_privateresources_hypervisor_host) }}"
-    state: present
-    path: "/home/{{ ansible_user }}/.ssh/known_hosts"
+# - name: Add hypervisor to known_hosts
+#   ansible.builtin.known_hosts:
+#     name: "{{ infra_privateresources_hypervisor_host }}"
+#     key: "{{ lookup('pipe', 'ssh-keyscan -H ' + infra_privateresources_hypervisor_host) }}"
+#     state: present
+#     path: "/home/{{ ansible_user }}/.ssh/known_hosts"
 
 # ===================================================================
 # Cloud-init configuration
