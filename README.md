@@ -18,16 +18,16 @@ Not sure why you'd want to install this, as it's my home infra. But hey, knock y
 
 ```bash
 # Clone repo
-git clone git@github.com:awfulwoman/infra.git /opt/repos/infra
+git clone git@github.com:awfulwoman/infra.git
 
 # Install supporting packages
-cd /opt/repos/infra
+cd infra
 source .venv/bin/activate
 pip3 install -r requirements.txt
 
 # To activate auto loading of resources when entering the directory
 apt install direnv -y
-direnv allow /opt/repos/infra
+direnv allow .
 ```
 
 ## LLM Disclaimer

@@ -75,7 +75,7 @@ reverseproxy_use_letsencrypt: false
 # REPOS
 # -------------------------------------------------------------------
 
-# The following repos will be pulled and made available at /opt/repos
+# The following repos will be pulled and made available at /fastpool/repos
 repos:
   - repo: awfulwoman/infra
     name: infra

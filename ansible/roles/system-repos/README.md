@@ -19,7 +19,7 @@ repos:
 
 ### Global
 
-- `repos_base_dir`: Base directory for clones (default: `/opt/repos`)
+- `repos_base_dir`: Base directory for clones (default: `/fastpool/repos`)
 - `repos_git_host`: Git host (default: `github.com`)
 - `repos_update`: Update existing repos (default: `false`)
 
