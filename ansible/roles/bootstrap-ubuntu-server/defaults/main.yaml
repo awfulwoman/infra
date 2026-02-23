@@ -1,6 +1,7 @@
 bootstrap_ubuntu_timezone: "Europe/Berlin"
 bootstrap_ubuntu_apt_packages:
   - curl
+  - direnv
   - dirmngr
   - e2fsprogs
   - ffmpeg

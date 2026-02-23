@@ -7,7 +7,6 @@
     - role: infothrill.nullmailer
       become: true
     - role: system-zfs
-    - role: ansible-core
     - role: system-sshkey
     - role: system-repos
     - role: composition-reverseproxy

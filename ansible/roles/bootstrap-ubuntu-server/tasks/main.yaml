@@ -106,6 +106,21 @@
     - ppa:m-grant-prg/utils
     - ppa:tomtomtom/yt-dlp
 
+- name: Ensure direnv hook is enabled
+  become: true
+  ansible.builtin.lineinfile:
+    dest: "/home/{{ item }}/.bashrc"
+    line: 'eval "$(direnv hook bash)"'
+    state: present
+    insertafter: EOF
+    create: true
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: "0644"
+  loop:
+    - root
+    - "{{ ansible_user }}"
+
 # - name: Upgrade apt packages
 #   become: true
 #   ansible.builtin.apt:
