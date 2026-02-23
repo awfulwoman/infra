@@ -22,6 +22,7 @@ git clone git@github.com:awfulwoman/infra.git /opt/repos/infra
 
 # Install supporting packages
 cd /opt/repos/infra
+source .venv/bin/activate
 pip3 install -r requirements.txt
 
 # To activate auto loading of resources when entering the directory
