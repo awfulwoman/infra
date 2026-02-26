@@ -77,7 +77,7 @@
     group: "{{ ansible_user }}"
     mode: "0755"
 
-- name: Disable Claude Code prompt suggestions
+- name: Set environment variables
   ansible.builtin.lineinfile:
     path: "{{ ansible_facts.user_dir }}/{{ system_claude_profile_file }}"
     line: "export {{ item }}"
@@ -88,6 +88,7 @@
     - "CLAUDE_CODE_ENABLE_PROMPT_SUGGESTION=false"
     - "CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY=1"
     - "CLAUDE_CONFIG_DIR={{ system_claude_settings_path }}"
+    - "CLAUDE_CODE_OAUTH_TOKEN={{ vault_claudecode_longlived_token }}"
 
 # Allows scrolling in tmux
 - name: Enable tmux mouse mode
