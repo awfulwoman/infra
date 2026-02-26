@@ -1,4 +1,4 @@
 ---
 system_git_user_name: "Charlie O'Hara"
-system_git_user_email: "github@whalecoiner.com"
+system_git_user_email: "github@{{ vault_personal_domain }}"
 system_git_pull_rebase: "true"
