@@ -1,6 +1,6 @@
 composition_name: pixelfed
 
-pixelfed_app_url: "https://photos.{{ domain_name }}"
+pixelfed_app_url: "https://photos.{{ vault_personal_domain }}"
 pixelfed_app_domain: "photos.{{ vault_personal_domain }}"
 pixelfed_admin_domain: "photos.{{ vault_personal_domain }}"
 

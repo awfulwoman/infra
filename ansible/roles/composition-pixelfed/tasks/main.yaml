@@ -44,13 +44,6 @@
     version: v0.12.7
     force: false
 
-- name: Run Configure DNS role
-  ansible.builtin.include_role:
-    name: "network-register-subdomain"
-  vars:
-    configure_dns_subdomains:
-      - pixelfed
-
 # ----------------------------
 # Start composition
 # ----------------------------

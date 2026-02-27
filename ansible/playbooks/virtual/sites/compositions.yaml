@@ -3,6 +3,7 @@
   roles:
     - role: composition-reverseproxy
     - role: composition-container-management
+    - role: composition-pixelfed
     - role: composition-awfulwoman
     - role: composition-zfs-api
 
