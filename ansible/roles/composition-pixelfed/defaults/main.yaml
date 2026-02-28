@@ -7,3 +7,6 @@ pixelfed_admin_domain: "photos.{{ vault_personal_domain }}"
 pixelfed_app_key: "{{ vault_pixelfed_app_key }}"
 pixelfed_db_password: "{{ vault_pixelfed_db_password }}"
 pixelfed_db_root_password: "{{ vault_pixelfed_db_root_password }}"
+
+pixelfed_cache_path: "{{ composition_config }}/cache"
+pixelfed_storage_path: "{{ composition_config }}/storage"

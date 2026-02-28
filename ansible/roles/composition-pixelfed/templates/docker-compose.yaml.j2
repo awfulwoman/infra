@@ -53,8 +53,8 @@ services:
       - "traefik.http.routers.pixelfed-admin.service=pixelfed"
       - "traefik.http.services.pixelfed.loadbalancer.server.port=8080"
     volumes:
-      - "{{ composition_config }}/storage:/var/www/storage"
-      - "{{ composition_config }}/cache:/var/www/bootstrap/cache"
+      - "{{ pixelfed_storage_path }}:/var/www/storage"
+      - "{{ pixelfed_cache_path }}:/var/www/bootstrap/cache"
       - /etc/localtime:/etc/localtime:ro
     networks:
       - "{{ default_docker_network }}"
