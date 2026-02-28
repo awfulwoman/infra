@@ -139,13 +139,6 @@ material.
 - **Docker Compose apps**: Templated with Jinja2 (`.yaml.j2` files),
   deployed via `composition-*` roles
 
-## Plans
-
-- Whenever a plan is requested, ALWAYS save a copy of it as a markdown file
-  in plans/.
-- When you are implementing a plan, always ask if the user wants to create
-  a pull request, rather than automatically committing to main.
-
 ## MCP Servers
 
 - Always use Context7 MCP when library/API documentation is needed, code
