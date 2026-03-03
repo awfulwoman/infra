@@ -1,4 +1,5 @@
 # Infrastructure Playbook Automation Configuration
+automation_infra_ansible_playbook_bin: "/usr/bin/ansible-playbook"
 automation_infra_schedule: "daily"  # How often to run (hourly/daily/weekly)
 automation_infra_playbook: "{{ ansible_infra_dir }}/ansible/playbooks/zfs/backup-infra.yaml"
 automation_infra_inventory: "{{ ansible_infra_dir }}/ansible/inventory/hosts.yaml"

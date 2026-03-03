@@ -5,10 +5,10 @@ Wants=network-online.target
 
 [Service]
 Type=oneshot
-User=root
-Group=root
+User={{ ansible_user }}
+Group={{ ansible_user }}
 WorkingDirectory={{ ansible_infra_dir }}
-ExecStart=/usr/bin/ansible-playbook \
+ExecStart={{ automation_infra_ansible_playbook_bin }} \
   {{ automation_infra_playbook }} \
   --inventory {{ automation_infra_inventory }} \
   --vault-password-file {{ automation_infra_vault_password_file }}

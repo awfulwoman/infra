@@ -1,10 +1,10 @@
 # code: language=ansible
 
-- name: "Check if ansible-playbook is available"
-  ansible.builtin.command: which ansible-playbook
+- name: "Determine if ansible-playbook command is available"
+  ansible.builtin.stat:
+    path: "{{ automation_infra_ansible_playbook_bin }}"
   register: ansible_check
-  changed_when: false
-  failed_when: ansible_check.rc != 0
+  failed_when: not ansible_check.stat.exists or not ansible_check.stat.executable
 
 - name: "Verify playbook path exists"
   ansible.builtin.stat:

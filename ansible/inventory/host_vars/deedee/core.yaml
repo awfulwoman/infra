@@ -72,6 +72,11 @@ terraform_working_dir: "/fastpool/terraform"
 reverseproxy_use_letsencrypt: false
 
 # -------------------------------------------------------------------
+# AUTOMATION INFRA
+# -------------------------------------------------------------------
+automation_infra_ansible_playbook_bin: /opt/repos/infra/.venv/bin/ansible-playbook
+
+# -------------------------------------------------------------------
 # REPOS
 # -------------------------------------------------------------------
 
