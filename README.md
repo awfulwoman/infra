@@ -20,7 +20,7 @@ Not sure why you'd want to install this, as it's my home infra. But hey, knock y
 # Clone repo
 git clone git@github.com:awfulwoman/infra.git
 
-# Install supporting packages
+# Install supporting Python packages
 cd infra
 source .venv/bin/activate
 pip3 install -r requirements.txt
