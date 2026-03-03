@@ -14,7 +14,7 @@ I access everything though Tailscale, which is an annoying dependency. But I kee
 
 Not sure why you'd want to install this, as it's my home infra. But hey, knock yourself out.
 
-## Getting a host machine up and running
+## setting up the control plane
 
 ```bash
 # Clone repo
