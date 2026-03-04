@@ -8,7 +8,7 @@ terraform {
 }
 
 # Connect to libvirt on host-storage via SSH
-# Terraform runs on dns (control plane), manages VMs on host-storage (hypervisor)
+# Terraform runs on deedee (control plane), manages VMs on host-storage (hypervisor)
 provider "libvirt" {
   uri = var.hypervisor_uri
 }

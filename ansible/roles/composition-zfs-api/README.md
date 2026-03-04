@@ -242,8 +242,8 @@ scrape_configs:
     static_configs:
       - targets:
           - 'zfs-api.host-storage.xberg.ber.domain.com:8000'
-          - 'zfs-api.host-homeassistant.xberg.ber.domain.com:8000'
-          - 'zfs-api.dns.xberg.ber.domain.com:8000'
+          - 'zfs-api.homebrain.xberg.ber.domain.com:8000'
+          - 'zfs-api.deedee.xberg.ber.domain.com:8000'
           - 'zfs-api.host-backups.xberg.ber.domain.com:8000'
           - 'zfs-api.host-albion.location.city.domain.com:8000'
         labels:
