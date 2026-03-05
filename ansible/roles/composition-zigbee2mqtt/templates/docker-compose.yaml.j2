@@ -3,7 +3,7 @@ name: "{{ composition_name }}"
 services:
   zigbee2mqtt:
     container_name: zigbee2mqtt
-    image: "koenkk/zigbee2mqtt:2.8.0"
+    image: "koenkk/zigbee2mqtt:2.9.1"
     restart: unless-stopped
     privileged: true
     env_file: .environment_vars
