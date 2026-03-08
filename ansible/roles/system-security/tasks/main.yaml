@@ -27,6 +27,12 @@
     - 10periodic
     - 50unattended-upgrades
 
+- name: Delete rogue unattended-upgrades files from previous Ansible roles
+  become: true
+  ansible.builtin.file:
+    path: "/etc/apt/apt.conf.d/90-ansible-unattended-upgrades"
+    state: absent
+
 - name: Add configured user accounts to passwordless sudoers
   become: true
   ansible.builtin.lineinfile:
