@@ -23,15 +23,14 @@
 
 - name: Respond to DNS-01 challenge
   when: domain_challenge.authorizations[dns01_domain_full].challenges[0].status == "pending"
-  community.digitalocean.digital_ocean_domain_record:
+  community.dns.hetzner_dns_record:
     state: present
-    oauth_token: "{{ vault_digitalocean_letsencrypt_token }}"
-    domain: "{{ dns01_domain_base }}"
+    hetzner_api_token: "{{ vault_hetzner_api_key_rw }}"
+    zone_name: "{{ dns01_domain_base }}"
     type: TXT
-    ttl: 30
-    name: "{{ domain_challenge.challenge_data[dns01_domain_full]['dns-01'].resource }}{{ '.' + dns01_domain_sub_no_wildcard if dns01_domain_sub_no_wildcard }}"
-    data: "{{ domain_challenge.challenge_data[dns01_domain_full]['dns-01'].resource_value }}"
-    force_update: true
+    ttl: 60
+    prefix: "{{ domain_challenge.challenge_data[dns01_domain_full]['dns-01'].resource }}{{ '.' + dns01_domain_sub_no_wildcard if dns01_domain_sub_no_wildcard }}"
+    value: "{{ domain_challenge.challenge_data[dns01_domain_full]['dns-01'].resource_value }}"
   register: txt_response
 
 - name: Debug txt verification
@@ -39,10 +38,10 @@
     var: txt_response
   when: (infra_certbot_debug) and (txt_response is defined)
 
-- name: Extract and store the TXT record so we can delete it later
-  ansible.builtin.set_fact:
-    txt_record_id: "{{ txt_response.result.id }}"
-  when: txt_response is defined
+- name: Wait for TXT record to propagate
+  ansible.builtin.pause:
+    seconds: 30
+  when: txt_response is defined and txt_response.changed
 
 - name: Collect certificate order
   when: domain_challenge.authorizations[dns01_domain_full].challenges[0].status == "pending"
@@ -70,11 +69,13 @@
   when: infra_certbot_debug
 
 - name: Remove TXT record
-  community.digitalocean.digital_ocean_domain_record:
+  community.dns.hetzner_dns_record:
     state: absent
-    oauth_token: "{{ vault_digitalocean_domain_token }}"
-    domain: "{{ dns01_domain_base }}"
-    record_id: "{{ txt_record_id }}"
+    hetzner_api_token: "{{ vault_hetzner_api_key_rw }}"
+    zone_name: "{{ dns01_domain_base }}"
+    type: TXT
+    prefix: "{{ domain_challenge.challenge_data[dns01_domain_full]['dns-01'].resource }}{{ '.' + dns01_domain_sub_no_wildcard if dns01_domain_sub_no_wildcard }}"
+    value: "{{ domain_challenge.challenge_data[dns01_domain_full]['dns-01'].resource_value }}"
   register: txt_remove_response
   when: txt_response is defined
 

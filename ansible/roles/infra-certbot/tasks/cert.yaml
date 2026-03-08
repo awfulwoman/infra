@@ -5,7 +5,7 @@
     domain_sub_no_wildcard: "{{ (item.subdomain | split('.') | reject('match', '[*]') | join('.')) if item.subdomain is defined else false }}"
     domain_full: "{{ item.subdomain + '.' if item.subdomain is defined }}{{ item.domain }}"
 
-- name: INFO 💋
+- name: Loop info
   ansible.builtin.debug:
     msg: "Assessing {{ domain_full }} - Cert {{ ansible_loop.index }}/{{ ansible_loop.length }}"
 
