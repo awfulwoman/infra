@@ -22,6 +22,7 @@ git clone git@github.com:awfulwoman/infra.git
 
 # Install supporting Python packages
 cd infra
+python -m venv .venv
 source .venv/bin/activate
 pip3 install -r requirements.txt
 
