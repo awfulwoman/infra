@@ -77,7 +77,7 @@ reverseproxy_use_letsencrypt: false
 # -------------------------------------------------------------------
 # AUTOMATION INFRA
 # -------------------------------------------------------------------
-automation_infra_ansible_playbook_bin: /opt/repos/infra/.venv/bin/ansible-playbook
+automation_infra_ansible_playbook_bin: /fastpool/repos/infra/.venv/bin/ansible-playbook
 
 # -------------------------------------------------------------------
 # REPOS
