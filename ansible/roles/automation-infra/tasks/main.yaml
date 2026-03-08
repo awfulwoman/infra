@@ -1,10 +1,13 @@
 # code: language=ansible
 
-- name: "Determine if ansible-playbook command is available"
-  ansible.builtin.stat:
-    path: "{{ automation_infra_ansible_playbook_bin }}"
-  register: ansible_check
-  failed_when: not ansible_check.stat.exists or not ansible_check.stat.executable
+- name: "Deploy run script"
+  become: true
+  ansible.builtin.template:
+    src: automation-infra.sh.j2
+    dest: "{{ automation_infra_script_path }}"
+    owner: root
+    group: root
+    mode: "0755"
 
 - name: "Verify playbook path exists"
   ansible.builtin.stat:
