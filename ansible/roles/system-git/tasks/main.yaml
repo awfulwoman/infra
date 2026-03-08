@@ -16,3 +16,9 @@
     name: pull.rebase
     scope: global
     value: "{{ system_git_pull_rebase }}"
+
+- name: Configure git default branch name
+  community.general.git_config:
+    name: init.defaultBranch
+    scope: global
+    value: "{{ system_git_init_defaultbranch }}"
