@@ -1,0 +1,93 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  invidious:
+    image: {{ composition_invidious_image }}
+    restart: unless-stopped
+    ports:
+      - "{{ composition_invidious_port }}:3000"
+    environment:
+      INVIDIOUS_CONFIG: |
+        db:
+          dbname: {{ composition_invidious_db_name }}
+          user: {{ composition_invidious_db_user }}
+          password: {{ composition_invidious_db_password }}
+          host: invidious-db
+          port: 5432
+        check_tables: true
+        hmac_key: "{{ composition_invidious_hmac_key }}"
+        invidious_companion:
+          - private_url: "http://invidious-companion:8282/companion"
+        invidious_companion_key: "{{ composition_invidious_companion_key }}"
+        external_port: 443
+        domain: {{ composition_invidious_subdomain }}.{{ domain_name }}
+        https_only: true
+        statistics_enabled: false
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:3000/api/v1/stats"]
+      interval: 30s
+      timeout: 5s
+      retries: 2
+      start_period: 30s
+    logging:
+      options:
+        max-size: "1G"
+        max-file: "4"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.invidious.rule=Host(`{{ composition_invidious_subdomain }}.{{ domain_name }}`)"
+      - "traefik.http.routers.invidious.tls=true"
+      - "traefik.http.routers.invidious.tls.certresolver=letsencrypt"
+      - "traefik.http.services.invidious.loadbalancer.server.port=3000"
+    networks:
+      - "{{ default_docker_network }}"
+    depends_on:
+      invidious-db:
+        condition: service_healthy
+
+  invidious-companion:
+    image: {{ composition_invidious_companion_image }}
+    restart: unless-stopped
+    environment:
+      - SERVER_SECRET_KEY={{ composition_invidious_companion_key }}
+    logging:
+      options:
+        max-size: "1G"
+        max-file: "4"
+    cap_drop:
+      - ALL
+    read_only: true
+    volumes:
+      - companioncache:/var/tmp/youtubei.js:rw
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - "{{ default_docker_network }}"
+
+  invidious-db:
+    image: {{ composition_invidious_db_image }}
+    restart: unless-stopped
+    env_file: .environment_vars
+    environment:
+      POSTGRES_DB: {{ composition_invidious_db_name }}
+      POSTGRES_USER: {{ composition_invidious_db_user }}
+      POSTGRES_PASSWORD: {{ composition_invidious_db_password }}
+    volumes:
+      - "{{ composition_config }}/pgdata:/var/lib/postgresql/data"
+      - "{{ composition_config }}/config/sql:/config/sql"
+      - "{{ composition_config }}/docker/init-invidious-db.sh:/docker-entrypoint-initdb.d/init-invidious-db.sh"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - "{{ default_docker_network }}"
+
+volumes:
+  companioncache:
+
+networks:
+  "{{ default_docker_network }}":
+    external: true

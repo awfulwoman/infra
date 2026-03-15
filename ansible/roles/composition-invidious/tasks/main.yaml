@@ -1,0 +1,82 @@
+# code: language=ansible
+
+# ----------------------------
+# Core tasks
+# ----------------------------
+
+- name: "Create compose file"
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ composition_root }}/docker-compose.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0644"
+
+- name: "Create .env file"
+  ansible.builtin.template:
+    src: environment_vars.j2
+    dest: "{{ composition_root }}/.environment_vars"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0644"
+
+# ----------------------------
+# Specific tasks
+# ----------------------------
+
+- name: Create directories
+  ansible.builtin.file:
+    path: "{{ composition_config }}/{{ dir_item }}"
+    state: directory
+    mode: "0755"
+  loop_control:
+    loop_var: dir_item
+  loop:
+    - pgdata
+    - config/sql
+    - docker
+
+- name: Clone Invidious repository for DB init scripts
+  ansible.builtin.git:
+    repo: https://github.com/iv-org/invidious.git
+    dest: "{{ composition_config }}/invidious-repo"
+    version: master
+    depth: 1
+    force: true
+
+- name: Copy SQL init files
+  ansible.builtin.copy:
+    src: "{{ composition_config }}/invidious-repo/config/sql/"
+    dest: "{{ composition_config }}/config/sql/"
+    remote_src: true
+    mode: "0644"
+
+- name: Copy DB init script
+  ansible.builtin.copy:
+    src: "{{ composition_config }}/invidious-repo/docker/init-invidious-db.sh"
+    dest: "{{ composition_config }}/docker/init-invidious-db.sh"
+    remote_src: true
+    mode: "0755"
+
+- name: Remove cloned repository
+  ansible.builtin.file:
+    path: "{{ composition_config }}/invidious-repo"
+    state: absent
+
+- name: Run Configure DNS role
+  ansible.builtin.include_role:
+    name: "network-register-subdomain"
+  vars:
+    configure_dns_subdomains:
+      - "{{ composition_invidious_subdomain }}"
+
+# ----------------------------
+# Start composition
+# ----------------------------
+
+- name: Start Docker Compose project
+  community.docker.docker_compose_v2:
+    project_src: "{{ composition_root }}"
+    state: present
+    build: always
+    remove_orphans: true
