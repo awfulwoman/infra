@@ -1,0 +1,4 @@
+- name: Run memorybank
+  hosts: host-storage
+  roles:
+    - role: composition-memorybank
