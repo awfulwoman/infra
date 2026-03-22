@@ -35,13 +35,13 @@
     - db
     - media
 
-- name: Clone or update memorybank source
-  ansible.builtin.git:
-    repo: "{{ memorybank_repo_url }}"
-    dest: "{{ composition_root }}/src"
-    version: "{{ memorybank_repo_version }}"
-    update: true
-    force: false
+# - name: Clone or update memorybank source
+#   ansible.builtin.git:
+#     repo: "{{ memorybank_repo_url }}"
+#     dest: "{{ composition_root }}/src"
+#     version: "{{ memorybank_repo_version }}"
+#     update: true
+#     force: false
 
 - name: Run Configure DNS role
   ansible.builtin.include_role:

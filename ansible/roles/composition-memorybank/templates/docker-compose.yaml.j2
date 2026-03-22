@@ -3,7 +3,7 @@ name: "{{ composition_name }}"
 services:
   backend:
     container_name: memorybank-backend
-    build: ./src/backend
+    # build: ./src/backend
     restart: unless-stopped
     env_file: .environment_vars
     volumes:
@@ -15,7 +15,7 @@ services:
 
   frontend:
     container_name: memorybank-frontend
-    build: ./src/frontend
+    # build: ./src/frontend
     restart: unless-stopped
     depends_on:
       - backend
