@@ -1,0 +1,5 @@
+# Composition name (used by composition-common dependency)
+composition_name: memorybank
+
+memorybank_repo_url: "https://github.com/awfulwoman/memorybank.git"
+memorybank_repo_version: "main"

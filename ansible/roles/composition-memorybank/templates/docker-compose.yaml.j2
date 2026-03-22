@@ -1,0 +1,33 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  backend:
+    container_name: memorybank-backend
+    build: ./src/backend
+    restart: unless-stopped
+    env_file: .environment_vars
+    volumes:
+      - "{{ composition_config }}/db:/data/db"
+      - "{{ composition_config }}/media:/data/media"
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+
+  frontend:
+    container_name: memorybank-frontend
+    build: ./src/frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.memorybank.rule=Host(`memorybank.{{ domain_name }}`)"
+      - "traefik.http.routers.memorybank.tls=true"
+      - "traefik.http.routers.memorybank.tls.certresolver=letsencrypt"
+      - "traefik.http.services.memorybank.loadbalancer.server.port=80"
+    networks:
+      - "{{ default_docker_network }}"
+
+networks:
+  "{{ default_docker_network }}":
+    external: true
