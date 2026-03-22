@@ -4,6 +4,7 @@ services:
   backend:
     container_name: memorybank-backend
     # build: ./src/backend
+    image: ghcr.io/awfulwoman/memorybank-backend:latest
     restart: unless-stopped
     env_file: .environment_vars
     volumes:
@@ -16,6 +17,7 @@ services:
   frontend:
     container_name: memorybank-frontend
     # build: ./src/frontend
+    image: ghcr.io/awfulwoman/memorybank-frontend:latest
     restart: unless-stopped
     depends_on:
       - backend
