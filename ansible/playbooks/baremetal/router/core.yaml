@@ -1,4 +1,4 @@
-- name: Router
+- name: Testbed for dual-NIC Linux router setup
   hosts: router
   roles:
     - role: bootstrap-ubuntu-server
