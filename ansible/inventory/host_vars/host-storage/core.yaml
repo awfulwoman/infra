@@ -12,16 +12,19 @@ host_type: baremetal
 host_name: storage
 host_city: ber
 host_location: xberg
-host_ipv4: 192.168.1.116
-# host_ipv4: 172.16.0.4
 host_pfqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}"
 host_fqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}.{{ domain_name }}"
 
 # -------------------------------------------------------------------
 # NETWORK
 # -------------------------------------------------------------------
+host_ipv4: 192.168.1.116
 host_primary_interface: "enp3s0"
 host_ipv4_subnet: 24
+
+# -------------------------------------------------------------------
+# WAKE ON LAN
+# -------------------------------------------------------------------
 wakeonlan_mac_address: "34:60:f9:bb:3d:16"
 wakeonlan_interface: enp3s0
 
