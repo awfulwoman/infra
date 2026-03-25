@@ -9,25 +9,22 @@ ansible_become_password: "{{ vault_password }}"
 # INFRA
 # -------------------------------------------------------------------
 host_type: baremetal
-host_name: backups # Hostname of the machine
-host_city: ber # City where the machine is located
-host_location: xberg # Location of the machine within the city
-host_ipv4: 192.168.1.118
+host_name: backups
+host_city: ber
+host_location: xberg
 host_pfqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}"
 host_fqdn: "{{ host_pfqdn }}.{{ domain_name }}"
 
 # -------------------------------------------------------------------
 # NETWORK
 # -------------------------------------------------------------------
+host_ipv4: 192.168.1.118
 host_primary_interface: "enp3s0"
 host_ipv4_subnet: 24
-wakeonlan_mac_address: "60:a4:4c:40:52:57"
-wakeonlan_interface: enp3s0
 
 # -------------------------------------------------------------------
 # ZFS
 # -------------------------------------------------------------------
-
 zfs:
   slowpool:
     vdevs:

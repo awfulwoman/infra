@@ -17,7 +17,7 @@ ansible_user: "{{ vault_server_username }}"
 ansible_become_password: "{{ vault_password }}"
 
 # -------------------------------------------------------------------
-# UBUNTU
+# UBUNTUPRO
 # -------------------------------------------------------------------
 ubuntupro_attach: false
 

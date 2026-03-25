@@ -18,7 +18,7 @@ host_fqdn: "{{ host_pfqdn }}.{{ domain_name }}"
 host_description: "Used as a jumphost and for running Claude Code"
 
 # -------------------------------------------------------------------
-# UBUNTU
+# UBUNTUPRO
 # -------------------------------------------------------------------
 
 ubuntupro_attach: false
