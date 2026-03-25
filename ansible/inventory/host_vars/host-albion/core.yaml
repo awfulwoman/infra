@@ -16,6 +16,12 @@ host_pfqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}"
 host_fqdn: "{{ host_pfqdn }}.{{ domain_name }}"
 
 # -------------------------------------------------------------------
+# NETWORK
+# -------------------------------------------------------------------
+host_primary_interface: "eth0"
+tailscale_exit_node: true
+
+# -------------------------------------------------------------------
 # UBUNTUPRO
 # -------------------------------------------------------------------
 
@@ -33,12 +39,6 @@ raspberry_pi_wifi: false
 raspberry_pi_boot_config_location: /boot/firmware/config.txt
 raspberry_pi_config_overrides:
   - "dtoverlay=gpio-fan,gpiopin=14,temp=60000"
-
-# -------------------------------------------------------------------
-# NETWORK
-# -------------------------------------------------------------------
-host_primary_interface: "eth0"
-tailscale_exit_node: true
 
 # -------------------------------------------------------------------
 # ZFS
@@ -78,7 +78,6 @@ backups_zfs_archive_offsite_dataset: fastpool/backups/raw
 # -------------------------------------------------------------------
 # DOWNLOADS
 # -------------------------------------------------------------------
-
 downloads_dir: "/fastpool/downloads"
 
 # -------------------------------------------------------------------
