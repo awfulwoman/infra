@@ -17,15 +17,15 @@ host_pfqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}"
 host_fqdn: "{{ host_pfqdn }}.{{ domain_name }}"
 
 # -------------------------------------------------------------------
-# UBUNTUPRO
+# NETWORK
 # -------------------------------------------------------------------
-
-ubuntupro_attach: true
-
-# --- NETWORK -------------
 host_primary_interface: "enp1s0"
 host_ipv4_subnet: 24
-network_interface_primary: "enp1s0"
+
+# -------------------------------------------------------------------
+# UBUNTUPRO
+# -------------------------------------------------------------------
+ubuntupro_attach: true
 
 # -------------------------------------------------------------------
 # ZFS
