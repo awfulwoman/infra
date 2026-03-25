@@ -7,7 +7,7 @@ host_city: hetzner
 host_location: cloud
 host_ipv4: 188.245.37.81
 host_pfqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}"
-host_fqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}.{{ domain_name }}"
+host_fqdn: "{{ host_pfqdn }}.{{ domain_name }}"
 host_description: "Hetzner cloud server for public services"
 
 bootstrap_ubuntu_timezone: "Europe/Berlin"
