@@ -3,10 +3,15 @@ network:
   renderer: {{ network_netplan_renderer }}
   ethernets:
     {{ network_netplan_interface }}:
+
+{# BRIDGED #}
 {% if network_netplan_bridge_enable %}
       dhcp4: false
       dhcp6: false
+
+{# STATIC #}
 {% elif network_netplan_mode == 'static' %}
+      # Static IP address
       addresses:
         - {{ host_ipv4 }}/{{ network_netplan_subnet }}
       routes:
@@ -19,6 +24,8 @@ network:
           - {{ ns }}
 {% endfor %}
 {% endif %}
+
+{# DHCP #}
 {% else %}
       dhcp4: true
 {% if network_netplan_nameservers | length > 0 %}
@@ -29,6 +36,8 @@ network:
 {% endfor %}
 {% endif %}
 {% endif %}
+
+{# BRIDGED #}
 {% if network_netplan_bridge_enable %}
   bridges:
     {{ network_netplan_bridge_name }}:
