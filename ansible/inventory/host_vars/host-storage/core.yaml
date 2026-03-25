@@ -10,6 +10,7 @@ ansible_become_password: "{{ vault_password }}" # Account password (for sudo)
 # -------------------------------------------------------------------
 host_type: baremetal
 host_name: storage
+host_description: "Central storage device"
 host_city: ber
 host_location: xberg
 host_pfqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}"
@@ -127,16 +128,9 @@ zfs:
 # Media storage
 shared_media_path: /slowpool/shared/media
 
-# syncthing_paths:
-#   data_default: "/slowpool/shared/syncthing"
-
 # -------------------------------------------------------------------
 # NFS
 # -------------------------------------------------------------------
-# nfs_exports:
-  # - "/fastpool *(rw,all_squash,anonuid=1000,anongid=1000)"
-  # - "{{ shared_media_path }} *(rw,all_squash,anonuid=1000,anongid=1000)"
-
 zfs_nfs_exports:
   - dataset: slowpool/shared/media
     options: "rw=100.64.0.0/10:192.168.1.0/24:192.168.122.0/24,anonuid=1000,anongid=1000,no_root_squash,all_squash"

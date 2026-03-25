@@ -17,3 +17,4 @@ host_ipv4: 192.168.1.111
 # host_ipv4: 172.16.0.4
 host_pfqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}"
 host_fqdn: "{{ host_pfqdn }}.{{ domain_name }}"
+host_description: "KVM over IP device"

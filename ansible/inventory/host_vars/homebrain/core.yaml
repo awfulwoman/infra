@@ -9,16 +9,17 @@ ansible_become_password: "{{ vault_password }}"
 # IDENTITY
 # -------------------------------------------------------------------
 host_type: baremetal
-host_name: homebrain # Hostname of the machine
-host_city: ber # City where the machine is located
-host_location: xberg # Location of the machine within the city
-host_ipv4: 192.168.1.130
+host_name: homebrain
+host_city: ber
+host_location: xberg
 host_pfqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}"
 host_fqdn: "{{ host_pfqdn }}.{{ domain_name }}"
+host_description: "Home automation hub"
 
 # -------------------------------------------------------------------
 # NETWORK
 # -------------------------------------------------------------------
+host_ipv4: 192.168.1.130
 host_primary_interface: "enp1s0"
 host_ipv4_subnet: 24
 
@@ -52,8 +53,6 @@ zfs:
 composition_motioneye_usbdevice: /dev/video0
 
 docker_port_open: true
-
-# compositions list moved to playbook (see playbooks/baremetal/homebrain/core.yaml)
 
 traefik_providers:
   - homeassistant

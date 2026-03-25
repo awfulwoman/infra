@@ -14,6 +14,7 @@ host_city: ldn
 host_location: camden
 host_pfqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}"
 host_fqdn: "{{ host_pfqdn }}.{{ domain_name }}"
+host_description: "Remote node in London"
 
 # -------------------------------------------------------------------
 # NETWORK
