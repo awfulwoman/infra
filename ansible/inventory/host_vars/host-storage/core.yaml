@@ -6,10 +6,10 @@ ansible_user: "{{ vault_server_username }}" # Account to connect as
 ansible_become_password: "{{ vault_password }}" # Account password (for sudo)
 
 # -------------------------------------------------------------------
-# INFRA
+# IDENTITY
 # -------------------------------------------------------------------
 host_type: baremetal
-host_name: storage 
+host_name: storage
 host_city: ber
 host_location: xberg
 host_pfqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}"

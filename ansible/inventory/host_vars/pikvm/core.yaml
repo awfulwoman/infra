@@ -7,7 +7,7 @@ ansible_become_password: "{{ vault_password }}"
 ansible_remote_tmp: "/tmp/.ansible/tmp"
 
 # -------------------------------------------------------------------
-# INFRA
+# IDENTITY
 # -------------------------------------------------------------------
 host_type: baremetal
 host_name: pikvm

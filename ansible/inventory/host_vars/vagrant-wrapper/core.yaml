@@ -6,7 +6,7 @@ ansible_connection: local
 ansible_user: vagrant
 
 # -------------------------------------------------------------------
-# INFRA
+# IDENTITY
 # -------------------------------------------------------------------
 host_type: virtual
 host_name: vagrant-wrapper

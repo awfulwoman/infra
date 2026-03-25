@@ -6,7 +6,7 @@ ansible_user: "{{ vault_server_username }}"
 ansible_become_password: "{{ vault_password }}"
 
 # -------------------------------------------------------------------
-# INFRA
+# IDENTITY
 # -------------------------------------------------------------------
 host_type: baremetal
 host_name: homebrain # Hostname of the machine
