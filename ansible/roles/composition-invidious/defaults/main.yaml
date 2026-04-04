@@ -1,0 +1,18 @@
+# Composition name (used by composition-common dependency)
+composition_name: invidious
+
+# Invidious settings
+composition_invidious_port: 3600
+composition_invidious_subdomain: invidious
+composition_invidious_image: quay.io/invidious/invidious:latest
+composition_invidious_companion_image: quay.io/invidious/invidious-companion:latest
+composition_invidious_db_image: docker.io/library/postgres:14
+
+# Database credentials (should be overridden with vault-encrypted values)
+composition_invidious_db_name: invidious
+composition_invidious_db_user: kemal
+composition_invidious_db_password: "{{ vault_invidious_db_password }}"
+
+# Security keys (should be overridden with vault-encrypted values)
+composition_invidious_hmac_key: "{{ vault_invidious_hmac_key }}"
+composition_invidious_companion_key: "{{ vault_invidious_companion_key }}"
