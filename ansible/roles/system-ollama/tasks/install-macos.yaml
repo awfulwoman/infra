@@ -13,7 +13,13 @@
     group: wheel
     mode: "0644"
   register: ollama_plist
-  notify: Reload ollama service
+
+- name: Unload service before reload on plist change
+  become: true
+  ansible.builtin.command: launchctl unload /Library/LaunchDaemons/com.awfulwoman.ollama.plist
+  when: ollama_plist.changed
+  changed_when: false
+  failed_when: false
 
 - name: Ensure service is loaded
   become: true
