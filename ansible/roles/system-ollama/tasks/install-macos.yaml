@@ -14,7 +14,7 @@
     mode: "0644"
   register: ollama_plist
 
-- name: Unload service before reload on plist change
+- name: Unload service before reload on plist change # noqa: no-handler
   become: true
   ansible.builtin.command: launchctl unload /Library/LaunchDaemons/com.awfulwoman.ollama.plist
   when: ollama_plist.changed
