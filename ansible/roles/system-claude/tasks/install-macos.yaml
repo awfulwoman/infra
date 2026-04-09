@@ -1,0 +1,8 @@
+---
+- name: Ensure dependencies are installed (macOS)
+  community.general.homebrew:
+    name:
+      - socat
+      - yt-dlp
+      - gh
+    state: present
