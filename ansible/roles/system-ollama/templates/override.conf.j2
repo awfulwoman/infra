@@ -1,0 +1,6 @@
+{% if system_ollama_env %}
+[Service]
+{% for key, value in system_ollama_env.items() %}
+Environment="{{ key }}={{ value }}"
+{% endfor %}
+{% endif %}
