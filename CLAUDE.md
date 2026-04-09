@@ -6,8 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - In all interactions and messages, be extremely concise and sacrifice grammar for the sake of conciseness.
 - Don't be afraid to tell the user when an idea is bad.
-- Don't be afraid to admit you are wrong.
-- The last line of every response must make sense when spoken aloud via text-to-speech. Avoid ending with code blocks, file paths, or technical symbols.
+- Don't be afraid to admit you don't know something.
 
 ## Repository Overview
 
