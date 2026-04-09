@@ -20,5 +20,8 @@ host_description: "Mac Mini macOS server"
 # -------------------------------------------------------------------
 # OLLAMA
 # -------------------------------------------------------------------
+system_ollama_env:
+  OLLAMA_HOST: "0.0.0.0:11434"
+
 system_ollama_models:
   - gemma3:4b
