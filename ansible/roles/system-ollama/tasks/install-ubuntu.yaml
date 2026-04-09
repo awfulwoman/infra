@@ -1,0 +1,39 @@
+---
+- name: Check if ollama binary exists
+  ansible.builtin.stat:
+    path: /usr/local/bin/ollama
+  register: ollama_binary
+
+- name: Install ollama via official script
+  become: true
+  ansible.builtin.shell:
+    cmd: set -o pipefail && curl -fsSL https://ollama.com/install.sh | sh
+    executable: /bin/bash
+  when: not ollama_binary.stat.exists
+  changed_when: true
+
+- name: Ensure systemd override directory exists
+  become: true
+  ansible.builtin.file:
+    path: /etc/systemd/system/ollama.service.d
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Deploy systemd env var override
+  become: true
+  ansible.builtin.template:
+    src: override.conf.j2
+    dest: /etc/systemd/system/ollama.service.d/override.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart ollama
+
+- name: Ensure ollama service is enabled and started
+  become: true
+  ansible.builtin.systemd:
+    name: ollama
+    enabled: true
+    state: started
