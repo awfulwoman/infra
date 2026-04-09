@@ -3,3 +3,4 @@
   roles:
     - role: bootstrap-macos-server
     - role: automation-key-updater
+    - role: system-ollama

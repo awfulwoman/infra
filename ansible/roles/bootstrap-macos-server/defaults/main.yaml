@@ -3,4 +3,3 @@ bootstrap_macos_server_homebrew_formulae:
   - jq
   - git
   - watch
-  - ollama
