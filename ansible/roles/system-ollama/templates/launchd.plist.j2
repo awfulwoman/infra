@@ -18,7 +18,7 @@
     <dict>
 {% for key, value in system_ollama_env.items() %}
         <key>{{ key }}</key>
-        <string>{{ value }}</string>
+        <string>{{ value | escape }}</string>
 {% endfor %}
     </dict>
 {% endif %}
