@@ -8,7 +8,7 @@
   when: ansible_facts['os_family'] == 'Debian'
 
 - name: Pull ollama models
-  ansible.builtin.command: "ollama pull {{ item }}"
+  ansible.builtin.command: "{{ system_ollama_bin }} pull {{ item }}"
   loop: "{{ system_ollama_models }}"
   register: result
   changed_when: "'pulling' in result.stdout"

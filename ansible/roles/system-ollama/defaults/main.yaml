@@ -1,3 +1,4 @@
 ---
 system_ollama_models: []
 system_ollama_env: {}
+system_ollama_bin: "{{ '/opt/homebrew/bin/ollama' if ansible_facts['os_family'] == 'Darwin' else '/usr/local/bin/ollama' }}"
