@@ -4,7 +4,7 @@
 # Core tasks
 # ----------------------------
 
-- name: Create compose file
+- name: "Create compose file"
   ansible.builtin.template:
     src: docker-compose.yaml.j2
     dest: "{{ composition_root }}/docker-compose.yaml"
@@ -12,7 +12,7 @@
     group: "{{ ansible_user }}"
     mode: "0774"
 
-- name: Create .env file
+- name: "Create .env file"
   ansible.builtin.template:
     src: environment_vars.j2
     dest: "{{ composition_root }}/.environment_vars"
@@ -24,12 +24,12 @@
 # Specific tasks
 # ----------------------------
 
-- name: Create data directory
+- name: "Create data directory"
   ansible.builtin.file:
     path: "{{ composition_config }}/data"
     state: directory
 
-- name: Run Configure DNS role
+- name: "Run Configure DNS role"
   ansible.builtin.include_role:
     name: "network-register-subdomain"
   vars:
@@ -40,7 +40,7 @@
 # Start composition
 # ----------------------------
 
-- name: Start Docker Compose project
+- name: "Start Docker Compose project"
   community.docker.docker_compose_v2:
     project_src: "{{ composition_root }}"
     state: present
