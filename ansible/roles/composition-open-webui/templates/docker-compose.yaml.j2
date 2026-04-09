@@ -6,8 +6,6 @@ services:
     image: ghcr.io/open-webui/open-webui:main
     restart: unless-stopped
     env_file: .environment_vars
-    ports:
-      - "3000:8080"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.open-webui.rule=Host(`chat.{{ domain_name }}`)"
