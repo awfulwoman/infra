@@ -37,3 +37,4 @@
     name: ollama
     enabled: true
     state: started
+    daemon_reload: true

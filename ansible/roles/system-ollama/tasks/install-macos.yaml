@@ -24,6 +24,7 @@
 - name: Ensure service is loaded
   become: true
   ansible.builtin.command: launchctl load /Library/LaunchDaemons/com.awfulwoman.ollama.plist
+  when: ollama_plist.changed
   register: launchctl_load
   changed_when: launchctl_load.rc == 0
   failed_when: false
