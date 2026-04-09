@@ -12,7 +12,7 @@ system_claude_ensure_path: true
 system_claude_profile_file: ".bashrc"
 
 # Directory for Claude settings and config
-system_claude_settings_path: "~/.config/claude"
+system_claude_settings_path: "{{ ansible_facts.user_dir }}/.config/claude"
 
 # Group owner for the settings directory
 # Ubuntu: matches ansible_user (users have an eponymous group)
