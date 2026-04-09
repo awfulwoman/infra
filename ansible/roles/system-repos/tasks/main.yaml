@@ -5,15 +5,16 @@
     state: directory
     mode: "0755"
     owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    group: "{{ 'staff' if ansible_facts['os_family'] == 'Darwin' else ansible_user }}"
 
 - name: Ensure .ssh directory exists
+  become: true
   ansible.builtin.file:
     path: "{{ ansible_facts.user_dir }}/.ssh"
     state: directory
     mode: "0700"
     owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    group: "{{ 'staff' if ansible_facts['os_family'] == 'Darwin' else ansible_user }}"
 
 - name: Check if git host is in known_hosts
   ansible.builtin.command:

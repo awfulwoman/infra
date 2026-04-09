@@ -4,5 +4,6 @@
   roles:
     - role: bootstrap-macos-server
     - role: automation-key-updater
+    - role: system-repos
     - role: system-ollama
     - role: system-claude

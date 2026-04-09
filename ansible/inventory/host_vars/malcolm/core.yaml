@@ -33,3 +33,17 @@ system_ollama_models:
 # -------------------------------------------------------------------
 system_claude_settings_group: "staff"
 system_claude_profile_file: ".zshrc"
+
+
+# -------------------------------------------------------------------
+# REPOS
+# -------------------------------------------------------------------
+repos:
+  - repo: awfulwoman/infra
+  - repo: awfulwoman/chives
+  - repo: awfulwoman/podderton
+  - repo: awfulwoman/ralph
+  - repo: awfulwoman/awfulclaw
+  - repo: awfulwoman/memorybank
+  - repo: awfulwoman/personal-site
+repos_base_dir: "{{ ansible_facts.user_dir }}/Code"
