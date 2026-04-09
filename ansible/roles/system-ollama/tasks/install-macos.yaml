@@ -1,0 +1,23 @@
+---
+- name: Ensure ollama is installed via Homebrew
+  community.general.homebrew:
+    name: ollama
+    state: present
+
+- name: Ensure launchd plist is deployed
+  become: true
+  ansible.builtin.template:
+    src: launchd.plist.j2
+    dest: /Library/LaunchDaemons/com.awfulwoman.ollama.plist
+    owner: root
+    group: wheel
+    mode: "0644"
+  register: ollama_plist
+  notify: reload ollama service
+
+- name: Ensure service is loaded
+  become: true
+  ansible.builtin.command: launchctl load /Library/LaunchDaemons/com.awfulwoman.ollama.plist
+  register: launchctl_load
+  changed_when: launchctl_load.rc == 0
+  failed_when: false
