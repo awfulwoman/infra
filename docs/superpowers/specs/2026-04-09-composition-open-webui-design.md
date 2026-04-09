@@ -26,10 +26,10 @@ Follows the established `composition-*` pattern used by all other Docker Compose
 
 ```yaml
 composition_name: open-webui
-composition_open_webui_ollama_base_url: ""
+composition_open_webui_ollama_base_url: "http://192.168.1.150:11434"
 ```
 
-`composition_open_webui_ollama_base_url` is left empty by default and must be set per-host in host_vars. This ensures the role is reusable across hosts pointing to different Ollama instances.
+`composition_open_webui_ollama_base_url` defaults to Malcolm's LAN IP. Can be overridden per-host if Ollama moves or is deployed elsewhere.
 
 ## Meta
 
@@ -65,13 +65,7 @@ WEBUI_AUTH=False
 
 ## Host Configuration (host-storage)
 
-Add to `ansible/inventory/host_vars/host-storage/core.yaml`:
-
-```yaml
-composition_open_webui_ollama_base_url: "http://192.168.1.150:11434"
-```
-
-Add to the `cnames` list:
+Add to the `cnames` list in `ansible/inventory/host_vars/host-storage/core.yaml`:
 
 ```yaml
 - chat.{{ domain_name }}
