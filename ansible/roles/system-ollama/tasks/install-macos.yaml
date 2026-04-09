@@ -21,7 +21,7 @@
   changed_when: false
   failed_when: false
 
-- name: Ensure service is loaded
+- name: Ensure service is loaded # noqa: no-handler
   become: true
   ansible.builtin.command: launchctl load /Library/LaunchDaemons/com.awfulwoman.ollama.plist
   when: ollama_plist.changed
