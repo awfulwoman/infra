@@ -1,35 +1,11 @@
-- name: Ensure dependencies are installed
-  become: true
-  ansible.builtin.apt:
-    name:
-      - curl
-      - gpg
-      - yt-dlp
-      - bubblewrap
-      - socat
-      - libonig-dev
-    state: present
+---
+- name: Install dependencies (macOS)
+  ansible.builtin.include_tasks: install-macos.yaml
+  when: ansible_facts['os_family'] == 'Darwin'
 
-- name: Add GitHub CLI repository key
-  become: true
-  ansible.builtin.apt_key:
-    url: https://cli.github.com/packages/githubcli-archive-keyring.gpg
-    keyring: /usr/share/keyrings/githubcli-archive-keyring.gpg
-    state: present
-
-- name: Add GitHub CLI repository
-  become: true
-  ansible.builtin.apt_repository:
-    repo: "deb [arch=amd64 signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main"
-    filename: github-cli
-    state: present
-
-- name: Install GitHub CLI
-  become: true
-  ansible.builtin.apt:
-    name: gh
-    state: present
-    update_cache: true
+- name: Install dependencies (Ubuntu/Debian)
+  ansible.builtin.include_tasks: install-ubuntu.yaml
+  when: ansible_facts['os_family'] == 'Debian'
 
 - name: Check if Claude CLI is already installed
   ansible.builtin.stat:
@@ -40,13 +16,15 @@
   when: not claude_installed.stat.exists
   block:
     - name: Download and execute Claude CLI install script
-      ansible.builtin.shell: >
+      ansible.builtin.shell: |
+        set -o pipefail
         curl -fsSL {{ system_claude_install_url }} | bash -s -- {{ system_claude_channel }}
       args:
         creates: "{{ ansible_facts.user_dir }}/.local/bin/claude"
         executable: /bin/bash
       environment:
         HOME: "{{ ansible_facts.user_dir }}"
+      # noqa command-instead-of-module: Using shell to pipe curl to bash for installation script
 
 - name: Ensure .local/bin is in PATH
   when: system_claude_ensure_path
@@ -74,7 +52,7 @@
     path: "{{ system_claude_settings_path }}"
     state: directory
     owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    group: "{{ system_claude_settings_group }}"
     mode: "0755"
 
 - name: Set environment variables
