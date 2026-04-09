@@ -1,0 +1,30 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  open-webui:
+    container_name: open-webui
+    image: ghcr.io/open-webui/open-webui:main
+    restart: unless-stopped
+    env_file: .environment_vars
+    ports:
+      - "3000:8080"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.open-webui.rule=Host(`chat.{{ domain_name }}`)"
+      - "traefik.http.routers.open-webui.tls=true"
+      - "traefik.http.routers.open-webui.tls.certresolver=letsencrypt"
+      - "traefik.http.services.open-webui.loadbalancer.server.port=8080"
+    volumes:
+      - "{{ composition_config }}/data:/app/backend/data"
+    networks:
+      - "{{ default_docker_network }}"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+networks:
+  "{{ default_docker_network }}":
+    external: true
