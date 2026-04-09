@@ -4,27 +4,34 @@
     name: ollama
     state: present
 
+- name: Ensure LaunchAgents directory exists
+  ansible.builtin.file:
+    path: "{{ ansible_facts.user_dir }}/Library/LaunchAgents"
+    state: directory
+    mode: "0755"
+
 - name: Ensure launchd plist is deployed
-  become: true
   ansible.builtin.template:
     src: launchd.plist.j2
-    dest: /Library/LaunchDaemons/com.awfulwoman.ollama.plist
-    owner: root
-    group: wheel
+    dest: "{{ ansible_facts.user_dir }}/Library/LaunchAgents/com.awfulwoman.ollama.plist"
     mode: "0644"
   register: ollama_plist
 
 - name: Unload service before reload on plist change # noqa: no-handler
-  become: true
-  ansible.builtin.command: launchctl unload /Library/LaunchDaemons/com.awfulwoman.ollama.plist
+  ansible.builtin.command: "launchctl unload {{ ansible_facts.user_dir }}/Library/LaunchAgents/com.awfulwoman.ollama.plist"
   when: ollama_plist.changed
   changed_when: false
   failed_when: false
 
 - name: Ensure service is loaded # noqa: no-handler
-  become: true
-  ansible.builtin.command: launchctl load /Library/LaunchDaemons/com.awfulwoman.ollama.plist
+  ansible.builtin.command: "launchctl load {{ ansible_facts.user_dir }}/Library/LaunchAgents/com.awfulwoman.ollama.plist"
   when: ollama_plist.changed
   register: launchctl_load
   changed_when: launchctl_load.rc == 0
   failed_when: false
+
+- name: Ensure service is running
+  ansible.builtin.command: launchctl list com.awfulwoman.ollama
+  register: launchctl_status
+  changed_when: false
+  failed_when: launchctl_status.rc != 0

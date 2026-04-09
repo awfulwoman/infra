@@ -7,6 +7,13 @@
   ansible.builtin.include_tasks: install-ubuntu.yaml
   when: ansible_facts['os_family'] == 'Debian'
 
+- name: Wait for ollama API to be available
+  ansible.builtin.wait_for:
+    host: 127.0.0.1
+    port: 11434
+    timeout: 30
+  when: system_ollama_models | length > 0
+
 - name: Pull ollama models
   ansible.builtin.command: "{{ system_ollama_bin }} pull {{ item }}"
   loop: "{{ system_ollama_models }}"
