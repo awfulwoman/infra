@@ -5,3 +5,17 @@
     name: ollama
     state: restarted
     daemon_reload: true
+
+- name: Reload ollama service
+  become: true
+  block:
+    - name: Unload service before reload on plist change
+      ansible.builtin.command: launchctl unload /Library/LaunchDaemons/com.awfulwoman.ollama.plist
+      changed_when: false
+      failed_when: false
+
+    - name: Load ollama service
+      ansible.builtin.command: launchctl load /Library/LaunchDaemons/com.awfulwoman.ollama.plist
+      register: launchctl_load
+      changed_when: launchctl_load.rc == 0
+      failed_when: false

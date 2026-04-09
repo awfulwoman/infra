@@ -13,7 +13,7 @@
     group: wheel
     mode: "0644"
   register: ollama_plist
-  notify: reload ollama service
+  notify: Reload ollama service
 
 - name: Ensure service is loaded
   become: true
