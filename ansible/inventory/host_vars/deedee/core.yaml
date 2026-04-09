@@ -89,3 +89,8 @@ repos:
     name: infra
   - repo: qwibitai/NanoClaw
     name: nanoclaw
+
+# -------------------------------------------------------------------
+# CLAUDE
+# -------------------------------------------------------------------
+system_claude_settings_path: "/fastpool/claude/settings"
