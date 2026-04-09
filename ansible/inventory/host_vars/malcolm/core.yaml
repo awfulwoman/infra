@@ -25,3 +25,10 @@ system_ollama_env:
 
 system_ollama_models:
   - gemma3:4b
+
+# -------------------------------------------------------------------
+# CLAUDE
+# -------------------------------------------------------------------
+system_claude_settings_path: "/opt/claude"
+system_claude_settings_group: "staff"
+system_claude_profile_file: ".zshrc"
