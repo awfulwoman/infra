@@ -1,3 +1,3 @@
 pre-commit==4.5.1
-ansible-dev-tools==26.2.0
+ansible-dev-tools==26.4.1
 ansible==13.4.0
