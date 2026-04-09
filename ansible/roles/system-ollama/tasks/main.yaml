@@ -1,0 +1,14 @@
+---
+- name: Install ollama (macOS)
+  ansible.builtin.include_tasks: install-macos.yaml
+  when: ansible_facts['os_family'] == 'Darwin'
+
+- name: Install ollama (Ubuntu/Debian)
+  ansible.builtin.include_tasks: install-ubuntu.yaml
+  when: ansible_facts['os_family'] == 'Debian'
+
+- name: Pull ollama models
+  ansible.builtin.command: "ollama pull {{ item }}"
+  loop: "{{ system_ollama_models }}"
+  register: result
+  changed_when: "'pulling' in result.stdout"
