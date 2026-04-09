@@ -163,3 +163,4 @@ cnames:
   - jellyseerr.{{ domain_name }}
   - translate.{{ domain_name }}
   - loki.{{ domain_name }}
+  - chat.{{ domain_name }}
