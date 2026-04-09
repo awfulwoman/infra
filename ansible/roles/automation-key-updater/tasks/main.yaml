@@ -1,5 +1,15 @@
----
+# -------------------------------------------------------------------
 # Manages periodic fetching of SSH public keys from GitHub
+# -------------------------------------------------------------------
+
+- name: Ensure bin path exists
+  become: true
+  ansible.builtin.file:
+    dest: "{{ automation_key_updater_script_path | dirname }}"
+    state: directory
+    owner: root
+    group: "{{ 'wheel' if ansible_facts['os_family'] == 'Darwin' else 'root' }}"
+    mode: "0755"
 
 - name: Ensure update script is installed
   become: true
@@ -7,14 +17,14 @@
     src: update-automation-keys.sh
     dest: "{{ automation_key_updater_script_path }}"
     owner: root
-    group: root
+    group: "{{ 'wheel' if ansible_facts['os_family'] == 'Darwin' else 'root' }}"
     mode: "0755"
 
 - name: Ensure GitHub SSH keys are fetched immediately
   become: true
-  ansible.builtin.command: "ssh-import-id-gh {{ automation_key_updater_username }}"
+  ansible.builtin.command: "{{ automation_key_updater_script_path }}"
   register: initial_run
-  changed_when: "'added' in initial_run.stdout"
+  changed_when: false # as it always runs regardless
 
 - name: Display initial run output
   ansible.builtin.debug:

@@ -4,17 +4,14 @@ Fetches SSH public keys from a GitHub user account and keeps them updated via cr
 
 ## Purpose
 
-Provides disaster recovery for SSH access by automatically synchronizing SSH
-keys from GitHub. If you lose local SSH keys, you can still access machines as
-long as you can push new keys to your GitHub account.
+Provides disaster recovery for SSH access by automatically synchronizing SSH keys from GitHub. If you lose local SSH keys, you can still access machines as long as you can push new keys to your GitHub account.
 
 ## Features
 
 - Fetches public keys from `https://github.com/<username>.keys`
 - Runs immediately on deployment
 - Schedules daily updates via cron (default: 3:15 AM)
-- Uses markers to safely manage GitHub keys without affecting other
-  authorized_keys entries
+- Uses markers to safely manage GitHub keys without affecting other authorized_keys entries
 
 ## Configuration
 

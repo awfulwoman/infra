@@ -6,6 +6,7 @@ set -euo pipefail
 
 GITHUB_USER="{{ automation_key_updater_username }}"
 TARGET_USER="{{ automation_key_updater_target_user }}"
+TARGET_GROUP="{{ automation_key_updater_target_group }}"
 COMMENT="github.com/${GITHUB_USER}"
 MARKER_START="# BEGIN GITHUB KEYS: ${GITHUB_USER}"
 MARKER_END="# END GITHUB KEYS: ${GITHUB_USER}"
@@ -39,6 +40,6 @@ sed -i.bak "/${MARKER_START}/,/${MARKER_END}/d" "${AUTHORIZED_KEYS}"
 } >> "${AUTHORIZED_KEYS}"
 
 # Set correct ownership
-chown -R "${TARGET_USER}:${TARGET_USER}" "${TARGET_HOME}/.ssh"
+chown -R "${TARGET_USER}:${TARGET_GROUP}" "${TARGET_HOME}/.ssh"
 
 echo "Successfully updated GitHub SSH keys for ${TARGET_USER}"

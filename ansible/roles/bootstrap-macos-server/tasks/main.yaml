@@ -1,0 +1,41 @@
+- name: Naming settings
+  ansible.builtin.debug:
+    msg: |
+      * SETTING: host_name
+        inventory_hostname: "{{ host_name }}"
+        As defined in the INFRA section of a hosts config. Until changes take effect this may be different from the machines actual hostname.
+
+- name: Naming facts
+  ansible.builtin.debug:
+    msg: |
+      * FACT: Inventory hostname
+        inventory_hostname: "{{ inventory_hostname }}"
+        Obtained from the Ansible inventory configuration. Can be different than the machine's hostname.
+      * FACT: Ansible's hostname
+        ansible_facts['hostname']: "{{ ansible_facts['hostname'] }}"
+        Obtained via gather_facts. Short version of the hostname.
+      * FACT: Ansible's FQDN
+        ansible_fqdn: "{{ ansible_facts['fqdn'] }}"
+        Obtained via gather_facts. Long version of the hostname, including the domain.
+      * FACT: Ansible connection address
+        ansible_host: "{{ ansible_host }}"
+        The IP address or hostname used to connect to the machine. Can be different than the machine's hostname.
+      * FACT: Default IP address
+        ansible_default_ipv4.address: "{{ ansible_default_ipv4.address }}"
+        The default IPv4 address of the machine, used for network communication.
+
+- name: Ensure Homebrew is installed
+  ansible.builtin.stat:
+    path: /opt/homebrew/bin/brew
+  register: homebrew_check
+
+# - name: Installing Homebrew
+#   ansible.builtin.shell:
+#     cmd: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+#     creates: /opt/homebrew/bin/brew
+#   when: not homebrew_check.stat.exists
+
+- name: Ensure Homebrew formulae are installed
+  community.general.homebrew:
+    name: "{{ bootstrap_macos_server_homebrew_formulae }}"
+    state: present
