@@ -1,0 +1,74 @@
+# code: language=ansible
+
+# ----------------------------
+# Core tasks
+# ----------------------------
+
+- name: "Create compose file"
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ composition_root }}/docker-compose.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"
+
+- name: "Create .env file"
+  ansible.builtin.template:
+    src: environment_vars.j2
+    dest: "{{ composition_root }}/.environment_vars"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"
+
+# ----------------------------
+# Specific tasks
+# ----------------------------
+
+- name: Create directories
+  ansible.builtin.file:
+    path: "{{ composition_config }}/{{ dir_item }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0775"
+  loop_control:
+    loop_var: dir_item
+  loop:
+    - data
+    - searxng
+
+- name: Copy SearXNG settings
+  ansible.builtin.template:
+    src: searxng-settings.yml.j2
+    dest: "{{ composition_config }}/searxng/settings.yml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"
+
+- name: Copy SearXNG limiter config
+  ansible.builtin.copy:
+    content: |
+      [botdetection.ip_limit]
+      link_token = true
+    dest: "{{ composition_config }}/searxng/limiter.toml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"
+
+- name: Run Configure DNS role
+  ansible.builtin.include_role:
+    name: "network-register-subdomain"
+  vars:
+    configure_dns_subdomains:
+      - vane
+
+# ----------------------------
+# Start composition
+# ----------------------------
+
+- name: Start Docker Compose project
+  community.docker.docker_compose_v2:
+    project_src: "{{ composition_root }}"
+    state: present
+    build: always
+    remove_orphans: true
