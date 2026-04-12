@@ -27,7 +27,8 @@ all:
         host-test-router:
 
     # -------------------------------------------------------------------
-    # Home Automation
+    # HOME AUTOMATION
+    # Hosts running home automation services
     # -------------------------------------------------------------------
     homeautomation:
       hosts:
