@@ -1,28 +1,7 @@
-- name: Install NFS packages
-  become: true
-  ansible.builtin.apt:
-    name:
-      - nfs-common
-    state: present
+- name: Mount NFS shares (macOS)
+  ansible.builtin.include_tasks: mount-macos.yaml
+  when: ansible_facts['os_family'] == 'Darwin'
 
-
-- name: Attempt to mount NFS shares
-  block:
-    - name: Mount remote NFS volumes
-      become: true
-      ansible.posix.mount:
-        src: "{{ nfs_mount.remote_server }}:{{ nfs_mount.remote_path }}"
-        path: "{{ nfs_mount.local_path }}"
-        state: mounted
-        opts: "{{ nfs_mount.nfsclient_mount_options | default('defaults,_netdev,x-systemd.after=network-online.target') }}"
-        fstype: nfs
-        boot: true
-      loop: "{{ nfs_mounts }}"
-      loop_control:
-        loop_var: nfs_mount
-      when: nfs_mounts is defined
-
-  rescue:
-    - name: Debug remote mount failure
-      ansible.builtin.debug:
-        msg: "Could not mount {{ nfs_mount.remote_server }}:{{ nfs_mount.remote_path }}. Non-fatal. Proceeding."
+- name: Install packages and mount NFS shares (Ubuntu/Debian)
+  ansible.builtin.include_tasks: mount-ubuntu.yaml
+  when: ansible_facts['os_family'] == 'Debian'
