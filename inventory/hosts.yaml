@@ -119,6 +119,7 @@ all:
         unmanaged-phone-pixel7a:
         unmanaged-printer-epson-xp610:
         unmanaged-reader-kindle:
+        unmanaged-reader-kobo:
         unmanaged-robot-derek:
         unmanaged-router-opensense:
         unmanaged-satellite-apple-homepod-mini-bedroom:
