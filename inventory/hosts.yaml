@@ -1,9 +1,10 @@
 all:
+
+  # -------------------------------------------------------------------
+  # UNASSIGNED HOSTS
+  # Only hosts not assigned to any group should need to be lsited here
+  # -------------------------------------------------------------------
   # hosts:
-    # -------------------------------------------------------------------
-    # UNASSIGNED
-    # Only hosts not assigned to any group should need to be lsited here
-    # -------------------------------------------------------------------
 
   children:
 
