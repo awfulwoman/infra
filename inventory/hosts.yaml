@@ -1,87 +1,41 @@
 all:
-  hosts:
-    host-albion:
-    host-backups:
-    host-belinda:
-    host-deedee:
-    host-homebrain:
-    host-malcolm:
-    host-mba2011:
-    host-pikvm:
-    host-samson:
-    host-sites:
-    host-storage:
-    host-test-router:
-    unmanaged-ap-bedroom:
-    unmanaged-ap-livingroom:
-    unmanaged-ap-pantry:
-    unmanaged-av-appletv:
-    unmanaged-av-chromecast:
-    unmanaged-custom-ir-controller:
-    unmanaged-custom-projector-controller:
-    unmanaged-custom-weather-station:
-    unmanaged-laptop-lenovo-work-GM03H3GT:
-    unmanaged-laptop-macbook-air-intel-11inch:
-    unmanaged-laptop-macbook-air-intel-13inch:
-    unmanaged-laptop-macbook-air-m3-16gb:
-    unmanaged-laptop-macbook-air-m4-16gb-work-FXHP0C5935:
-    unmanaged-phone-iphone12:
-    unmanaged-phone-iphone13:
-    unmanaged-phone-oneplus6:
-    unmanaged-phone-pixel7a:
-    unmanaged-printer-epson-xp610:
-    unmanaged-reader-kindle:
-    unmanaged-robot-derek:
-    unmanaged-router-opensense:
-    unmanaged-satellite-apple-homepod-mini-bedroom:
-    unmanaged-satellite-apple-homepod-mini-livingroom:
-    unmanaged-satellite-homeassistant-voice-bedroom:
-    unmanaged-satellite-homeassistant-voice-kitchen:
-    unmanaged-satellite-homeassistant-voice-livingroom:
-    unmanaged-tablet-ipad-bedroom:
-    unmanaged-tablet-ipad-mini:
-    unmanaged-tablet-remarkable:
-    unmanaged-watch-apple-series6:
-    vagrant-wrapper:
-
+  # hosts:
+    # -------------------------------------------------------------------
+    # UNASSIGNED
+    # Only hosts not assigned to any group should need to be lsited here
+    # -------------------------------------------------------------------
 
   children:
+
     # -------------------------------------------------------------------
-    # GROUPS
+    # MANAGED INFRA
+    # Everything that is managed by Ansible is listed here
     # -------------------------------------------------------------------
-
-    # Vagrant Wrappers
-    vagrant:
-      hosts:
-        vagrant-wrapper:
-
-    # Unmanaged
-    unmanaged:
-      hosts:
-        unmanaged-av-appletv:
-        unmanaged-av-chromecast:
-
-    # Infrastructure
     infra:
       hosts:
-        host-homebrain:
+        host-albion:
         host-backups:
-        host-storage:
-        host-sites:
-        host-samson:
-        # host-albion:
-        host-deedee:
-        host-test-router:
-        host-pikvm:
         host-belinda:
+        host-deedee:
+        host-homebrain:
         host-malcolm:
+        host-pikvm:
+        host-samson:
+        host-sites:
+        host-storage:
+        host-test-router:
 
+    # -------------------------------------------------------------------
     # Home Automation
+    # -------------------------------------------------------------------
     homeautomation:
       hosts:
         host-homebrain:
 
-    # Hosts that use ZFS in any way
+    # -------------------------------------------------------------------
+    # ZFS
+    # Hosts that use ZFS
+    # -------------------------------------------------------------------
     zfs:
       hosts:
         host-storage:
@@ -93,7 +47,10 @@ all:
         host-sites:
         host-belinda:
 
-    # Hosts acting as replication sources/clients
+    # -------------------------------------------------------------------
+    # ZFS REPLICATION SOURCES
+    # Hosts acting as replication sources
+    # -------------------------------------------------------------------
     zfs-backup-clients:
       hosts:
         host-storage:
@@ -102,18 +59,73 @@ all:
         host-sites:
         host-samson:
 
-    # Hosts acting as backup/replication server(s)
+    # -------------------------------------------------------------------
+    # ZFS REPLICATION DESTINATIONS
+    # Hosts acting as replication destination
+    # -------------------------------------------------------------------
     zfs-backup-servers:
       hosts:
         host-backups:
         host-belinda:
 
-    # Offsite replication destination
+    # -------------------------------------------------------------------
+    # ZFS REPLICATION DESTINATIONS - OFFSITE
+    # Hosts acting as offsite replication destination
+    # NOTE: the only offsite host died - needs replacing
+    # -------------------------------------------------------------------
     # zfs-backup-offsite:
     #   hosts:
     #     host-albion:
 
+    # -------------------------------------------------------------------
+    # PUBLIC SERVERS
     # Hosts that static sites can be deployed to
+    # -------------------------------------------------------------------
     sitedeployment:
       hosts:
         host-sites:
+
+    # -------------------------------------------------------------------
+    # VAGRANT HOSTS
+    # Vagrant hosts, commonly used for development
+    # -------------------------------------------------------------------
+    vagrant:
+      hosts:
+        vagrant-wrapper:
+
+    # -------------------------------------------------------------------
+    # UNMANAGED DEVICES
+    # Known stable devices that require DNS and static IP addresses
+    # -------------------------------------------------------------------
+    unmanaged:
+      hosts:
+        unmanaged-ap-bedroom:
+        unmanaged-ap-livingroom:
+        unmanaged-ap-pantry:
+        unmanaged-av-appletv:
+        unmanaged-av-chromecast:
+        unmanaged-custom-ir-controller:
+        unmanaged-custom-projector-controller:
+        unmanaged-custom-weather-station:
+        unmanaged-laptop-lenovo-work-GM03H3GT:
+        unmanaged-laptop-macbook-air-intel-11inch:
+        unmanaged-laptop-macbook-air-intel-13inch:
+        unmanaged-laptop-macbook-air-m3-16gb:
+        unmanaged-laptop-macbook-air-m4-16gb-work-FXHP0C5935:
+        unmanaged-phone-iphone12:
+        unmanaged-phone-iphone13:
+        unmanaged-phone-oneplus6:
+        unmanaged-phone-pixel7a:
+        unmanaged-printer-epson-xp610:
+        unmanaged-reader-kindle:
+        unmanaged-robot-derek:
+        unmanaged-router-opensense:
+        unmanaged-satellite-apple-homepod-mini-bedroom:
+        unmanaged-satellite-apple-homepod-mini-livingroom:
+        unmanaged-satellite-homeassistant-voice-bedroom:
+        unmanaged-satellite-homeassistant-voice-kitchen:
+        unmanaged-satellite-homeassistant-voice-livingroom:
+        unmanaged-tablet-ipad-bedroom:
+        unmanaged-tablet-ipad-mini:
+        unmanaged-tablet-remarkable:
+        unmanaged-watch-apple-series6:
