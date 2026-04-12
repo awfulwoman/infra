@@ -92,6 +92,7 @@ kvmd:
                 - ["#Storage", server5_led, server5_switch|Switch]
                 - ["#Router", server6_led, server6_switch|Switch]
                 - ["#Backups", server4_led, server4_switch|Switch]
+                - ["#Mac Mini M4 16GB", server3_led, server3_switch|Switch]
                 #- ["#Server 2", server1_led, server1_switch|Switch]
                 #- ["#Server 3", server2_led, server2_switch|Switch]
                 #- ["#Server 4", server3_led, server3_switch|Switch]

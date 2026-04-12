@@ -22,6 +22,12 @@ host_description: "Mac Mini M4 16GB"
 # -------------------------------------------------------------------
 system_ollama_env:
   OLLAMA_HOST: "0.0.0.0:11434"
+  OLLAMA_NO_CLOUD: 1
+  OLLAMA_NUM_PARALLEL: 4
+  OLLAMA_MAX_LOADED_MODELS: 1
+  OLLAMA_ORIGINS: "*"
+  OLLAMA_KEEP_ALIVE: -1
+  OLLAMA_KV_CACHE_TYPE: q8_0
 
 system_ollama_models:
   - gemma3:4b

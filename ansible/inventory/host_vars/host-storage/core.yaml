@@ -80,6 +80,8 @@ zfs:
     datasets:
       shared:
         datasets:
+          models:
+            policy: high
           photos:
             policy: critical
           syncthing:
@@ -135,6 +137,8 @@ zfs_nfs_exports:
   - dataset: slowpool/shared/media
     options: "rw=100.64.0.0/10:192.168.1.0/24:192.168.122.0/24,anonuid=1000,anongid=1000,no_root_squash,all_squash"
   - dataset: slowpool/charlie/photos
+    options: "rw=100.64.0.0/10:192.168.1.0/24:192.168.122.0/24,anonuid=1000,anongid=1000,no_root_squash,all_squash"
+  - dataset: slowpool/shared/models
     options: "rw=100.64.0.0/10:192.168.1.0/24:192.168.122.0/24,anonuid=1000,anongid=1000,no_root_squash,all_squash"
 
 # -------------------------------------------------------------------
