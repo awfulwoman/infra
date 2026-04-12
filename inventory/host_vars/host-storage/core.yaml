@@ -1,19 +1,12 @@
 # -------------------------------------------------------------------
-# ANSIBLE
-# -------------------------------------------------------------------
-ansible_host: 192.168.1.116 # How to access the host
-ansible_user: "{{ vault_server_username }}" # Account to connect as
-ansible_become_password: "{{ vault_password }}" # Account password (for sudo)
-
-# -------------------------------------------------------------------
 # IDENTITY
 # -------------------------------------------------------------------
 host_type: baremetal
 host_name: storage
 host_description: "Central storage device"
-host_city: ber
-host_location: xberg
-host_pfqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}"
+host_region: ber
+host_site: xberg
+host_pfqdn: "{{ host_name }}.{{ host_site }}.{{ host_region }}"
 host_fqdn: "{{ host_pfqdn }}.{{ domain_name }}"
 
 # -------------------------------------------------------------------
@@ -22,6 +15,13 @@ host_fqdn: "{{ host_pfqdn }}.{{ domain_name }}"
 host_ipv4: 192.168.1.116
 host_primary_interface: "enp3s0"
 host_ipv4_subnet: 24
+
+# -------------------------------------------------------------------
+# ANSIBLE
+# -------------------------------------------------------------------
+ansible_host: "{{ host_ipv4 }}" # How to access the host
+ansible_user: "{{ vault_server_username }}" # Account to connect as
+ansible_become_password: "{{ vault_password }}" # Account password (for sudo)
 
 # -------------------------------------------------------------------
 # UBUNTUPRO

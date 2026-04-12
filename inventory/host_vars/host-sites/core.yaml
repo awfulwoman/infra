@@ -1,20 +1,29 @@
-ansible_host: awfulwoman.com
-ansible_user: "{{ vault_server_username }}"
-
+# -------------------------------------------------------------------
+# IDENTITY
+# -------------------------------------------------------------------
 host_type: virtual
 host_name: sites
-host_city: hetzner
-host_location: cloud
-host_ipv4: 188.245.37.81
-host_pfqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}"
+host_region: hetzner
+host_site: cloud
+host_pfqdn: "{{ host_name }}.{{ host_site }}.{{ host_region }}"
 host_fqdn: "{{ host_pfqdn }}.{{ domain_name }}"
 host_description: "Hetzner cloud server for public services"
-
-bootstrap_ubuntu_timezone: "Europe/Berlin"
 
 # -------------------------------------------------------------------
 # NETWORK
 # -------------------------------------------------------------------
+host_ipv4: 188.245.37.81
+
+# -------------------------------------------------------------------
+# ANSIBLE
+# -------------------------------------------------------------------
+ansible_host: awfulwoman.com
+ansible_user: "{{ vault_server_username }}"
+
+
+bootstrap_ubuntu_timezone: "Europe/Berlin"
+
+
 # -------------------------------------------------------------------
 # ZFS
 # -------------------------------------------------------------------

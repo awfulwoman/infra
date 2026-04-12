@@ -1,36 +1,25 @@
 all:
   hosts:
-    homebrain:
+    host-homebrain:
     host-backups:
     host-storage:
-    sites:
+    host-sites:
     host-mba2011:
     # host-albion:
-    deedee:
-    samson:
-    testrouter:
-    pikvm:
-    belinda:
-    malcolm:
+    host-deedee:
+    host-samson:
+    host-test-router:
+    host-pikvm:
+    host-belinda:
+    host-malcolm:
     vagrant-wrapper:
-    appletv:
-      host_type: baremetal
-      host_name: appletv
-      host_city: ber
-      host_location: xberg
-      host_ipv4: 192.168.1.221
-      host_pfqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}"
-      host_fqdn: "{{ host_pfqdn }}.{{ domain_name }}"
-    chromecast:
-      host_type: baremetal
-      host_name: chromecast
-      host_city: ber
-      host_location: xberg
-      host_ipv4: 192.168.1.221
-      host_pfqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}"
-      host_fqdn: "{{ host_pfqdn }}.{{ domain_name }}"
+    unmanaged-appletv:
+    unmanaged-chromecast:
 
   children:
+    # -------------------------------------------------------------------
+    # GROUPS
+    # -------------------------------------------------------------------
 
     # Vagrant Wrappers
     vagrant:
@@ -40,55 +29,55 @@ all:
     # Devices
     devices:
       hosts:
-        appletv:
-        chromecast:
+        device-appletv:
+        device-chromecast:
 
     # Infrastructure
     infra:
       hosts:
-        homebrain:
+        host-homebrain:
         host-backups:
         host-storage:
-        sites:
-        samson:
+        host-sites:
+        host-samson:
         # host-albion:
-        deedee:
-        # testrouter:
-        pikvm:
-        belinda:
-        malcolm:
+        host-deedee:
+        host-test-router:
+        host-pikvm:
+        host-belinda:
+        host-malcolm:
 
     # Home Automation
     homeautomation:
       hosts:
-        homebrain:
+        host-homebrain:
 
     # Hosts that use ZFS in any way
     zfs:
       hosts:
         host-storage:
-        homebrain:
-        deedee:
+        host-homebrain:
+        host-deedee:
         host-backups:
         # host-albion: # Has died
-        samson:
-        sites:
-        belinda:
+        host-samson:
+        host-sites:
+        host-belinda:
 
     # Hosts acting as replication sources/clients
     zfs-backup-clients:
       hosts:
         host-storage:
-        homebrain:
-        deedee:
-        sites:
-        samson:
+        host-homebrain:
+        host-deedee:
+        host-sites:
+        host-samson:
 
     # Hosts acting as backup/replication server(s)
     zfs-backup-servers:
       hosts:
         host-backups:
-        belinda:
+        host-belinda:
 
     # Offsite replication destination
     # zfs-backup-offsite:
@@ -98,4 +87,4 @@ all:
     # Hosts that static sites can be deployed to
     sitedeployment:
       hosts:
-        sites:
+        host-sites:

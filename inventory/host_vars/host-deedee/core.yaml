@@ -1,25 +1,26 @@
 # -------------------------------------------------------------------
-# ANSIBLE
-# -------------------------------------------------------------------
-ansible_host: 192.168.1.2
-ansible_user: "{{ vault_server_username }}"
-
-# -------------------------------------------------------------------
 # IDENTITY
 # -------------------------------------------------------------------
 host_type: baremetal
 host_name: deedee
-host_city: ber
-host_location: xberg
-host_ipv4: 192.168.1.2
-host_pfqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}"
+host_region: ber
+host_site: xberg
+host_pfqdn: "{{ host_name }}.{{ host_site }}.{{ host_region }}"
 host_fqdn: "{{ host_pfqdn }}.{{ domain_name }}"
 host_description: "Runs infrastructure tasks"
 
 # -------------------------------------------------------------------
-# UBUNTUPRO
+# NETWORK
 # -------------------------------------------------------------------
-ubuntupro_attach: true
+host_ipv4: 192.168.1.2
+host_ipv4_subnet: 24
+host_primary_interface: "eth0"
+
+# -------------------------------------------------------------------
+# ANSIBLE
+# -------------------------------------------------------------------
+ansible_host: "{{ host_ipv4 }}"
+ansible_user: "{{ vault_server_username }}"
 
 # -------------------------------------------------------------------
 # HARDWARE
@@ -29,9 +30,9 @@ raspberry_pi_bluetooth: false
 raspberry_pi_boot_config_location: /boot/firmware/config.txt
 
 # -------------------------------------------------------------------
-# NETWORK
+# UBUNTUPRO
 # -------------------------------------------------------------------
-host_primary_interface: "eth0"
+ubuntupro_attach: true
 
 # -------------------------------------------------------------------
 # ZFS

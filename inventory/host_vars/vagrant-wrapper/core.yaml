@@ -10,8 +10,8 @@ ansible_user: vagrant
 # -------------------------------------------------------------------
 host_type: virtual
 host_name: vagrant-wrapper
-host_city: local
-host_location: dev
-host_pfqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}"
+host_region: local
+host_site: dev
+host_pfqdn: "{{ host_name }}.{{ host_site }}.{{ host_region }}"
 host_fqdn: "{{ host_pfqdn }}.{{ domain_name }}"
 host_description: "Local Vagrant development VM"

@@ -49,7 +49,7 @@
 #   vars:
 #     configure_dns_subdomains:
 #       - homeassistant
-#       - whoami.{{ ansible_hostname }}
+#       - whoami.{{ host_name }}
 
 # ----------------------------
 # Start composition

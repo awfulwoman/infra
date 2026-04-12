@@ -3,17 +3,24 @@
 # -------------------------------------------------------------------
 host_type: baremetal
 host_name: belinda
-host_city: ber
-host_location: kberg
-host_ipv4: 192.168.1.117
-host_pfqdn: "{{ host_name }}.{{ host_location }}.{{ host_city }}"
+host_region: ber
+host_site: kberg
+host_pfqdn: "{{ host_name }}.{{ host_site }}.{{ host_region }}"
 host_fqdn: "{{ host_pfqdn }}.{{ domain_name }}"
 host_description: "Raspberry Pi 5 backup server"
 
 # -------------------------------------------------------------------
+# NETWORK
+# -------------------------------------------------------------------
+host_ipv4: 192.168.1.117
+host_primary_interface: "eth0"
+host_ipv4_subnet: 24
+tailscale_exit_node: false
+
+# -------------------------------------------------------------------
 # ANSIBLE
 # -------------------------------------------------------------------
-ansible_host: belinda # TODO: Replace this with `host_fqdn` once DNS infra is up and running
+ansible_host: "{{ host_ipv4 }}" # TODO: Replace this with `host_fqdn` once DNS infra is up and running
 ansible_user: "{{ vault_server_username }}"
 ansible_become_password: "{{ vault_password }}"
 
@@ -39,12 +46,6 @@ raspberry_pi_config_overrides:
   - "dtparam=pciex1"
   - "dtparam=pciex1_gen=3" # https://docs.radxa.com/en/accessories/storage/penta-sata-hat/penta-for-rpi5
 
-# -------------------------------------------------------------------
-# NETWORK
-# -------------------------------------------------------------------
-host_primary_interface: "eth0"
-host_ipv4_subnet: 24
-tailscale_exit_node: false
 
 # -------------------------------------------------------------------
 # ZFS
