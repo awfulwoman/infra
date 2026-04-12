@@ -8,13 +8,13 @@ system_claude_channel: "latest"
 # Ensure PATH is set in shell profile
 system_claude_ensure_path: true
 
-# Shell profile file to update (default: .bashrc for Ubuntu)
-system_claude_profile_file: ".bashrc"
+# Shell profile file to update (set per OS in tasks/main.yaml)
+system_claude_profile_file: "{{ '.zshrc' if ansible_facts['os_family'] == 'Darwin' else '.bashrc' }}"
 
 # Directory for Claude settings and config
 system_claude_settings_path: "{{ ansible_facts.user_dir }}/.config/claude"
 
 # Group owner for the settings directory
 # Ubuntu: matches ansible_user (users have an eponymous group)
-# macOS: override to "staff" in host_vars
+# macOS: set to "staff" in host_vars
 system_claude_settings_group: "{{ ansible_user }}"
