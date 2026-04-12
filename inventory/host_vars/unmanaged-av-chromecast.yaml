@@ -12,4 +12,5 @@ host_description: Living Room Chromecast Audio
 # -------------------------------------------------------------------
 # NETWORK
 # -------------------------------------------------------------------
-host_ipv4: 192.168.1.221
+host_ipv4: false
+host_mac: false
