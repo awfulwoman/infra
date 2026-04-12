@@ -131,5 +131,6 @@ all:
         unmanaged-satellite-homeassistant-voice-livingroom:
         unmanaged-tablet-ipad-bedroom:
         unmanaged-tablet-ipad-mini:
+        unmanaged-tablet-ipad-work:
         unmanaged-tablet-remarkable:
         unmanaged-watch-apple-series6:
