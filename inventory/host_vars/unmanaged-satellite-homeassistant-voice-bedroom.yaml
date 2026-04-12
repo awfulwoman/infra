@@ -1,0 +1,16 @@
+# -------------------------------------------------------------------
+# IDENTITY
+# -------------------------------------------------------------------
+host_type: unmanaged
+host_name: satellite-homeassistant-voice-bedroom
+host_region: ber
+host_site: xberg
+host_pfqdn: "{{ host_name }}.{{ host_site }}.{{ host_region }}"
+host_fqdn: "{{ host_pfqdn }}.{{ domain_name }}"
+host_description: Bedroom HA Voice
+
+# -------------------------------------------------------------------
+# NETWORK
+# -------------------------------------------------------------------
+host_ipv4: false
+host_mac: false

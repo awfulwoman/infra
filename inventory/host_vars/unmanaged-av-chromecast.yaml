@@ -1,0 +1,15 @@
+# -------------------------------------------------------------------
+# IDENTITY
+# -------------------------------------------------------------------
+host_type: unmanaged
+host_name: av-chromecast
+host_region: ber
+host_site: xberg
+host_pfqdn: "{{ host_name }}.{{ host_site }}.{{ host_region }}"
+host_fqdn: "{{ host_pfqdn }}.{{ domain_name }}"
+host_description: Living Room Chromecast Audio
+
+# -------------------------------------------------------------------
+# NETWORK
+# -------------------------------------------------------------------
+host_ipv4: 192.168.1.221
