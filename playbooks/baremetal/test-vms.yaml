@@ -14,7 +14,7 @@
       ansible.builtin.reboot:
 
 - name: Manage VMs via Terraform
-  hosts: deedee
+  hosts: host-deedee
   roles:
     - role: infra-private-resources
 

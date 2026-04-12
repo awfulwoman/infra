@@ -1,0 +1,10 @@
+- name: samson development playbook
+  hosts: host-samson
+  roles:
+    - role: system-sshkey
+    - role: system-repos
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:

@@ -1,0 +1,9 @@
+- name: Build infra automation
+  hosts: host-deedee
+  roles:
+    - role: automation-infra
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:

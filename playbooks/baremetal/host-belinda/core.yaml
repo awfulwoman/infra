@@ -1,0 +1,23 @@
+- name: Belinda the Backup Server
+  hosts: host-belinda
+  roles:
+    - role: bootstrap-ubuntu-server
+    - role: network-netplan
+    - role: hardware-raspberry-pi
+    - role: system-zfs
+    - role: system-zfs-policy
+    - role: backups-zfs-server
+    - role: composition-container-management
+    - role: composition-reverseproxy
+    - role: composition-zfs-api
+    - role: client-nut
+    - role: infothrill.nullmailer
+      become: true
+    - role: monitoring-healthchecksio
+    - role: system-promtail
+      tags: promtail
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:

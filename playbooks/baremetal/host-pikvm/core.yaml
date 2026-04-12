@@ -1,0 +1,5 @@
+- name: Basic PiKVM stuff
+  hosts: host-pikvm
+  roles:
+    - role: system-pikvm
+    - role: monitoring-healthchecksio

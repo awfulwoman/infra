@@ -1,0 +1,30 @@
+- name: DeeDee - we're off to Yonkers
+  hosts: host-deedee
+  roles:
+    - role: hardware-raspberry-pi
+    - role: bootstrap-ubuntu-server
+    - role: network-netplan
+    - role: infothrill.nullmailer
+      become: true
+    - role: system-sshkey
+    - role: system-repos
+    - role: system-zfs
+    - role: infra-public-resources
+    - role: infra-private-resources
+    - role: infra-named
+    - role: infra-certbot
+    - role: system-claude
+    - role: composition-reverseproxy
+    - role: composition-container-management
+    - role: composition-zfs-api
+    - role: backups-zfs-client
+    - role: script-share-personal-site
+    - role: monitoring-healthchecksio
+    - role: automation-infra
+    - role: system-promtail
+      tags: promtail
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:

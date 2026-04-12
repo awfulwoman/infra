@@ -1,0 +1,9 @@
+- name: DeeDee development playbook
+  hosts: host-deedee
+  roles:
+    - role: system-zfs-policy
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:

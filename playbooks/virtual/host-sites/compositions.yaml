@@ -1,0 +1,13 @@
+- name: Out on the internet server
+  hosts: host-sites
+  roles:
+    - role: composition-reverseproxy
+    - role: composition-container-management
+    - role: composition-pixelfed
+    - role: composition-awfulwoman
+    - role: composition-zfs-api
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:

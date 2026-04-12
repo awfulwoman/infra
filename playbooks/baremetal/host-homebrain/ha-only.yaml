@@ -1,0 +1,12 @@
+- name: Home Automation Server NEW
+  hosts: host-homebrain
+  roles:
+    - role: composition-homeassistant
+    - role: composition-matter
+    - role: composition-mqtt
+    - role: composition-zigbee2mqtt
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:

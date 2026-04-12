@@ -1,0 +1,9 @@
+- name: Run certbot role
+  hosts: host-deedee
+  roles:
+    - role: infra-certbot
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:
