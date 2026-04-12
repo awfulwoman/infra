@@ -115,6 +115,8 @@ all:
         unmanaged-laptop-macbook-air-intel-13inch:
         unmanaged-laptop-macbook-air-m3-16gb:
         unmanaged-laptop-macbook-air-m4-16gb-work-FXHP0C5935:
+        unmanaged-laptop-macbook-pro-intel:
+        unmanaged-nas-bunny:
         unmanaged-phone-iphone12:
         unmanaged-phone-iphone13:
         unmanaged-phone-oneplus6:
