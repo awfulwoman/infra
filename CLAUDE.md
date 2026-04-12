@@ -18,20 +18,20 @@ This is a personal home infrastructure management repository using Infrastructur
 
 ```bash
 # Install Ansible Galaxy dependencies
-ansible-galaxy install -r ansible/meta/requirements.yaml
+ansible-galaxy install -r meta/requirements.yaml
 ```
 
 Playbooks are arranged to be cascading:
 
 ```bash
 # Run all Core playbooks
-ansible-playbook ansible/playbooks/core.yaml
+ansible-playbook playbooks/core.yaml
 
 # Run all Core bare-metal playbooks
-ansible-playbook ansible/playbooks/baremetal/core.yaml
+ansible-playbook playbooks/baremetal/core.yaml
 
 # Run only the Core host-storage playbook
-ansible-playbook ansible/playbooks/baremetal/host-storage/core.yaml
+ansible-playbook playbooks/baremetal/host-storage/core.yaml
 ```
 
 ## Github
@@ -41,7 +41,7 @@ ansible-playbook ansible/playbooks/baremetal/host-storage/core.yaml
 
 ## Architecture
 
-### Ansible (`ansible/`)
+### Ansible
 
 The primary configuration management tool. Structure:
 
@@ -70,7 +70,7 @@ The primary configuration management tool. Structure:
 
 **Ansible configuration** (`ansible.cfg`):
 
-- Inventory: `./ansible/inventory/hosts.yaml`
+- Inventory: `./inventory/hosts.yaml`
 - Galaxy roles: `/opt/ansible/galaxy/roles`
 - Galaxy collections: `/opt/ansible/galaxy/collections`
 - Vault identity: `beanpod`
@@ -93,7 +93,7 @@ Devices must define substitutions for secrets since secrets can't be used inside
 
 ### Terraform
 
-Located in `ansible/roles/infra-*/templates/` for provisioning infrastructure:
+Located in `roles/infra-*/templates/` for provisioning infrastructure:
 
 - **Local**: QEMU/libvirt virtual machines
 - **Public**: Hetzner Cloud (servers, floating IPs, DNS, firewalls)

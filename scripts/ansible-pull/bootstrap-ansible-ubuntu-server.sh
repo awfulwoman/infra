@@ -100,15 +100,15 @@ echo "UPDATE ANSIBLE GALAXY ROLES"
 echo "************************************"
 sudo mkdir -p $ANSIBLE_ROLES_PATH
 sudo chown -R awful:awful $ANSIBLE_ROLES_PATH
-ansible-galaxy install -r $ANSIBLE_INFRA_DIR/ansible/meta/requirements.yaml -p $ANSIBLE_ROLES_PATH
+ansible-galaxy install -r $ANSIBLE_INFRA_DIR/meta/requirements.yaml -p $ANSIBLE_ROLES_PATH
 
 echo " "
 echo "UPDATE ANSIBLE GALAXY COLLECTIONS"
 echo "************************************"
 sudo mkdir -p $ANSIBLE_COLLECTIONS_PATH
 sudo chown -R awful:awful $ANSIBLE_COLLECTIONS_PATH
-ansible-galaxy collection install -r $ANSIBLE_INFRA_DIR/ansible/meta/requirements.yaml -p $ANSIBLE_COLLECTIONS_PATH
+ansible-galaxy collection install -r $ANSIBLE_INFRA_DIR/meta/requirements.yaml -p $ANSIBLE_COLLECTIONS_PATH
 
 
 # Run Ansible Pull
-ansible-pull -U $ANSIBLEPULL_REPO_URL "ansible/playbooks/$ANSIBLEPULL_PLAYBOOK.yaml" --vault-password-file $ANSIBLE_VAULT_PASSWORD_FILE
+ansible-pull -U $ANSIBLEPULL_REPO_URL "playbooks/$ANSIBLEPULL_PLAYBOOK.yaml" --vault-password-file $ANSIBLE_VAULT_PASSWORD_FILE

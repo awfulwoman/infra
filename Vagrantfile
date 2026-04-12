@@ -53,16 +53,16 @@ Vagrant.configure("2") do |config|
   # Install galaxy roles first
   config.vm.provision "shell", privileged: false, inline: <<-SHELL
     cd #{workspace_path}
-    ansible-galaxy install -r ansible/meta/requirements.yaml --roles-path=/opt/ansible/galaxy/roles
+    ansible-galaxy install -r meta/requirements.yaml --roles-path=/opt/ansible/galaxy/roles
   SHELL
 
   # Provision using Ansible
   config.vm.provision "shell", privileged: false, inline: <<-SHELL
     cd #{workspace_path}
-    export ANSIBLE_ROLES_PATH=#{workspace_path}/ansible/roles:/opt/ansible/galaxy/roles
+    export ANSIBLE_ROLES_PATH=#{workspace_path}/roles:/opt/ansible/galaxy/roles
     export VAGRANT_WORKSPACE_PATH=#{workspace_path}
-    ansible-playbook ansible/playbooks/virtual/vagrant-wrapper/core.yaml \
-      -i ansible/inventory/hosts.yaml \
+    ansible-playbook playbooks/virtual/vagrant-wrapper/core.yaml \
+      -i inventory/hosts.yaml \
       --limit=vagrant-wrapper
   SHELL
 

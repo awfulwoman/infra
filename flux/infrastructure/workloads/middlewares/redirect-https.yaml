@@ -1,9 +1,0 @@
-apiVersion: traefik.containo.us/v1alpha1
-kind: Middleware
-metadata:
-  name: redirect-https
-  namespace: flux-system
-spec:
-  redirectScheme:
-    scheme: https
-    permanent: true

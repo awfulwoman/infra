@@ -4,6 +4,7 @@ repos:
     hooks:
     - id: check-yaml
       args: ['--unsafe']
+      exclude: ^roles/.*/templates/.*\.yaml$
     - id: end-of-file-fixer
     - id: trailing-whitespace
     - id: detect-private-key

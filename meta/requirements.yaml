@@ -1,0 +1,25 @@
+# https://www.jeffgeerling.com/blog/2020/ansible-best-practices-using-project-local-collections-and-roles
+# ansible-galaxy install -r meta/requirements.yaml
+# ansible-galaxy collection install -r meta/requirements.yaml
+roles:
+  - name: weareinteractive.environment
+    version: 1.5.0
+  - name: xanmanning.k3s
+    version: v3.6.2
+  - name: robertdebock.digitalocean_agent
+    version: 3.1.9
+  - name: infothrill.nullmailer
+    version: v3.3.0
+
+collections:
+  - name: ansible.netcommon
+  - name: ansible.posix
+  - name: artis3n.tailscale
+  - name: bitwarden.secrets
+  - name: community.crypto
+  - name: community.digitalocean
+  - name: community.dns
+  - name: community.docker
+  - name: community.general
+  - name: community.healthchecksio
+  - name: hetzner.hcloud

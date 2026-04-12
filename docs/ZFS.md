@@ -231,7 +231,7 @@ zfs:
 2. Does the parent have `children_inherit_policy: true`? (For declared children)
    ```bash
    # Check the processed policy values
-   ansible-playbook ansible/playbooks/baremetal/core.yaml --tags system-zfs-policy --check --diff
+   ansible-playbook playbooks/baremetal/core.yaml --tags system-zfs-policy --check --diff
    ```
 
 3. Did the child explicitly set `policy: none`?
