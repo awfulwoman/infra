@@ -106,6 +106,7 @@ all:
         unmanaged-ap-pantry:
         unmanaged-av-appletv:
         unmanaged-av-chromecast:
+        unmanaged-av-hifi:
         unmanaged-custom-ir-controller:
         unmanaged-custom-projector-controller:
         unmanaged-custom-weather-station:
