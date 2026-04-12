@@ -1,20 +1,49 @@
 all:
   hosts:
-    host-homebrain:
+    host-albion:
     host-backups:
-    host-storage:
-    host-sites:
-    host-mba2011:
-    # host-albion:
-    host-deedee:
-    host-samson:
-    host-test-router:
-    host-pikvm:
     host-belinda:
+    host-deedee:
+    host-homebrain:
     host-malcolm:
+    host-mba2011:
+    host-pikvm:
+    host-samson:
+    host-sites:
+    host-storage:
+    host-test-router:
+    unmanaged-ap-bedroom:
+    unmanaged-ap-livingroom:
+    unmanaged-ap-pantry:
+    unmanaged-av-appletv:
+    unmanaged-av-chromecast:
+    unmanaged-custom-ir-controller:
+    unmanaged-custom-projector-controller:
+    unmanaged-custom-weather-station:
+    unmanaged-laptop-lenovo-work-GM03H3GT:
+    unmanaged-laptop-macbook-air-intel-11inch:
+    unmanaged-laptop-macbook-air-intel-13inch:
+    unmanaged-laptop-macbook-air-m3-16gb:
+    unmanaged-laptop-macbook-air-m4-16gb-work-FXHP0C5935:
+    unmanaged-phone-iphone12:
+    unmanaged-phone-iphone13:
+    unmanaged-phone-oneplus6:
+    unmanaged-phone-pixel7a:
+    unmanaged-printer-epson-xp610:
+    unmanaged-reader-kindle:
+    unmanaged-robot-derek:
+    unmanaged-router-opensense:
+    unmanaged-satellite-apple-homepod-mini-bedroom:
+    unmanaged-satellite-apple-homepod-mini-livingroom:
+    unmanaged-satellite-homeassistant-voice-bedroom:
+    unmanaged-satellite-homeassistant-voice-kitchen:
+    unmanaged-satellite-homeassistant-voice-livingroom:
+    unmanaged-tablet-ipad-bedroom:
+    unmanaged-tablet-ipad-mini:
+    unmanaged-tablet-remarkable:
+    unmanaged-watch-apple-series6:
     vagrant-wrapper:
-    unmanaged-appletv:
-    unmanaged-chromecast:
+
 
   children:
     # -------------------------------------------------------------------
@@ -26,11 +55,11 @@ all:
       hosts:
         vagrant-wrapper:
 
-    # Devices
-    devices:
+    # Unmanaged
+    unmanaged:
       hosts:
-        device-appletv:
-        device-chromecast:
+        unmanaged-av-appletv:
+        unmanaged-av-chromecast:
 
     # Infrastructure
     infra:
