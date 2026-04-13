@@ -1,0 +1,30 @@
+# Installs Homebrew on MacOS
+
+- name: Check if Homebrew is installed
+  ansible.builtin.stat:
+    path: "{{ system_homebrew_bin }}"
+  register: homebrew_check
+
+- name: Install Homebrew
+  when: not homebrew_check.stat.exists
+  block:
+    - name: Add temporary passwordless sudo for Homebrew installation
+      ansible.builtin.copy:
+        dest: /etc/sudoers.d/ansible-homebrew
+        content: "{{ ansible_user }} ALL=(ALL) NOPASSWD: ALL\n"
+        mode: "0440"
+        validate: visudo -cf %s
+      become: true
+
+    - name: Run Homebrew install script
+      ansible.builtin.shell:
+        cmd: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      environment:
+        NONINTERACTIVE: "1"
+  always:
+    - name: Remove temporary passwordless sudo
+      ansible.builtin.file:
+        path: /etc/sudoers.d/ansible-homebrew
+        state: absent
+      become: true
+      when: not homebrew_check.stat.exists
