@@ -38,11 +38,13 @@ system_ollama_env:
   OLLAMA_MAX_LOADED_MODELS: 1
   OLLAMA_ORIGINS: "*"
   OLLAMA_KEEP_ALIVE: -1
-  OLLAMA_KV_CACHE_TYPE: q8_0
+  OLLAMA_FLASH_ATTENTION: 1
+  OLLAMA_KV_CACHE_TYPE: q8_0 # f16 (default), q8_0, q4_0
 
 system_ollama_models:
   - gemma3:4b
   - gemma3:12b
+  - gemma4:e4b # MoE (mixture of experts), 4B active params per token
   - qwen3:14b
 
 # -------------------------------------------------------------------
@@ -50,7 +52,6 @@ system_ollama_models:
 # -------------------------------------------------------------------
 system_claude_settings_group: "staff"
 system_claude_profile_file: ".zshrc"
-
 
 # -------------------------------------------------------------------
 # REPOS
