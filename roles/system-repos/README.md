@@ -8,7 +8,7 @@ repository access.
 ## Usage
 
 ```yaml
-repos:
+system_repos:
   - repo: awfulwoman/infra
     name: infra
   - repo: awfulwoman/obsidian
@@ -19,9 +19,9 @@ repos:
 
 ### Global
 
-- `repos_base_dir`: Base directory for clones (default: `/fastpool/repos`)
-- `repos_git_host`: Git host (default: `github.com`)
-- `repos_update`: Update existing repos (default: `false`)
+- `system_repos_base_dir`: Base directory for clones (default: `/fastpool/repos`)
+- `system_repos_git_host`: Git host (default: `github.com`)
+- `system_repos_update`: Update existing repos (default: `false`)
 
 ### Per-repo
 
@@ -34,14 +34,14 @@ repos:
 **Basic usage:**
 
 ```yaml
-repos:
+system_repos:
   - repo: awfulwoman/infra
 ```
 
 **Specific version:**
 
 ```yaml
-repos:
+system_repos:
   - repo: awfulwoman/infra
     version: v1.2.3
 ```
@@ -49,7 +49,7 @@ repos:
 **Custom directory name:**
 
 ```yaml
-repos:
+system_repos:
   - repo: awfulwoman/infra
     name: infrastructure
 ```

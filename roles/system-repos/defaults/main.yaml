@@ -4,13 +4,13 @@
 #   - repo: Repository in 'owner/name' format (e.g., 'awfulwoman/infra')
 #   - name: Directory name (optional, defaults to repo name)
 #   - version: Branch/tag/commit (optional, defaults to HEAD)
-repos: []
+system_repos: []
 
 # Base directory for all repos
-repos_base_dir: /fastpool/repos
+system_repos_base_dir: /fastpool/repos
 
 # Default Git host
-repos_git_host: github.com
+system_repos_git_host: github.com
 
 # Update repos if they already exist
-repos_update: false
+system_repos_update: false

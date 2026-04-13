@@ -1,7 +1,7 @@
 - name: Ensure repos base directory exists
   become: true
   ansible.builtin.file:
-    path: "{{ repos_base_dir }}"
+    path: "{{ system_repos_base_dir }}"
     state: directory
     mode: "0755"
     owner: "{{ ansible_user }}"
@@ -18,22 +18,22 @@
 
 - name: Check if git host is in known_hosts
   ansible.builtin.command:
-    cmd: "ssh-keygen -F {{ repos_git_host }}"
+    cmd: "ssh-keygen -F {{ system_repos_git_host }}"
   register: known_hosts_check
   changed_when: false
   failed_when: false
 
 - name: Add git host to known_hosts
   ansible.builtin.shell: |
-    ssh-keyscan {{ repos_git_host }} >> {{ ansible_facts.user_dir }}/.ssh/known_hosts
+    ssh-keyscan {{ system_repos_git_host }} >> {{ ansible_facts.user_dir }}/.ssh/known_hosts
   when: known_hosts_check.rc != 0
 
 - name: Clone/update repositories
   ansible.builtin.git:
-    repo: "git@{{ repos_git_host }}:{{ item.repo }}.git"
-    dest: "{{ repos_base_dir }}/{{ item.name | default(item.repo.split('/')[-1]) }}"
+    repo: "git@{{ system_repos_git_host }}:{{ item.repo }}.git"
+    dest: "{{ system_repos_base_dir }}/{{ item.name | default(item.repo.split('/')[-1]) }}"
     version: "{{ item.version | default('HEAD') }}"
-    update: "{{ repos_update }}"
-  loop: "{{ repos }}"
+    update: "{{ system_repos_update }}"
+  loop: "{{ system_repos }}"
   loop_control:
     label: "{{ item.name | default(item.repo.split('/')[-1]) }}"

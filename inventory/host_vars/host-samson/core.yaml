@@ -47,7 +47,7 @@ raspberry_pi_boot_config_location: /boot/firmware/config.txt
 # -------------------------------------------------------------------
 # REPOS
 # -------------------------------------------------------------------
-repos:
+system_repos:
   - repo: awfulwoman/infra
     name: infra
   - repo: awfulwoman/obsidian
