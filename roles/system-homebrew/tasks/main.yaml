@@ -40,3 +40,10 @@
         state: absent
       become: true
       when: not homebrew_check.stat.exists
+
+- name: Ensure Homebrew shellenv is configured in shell profile (Linux)
+  ansible.builtin.lineinfile:
+    path: "~/.bashrc"
+    line: 'eval "$({{ system_homebrew_bin }} shellenv)"'
+    state: present
+  when: ansible_facts['system'] == 'Linux'
