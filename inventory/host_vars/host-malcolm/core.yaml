@@ -5,8 +5,10 @@ host_type: baremetal
 host_name: malcolm
 host_region: ber
 host_site: xberg
-host_pfqdn: "{{ host_name }}.{{ host_site }}.{{ host_region }}"
-host_fqdn: "{{ host_pfqdn }}.{{ domain_name }}"
+# host_pfqdn: "{{ host_name }}.{{ host_site }}.{{ host_region }}"
+# host_fqdn: "{{ host_pfqdn }}.{{ domain_name }}"
+host_pfqdn: malcolm.buru-jazz
+host_fqdn: malcolm.buru-jazz.ts.net
 host_description: "Mac Mini M4 16GB"
 
 # -------------------------------------------------------------------
@@ -21,7 +23,8 @@ host_ipv4_subnet: 24
 # -------------------------------------------------------------------
 # ANSIBLE
 # -------------------------------------------------------------------
-ansible_host: "{{ host_ipv4 }}"
+# ansible_host: "{{ host_ipv4 }}"
+ansible_host: "{{ host_fqdn }}"
 ansible_user: "{{ vault_server_username }}"
 ansible_become_password: "{{ vault_password }}"
 
@@ -52,7 +55,7 @@ system_claude_profile_file: ".zshrc"
 # -------------------------------------------------------------------
 # REPOS
 # -------------------------------------------------------------------
-repos:
+system_repos:
   - repo: awfulwoman/infra
   - repo: awfulwoman/chives
   - repo: awfulwoman/podderton
@@ -60,4 +63,4 @@ repos:
   - repo: awfulwoman/awfulclaw
   - repo: awfulwoman/memorybank
   - repo: awfulwoman/personal-site
-repos_base_dir: "{{ ansible_facts.user_dir }}/Code"
+system_repos_base_dir: "{{ ansible_facts.user_dir }}/Code"
