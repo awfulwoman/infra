@@ -3,21 +3,35 @@
   ansible.builtin.set_fact:
     network_netplan: >-
       {{
-        {
-          'renderer': network_netplan_renderer,
-          'ethernets': {
-            network_netplan_interface: (
-              {'dhcp4': true, 'nameservers': {'addresses': network_netplan_nameservers}}
-              if network_netplan_mode == 'dhcp'
-              else {
-                'addresses': [host_ipv4 ~ '/' ~ network_netplan_subnet],
-                'routes': [{'to': 'default', 'via': network_netplan_gateway}],
-                'nameservers': {'addresses': network_netplan_nameservers}
-              }
-            )
+        (
+          {
+            'renderer': network_netplan_renderer,
+            'ethernets': {
+              network_netplan_interface: (
+                {'dhcp4': true, 'nameservers': {'addresses': network_netplan_nameservers}}
+                if network_netplan_mode == 'dhcp'
+                else {
+                  'addresses': [host_ipv4 ~ '/' ~ network_netplan_subnet],
+                  'routes': [{'to': 'default', 'via': network_netplan_gateway}],
+                  'nameservers': {'addresses': network_netplan_nameservers}
+                }
+              )
+            }
           }
-        } | combine(network_netplan_config, recursive=true)
+          if host_ipv4 | default(false)
+          else {'renderer': network_netplan_renderer}
+        ) | combine(network_netplan_config, recursive=true)
       }}
+  tags:
+    - network-netplan
+    - netplan
+
+- name: Fail if no network configuration is provided
+  ansible.builtin.fail:
+    msg: "network-netplan: neither host_ipv4 nor network_netplan_config is set"
+  when:
+    - not (host_ipv4 | default(false))
+    - not network_netplan_config
   tags:
     - network-netplan
     - netplan
