@@ -18,6 +18,8 @@ host_description: "Remote node in London"
 
 # -------------------------------------------------------------------
 # NETWORK
+# Hint: Use `network_netplan_config:` for more fine-grained control
+# Docs: roles/network-netplan/README.md
 # -------------------------------------------------------------------
 host_primary_interface: "eth0"
 tailscale_exit_node: true

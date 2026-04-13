@@ -11,6 +11,8 @@ host_description: "Raspberry Pi 5 backup server"
 
 # -------------------------------------------------------------------
 # NETWORK
+# Hint: Use `network_netplan_config:` for more fine-grained control
+# Docs: roles/network-netplan/README.md
 # -------------------------------------------------------------------
 host_ipv4: 192.168.1.117
 host_primary_interface: "eth0"

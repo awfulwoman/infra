@@ -11,6 +11,8 @@ host_description: "Hetzner cloud server for public services"
 
 # -------------------------------------------------------------------
 # NETWORK
+# Hint: Use `network_netplan_config:` for more fine-grained control
+# Docs: roles/network-netplan/README.md
 # -------------------------------------------------------------------
 host_ipv4: 188.245.37.81
 

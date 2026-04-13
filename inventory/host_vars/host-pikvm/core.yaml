@@ -11,6 +11,8 @@ host_description: "KVM over IP device"
 
 # -------------------------------------------------------------------
 # NETWORK
+# Hint: Use `network_netplan_config:` for more fine-grained control
+# Docs: roles/network-netplan/README.md
 # -------------------------------------------------------------------
 host_ipv4: 192.168.1.111
 host_primary_interface: "enp3s0"
