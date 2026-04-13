@@ -2,7 +2,7 @@
 
 - name: Check if Homebrew is installed
   ansible.builtin.stat:
-    path: /opt/homebrew/bin/brew
+    path: "{{ bootstrap_macos_server_homebrew_bin }}"
   register: homebrew_check
 
 - name: Install Homebrew
@@ -32,4 +32,5 @@
 - name: Ensure Homebrew formulae are installed
   community.general.homebrew:
     name: "{{ bootstrap_macos_server_homebrew_formulae }}"
+    path: "{{ bootstrap_macos_server_homebrew_bin | dirname }}"
     state: present

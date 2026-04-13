@@ -1,4 +1,6 @@
 ---
+bootstrap_macos_server_homebrew_bin: "{{ '/opt/homebrew/bin/brew' if ansible_architecture == 'arm64' else '/usr/local/bin/brew' }}"
+
 bootstrap_macos_server_homebrew_formulae:
   - jq
   - git
