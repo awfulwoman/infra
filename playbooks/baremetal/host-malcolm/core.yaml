@@ -7,3 +7,4 @@
     - role: system-repos
     - role: system-ollama
     - role: system-claude
+    - role: system-git
