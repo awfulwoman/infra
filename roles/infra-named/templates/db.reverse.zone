@@ -40,10 +40,20 @@ $ORIGIN {{ bind_iprange_reversed }}.IN-ADDR.ARPA.
   {% endfor %}
 {% endif %}
 
-; PTR records - from Ansible inventory
+; PTR records - from Ansible inventory (managed hosts)
 {% for host in groups[bind_ansible_group] %}
   {% if hostvars[host].host_fqdn is defined and hostvars[host].host_ipv4 is defined %}
-    {% if hostvars[host].host_ipv4 is not none %}
+    {% if hostvars[host].host_ipv4 %}
+      {% set record_ip_split = hostvars[host].host_ipv4.split('.')[0:4] -%}
+      {{- '%-40s' | format(record_ip_split[3] + '.' + record_ip_split[2])  }} IN      PTR      {{ hostvars[host].host_pfqdn }}.{{ bind_domain}}.
+    {% endif %}
+  {% endif %}
+{% endfor %}
+
+; PTR records - from Ansible inventory (unmanaged devices)
+{% for host in groups[bind_unmanaged_group] %}
+  {% if hostvars[host].host_fqdn is defined and hostvars[host].host_ipv4 is defined %}
+    {% if hostvars[host].host_ipv4 %}
       {% set record_ip_split = hostvars[host].host_ipv4.split('.')[0:4] -%}
       {{- '%-40s' | format(record_ip_split[3] + '.' + record_ip_split[2])  }} IN      PTR      {{ hostvars[host].host_pfqdn }}.{{ bind_domain}}.
     {% endif %}

@@ -32,10 +32,19 @@ $ORIGIN    {{ bind_domain }}.
   {% endfor %}
 {% endif %}
 
-; A records - from Ansible inventory
+; A records - from Ansible inventory (managed hosts)
 {% for host in groups[bind_ansible_group] %}
   {% if (hostvars[host].host_fqdn is defined) and (hostvars[host].host_ipv4 is defined) %}
-    {% if hostvars[host].host_ipv4 is not none %}
+    {% if hostvars[host].host_ipv4 %}
+      {{- '%-40s' | format(hostvars[host].host_pfqdn) }} IN      A         {{ hostvars[host].host_ipv4 }}
+    {% endif %}
+  {% endif %}
+{% endfor %}
+
+; A records - from Ansible inventory (unmanaged devices)
+{% for host in groups[bind_unmanaged_group] %}
+  {% if (hostvars[host].host_fqdn is defined) and (hostvars[host].host_ipv4 is defined) %}
+    {% if hostvars[host].host_ipv4 %}
       {{- '%-40s' | format(hostvars[host].host_pfqdn) }} IN      A         {{ hostvars[host].host_ipv4 }}
     {% endif %}
   {% endif %}

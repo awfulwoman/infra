@@ -1,0 +1,25 @@
+#jinja2: lstrip_blocks:True
+# Managed by Ansible - do not edit manually
+
+default-lease-time {{ dhcpd_default_lease_time }};
+max-lease-time {{ dhcpd_max_lease_time }};
+
+option domain-name "{{ dhcpd_domain_name }}";
+option domain-name-servers {% for dns in dhcpd_dns_servers %}{{ dns }}{% if not loop.last %}, {% endif %}{% endfor %};
+
+subnet {{ dhcpd_subnet }} netmask {{ dhcpd_subnet_mask }} {
+  option routers {{ dhcpd_routers }};
+  range {{ dhcpd_range_start }} {{ dhcpd_range_end }};
+}
+
+# Static leases - unmanaged devices
+{% for host in groups[dhcpd_unmanaged_group] %}
+  {% set h = hostvars[host] %}
+  {% if h.host_ipv4 and h.host_mac %}
+host {{ host }} {
+  hardware ethernet {{ h.host_mac }};
+  fixed-address {{ h.host_ipv4 }};
+  option host-name "{{ h.host_name }}";
+}
+  {% endif %}
+{% endfor %}

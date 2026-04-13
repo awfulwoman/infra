@@ -3,3 +3,29 @@
   ansible.builtin.apt:
     package:
       - isc-dhcp-server
+    state: present
+
+- name: Configure listening interface
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/default/isc-dhcp-server
+    regexp: '^INTERFACESv4='
+    line: 'INTERFACESv4="{{ dhcpd_interface }}"'
+  notify: Restart dhcpd
+
+- name: Deploy dhcpd configuration
+  become: true
+  ansible.builtin.template:
+    src: dhcpd.conf.j2
+    dest: /etc/dhcp/dhcpd.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart dhcpd
+
+- name: Ensure isc-dhcp-server is started and enabled
+  become: true
+  ansible.builtin.systemd:
+    name: isc-dhcp-server
+    state: "{{ 'started' if dhcpd_enabled else 'stopped' }}"
+    enabled: "{{ dhcpd_enabled }}"

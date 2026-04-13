@@ -1,0 +1,17 @@
+dhcpd_enabled: false
+
+dhcpd_unmanaged_group: unmanaged
+
+dhcpd_interface: eth0
+
+dhcpd_subnet: 192.168.1.0
+dhcpd_subnet_mask: 255.255.255.0
+dhcpd_routers: 192.168.1.1
+dhcpd_dns_servers:
+  - 192.168.1.2
+dhcpd_domain_name: "{{ domain_name }}"
+dhcpd_default_lease_time: 86400
+dhcpd_max_lease_time: 86400
+
+dhcpd_range_start: 192.168.1.100
+dhcpd_range_end: 192.168.1.199
