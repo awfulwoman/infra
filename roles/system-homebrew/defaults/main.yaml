@@ -1,2 +1,6 @@
 ---
-system_homebrew_bin: "{{ '/opt/homebrew/bin/brew' if ansible_architecture == 'arm64' else '/usr/local/bin/brew' }}"
+system_homebrew_bin: >-
+  {{
+    '/home/linuxbrew/.linuxbrew/bin/brew' if ansible_system == 'Linux'
+    else ('/opt/homebrew/bin/brew' if ansible_architecture == 'arm64' else '/usr/local/bin/brew')
+  }}

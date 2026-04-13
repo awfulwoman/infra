@@ -1,4 +1,16 @@
-# Installs Homebrew on MacOS
+# Installs Homebrew on MacOS and Linux
+
+- name: Ensure Homebrew prerequisites are installed (Linux)
+  ansible.builtin.apt:
+    name:
+      - build-essential
+      - procps
+      - curl
+      - file
+      - git
+    state: present
+  become: true
+  when: ansible_system == 'Linux'
 
 - name: Check if Homebrew is installed
   ansible.builtin.stat:
