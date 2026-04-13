@@ -1,0 +1,211 @@
+all:
+  children:
+    unmanaged:
+      vars:
+        host_type: unmanaged
+        host_region: ber
+        host_site: xberg
+        host_pfqdn: "{{ host_name }}.{{ host_site }}.{{ host_region }}"
+        host_fqdn: "{{ host_pfqdn }}.{{ domain_name }}"
+      hosts:
+
+        # Access Points
+        unmanaged-ap-bedroom:
+          host_name: ap-bedroom
+          host_description: Bedroom Access Point
+          host_ipv4: false
+          host_mac: false
+        unmanaged-ap-livingroom:
+          host_name: ap-livingroom
+          host_description: Living Room Access Point
+          host_ipv4: false
+          host_mac: false
+        unmanaged-ap-pantry:
+          host_name: ap-pantry
+          host_description: Pantry Access Point
+          host_ipv4: false
+          host_mac: false
+
+        # AV
+        unmanaged-av-appletv:
+          host_name: av-appletv
+          host_description: Living Room Apple TV
+          host_ipv4: false
+          host_mac: false
+        unmanaged-av-chromecast:
+          host_name: av-chromecast
+          host_description: Living Room Chromecast Audio
+          host_ipv4: false
+          host_mac: false
+        unmanaged-av-hifi:
+          host_name: av-hifi
+          host_description:
+          host_ipv4: false
+          host_mac: false
+
+        # Custom ESPHome devices
+        unmanaged-custom-ir-controller:
+          host_name: custom-ir-controller
+          host_description: ESPhome IR controller
+          host_ipv4: false
+          host_mac: false
+        unmanaged-custom-projector-controller:
+          host_name: custom-projector-controller
+          host_description: ESPhome projctor controller
+          host_ipv4: false
+          host_mac: false
+        unmanaged-custom-weather-station:
+          host_name: custom-weather-station
+          host_description: EPhome weather station
+          host_ipv4: false
+          host_mac: false
+
+        # Laptops
+        unmanaged-laptop-lenovo-work-GM03H3GT:
+          host_name: laptop-lenovo-work-GM03H3GT
+          host_description: Wifey's work laptop
+          host_ipv4: false
+          host_mac: false
+        unmanaged-laptop-macbook-air-intel-11inch:
+          host_name: laptop-macbook-air-intel-11inch
+          host_description: Old Intel Macbook Air - 11inch
+          host_ipv4: false
+          host_mac: false
+        unmanaged-laptop-macbook-air-intel-13inch:
+          host_name: laptop-macbook-air-intel-13inch
+          host_description: Old Intel Macbook Air - 13inch
+          host_ipv4: false
+          host_mac: false
+        unmanaged-laptop-macbook-air-m3-16gb:
+          host_name: laptop-macbook-air-m3-16gb
+          host_description: Charlie's daily driver laptop
+          host_ipv4: false
+          host_mac: false
+        unmanaged-laptop-macbook-air-m4-16gb-work-FXHP0C5935:
+          host_name: laptop-macbook-air-m4-16gb-work-FXHP0C5935
+          host_description: Charlie's work laptop
+          host_ipv4: false
+          host_mac: false
+        unmanaged-laptop-macbook-pro-intel:
+          host_name: laptop-macbook-pro-intel
+          host_description:
+          host_ipv4: false
+          host_mac: false
+
+        # NAS
+        unmanaged-nas-bunny:
+          host_name: nas-bunny
+          host_description:
+          host_ipv4: false
+          host_mac: false
+
+        # Phones
+        unmanaged-phone-iphone12:
+          host_name: phone-iphone12
+          host_description: Charlie's phone
+          host_ipv4: false
+          host_mac: false
+        unmanaged-phone-iphone13:
+          host_name: phone-iphone13
+          host_description: Wifey's phone
+          host_ipv4: false
+          host_mac: false
+        unmanaged-phone-oneplus6:
+          host_name: phone-oneplus6
+          host_description: Old phone
+          host_ipv4: false
+          host_mac: false
+        unmanaged-phone-pixel7a:
+          host_name: phone-pixel7a
+          host_description: B's phone
+          host_ipv4: false
+          host_mac: false
+
+        # Printers
+        unmanaged-printer-epson-xp610:
+          host_name: printer-epson-xp610
+          host_description: A little inkjet printer that somehow still finds usage
+          host_ipv4: false
+          host_mac: false
+
+        # Readers
+        unmanaged-reader-kindle:
+          host_name: reader-kindle
+          host_description: Charlie's old Kindle
+          host_ipv4: false
+          host_mac: false
+        unmanaged-reader-kobo:
+          host_name: reader-kobo
+          host_description: Wifey's Kobo
+          host_ipv4: false
+          host_mac: false
+
+        # Robots
+        unmanaged-robot-derek:
+          host_name: robot-derek
+          host_description: Derek the cleaning robot
+          host_ipv4: false
+          host_mac: false
+
+        # Routers
+        unmanaged-router-opensense:
+          host_name: router-opensense
+          host_description: Opensense router
+          host_ipv4: false
+          host_mac: false
+
+        # Satellites
+        unmanaged-satellite-apple-homepod-mini-bedroom:
+          host_name: satellite-apple-homepod-mini-bedroom
+          host_description: Bedroom Homepod Mini
+          host_ipv4: false
+          host_mac: false
+        unmanaged-satellite-apple-homepod-mini-livingroom:
+          host_name: satellite-apple-homepod-mini-livingroom
+          host_description: Living Room Homepod
+          host_ipv4: false
+          host_mac: false
+        unmanaged-satellite-homeassistant-voice-bedroom:
+          host_name: satellite-homeassistant-voice-bedroom
+          host_description: Bedroom HA Voice
+          host_ipv4: false
+          host_mac: false
+        unmanaged-satellite-homeassistant-voice-kitchen:
+          host_name: satellite-homeassistant-voice-kitchen
+          host_description: Kitchen HA Voice
+          host_ipv4: false
+          host_mac: false
+        unmanaged-satellite-homeassistant-voice-livingroom:
+          host_name: satellite-homeassistant-voice-livingroom
+          host_description: Living Room HA Voice
+          host_ipv4: false
+          host_mac: false
+
+        # Tablets
+        unmanaged-tablet-ipad-bedroom:
+          host_name: tablet-ipad-bedroom
+          host_description: Bedroom iPad
+          host_ipv4: false
+          host_mac: false
+        unmanaged-tablet-ipad-mini:
+          host_name: tablet-ipad-mini
+          host_description: iPad Mini
+          host_ipv4: false
+          host_mac: false
+        unmanaged-tablet-ipad-work:
+          host_name: tablet-ipad-work
+          host_description:
+          host_ipv4: false
+          host_mac: false
+        unmanaged-tablet-remarkable:
+          host_name: tablet-remarkable
+          host_description: Charlie's reMarkable2
+          host_ipv4: false
+          host_mac: false
+
+        # Watches
+        unmanaged-watch-apple-series6:
+          host_name: watch-apple-series6
+          host_description: Charlie's Apple Watch
+          host_ipv4: false
+          host_mac: false

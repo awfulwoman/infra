@@ -95,44 +95,4 @@ all:
       hosts:
         vagrant-wrapper:
 
-    # -------------------------------------------------------------------
-    # UNMANAGED DEVICES
-    # Known stable devices that require DNS and static IP addresses
-    # -------------------------------------------------------------------
-    unmanaged:
-      hosts:
-        unmanaged-ap-bedroom:
-        unmanaged-ap-livingroom:
-        unmanaged-ap-pantry:
-        unmanaged-av-appletv:
-        unmanaged-av-chromecast:
-        unmanaged-av-hifi:
-        unmanaged-custom-ir-controller:
-        unmanaged-custom-projector-controller:
-        unmanaged-custom-weather-station:
-        unmanaged-laptop-lenovo-work-GM03H3GT:
-        unmanaged-laptop-macbook-air-intel-11inch:
-        unmanaged-laptop-macbook-air-intel-13inch:
-        unmanaged-laptop-macbook-air-m3-16gb:
-        unmanaged-laptop-macbook-air-m4-16gb-work-FXHP0C5935:
-        unmanaged-laptop-macbook-pro-intel:
-        unmanaged-nas-bunny:
-        unmanaged-phone-iphone12:
-        unmanaged-phone-iphone13:
-        unmanaged-phone-oneplus6:
-        unmanaged-phone-pixel7a:
-        unmanaged-printer-epson-xp610:
-        unmanaged-reader-kindle:
-        unmanaged-reader-kobo:
-        unmanaged-robot-derek:
-        unmanaged-router-opensense:
-        unmanaged-satellite-apple-homepod-mini-bedroom:
-        unmanaged-satellite-apple-homepod-mini-livingroom:
-        unmanaged-satellite-homeassistant-voice-bedroom:
-        unmanaged-satellite-homeassistant-voice-kitchen:
-        unmanaged-satellite-homeassistant-voice-livingroom:
-        unmanaged-tablet-ipad-bedroom:
-        unmanaged-tablet-ipad-mini:
-        unmanaged-tablet-ipad-work:
-        unmanaged-tablet-remarkable:
-        unmanaged-watch-apple-series6:
+    # Unmanaged devices are defined in hosts-unmanaged.yaml
