@@ -3,6 +3,7 @@
   roles:
     - role: hardware-raspberry-pi
     - role: bootstrap-ubuntu-server
+    - role: system-homebrew
     - role: network-netplan
     - role: infothrill.nullmailer
       become: true
