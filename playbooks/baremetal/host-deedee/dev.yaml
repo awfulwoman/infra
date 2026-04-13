@@ -1,7 +1,7 @@
 - name: DeeDee development playbook
   hosts: host-deedee
   roles:
-    - role: system-zfs-policy
+    - role: system-repos
 
   handlers:
     - name: Reboot host
