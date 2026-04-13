@@ -1,0 +1,7 @@
+# Asserts that the current platform is supported by the calling role
+
+- name: Assert supported platform
+  ansible.builtin.assert:
+    that:
+      - ansible_facts['system'] in ansible_assert_platform_supported
+    fail_msg: "Role does not support {{ ansible_facts['system'] }}. Supported platforms: {{ ansible_assert_platform_supported | join(', ') }}"

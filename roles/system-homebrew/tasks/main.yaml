@@ -10,7 +10,7 @@
       - git
     state: present
   become: true
-  when: ansible_system == 'Linux'
+  when: ansible_facts['system'] == 'Linux'
 
 - name: Check if Homebrew is installed
   ansible.builtin.stat:

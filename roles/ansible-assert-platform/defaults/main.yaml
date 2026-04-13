@@ -1,0 +1,3 @@
+---
+ansible_assert_platform_supported:
+  - Linux

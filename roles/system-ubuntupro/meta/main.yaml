@@ -1,0 +1,6 @@
+---
+dependencies:
+  - role: ansible-assert-platform
+    vars:
+      ansible_assert_platform_supported:
+        - Linux
