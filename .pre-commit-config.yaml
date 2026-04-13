@@ -2,14 +2,14 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
-    - id: check-yaml
-      args: ['--unsafe']
-      exclude: ^roles/.*/templates/.*\.yaml$
-    - id: end-of-file-fixer
-    - id: trailing-whitespace
-    - id: detect-private-key
-    - id: check-added-large-files
-  # - repo: https://github.com/jackdewinter/pymarkdown
-  #   rev: v0.9.34
-  #   hooks:
-  #     - id: pymarkdown
+      - id: check-yaml
+        args: ['--unsafe']
+        exclude: ^roles/.*/templates/.*\.yaml$
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: detect-private-key
+      - id: check-added-large-files
+#     - repo: https://github.com/jackdewinter/pymarkdown
+#       rev: v0.9.34
+#       hooks:
+#         - id: pymarkdown
