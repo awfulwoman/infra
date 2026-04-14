@@ -5,13 +5,13 @@
     name: "{{ domain_item }}"
     type: "A"
     records:
-      - value: "{{ ansible_tailscale0.ipv4.address }}"
+      - value: "{{ ansible_facts['tailscale0']['ipv4']['address'] }}"
         comment: "Tailscale"
     state: present
   loop: "{{ configure_dns_subdomains }}"
   loop_control:
     loop_var: domain_item
-  when: ansible_tailscale0.ipv4.address is defined
+  when: ansible_facts['tailscale0']['ipv4']['address'] is defined
 
 - name: Confirm DNS
   ansible.builtin.debug:
@@ -19,6 +19,6 @@
   loop: "{{ configure_dns_subdomains }}"
   loop_control:
     loop_var: domain_item
-  when: ansible_tailscale0.ipv4.address is defined
+  when: ansible_facts['tailscale0']['ipv4']['address'] is defined
 
 # - name: Register a subdomain on the internal network

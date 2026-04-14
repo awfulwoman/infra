@@ -28,6 +28,6 @@ promtail_arch_map:
   armv7l: "arm"
 
 # Download URL (architecture determined at runtime)
-promtail_arch: "{{ promtail_arch_map[ansible_architecture] | default('amd64') }}"
+promtail_arch: "{{ promtail_arch_map[ansible_facts['architecture']] | default('amd64') }}"
 promtail_download_url: "https://github.com/grafana/loki/releases/download/v{{ promtail_version }}/promtail-linux-{{ promtail_arch }}.zip"
 promtail_binary_name: "promtail-linux-{{ promtail_arch }}"

@@ -52,7 +52,7 @@ cache:
 # #   # The host of the cache server.
 # #   # It's not for the address to listen, but the address to connect from job containers.
 # #   # So 0.0.0.0 is a bad choice, leave it empty to detect automatically.
-  host: "{{ ansible_tailscale0.ipv4.address }}"
+  host: "{{ ansible_facts['tailscale0']['ipv4']['address'] }}"
 # #   # The port of the cache server.
 # #   # 0 means to use a random available port.
   port: 8999
