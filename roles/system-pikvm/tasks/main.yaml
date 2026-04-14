@@ -71,14 +71,14 @@
     cmd: pikvm-update --no-reboot
   register: update_result
   changed_when: false
+  failed_when: update_result.rc not in [0, 100]
 
-- name: Check for reboots
-  ansible.builtin.debug:
-    var: update_result
-  changed_when: '"A reboot is necessary" in update_result.stdout'
-  notify: Reboot host
+- name: Reboot to apply updates
+  ansible.builtin.reboot:
+  when: update_result.rc == 100
 
 - name: Ensure filesystem is read-only
   ansible.builtin.command:
     cmd: ro
   changed_when: false
+  when: update_result.rc != 100
