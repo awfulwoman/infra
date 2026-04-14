@@ -183,6 +183,8 @@
 - name: Tailscale
   ansible.builtin.include_role:
     name: artis3n.tailscale.machine
+  vars:
+    tailscale_up_skip: "{{ tailscale_connected }}"
   when: tailscale_exit_node is undefined or tailscale_exit_node is not true
 
 - name: Tailscale - with exit node
@@ -190,6 +192,7 @@
     name: artis3n.tailscale.machine
   vars:
     tailscale_args: "--advertise-exit-node"
+    tailscale_up_skip: "{{ tailscale_connected }}"
   when: tailscale_exit_node is defined and tailscale_exit_node is true
 
 - name: Git
