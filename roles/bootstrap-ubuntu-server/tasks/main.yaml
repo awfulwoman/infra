@@ -160,9 +160,25 @@
   vars:
     ansible_become: true
 
+- name: Check if Tailscale is already connected
+  ansible.builtin.command:
+    cmd: tailscale status --json
+  register: tailscale_status_raw
+  changed_when: false
+  failed_when: false
+
+- name: Parse Tailscale connection state
+  ansible.builtin.set_fact:
+    tailscale_connected: >-
+      {{
+        (tailscale_status_raw.rc == 0) and
+        ((tailscale_status_raw.stdout | from_json).BackendState == 'Running')
+      }}
+
 - name: Generate Tailscale auth key
   ansible.builtin.include_role:
     name: network-tailscale-authkey
+  when: not tailscale_connected
 
 - name: Tailscale
   ansible.builtin.include_role:
