@@ -55,16 +55,29 @@
     state: started
     name: tailscaled
 
+- name: Check if Tailscale is already connected
+  ansible.builtin.command:
+    cmd: tailscale status
+  register: tailscale_status
+  changed_when: false
+  failed_when: false
+
+- name: Generate Tailscale auth key
+  ansible.builtin.include_role:
+    name: network-tailscale-authkey
+  when: tailscale_status.rc != 0
+
 - name: Ensure the Tailnet is brought up
   ansible.builtin.command:
     cmd: "tailscale up --auth-key={{ tailscale_authkey }}"
   register: tailscaleup_result
-  changed_when: tailscaleup_result.rc != 0
+  changed_when: tailscaleup_result.rc == 0
+  when: tailscale_status.rc != 0
 
 - name: DEBUG Tailnet output due to errors
   ansible.builtin.debug:
     var: tailscaleup_result
-  when: tailscaleup_result.rc != 0
+  when: tailscale_status.rc != 0 and tailscaleup_result.rc != 0
 
 - name: Ensure packages are updated
   ansible.builtin.command:
