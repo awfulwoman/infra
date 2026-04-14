@@ -28,8 +28,8 @@
             ephemeral: false
             preauthorized: true
             tags: "{{ tailscale_node_tags }}"
-      expirySeconds: 300
-    status_code: 200
+      expirySeconds: "{{ tailscale_authkey_expiry_seconds }}"
+    status_code: 201
   register: tailscale_key_response
   no_log: true
 
