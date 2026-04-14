@@ -28,14 +28,14 @@
 
 # Bluetooth hardware status
 - name: Get Bluetooth status
-  ansible.builtin.command: blueutil -p
+  ansible.builtin.command: "{{ system_homebrew_bin | dirname }}/blueutil -p"
   register: hardware_apple_bluetooth_status
   changed_when: false
 
 - name: Ensure Bluetooth is disabled
-  ansible.builtin.command: blueutil -p 0
+  ansible.builtin.command: "{{ system_homebrew_bin | dirname }}/blueutil -p 0"
   when: (hardware_apple_bluetooth is false) and (hardware_apple_bluetooth_status.stdout != '0')
 
 - name: Ensure Bluetooth is enabled
-  ansible.builtin.command: blueutil -p 1
+  ansible.builtin.command: "{{ system_homebrew_bin | dirname }}/blueutil -p 1"
   when: (hardware_apple_bluetooth is true) and (hardware_apple_bluetooth_status.stdout != '1')
