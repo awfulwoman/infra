@@ -47,3 +47,9 @@
     line: 'eval "$({{ system_homebrew_bin }} shellenv)"'
     state: present
   when: ansible_facts['system'] == 'Linux'
+
+- name: Ensure Homebrew formulae are installed
+  community.general.homebrew:
+    name: "{{ system_homebrew_formulae }}"
+    path: "{{ system_homebrew_bin | dirname }}"
+    state: present

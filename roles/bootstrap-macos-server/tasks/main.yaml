@@ -1,7 +1,15 @@
 # Boostraps a MacOS server
 
-- name: Ensure Homebrew formulae are installed
-  community.general.homebrew:
-    name: "{{ bootstrap_macos_server_homebrew_formulae }}"
-    path: "{{ system_homebrew_bin | dirname }}"
-    state: present
+# Disable power saving
+
+- name: Ensure default consumer apps are absent
+  become: true
+  ansible.builtin.file:
+    path: /Applications/{{ item }}
+    state: absent
+  loop:
+    - GarageBand.app
+    - iMovie.app
+    - Keynote.app
+    - Numbers.app
+    - Pages.app

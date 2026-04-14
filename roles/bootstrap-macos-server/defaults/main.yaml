@@ -1,9 +1,2 @@
 ---
-bootstrap_macos_server_homebrew_formulae:
-  - jq
-  - git
-  - watch
-  - direnv
-  - ffmpeg
-  - macmon
-  - wget
+bootstrap_macos_server_homebrew_formulae: []
