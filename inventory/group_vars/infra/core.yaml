@@ -1,6 +1,9 @@
 # code: language=ansible
 
-tailscale_authkey: "{{ vault_tailscale_authkey }}"
+tailscale_oauth_client_id: "{{ vault_tailscale_authkey_rotation_app_client_id }}"
+tailscale_oauth_client_secret: "{{ vault_tailscale_authkey_rotation_app_client_secret }}"
+tailscale_node_tags:
+  - tag:auto-generated
 
 security_autoupdate_mail_on_error: true
 security_autoupdate_mail_to: "unattended@{{ vault_olddomain_wc }}"
