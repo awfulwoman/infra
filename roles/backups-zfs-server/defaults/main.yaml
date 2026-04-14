@@ -6,7 +6,7 @@ backups_zfs_server_logging_successfile: backups.log
 backups_zfs_server_logging_errorfile: error.log
 backups_zfs_server_script_path: /opt/zfsbackup
 backups_zfs_server_local_dataset: slowpool/encryptedbackups
-backups_zfs_server_pull_group: zfs-backup-clients # The ansible group that we try to pull backup data from
+backups_zfs_server_pull_group: zfs_backup_clients # The ansible group that we try to pull backup data from
 
 # Offsite push configuration
 backups_zfs_server_offsite_enabled: false # Set to true to enable offsite replication

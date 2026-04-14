@@ -53,7 +53,7 @@ all:
     # ZFS REPLICATION SOURCES
     # Hosts acting as replication sources
     # -------------------------------------------------------------------
-    zfs-backup-clients:
+    zfs_backup_clients:
       hosts:
         host-storage:
         host-homebrain:
@@ -65,7 +65,7 @@ all:
     # ZFS REPLICATION DESTINATIONS
     # Hosts acting as replication destination
     # -------------------------------------------------------------------
-    zfs-backup-servers:
+    zfs_backup_servers:
       hosts:
         host-backups:
         host-belinda:
