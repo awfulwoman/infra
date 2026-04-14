@@ -16,9 +16,10 @@ host_description: "Mac Mini M4 16GB"
 # Hint: Use `network_netplan_config:` for more fine-grained control
 # Docs: roles/network-netplan/README.md
 # -------------------------------------------------------------------
-host_ipv4: 192.168.1.150
 host_primary_interface: "en0"
+host_ipv4: 192.168.1.150
 host_ipv4_subnet: 24
+host_mac: "1c:f6:4c:3e:51:a5"
 
 # -------------------------------------------------------------------
 # ANSIBLE

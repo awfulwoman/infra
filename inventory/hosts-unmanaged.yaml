@@ -36,17 +36,17 @@ all:
           host_name: av-appletv
           host_description: Living Room Apple TV
           host_ipv4: false
-          host_mac: false
+          host_mac: "34:fd:6a:38:cc:64"
         unmanaged-av-chromecast:
           host_name: av-chromecast
           host_description: Living Room Chromecast Audio
           host_ipv4: false
-          host_mac: false
+          host_mac: "54:60:09:d8:e0:92"
         unmanaged-av-hifi:
           host_name: av-hifi
           host_description:
           host_ipv4: false
-          host_mac: false
+          host_mac: "00:02:2e:70:1c:9b"
 
         # Custom ESPHome devices
         unmanaged-custom-ir-controller:
@@ -63,7 +63,7 @@ all:
           host_name: custom-weather-station
           host_description: EPhome weather station
           host_ipv4: false
-          host_mac: false
+          host_mac: "c8:f0:9e:2f:a1:f0"
 
         # Laptops
         unmanaged-laptop-lenovo-work-GM03H3GT:
@@ -95,7 +95,7 @@ all:
           host_name: laptop-macbook-pro-intel
           host_description:
           host_ipv4: false
-          host_mac: false
+          host_mac: "20:c9:d0:e4:42:81"
 
         # NAS
         unmanaged-nas-bunny:
@@ -119,7 +119,7 @@ all:
           host_name: phone-oneplus6
           host_description: Old phone
           host_ipv4: false
-          host_mac: false
+          host_mac: "ce:a9:da:af:7d:71"
         unmanaged-phone-pixel7a:
           host_name: phone-pixel7a
           host_description: B's phone
@@ -131,14 +131,14 @@ all:
           host_name: printer-epson-xp610
           host_description: A little inkjet printer that somehow still finds usage
           host_ipv4: false
-          host_mac: false
+          host_mac: "ac:18:26:72:26:f7"
 
         # Readers
         unmanaged-reader-kindle:
           host_name: reader-kindle
           host_description: Charlie's old Kindle
           host_ipv4: false
-          host_mac: false
+          host_mac: "f0:4f:7c:75:84:dd"
         unmanaged-reader-kobo:
           host_name: reader-kobo
           host_description: Wifey's Kobo
@@ -150,12 +150,12 @@ all:
           host_name: robot-derek
           host_description: Derek the cleaning robot
           host_ipv4: false
-          host_mac: false
+          host_mac: "24:18:c6:14:86:ba"
 
         # Routers
-        unmanaged-router-opensense:
-          host_name: router-opensense
-          host_description: Opensense router
+        unmanaged-router-opnsense:
+          host_name: router-opnsense
+          host_description: OPNsense router
           host_ipv4: false
           host_mac: false
 
@@ -164,7 +164,7 @@ all:
           host_name: satellite-apple-homepod-mini-bedroom
           host_description: Bedroom Homepod Mini
           host_ipv4: false
-          host_mac: false
+          host_mac: "3c:e0:72:bd:01:5d"
         unmanaged-satellite-apple-homepod-mini-livingroom:
           host_name: satellite-apple-homepod-mini-livingroom
           host_description: Living Room Homepod
@@ -206,11 +206,11 @@ all:
           host_name: tablet-remarkable
           host_description: Charlie's reMarkable2
           host_ipv4: false
-          host_mac: false
+          host_mac: "10:2c:6b:e0:76:3e"
 
         # Watches
         unmanaged-watch-apple-series6:
           host_name: watch-apple-series6
           host_description: Charlie's Apple Watch
           host_ipv4: false
-          host_mac: false
+          host_mac: "2a:84:ea:6c:8f:62"
