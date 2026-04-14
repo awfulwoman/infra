@@ -7,7 +7,7 @@
   changed_when: false
 
 - name: Ensure override config is in place
-  ansible.builtin.copy:
+  ansible.builtin.template:
     src: override.yaml
     dest: /etc/kvmd/override.yaml
     owner: root

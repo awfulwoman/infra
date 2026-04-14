@@ -9,6 +9,11 @@ all:
         host_fqdn: "{{ host_pfqdn }}.{{ domain_name }}"
       hosts:
 
+        unmanaged-kvm-tesmart-8port:
+          host_name: kvm-tesmart-8port
+          host_ipv4: 192.168.1.10
+          ost_description: Rack-mounted KVM switch, supporting PiKVM
+
         # Access Points
         unmanaged-ap-bedroom:
           host_name: ap-bedroom

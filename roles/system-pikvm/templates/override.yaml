@@ -7,7 +7,7 @@ kvmd:
         drivers:
             tes:
                 type: tesmart
-                host: 192.168.1.10 # Address of HDMI switch
+                host: "{{ hostvars['unmanaged-kvm-tesmart-8port']['host_ipv4'] }}"
                 port: 5000
         scheme:
             server0_led:
