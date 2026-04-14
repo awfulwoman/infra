@@ -17,7 +17,7 @@ host_description: "Mac Mini M4 16GB"
 # Docs: roles/network-netplan/README.md
 # -------------------------------------------------------------------
 host_ipv4: 192.168.1.150
-host_primary_interface: "enp3s0"
+host_primary_interface: "en0"
 host_ipv4_subnet: 24
 
 # -------------------------------------------------------------------
@@ -27,6 +27,13 @@ host_ipv4_subnet: 24
 ansible_host: "{{ host_fqdn }}"
 ansible_user: "{{ vault_server_username }}"
 ansible_become_password: "{{ vault_password }}"
+
+# -------------------------------------------------------------------
+# HARDWARE
+# -------------------------------------------------------------------
+hardware_apple_bluetooth: false
+hardware_apple_wifi: false
+hardware_apple_wifi_interface: en1
 
 # -------------------------------------------------------------------
 # OLLAMA

@@ -1,0 +1,41 @@
+# Configures Apple macOS hardware settings
+
+- name: Ensure blueutil is installed
+  community.general.homebrew:
+    name: blueutil
+    state: present
+
+# WiFi hardware status
+- name: Get WiFi status
+  ansible.builtin.command: networksetup -getairportpower {{ hardware_apple_wifi_interface }}
+  register: hardware_apple_wifi_status
+  changed_when: false
+  when: hardware_apple_wifi_interface is not none
+
+- name: Ensure WiFi is disabled
+  ansible.builtin.command: networksetup -setairportpower {{ hardware_apple_wifi_interface }} off
+  when:
+    - hardware_apple_wifi_interface is not none
+    - hardware_apple_wifi is false
+    - "'On' in hardware_apple_wifi_status.stdout"
+
+- name: Ensure WiFi is enabled
+  ansible.builtin.command: networksetup -setairportpower {{ hardware_apple_wifi_interface }} on
+  when:
+    - hardware_apple_wifi_interface is not none
+    - hardware_apple_wifi is true
+    - "'Off' in hardware_apple_wifi_status.stdout"
+
+# Bluetooth hardware status
+- name: Get Bluetooth status
+  ansible.builtin.command: blueutil -p
+  register: hardware_apple_bluetooth_status
+  changed_when: false
+
+- name: Ensure Bluetooth is disabled
+  ansible.builtin.command: blueutil -p 0
+  when: (hardware_apple_bluetooth is false) and (hardware_apple_bluetooth_status.stdout != '0')
+
+- name: Ensure Bluetooth is enabled
+  ansible.builtin.command: blueutil -p 1
+  when: (hardware_apple_bluetooth is true) and (hardware_apple_bluetooth_status.stdout != '1')

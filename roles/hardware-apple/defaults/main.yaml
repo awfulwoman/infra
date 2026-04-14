@@ -1,0 +1,4 @@
+hardware_apple_bluetooth: true
+
+hardware_apple_wifi: true
+hardware_apple_wifi_interface: null
