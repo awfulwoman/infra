@@ -1,0 +1,5 @@
+galaxy_info:
+  role_name: network-tailscale-authkey
+  description: Generates a one-time Tailscale auth key via OAuth and sets it as tailscale_authkey fact
+  min_ansible_version: "2.14"
+dependencies: []
