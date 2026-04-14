@@ -5,7 +5,7 @@
     - role: network-netplan
     - role: infothrill.nullmailer
       become: true
-    # - role: system-sshkey
+    - role: system-sshkey
     # - role: system-zfs
     # - role: infra-public-resources
     - role: infra-named
