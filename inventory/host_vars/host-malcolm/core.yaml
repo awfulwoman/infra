@@ -89,3 +89,4 @@ system_homebrew_formulae:
   - ansible
   - ansible-lint
   - gemini-cli
+  - tmux
