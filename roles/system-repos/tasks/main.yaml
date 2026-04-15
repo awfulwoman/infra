@@ -28,12 +28,24 @@
     ssh-keyscan {{ system_repos_git_host }} >> {{ ansible_facts.user_dir }}/.ssh/known_hosts
   when: known_hosts_check.rc != 0
 
+- name: Ensure parent directories exist
+  become: true
+  ansible.builtin.file:
+    path: "{{ system_repos_base_dir }}/{{ item.repo.split('/')[0] }}"
+    state: directory
+    mode: "0755"
+    owner: "{{ ansible_user }}"
+    group: "{{ 'staff' if ansible_facts['os_family'] == 'Darwin' else ansible_user }}"
+  loop: "{{ system_repos }}"
+  loop_control:
+    label: "{{ item.repo.split('/')[0] }}"
+
 - name: Clone/update repositories
   ansible.builtin.git:
     repo: "git@{{ system_repos_git_host }}:{{ item.repo }}.git"
-    dest: "{{ system_repos_base_dir }}/{{ item.name | default(item.repo.split('/')[-1]) }}"
+    dest: "{{ system_repos_base_dir }}/{{ item.repo.split('/')[0] }}/{{ item.name | default(item.repo.split('/')[-1]) }}"
     version: "{{ item.version | default('HEAD') }}"
     update: "{{ system_repos_update }}"
   loop: "{{ system_repos }}"
   loop_control:
-    label: "{{ item.name | default(item.repo.split('/')[-1]) }}"
+    label: "{{ item.repo.split('/')[0] }}/{{ item.name | default(item.repo.split('/')[-1]) }}"
