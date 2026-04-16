@@ -1,0 +1,15 @@
+# Composition name (used by composition-common dependency)
+composition_name: dmarc
+
+# IMAP connection (override in host vars / vault as needed)
+dmarc_imap_host: "{{ vault_dmarc_imap_host }}"
+dmarc_imap_port: 993
+dmarc_imap_starttls: false
+dmarc_imap_user: "{{ vault_dmarc_imap_user }}"
+dmarc_imap_password: "{{ vault_dmarc_imap_password }}"
+dmarc_imap_dmarc_folder: INBOX
+dmarc_imap_tls_folder: INBOX
+
+# Web UI basic auth
+dmarc_http_user: "{{ vault_dmarc_http_user }}"
+dmarc_http_password: "{{ vault_dmarc_http_password }}"

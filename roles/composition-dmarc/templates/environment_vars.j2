@@ -1,0 +1,16 @@
+TZ="Europe/Berlin"
+
+# IMAP source for DMARC / SMTP TLS aggregate reports
+IMAP_HOST={{ dmarc_imap_host }}
+IMAP_PORT={{ dmarc_imap_port }}
+IMAP_STARTTLS={{ dmarc_imap_starttls | string | lower }}
+IMAP_USER={{ dmarc_imap_user }}
+IMAP_PASSWORD={{ dmarc_imap_password }}
+IMAP_DMARC_FOLDER={{ dmarc_imap_dmarc_folder }}
+IMAP_TLS_FOLDER={{ dmarc_imap_tls_folder }}
+
+# Web UI basic auth (TLS terminated at Traefik)
+HTTP_SERVER_PORT=8080
+HTTP_SERVER_BINDING=0.0.0.0
+HTTP_SERVER_USER={{ dmarc_http_user }}
+HTTP_SERVER_PASSWORD={{ dmarc_http_password }}

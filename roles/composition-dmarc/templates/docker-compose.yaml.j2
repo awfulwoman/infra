@@ -1,0 +1,26 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  dmarc:
+    container_name: dmarc
+    image: ghcr.io/cry-inc/dmarc-report-viewer:latest
+    restart: unless-stopped
+    env_file: .environment_vars
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dmarc.rule=Host(`dmarc.{{ domain_name }}`)"
+      - "traefik.http.routers.dmarc.tls=true"
+      - "traefik.http.routers.dmarc.tls.certresolver=letsencrypt"
+      - "traefik.http.services.dmarc.loadbalancer.server.port=8080"
+    networks:
+      - "{{ default_docker_network }}"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+networks:
+  "{{ default_docker_network }}":
+    external: true
