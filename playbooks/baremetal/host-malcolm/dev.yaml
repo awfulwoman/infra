@@ -1,0 +1,5 @@
+---
+- name: Malcolm
+  hosts: host-malcolm
+  roles:
+    - role: monitoring-healthchecksio

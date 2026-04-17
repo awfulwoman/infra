@@ -9,3 +9,4 @@
     - role: system-ollama
     - role: system-claude
     - role: system-git
+    - role: monitoring-healthchecksio
