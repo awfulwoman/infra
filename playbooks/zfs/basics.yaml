@@ -2,3 +2,4 @@
   hosts: zfs
   roles:
     - role: system-zfs
+      tags: [system, zfs]

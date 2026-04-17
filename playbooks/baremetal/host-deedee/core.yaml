@@ -2,27 +2,43 @@
   hosts: host-deedee
   roles:
     - role: hardware-raspberry-pi
+      tags: [hardware]
     - role: bootstrap-ubuntu-server
+      tags: [bootstrap]
     - role: network-netplan
+      tags: [network]
     - role: infothrill.nullmailer
       become: true
     - role: system-sshkey
+      tags: [system]
     - role: system-repos
+      tags: [system]
     - role: system-zfs
+      tags: [system, zfs]
     - role: infra-public-resources
+      tags: [infra]
     - role: infra-private-resources
+      tags: [infra]
     - role: infra-named
+      tags: [infra]
     - role: infra-certbot
+      tags: [infra]
     - role: system-claude
+      tags: [system]
     - role: composition-reverseproxy
+      tags: [compositions]
     - role: composition-container-management
+      tags: [compositions]
     - role: composition-zfs-api
+      tags: [compositions, zfs]
     - role: backups-zfs-client
+      tags: [backups, zfs]
     - role: script-share-personal-site
     - role: monitoring-healthchecksio
+      tags: [monitoring]
     - role: automation-infra
     - role: system-promtail
-      tags: promtail
+      tags: [system, promtail]
 
   handlers:
     - name: Reboot host

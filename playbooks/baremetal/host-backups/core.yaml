@@ -2,23 +2,34 @@
   hosts: host-backups
   roles:
     - role: bootstrap-ubuntu-server
+      tags: [bootstrap]
     - role: network-netplan
+      tags: [network]
     - role: client-nut
+      tags: [client]
     - role: infothrill.nullmailer
       become: true
     - role: system-wakeonlan
+      tags: [system]
     - role: system-zfs
+      tags: [system, zfs]
     # - role: system-msmtp
     - role: system-mqtt2cmd
+      tags: [system]
     - role: backups-zfs-server
       zfsbackup_pushover: false
       zfsbackup_run_after_wake: false
+      tags: [backups, zfs]
     - role: composition-container-management
+      tags: [compositions]
     - role: composition-reverseproxy
+      tags: [compositions]
     - role: composition-zfs-api
+      tags: [compositions, zfs]
     - role: monitoring-healthchecksio
+      tags: [monitoring]
     - role: system-promtail
-      tags: promtail
+      tags: [system, promtail]
 
   handlers:
     - name: Reboot host

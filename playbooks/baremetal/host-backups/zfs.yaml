@@ -2,7 +2,9 @@
   hosts: host-backups
   roles:
     - role: system-zfs
+      tags: [system, zfs]
     - role: backups-zfs-server
+      tags: [backups, zfs]
   handlers:
     - name: Reboot host
       become: true

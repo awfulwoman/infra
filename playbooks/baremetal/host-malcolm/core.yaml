@@ -3,10 +3,17 @@
   hosts: host-malcolm
   roles:
     - role: bootstrap-macos-server
+      tags: [bootstrap]
     - role: hardware-apple
+      tags: [hardware]
     - role: automation-key-updater
     - role: system-repos
+      tags: [system]
     - role: system-ollama
+      tags: [system]
     - role: system-claude
+      tags: [system]
     - role: system-git
+      tags: [system]
     - role: monitoring-healthchecksio
+      tags: [monitoring]

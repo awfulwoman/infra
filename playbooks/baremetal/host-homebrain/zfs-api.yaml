@@ -13,6 +13,7 @@
     - role: composition-zigbee2mqtt
     - role: composition-watchyourlan
     - role: composition-zfs-api
+      tags: [compositions, zfs]
 
   handlers:
     - name: Reboot host

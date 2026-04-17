@@ -2,10 +2,13 @@
   hosts: host-test-router
   roles:
     - role: bootstrap-ubuntu-server
+      tags: [bootstrap]
     - role: network-netplan
+      tags: [network]
     - role: infothrill.nullmailer
       become: true
     - role: system-sshkey
+      tags: [system]
     # - role: system-zfs
     # - role: infra-public-resources
     # - role: infra-named
@@ -13,6 +16,7 @@
     # - role: compositions
     # - role: backups-zfs-client
     - role: monitoring-healthchecksio
+      tags: [monitoring]
 
   handlers:
     - name: Reboot host

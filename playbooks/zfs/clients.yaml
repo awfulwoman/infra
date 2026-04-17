@@ -2,5 +2,8 @@
   hosts: zfs_backup_clients
   roles:
     - role: system-zfs
+      tags: [system, zfs]
     - role: backups-zfs-client
+      tags: [backups, zfs]
     - role: composition-zfs-api
+      tags: [compositions, zfs]

@@ -2,21 +2,33 @@
   hosts: host-albion
   roles:
     - role: hardware-raspberry-pi
+      tags: [hardware]
     - role: bootstrap-ubuntu-server
+      tags: [bootstrap]
     - role: network-netplan
+      tags: [network]
     - role: infothrill.nullmailer
       become: true
     - role: system-sshkey
+      tags: [system]
     - role: system-zfs
+      tags: [system, zfs]
     - role: backups-zfs-archive-offsite
+      tags: [backups, zfs]
     - role: network-ip-address-forwarding
+      tags: [network]
     - role: client-nfs
+      tags: [client]
     - role: composition-reverseproxy
+      tags: [compositions]
     - role: composition-container-management
+      tags: [compositions]
     - role: composition-zfs-api
+      tags: [compositions, zfs]
     - role: monitoring-healthchecksio
+      tags: [monitoring]
     - role: system-promtail
-      tags: promtail
+      tags: [system, promtail]
 
   handlers:
     - name: Reboot host

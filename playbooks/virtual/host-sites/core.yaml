@@ -2,18 +2,28 @@
   hosts: host-sites
   roles:
     - role: bootstrap-ubuntu-server
+      tags: [bootstrap]
     - role: virtual-hetzner
+      tags: [virtual]
     - role: user-site-deployment
     - role: system-zfs
+      tags: [system, zfs]
     - role: system-zfs-policy
+      tags: [system, zfs]
     - role: client-nfs
+      tags: [client]
     - role: composition-reverseproxy
+      tags: [compositions]
     - role: composition-container-management
+      tags: [compositions]
     - role: composition-awfulwoman
+      tags: [compositions]
     - role: composition-zfs-api
+      tags: [compositions, zfs]
     - role: monitoring-healthchecksio
+      tags: [monitoring]
     - role: system-promtail
-      tags: promtail
+      tags: [system, promtail]
 
   handlers:
     - name: Reboot host

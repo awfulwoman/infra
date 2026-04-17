@@ -2,4 +2,6 @@
   hosts: host-pikvm
   roles:
     - role: system-pikvm
+      tags: [system]
     - role: monitoring-healthchecksio
+      tags: [monitoring]
