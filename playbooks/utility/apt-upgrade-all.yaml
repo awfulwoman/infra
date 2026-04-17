@@ -1,8 +1,0 @@
-- name: Update and upgrade apt packages
-  hosts: infra
-  tasks:
-    - name: Update apt cache and upgrade packages
-      become: true
-      ansible.builtin.apt:
-        update_cache: true
-        upgrade: safe

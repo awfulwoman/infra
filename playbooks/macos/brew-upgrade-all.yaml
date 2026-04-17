@@ -1,0 +1,7 @@
+- name: Update and upgrade Homebrew packages
+  hosts: macos_servers
+  tasks:
+    - name: Upgrade all formulae
+      community.general.homebrew:
+        update_homebrew: true
+        upgrade_all: true
