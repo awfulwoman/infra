@@ -37,7 +37,6 @@ all:
         host-belinda:
         host-deedee:
         host-homebrain:
-        host-pikvm:
         host-samson:
         host-sites:
         host-storage:

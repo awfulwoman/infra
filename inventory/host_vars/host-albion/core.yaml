@@ -1,7 +1,7 @@
 # -------------------------------------------------------------------
 # ANSIBLE
 # -------------------------------------------------------------------
-ansible_host: host-albion.{{ vault_tailnet_name }}
+ansible_host: host-albion.{{ tailscale_tailnet_name }}
 ansible_user: "{{ vault_server_username }}"
 ansible_become_password: "{{ vault_password }}"
 

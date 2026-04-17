@@ -1,5 +1,5 @@
 - name: Update and upgrade apt packages
-  hosts: servers_ubuntu
+  hosts: ubuntu_servers
   tasks:
     - name: Update apt cache and upgrade packages
       become: true
