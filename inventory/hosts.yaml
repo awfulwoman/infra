@@ -27,6 +27,31 @@ all:
         host-test-router:
 
     # -------------------------------------------------------------------
+    # UBUNTU SERVERS
+    # All servers that run Ubuntu
+    # -------------------------------------------------------------------
+    ubuntu_servers:
+      hosts:
+        host-albion:
+        host-backups:
+        host-belinda:
+        host-deedee:
+        host-homebrain:
+        host-pikvm:
+        host-samson:
+        host-sites:
+        host-storage:
+        host-test-router:
+
+    # -------------------------------------------------------------------
+    # MACOS SERVERS
+    # All servers that run MacOS
+    # -------------------------------------------------------------------
+    macos_servers:
+      hosts:
+        host-malcolm:
+
+    # -------------------------------------------------------------------
     # HOME AUTOMATION
     # Hosts running home automation services
     # -------------------------------------------------------------------
