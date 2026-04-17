@@ -1,0 +1,7 @@
+- name: Kubernetes cluster
+  hosts: k8s
+
+  tasks:
+    - name: Reboot all nodes
+      become: true
+      ansible.builtin.reboot:
