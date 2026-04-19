@@ -1,4 +1,4 @@
-- name: Home Automation Server
+- name: Home Automation - making lights go on and off in an overly-complicated way
   hosts: host-homebrain
   roles:
     - role: bootstrap-ubuntu-server

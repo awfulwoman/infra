@@ -1,5 +1,5 @@
 ---
-- name: Storage NAS
+- name: NAS and general workloads
   hosts: host-storage
   roles:
     - role: bootstrap-ubuntu-server

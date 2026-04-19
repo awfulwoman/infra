@@ -1,4 +1,4 @@
-- name: DeeDee - we're off to Yonkers
+- name: DeeDee - aw man, we're off to Yonkers
   hosts: host-deedee
   roles:
     - role: hardware-raspberry-pi

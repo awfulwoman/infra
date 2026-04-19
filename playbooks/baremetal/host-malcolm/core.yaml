@@ -1,5 +1,5 @@
 ---
-- name: Malcolm
+- name: Malcolm, the little power-efficient Mac Mini
   hosts: host-malcolm
   roles:
     - role: bootstrap-macos-server

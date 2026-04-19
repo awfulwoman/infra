@@ -1,4 +1,4 @@
-- name: Basic PiKVM stuff
+- name: PiKVM - a weirdly angry system
   hosts: host-pikvm
   roles:
     - role: system-pikvm
