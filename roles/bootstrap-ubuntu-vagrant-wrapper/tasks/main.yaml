@@ -76,7 +76,7 @@
 - name: Env vars
   no_log: true
   ansible.builtin.include_role:
-    name: weareinteractive.environment
+    name: system-environment
   vars:
     ansible_become: true
 

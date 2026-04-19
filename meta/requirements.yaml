@@ -2,8 +2,6 @@
 # ansible-galaxy install -r meta/requirements.yaml
 # ansible-galaxy collection install -r meta/requirements.yaml
 roles:
-  - name: weareinteractive.environment
-    version: 1.5.0
   - name: xanmanning.k3s
     version: v3.6.2
   - name: robertdebock.digitalocean_agent
