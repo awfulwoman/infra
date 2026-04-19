@@ -55,6 +55,7 @@ The primary configuration management tool. Structure:
   - `client-*`: Client half of client-server pairs (nfs, nut)
   - `virtual-*`: Virtualisation roles (qemu-host, qemu-guest, hetzner)
   - `hardware-*`: Hardware-specific configs (raspberry-pi, zigbee-conbee, rtl-433)
+  - `automation-*`: Scheduled automation (e.g., `automation-infra` runs a list of playbooks on a systemd timer on Linux or launchd on macOS)
   - `monitoring-*`: Monitoring integrations (healthchecksio, linux2mqtt)
   - `network-*`: Network configuration
     - `network-netplan`: Netplan-based network configuration for primary interface (supports static IP and DHCP)
@@ -71,9 +72,10 @@ The primary configuration management tool. Structure:
 **Ansible configuration** (`ansible.cfg`):
 
 - Inventory: `./inventory/hosts.yaml`
-- Galaxy roles: `/opt/ansible/galaxy/roles`
-- Galaxy collections: `/opt/ansible/galaxy/collections`
+- Galaxy roles: `/opt/ansible/galaxy/roles` (Linux); macOS uses `{{ ansible_path }}/galaxy/roles`
+- Galaxy collections: `/opt/ansible/galaxy/collections` (Linux); macOS uses `{{ ansible_path }}/galaxy/collections`
 - Vault identity: `beanpod`
+- `vault_password_file` is hardcoded to `/opt/ansible/.vaultpassword` — only correct on Linux; macOS hosts override via `ansible_vault_password_file` in host_vars
 
 ### Flux/Kubernetes (`flux/`)
 
