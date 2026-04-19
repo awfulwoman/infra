@@ -6,3 +6,15 @@
 - name: Install Ansible (Ubuntu/Debian)
   ansible.builtin.include_tasks: install-ubuntu.yaml
   when: ansible_facts['os_family'] == 'Debian'
+
+- name: Ensure Ansible CLI paths exist
+  when: ansible_path is defined
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0755"
+  loop: >-
+    {{
+      [ansible_path, ansible_log_path, ansible_collections_path] +
+      (ansible_roles_path.split(':') | select('match', '^/') | list)
+    }}
