@@ -1,6 +1,5 @@
 # Boostraps a MacOS server
 - name: Env vars
-  no_log: true
   ansible.builtin.include_role:
     name: system-environment
 
