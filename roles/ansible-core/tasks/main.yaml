@@ -7,6 +7,14 @@
   ansible.builtin.include_tasks: install-ubuntu.yaml
   when: ansible_facts['os_family'] == 'Debian'
 
+- name: Install Ansible Galaxy dependencies
+  when: ansible_infra_dir is defined
+  ansible.builtin.command:
+    cmd: ansible-galaxy install -r {{ ansible_infra_dir }}/meta/requirements.yaml
+  environment:
+    PATH: "/opt/homebrew/bin:/usr/local/bin:{{ ansible_facts['env']['PATH'] }}"
+  changed_when: false
+
 - name: Ensure Ansible CLI paths exist
   when: ansible_path is defined
   ansible.builtin.file:

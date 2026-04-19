@@ -1,14 +1,24 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-cd {{ ansible_infra_dir }}
-
 {% for playbook in automation_infra_playbooks %}
+{% if ansible_facts['os_family'] == 'Darwin' %}
+sudo -u {{ ansible_user }} bash -l -c "
+  cd {{ ansible_infra_dir }} && \
+  ANSIBLE_ROLES_PATH={{ ansible_roles_path }}:{{ ansible_infra_dir }}/roles \
+  ANSIBLE_COLLECTIONS_PATH={{ ansible_collections_path }} \
+  ansible-playbook \
+    {{ automation_infra_playbooks_base_path }}/{{ playbook }} \
+    --inventory {{ automation_infra_inventory }} \
+    --vault-password-file {{ automation_infra_vault_password_file }}"
+{% else %}
 sudo -u {{ ansible_user }} bash -c "
+  cd {{ ansible_infra_dir }} && \
   source {{ ansible_infra_dir }}/.venv/bin/activate && \
   ansible-playbook \
     {{ automation_infra_playbooks_base_path }}/{{ playbook }} \
     --inventory {{ automation_infra_inventory }} \
     --vault-password-file {{ automation_infra_vault_password_file }}"
+{% endif %}
 
 {% endfor %}
