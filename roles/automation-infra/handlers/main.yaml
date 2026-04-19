@@ -3,3 +3,10 @@
   become: true
   ansible.builtin.systemd:
     daemon_reload: true
+
+- name: Reload launchd
+  become: true
+  ansible.builtin.shell:
+    cmd: >
+      launchctl bootout system/{{ automation_infra_plist_label }} 2>/dev/null || true &&
+      launchctl bootstrap system /Library/LaunchDaemons/{{ automation_infra_plist_label }}.plist

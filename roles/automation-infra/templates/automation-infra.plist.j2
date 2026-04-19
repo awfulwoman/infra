@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>{{ automation_infra_plist_label }}</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>{{ automation_infra_script_path }}</string>
+  </array>
+
+  <key>StartCalendarInterval</key>
+{% if automation_infra_schedule == "hourly" %}
+  <dict>
+    <key>Minute</key>
+    <integer>0</integer>
+  </dict>
+{% elif automation_infra_schedule == "weekly" %}
+  <dict>
+    <key>Weekday</key>
+    <integer>0</integer>
+    <key>Hour</key>
+    <integer>0</integer>
+    <key>Minute</key>
+    <integer>0</integer>
+  </dict>
+{% else %}
+  <dict>
+    <key>Hour</key>
+    <integer>0</integer>
+    <key>Minute</key>
+    <integer>0</integer>
+  </dict>
+{% endif %}
+
+  <key>StandardOutPath</key>
+  <string>/usr/local/var/log/{{ automation_infra_service_name }}.log</string>
+
+  <key>StandardErrorPath</key>
+  <string>/usr/local/var/log/{{ automation_infra_service_name }}.log</string>
+</dict>
+</plist>

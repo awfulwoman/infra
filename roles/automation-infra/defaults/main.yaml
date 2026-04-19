@@ -1,7 +1,10 @@
 # Infrastructure Playbook Automation Configuration
 automation_infra_script_path: "/usr/local/bin/automation-infra"
 automation_infra_schedule: "daily"  # How often to run (hourly/daily/weekly)
+automation_infra_playbooks_base_path: "{{ ansible_infra_dir }}/playbooks"
 automation_infra_playbooks: []
 automation_infra_inventory: "{{ ansible_infra_dir }}/inventory/hosts.yaml"
 automation_infra_vault_password_file: "{{ ansible_vault_password_file }}"
 automation_infra_service_name: "automation-infra"
+automation_infra_plist_label: "local.automation-infra"
+automation_infra_root_group: "{{ 'wheel' if ansible_facts['os_family'] == 'Darwin' else 'root' }}"

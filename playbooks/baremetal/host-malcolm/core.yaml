@@ -21,6 +21,8 @@
       tags: [hardware]
     - role: automation-key-updater
       tags: [automation]
+    - role: automation-infra
+      tags: [automation]
     - role: system-repos
       tags: [system]
     - role: system-ollama

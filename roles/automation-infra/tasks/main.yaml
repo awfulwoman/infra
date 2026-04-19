@@ -6,12 +6,12 @@
     src: automation-infra.sh.j2
     dest: "{{ automation_infra_script_path }}"
     owner: root
-    group: root
+    group: "{{ automation_infra_root_group }}"
     mode: "0755"
 
 - name: "Verify playbook path exists"
   ansible.builtin.stat:
-    path: "{{ item }}"
+    path: "{{ automation_infra_playbooks_base_path }}/{{ item }}"
   register: playbook_check
   failed_when: not playbook_check.stat.exists
   loop: "{{ automation_infra_playbooks }}"
@@ -22,6 +22,8 @@
   register: inventory_check
   failed_when: not inventory_check.stat.exists
 
+# Linux (systemd)
+
 - name: "Create systemd service"
   become: true
   ansible.builtin.template:
@@ -31,6 +33,7 @@
     group: root
     mode: "0644"
   notify: Reload systemd
+  when: ansible_facts['os_family'] != 'Darwin'
 
 - name: "Create systemd timer"
   become: true
@@ -41,6 +44,7 @@
     group: root
     mode: "0644"
   notify: Reload systemd
+  when: ansible_facts['os_family'] != 'Darwin'
 
 - name: "Enable and start systemd timer"
   become: true
@@ -49,3 +53,44 @@
     enabled: true
     state: started
     daemon_reload: true
+  when: ansible_facts['os_family'] != 'Darwin'
+
+# macOS (launchd)
+
+- name: "Ensure log directory exists"
+  become: true
+  ansible.builtin.file:
+    path: /usr/local/var/log
+    state: directory
+    owner: root
+    group: wheel
+    mode: "0755"
+  when: ansible_facts['os_family'] == 'Darwin'
+
+- name: "Deploy launchd plist"
+  become: true
+  ansible.builtin.template:
+    src: automation-infra.plist.j2
+    dest: /Library/LaunchDaemons/{{ automation_infra_plist_label }}.plist
+    owner: root
+    group: wheel
+    mode: "0644"
+  notify: Reload launchd
+  when: ansible_facts['os_family'] == 'Darwin'
+
+- name: "Check if launchd service is bootstrapped"
+  become: true
+  ansible.builtin.command:
+    cmd: launchctl print system/{{ automation_infra_plist_label }}
+  register: launchd_check
+  failed_when: false
+  changed_when: false
+  when: ansible_facts['os_family'] == 'Darwin'
+
+- name: "Bootstrap launchd service"
+  become: true
+  ansible.builtin.command:
+    cmd: launchctl bootstrap system /Library/LaunchDaemons/{{ automation_infra_plist_label }}.plist
+  when:
+    - ansible_facts['os_family'] == 'Darwin'
+    - launchd_check.rc != 0
