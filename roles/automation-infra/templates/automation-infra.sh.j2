@@ -1,25 +1,41 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+WORK_DIR=$(sudo -u {{ ansible_user }} mktemp -d -t automation-infra.XXXXXX)
+trap "rm -rf $WORK_DIR" EXIT
+
+sudo -u {{ ansible_user }} git clone {{ automation_infra_repo_url }} "$WORK_DIR"
+
+{% if ansible_facts['os_family'] == 'Darwin' %}
+sudo -u {{ ansible_user }} bash -l -c "
+  ANSIBLE_ROLES_PATH={{ ansible_roles_path }} \
+  ANSIBLE_COLLECTIONS_PATH={{ ansible_collections_path }} \
+  ansible-galaxy install -r $WORK_DIR/meta/requirements.yaml"
+{% else %}
+sudo -u {{ ansible_user }} bash -c "
+  source {{ ansible_infra_dir }}/.venv/bin/activate && \
+  ansible-galaxy install -r $WORK_DIR/meta/requirements.yaml"
+{% endif %}
+
 {% for playbook in automation_infra_playbooks %}
 {% if ansible_facts['os_family'] == 'Darwin' %}
 sudo -u {{ ansible_user }} bash -l -c "
-  cd {{ ansible_infra_dir }} && \
-  ANSIBLE_ROLES_PATH={{ ansible_roles_path }}:{{ ansible_infra_dir }}/roles \
+  cd $WORK_DIR && \
+  ANSIBLE_ROLES_PATH={{ ansible_roles_path }}:$WORK_DIR/roles \
   ANSIBLE_COLLECTIONS_PATH={{ ansible_collections_path }} \
   ANSIBLE_VAULT_PASSWORD_FILE={{ automation_infra_vault_password_file }} \
   ansible-playbook \
-    {{ automation_infra_playbooks_base_path }}/{{ playbook }} \
-    --inventory {{ automation_infra_inventory }} \
+    $WORK_DIR/playbooks/{{ playbook }} \
+    --inventory $WORK_DIR/inventory/hosts.yaml \
     --vault-password-file {{ automation_infra_vault_password_file }}"
 {% else %}
 sudo -u {{ ansible_user }} bash -c "
-  cd {{ ansible_infra_dir }} && \
+  cd $WORK_DIR && \
   source {{ ansible_infra_dir }}/.venv/bin/activate && \
   ANSIBLE_VAULT_PASSWORD_FILE={{ automation_infra_vault_password_file }} \
   ansible-playbook \
-    {{ automation_infra_playbooks_base_path }}/{{ playbook }} \
-    --inventory {{ automation_infra_inventory }} \
+    $WORK_DIR/playbooks/{{ playbook }} \
+    --inventory $WORK_DIR/inventory/hosts.yaml \
     --vault-password-file {{ automation_infra_vault_password_file }}"
 {% endif %}
 

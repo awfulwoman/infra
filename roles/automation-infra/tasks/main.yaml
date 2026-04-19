@@ -1,5 +1,11 @@
 # code: language=ansible
 
+- name: "Validate required variables"
+  ansible.builtin.assert:
+    that:
+      - automation_infra_repo_url | length > 0
+    fail_msg: "automation_infra_repo_url must be set"
+
 - name: "Deploy run script"
   become: true
   ansible.builtin.template:
