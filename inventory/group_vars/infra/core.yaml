@@ -27,7 +27,7 @@ default_docker_network: guineanet
 ansible_path: "/opt/ansible"
 ansible_log_path: "{{ ansible_path }}/logs"
 ansible_vault_password_file: "{{ ansible_path }}/.vaultpassword"
-ansible_roles_path: "{{ ansible_path }}/galaxy/roles:./roles"
+ansible_roles_path: "{{ ansible_path }}/galaxy/roles"
 ansible_collections_path: "{{ ansible_path }}/galaxy/collections"
 ansible_infra_dir: "/fastpool/repos/infra"
 
@@ -54,7 +54,7 @@ environment_config:
   ANSIBLE_PATH: "{{ ansible_path }}"
   ANSIBLE_LOG_PATH: "{{ ansible_log_path }}"
   ANSIBLE_VAULT_PASSWORD_FILE: "{{ ansible_vault_password_file }}"
-  ANSIBLE_ROLES_PATH: "{{ ansible_roles_path }}"
+  ANSIBLE_ROLES_PATH: "{{ ansible_roles_path }}:./roles"
   ANSIBLE_COLLECTIONS_PATH: "{{ ansible_collections_path }}"
   ANSIBLE_INFRA_DIR: "{{ ansible_infra_dir }}"
   TF_VAR_digitalocean_token: "{{ vault_ddns_digitalocean_token }}"

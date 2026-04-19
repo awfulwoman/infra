@@ -8,7 +8,7 @@
     dest: "{{ automation_key_updater_script_path | dirname }}"
     state: directory
     owner: root
-    group: "{{ 'wheel' if ansible_facts['os_family'] == 'Darwin' else 'root' }}"
+    group: "{{ 'wheel' if ansible_facts['os_family'] | default('Linux') == 'Darwin' else 'root' }}"
     mode: "0755"
 
 - name: Ensure update script is installed
@@ -17,7 +17,7 @@
     src: update-automation-keys.sh
     dest: "{{ automation_key_updater_script_path }}"
     owner: root
-    group: "{{ 'wheel' if ansible_facts['os_family'] == 'Darwin' else 'root' }}"
+    group: "{{ 'wheel' if ansible_facts['os_family'] | default('Linux') == 'Darwin' else 'root' }}"
     mode: "0755"
 
 - name: Ensure GitHub SSH keys are fetched immediately

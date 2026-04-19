@@ -31,7 +31,7 @@ ansible_become_password: "{{ vault_password }}"
 ansible_path: "{{ ansible_facts.user_dir }}/ansible"
 ansible_log_path: "{{ ansible_path }}/logs"
 ansible_vault_password_file: "{{ ansible_path }}/.vaultpassword"
-ansible_roles_path: "{{ ansible_path }}/galaxy/roles:./roles"
+ansible_roles_path: "{{ ansible_path }}/galaxy/roles"
 ansible_collections_path: "{{ ansible_path }}/galaxy/collections"
 
 # -------------------------------------------------------------------

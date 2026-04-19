@@ -3,5 +3,5 @@
 - name: Assert supported platform
   ansible.builtin.assert:
     that:
-      - ansible_facts['system'] in ansible_assert_platform_supported
-    fail_msg: "Role does not support {{ ansible_facts['system'] }}. Supported platforms: {{ ansible_assert_platform_supported | join(', ') }}"
+      - ansible_facts['system'] | default('unknown') in ansible_assert_platform_supported
+    fail_msg: "Role does not support {{ ansible_facts['system'] | default('unknown') }}. Supported platforms: {{ ansible_assert_platform_supported | join(', ') }}"

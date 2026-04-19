@@ -1,0 +1,10 @@
+# A dictionary of environment variables to set, e.g.:
+#
+# environment_config:
+#   MY_VAR: "my_value"
+#   ANOTHER_VAR: "another_value"
+environment_config: {}
+
+# Override the target file. If unset, defaults to /etc/environment on Debian
+# and ~/.zshenv on macOS.
+environment_file: ""

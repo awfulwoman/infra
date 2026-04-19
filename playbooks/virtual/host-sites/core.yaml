@@ -1,18 +1,18 @@
 - name: Out on the internet server
   hosts: host-sites
-  gather_facts: false
-  pre_tasks:
-    - name: Check connectivity
-      ansible.builtin.wait_for_connection:
-        timeout: 5
-      register: connectivity
-      ignore_unreachable: true
-      ignore_errors: true
-    - name: Skip play if host is unreachable
-      ansible.builtin.meta: end_host
-      when: connectivity.failed | default(false)
-    - name: Gather host facts, continuing as normal
-      ansible.builtin.setup:
+  # gather_facts: false
+  # pre_tasks:
+  #   - name: Check connectivity
+  #     ansible.builtin.wait_for_connection:
+  #       timeout: 5
+  #     register: connectivity
+  #     ignore_unreachable: true
+  #     ignore_errors: true
+  #   - name: Skip play if host is unreachable
+  #     ansible.builtin.meta: end_host
+  #     when: connectivity.failed | default(false)
+  #   - name: Gather host facts, continuing as normal
+  #     ansible.builtin.setup:
   roles:
     - role: bootstrap-ubuntu-server
       tags: [bootstrap]

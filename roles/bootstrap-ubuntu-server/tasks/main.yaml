@@ -102,9 +102,7 @@
 - name: Env vars
   no_log: true
   ansible.builtin.include_role:
-    name: weareinteractive.environment
-  vars:
-    ansible_become: true
+    name: system-environment
 
 - name: Ubuntu Pro
   ansible.builtin.include_role:
