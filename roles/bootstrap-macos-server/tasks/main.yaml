@@ -4,16 +4,6 @@
   ansible.builtin.include_role:
     name: system-environment
 
-- name: Debug Ansible CLI environment
-  ansible.builtin.debug:
-    msg:
-      ansible_path: "{{ ansible_path | default('undefined') }}"
-      ansible_log_path: "{{ ansible_log_path | default('undefined') }}"
-      ansible_vault_password_file: "{{ ansible_vault_password_file | default('undefined') }}"
-      ansible_roles_path: "{{ ansible_roles_path | default('undefined') }}"
-      ansible_collections_path: "{{ ansible_collections_path | default('undefined') }}"
-      environment_config: "{{ environment_config | default({}) }}"
-
 - name: Fix TERM for ghostty over SSH
   ansible.builtin.blockinfile:
     path: "{{ ansible_facts.user_dir }}/.zshrc"

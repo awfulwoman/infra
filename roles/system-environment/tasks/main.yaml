@@ -1,5 +1,6 @@
 - name: Configure environment variables (Debian)
   become: true
+  no_log: true
   when:
     - environment_config | length > 0
     - ansible_facts['os_family'] == 'Debian'
@@ -14,6 +15,7 @@
   loop: "{{ environment_config | dict2items }}"
 
 - name: Configure environment variables (macOS)
+  no_log: true
   when:
     - environment_config | length > 0
     - ansible_facts['os_family'] == 'Darwin'
