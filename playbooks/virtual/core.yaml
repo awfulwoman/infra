@@ -1,4 +1,4 @@
 - name: VM Hetzner
-  import_playbook: sites/core.yaml
+  import_playbook: host-sites/core.yaml
   tags:
     - public-infra
