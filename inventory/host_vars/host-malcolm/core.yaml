@@ -89,6 +89,7 @@ automation_infra_playbooks:
   - baremetal/host-homebrain/core.yaml
   - baremetal/host-belinda/core.yaml
   - baremetal/host-malcolm/core.yaml
+  - virtual/host-sites/core.yaml
 
 # -------------------------------------------------------------------
 # HOMEBREW
