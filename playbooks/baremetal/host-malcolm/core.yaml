@@ -7,6 +7,7 @@
     - role: hardware-apple
       tags: [hardware]
     - role: automation-key-updater
+      tags: [automation]
     - role: system-repos
       tags: [system]
     - role: system-ollama
@@ -14,7 +15,7 @@
     - role: system-claude
       tags: [system]
     - role: ansible-core
-      tags: [system]
+      tags: [ansible]
     - role: system-git
       tags: [system]
     - role: monitoring-healthchecksio
