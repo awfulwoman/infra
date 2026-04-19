@@ -2,7 +2,6 @@
 automation_infra_script_path: "/usr/local/bin/automation-infra"
 automation_infra_schedule: "daily"  # How often to run (hourly/daily/weekly)
 automation_infra_repo_url: ""
-automation_infra_playbooks_base_path: "{{ ansible_infra_dir }}/playbooks"
 automation_infra_playbooks: []
 automation_infra_inventory: "{{ ansible_infra_dir }}/inventory/hosts.yaml"
 automation_infra_vault_password_file: "{{ ansible_vault_password_file }}"

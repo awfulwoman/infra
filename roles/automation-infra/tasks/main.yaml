@@ -17,7 +17,7 @@
 
 - name: "Verify playbook path exists"
   ansible.builtin.stat:
-    path: "{{ automation_infra_playbooks_base_path }}/{{ item }}"
+    path: "{{ ansible_infra_dir }}/playbooks/{{ item }}"
   register: playbook_check
   failed_when: not playbook_check.stat.exists
   loop: "{{ automation_infra_playbooks }}"
