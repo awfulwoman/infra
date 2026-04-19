@@ -1,0 +1,24 @@
+- name: Install apt packages
+  become: true
+  ansible.builtin.apt:
+    name:
+      - bcmwl-kernel-source
+      - acpi
+
+- name: Remove conflicting wifi modules
+  become: true
+  community.general.modprobe:
+    name:
+      - b43
+      - ssb
+      - brcmfmac
+      - brcmsmac
+      - bcma
+    state: absent
+
+- name: Add WL module
+  become: true
+  community.general.modprobe:
+    name: wl # array not allowed
+    state: present
+    persistent: present
