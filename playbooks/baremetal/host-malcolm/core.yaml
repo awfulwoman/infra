@@ -13,6 +13,8 @@
       tags: [system]
     - role: system-claude
       tags: [system]
+    - role: ansible-core
+      tags: [system]
     - role: system-git
       tags: [system]
     - role: monitoring-healthchecksio

@@ -1,0 +1,7 @@
+---
+- name: Install Ansible via Homebrew
+  community.general.homebrew:
+    name:
+      - ansible
+      - ansible-lint
+    state: present

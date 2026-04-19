@@ -28,6 +28,11 @@ host_mac: "1c:f6:4c:3e:51:a5"
 ansible_host: "{{ host_fqdn }}"
 ansible_user: "{{ vault_server_username }}"
 ansible_become_password: "{{ vault_password }}"
+ansible_path: "{{ ansible_facts.user_dir }}/ansible"
+ansible_log_path: "{{ ansible_path }}/logs"
+ansible_vault_password_file: "{{ ansible_path }}/.vaultpassword"
+ansible_roles_path: "{{ ansible_path }}/galaxy/roles:./roles"
+ansible_collections_path: "{{ ansible_path }}/galaxy/collections"
 
 # -------------------------------------------------------------------
 # HARDWARE
@@ -86,7 +91,5 @@ system_homebrew_formulae:
   - ffmpeg
   - macmon
   - wget
-  - ansible
-  - ansible-lint
   - gemini-cli
   - tmux
