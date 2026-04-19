@@ -10,6 +10,12 @@ Credentials are stored in this repo, encrypted.
 
 I access everything though Tailscale, which is an annoying dependency. But I keep the integration as light as possible so that I can detach my infra from them when they inevitably turn evil.
 
+![host-homebrain - Core Playbook](https://healthchecks.io/b/2/fa63155e-40e1-4f59-9279-8d975b73378f.svg)
+![host-malcolm - Core Playbook](https://healthchecks.io/b/2/7cfa55ac-9a06-4f4a-b726-0c6cc569dae8.svg)
+![host-sites - Core Playbook](https://healthchecks.io/b/2/7a8d9d9b-f5fb-4299-bc98-c206ba518c75.svg)
+![host-storage - Core Playbook](https://healthchecks.io/b/2/3ac8d7ea-5f57-4572-8a06-64d5f15c9877.svg)
+![host-pikvm - Core Playbook](https://healthchecks.io/b/2/b974756a-0733-4c2d-8f64-b4466c3cd0ca.svg)
+
 ## Installation
 
 Not sure why you'd want to install this, as it's my home infra. But hey, knock yourself out.
