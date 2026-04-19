@@ -1,7 +1,6 @@
 - name: Build infra automation
   hosts: host-deedee
-  roles:
-    - role: automation-infra
+  roles: []
 
   handlers:
     - name: Reboot host

@@ -49,7 +49,6 @@
     - role: script-share-personal-site
     - role: monitoring-healthchecksio
       tags: [monitoring]
-    - role: automation-infra
     - role: system-promtail
       tags: [system, promtail]
 

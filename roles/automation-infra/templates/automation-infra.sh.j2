@@ -4,7 +4,10 @@ set -euo pipefail
 cd {{ ansible_infra_dir }}
 source {{ ansible_infra_dir }}/.venv/bin/activate
 
+{% for playbook in automation_infra_playbooks %}
 ansible-playbook \
-  {{ automation_infra_playbook }} \
+  {{ playbook }} \
   --inventory {{ automation_infra_inventory }} \
   --vault-password-file {{ automation_infra_vault_password_file }}
+
+{% endfor %}
