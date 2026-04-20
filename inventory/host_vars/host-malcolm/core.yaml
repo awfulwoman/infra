@@ -75,7 +75,6 @@ system_repos:
   - repo: awfulwoman/chives
   - repo: awfulwoman/podderton
   - repo: awfulwoman/ralph
-  - repo: awfulwoman/awfulclaw
   - repo: awfulwoman/memorybank
   - repo: awfulwoman/personal-site
 system_repos_base_dir: "{{ ansible_facts.user_dir }}/Code"
