@@ -61,6 +61,8 @@
       tags: [compositions]
     - role: composition-immich
       tags: [compositions]
+    - role: composition-llm-inference-calculator
+      tags: [compositions, composition-llm-inference-calculator]
     - role: composition-audiobookshelf
       tags: [compositions]
     - role: composition-downloads
