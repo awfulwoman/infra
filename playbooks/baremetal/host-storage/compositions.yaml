@@ -24,3 +24,4 @@
     - role: composition-libretranslate
     - role: composition-open-webui
     - role: composition-llm-inference-calculator
+    - role: composition-n8n

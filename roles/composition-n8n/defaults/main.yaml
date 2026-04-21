@@ -1,0 +1,5 @@
+# code: language=ansible
+composition_name: n8n
+
+n8n_db_password: "{{ vault_n8n_db_password }}"
+n8n_encryption_key: "{{ vault_n8n_encryption_key }}"

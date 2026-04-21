@@ -83,6 +83,8 @@
       tags: [compositions]
     - role: composition-libretranslate
       tags: [compositions]
+    - role: composition-n8n
+      tags: [compositions, composition-n8n]
     - role: composition-memorybank
       tags: [compositions]
     - role: system-emailbackup
