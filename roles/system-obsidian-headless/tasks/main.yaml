@@ -1,0 +1,20 @@
+---
+- name: Install obsidian-headless (macOS)
+  ansible.builtin.include_tasks: install-macos.yaml
+  when: ansible_facts['os_family'] == 'Darwin'
+
+- name: Install obsidian-headless (Ubuntu/Debian)
+  ansible.builtin.include_tasks: install-ubuntu.yaml
+  when: ansible_facts['os_family'] == 'Debian'
+
+- name: Set up vaults
+  ansible.builtin.include_tasks: setup-vaults.yaml
+  when: system_obsidian_headless_vaults | length > 0
+
+- name: Deploy and enable service (macOS)
+  ansible.builtin.include_tasks: service-macos.yaml
+  when: ansible_facts['os_family'] == 'Darwin'
+
+- name: Deploy and enable service (Ubuntu/Debian)
+  ansible.builtin.include_tasks: service-ubuntu.yaml
+  when: ansible_facts['os_family'] == 'Debian'

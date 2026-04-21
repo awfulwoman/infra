@@ -1,0 +1,7 @@
+---
+- name: Restart obsidian-headless
+  become: true
+  ansible.builtin.systemd:
+    name: obsidian-headless
+    state: restarted
+    daemon_reload: true

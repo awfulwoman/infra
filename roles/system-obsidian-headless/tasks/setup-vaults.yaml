@@ -1,0 +1,48 @@
+---
+- name: Set node bin dir fact
+  ansible.builtin.set_fact:
+    _ob_node_bin_dir: "{{ system_obsidian_headless_ob_bin | dirname }}"
+
+- name: Assert logged in to Obsidian (run 'ob login' on the host first)
+  ansible.builtin.command: "{{ system_obsidian_headless_ob_bin }} sync-list-remote"
+  environment:
+    PATH: "{{ _ob_node_bin_dir }}:{{ ansible_env.PATH }}"
+  changed_when: false
+  become: "{{ system_obsidian_headless_user != ansible_facts['user_id'] }}"
+  become_user: "{{ system_obsidian_headless_user }}"
+
+- name: Ensure local vault directories exist
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: directory
+    mode: "0750"
+    owner: "{{ system_obsidian_headless_user }}"
+  loop: "{{ system_obsidian_headless_vaults }}"
+  no_log: true
+  become: true
+
+- name: Check which vaults are already configured for sync
+  ansible.builtin.command: "{{ system_obsidian_headless_ob_bin }} sync-list-local"
+  environment:
+    PATH: "{{ _ob_node_bin_dir }}:{{ ansible_env.PATH }}"
+  register: ob_local_vaults
+  changed_when: false
+  failed_when: false
+  become: "{{ system_obsidian_headless_user != ansible_facts['user_id'] }}"
+  become_user: "{{ system_obsidian_headless_user }}"
+
+- name: Set up vault sync for unconfigured vaults
+  ansible.builtin.command: >
+    {{ system_obsidian_headless_ob_bin }} sync-setup
+    --vault {{ item.name | quote }}
+    --path {{ item.path | quote }}
+    --device-name {{ system_obsidian_headless_device_name | quote }}
+    --password {{ (item.password | default('')) | quote }}
+  environment:
+    PATH: "{{ _ob_node_bin_dir }}:{{ ansible_env.PATH }}"
+  loop: "{{ system_obsidian_headless_vaults }}"
+  when: item.path not in ob_local_vaults.stdout
+  changed_when: true
+  no_log: true
+  become: "{{ system_obsidian_headless_user != ansible_facts['user_id'] }}"
+  become_user: "{{ system_obsidian_headless_user }}"

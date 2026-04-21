@@ -1,0 +1,14 @@
+[Unit]
+Description=Obsidian Headless Sync
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User={{ system_obsidian_headless_user }}
+ExecStart={{ system_obsidian_headless_ob_bin }} sync --continuous
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

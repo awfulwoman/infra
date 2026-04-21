@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.awfulwoman.obsidian-headless-{{ vault.name | lower | replace(' ', '-') }}</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>{{ system_obsidian_headless_ob_bin }}</string>
+        <string>sync</string>
+        <string>--continuous</string>
+        <string>--path</string>
+        <string>{{ vault.path }}</string>
+    </array>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>{{ system_obsidian_headless_ob_bin | dirname }}:/usr/local/bin:/usr/bin:/bin</string>
+    </dict>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>StandardOutPath</key>
+    <string>{{ ansible_facts['user_dir'] }}/Library/Logs/obsidian-headless-{{ vault.name | lower | replace(' ', '-') }}.log</string>
+    <key>StandardErrorPath</key>
+    <string>{{ ansible_facts['user_dir'] }}/Library/Logs/obsidian-headless-{{ vault.name | lower | replace(' ', '-') }}.log</string>
+</dict>
+</plist>

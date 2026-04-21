@@ -1,0 +1,58 @@
+---
+- name: Ensure LaunchAgents directory exists
+  ansible.builtin.file:
+    path: "{{ ansible_facts['user_dir'] }}/Library/LaunchAgents"
+    state: directory
+    mode: "0755"
+
+- name: Remove old unsuffixed plist if present
+  ansible.builtin.file:
+    path: "{{ ansible_facts['user_dir'] }}/Library/LaunchAgents/com.awfulwoman.obsidian-headless.plist"
+    state: absent
+
+- name: Deploy per-vault launchd plists
+  ansible.builtin.template:
+    src: com.awfulwoman.obsidian-headless.plist.j2
+    dest: "{{ ansible_facts['user_dir'] }}/Library/LaunchAgents/com.awfulwoman.obsidian-headless-{{ item.name | lower | replace(' ', '-') }}.plist"
+    mode: "0644"
+  vars:
+    vault: "{{ item }}"
+  loop: "{{ system_obsidian_headless_vaults }}"
+  no_log: true
+  register: ob_plists
+
+- name: Unload changed services # noqa: no-handler
+  ansible.builtin.command: >
+    launchctl unload {{ ansible_facts['user_dir'] }}/Library/LaunchAgents/com.awfulwoman.obsidian-headless-{{ item.item.name | lower | replace(' ', '-') }}.plist
+  loop: "{{ ob_plists.results }}"
+  when: item.changed
+  changed_when: false
+  failed_when: false
+  no_log: true
+
+- name: Load services # noqa: no-handler
+  ansible.builtin.command: >
+    launchctl load {{ ansible_facts['user_dir'] }}/Library/LaunchAgents/com.awfulwoman.obsidian-headless-{{ item.item.name | lower | replace(' ', '-') }}.plist
+  loop: "{{ ob_plists.results }}"
+  when: item.changed
+  register: launchctl_load
+  changed_when: launchctl_load.rc == 0
+  failed_when: false
+  no_log: true
+
+- name: Ensure all vault services are running
+  ansible.builtin.command: >
+    launchctl list com.awfulwoman.obsidian-headless-{{ item.name | lower | replace(' ', '-') }}
+  loop: "{{ system_obsidian_headless_vaults }}"
+  changed_when: false
+  failed_when: false
+  no_log: true
+  register: launchctl_status
+
+- name: Start any services not yet running
+  ansible.builtin.shell: >
+    launchctl kickstart -k gui/$(id -u)/com.awfulwoman.obsidian-headless-{{ item.item.name | lower | replace(' ', '-') }}
+  loop: "{{ launchctl_status.results }}"
+  when: item.rc != 0
+  changed_when: true
+  no_log: true

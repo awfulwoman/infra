@@ -1,0 +1,41 @@
+---
+- name: Check if obsidian-headless is already installed
+  ansible.builtin.shell: |
+    [ -s "$HOME/.nvm/nvm.sh" ] && . "$HOME/.nvm/nvm.sh"
+    ob --version
+  args:
+    executable: /bin/bash
+  environment:
+    HOME: "{{ ansible_facts['user_dir'] }}"
+    NVM_DIR: "{{ ansible_facts['user_dir'] }}/.nvm"
+  register: ob_installed
+  changed_when: false
+  failed_when: false
+
+- name: Install obsidian-headless globally via npm
+  ansible.builtin.shell: |
+    [ -s "$HOME/.nvm/nvm.sh" ] && . "$HOME/.nvm/nvm.sh"
+    npm install -g obsidian-headless
+  args:
+    executable: /bin/bash
+  environment:
+    HOME: "{{ ansible_facts['user_dir'] }}"
+    NVM_DIR: "{{ ansible_facts['user_dir'] }}/.nvm"
+  when: ob_installed.rc != 0
+  changed_when: true
+
+- name: Discover ob binary path
+  ansible.builtin.shell: |
+    [ -s "$HOME/.nvm/nvm.sh" ] && . "$HOME/.nvm/nvm.sh"
+    which ob
+  args:
+    executable: /bin/bash
+  environment:
+    HOME: "{{ ansible_facts['user_dir'] }}"
+    NVM_DIR: "{{ ansible_facts['user_dir'] }}/.nvm"
+  register: ob_bin_path
+  changed_when: false
+
+- name: Set ob binary path fact
+  ansible.builtin.set_fact:
+    system_obsidian_headless_ob_bin: "{{ ob_bin_path.stdout | trim }}"

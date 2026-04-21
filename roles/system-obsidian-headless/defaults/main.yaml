@@ -1,0 +1,16 @@
+---
+# List of vaults to configure for sync.
+# Each entry:
+#   name: "My Vault"         # remote vault name (must match Obsidian Sync)
+#   path: "/path/to/vault"   # local path on the server
+#   password: ""             # E2E encryption password, if set on the vault
+system_obsidian_headless_vaults: []
+
+# Device name reported to Obsidian Sync.
+system_obsidian_headless_device_name: "{{ inventory_hostname }}"
+
+# User that owns vault files and runs the service.
+system_obsidian_headless_user: "{{ ansible_facts['user_id'] }}"
+
+# Resolved at install time via `which ob`; override only if needed.
+system_obsidian_headless_ob_bin: "ob"

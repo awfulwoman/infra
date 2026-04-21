@@ -68,6 +68,14 @@ system_claude_settings_group: "staff"
 system_claude_profile_file: ".zshrc"
 
 # -------------------------------------------------------------------
+# OBSIDIAN
+# -------------------------------------------------------------------
+system_obsidian_headless_vaults:
+  - name: "Personal"
+    path: "{{ ansible_facts['user_dir'] }}/Obsidian"
+    password: "{{ vault_obsidian_vault_key }}"
+
+# -------------------------------------------------------------------
 # REPOS
 # -------------------------------------------------------------------
 system_repos:

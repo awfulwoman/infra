@@ -35,5 +35,7 @@
       tags: [system]
     - role: system-nvm
       tags: [system, system-nvm]
+    - role: system-obsidian-headless
+      tags: [system, system-obsidian-headless]
     - role: monitoring-healthchecksio
       tags: [monitoring]
