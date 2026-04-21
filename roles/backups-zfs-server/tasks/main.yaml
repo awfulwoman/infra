@@ -172,7 +172,8 @@
     minute: "{{ backups_zfs_server_cron_minute }}"
     job: >-
       {{ backups_zfs_server_script_path }}/zfs-pull-backups
-      --host {{ item }}
+      --host {{ hostvars[item].ansible_host }}
+      --name {{ item }}
       --user {{ vault_zfsbackups_user }}
       --datasets {{ _datasets | map(attribute='dataset') | join(' ') }}
       >/dev/null

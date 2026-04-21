@@ -116,7 +116,7 @@ def signal_handler(signum, frame):
     sys.exit(1)
 
 
-def preflight(host, datasets, user, destination):
+def preflight(host, name, datasets, user, destination):
     info('Checking remote host is up')
     result = subprocess.run(['ssh', f'{user}@{host}', 'ls'],
             shell=False,
@@ -152,7 +152,7 @@ def preflight(host, datasets, user, destination):
         sys.exit(1)
     debug(f'Destination {destination} exists')
 
-    pulldatasets_init(host, datasets, user, destination)
+    pulldatasets_init(host, name, datasets, user, destination)
 
 def get_remote_child_datasets(host, dataset, user):
     """Get all datasets under a parent (including the parent itself)."""
@@ -178,7 +178,7 @@ def get_remote_child_datasets(host, dataset, user):
         sys.exit(1)
 
 
-def pulldatasets_init(host, datasets, user, destination):
+def pulldatasets_init(host, name, datasets, user, destination):
     # Expand each dataset to include all children
     all_datasets = []
     for dataset in datasets:
@@ -196,7 +196,7 @@ def pulldatasets_init(host, datasets, user, destination):
     info(f"Datasets in queue: {len(unique_datasets)}")
     for dataset in unique_datasets:
         info(f'{host}:{dataset}')
-        pulldatasets(host, dataset, user, destination)
+        pulldatasets(host, name, dataset, user, destination)
 
 def get_remote_snapshots(host, dataset, user):
     """Get all snapshot names for a dataset on remote host, sorted by creation time."""
@@ -362,8 +362,8 @@ def ensure_parent_datasets_exist(dataset_path):
             info(f"Created parent dataset: {parent}")
 
 
-def pulldatasets(host, dataset, user, destination):
-    local_dataset = f"{destination}/{host}/{dataset}"
+def pulldatasets(host, name, dataset, user, destination):
+    local_dataset = f"{destination}/{name}/{dataset}"
 
     remote_snapshots = get_remote_snapshots(host, dataset, user)
     if not remote_snapshots:
@@ -433,7 +433,8 @@ def pulldatasets(host, dataset, user, destination):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Backup ZFS datasets from a remote host.')
-    parser.add_argument('--host', help='Remote host')
+    parser.add_argument('--host', help='Remote host address for SSH')
+    parser.add_argument('--name', help='Name used for local dataset path (defaults to --host)')
     parser.add_argument('--datasets', nargs='+', help='Source datasets')
     parser.add_argument('--user', default=DEFAULT_user, help='Remote SSH user')
     parser.add_argument('--destination', default=DEFAULT_destination, help='Local dataset to receive backups (default: %(default)s)')
@@ -448,8 +449,10 @@ if __name__ == "__main__":
         print("Usage: zfs-pull-backups --user <user> --host <host> --datasets-source <space-seperated list> [--datasets-destination <destination>]", file=sys.stderr)
         sys.exit(1)
 
+    name = args.name if args.name else args.host
+
     # Set host-specific lockfile to allow parallel pulls from different hosts
-    _lockfile = get_lockfile_path(args.host)
+    _lockfile = get_lockfile_path(name)
 
     # Acquire lockfile to prevent concurrent executions from this host
     if not acquire_lock():
@@ -462,4 +465,4 @@ if __name__ == "__main__":
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGHUP, signal_handler)
 
-    preflight(args.host, args.datasets, args.user, args.destination)
+    preflight(args.host, name, args.datasets, args.user, args.destination)
