@@ -1,0 +1,18 @@
+- name: Check if nvm is already installed
+  ansible.builtin.stat:
+    path: "{{ ansible_facts.user_dir }}/.nvm/nvm.sh"
+  register: nvm_installed
+
+- name: Download and execute nvm install script
+  ansible.builtin.shell: >
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/{{ system_nvm_version }}/install.sh | bash
+  args:
+    creates: "{{ ansible_facts.user_dir }}/.nvm/nvm.sh"
+    executable: /bin/bash
+  environment:
+    HOME: "{{ ansible_facts.user_dir }}"
+  when: not nvm_installed.stat.exists
+
+- name: Set nvm script path
+  ansible.builtin.set_fact:
+    nvm_sh_path: "{{ ansible_facts.user_dir }}/.nvm/nvm.sh"

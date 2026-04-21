@@ -1,0 +1,8 @@
+- name: Ensure nvm is installed via Homebrew
+  community.general.homebrew:
+    name: nvm
+    state: present
+
+- name: Set nvm script path
+  ansible.builtin.set_fact:
+    nvm_sh_path: "{{ '/opt/homebrew' if ansible_facts['machine'] == 'arm64' else '/usr/local' }}/opt/nvm/nvm.sh"

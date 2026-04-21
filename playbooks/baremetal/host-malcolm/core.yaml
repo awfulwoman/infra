@@ -33,5 +33,7 @@
       tags: [ansible]
     - role: system-git
       tags: [system]
+    - role: system-nvm
+      tags: [system, system-nvm]
     - role: monitoring-healthchecksio
       tags: [monitoring]
