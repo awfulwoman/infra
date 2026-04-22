@@ -107,6 +107,28 @@ logbook:
       - sun
 
 #############################################################################
+# AUTOMATIONS (INLINE)
+#############################################################################
+# Requires the IMAP integration to include `headers` in event message data.
+automation manual:
+  - alias: Amazon pickup notification
+    description: Notify Charlie's iPhone when a pickup-point@amazon.de email arrives.
+    triggers:
+      - trigger: event
+        event_type: imap_content
+    conditions:
+      - condition: template
+        value_template: >-
+          {{ not trigger.event.data.initial and
+             'pickup-point@amazon.de' in
+             (trigger.event.data.headers.get('Reply-To', []) | join(',') | lower) }}
+    actions:
+      - action: notify.mobile_app_charlies_iphone
+        data:
+          title: Amazon pickup ready
+          message: "{{ trigger.event.data.subject }}"
+
+#############################################################################
 # INCLUDES
 #############################################################################
 automation: !include automations.yaml
