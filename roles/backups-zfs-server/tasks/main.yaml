@@ -161,6 +161,15 @@
     owner: root
     group: root
 
+- name: Ensure root known_hosts contains source host keys
+  become: true
+  ansible.builtin.known_hosts:
+    name: "{{ hostvars[item].ansible_host }}"
+    key: "{{ lookup('pipe', 'ssh-keyscan -T 10 ' + hostvars[item].ansible_host) }}"
+    path: /root/.ssh/known_hosts
+    state: present
+  loop: "{{ groups[backups_zfs_server_pull_group] }}"
+
 - name: Ensure that pull backup cronjobs are managed for each client
   become: true
   vars:
