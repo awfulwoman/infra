@@ -119,7 +119,8 @@ automation manual:
     conditions:
       - condition: template
         value_template: >-
-          {{ 'pickup-point@amazon.de' in
+          {{ not trigger.event.data.initial and
+             'pickup-point@amazon.de' in
              (trigger.event.data.headers.get('Reply-To', []) | join(',') | lower) }}
     actions:
       - action: notify.mobile_app_charlies_iphone
