@@ -1,0 +1,50 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  vane:
+    container_name: vane
+    ports:
+      - "127.0.0.1:3069:3000"
+    image: itzcrazykns1337/vane:latest
+    restart: unless-stopped
+    env_file: .environment_vars
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.vane.rule=Host(`vane.{{ domain_name }}`)"
+      - "traefik.http.routers.vane.tls=true"
+      - "traefik.http.routers.vane.tls.certresolver=letsencrypt"
+      - "traefik.http.services.vane.loadbalancer.server.port=3000"
+    volumes:
+      - "{{ composition_config }}/data:/home/vane/data"
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+    depends_on:
+      searxng:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  searxng:
+    container_name: vane-searxng
+    image: docker.io/searxng/searxng:latest
+    restart: unless-stopped
+    volumes:
+      - "{{ composition_config }}/searxng:/etc/searxng"
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+networks:
+  "{{ default_docker_network }}":
+    external: true
