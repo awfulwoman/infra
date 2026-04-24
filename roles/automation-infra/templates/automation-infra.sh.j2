@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -uo pipefail
 
 WORK_DIR=$(sudo -u {{ ansible_user }} mktemp -d -t automation-infra.XXXXXX)
 trap "rm -rf $WORK_DIR" EXIT
+FAILED=0
 
 sudo -u {{ ansible_user }} git clone {{ automation_infra_repo_url }} "$WORK_DIR"
 
@@ -27,7 +28,7 @@ sudo -u {{ ansible_user }} bash -l -c "
   ansible-playbook \
     $WORK_DIR/playbooks/{{ playbook }} \
     --inventory $WORK_DIR/inventory/hosts.yaml \
-    --vault-password-file {{ automation_infra_vault_password_file }}"
+    --vault-password-file {{ automation_infra_vault_password_file }}" || FAILED=1
 {% else %}
 sudo -u {{ ansible_user }} bash -c "
   cd $WORK_DIR && \
@@ -36,7 +37,8 @@ sudo -u {{ ansible_user }} bash -c "
   ansible-playbook \
     $WORK_DIR/playbooks/{{ playbook }} \
     --inventory $WORK_DIR/inventory/hosts.yaml \
-    --vault-password-file {{ automation_infra_vault_password_file }}"
+    --vault-password-file {{ automation_infra_vault_password_file }}" || FAILED=1
 {% endif %}
 
 {% endfor %}
+exit $FAILED
