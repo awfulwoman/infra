@@ -57,11 +57,16 @@
   with_items: "{{ security_sudoers_passworded }}"
   when: security_sudoers_passworded | length > 0
 
+- name: Gather service facts
+  ansible.builtin.service_facts:
+
 - name: Ensure SSH daemon is running
   become: true
   ansible.builtin.service:
     name: "{{ security_sshd_name }}"
     state: "{{ security_sshd_state }}"
+  when: ansible_facts.services[security_sshd_name ~ '.service'] is not defined
+        or ansible_facts.services[security_sshd_name ~ '.service'].status != 'masked'
 
 - name: Ensure SSH config is hardened
   become: true
@@ -89,6 +94,8 @@
       line: "GSSAPIAuthentication {{ 'yes' if security_ssh_gss_api_authentication else 'no' }}"
     - regexp: "^X11Forwarding"
       line: "X11Forwarding {{ 'yes' if security_ssh_x11_forwarding else 'no' }}"
+  when: ansible_facts.services[security_sshd_name ~ '.service'] is not defined
+        or ansible_facts.services[security_sshd_name ~ '.service'].status != 'masked'
   notify:
     - Restart SSH
 
@@ -102,7 +109,10 @@
     create: true
     validate: 'sshd -T -f %s'
     mode: "0644"
-  when: security_ssh_allowed_users | length > 0
+  when:
+    - security_ssh_allowed_users | length > 0
+    - ansible_facts.services[security_sshd_name ~ '.service'] is not defined
+      or ansible_facts.services[security_sshd_name ~ '.service'].status != 'masked'
   notify: Restart SSH
 
 - name: Add configured groups allowed to connect over ssh
@@ -115,7 +125,10 @@
     create: true
     validate: 'sshd -T -f %s'
     mode: "0644"
-  when: security_ssh_allowed_groups | length > 0
+  when:
+    - security_ssh_allowed_groups | length > 0
+    - ansible_facts.services[security_sshd_name ~ '.service'] is not defined
+      or ansible_facts.services[security_sshd_name ~ '.service'].status != 'masked'
   notify: Restart SSH
 
 
@@ -127,6 +140,8 @@
     owner: root
     group: root
     mode: "0644"
+  when: ansible_facts.services['fail2ban.service'] is not defined
+        or ansible_facts.services['fail2ban.service'].status != 'masked'
   notify:
     - Restart fail2ban
 
@@ -138,6 +153,8 @@
     owner: root
     group: root
     mode: "0644"
+  when: ansible_facts.services['fail2ban.service'] is not defined
+        or ansible_facts.services['fail2ban.service'].status != 'masked'
   notify:
     - Restart fail2ban
 
@@ -147,3 +164,5 @@
     name: fail2ban
     state: started
     enabled: true
+  when: ansible_facts.services['fail2ban.service'] is not defined
+        or ansible_facts.services['fail2ban.service'].status != 'masked'
