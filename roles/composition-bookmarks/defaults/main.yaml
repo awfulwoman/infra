@@ -1,6 +1,0 @@
-# Composition name (used by composition-common dependency)
-composition_name: bookmarks
-
-composition_bookmarks_subdomains:
-  - wallabag
-  - linkwarden
