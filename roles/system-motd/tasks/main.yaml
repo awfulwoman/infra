@@ -1,13 +1,29 @@
 ---
+- name: Check if update-motd.d exists
+  ansible.builtin.stat:
+    path: /etc/update-motd.d
+  register: _motd_dir
+
+- name: Stat Canonical MOTD scripts
+  ansible.builtin.stat:
+    path: "{{ item }}"
+  loop: "{{ motd_targets }}"
+  register: _motd_targets_stat
+  when:
+    - _motd_dir.stat.exists
+    - ansible_facts['distribution'] == "Ubuntu"
+
 - name: Disable Canonical Advertisment of the Day
   become: true
   ansible.builtin.file:
-    path: "{{ item }}"
+    path: "{{ item.stat.path }}"
     mode: "0664"
     modification_time: preserve
     access_time: preserve
-  loop: "{{ motd_targets }}"
-  when: ansible_facts['distribution'] == "Ubuntu"
+  loop: "{{ _motd_targets_stat.results | default([]) | selectattr('stat.exists') }}"
+  when:
+    - _motd_dir.stat.exists
+    - ansible_facts['distribution'] == "Ubuntu"
 
 - name: Ensure ZFS login message exists
   become: true
@@ -17,3 +33,4 @@
     mode: "0775"
     src: 99-zfspool
     dest: /etc/update-motd.d/99-zfspool
+  when: _motd_dir.stat.exists
