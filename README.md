@@ -10,11 +10,12 @@ Credentials are stored in this repo, encrypted.
 
 I access everything though Tailscale, which is an annoying dependency. But I keep the integration as light as possible so that I can detach my infra from them when they inevitably turn evil.
 
-![host-homebrain - Core Playbook](https://healthchecks.io/b/2/fa63155e-40e1-4f59-9279-8d975b73378f.svg)
-![host-malcolm - Core Playbook](https://healthchecks.io/b/2/7cfa55ac-9a06-4f4a-b726-0c6cc569dae8.svg)
-![host-sites - Core Playbook](https://healthchecks.io/b/2/7a8d9d9b-f5fb-4299-bc98-c206ba518c75.svg)
-![host-storage - Core Playbook](https://healthchecks.io/b/2/3ac8d7ea-5f57-4572-8a06-64d5f15c9877.svg)
-![host-pikvm - Core Playbook](https://healthchecks.io/b/2/b974756a-0733-4c2d-8f64-b4466c3cd0ca.svg)
+![host-deedee - Core Playbook](https://healthchecks.io/b/2/40acdd90-f69c-4c53-a7d2-598ed3b84c68.svg)
+![host-homebrain - Core Playbook](https://healthchecks.io/b/2/aa67e305-5a8e-4242-a17d-8e031438c265.svg)
+![host-malcolm - Core Playbook](https://healthchecks.io/b/2/63a475d3-10d6-4a8a-8c37-dbb9b8ccce37.svg)
+![host-sites - Core Playbook](https://healthchecks.io/b/2/7bef37e9-768c-4c57-8a04-f8e4c1c1b836.svg)
+![host-storage - Core Playbook](https://healthchecks.io/b/2/fd04805d-b1c2-4fc6-8a05-bab0a6fead5a.svg)
+
 
 ## Installation
 
