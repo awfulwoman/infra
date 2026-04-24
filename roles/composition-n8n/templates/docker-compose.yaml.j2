@@ -28,7 +28,7 @@ services:
 
   n8n-db:
     container_name: n8n_db
-    image: postgres:16-alpine
+    image: postgres:18-alpine
     restart: unless-stopped
     env_file: .environment_vars
     volumes:
