@@ -1,0 +1,27 @@
+- name: Create server user
+  hosts: demo01
+  vars:
+    ansible_user: root
+  tasks:
+    - name: Create user
+      ansible.builtin.user:
+        name: "{{ vault_server_username }}"
+        shell: /bin/bash
+        groups: sudo
+        append: true
+        password_lock: true
+
+    - name: Allow passwordless sudo
+      ansible.builtin.copy:
+        content: "{{ vault_server_username }} ALL=(ALL) NOPASSWD:ALL\n"
+        dest: "/etc/sudoers.d/{{ vault_server_username }}"
+        owner: root
+        group: root
+        mode: "0440"
+        validate: visudo -cf %s
+
+    - name: Add SSH keys from GitHub
+      ansible.posix.authorized_key:
+        user: "{{ vault_server_username }}"
+        key: https://github.com/awfulwoman.keys
+        state: present

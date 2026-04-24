@@ -10,13 +10,20 @@
       ansible_facts['distribution_release'] - {{ ansible_facts['distribution_release'] }}
       ansible_facts['distribution_version'] - {{ ansible_facts['distribution_version'] }}
 
+- name: Check if Docker is already installed
+  ansible.builtin.stat:
+    path: /usr/bin/docker
+  register: _docker_binary
+
 - name: Install python3 on Debian
   become: true
   ansible.builtin.apt:
     name:
       - python3-debian
     state: present
-  when: ansible_facts['distribution'] == "Debian"
+  when:
+    - not _docker_binary.stat.exists
+    - ansible_facts['distribution'] == "Debian"
 
 - name: Add repo using key from URL (Debian)
   become: true
@@ -31,7 +38,9 @@
       {% elif ansible_facts['architecture'] == 'aarch64' %}arm64
       {% else -%}ansible_facts['architecture']{% endif %}
     signed_by: "https://download.docker.com/linux/debian/gpg"
-  when: ansible_facts['distribution'] == "Debian"
+  when:
+    - not _docker_binary.stat.exists
+    - ansible_facts['distribution'] == "Debian"
 
 - name: Add repo using key from URL (Ubuntu)
   become: true
@@ -46,7 +55,9 @@
       {% elif ansible_facts['architecture'] == 'aarch64' %}arm64
       {% else -%}ansible_facts['architecture']{% endif %}
     signed_by: "https://download.docker.com/linux/ubuntu/gpg"
-  when: ansible_facts['distribution'] == "Ubuntu"
+  when:
+    - not _docker_binary.stat.exists
+    - ansible_facts['distribution'] == "Ubuntu"
 
 - name: Install Docker from Docker repository
   become: true
@@ -59,6 +70,7 @@
       - docker-compose-plugin
     update_cache: true
     state: present
+  when: not _docker_binary.stat.exists
 
 - name: "Ensure user is in docker group"
   become: true

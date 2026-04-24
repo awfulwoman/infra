@@ -1,10 +1,5 @@
 - name: Oggcamp Basic Ubuntu
-  hosts: exe-dev-demo-host-01
-  pre_tasks:
-    - name: Remove pre-installed Tailscale apt source conflicting with artis3n.tailscale
-      become: true
-      ansible.builtin.file:
-        path: /etc/apt/sources.list.d/tailscale.list
-        state: absent
+  hosts: demo01
   roles:
     - role: bootstrap-ubuntu-server
+    # - role: composition-whoami

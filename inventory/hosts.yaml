@@ -25,6 +25,10 @@ all:
         host-sites:
         host-storage:
         host-test-router:
+        demo01:
+          ansible_host: 91.99.54.29
+          ansible_user: "{{ vault_server_username }}"
+          host_name: monkey # TODO If not defined this should use ansible_host
 
     # -------------------------------------------------------------------
     # UBUNTU SERVERS

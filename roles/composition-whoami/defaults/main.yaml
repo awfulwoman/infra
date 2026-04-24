@@ -1,0 +1,5 @@
+# Composition name (used by composition-common dependency)
+composition_name: whoami
+
+composition_whoami_subdomains:
+  - "whoami.{{ ansible_facts['hostname'] }}"

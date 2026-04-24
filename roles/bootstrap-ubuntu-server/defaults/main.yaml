@@ -5,23 +5,23 @@ bootstrap_ubuntu_apt_packages:
   - direnv
   - dirmngr
   - e2fsprogs
-  - ffmpeg
+  # - ffmpeg
   - git
   - htop
   - iptables
   - lm-sensors
   - mosh
-  - netplan.io
-  - python-is-python3
+  # - netplan.io
+  # - python-is-python3
   - python3
   - python3-docker
   - python3-pip
   - python3-virtualenv
-  - restic
+  # - restic
   - retry
-  - smartmontools
-  - sqlite3
-  - timg
+  # - smartmontools
+  # - sqlite3
+  # - timg
   - tmux
   - unzip
   - uptimed

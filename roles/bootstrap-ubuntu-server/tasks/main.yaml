@@ -95,9 +95,9 @@
     - root
     - "{{ ansible_user }}"
 
-- name: Pipx
-  ansible.builtin.include_role:
-    name: system-pipx
+# - name: Pipx
+#   ansible.builtin.include_role:
+#     name: system-pipx
 
 - name: Env vars
   no_log: true
@@ -159,11 +159,11 @@
   ansible.builtin.include_role:
     name: system-git
 
-- name: "Allow the user to sudo rsync with no password"
-  become: true
-  community.general.sudoers:
-    name: allow-sudo-rsync-no-password
-    state: present
-    user: "{{ ansible_user }}"
-    nopassword: true
-    commands: /usr/bin/rsync
+# - name: "Allow the user to sudo rsync with no password"
+#   become: true
+#   community.general.sudoers:
+#     name: allow-sudo-rsync-no-password
+#     state: present
+#     user: "{{ ansible_user }}"
+#     nopassword: true
+#     commands: /usr/bin/rsync

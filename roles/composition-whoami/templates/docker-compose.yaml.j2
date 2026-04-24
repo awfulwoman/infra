@@ -1,0 +1,22 @@
+# code: language=ansible-jinja
+name: "{{ composition_name }}"
+services:
+  whoami:
+    container_name: whoami
+    ports:
+      - "127.0.0.1:8282:80"
+    image: traefik/whoami
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.whoami.rule=Host(`whoami.{{ ansible_facts['hostname'] }}.{{ domain_name }}`)"
+      - "traefik.http.routers.whoami.tls=true"
+      - "traefik.http.routers.whoami.tls.certresolver=letsencrypt"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+
+networks:
+  "{{ default_docker_network }}":
+    external: true
