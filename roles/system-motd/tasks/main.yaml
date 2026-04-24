@@ -33,4 +33,6 @@
     mode: "0775"
     src: 99-zfspool
     dest: /etc/update-motd.d/99-zfspool
-  when: _motd_dir.stat.exists
+  when:
+    - _motd_dir.stat.exists
+    - zfs is defined
