@@ -140,8 +140,10 @@
     owner: root
     group: root
     mode: "0644"
-  when: ansible_facts.services['fail2ban.service'] is not defined
-        or ansible_facts.services['fail2ban.service'].status != 'masked'
+  when:
+    - security_fail2ban_enabled
+    - ansible_facts.services['fail2ban.service'] is not defined
+      or ansible_facts.services['fail2ban.service'].status != 'masked'
   notify:
     - Restart fail2ban
 
@@ -153,8 +155,10 @@
     owner: root
     group: root
     mode: "0644"
-  when: ansible_facts.services['fail2ban.service'] is not defined
-        or ansible_facts.services['fail2ban.service'].status != 'masked'
+  when:
+    - security_fail2ban_enabled
+    - ansible_facts.services['fail2ban.service'] is not defined
+      or ansible_facts.services['fail2ban.service'].status != 'masked'
   notify:
     - Restart fail2ban
 
@@ -164,5 +168,7 @@
     name: fail2ban
     state: started
     enabled: true
-  when: ansible_facts.services['fail2ban.service'] is not defined
-        or ansible_facts.services['fail2ban.service'].status != 'masked'
+  when:
+    - security_fail2ban_enabled
+    - ansible_facts.services['fail2ban.service'] is not defined
+      or ansible_facts.services['fail2ban.service'].status != 'masked'
