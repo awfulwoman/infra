@@ -30,8 +30,7 @@
   ansible.builtin.include_role:
     name: "network-register-subdomain"
   vars:
-    configure_dns_subdomains:
-      - mqtt
+    configure_dns_subdomains: "{{ composition_mqtt_subdomains }}"
 
 # ----------------------------
 # Start composition

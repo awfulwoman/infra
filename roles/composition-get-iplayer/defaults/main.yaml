@@ -1,2 +1,5 @@
 # Composition name (used by composition-common dependency)
 composition_name: get-iplayer
+
+composition_get_iplayer_subdomains:
+  - iplayer

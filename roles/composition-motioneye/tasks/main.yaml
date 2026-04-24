@@ -42,8 +42,7 @@
   ansible.builtin.include_role:
     name: "network-register-subdomain"
   vars:
-    configure_dns_subdomains:
-      - "motioneye.{{ ansible_facts['hostname'] }}"
+    configure_dns_subdomains: "{{ composition_motioneye_subdomains }}"
 
 - name: Enact ZFS drive
   ansible.builtin.command: "zpool create fastpool {{ composition_motioneye_zfsdriveid }}"

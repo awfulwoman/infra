@@ -1,4 +1,7 @@
 # Composition name (used by composition-common dependency)
 composition_name: immich
 
+composition_immich_subdomains:
+  - immich
+
 compositions_immich_photo_path: /slowpool/charlie/photos

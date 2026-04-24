@@ -1,4 +1,7 @@
 # Composition name (used by composition-common dependency)
 composition_name: iplayarr
 
+composition_iplayarr_subdomains:
+  - iplayarr
+
 iplayarr_downloads: /fastpool/storage-share

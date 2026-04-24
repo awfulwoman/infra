@@ -1,2 +1,5 @@
 # Composition name (used by composition-common dependency)
 composition_name: mqtt
+
+composition_mqtt_subdomains:
+  - mqtt

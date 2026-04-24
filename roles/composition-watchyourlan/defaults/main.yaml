@@ -1,4 +1,7 @@
 # Composition name (used by composition-common dependency)
 composition_name: watchyourlan
 
+composition_watchyourlan_subdomains:
+  - lan
+
 watchyourlan_interface: "{{ host_primary_interface }}"

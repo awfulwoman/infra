@@ -1,2 +1,5 @@
 # Composition name (used by composition-common dependency)
 composition_name: audiobookshelf
+
+composition_audiobookshelf_subdomains:
+  - audiobookshelf

@@ -3,6 +3,8 @@ composition_name: splitwise
 composition_splitwise_enabled: true
 composition_splitwise_port: 8000
 composition_splitwise_subdomain: "splitwise.{{ host_name }}"
+composition_splitwise_subdomains:
+  - "{{ composition_splitwise_subdomain }}"
 composition_splitwise_domain: "{{ composition_splitwise_subdomain }}.{{ domain_name }}"
 composition_splitwise_mqtt_broker: "mqtt.{{ domain_name }}"
 composition_splitwise_mqtt_port: 1883

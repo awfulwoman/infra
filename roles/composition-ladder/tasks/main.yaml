@@ -50,8 +50,7 @@
   ansible.builtin.include_role:
     name: "network-register-subdomain"
   vars:
-    configure_dns_subdomains:
-      - ladder
+    configure_dns_subdomains: "{{ composition_ladder_subdomains }}"
 
 # ----------------------------
 # Start composition

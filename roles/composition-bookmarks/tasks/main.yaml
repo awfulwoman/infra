@@ -53,9 +53,7 @@
   ansible.builtin.include_role:
     name: "network-register-subdomain"
   vars:
-    configure_dns_subdomains:
-      - wallabag
-      - linkwarden
+    configure_dns_subdomains: "{{ composition_bookmarks_subdomains }}"
 
 # ----------------------------
 # Start composition

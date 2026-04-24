@@ -1,2 +1,5 @@
 # Composition name (used by composition-common dependency)
 composition_name: tubesync
+
+composition_tubesync_subdomains:
+  - tubesync

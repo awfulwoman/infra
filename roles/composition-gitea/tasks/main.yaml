@@ -38,8 +38,7 @@
   ansible.builtin.include_role:
     name: "network-register-subdomain"
   vars:
-    configure_dns_subdomains:
-      - gitea
+    configure_dns_subdomains: "{{ composition_gitea_subdomains }}"
 
 # ----------------------------
 # Start composition

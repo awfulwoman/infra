@@ -43,8 +43,7 @@
   ansible.builtin.include_role:
     name: "network-register-subdomain"
   vars:
-    configure_dns_subdomains:
-      - musicassistant
+    configure_dns_subdomains: "{{ composition_musicassistant_subdomains }}"
 
 # ----------------------------
 # Start composition

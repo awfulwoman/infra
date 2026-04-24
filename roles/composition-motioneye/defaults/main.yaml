@@ -1,5 +1,8 @@
 # Composition name (used by composition-common dependency)
 composition_name: motioneye
 
+composition_motioneye_subdomains:
+  - "motioneye.{{ ansible_facts['hostname'] }}"
+
 composition_motioneye_usbdevice: false
 composition_motioneye_zfsdriveid: false

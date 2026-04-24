@@ -53,8 +53,7 @@
   ansible.builtin.include_role:
     name: "network-register-subdomain"
   vars:
-    configure_dns_subdomains:
-      - iplayarr
+    configure_dns_subdomains: "{{ composition_iplayarr_subdomains }}"
 
 # ----------------------------
 # Start composition

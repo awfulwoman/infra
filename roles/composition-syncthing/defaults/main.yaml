@@ -1,4 +1,7 @@
 # Composition name (used by composition-common dependency)
 composition_name: syncthing
 
+composition_syncthing_subdomains:
+  - "syncthing.{{ ansible_facts['hostname'] }}"
+
 syncthing_paths: false

@@ -48,8 +48,7 @@
   ansible.builtin.include_role:
     name: "network-register-subdomain"
   vars:
-    configure_dns_subdomains:
-      - tubesync
+    configure_dns_subdomains: "{{ composition_tubesync_subdomains }}"
 
 # ----------------------------
 # Start composition

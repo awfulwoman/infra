@@ -1,2 +1,6 @@
 # Composition name (used by composition-common dependency)
 composition_name: owntracks
+
+composition_owntracks_subdomains:
+  - owntracks-recorder
+  - owntracks

@@ -1,2 +1,5 @@
 # Composition name (used by composition-common dependency)
 composition_name: ladder
+
+composition_ladder_subdomains:
+  - ladder

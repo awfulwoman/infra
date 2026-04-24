@@ -122,8 +122,7 @@
   ansible.builtin.include_role:
     name: "network-register-subdomain"
   vars:
-    configure_dns_subdomains:
-      - "{{ composition_zfs_api_subdomain }}"
+    configure_dns_subdomains: "{{ composition_zfs_api_subdomains }}"
 
 # ----------------------------
 # Start composition

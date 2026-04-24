@@ -14,6 +14,8 @@ composition_zfs_api_log_level: "info"
 
 # Domain configuration
 composition_zfs_api_subdomain: "zfs-api.{{ host_name }}"
+composition_zfs_api_subdomains:
+  - "{{ composition_zfs_api_subdomain }}"
 composition_zfs_api_domain: "{{ composition_zfs_api_subdomain }}.{{ domain_name }}"
 
 # Container settings

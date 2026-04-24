@@ -1,2 +1,15 @@
 # Composition name (used by composition-common dependency)
 composition_name: downloads
+
+composition_downloads_subdomains:
+  - qbittorrent
+  - prowlarr
+  - sonarr
+  - radarr
+  - gluetun
+  - lidarr
+  - bazarr
+  - librofm
+  - libation
+  - transmission
+  - jellyseerr

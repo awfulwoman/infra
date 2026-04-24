@@ -1,2 +1,5 @@
 # Composition name (used by composition-common dependency)
 composition_name: freshrss
+
+composition_freshrss_subdomains:
+  - freshrss

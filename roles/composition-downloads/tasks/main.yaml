@@ -73,18 +73,7 @@
   ansible.builtin.include_role:
     name: "network-register-subdomain"
   vars:
-    configure_dns_subdomains:
-      - qbittorrent
-      - prowlarr
-      - sonarr
-      - radarr
-      - gluetun
-      - lidarr
-      - bazarr
-      - librofm
-      - libation
-      - transmission
-      - jellyseerr
+    configure_dns_subdomains: "{{ composition_downloads_subdomains }}"
 
 # ----------------------------
 # Start composition

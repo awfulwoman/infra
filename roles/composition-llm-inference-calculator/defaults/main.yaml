@@ -1,4 +1,7 @@
 composition_name: llm-inference-calculator
 
+composition_llm_inference_calculator_subdomains:
+  - llmcalc
+
 llm_inference_calculator_repo_url: "https://github.com/alexziskind1/llm-inference-calculator.git"
 llm_inference_calculator_repo_version: "main"

@@ -4,3 +4,6 @@ composition_name: open-webui
 # Ollama API URL. Defaults to Malcolm (Mac Mini M4) LAN IP.
 # Override per-host if Ollama is running elsewhere.
 composition_open_webui_ollama_base_url: "http://192.168.1.150:11434"
+
+composition_open_webui_subdomains:
+  - chat
