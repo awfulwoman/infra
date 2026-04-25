@@ -1,4 +1,4 @@
-- name: Oggcamp Basic Ubuntu
+- name: S'up Oggcamp
   hosts: oggcamp-demo
   roles:
     - role: bootstrap-ubuntu-server
