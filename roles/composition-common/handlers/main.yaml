@@ -1,5 +1,8 @@
 - name: Restart Traefik
-  community.docker.docker_container:
-    name: traefik
-    state: started
-    restart: true
+  ansible.builtin.command:
+    cmd: docker restart traefik
+  register: _restart_traefik
+  failed_when:
+    - _restart_traefik.rc != 0
+    - "'No such container' not in _restart_traefik.stderr"
+  changed_when: _restart_traefik.rc == 0
