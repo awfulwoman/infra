@@ -27,7 +27,7 @@ all:
         host-test-router:
         # Let's do a demo folks!
         oggcamp-demo:
-          ansible_host: 49.12.184.222
+          ansible_host: 178.104.223.238
           ansible_user: "{{ vault_server_username }}"
           host_name: oggcamp2026
 
