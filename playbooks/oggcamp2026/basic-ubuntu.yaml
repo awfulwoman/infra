@@ -2,4 +2,3 @@
   hosts: oggcamp-demo
   roles:
     - role: bootstrap-ubuntu-server
-    # - role: composition-oggcamp
