@@ -19,7 +19,7 @@ host_ipv4: 188.245.37.81
 # -------------------------------------------------------------------
 # ANSIBLE
 # -------------------------------------------------------------------
-ansible_host: awfulwoman.com
+ansible_host: "{{ host_ipv4 }}"
 ansible_user: "{{ vault_server_username }}"
 
 

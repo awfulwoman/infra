@@ -91,11 +91,11 @@ system_repos_base_dir: "{{ ansible_facts.user_dir }}/Code"
 # AUTOMATIONS
 # -------------------------------------------------------------------
 automation_infra_playbooks:
+  - baremetal/host-storage/core.yaml
   - baremetal/host-homebrain/core.yaml
   - baremetal/host-belinda/core.yaml
   - baremetal/host-malcolm/core.yaml
   - virtual/host-sites/core.yaml
-  - baremetal/host-storage/core.yaml
 
 # -------------------------------------------------------------------
 # HOMEBREW
