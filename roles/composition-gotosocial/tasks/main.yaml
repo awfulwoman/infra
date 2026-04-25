@@ -66,3 +66,4 @@
     state: present
     build: always
     remove_orphans: true
+  notify: Restart Traefik

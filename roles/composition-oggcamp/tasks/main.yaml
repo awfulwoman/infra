@@ -41,12 +41,15 @@
 # Networking
 # ----------------------------
 
-- name: Register subdomain
-  ansible.builtin.include_role:
-    name: network-register-subdomain
-  vars:
-    configure_dns_subdomains: "{{ composition_oggcamp_subdomains }}"
-    domain_name: "{{ vault_personal_domain }}"
+- name: Register oggcamp subdomain to public IP
+  hetzner.hcloud.zone_rrset:
+    api_token: "{{ vault_hetzner_api_key_rw }}"
+    zone: "{{ vault_personal_domain }}"
+    name: "{{ composition_oggcamp_subdomain }}"
+    type: "A"
+    records:
+      - value: "{{ ansible_host }}"
+    state: present
 
 # ----------------------------
 # Start composition
@@ -57,3 +60,4 @@
     project_src: "{{ composition_root }}"
     state: present
     remove_orphans: true
+  notify: Restart Traefik

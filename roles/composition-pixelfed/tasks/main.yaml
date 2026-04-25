@@ -53,3 +53,4 @@
     project_src: "{{ composition_root }}"
     state: present
     remove_orphans: true
+  notify: Restart Traefik
