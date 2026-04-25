@@ -1,26 +1,26 @@
 #!/usr/bin/env bash
 set -uo pipefail
 
-WORK_DIR=$(sudo -u {{ ansible_user }} mktemp -d -t automation-infra.XXXXXX)
+WORK_DIR=$(mktemp -d -t automation-infra.XXXXXX)
 trap "rm -rf $WORK_DIR" EXIT
 FAILED=0
 
-sudo -u {{ ansible_user }} git clone {{ automation_infra_repo_url }} "$WORK_DIR"
+git clone {{ automation_infra_repo_url }} "$WORK_DIR"
 
 {% if ansible_facts['os_family'] == 'Darwin' %}
-sudo -u {{ ansible_user }} bash -l -c "
+bash -l -c "
   ANSIBLE_ROLES_PATH={{ ansible_roles_path }} \
   ANSIBLE_COLLECTIONS_PATH={{ ansible_collections_path }} \
   ansible-galaxy install -r $WORK_DIR/meta/requirements.yaml"
 {% else %}
-sudo -u {{ ansible_user }} bash -c "
+bash -c "
   source {{ ansible_infra_dir }}/.venv/bin/activate && \
   ansible-galaxy install -r $WORK_DIR/meta/requirements.yaml"
 {% endif %}
 
 {% for playbook in automation_infra_playbooks %}
 {% if ansible_facts['os_family'] == 'Darwin' %}
-sudo -u {{ ansible_user }} bash -l -c "
+bash -l -c "
   cd $WORK_DIR && \
   ANSIBLE_ROLES_PATH={{ ansible_roles_path }}:$WORK_DIR/roles \
   ANSIBLE_COLLECTIONS_PATH={{ ansible_collections_path }} \
@@ -30,7 +30,7 @@ sudo -u {{ ansible_user }} bash -l -c "
     --inventory $WORK_DIR/inventory/hosts.yaml \
     --vault-password-file {{ automation_infra_vault_password_file }}" || FAILED=1
 {% else %}
-sudo -u {{ ansible_user }} bash -c "
+bash -c "
   cd $WORK_DIR && \
   source {{ ansible_infra_dir }}/.venv/bin/activate && \
   ANSIBLE_VAULT_PASSWORD_FILE={{ automation_infra_vault_password_file }} \
