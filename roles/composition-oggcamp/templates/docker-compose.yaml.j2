@@ -1,0 +1,22 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  oggcamp:
+    image: nginx:alpine
+    container_name: oggcamp
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.oggcamp.rule=Host(`{{ composition_oggcamp_domain }}`)"
+      - "traefik.http.routers.oggcamp.tls=true"
+      - "traefik.http.routers.oggcamp.tls.certresolver=letsencrypt"
+      - "traefik.http.services.oggcamp.loadbalancer.server.port=80"
+    volumes:
+      - "{{ composition_config }}/repo/public:/usr/share/nginx/html:ro"
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+
+networks:
+  "{{ default_docker_network }}":
+    external: true

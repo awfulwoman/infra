@@ -1,5 +1,5 @@
 - name: Oggcamp Basic Ubuntu
-  hosts: demo01
+  hosts: oggcamp-demo
   roles:
     - role: bootstrap-ubuntu-server
-    # - role: composition-whoami
+    - role: composition-oggcamp

@@ -1,0 +1,59 @@
+# code: language=ansible
+
+# ----------------------------
+# Specific tasks
+# ----------------------------
+
+- name: Clone/update oggcamp site repository
+  ansible.builtin.git:
+    repo: "{{ composition_oggcamp_repo_url }}"
+    dest: "{{ composition_config }}/repo"
+    update: true
+    version: HEAD
+  register: git_clone
+
+- name: Build Hugo site
+  ansible.builtin.command:
+    argv:
+      - docker
+      - run
+      - --rm
+      - --volume
+      - "{{ composition_config }}/repo:/src"
+      - hugomods/hugo:latest
+      - hugo
+  when: git_clone.changed
+  changed_when: true
+
+# ----------------------------
+# Core tasks
+# ----------------------------
+
+- name: Create compose file
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ composition_root }}/docker-compose.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"
+
+# ----------------------------
+# Networking
+# ----------------------------
+
+- name: Register subdomain
+  ansible.builtin.include_role:
+    name: network-register-subdomain
+  vars:
+    configure_dns_subdomains: "{{ composition_oggcamp_subdomains }}"
+    domain_name: "{{ vault_personal_domain }}"
+
+# ----------------------------
+# Start composition
+# ----------------------------
+
+- name: Start Docker Compose project
+  community.docker.docker_compose_v2:
+    project_src: "{{ composition_root }}"
+    state: present
+    remove_orphans: true

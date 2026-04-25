@@ -1,0 +1,8 @@
+---
+composition_name: oggcamp
+
+composition_oggcamp_subdomain: oggcamp
+composition_oggcamp_domain: "{{ composition_oggcamp_subdomain }}.{{ vault_personal_domain }}"
+composition_oggcamp_subdomains:
+  - "{{ composition_oggcamp_subdomain }}"
+composition_oggcamp_repo_url: https://github.com/oggcamp/oggcamp.github.io.git

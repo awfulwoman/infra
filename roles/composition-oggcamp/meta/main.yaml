@@ -1,0 +1,6 @@
+---
+dependencies:
+  - role: composition-common
+    vars:
+      composition_name: oggcamp
+  - role: composition-reverseproxy
