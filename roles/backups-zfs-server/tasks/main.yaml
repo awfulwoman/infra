@@ -169,6 +169,7 @@
     path: /root/.ssh/known_hosts
     state: present
   loop: "{{ groups[backups_zfs_server_pull_group] }}"
+  ignore_errors: true
 
 - name: Ensure that pull backup cronjobs are managed for each client
   become: true
