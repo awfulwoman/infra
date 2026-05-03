@@ -1,0 +1,4 @@
+- name: Run all bootstrap tasks on Ubuntu Servers
+  hosts: ubuntu_servers
+  roles:
+    - role: bootstrap-ubuntu-server
