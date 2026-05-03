@@ -68,17 +68,18 @@
     regexp: '^127\.0\.1\.1'
     line: "127.0.1.1 {{ host_name }}"
 
-- name: Ensure PPAs are present
+- name: Ensure PPAs are removed - ffs Canonical
   become: true
-  ansible.builtin.apt_repository:
-    repo: "{{ ppa_item }}"
-    codename: "{{ ansible_facts['distribution_release'] }}"
-    update_cache: true
+  ansible.builtin.file:
+    path: "/etc/apt/sources.list.d/{{ ppa_item }}"
+    state: absent
   loop_control:
     loop_var: ppa_item
   loop:
-    - ppa:m-grant-prg/utils
-    - ppa:tomtomtom/yt-dlp
+    - ppa_ansible_ansible_noble.list
+    - ppa_tomtomtom_yt_dlp_noble.list
+    - ppa_m_grant_prg_utils_noble.list
+  notify: Update apt
 
 - name: Ensure direnv hook is enabled
   become: true
@@ -120,40 +121,40 @@
   vars:
     ansible_become: true
 
-- name: Check if Tailscale is already connected
-  ansible.builtin.command:
-    cmd: tailscale status --json
-  register: tailscale_status_raw
-  changed_when: false
-  failed_when: false
+# - name: Check if Tailscale is already connected
+#   ansible.builtin.command:
+#     cmd: tailscale status --json
+#   register: tailscale_status_raw
+#   changed_when: false
+#   failed_when: false
 
-- name: Parse Tailscale connection state
-  ansible.builtin.set_fact:
-    tailscale_connected: >-
-      {{
-        (tailscale_status_raw.rc == 0) and
-        ((tailscale_status_raw.stdout | from_json).BackendState == 'Running')
-      }}
+# - name: Parse Tailscale connection state
+#   ansible.builtin.set_fact:
+#     tailscale_connected: >-
+#       {{
+#         (tailscale_status_raw.rc == 0) and
+#         ((tailscale_status_raw.stdout | from_json).BackendState == 'Running')
+#       }}
 
-- name: Generate Tailscale auth key
-  ansible.builtin.include_role:
-    name: network-tailscale-authkey
-  when: not tailscale_connected
+# - name: Generate Tailscale auth key
+#   ansible.builtin.include_role:
+#     name: network-tailscale-authkey
+#   when: not tailscale_connected
 
-- name: Tailscale
-  ansible.builtin.include_role:
-    name: artis3n.tailscale.machine
-  vars:
-    tailscale_up_skip: "{{ tailscale_connected }}"
-  when: tailscale_exit_node is undefined or tailscale_exit_node is not true
+# - name: Tailscale
+#   ansible.builtin.include_role:
+#     name: artis3n.tailscale.machine
+#   vars:
+#     tailscale_up_skip: "{{ tailscale_connected }}"
+#   when: tailscale_exit_node is undefined or tailscale_exit_node is not true
 
-- name: Tailscale - with exit node
-  ansible.builtin.include_role:
-    name: artis3n.tailscale.machine
-  vars:
-    tailscale_args: "--advertise-exit-node"
-    tailscale_up_skip: "{{ tailscale_connected }}"
-  when: tailscale_exit_node is defined and tailscale_exit_node is true
+# - name: Tailscale - with exit node
+#   ansible.builtin.include_role:
+#     name: artis3n.tailscale.machine
+#   vars:
+#     tailscale_args: "--advertise-exit-node"
+#     tailscale_up_skip: "{{ tailscale_connected }}"
+#   when: tailscale_exit_node is defined and tailscale_exit_node is true
 
 - name: Git
   ansible.builtin.include_role:

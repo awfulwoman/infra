@@ -2,9 +2,6 @@
 security_autoupdate_enabled: true
 security_autoupdate_blacklist: []
 security_autoupdate_additional_origins:
-  - "LP-PPA-tomtomtom-yt-dlp:{{ ansible_facts['distribution_release'] }}"
-  - "LP-PPA-m-grant-prg-utils:{{ ansible_facts['distribution_release'] }}"
-  - "LP-PPA-ansible-ansible:{{ ansible_facts['distribution_release'] }}"
   - "Docker:{{ ansible_facts['distribution_release'] }}"
   - "Tailscale:{{ ansible_facts['distribution_release'] }}"
   - "HashiCorp:{{ ansible_facts['distribution_release'] }}"
