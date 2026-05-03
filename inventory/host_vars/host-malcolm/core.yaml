@@ -60,6 +60,7 @@ system_ollama_models:
   - gemma3:12b
   - gemma4:e4b # MoE (mixture of experts), 4B active params per token
   - qwen3:14b
+  - qwen3.5:4b
 
 # -------------------------------------------------------------------
 # CLAUDE
