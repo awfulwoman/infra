@@ -68,6 +68,8 @@
     regexp: '^127\.0\.1\.1'
     line: "127.0.1.1 {{ host_name }}"
 
+# On 2026/05/02 Canonicals's launchpad suffered a major outage due to a DDoS, causing all PPAs to become unavailable.
+# This caused apt operations to fail and break the playbook runs. Removing the PPAs until Canonical gets their act together.
 - name: Ensure PPAs are removed - ffs Canonical
   become: true
   ansible.builtin.file:
