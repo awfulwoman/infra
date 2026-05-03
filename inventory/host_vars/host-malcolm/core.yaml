@@ -47,12 +47,13 @@ hardware_apple_wifi_interface: en1
 # -------------------------------------------------------------------
 system_ollama_env:
   OLLAMA_HOST: "0.0.0.0:11434"
-  OLLAMA_NO_CLOUD: 1
+  OLLAMA_NO_CLOUD: 1 # Disable usage of Ollama's cloud models and websearch
   OLLAMA_NUM_PARALLEL: 4
   OLLAMA_MAX_LOADED_MODELS: 4
   OLLAMA_ORIGINS: "*"
-  # OLLAMA_KEEP_ALIVE: -1
-  OLLAMA_FLASH_ATTENTION: 1
+  OLLAMA_CONTEXT_LENGTH: 8192 # Default is 4096, but many models can handle more context, and the M4's unified memory allows for it
+  # OLLAMA_KEEP_ALIVE: -1 # Keep models loaded indefinitely (default is to unload after 5 minutes of inactivity)
+  OLLAMA_FLASH_ATTENTION: 1 # Reduce VRAM usage at the cost of some speed
   OLLAMA_KV_CACHE_TYPE: q8_0 # f16 (default), q8_0, q4_0
 
 system_ollama_models:
