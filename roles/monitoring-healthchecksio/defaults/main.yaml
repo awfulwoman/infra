@@ -1,3 +1,4 @@
 monitoring_healthchecksio: true
 monitoring_healthchecksio_name: "{{ inventory_hostname }} - Core Playbook"
 monitoring_healthchecksio_debug: false
+monitoring_healthchecksio_ping_type: success

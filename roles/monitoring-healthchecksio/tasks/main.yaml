@@ -21,11 +21,11 @@
         var: healthchecksio_check.uuid
       when: healthchecksio_check is defined and monitoring_healthchecksio_debug | bool
 
-    - name: Ping Healthchecks.io check
+    - name: Ping Healthchecks.io
       community.healthchecksio.ping:
         state: present
         api_key: "{{ vault_healthchecks_rw_apikey }}"
-        signal: success
+        signal: "{{ monitoring_healthchecksio_ping_type }}"
         uuid: "{{ healthchecksio_check.uuid }}"
       when: healthchecksio_check is defined and healthchecksio_check.uuid is defined and healthchecksio_check.uuid is not false
       register: healthchecksio_ping

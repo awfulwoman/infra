@@ -1,6 +1,9 @@
 - name: UK Server
   hosts: host-albion
   roles:
+    - role: monitoring-healthchecksio
+      monitoring_healthchecksio_ping_type: start
+      tags: [monitoring]
     - role: hardware-raspberry-pi
       tags: [hardware]
     - role: bootstrap-ubuntu-server
@@ -25,10 +28,11 @@
       tags: [compositions]
     - role: composition-zfs-api
       tags: [compositions, zfs]
-    - role: monitoring-healthchecksio
-      tags: [monitoring]
     - role: system-promtail
       tags: [system, promtail]
+    - role: monitoring-healthchecksio
+      monitoring_healthchecksio_ping_type: success
+      tags: [monitoring]
 
   handlers:
     - name: Reboot host
