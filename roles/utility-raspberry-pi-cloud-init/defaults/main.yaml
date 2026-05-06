@@ -1,0 +1,24 @@
+rpi_cloud_init_mount_path: /Volumes/system-boot
+rpi_cloud_init_hostname: raspberry-pi-000
+rpi_cloud_init_timezone: Europe/Berlin
+rpi_cloud_init_username: "{{ vault_server_username }}"
+rpi_cloud_init_groups:
+  - users
+  - adm
+  - dialout
+  - audio
+  - netdev
+  - video
+  - plugdev
+  - cdrom
+  - games
+  - input
+  - gpio
+  - spi
+  - i2c
+  - render
+  - sudo
+rpi_cloud_init_github_username: awfulwoman
+rpi_cloud_init_ssh_pwauth: false
+rpi_cloud_init_package_update: true
+rpi_cloud_init_package_upgrade: true

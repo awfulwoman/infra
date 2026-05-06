@@ -1,0 +1,6 @@
+- name: Write Raspberry Pi cloud-init user-data
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  roles:
+    - utility-raspberry-pi-cloud-init

@@ -1,0 +1,18 @@
+#cloud-config
+hostname: {{ rpi_cloud_init_hostname }}
+timezone: {{ rpi_cloud_init_timezone }}
+
+users:
+  - name: {{ rpi_cloud_init_username }}
+    groups: {{ rpi_cloud_init_groups | join(',') }}
+    shell: /bin/bash
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    plain_text_passwd: "{{ vault_server_password }}"
+    ssh_import_id:
+      - gh:{{ rpi_cloud_init_github_username }}
+
+enable_ssh: true
+ssh_pwauth: {{ rpi_cloud_init_ssh_pwauth | lower }}
+
+# package_update: {{ rpi_cloud_init_package_update | lower }}
+# package_upgrade: {{ rpi_cloud_init_package_upgrade | lower }}

@@ -1,0 +1,19 @@
+# Writes a cloud-init user-data file to a mounted Raspberry Pi SD card boot volume
+
+- name: Check system-boot volume is mounted
+  ansible.builtin.stat:
+    path: "{{ rpi_cloud_init_mount_path }}"
+  register: rpi_mount_stat
+
+- name: Assert system-boot volume is present
+  ansible.builtin.assert:
+    that:
+      - rpi_mount_stat.stat.exists
+      - rpi_mount_stat.stat.isdir
+    fail_msg: "{{ rpi_cloud_init_mount_path }} not found — insert the SD card and try again."
+
+- name: Write cloud-init user-data
+  ansible.builtin.template:
+    src: user-data.yaml.j2
+    dest: "{{ rpi_cloud_init_mount_path }}/user-data"
+    mode: "0644"
