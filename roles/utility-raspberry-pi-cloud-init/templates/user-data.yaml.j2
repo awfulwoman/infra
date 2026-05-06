@@ -8,6 +8,7 @@ users:
     shell: /bin/bash
     sudo: ALL=(ALL) NOPASSWD:ALL
     plain_text_passwd: "{{ vault_server_password }}"
+    lock_passwd: false
     ssh_import_id:
       - gh:{{ rpi_cloud_init_github_username }}
 

@@ -20,5 +20,5 @@ rpi_cloud_init_groups:
   - sudo
 rpi_cloud_init_github_username: awfulwoman
 rpi_cloud_init_ssh_pwauth: false
-rpi_cloud_init_package_update: true
-rpi_cloud_init_package_upgrade: true
+rpi_cloud_init_package_update: false
+rpi_cloud_init_package_upgrade: false
