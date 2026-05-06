@@ -12,6 +12,16 @@
       - rpi_mount_stat.stat.isdir
     fail_msg: "{{ rpi_cloud_init_mount_path }} not found — insert the SD card and try again."
 
+- name: Fetch SSH public keys from GitHub
+  ansible.builtin.uri:
+    url: "https://github.com/{{ rpi_cloud_init_github_username }}.keys"
+    return_content: true
+  register: rpi_github_keys_raw
+
+- name: Set SSH keys fact
+  ansible.builtin.set_fact:
+    rpi_github_keys: "{{ rpi_github_keys_raw.content.splitlines() | select('match', '.+') | list }}"
+
 - name: Write cloud-init user-data
   ansible.builtin.template:
     src: user-data.yaml.j2

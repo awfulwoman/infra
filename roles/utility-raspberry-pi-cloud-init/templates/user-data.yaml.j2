@@ -9,8 +9,10 @@ users:
     sudo: ALL=(ALL) NOPASSWD:ALL
     plain_text_passwd: "{{ vault_server_password }}"
     lock_passwd: false
-    ssh_import_id:
-      - gh:{{ rpi_cloud_init_github_username }}
+    ssh_authorized_keys:
+{% for key in rpi_github_keys %}
+      - {{ key }}
+{% endfor %}
 
 enable_ssh: true
 ssh_pwauth: {{ rpi_cloud_init_ssh_pwauth | lower }}
