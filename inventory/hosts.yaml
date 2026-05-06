@@ -25,7 +25,9 @@ all:
         host-sites:
         host-storage:
         host-test-router:
-        # Let's do a demo folks!
+        host-raspberry-pi4-2gb-roger:
+        host-raspberry-pi4-4gb-rudolph:
+        host-raspberry-pi4-8gb-randy:
 
 
     # -------------------------------------------------------------------
@@ -122,11 +124,3 @@ all:
         vagrant-wrapper:
 
     # Unmanaged devices are defined in hosts-unmanaged.yaml
-
-
-
-
-        # oggcamp-demo:
-        #   ansible_host: 49.12.184.222
-        #   ansible_user: "{{ vault_server_username }}"
-        #   host_name: oggcamp2026

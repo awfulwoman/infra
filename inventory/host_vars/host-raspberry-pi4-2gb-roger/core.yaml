@@ -2,7 +2,7 @@
 # IDENTITY
 # -------------------------------------------------------------------
 host_type: baremetal
-host_name: deedee
+host_name: roger
 host_region: ber
 host_site: xberg
 host_pfqdn: "{{ host_name }}.{{ host_site }}.{{ host_region }}"
@@ -17,7 +17,7 @@ host_description: "Runs infrastructure tasks"
 host_ipv4: 192.168.1.2
 host_ipv4_subnet: 24
 host_primary_interface: "eth0"
-host_mac: "e4:5f:01:34:5f:0e"
+host_mac: "e4:5f:01:7e:4a:4e"
 
 # -------------------------------------------------------------------
 # ANSIBLE
@@ -35,7 +35,7 @@ raspberry_pi_boot_config_location: /boot/firmware/config.txt
 # -------------------------------------------------------------------
 # UBUNTUPRO
 # -------------------------------------------------------------------
-ubuntupro_attach: true
+ubuntupro_attach: false
 
 # -------------------------------------------------------------------
 # ZFS
