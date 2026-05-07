@@ -1,5 +1,4 @@
 all:
-
   # -------------------------------------------------------------------
   # UNASSIGNED HOSTS
   # Only hosts not assigned to any group should need to be lsited here
@@ -17,11 +16,9 @@ all:
         host-albion:
         host-backups:
         host-belinda:
-        host-deedee:
         host-homebrain:
         host-malcolm:
         host-pikvm:
-        host-samson:
         host-sites:
         host-storage:
         host-test-router:
@@ -39,12 +36,13 @@ all:
         host-albion:
         host-backups:
         host-belinda:
-        host-deedee:
         host-homebrain:
-        host-samson:
         host-sites:
         host-storage:
         host-test-router:
+        host-raspberry-pi4-2gb-roger:
+        host-raspberry-pi4-4gb-rudolph:
+        host-raspberry-pi4-8gb-randy:
 
     # -------------------------------------------------------------------
     # MACOS SERVERS
@@ -73,9 +71,11 @@ all:
         host-deedee:
         host-backups:
         # host-albion: # Has died
-        host-samson:
         host-sites:
         host-belinda:
+        host-raspberry-pi4-2gb-roger:
+        # host-raspberry-pi4-4gb-rudolph:
+        # host-raspberry-pi4-8gb-randy:
 
     # -------------------------------------------------------------------
     # ZFS REPLICATION SOURCES
@@ -85,9 +85,10 @@ all:
       hosts:
         host-storage:
         host-homebrain:
-        host-deedee:
         host-sites:
-        host-samson:
+        host-raspberry-pi4-2gb-roger:
+        # host-raspberry-pi4-4gb-rudolph:
+        # host-raspberry-pi4-8gb-randy:
 
     # -------------------------------------------------------------------
     # ZFS REPLICATION DESTINATIONS
