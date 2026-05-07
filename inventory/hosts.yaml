@@ -68,7 +68,6 @@ all:
       hosts:
         host-storage:
         host-homebrain:
-        host-deedee:
         host-backups:
         # host-albion: # Has died
         host-sites:
