@@ -1,6 +1,6 @@
 ---
 - name: Malcolm, the little power-efficient Mac Mini
-  hosts: host-malcolm
+  hosts: host-mac-mini-m4-16gb-malcolm
   roles:
     - role: monitoring-healthchecksio
       monitoring_healthchecksio_ping_type: start

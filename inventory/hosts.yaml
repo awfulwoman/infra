@@ -16,7 +16,7 @@ all:
         # host-albion:
         host-backups:
         host-homebrain:
-        host-malcolm:
+        host-mac-mini-m4-16gb-malcolm:
         host-pikvm:
         host-sites:
         host-storage:
@@ -50,7 +50,7 @@ all:
     # -------------------------------------------------------------------
     macos_servers:
       hosts:
-        host-malcolm:
+        host-mac-mini-m4-16gb-malcolm:
 
     # -------------------------------------------------------------------
     # RASPBERRY PI
@@ -63,7 +63,6 @@ all:
         host-raspberry-pi4-4gb-rudolph:
         host-raspberry-pi4-8gb-randy:
         host-raspberry-pi5-4gb-belinda:
-
 
     # -------------------------------------------------------------------
     # HOME AUTOMATION
