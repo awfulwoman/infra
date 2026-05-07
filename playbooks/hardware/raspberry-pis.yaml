@@ -1,0 +1,5 @@
+- name: Run all bootstrap tasks on Ubuntu Servers
+  hosts: raspberry_pi
+  roles:
+    - role: hardware-raspberry-pi
+      tags: [hardware]

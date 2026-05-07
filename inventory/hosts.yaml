@@ -21,7 +21,7 @@ all:
         host-sites:
         host-storage:
         host-test-router:
-        host-raspberry-pi4-2gb-roger:
+        host-raspberry-pi4-2gb-deedee:
         host-raspberry-pi4-4gb-rudolph:
         host-raspberry-pi4-8gb-randy:
         host-raspberry-pi5-4gb-belinda:
@@ -39,7 +39,7 @@ all:
         host-sites:
         host-storage:
         host-test-router:
-        host-raspberry-pi4-2gb-roger:
+        host-raspberry-pi4-2gb-deedee:
         host-raspberry-pi4-4gb-rudolph:
         host-raspberry-pi4-8gb-randy:
         host-raspberry-pi5-4gb-belinda:
@@ -51,6 +51,19 @@ all:
     macos_servers:
       hosts:
         host-malcolm:
+
+    # -------------------------------------------------------------------
+    # RASPBERRY PI
+    # All Raspberry Pi hosts, regardless of role or OS
+    # -------------------------------------------------------------------
+    raspberry_pi:
+      hosts:
+        # host-albion:
+        host-raspberry-pi4-2gb-deedee:
+        host-raspberry-pi4-4gb-rudolph:
+        host-raspberry-pi4-8gb-randy:
+        host-raspberry-pi5-4gb-belinda:
+
 
     # -------------------------------------------------------------------
     # HOME AUTOMATION
@@ -72,7 +85,7 @@ all:
         # host-albion: # Has died
         host-sites:
         host-raspberry-pi5-4gb-belinda:
-        host-raspberry-pi4-2gb-roger:
+        host-raspberry-pi4-2gb-deedee:
         # host-raspberry-pi4-4gb-rudolph:
         # host-raspberry-pi4-8gb-randy:
 
@@ -85,7 +98,7 @@ all:
         host-storage:
         host-homebrain:
         host-sites:
-        host-raspberry-pi4-2gb-roger:
+        host-raspberry-pi4-2gb-deedee:
         # host-raspberry-pi4-4gb-rudolph:
         # host-raspberry-pi4-8gb-randy:
 
