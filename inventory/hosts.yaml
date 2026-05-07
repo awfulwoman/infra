@@ -15,7 +15,6 @@ all:
       hosts:
         # host-albion:
         host-backups:
-        host-belinda:
         host-homebrain:
         host-malcolm:
         host-pikvm:
@@ -25,6 +24,7 @@ all:
         host-raspberry-pi4-2gb-roger:
         host-raspberry-pi4-4gb-rudolph:
         host-raspberry-pi4-8gb-randy:
+        host-raspberry-pi5-4gb-belinda:
 
 
     # -------------------------------------------------------------------
@@ -35,7 +35,6 @@ all:
       hosts:
         # host-albion:
         host-backups:
-        host-belinda:
         host-homebrain:
         host-sites:
         host-storage:
@@ -43,6 +42,7 @@ all:
         host-raspberry-pi4-2gb-roger:
         host-raspberry-pi4-4gb-rudolph:
         host-raspberry-pi4-8gb-randy:
+        host-raspberry-pi5-4gb-belinda:
 
     # -------------------------------------------------------------------
     # MACOS SERVERS
@@ -71,7 +71,7 @@ all:
         host-backups:
         # host-albion: # Has died
         host-sites:
-        host-belinda:
+        host-raspberry-pi5-4gb-belinda:
         host-raspberry-pi4-2gb-roger:
         # host-raspberry-pi4-4gb-rudolph:
         # host-raspberry-pi4-8gb-randy:
@@ -96,7 +96,7 @@ all:
     zfs_backup_servers:
       hosts:
         host-backups:
-        host-belinda:
+        host-raspberry-pi5-4gb-belinda:
 
     # -------------------------------------------------------------------
     # ZFS REPLICATION DESTINATIONS - OFFSITE
