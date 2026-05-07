@@ -2,7 +2,7 @@
 # IDENTITY
 # -------------------------------------------------------------------
 host_type: baremetal
-host_name: roger
+host_name: raspberry-pi4-2gb-roger
 host_region: ber
 host_site: xberg
 host_pfqdn: "{{ host_name }}.{{ host_site }}.{{ host_region }}"
