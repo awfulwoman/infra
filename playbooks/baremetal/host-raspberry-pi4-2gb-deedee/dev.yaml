@@ -1,7 +1,6 @@
-- name: samson development playbook
-  hosts: host-samson
+- name: DeeDee development playbook
+  hosts: host-raspberry-pi4-2gb-deedee
   roles:
-    - role: system-sshkey
     - role: system-repos
 
   handlers:

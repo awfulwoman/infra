@@ -1,5 +1,5 @@
 - name: Run certbot role
-  hosts: host-deedee
+  hosts: host-raspberry-pi4-2gb-deedee
   roles:
     - role: infra-dhcpd
     - role: infra-named

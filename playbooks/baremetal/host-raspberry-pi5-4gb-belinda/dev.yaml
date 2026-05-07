@@ -1,5 +1,5 @@
 - name: Backup Server (dev work)
-  hosts: host-belinda
+  hosts: host-raspberry-pi5-4gb-belinda
   gather_facts: true
   roles:
     - role: backups-zfs-server

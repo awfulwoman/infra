@@ -1,5 +1,5 @@
 - name: DeeDee Server - ZFS API
-  hosts: host-deedee
+  hosts: host-raspberry-pi4-2gb-deedee
   vars:
     compositions:
       - zfs-api

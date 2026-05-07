@@ -1,5 +1,5 @@
 - name: DeeDee - aw man, we're off to Yonkers
-  hosts: host-deedee
+  hosts: host-raspberry-pi4-2gb-deedee
   roles:
     - role: monitoring-healthchecksio
       monitoring_healthchecksio_ping_type: start

@@ -1,11 +1,11 @@
 - name: ZFS and backup stuff
-  hosts: host-belinda
+  hosts: host-raspberry-pi4-2gb-deedee
   roles:
     - role: system-zfs
       tags: [system, zfs]
     - role: system-zfs-policy
       tags: [system, zfs]
-    - role: backups-zfs-server
+    - role: backups-zfs-client
       tags: [backups, zfs]
   handlers:
     - name: Reboot host

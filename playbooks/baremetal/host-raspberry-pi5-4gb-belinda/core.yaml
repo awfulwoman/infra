@@ -1,5 +1,5 @@
 - name: Belinda the Backup Server
-  hosts: host-belinda
+  hosts: host-raspberry-pi5-4gb-belinda
   roles:
     - role: monitoring-healthchecksio
       monitoring_healthchecksio_ping_type: start

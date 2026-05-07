@@ -1,5 +1,5 @@
 - name: Update Terraform
-  hosts: host-deedee
+  hosts: host-raspberry-pi4-2gb-deedee
   roles:
     - role: infra-public-resources
       tags:
