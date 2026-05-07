@@ -13,7 +13,7 @@ all:
     # -------------------------------------------------------------------
     infra:
       hosts:
-        host-albion:
+        # host-albion:
         host-backups:
         host-belinda:
         host-homebrain:
@@ -33,7 +33,7 @@ all:
     # -------------------------------------------------------------------
     ubuntu_servers:
       hosts:
-        host-albion:
+        # host-albion:
         host-backups:
         host-belinda:
         host-homebrain:
