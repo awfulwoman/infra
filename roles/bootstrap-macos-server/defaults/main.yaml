@@ -1,2 +1,5 @@
 ---
 bootstrap_macos_server_homebrew_formulae: []
+bootstrap_macos_server_zsh_theme: maran
+bootstrap_macos_server_zsh_plugins:
+  - git

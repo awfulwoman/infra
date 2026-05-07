@@ -1,7 +1,50 @@
 # Boostraps a MacOS server
+- name: Get current macOS hostnames
+  ansible.builtin.command:
+    cmd: "scutil --get {{ item }}"
+  loop:
+    - HostName
+    - ComputerName
+    - LocalHostName
+  register: _current_hostnames
+  changed_when: false
+  failed_when: false
+
+- name: Set macOS hostnames
+  become: true
+  ansible.builtin.command:
+    cmd: "scutil --set {{ item.item }} {{ host_name }}"
+  loop: "{{ _current_hostnames.results }}"
+  when: item.stdout != host_name
+  changed_when: true
+
 - name: Env vars
   ansible.builtin.include_role:
     name: system-environment
+
+- name: Check if oh-my-zsh is installed
+  ansible.builtin.stat:
+    path: "{{ ansible_facts.user_dir }}/.oh-my-zsh"
+  register: _omz_stat
+
+- name: Install oh-my-zsh
+  ansible.builtin.shell:
+    cmd: >
+      sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+      "" --unattended --keep-zshrc
+  when: not _omz_stat.stat.exists
+
+- name: Configure oh-my-zsh in .zshrc
+  ansible.builtin.blockinfile:
+    path: "{{ ansible_facts.user_dir }}/.zshrc"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: oh-my-zsh"
+    block: |
+      export ZSH="{{ ansible_facts.user_dir }}/.oh-my-zsh"
+      ZSH_THEME="{{ bootstrap_macos_server_zsh_theme }}"
+      plugins=({{ bootstrap_macos_server_zsh_plugins | join(' ') }})
+      source $ZSH/oh-my-zsh.sh
+    create: true
+    mode: "0644"
 
 - name: Fix TERM for ghostty over SSH
   ansible.builtin.blockinfile:
