@@ -171,6 +171,44 @@
   loop: "{{ groups[backups_zfs_server_pull_group] }}"
   ignore_errors: true
 
+- name: Ensure per-host pull backup script directory exists
+  become: true
+  ansible.builtin.file:
+    path: "{{ backups_zfs_server_script_path }}/scripts"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"
+
+- name: Ensure per-host pull backup scripts are absent for hosts without datasets
+  become: true
+  vars:
+    _datasets: "{{ hostvars[item].zfs | default({}) | zfs_backup_datasets }}"
+  ansible.builtin.file:
+    path: "{{ backups_zfs_server_script_path }}/scripts/pull-{{ item }}.sh"
+    state: absent
+  when: _datasets | length == 0
+  loop: "{{ groups[backups_zfs_server_pull_group] }}"
+
+- name: Ensure per-host pull backup scripts exist
+  become: true
+  vars:
+    _datasets: "{{ hostvars[item].zfs | default({}) | zfs_backup_datasets }}"
+  ansible.builtin.copy:
+    dest: "{{ backups_zfs_server_script_path }}/scripts/pull-{{ item }}.sh"
+    content: |
+      #!/bin/bash
+      {{ backups_zfs_server_script_path }}/zfs-pull-backups \
+        --host {{ hostvars[item].ansible_host }} \
+        --name {{ item }} \
+        --user {{ vault_zfsbackups_user }} \
+        --datasets {{ _datasets | map(attribute='dataset') | join(' ') }}
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"
+  when: _datasets | length > 0
+  loop: "{{ groups[backups_zfs_server_pull_group] }}"
+
 - name: Ensure that pull backup cronjobs are managed for each client
   become: true
   vars:
@@ -180,13 +218,7 @@
     name: "zfs-pull-backups {{ item }}"
     hour: "{{ backups_zfs_server_cron_hour }}"
     minute: "{{ backups_zfs_server_cron_minute }}"
-    job: >-
-      {{ backups_zfs_server_script_path }}/zfs-pull-backups
-      --host {{ hostvars[item].ansible_host }}
-      --name {{ item }}
-      --user {{ vault_zfsbackups_user }}
-      --datasets {{ _datasets | map(attribute='dataset') | join(' ') }}
-      >/dev/null
+    job: "{{ backups_zfs_server_script_path }}/scripts/pull-{{ item }}.sh >/dev/null"
     state: "{{ 'present' if _has_datasets else 'absent' }}"
   loop: "{{ groups[backups_zfs_server_pull_group] }}"
 
