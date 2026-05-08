@@ -22,7 +22,7 @@ all:
         host-storage:
         host-test-router:
         host-raspberry-pi4-2gb-deedee:
-        host-raspberry-pi4-4gb-rudolph:
+        host-raspberry-pi4-4gb-randolph:
         host-raspberry-pi4-8gb-randy:
         host-raspberry-pi5-4gb-belinda:
 
@@ -40,7 +40,7 @@ all:
         host-storage:
         host-test-router:
         host-raspberry-pi4-2gb-deedee:
-        host-raspberry-pi4-4gb-rudolph:
+        host-raspberry-pi4-4gb-randolph:
         host-raspberry-pi4-8gb-randy:
         host-raspberry-pi5-4gb-belinda:
 
@@ -60,7 +60,7 @@ all:
       hosts:
         # host-albion:
         host-raspberry-pi4-2gb-deedee:
-        host-raspberry-pi4-4gb-rudolph:
+        host-raspberry-pi4-4gb-randolph:
         host-raspberry-pi4-8gb-randy:
         host-raspberry-pi5-4gb-belinda:
 
@@ -85,7 +85,7 @@ all:
         host-sites:
         host-raspberry-pi5-4gb-belinda:
         host-raspberry-pi4-2gb-deedee:
-        # host-raspberry-pi4-4gb-rudolph:
+        # host-raspberry-pi4-4gb-randolph:
         # host-raspberry-pi4-8gb-randy:
 
     # -------------------------------------------------------------------
@@ -98,7 +98,7 @@ all:
         host-homebrain:
         host-sites:
         host-raspberry-pi4-2gb-deedee:
-        # host-raspberry-pi4-4gb-rudolph:
+        # host-raspberry-pi4-4gb-randolph:
         # host-raspberry-pi4-8gb-randy:
 
     # -------------------------------------------------------------------

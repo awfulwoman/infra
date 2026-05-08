@@ -2,7 +2,7 @@
 # IDENTITY
 # -------------------------------------------------------------------
 host_type: baremetal
-host_name: raspberry-pi5-4gb-rodney
+host_name: raspberry-pi5-4gb-belinda
 host_region: ber
 host_site: kberg
 host_pfqdn: "{{ host_name }}.{{ host_site }}.{{ host_region }}"
