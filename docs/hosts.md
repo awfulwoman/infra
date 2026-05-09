@@ -7,9 +7,9 @@ All physical and virtual machines managed by this infrastructure.
 | Host           | Description                              | IP              |
 |----------------|------------------------------------------|-----------------|
 | `deedee`       | DHCP and DNS server                      | 192.168.1.2     |
-| `homebrain`    | Home automation hub                      | 192.168.1.130   |
-| `generic-64gb-storage` | Central storage device      | 192.168.1.116   |
-| `generic-8gb-backups`  | Dedicated backup server *(sunsetted)* | 192.168.1.118   |
+| `minipc-8gb-homebrain`    | Home automation hub                      | 192.168.1.130   |
+| `server-64gb-storage` | Central storage device      | 192.168.1.116   |
+| `server-8gb-backups`  | Dedicated backup server *(sunsetted)* | 192.168.1.118   |
 | `samson`       | Jumphost and Claude Code runner          | 192.168.1.112   |
 | `malcolm`      | Mac Mini M4 16GB — Ollama / AI workloads | 192.168.1.150   |
 | `pikvm`        | KVM over IP device                       | 192.168.1.111   |

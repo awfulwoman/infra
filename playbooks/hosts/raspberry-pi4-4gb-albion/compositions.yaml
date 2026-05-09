@@ -1,0 +1,12 @@
+---
+- name: UK Server (compositions only)
+  hosts: raspberry-pi4-4gb-albion
+  roles:
+    - role: composition-reverseproxy
+    - role: composition-container-management
+    - role: composition-zfs-api
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:

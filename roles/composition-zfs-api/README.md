@@ -101,7 +101,7 @@ This role requires:
 ### Example Host Configuration
 
 ```yaml
-# In host_vars/generic-64gb-storage/core.yaml
+# In host_vars/server-64gb-storage/core.yaml
 roles:
   - system-zfs
   - system-zfs-policy
@@ -114,7 +114,7 @@ roles:
 ### Query Pool Health
 
 ```bash
-curl -s https://zfs-api.storage.xberg.ber.yourdomain.com/api/v1/pools | jq
+curl -s https://zfs-api.server-64gb-storage.xberg.ber.yourdomain.com/api/v1/pools | jq
 ```
 
 ```json
@@ -134,7 +134,7 @@ curl -s https://zfs-api.storage.xberg.ber.yourdomain.com/api/v1/pools | jq
 ### Check Snapshot Compliance
 
 ```bash
-curl -s https://zfs-api.storage.xberg.ber.yourdomain.com/api/v1/snapshots | jq
+curl -s https://zfs-api.server-64gb-storage.xberg.ber.yourdomain.com/api/v1/snapshots | jq
 ```
 
 ```json
@@ -160,27 +160,27 @@ curl -s https://zfs-api.storage.xberg.ber.yourdomain.com/api/v1/snapshots | jq
 ### Find Low Compliance Datasets
 
 ```bash
-curl -s https://zfs-api.storage.xberg.ber.yourdomain.com/api/v1/snapshots | \
+curl -s https://zfs-api.server-64gb-storage.xberg.ber.yourdomain.com/api/v1/snapshots | \
   jq '.datasets[] | select(.compliance.daily < 90)'
 ```
 
 ### Get Dataset Details
 
 ```bash
-curl -s https://zfs-api.storage.xberg.ber.yourdomain.com/api/v1/datasets/fastpool/compositions | jq
+curl -s https://zfs-api.server-64gb-storage.xberg.ber.yourdomain.com/api/v1/datasets/fastpool/compositions | jq
 ```
 
 ### Query Prometheus Metrics
 
 ```bash
 # View all Prometheus metrics
-curl https://zfs-api.storage.xberg.ber.yourdomain.com/metrics
+curl https://zfs-api.server-64gb-storage.xberg.ber.yourdomain.com/metrics
 
 # Filter specific metrics
-curl -s https://zfs-api.storage.xberg.ber.yourdomain.com/metrics | grep zfs_pool_capacity
+curl -s https://zfs-api.server-64gb-storage.xberg.ber.yourdomain.com/metrics | grep zfs_pool_capacity
 
 # Check metric format
-curl -s https://zfs-api.storage.xberg.ber.yourdomain.com/metrics | head -20
+curl -s https://zfs-api.server-64gb-storage.xberg.ber.yourdomain.com/metrics | head -20
 ```
 
 ### Monitor with Shell Script
@@ -189,7 +189,7 @@ curl -s https://zfs-api.storage.xberg.ber.yourdomain.com/metrics | head -20
 #!/bin/bash
 # Check ZFS health and alert on issues
 
-API_URL="https://zfs-api.storage.xberg.ber.yourdomain.com/api/v1"
+API_URL="https://zfs-api.server-64gb-storage.xberg.ber.yourdomain.com/api/v1"
 
 # Check pool health
 UNHEALTHY=$(curl -s "$API_URL/pools" | jq -r '.pools[] | select(.health != "ONLINE") | .name')
@@ -216,7 +216,7 @@ Use the REST sensor platform:
 sensor:
   - platform: rest
     name: "ZFS Storage Health"
-    resource: https://zfs-api.storage.xberg.ber.yourdomain.com/api/v1/pools/fastpool
+    resource: https://zfs-api.server-64gb-storage.xberg.ber.yourdomain.com/api/v1/pools/fastpool
     value_template: "{{ value_json.health }}"
     json_attributes:
       - capacity_percent
@@ -225,7 +225,7 @@ sensor:
 
   - platform: rest
     name: "ZFS Snapshot Compliance"
-    resource: https://zfs-api.storage.xberg.ber.yourdomain.com/api/v1/snapshots
+    resource: https://zfs-api.server-64gb-storage.xberg.ber.yourdomain.com/api/v1/snapshots
     value_template: "{{ value_json.summary.avg_compliance }}"
     unit_of_measurement: "%"
 ```
@@ -241,11 +241,11 @@ scrape_configs:
     scrape_interval: 60s
     static_configs:
       - targets:
-          - 'zfs-api.storage.xberg.ber.domain.com:8000'
-          - 'zfs-api.homebrain.xberg.ber.domain.com:8000'
+          - 'zfs-api.server-64gb-storage.xberg.ber.domain.com:8000'
+          - 'zfs-api.minipc-8gb-homebrain.xberg.ber.domain.com:8000'
           - 'zfs-api.deedee.xberg.ber.domain.com:8000'
-          - 'zfs-api.backups.xberg.ber.domain.com:8000'
-          - 'zfs-api.albion.location.city.domain.com:8000'
+          - 'zfs-api.server-8gb-backups.xberg.ber.domain.com:8000'
+          - 'zfs-api.raspberry-pi4-4gb-albion.location.city.domain.com:8000'
         labels:
           job: 'zfs'
           environment: 'homelab'
@@ -319,9 +319,9 @@ docker-compose down
 ### API Documentation
 
 Once running, visit:
-- Swagger UI: `https://zfs-api.storage.../api/docs`
-- ReDoc: `https://zfs-api.storage.../api/redoc`
-- OpenAPI spec: `https://zfs-api.storage.../api/openapi.json`
+- Swagger UI: `https://zfs-api.server-64gb-storage.../api/docs`
+- ReDoc: `https://zfs-api.server-64gb-storage.../api/redoc`
+- OpenAPI spec: `https://zfs-api.server-64gb-storage.../api/openapi.json`
 
 ## Troubleshooting
 

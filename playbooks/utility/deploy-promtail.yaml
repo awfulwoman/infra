@@ -1,13 +1,13 @@
 ---
 - name: Deploy Promtail to all Docker hosts
   hosts:
-    - generic-64gb-storage
-    - homebrain
-    - deedee
-    - generic-8gb-backups
-    - albion
-    - belinda
-    - sites
+    - server-64gb-storage
+    - minipc-8gb-homebrain
+    - raspberry-pi4-2gb-deedee
+    - server-8gb-backups
+    - raspberry-pi4-4gb-albion
+    - raspberry-pi5-4gb-belinda
+    - vps-hetzner-public01
 
   roles:
     - role: system-promtail

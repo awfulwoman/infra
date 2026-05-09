@@ -1,0 +1,40 @@
+- name: UK Server
+  hosts: raspberry-pi4-4gb-albion
+  roles:
+    - role: monitoring-healthchecksio
+      monitoring_healthchecksio_ping_type: start
+      tags: [monitoring]
+    - role: hardware-raspberry-pi
+      tags: [hardware]
+    - role: bootstrap-ubuntu-server
+      tags: [bootstrap]
+    - role: network-netplan
+      tags: [network]
+    - role: infothrill.nullmailer
+      become: true
+    - role: system-sshkey
+      tags: [system]
+    - role: system-zfs
+      tags: [system, zfs]
+    - role: backups-zfs-archive-offsite
+      tags: [backups, zfs]
+    - role: network-ip-address-forwarding
+      tags: [network]
+    - role: client-nfs
+      tags: [client]
+    - role: composition-reverseproxy
+      tags: [compositions]
+    - role: composition-container-management
+      tags: [compositions]
+    - role: composition-zfs-api
+      tags: [compositions, zfs]
+    - role: system-promtail
+      tags: [system, promtail]
+    - role: monitoring-healthchecksio
+      monitoring_healthchecksio_ping_type: success
+      tags: [monitoring]
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:

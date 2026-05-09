@@ -1,0 +1,114 @@
+# -------------------------------------------------------------------
+# IDENTITY
+# -------------------------------------------------------------------
+host_type: baremetal
+host_name: apple-macmini-m4-16gb-malcolm
+host_region: ber
+host_site: xberg
+# host_pfqdn: "{{ host_name }}.{{ host_site }}.{{ host_region }}"
+# host_fqdn: "{{ host_pfqdn }}.{{ domain_name }}"
+host_pfqdn: malcolm.buru-jazz
+host_fqdn: malcolm.buru-jazz.ts.net
+host_description: "Mac Mini M4 16GB"
+
+# -------------------------------------------------------------------
+# NETWORK
+# Hint: Use `network_netplan_config:` for more fine-grained control
+# Docs: roles/network-netplan/README.md
+# -------------------------------------------------------------------
+host_primary_interface: "en0"
+host_ipv4: 192.168.1.150
+host_ipv4_subnet: 24
+host_mac: "1c:f6:4c:3e:51:a5"
+
+# -------------------------------------------------------------------
+# ANSIBLE
+# -------------------------------------------------------------------
+ansible_host: "{{ host_ipv4 }}"
+# ansible_host: "{{ host_fqdn }}"
+ansible_user: "{{ vault_server_username }}"
+ansible_become_password: "{{ vault_password }}"
+ansible_path: "{{ ansible_facts.user_dir }}/ansible"
+ansible_log_path: "{{ ansible_path }}/logs"
+ansible_vault_password_file: "{{ ansible_path }}/.vaultpassword"
+ansible_roles_path: "{{ ansible_path }}/galaxy/roles"
+ansible_collections_path: "{{ ansible_path }}/galaxy/collections"
+ansible_infra_dir: "{{ ansible_facts.user_dir }}/Code/awfulwoman/infra"
+
+# -------------------------------------------------------------------
+# HARDWARE
+# -------------------------------------------------------------------
+hardware_apple_bluetooth: false
+hardware_apple_wifi: false
+hardware_apple_wifi_interface: en1
+
+# -------------------------------------------------------------------
+# OLLAMA
+# -------------------------------------------------------------------
+system_ollama_env:
+  OLLAMA_HOST: "0.0.0.0:11434"
+  OLLAMA_NO_CLOUD: 1 # Disable usage of Ollama's cloud models and websearch
+  OLLAMA_NUM_PARALLEL: 4
+  OLLAMA_MAX_LOADED_MODELS: 4
+  OLLAMA_ORIGINS: "*"
+  OLLAMA_CONTEXT_LENGTH: 8192 # Default is 4096, but many models can handle more context, and the M4's unified memory allows for it
+  # OLLAMA_KEEP_ALIVE: -1 # Keep models loaded indefinitely (default is to unload after 5 minutes of inactivity)
+  OLLAMA_FLASH_ATTENTION: 1 # Reduce VRAM usage at the cost of some speed
+  OLLAMA_KV_CACHE_TYPE: q8_0 # f16 (default), q8_0, q4_0
+
+system_ollama_models:
+  - gemma3:4b
+  - gemma3:12b
+  - gemma4:e4b # MoE (mixture of experts), 4B active params per token
+  - qwen3:14b
+  - qwen3.5:4b
+
+# -------------------------------------------------------------------
+# CLAUDE
+# -------------------------------------------------------------------
+system_claude_settings_group: "staff"
+system_claude_profile_file: ".zshrc"
+
+# -------------------------------------------------------------------
+# OBSIDIAN
+# -------------------------------------------------------------------
+system_obsidian_headless_vaults:
+  - name: "Personal"
+    path: "{{ ansible_facts['user_dir'] }}/Obsidian"
+    password: "{{ vault_obsidian_vault_key }}"
+
+# -------------------------------------------------------------------
+# REPOS
+# -------------------------------------------------------------------
+system_repos:
+  - repo: awfulwoman/infra
+  - repo: awfulwoman/chives
+  - repo: awfulwoman/podderton
+  - repo: awfulwoman/ralph
+  - repo: awfulwoman/memorybank
+  - repo: awfulwoman/personal-site
+system_repos_base_dir: "{{ ansible_facts.user_dir }}/Code"
+
+# -------------------------------------------------------------------
+# AUTOMATIONS
+# -------------------------------------------------------------------
+automation_infra_playbooks:
+  - hosts/server-64gb-storage/core.yaml
+  - hosts/minipc-8gb-homebrain/core.yaml
+  - hosts/raspberry-pi5-4gb-belinda/core.yaml
+  - hosts/apple-macmini-m4-16gb-malcolm/core.yaml
+  - hosts/vps-hetzner-public01/core.yaml
+
+# -------------------------------------------------------------------
+# HOMEBREW
+# -------------------------------------------------------------------
+system_homebrew_formulae:
+  - jq
+  - git
+  - watch
+  - direnv
+  - ffmpeg
+  - macmon
+  - wget
+  - gemini-cli
+  - tmux

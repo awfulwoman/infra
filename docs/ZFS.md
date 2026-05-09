@@ -111,7 +111,7 @@ This happens every time the scripts run, meaning newly-created children are imme
 
 Docker automatically creates ZFS datasets for volumes when using the ZFS storage driver. These datasets aren't in your inventory because Docker creates them dynamically based on `docker-compose.yaml` files.
 
-**Example from `generic-64gb-storage`:**
+**Example from `server-64gb-storage`:**
 
 ```yaml
 zfs:
@@ -231,7 +231,7 @@ zfs:
 2. Does the parent have `children_inherit_policy: true`? (For declared children)
    ```bash
    # Check the processed policy values
-   ansible-playbook playbooks/hosts/generic-64gb-storage/core.yaml --tags system-zfs-policy --check --diff
+   ansible-playbook playbooks/hosts/server-64gb-storage/core.yaml --tags system-zfs-policy --check --diff
    ```
 
 3. Did the child explicitly set `policy: none`?

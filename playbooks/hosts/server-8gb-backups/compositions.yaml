@@ -1,0 +1,6 @@
+- name: Backups - Compositions
+  hosts: server-8gb-backups
+  roles:
+    - role: composition-container-management
+    - role: composition-reverseproxy
+    - role: composition-zfs-api

@@ -1,0 +1,10 @@
+- name: Storage NAS - ZFS API
+  hosts: server-64gb-storage
+  roles:
+    - role: composition-zfs-api
+      tags: [compositions, zfs]
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:

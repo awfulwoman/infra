@@ -3,8 +3,8 @@ infra_privateresources_terraform_working_dir: "{{ terraform_working_dir }}/priva
 infra_privateresources_debug: false
 infra_privateresources_tf_apply: false
 
-# Hypervisor connection (Terraform runs on dns, connects to generic-64gb-storage via SSH)
-infra_privateresources_hypervisor_host: "generic-64gb-storage"
+# Hypervisor connection (Terraform runs on dns, connects to server-64gb-storage via SSH)
+infra_privateresources_hypervisor_host: "server-64gb-storage"
 # Dedicated service account with restricted libvirt-only access (least privilege)
 infra_privateresources_hypervisor_user: "libvirt-remote"
 infra_privateresources_hypervisor_ssh_uri: "qemu+ssh://{{ infra_privateresources_hypervisor_user }}@{{ infra_privateresources_hypervisor_host }}/system?keyfile={{ infra_privateresources_ssh_key_path }}"

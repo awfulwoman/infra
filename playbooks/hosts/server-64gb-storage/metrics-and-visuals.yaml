@@ -1,0 +1,12 @@
+- name: Storage NAS - VictoriaMetrics & Grafana
+  hosts: server-64gb-storage
+
+  roles:
+    - role: composition-victoriametrics
+    - role: composition-grafana
+
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:

@@ -1,0 +1,14 @@
+- name: Out on the internet server
+  hosts: vps-hetzner-public01
+  # vars:
+  #   compositions:
+  #     - awfulwoman
+  roles:
+    # - role: compositions
+    - role: system-zfs
+    - role: system-zfs-policy
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:

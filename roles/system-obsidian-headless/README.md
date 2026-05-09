@@ -43,7 +43,7 @@ system_obsidian_headless_vaults:
 ## Example
 
 ```yaml
-- hosts: generic-64gb-storage
+- hosts: server-64gb-storage
   roles:
     - role: system-nvm
     - role: system-obsidian-headless

@@ -1,0 +1,4 @@
+- name: Run memorybank
+  hosts: server-64gb-storage
+  roles:
+    - role: composition-memorybank

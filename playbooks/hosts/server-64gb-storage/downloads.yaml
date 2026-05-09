@@ -1,0 +1,4 @@
+- name: Run compositions
+  hosts: server-64gb-storage
+  roles:
+    - role: composition-downloads

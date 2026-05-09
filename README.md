@@ -11,10 +11,10 @@ Credentials are stored in this repo, encrypted.
 I access everything though Tailscale, which is an annoying dependency. But I keep the integration as light as possible so that I can detach my infra from them when they inevitably turn evil.
 
 ![raspberry-pi4-2gb-deedee - Core Playbook](https://healthchecks.io/b/2/40acdd90-f69c-4c53-a7d2-598ed3b84c68.svg)
-![mini-pc-8gb-homebrain - Core Playbook](https://healthchecks.io/b/2/aa67e305-5a8e-4242-a17d-8e031438c265.svg)
-![mac-mini-m4-16gb-malcolm - Core Playbook](https://healthchecks.io/b/2/63a475d3-10d6-4a8a-8c37-dbb9b8ccce37.svg)
-![hetzner-sites - Core Playbook](https://healthchecks.io/b/2/7bef37e9-768c-4c57-8a04-f8e4c1c1b836.svg)
-![generic-64gb-storage - Core Playbook](https://healthchecks.io/b/2/fd04805d-b1c2-4fc6-8a05-bab0a6fead5a.svg)
+![minipc-8gb-homebrain - Core Playbook](https://healthchecks.io/b/2/aa67e305-5a8e-4242-a17d-8e031438c265.svg)
+![apple-macmini-m4-16gb-malcolm - Core Playbook](https://healthchecks.io/b/2/63a475d3-10d6-4a8a-8c37-dbb9b8ccce37.svg)
+![vps-hetzner-public01 - Core Playbook](https://healthchecks.io/b/2/7bef37e9-768c-4c57-8a04-f8e4c1c1b836.svg)
+![server-64gb-storage - Core Playbook](https://healthchecks.io/b/2/fd04805d-b1c2-4fc6-8a05-bab0a6fead5a.svg)
 
 
 ## Installation

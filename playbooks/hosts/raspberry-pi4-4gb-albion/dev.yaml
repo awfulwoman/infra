@@ -1,0 +1,11 @@
+- name: UK Server (dev work)
+  hosts: raspberry-pi4-4gb-albion
+  gather_facts: false
+  roles:
+    # - role: compositions
+    - role: backups-zfs-archive-offsite
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:

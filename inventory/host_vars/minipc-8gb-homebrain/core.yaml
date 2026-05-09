@@ -1,0 +1,69 @@
+# -------------------------------------------------------------------
+# IDENTITY
+# -------------------------------------------------------------------
+host_type: baremetal
+host_name: minipc-8gb-homebrain
+host_region: ber
+host_site: xberg
+host_pfqdn: "{{ host_name }}.{{ host_site }}.{{ host_region }}"
+host_fqdn: "{{ host_pfqdn }}.{{ domain_name }}"
+host_description: "Home automation hub"
+
+# -------------------------------------------------------------------
+# NETWORK
+# Hint: Use `network_netplan_config:` for more fine-grained control
+# Docs: roles/network-netplan/README.md
+# -------------------------------------------------------------------
+host_ipv4: 192.168.1.130
+host_primary_interface: "enp1s0"
+host_ipv4_subnet: 24
+
+# -------------------------------------------------------------------
+# ANSIBLE
+# -------------------------------------------------------------------
+ansible_host: "{{ host_ipv4 }}"
+ansible_user: "{{ vault_server_username }}"
+ansible_become_password: "{{ vault_password }}"
+
+# -------------------------------------------------------------------
+# UBUNTUPRO
+# -------------------------------------------------------------------
+ubuntupro_attach: true
+
+# -------------------------------------------------------------------
+# ZFS
+# -------------------------------------------------------------------
+
+zfs:
+  fastpool:
+    vdevs:
+      - type: stripe
+        disks: /dev/disk/by-id/scsi-SATA_INTENSO_SSD_AA000000000000001079
+    datasets:
+      misc:
+        datasets:
+          syncthing:
+            policy: critical
+      compositions:
+        state: present
+        policy: critical
+
+# -------------------------------------------------------------------
+# MISC
+# -------------------------------------------------------------------
+
+composition_motioneye_usbdevice: /dev/video0
+
+docker_port_open: true
+
+traefik_providers:
+  - homeassistant
+  - esphome
+  - watchyourlan
+
+cnames:
+  - homeassistant.{{ domain_name }}
+  - ha.{{ domain_name }}
+  - esphome.{{ domain_name }}
+  - mctest.{{ domain_name }}
+  - lan.{{ domain_name }}

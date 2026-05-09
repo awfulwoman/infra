@@ -28,7 +28,7 @@ Playbooks are organised into two directories:
 ansible-playbook playbooks/groups/ubuntu/bootstrap.yaml
 
 # Run a host-specific playbook
-ansible-playbook playbooks/hosts/generic-64gb-storage/core.yaml
+ansible-playbook playbooks/hosts/server-64gb-storage/core.yaml
 ```
 
 ## Github

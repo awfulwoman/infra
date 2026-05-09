@@ -13,14 +13,14 @@ all:
     # -------------------------------------------------------------------
     infra:
       hosts:
-        # albion:
-        generic-8gb-backups:
-        mini-pc-8gb-homebrain:
-        mac-mini-m4-16gb-malcolm:
+        # raspberry-pi4-4gb-albion:
+        server-8gb-backups:
+        minipc-8gb-homebrain:
+        apple-macmini-m4-16gb-malcolm:
         raspberry-pi4-2gb-pikvm:
-        hetzner-sites:
-        generic-64gb-storage:
-        mini-pc-test-router:
+        vps-hetzner-public01:
+        server-64gb-storage:
+        minipc-8gb-test-router:
         raspberry-pi4-2gb-deedee:
         raspberry-pi4-4gb-randolph:
         raspberry-pi4-8gb-randy:
@@ -33,12 +33,12 @@ all:
     # -------------------------------------------------------------------
     ubuntu_servers:
       hosts:
-        # albion:
-        generic-8gb-backups:
-        mini-pc-8gb-homebrain:
-        hetzner-sites:
-        generic-64gb-storage:
-        mini-pc-test-router:
+        # raspberry-pi4-4gb-albion:
+        server-8gb-backups:
+        minipc-8gb-homebrain:
+        vps-hetzner-public01:
+        server-64gb-storage:
+        minipc-8gb-test-router:
         raspberry-pi4-2gb-deedee:
         raspberry-pi4-4gb-randolph:
         raspberry-pi4-8gb-randy:
@@ -50,7 +50,7 @@ all:
     # -------------------------------------------------------------------
     macos_servers:
       hosts:
-        mac-mini-m4-16gb-malcolm:
+        apple-macmini-m4-16gb-malcolm:
 
     # -------------------------------------------------------------------
     # RASPBERRY PI
@@ -58,7 +58,7 @@ all:
     # -------------------------------------------------------------------
     raspberry_pi:
       hosts:
-        # albion:
+        # raspberry-pi4-4gb-albion:
         raspberry-pi4-2gb-pikvm:
         raspberry-pi4-2gb-deedee:
         raspberry-pi4-4gb-randolph:
@@ -72,7 +72,7 @@ all:
     # -------------------------------------------------------------------
     homeautomation:
       hosts:
-        mini-pc-8gb-homebrain:
+        minipc-8gb-homebrain:
 
     # -------------------------------------------------------------------
     # ZFS
@@ -80,11 +80,11 @@ all:
     # -------------------------------------------------------------------
     zfs:
       hosts:
-        generic-64gb-storage:
-        mini-pc-8gb-homebrain:
-        generic-8gb-backups:
-        # albion: # Has died
-        hetzner-sites:
+        server-64gb-storage:
+        minipc-8gb-homebrain:
+        server-8gb-backups:
+        # raspberry-pi4-4gb-albion: # Has died
+        vps-hetzner-public01:
         raspberry-pi5-4gb-belinda:
         raspberry-pi4-2gb-deedee:
         # raspberry-pi4-4gb-randolph:
@@ -96,9 +96,9 @@ all:
     # -------------------------------------------------------------------
     zfs_backup_clients:
       hosts:
-        generic-64gb-storage:
-        mini-pc-8gb-homebrain:
-        hetzner-sites:
+        server-64gb-storage:
+        minipc-8gb-homebrain:
+        vps-hetzner-public01:
         raspberry-pi4-2gb-deedee:
         # raspberry-pi4-4gb-randolph:
         # raspberry-pi4-8gb-randy:
@@ -109,7 +109,7 @@ all:
     # -------------------------------------------------------------------
     zfs_backup_servers:
       hosts:
-        generic-8gb-backups:
+        server-8gb-backups:
         raspberry-pi5-4gb-belinda:
 
     # -------------------------------------------------------------------
@@ -119,7 +119,7 @@ all:
     # -------------------------------------------------------------------
     # zfs-backup-offsite:
     #   hosts:
-    #     albion:
+    #     raspberry-pi4-4gb-albion:
 
     # -------------------------------------------------------------------
     # PUBLIC SERVERS
@@ -127,7 +127,7 @@ all:
     # -------------------------------------------------------------------
     sitedeployment:
       hosts:
-        hetzner-sites:
+        vps-hetzner-public01:
 
     # -------------------------------------------------------------------
     # VAGRANT HOSTS

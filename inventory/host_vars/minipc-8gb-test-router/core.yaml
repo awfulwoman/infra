@@ -2,26 +2,35 @@
 # IDENTITY
 # -------------------------------------------------------------------
 host_type: baremetal
-host_name: raspberry-pi4-2gb-pikvm
+host_name: minipc-8gb-test-router
 host_region: ber
 host_site: xberg
 host_pfqdn: "{{ host_name }}.{{ host_site }}.{{ host_region }}"
 host_fqdn: "{{ host_pfqdn }}.{{ domain_name }}"
-host_description: "KVM over IP device"
+host_description: "Testbed for dual-NIC Linux router"
 
 # -------------------------------------------------------------------
 # NETWORK
 # Hint: Use `network_netplan_config:` for more fine-grained control
 # Docs: roles/network-netplan/README.md
 # -------------------------------------------------------------------
-host_ipv4: 192.168.1.111
-host_primary_interface: "enp3s0"
+host_ipv4: 192.168.1.221
+host_primary_interface: "enp1s0"
 host_ipv4_subnet: 24
+network_netplan_config:
+  ethernets:
+    enp1s0: # WAN - our normal networ
+      addresses: ["{{ host_ipv4 }}/{{ host_ipv4_subnet }}"]
+      nameservers:
+        addresses: [192.168.1.1]
+    enp2s0: # LAN - the new network
+      addresses: [172.16.0.1/16]
+      nameservers:
+        addresses: [172.16.0.1]
 
 # -------------------------------------------------------------------
 # ANSIBLE
 # -------------------------------------------------------------------
-ansible_host: "{{ host_ipv4 }}" # How to access the host
-ansible_user: root # User to connect as
+ansible_host: "{{ host_ipv4 }}"
+ansible_user: "{{ vault_server_username }}"
 ansible_become_password: "{{ vault_password }}"
-ansible_remote_tmp: "/tmp/.ansible/tmp"
