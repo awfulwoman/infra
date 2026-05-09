@@ -14,13 +14,13 @@ all:
     infra:
       hosts:
         # host-albion:
-        host-backups:
-        host-homebrain:
+        host-generic-8gb-backups:
+        host-mini-pc-8gb-homebrain:
         host-mac-mini-m4-16gb-malcolm:
-        host-pikvm:
-        host-sites:
-        host-storage:
-        host-test-router:
+        host-raspberry-pi4-2gb-pikvm:
+        host-hetzner-sites:
+        host-generic-64gb-storage:
+        host-mini-pc-test-router:
         host-raspberry-pi4-2gb-deedee:
         host-raspberry-pi4-4gb-randolph:
         host-raspberry-pi4-8gb-randy:
@@ -34,11 +34,11 @@ all:
     ubuntu_servers:
       hosts:
         # host-albion:
-        host-backups:
-        host-homebrain:
-        host-sites:
-        host-storage:
-        host-test-router:
+        host-generic-8gb-backups:
+        host-mini-pc-8gb-homebrain:
+        host-hetzner-sites:
+        host-generic-64gb-storage:
+        host-mini-pc-test-router:
         host-raspberry-pi4-2gb-deedee:
         host-raspberry-pi4-4gb-randolph:
         host-raspberry-pi4-8gb-randy:
@@ -59,10 +59,12 @@ all:
     raspberry_pi:
       hosts:
         # host-albion:
+        host-raspberry-pi4-2gb-pikvm:
         host-raspberry-pi4-2gb-deedee:
         host-raspberry-pi4-4gb-randolph:
         host-raspberry-pi4-8gb-randy:
         host-raspberry-pi5-4gb-belinda:
+
 
     # -------------------------------------------------------------------
     # HOME AUTOMATION
@@ -70,7 +72,7 @@ all:
     # -------------------------------------------------------------------
     homeautomation:
       hosts:
-        host-homebrain:
+        host-mini-pc-8gb-homebrain:
 
     # -------------------------------------------------------------------
     # ZFS
@@ -78,11 +80,11 @@ all:
     # -------------------------------------------------------------------
     zfs:
       hosts:
-        host-storage:
-        host-homebrain:
-        host-backups:
+        host-generic-64gb-storage:
+        host-mini-pc-8gb-homebrain:
+        host-generic-8gb-backups:
         # host-albion: # Has died
-        host-sites:
+        host-hetzner-sites:
         host-raspberry-pi5-4gb-belinda:
         host-raspberry-pi4-2gb-deedee:
         # host-raspberry-pi4-4gb-randolph:
@@ -94,9 +96,9 @@ all:
     # -------------------------------------------------------------------
     zfs_backup_clients:
       hosts:
-        host-storage:
-        host-homebrain:
-        host-sites:
+        host-generic-64gb-storage:
+        host-mini-pc-8gb-homebrain:
+        host-hetzner-sites:
         host-raspberry-pi4-2gb-deedee:
         # host-raspberry-pi4-4gb-randolph:
         # host-raspberry-pi4-8gb-randy:
@@ -107,7 +109,7 @@ all:
     # -------------------------------------------------------------------
     zfs_backup_servers:
       hosts:
-        host-backups:
+        host-generic-8gb-backups:
         host-raspberry-pi5-4gb-belinda:
 
     # -------------------------------------------------------------------
@@ -125,7 +127,7 @@ all:
     # -------------------------------------------------------------------
     sitedeployment:
       hosts:
-        host-sites:
+        host-hetzner-sites:
 
     # -------------------------------------------------------------------
     # VAGRANT HOSTS
