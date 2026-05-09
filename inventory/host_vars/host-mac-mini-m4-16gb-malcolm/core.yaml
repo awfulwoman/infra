@@ -93,11 +93,11 @@ system_repos_base_dir: "{{ ansible_facts.user_dir }}/Code"
 # AUTOMATIONS
 # -------------------------------------------------------------------
 automation_infra_playbooks:
-  - baremetal/host-generic-64gb-storage/core.yaml
-  - baremetal/host-mini-pc-8gb-homebrain/core.yaml
-  - baremetal/host-raspberry-pi5-4gb-belinda/core.yaml
-  - baremetal/host-mac-mini-m4-16gb-malcolm/core.yaml
-  - virtual/host-hetzner-sites/core.yaml
+  - host-specific/host-generic-64gb-storage/core.yaml
+  - host-specific/host-mini-pc-8gb-homebrain/core.yaml
+  - host-specific/host-raspberry-pi5-4gb-belinda/core.yaml
+  - host-specific/host-mac-mini-m4-16gb-malcolm/core.yaml
+  - host-specific/host-hetzner-sites/core.yaml
 
 # -------------------------------------------------------------------
 # HOMEBREW
