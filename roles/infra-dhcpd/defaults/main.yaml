@@ -9,7 +9,7 @@ dhcpd_subnet_mask: 255.255.255.0
 dhcpd_routers: 192.168.1.1
 dhcpd_dns_servers:
   - 192.168.1.2
-dhcpd_domain_name: "{{ domain_name }}"
+dhcpd_domain_name: "{{ domainname_infra }}"
 dhcpd_default_lease_time: 86400
 dhcpd_max_lease_time: 86400
 

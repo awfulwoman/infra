@@ -87,7 +87,7 @@ services:
       - "3000:8080"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.open-webui.rule=Host(`chat.{{ domain_name }}`)"
+      - "traefik.http.routers.open-webui.rule=Host(`chat.{{ domainname_infra }}`)"
       - "traefik.http.routers.open-webui.tls=true"
       - "traefik.http.routers.open-webui.tls.certresolver=letsencrypt"
       - "traefik.http.services.open-webui.loadbalancer.server.port=8080"
@@ -203,11 +203,11 @@ git commit -m "feat(composition-open-webui): add role tasks"
 
 - [ ] **Step 1: Add CNAME to host-storage host_vars**
 
-In `ansible/inventory/host_vars/host-storage/core.yaml`, add `chat.{{ domain_name }}` to the `cnames` list. The list currently ends with `loki.{{ domain_name }}`:
+In `ansible/inventory/host_vars/host-storage/core.yaml`, add `chat.{{ domainname_infra }}` to the `cnames` list. The list currently ends with `loki.{{ domainname_infra }}`:
 
 ```yaml
-  - loki.{{ domain_name }}
-  - chat.{{ domain_name }}
+  - loki.{{ domainname_infra }}
+  - chat.{{ domainname_infra }}
 ```
 
 - [ ] **Step 2: Add role to compositions playbook**

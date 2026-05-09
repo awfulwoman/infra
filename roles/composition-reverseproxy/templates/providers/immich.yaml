@@ -8,7 +8,7 @@ http:
   routers:
     immich:
       service: immich
-      rule: "Host(`immich.{{ domain_name }}`)"
+      rule: "Host(`immich.{{ domainname_infra }}`)"
       tls:
         certresolver: letsencrypt
       entrypoints:

@@ -8,7 +8,7 @@ http:
   routers:
     esphome:
       service: esphome
-      rule: "Host(`esphome.{{ domain_name }}`)"
+      rule: "Host(`esphome.{{ domainname_infra }}`)"
       tls:
         certresolver: letsencrypt
       entrypoints:

@@ -13,7 +13,7 @@ host_name: raspberry-pi4-4gb-albion
 host_region: ldn
 host_site: camden
 host_pfqdn: "{{ host_name }}.{{ host_site }}.{{ host_region }}"
-host_fqdn: "{{ host_pfqdn }}.{{ domain_name }}"
+host_fqdn: "{{ host_pfqdn }}.{{ domainname_infra }}"
 host_description: "Remote node in London"
 
 # -------------------------------------------------------------------

@@ -1,7 +1,7 @@
 - name: Register subdomain to a Tailscale address via Hetzner's DNS
   hetzner.hcloud.zone_rrset:
     api_token: "{{ vault_hetzner_api_key_rw }}"
-    zone: "{{ domain_name }}"
+    zone: "{{ domainname_infra }}"
     name: "{{ domain_item }}"
     type: "A"
     records:
@@ -15,7 +15,7 @@
 
 - name: Confirm DNS
   ansible.builtin.debug:
-    msg: "Tailscale domain: {{ domain_item }}.{{ domain_name }}"
+    msg: "Tailscale domain: {{ domain_item }}.{{ domainname_infra }}"
   loop: "{{ configure_dns_subdomains }}"
   loop_control:
     loop_var: domain_item

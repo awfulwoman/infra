@@ -22,7 +22,7 @@ The container handles multiple hostnames: the primary personal domain plus two l
 
 ## Integrations
 
-- **Traefik**: Routes `{{ vault_personal_domain }}`, `{{ vault_olddomain_wc }}`, and `{{ vault_olddomain_se }}` to the container with Let's Encrypt TLS.
+- **Traefik**: Routes `{{ domainname_personal }}`, `{{ vault_domainname_wc }}`, and `{{ vault_domainname_se }}` to the container with Let's Encrypt TLS.
 - **Deploy user**: A separate system user (`vault_sitedeployer_user`) with an authorised SSH key deploys content to `awfulwoman_path`. Both the deploy user and the Ansible user are added to the `nginx` group for shared directory access.
 
 ## Notes

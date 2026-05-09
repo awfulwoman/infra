@@ -74,7 +74,7 @@ infra_publicresources_hcloud_firewall:
 
 
 infra_publicresources_hetzner_domain:
-  - domain: "{{ vault_infra_domain_name_ew }}"
+  - domain: "{{ vault_domainname_ew }}"
     id: ew
     ipaddress: infra_publicresources_hcloud_floating_ip.bonjo.ip_address
     description: >
@@ -90,7 +90,7 @@ infra_publicresources_hetzner_domain:
         value: infra_publicresources_hcloud_floating_ip.bonjo.ip_address
         id: ew_a_www
 
-  - domain: "{{ vault_infra_domain_name_rs }}"
+  - domain: "{{ vault_domainname_rs }}"
     id: rs
     ipaddress: infra_publicresources_hcloud_floating_ip.bonjo.ip_address
     description: >
@@ -105,7 +105,7 @@ infra_publicresources_hetzner_domain:
         value: infra_publicresources_hcloud_floating_ip.bonjo.ip_address
         id: rs_a_www
 
-  - domain: "{{ vault_personal_domain }}"
+  - domain: "{{ vault_domainname_aw }}"
     id: aw
     project: Personal Site
     description: >
@@ -121,11 +121,11 @@ infra_publicresources_hetzner_domain:
         id: aw_a_www
       - type: CNAME
         hostname: shared
-        value: "{{ vault_personal_domain }}"
+        value: "{{ vault_domainname_aw }}"
         id: aw_a_shared
       - type: CNAME
         hostname: gts
-        value: "{{ vault_personal_domain }}"
+        value: "{{ vault_domainname_aw }}"
         id: aw_a_gts
       - type: A
         hostname: photos
@@ -133,7 +133,7 @@ infra_publicresources_hetzner_domain:
         id: aw_a_px
       - type: TXT
         hostname: _dmarc
-        value: "v=DMARC1;p=none;rua=mailto:postmaster@{{ vault_olddomain_wc }}"
+        value: "v=DMARC1;p=none;rua=mailto:postmaster@{{ vault_mailbox_domain }}"
         id: aw_txt_dmarc
       - type: TXT
         value: "v=spf1 include:{{ vault_mailbox_domain }} ~all"
@@ -170,7 +170,7 @@ infra_publicresources_hetzner_domain:
         ttl: 14400
         id: aw_mx_mb1
 
-  - domain: "{{ vault_olddomain_se }}"
+  - domain: "{{ vault_domainname_se }}"
     id: se
     project: Personal Site
     ipaddress: infra_publicresources_hcloud_floating_ip.bonjo.ip_address
@@ -213,7 +213,7 @@ infra_publicresources_hetzner_domain:
         ttl: 1800
         id: se_mx_google_alt4
 
-  - domain: "{{ vault_olddomain_wc }}"
+  - domain: "{{ vault_domainname_wc }}"
     id: wc
     project: Personal Site
     description: >
@@ -230,7 +230,7 @@ infra_publicresources_hetzner_domain:
         id: wc_a_www
       - type: TXT
         hostname: _dmarc
-        value: "v=DMARC1;p=none;rua=mailto:postmaster@{{ vault_olddomain_wc }}"
+        value: "v=DMARC1;p=none;rua=mailto:postmaster@{{ vault_domainname_wc }}"
         id: wc_txt_dmarc
       - type: TXT
         value: "v=spf1 include:{{ vault_mailbox_domain }} ~all"

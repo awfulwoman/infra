@@ -32,7 +32,7 @@
     state: present
     terms_agreed: true
     contact:
-      - "mailto:letsencrypt@{{ vault_personal_domain }}"
+      - "mailto:letsencrypt@{{ domainname_personal }}"
   when: not account_data.exists
   register: acme_account_creation
 

@@ -30,5 +30,5 @@ All three must be set (they default to `null`); store them in Ansible Vault.
 
 ## Integrations
 
-- **Traefik**: Firefly III at `firefly.{{ domain_name }}`, importer at `firefly-importer.{{ domain_name }}`, both with Let's Encrypt TLS.
+- **Traefik**: Firefly III at `firefly.{{ domainname_infra }}`, importer at `firefly-importer.{{ domainname_infra }}`, both with Let's Encrypt TLS.
 - **N26 import config**: A pre-built import configuration for N26 CSV exports is included at `files/n26_firefly_import_config.json` and can be loaded directly in the importer UI.

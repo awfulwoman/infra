@@ -16,7 +16,7 @@
 
 ## Integrations
 
-- **Traefik**: Exposed at `freshrss.{{ domain_name }}` with Let's Encrypt TLS.
+- **Traefik**: Exposed at `freshrss.{{ domainname_infra }}` with Let's Encrypt TLS.
 
 ## Notes
 

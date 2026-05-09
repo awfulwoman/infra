@@ -6,7 +6,7 @@ host_name: raspberry-pi5-4gb-belinda
 host_region: ber
 host_site: kberg
 host_pfqdn: "{{ host_name }}.{{ host_site }}.{{ host_region }}"
-host_fqdn: "{{ host_pfqdn }}.{{ domain_name }}"
+host_fqdn: "{{ host_pfqdn }}.{{ domainname_infra }}"
 host_description: "Raspberry Pi 5 backup server"
 
 # -------------------------------------------------------------------

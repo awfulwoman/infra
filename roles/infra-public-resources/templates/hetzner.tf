@@ -168,7 +168,7 @@ resource "hcloud_floating_ip_assignment" "{{ ipassignment.id }}" {
 resource "hcloud_rdns" "{{ ipassignment.id }}" {
   floating_ip_id = "${hcloud_floating_ip.{{ ipassignment.reservedip }}.id}"
   ip_address     = "${hcloud_floating_ip.{{ ipassignment.reservedip }}.ip_address}"
-  dns_ptr        = "{{ vault_personal_domain }}"
+  dns_ptr        = "{{ domainname_personal }}"
 }
 
 {% endif %}

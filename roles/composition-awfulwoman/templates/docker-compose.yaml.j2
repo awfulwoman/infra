@@ -7,11 +7,11 @@ services:
     restart: unless-stopped
     env_file: .environment_vars
     environment:
-      - NGINX_HOST="{{ vault_personal_domain }}"
+      - NGINX_HOST="{{ domainname_personal }}"
       - NGINX_PORT=80
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.beta.rule=Host(`{{ vault_personal_domain }}`) || Host(`{{ vault_olddomain_wc }}`) || Host(`{{ vault_olddomain_se }}`)"
+      - "traefik.http.routers.beta.rule=Host(`{{ domainname_personal }}`) || Host(`{{ vault_domainname_wc }}`) || Host(`{{ vault_domainname_se }}`)"
       - "traefik.http.routers.beta.tls=true"
       - "traefik.http.routers.beta.tls.certresolver=letsencrypt"
       - "traefik.http.services.beta.loadbalancer.server.port=80"

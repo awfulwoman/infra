@@ -23,7 +23,7 @@
 
 ## Integrations
 
-- **Traefik**: Exposed at `gitea.{{ domain_name }}` with Let's Encrypt TLS.
+- **Traefik**: Exposed at `gitea.{{ domainname_infra }}` with Let's Encrypt TLS.
 - **composition-gitea-runners**: Act runners register against this instance using the shared `vault_gitea_runner_registration` token. Runners are deployed separately, potentially on different hosts.
 
 ## Notes

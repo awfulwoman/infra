@@ -6,7 +6,7 @@ host_name: raspberry-pi4-4gb-randolph
 host_region: ber
 host_site: xberg
 host_pfqdn: "{{ host_name }}.{{ host_site }}.{{ host_region }}"
-host_fqdn: "{{ host_pfqdn }}.{{ domain_name }}"
+host_fqdn: "{{ host_pfqdn }}.{{ domainname_infra }}"
 host_description: "Runs infrastructure tasks"
 
 # -------------------------------------------------------------------

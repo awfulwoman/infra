@@ -21,8 +21,8 @@
 |----------|---------|
 | `composition_grafana_admin_user` | Admin username (`vault_grafana_admin_user`, default: `admin`) |
 | `composition_grafana_admin_password` | Admin password (`vault_grafana_admin_password`) |
-| `composition_grafana_victoriametrics_url` | VictoriaMetrics URL (default: `https://zfs.metrics.{{ domain_name }}`) |
-| `composition_grafana_loki_url` | Loki URL (default: `https://loki.{{ domain_name }}`) |
+| `composition_grafana_victoriametrics_url` | VictoriaMetrics URL (default: `https://zfs.metrics.{{ domainname_infra }}`) |
+| `composition_grafana_loki_url` | Loki URL (default: `https://loki.{{ domainname_infra }}`) |
 | `composition_grafana_traefik_enabled` | Toggle Traefik labels (default: `true`) |
 | `composition_grafana_default_theme` | UI theme (default: `dark`) |
 
@@ -45,13 +45,13 @@ Per-host ZFS dashboards are generated dynamically at deploy time by `templates/g
 
 ## Alerting
 
-- Contact point: email to `alert@{{ vault_personal_domain }}` via SMTP (`vault_smtp_*`).
+- Contact point: email to `alert@{{ domainname_personal }}` via SMTP (`vault_smtp_*`).
 - Alert rule: **ZFS Pool Not ONLINE** — fires when `zfs_pool_health < 1` for 2+ minutes.
 - Notification policy: group by folder + alertname, repeat every 4h.
 
 ## Integrations
 
-- **Traefik**: Exposed at `grafana.{{ domain_name }}` with Let's Encrypt TLS.
+- **Traefik**: Exposed at `grafana.{{ domainname_infra }}` with Let's Encrypt TLS.
 - **composition-victoriametrics**: Primary metrics datasource.
 - **Loki** (separate composition): Log datasource.
 - **network-register-subdomain**: Registers the `grafana` subdomain.

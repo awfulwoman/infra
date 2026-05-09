@@ -8,7 +8,7 @@ http:
   routers:
     watchyourlan:
       service: watchyourlan
-      rule: "Host(`lan.{{ domain_name }}`)"
+      rule: "Host(`lan.{{ domainname_infra }}`)"
       tls:
         certresolver: letsencrypt
       entrypoints:

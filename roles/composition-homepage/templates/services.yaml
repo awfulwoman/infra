@@ -4,21 +4,21 @@
 - Home Automation:
   - Home Assistant:
       icon: sh-home-assistant.png
-      href: "https://homeassistant.{{ domain_name }}"
+      href: "https://homeassistant.{{ domainname_infra }}"
       description: Home Orchestration
       server: homeautomation-docker
       container: homeassistant
 
   - Zigbee2MQTT:
       icon: sh-zigbee2mqtt.png
-      href: "https://zigbee2mqtt.{{ domain_name }}"
+      href: "https://zigbee2mqtt.{{ domainname_infra }}"
       description: Zigbee coordinator
       server: homeautomation-docker
       container: zigbee2mqtt
 
   - ESPhome:
       icon: sh-esphome.png
-      href: "https://esphome.{{ domain_name }}"
+      href: "https://esphome.{{ domainname_infra }}"
       description: ESPhome controller
       server: homeautomation-docker
       container: esphome
@@ -32,21 +32,21 @@
 - Media:
   - Jellyfin:
       icon: sh-jellyfin.png
-      href: "https://jellyfin.{{ domain_name }}"
+      href: "https://jellyfin.{{ domainname_infra }}"
       description: Video Streaming
       server: storage-docker
       container: jellyfin
 
   - Audiobookshelf:
       icon: sh-audiobookshelf.png
-      href: "https://audiobookshelf.{{ domain_name }}"
+      href: "https://audiobookshelf.{{ domainname_infra }}"
       description: Audiobook Streaming
       server: storage-docker
       container: audiobookshelf
 
   - Immich:
       icon: sh-immich.png
-      href: "https://immich.{{ domain_name }}"
+      href: "https://immich.{{ domainname_infra }}"
       description: Photo Backup
       server: storage-docker
       container: immich_server
@@ -54,13 +54,13 @@
 - Reading:
   - FreshRSS:
       icon: sh-freshrss.png
-      href: "https://freshrss.{{ domain_name }}"
+      href: "https://freshrss.{{ domainname_infra }}"
       description: RSS Reader
       server: storage-docker
       container: freshrss
   - Karakeep:
       icon: sh-karakeep.png
-      href: "https://karakeep.{{ domain_name }}"
+      href: "https://karakeep.{{ domainname_infra }}"
       description: Bookmarks
       server: storage-docker
       container: karakeep-karakeep-1
@@ -68,7 +68,7 @@
 - Version Control:
   - Gitea:
       icon: sh-gitea.png
-      href: "https://gitea.{{ domain_name }}"
+      href: "https://gitea.{{ domainname_infra }}"
       description: Git Repository
       server: storage-docker
       container: gitea
@@ -76,7 +76,7 @@
 - Downloaders:
   - Gluetun:
       icon: sh-gluetun.png
-      href: "https://gluetun.{{ domain_name }}"
+      href: "https://gluetun.{{ domainname_infra }}"
       description: VPN
       server: storage-docker
       container: gluetun
@@ -86,68 +86,68 @@
 
   - Prowlarr:
       icon: sh-prowlarr.png
-      href: "https://prowlarr.{{ domain_name }}"
+      href: "https://prowlarr.{{ domainname_infra }}"
       description: Indexer Manager
       server: storage-docker
       container: prowlarr
       widget:
         type: prowlarr
-        url: https://prowlarr.{{ domain_name }}
+        url: https://prowlarr.{{ domainname_infra }}
         key: {{ vault_prowlarr_api_key }}
 
   - Lidarr:
       icon: sh-lidarr.png
-      href: "https://lidarr.{{ domain_name }}"
+      href: "https://lidarr.{{ domainname_infra }}"
       description: Music Streaming
       server: storage-docker
       container: lidarr
 
   - Jellyseerr:
       icon: sh-jellyseerr.png
-      href: "https://jellyseerr.{{ domain_name }}"
+      href: "https://jellyseerr.{{ domainname_infra }}"
       description: Download requests
       server: storage-docker
       container: jellyseerr
 
   - Sonarr:
       icon: sh-sonarr.png
-      href: "https://sonarr.{{ domain_name }}"
+      href: "https://sonarr.{{ domainname_infra }}"
       description: TV Series Streaming
       server: storage-docker
       container: sonarr
       widget:
         type: sonarr
-        url: https://sonarr.{{ domain_name }}
+        url: https://sonarr.{{ domainname_infra }}
         key: {{ vault_sonarr_api_key }}
         enableQueue: true
 
   - Radarr:
       icon: sh-radarr.png
-      href: "https://radarr.{{ domain_name }}"
+      href: "https://radarr.{{ domainname_infra }}"
       description: Movie Streaming
       server: storage-docker
       container: radarr
       widget:
         type: radarr
-        url: https://radarr.{{ domain_name }}
+        url: https://radarr.{{ domainname_infra }}
         key: {{ vault_radarr_api_key }}
         enableQueue: true
 
   - Qbittorrent:
       icon: sh-qbittorrent.png
-      href: "https://qbittorrent.{{ domain_name }}"
+      href: "https://qbittorrent.{{ domainname_infra }}"
       description: Torrent Client
       server: storage-docker
       container: qbittorrent
       widget:
         type: qbittorrent
-        url: "https://qbittorrent.{{ domain_name }}"
+        url: "https://qbittorrent.{{ domainname_infra }}"
         username: {{ vault_qbittorrent_username }}
         password: {{ vault_qbittorrent_password }}
 
   - TubeSync:
       icon: sh-tubesync.png
-      href: "https://tubesync.{{ domain_name }}"
+      href: "https://tubesync.{{ domainname_infra }}"
       description: YouTube Sync
       server: storage-docker
       container: tubesync

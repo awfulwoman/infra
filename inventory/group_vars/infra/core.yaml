@@ -6,7 +6,7 @@ tailscale_node_tags:
   - tag:auto-generated
 
 security_autoupdate_mail_on_error: true
-security_autoupdate_mail_to: "unattended@{{ vault_olddomain_wc }}"
+security_autoupdate_mail_to: "unattended@{{ domainname_personal }}"
 security_autoupdate_reboot: true
 security_autoupdate_reboot_time: 03:00
 security_sudoers_passwordless:
@@ -41,7 +41,7 @@ terraform_working_dir: /opt/terraform
 # Hetzner
 hetzner_floating_ip: 78.47.163.140
 
-nullmailer_mail_recipient: "hardcoded@{{ vault_olddomain_wc }}"
+nullmailer_mail_recipient: "hardcoded@{{ domainname_personal }}"
 nullmailer_relay_host: "smtp.{{ vault_mailbox_domain }}"
 nullmailer_relay_port: 465
 nullmailer_relay_user: "{{ vault_mailbox_user }}"

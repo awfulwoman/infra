@@ -20,7 +20,7 @@ Messages published to `<basetopic>/<hostname>` trigger the following actions:
 
 | Variable | Default | Description |
 |---|---|---|
-| `mqtt2cmd_broker` | `mqtt.<domain_name>` | MQTT broker hostname |
+| `mqtt2cmd_broker` | `mqtt.<domainname_infra>` | MQTT broker hostname |
 | `mqtt2cmd_basetopic` | `servers` | Topic prefix; full topic is `<basetopic>/<hostname>` |
 | `mqtt2cmd_executable` | `mqtt2cmd` | Script filename |
 | `mqtt2cmd_executable_path` | `/usr/local/sbin` | Deployment path for the script |

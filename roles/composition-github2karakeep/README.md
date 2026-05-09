@@ -7,7 +7,7 @@ Runs [github2karakeep](https://github.com/hasansino/github2karakeep), a backgrou
 | Variable | Purpose |
 |----------|---------|
 | `github2karakeep_gh_token` | GitHub personal access token with read:user scope (`vault_github_stars_token`) |
-| `github2karakeep_kk_url` | KaraKeep instance URL (default: `https://karakeep.{{ domain_name }}`) |
+| `github2karakeep_kk_url` | KaraKeep instance URL (default: `https://karakeep.{{ domainname_infra }}`) |
 | `github2karakeep_kk_token` | KaraKeep API token (`vault_github2karakeep_token`) |
 | `github2karakeep_schedule` | Sync schedule (default: `@daily`) |
 

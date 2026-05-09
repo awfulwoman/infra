@@ -1,5 +1,5 @@
 ---
 system_git_user_name: "Charlie O'Hara"
-system_git_user_email: "github@{{ vault_personal_domain }}"
+system_git_user_email: "github@{{ domainname_personal }}"
 system_git_pull_rebase: "true"
 system_git_init_defaultbranch: main

@@ -17,17 +17,17 @@ composition_grafana_base_path: "{{ compositions_base_path }}/grafana"
 composition_grafana_subdomain: "grafana"
 composition_grafana_subdomains:
   - "{{ composition_grafana_subdomain }}"
-composition_grafana_domain: "{{ composition_grafana_subdomain }}.{{ domain_name }}"
+composition_grafana_domain: "{{ composition_grafana_subdomain }}.{{ domainname_infra }}"
 
 # Traefik integration
 composition_grafana_traefik_enabled: true
 
 # VictoriaMetrics datasource configuration
-composition_grafana_victoriametrics_url: "https://zfs.metrics.{{ domain_name }}"
+composition_grafana_victoriametrics_url: "https://zfs.metrics.{{ domainname_infra }}"
 composition_grafana_victoriametrics_name: "VictoriaMetrics"
 
 # Loki datasource configuration
-composition_grafana_loki_url: "https://loki.{{ domain_name }}"
+composition_grafana_loki_url: "https://loki.{{ domainname_infra }}"
 composition_grafana_loki_name: "Loki"
 
 # Admin credentials (should be vault-encrypted)

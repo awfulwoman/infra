@@ -38,7 +38,7 @@ providers:
 certificatesResolvers:
   letsencrypt:
     acme:
-      email: "certs@{{ vault_personal_domain }}"
+      email: "certs@{{ domainname_personal }}"
       storage: /letsencrypt/acme.json
       # caserver: https://acme-staging-v02.api.letsencrypt.org/directory"
       dnschallenge:

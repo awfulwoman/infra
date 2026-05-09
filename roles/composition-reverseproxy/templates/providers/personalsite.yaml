@@ -23,11 +23,11 @@ http:
   middlewares:
     redirectOldDomains01:
       redirectRegex:
-        regex: "^http://{{ vault_olddomain_se }}/(.*)"
+        regex: "^http://{{ vault_domainname_se }}/(.*)"
         replacement: "https://awfulwoman.com/${1}"
     redirectOldDomains02:
       redirectRegex:
-        regex: "^http://{{ vault_olddomain_wc }}/(.*)"
+        regex: "^http://{{ vault_domainname_wc }}/(.*)"
         replacement: "https://awfulwoman.com/${1}"
     secHeaders:
       headers:

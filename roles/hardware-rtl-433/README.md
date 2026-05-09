@@ -11,7 +11,7 @@ The role:
 
 ## MQTT Output
 
-Events are published to `rtl_433/<model>/<id>` on the MQTT broker at `mqtt.{{ domain_name }}` with retain disabled. The `domain_name` variable must be set (typically in `group_vars`).
+Events are published to `rtl_433/<model>/<id>` on the MQTT broker at `mqtt.{{ domainname_infra }}` with retain disabled. The `domainname_infra` variable must be set (typically in `group_vars`).
 
 ## Notes
 

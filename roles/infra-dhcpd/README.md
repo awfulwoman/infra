@@ -14,7 +14,7 @@ The role is designed for a home network where most infrastructure hosts have sta
 | `dhcpd_subnet_mask` | `255.255.255.0` | Subnet mask |
 | `dhcpd_routers` | `192.168.1.1` | Default gateway advertised to clients |
 | `dhcpd_dns_servers` | `["192.168.1.2"]` | DNS servers advertised to clients |
-| `dhcpd_domain_name` | `{{ domain_name }}` | Domain name suffix advertised to clients |
+| `dhcpd_domain_name` | `{{ domainname_infra }}` | Domain name suffix advertised to clients |
 | `dhcpd_default_lease_time` | `86400` | Default lease time in seconds (24h) |
 | `dhcpd_max_lease_time` | `86400` | Maximum lease time in seconds (24h) |
 | `dhcpd_range_start` | `192.168.1.100` | Start of dynamic address pool |

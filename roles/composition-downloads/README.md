@@ -37,6 +37,6 @@ All media services share `{{ shared_media_path }}` mounted at `/data`, with the 
 
 ## Integrations
 
-- **Traefik**: All services exposed at their respective subdomains on `{{ domain_name }}` with Let's Encrypt TLS.
+- **Traefik**: All services exposed at their respective subdomains on `{{ domainname_infra }}` with Let's Encrypt TLS.
 - **Audiobookshelf** (`composition-audiobookshelf`): Reads from `{{ shared_media_path }}/audiobooks`, which librofm-downloader and Libation write to.
 - **Jellyfin**: Shares the same `{{ shared_media_path }}` for movies, TV, and music.

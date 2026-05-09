@@ -6,7 +6,7 @@ host_name: minipc-8gb-homebrain
 host_region: ber
 host_site: xberg
 host_pfqdn: "{{ host_name }}.{{ host_site }}.{{ host_region }}"
-host_fqdn: "{{ host_pfqdn }}.{{ domain_name }}"
+host_fqdn: "{{ host_pfqdn }}.{{ domainname_infra }}"
 host_description: "Home automation hub"
 
 # -------------------------------------------------------------------
@@ -62,8 +62,8 @@ traefik_providers:
   - watchyourlan
 
 cnames:
-  - homeassistant.{{ domain_name }}
-  - ha.{{ domain_name }}
-  - esphome.{{ domain_name }}
-  - mctest.{{ domain_name }}
-  - lan.{{ domain_name }}
+  - homeassistant.{{ domainname_infra }}
+  - ha.{{ domainname_infra }}
+  - esphome.{{ domainname_infra }}
+  - mctest.{{ domainname_infra }}
+  - lan.{{ domainname_infra }}

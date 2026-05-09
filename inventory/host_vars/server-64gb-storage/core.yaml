@@ -7,7 +7,7 @@ host_description: "Central storage device"
 host_region: ber
 host_site: xberg
 host_pfqdn: "{{ host_name }}.{{ host_site }}.{{ host_region }}"
-host_fqdn: "{{ host_pfqdn }}.{{ domain_name }}"
+host_fqdn: "{{ host_pfqdn }}.{{ domainname_infra }}"
 
 # -------------------------------------------------------------------
 # NETWORK
@@ -148,25 +148,25 @@ zfs_nfs_exports:
 # These cnames will be aliased to this machine's FQDN.
 # -------------------------------------------------------------------
 cnames:
-  - jellyfin.{{ domain_name }}
-  - lidarr.{{ domain_name }}
-  - karakeep.{{ domain_name }}
-  - prowlarr.{{ domain_name }}
-  - sonarr.{{ domain_name }}
-  - radarr.{{ domain_name }}
-  - immich.{{ domain_name }}
-  - gitea.{{ domain_name }}
-  - musicassistant.{{ domain_name }}
+  - jellyfin.{{ domainname_infra }}
+  - lidarr.{{ domainname_infra }}
+  - karakeep.{{ domainname_infra }}
+  - prowlarr.{{ domainname_infra }}
+  - sonarr.{{ domainname_infra }}
+  - radarr.{{ domainname_infra }}
+  - immich.{{ domainname_infra }}
+  - gitea.{{ domainname_infra }}
+  - musicassistant.{{ domainname_infra }}
   - traefik.{{ host_fqdn }}
-  - syncthing.{{ domain_name }}
-  - freshrss.{{ domain_name }}
-  - tubesync.{{ domain_name }}
-  - audiobookshelf.{{ domain_name }}
-  - libation.{{ domain_name }}
-  - librofm.{{ domain_name }}
-  - home.{{ domain_name }}
-  - wallabag.{{ domain_name }}
-  - jellyseerr.{{ domain_name }}
-  - translate.{{ domain_name }}
-  - loki.{{ domain_name }}
-  - chat.{{ domain_name }}
+  - syncthing.{{ domainname_infra }}
+  - freshrss.{{ domainname_infra }}
+  - tubesync.{{ domainname_infra }}
+  - audiobookshelf.{{ domainname_infra }}
+  - libation.{{ domainname_infra }}
+  - librofm.{{ domainname_infra }}
+  - home.{{ domainname_infra }}
+  - wallabag.{{ domainname_infra }}
+  - jellyseerr.{{ domainname_infra }}
+  - translate.{{ domainname_infra }}
+  - loki.{{ domainname_infra }}
+  - chat.{{ domainname_infra }}

@@ -77,7 +77,7 @@ infra_publicresources_digitalocean_project:
       - digitalocean_domain.rs
 
 infra_publicresources_digitalocean_domain:
-  - domain: "{{ vault_infra_domain_name_ew }}"
+  - domain: "{{ vault_domainname_ew }}"
     id: ew
     ipaddress: digitalocean_reserved_ip.bonjo.ip_address
     description: >
@@ -85,14 +85,14 @@ infra_publicresources_digitalocean_domain:
       that I can obtain Let's Encrypt certificates.
     records: [] # digitalocean_record
 
-  - domain: "{{ vault_infra_domain_name_rs }}"
+  - domain: "{{ vault_domainname_rs }}"
     id: rs
     ipaddress: digitalocean_reserved_ip.bonjo.ip_address
     description: >
       A testing domain for learning.
     records: [] # digitalocean_record
 
-  - domain: "{{ vault_personal_domain }}"
+  - domain: "{{ domainname_personal }}"
     id: aw
     project: Personal Site
     ipaddress: digitalocean_reserved_ip.bonjo.ip_address
@@ -117,7 +117,7 @@ infra_publicresources_digitalocean_domain:
         id: aw_txt_atproto
       - type: TXT
         hostname: _dmarc
-        value: "v=DMARC1;p=none;rua=mailto:postmaster@{{ vault_olddomain_wc }}"
+        value: "v=DMARC1;p=none;rua=mailto:postmaster@{{ vault_domainname_wc }}"
         id: aw_txt_dmarc
       - type: TXT
         value: "v=spf1 include:{{ vault_mailbox_domain }} ~all"
@@ -154,7 +154,7 @@ infra_publicresources_digitalocean_domain:
         ttl: 14400
         id: aw_mx_mb1
 
-  - domain: "{{ vault_olddomain_se }}"
+  - domain: "{{ vault_domainname_se }}"
     id: se
     project: Personal Site
     ipaddress: digitalocean_reserved_ip.bonjo.ip_address
@@ -193,7 +193,7 @@ infra_publicresources_digitalocean_domain:
         ttl: 1800
         id: se_mx_google_alt4
 
-  - domain: "{{ vault_olddomain_wc }}"
+  - domain: "{{ vault_domainname_wc }}"
     id: wc
     project: Personal Site
     description: >
@@ -206,7 +206,7 @@ infra_publicresources_digitalocean_domain:
         id: wc_a_www
       - type: TXT
         hostname: _dmarc
-        value: "v=DMARC1;p=none;rua=mailto:postmaster@{{ vault_olddomain_wc }}"
+        value: "v=DMARC1;p=none;rua=mailto:postmaster@{{ vault_domainname_wc }}"
         id: wc_txt_dmarc
       - type: TXT
         value: "v=spf1 include:{{ vault_mailbox_domain }} ~all"

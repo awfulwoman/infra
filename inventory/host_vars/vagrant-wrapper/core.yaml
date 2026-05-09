@@ -13,5 +13,5 @@ host_name: vagrant-wrapper
 host_region: local
 host_site: dev
 host_pfqdn: "{{ host_name }}.{{ host_site }}.{{ host_region }}"
-host_fqdn: "{{ host_pfqdn }}.{{ domain_name }}"
+host_fqdn: "{{ host_pfqdn }}.{{ domainname_infra }}"
 host_description: "Local Vagrant development VM"

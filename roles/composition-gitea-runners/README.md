@@ -1,6 +1,6 @@
 # Gitea Act Runners
 
-Deploys [Gitea Act Runner](https://gitea.com/gitea/act_runner) instances that execute Gitea Actions CI/CD jobs. Runners connect to the Gitea instance at `gitea.{{ domain_name }}` and run jobs inside Docker containers. Designed to be deployed on hosts separate from the Gitea server to distribute load.
+Deploys [Gitea Act Runner](https://gitea.com/gitea/act_runner) instances that execute Gitea Actions CI/CD jobs. Runners connect to the Gitea instance at `gitea.{{ domainname_infra }}` and run jobs inside Docker containers. Designed to be deployed on hosts separate from the Gitea server to distribute load.
 
 Currently one runner (`runner01`) is active; a second (`runner02`) is defined but commented out.
 

@@ -50,7 +50,7 @@ Declares `composition-common` as a dependency (as all composition roles do), whi
 - **Volume:** `{{ composition_config }}/data:/app/backend/data` (SQLite database, uploaded files)
 - **Network:** `{{ default_docker_network }}` (external, shared with Traefik)
 - **Traefik labels:**
-  - Route `chat.{{ domain_name }}` → port 8080
+  - Route `chat.{{ domainname_infra }}` → port 8080
   - TLS via `letsencrypt` certresolver
 
 ## Environment Variables
@@ -68,7 +68,7 @@ WEBUI_AUTH=False
 Add to the `cnames` list in `ansible/inventory/host_vars/host-storage/core.yaml`:
 
 ```yaml
-- chat.{{ domain_name }}
+- chat.{{ domainname_infra }}
 ```
 
 ## Playbook

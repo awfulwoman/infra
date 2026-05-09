@@ -8,7 +8,7 @@ http:
   routers:
     musicassistant:
       service: musicassistant
-      rule: "Host(`musicassistant.{{ domain_name }}`)"
+      rule: "Host(`musicassistant.{{ domainname_infra }}`)"
       tls:
         certresolver: letsencrypt
       entrypoints:

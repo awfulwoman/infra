@@ -8,7 +8,7 @@ http:
   routers:
     homeassistant:
       service: homeassistant
-      rule: "Host(`homeassistant.{{ domain_name }}`)"
+      rule: "Host(`homeassistant.{{ domainname_infra }}`)"
       tls:
         certresolver: letsencrypt
       entrypoints:

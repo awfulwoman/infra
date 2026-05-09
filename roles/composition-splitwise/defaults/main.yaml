@@ -5,8 +5,8 @@ composition_splitwise_port: 8000
 composition_splitwise_subdomain: "splitwise.{{ host_name }}"
 composition_splitwise_subdomains:
   - "{{ composition_splitwise_subdomain }}"
-composition_splitwise_domain: "{{ composition_splitwise_subdomain }}.{{ domain_name }}"
-composition_splitwise_mqtt_broker: "mqtt.{{ domain_name }}"
+composition_splitwise_domain: "{{ composition_splitwise_subdomain }}.{{ domainname_infra }}"
+composition_splitwise_mqtt_broker: "mqtt.{{ domainname_infra }}"
 composition_splitwise_mqtt_port: 1883
 composition_splitwise_admin_username: "admin"
 composition_splitwise_admin_password: "{{ vault_splitwise_admin_password }}"

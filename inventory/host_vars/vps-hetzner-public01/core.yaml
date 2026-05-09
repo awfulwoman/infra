@@ -6,7 +6,7 @@ host_name: vps-hetzner-public01
 host_region: hetzner
 host_site: cloud
 host_pfqdn: "{{ host_name }}.{{ host_site }}.{{ host_region }}"
-host_fqdn: "{{ host_pfqdn }}.{{ domain_name }}"
+host_fqdn: "{{ host_pfqdn }}.{{ domainname_infra }}"
 host_description: "Hetzner cloud server for public services"
 
 # -------------------------------------------------------------------

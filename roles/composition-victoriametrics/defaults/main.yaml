@@ -26,12 +26,12 @@ composition_victoriametrics_scrape_timeout: "30s"
 composition_victoriametrics_subdomain: "zfs.metrics"
 composition_victoriametrics_subdomains:
   - "{{ composition_victoriametrics_subdomain }}"
-composition_victoriametrics_domain: "{{ composition_victoriametrics_subdomain }}.{{ domain_name }}"
+composition_victoriametrics_domain: "{{ composition_victoriametrics_subdomain }}.{{ domainname_infra }}"
 
 # Traefik integration
 composition_victoriametrics_traefik_enabled: true
 
 # ZFS API endpoints to scrape
 # Automatically scrapes all hosts in the 'zfs' inventory group
-# Format: zfs-api.{hostname}.{domain_name}
+# Format: zfs-api.{hostname}.{domainname_infra}
 composition_victoriametrics_scrape_targets: "{{ groups['zfs'] | default([]) }}"

@@ -29,5 +29,5 @@ Dynamic VM route proxying is supported via `reverseproxy_vm_routes` — each ent
 ## Integrations
 
 - **DNS**: Registers `whoami.<hostname>` and `traefik.<hostname>` subdomains via `network-register-subdomain`
-- **Let's Encrypt**: DNS challenge via Hetzner nameservers; cert email from `vault_personal_domain`
+- **Let's Encrypt**: DNS challenge via Hetzner nameservers; cert email from `domainname_personal`
 - **Docker**: All other compositions route through this proxy via `traefik.enable=true` labels on the shared `default_docker_network`

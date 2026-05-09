@@ -13,7 +13,7 @@ infra_certbot_domains:
       subdomain: "*.test02"
     - domain: "{{ vault_domain_test }}"
       subdomain: "test03.test02"
-  # - domain: "{{ domain_name }}"
+  # - domain: "{{ domainname_infra }}"
   #   subdomain: "pancake"
   # - domain: awfulwoman.com
   #   subdomain: www
@@ -24,7 +24,7 @@ infra_certbot_le_private_key_filename: le.key
 infra_certbot_csr_private_key_dir: "{{ acme_path }}/private"
 infra_certbot_csr_private_key_filename: csr.key
 infra_certbot_csr_dir: "{{ acme_path }}/csr"
-infra_certbot_email: "letsencrypt@{{ vault_personal_domain }}"
+infra_certbot_email: "letsencrypt@{{ domainname_personal }}"
 infra_certbot_version: 2
 infra_certbot_cert_dir: "{{ acme_path }}/certs"
 # Staging
