@@ -15,9 +15,9 @@ Deploys [Firefly III](https://www.firefly-iii.org/), a self-hosted personal fina
 
 | Variable | Purpose |
 |----------|---------|
-| `firefly_cron_token` | Token for the Firefly III cron endpoint |
-| `firefly_db_password` | MariaDB password |
-| `firefly_app_key` | Laravel application encryption key (32 chars) |
+| `vault_firefly_cron_token` | Token for the Firefly III cron endpoint |
+| `vault_firefly_db_password` | MariaDB password |
+| `vault_firefly_app_key` | Laravel application encryption key (32 chars) |
 
 All three must be set (they default to `null`); store them in Ansible Vault.
 

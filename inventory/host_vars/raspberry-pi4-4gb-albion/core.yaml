@@ -1,7 +1,7 @@
 # -------------------------------------------------------------------
 # ANSIBLE
 # -------------------------------------------------------------------
-ansible_host: raspberry-pi4-4gb-albion.{{ tailscale_tailnet_name }}
+ansible_host: raspberry-pi4-4gb-albion.{{ vault_tailscale_tailnet_name }}
 ansible_user: "{{ vault_server_username }}"
 ansible_become_password: "{{ vault_password }}"
 

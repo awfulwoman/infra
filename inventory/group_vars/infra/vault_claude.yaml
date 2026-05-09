@@ -1,3 +1,5 @@
+# code: language=ansible
+
 vault_claudecode_longlived_token: !vault |
           $ANSIBLE_VAULT;1.2;AES256;beanpod
           31386137636634626138636338653839343663343731636533333066333866626666336532353163

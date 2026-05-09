@@ -2,12 +2,12 @@ TZ="Europe/Berlin"
 
 # Core
 # See https://raw.githubusercontent.com/firefly-iii/firefly-iii/main/.env.example
-STATIC_CRON_TOKEN="{{ firefly_cron_token }}" # MUST be 32 characters long
-APP_KEY="{{ firefly_app_key }}"
+STATIC_CRON_TOKEN="{{ vault_firefly_cron_token }}" # MUST be 32 characters long
+APP_KEY="{{ vault_firefly_app_key }}"
 DB_HOST="firefly_iii_db"
 DB_CONNECTION=mysql
 DB_PORT=3306
 DB_DATABASE=firefly
 DB_USERNAME=firefly
-DB_PASSWORD="{{ firefly_db_password }}"
+DB_PASSWORD="{{ vault_firefly_db_password }}"
 TRUSTED_PROXIES=**
