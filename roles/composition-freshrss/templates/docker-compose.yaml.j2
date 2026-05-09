@@ -10,7 +10,7 @@ services:
     env_file: .environment_vars
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.freshrss.rule=Host(`freshrss.{{ domain_name }}`)"
+      - "traefik.http.routers.freshrss.rule=Host(`freshrss.{{ domainname_infra }}`)"
       - "traefik.http.routers.freshrss.tls=true"
       - "traefik.http.routers.freshrss.tls.certresolver=letsencrypt"
     volumes:

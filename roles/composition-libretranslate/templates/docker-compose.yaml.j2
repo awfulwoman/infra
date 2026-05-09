@@ -12,7 +12,7 @@ services:
     env_file: .environment_vars
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.libretranslate.rule=Host(`translate.{{ domain_name }}`)"
+      - "traefik.http.routers.libretranslate.rule=Host(`translate.{{ domainname_infra }}`)"
       - "traefik.http.routers.libretranslate.tls=true"
       - "traefik.http.routers.libretranslate.tls.certresolver=letsencrypt"
       - "traefik.http.services.libretranslate.loadbalancer.server.port=5000"

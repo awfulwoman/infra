@@ -16,7 +16,7 @@ scrape_configs:
     static_configs:
       - targets:
 {% for host in composition_victoriametrics_scrape_targets %}
-          - 'zfs-api.{{ host }}.{{ domain_name }}:443'
+          - 'zfs-api.{{ host }}.{{ domainname_infra }}:443'
 {% endfor %}
         labels:
           job: 'zfs'

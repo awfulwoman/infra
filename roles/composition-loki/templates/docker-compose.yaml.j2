@@ -13,7 +13,7 @@ services:
 {% if composition_loki_traefik_enabled %}
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.{{ composition_loki_container_name }}.rule=Host(`{{ composition_loki_subdomain }}.{{ domain_name }}`)"
+      - "traefik.http.routers.{{ composition_loki_container_name }}.rule=Host(`{{ composition_loki_subdomain }}.{{ domainname_infra }}`)"
       - "traefik.http.routers.{{ composition_loki_container_name }}.tls=true"
       - "traefik.http.routers.{{ composition_loki_container_name }}.tls.certresolver=letsencrypt"
       - "traefik.http.services.{{ composition_loki_container_name }}.loadbalancer.server.port=3100"

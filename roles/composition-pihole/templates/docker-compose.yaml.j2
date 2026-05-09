@@ -19,7 +19,7 @@ services:
     env_file: .environment_vars
     # labels:
     #   - "traefik.enable=true"
-    #   - "traefik.http.routers.pihole.rule=Host(`pihole.{{ domain_name }}`)"
+    #   - "traefik.http.routers.pihole.rule=Host(`pihole.{{ domainname_infra }}`)"
     #   - "traefik.http.routers.pihole.tls=true"
     #   - "traefik.http.routers.pihole.tls.certresolver=letsencrypt"
     #   - "traefik.http.services.pihole.loadbalancer.server.port=80"

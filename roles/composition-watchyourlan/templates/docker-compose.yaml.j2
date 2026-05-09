@@ -11,7 +11,7 @@ services:
     network_mode: host
     labels:
       - "traefik.enable=true"
-      # - "traefik.http.routers.watchyourlan.rule=Host(`lan.{{ domain_name }}`)"
+      # - "traefik.http.routers.watchyourlan.rule=Host(`lan.{{ domainname_infra }}`)"
       # - "traefik.http.routers.watchyourlan.tls=true"
       # - "traefik.http.routers.watchyourlan.tls.certresolver=letsencrypt"
       # - "traefik.http.services.watchyourlan.loadbalancer.server.port=8840"

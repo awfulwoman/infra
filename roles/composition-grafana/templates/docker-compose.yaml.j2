@@ -14,7 +14,7 @@ services:
 {% if composition_grafana_traefik_enabled %}
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.{{ composition_grafana_container_name }}.rule=Host(`{{ composition_grafana_subdomain }}.{{ domain_name }}`)"
+      - "traefik.http.routers.{{ composition_grafana_container_name }}.rule=Host(`{{ composition_grafana_subdomain }}.{{ domainname_infra }}`)"
       - "traefik.http.routers.{{ composition_grafana_container_name }}.tls=true"
       - "traefik.http.routers.{{ composition_grafana_container_name }}.tls.certresolver=letsencrypt"
       - "traefik.http.services.{{ composition_grafana_container_name }}.loadbalancer.server.port=3000"

@@ -1,6 +1,6 @@
 DJANGO_SECRET_KEY="{{ vault_memorybank_django_secret_key }}"
 DJANGO_DEBUG="false"
-DJANGO_ALLOWED_HOSTS="memorybank.{{ domain_name }}"
-CSRF_TRUSTED_ORIGINS="https://memorybank.{{ domain_name }}"
+DJANGO_ALLOWED_HOSTS="memorybank.{{ domainname_infra }}"
+CSRF_TRUSTED_ORIGINS="https://memorybank.{{ domainname_infra }}"
 SQLITE_PATH="/data/db/db.sqlite3"
 MEDIA_ROOT="/data/media"

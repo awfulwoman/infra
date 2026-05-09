@@ -10,7 +10,7 @@ services:
     env_file: .environment_vars
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.mosquitto.rule=Host(`mqtt.{{ domain_name }}`)"
+      - "traefik.http.routers.mosquitto.rule=Host(`mqtt.{{ domainname_infra }}`)"
     volumes:
       - "{{ composition_config }}/mosquitto.conf:/mosquitto/config/mosquitto.conf"
       - "{{ composition_config }}/data:/mosquitto/data"

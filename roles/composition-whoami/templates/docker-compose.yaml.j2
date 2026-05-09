@@ -9,7 +9,7 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.whoami.rule=Host(`whoami.{{ ansible_facts['hostname'] }}.{{ domain_name }}`)"
+      - "traefik.http.routers.whoami.rule=Host(`whoami.{{ ansible_facts['hostname'] }}.{{ domainname_infra }}`)"
       - "traefik.http.routers.whoami.tls=true"
       - "traefik.http.routers.whoami.tls.certresolver=letsencrypt"
     volumes:

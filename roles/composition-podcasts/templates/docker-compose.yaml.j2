@@ -68,7 +68,7 @@ services:
       DEBUG_MODE: false
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.pinepods.rule=Host(`podcasts.{{ domain_name }}`)"
+      - "traefik.http.routers.pinepods.rule=Host(`podcasts.{{ domainname_infra }}`)"
       - "traefik.http.routers.pinepods.tls=true"
       - "traefik.http.routers.pinepods.tls.certresolver=letsencrypt"
     volumes:

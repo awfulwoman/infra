@@ -10,7 +10,7 @@ services:
     env_file: .environment_vars
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.piper.rule=Host(`piper.{{ domain_name }}`)"
+      - "traefik.http.routers.piper.rule=Host(`piper.{{ domainname_infra }}`)"
     volumes:
       - "{{ composition_config }}/piper:/data"
       - "{{ composition_config }}/voices:/share/piper"

@@ -2,5 +2,5 @@ k3s_become: true
 k3s_etcd_datastore: true
 
 environment_config:
-  CLUSTER_DOMAIN: "{{ vault_domain_name }}"
+  CLUSTER_DOMAIN: "{{ domainname_infra }}"
   CLUSTER_CERTS_EMAIL: "{{ vault_cert_email }}"

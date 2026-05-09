@@ -11,7 +11,7 @@ services:
       - .environment_vars
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.karakeep.rule=Host(`karakeep.{{ domain_name }}`)"
+      - "traefik.http.routers.karakeep.rule=Host(`karakeep.{{ domainname_infra }}`)"
       - "traefik.http.routers.karakeep.tls=true"
       - "traefik.http.routers.karakeep.tls.certresolver=letsencrypt"
     environment:

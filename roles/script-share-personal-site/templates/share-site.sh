@@ -2,7 +2,7 @@
 
 if [ ! -d "{{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}/.git" ];
 then
-  git clone https://gitea.{{ domain_name }}/awfulwoman/personal-site {{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}
+  git clone https://gitea.{{ domainname_infra }}/awfulwoman/personal-site {{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}
 else
   cd {{ script_share_personal_site_path }}/{{ script_share_personal_site_name }}
   git checkout .

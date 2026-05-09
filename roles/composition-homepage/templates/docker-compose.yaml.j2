@@ -10,12 +10,12 @@ services:
     env_file: .environment_vars
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.homepage.rule=Host(`home.{{ domain_name }}`)"
+      - "traefik.http.routers.homepage.rule=Host(`home.{{ domainname_infra }}`)"
       - "traefik.http.routers.homepage.tls=true"
       - "traefik.http.routers.homepage.tls.certresolver=letsencrypt"
       # - "homepage.group=GROUP"
       # - "homepage.name=SUBDOMAIN"
-      # - "homepage.href=https://SUBDOMAIN.{{ domain_name }}"
+      # - "homepage.href=https://SUBDOMAIN.{{ domainname_infra }}"
       # - "homepage.description=whatever"
     volumes:
       - "{{ composition_config }}/homepage:/app/config"

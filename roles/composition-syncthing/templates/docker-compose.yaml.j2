@@ -13,7 +13,7 @@ services:
     env_file: .environment_vars
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.syncthing.rule=Host(`syncthing.{{ ansible_facts['hostname'] }}.{{ domain_name }}`)"
+      - "traefik.http.routers.syncthing.rule=Host(`syncthing.{{ ansible_facts['hostname'] }}.{{ domainname_infra }}`)"
       - "traefik.http.routers.syncthing.tls=true"
       - "traefik.http.routers.syncthing.tls.certresolver=letsencrypt"
       - "traefik.http.services.syncthing.loadbalancer.server.port=8384"

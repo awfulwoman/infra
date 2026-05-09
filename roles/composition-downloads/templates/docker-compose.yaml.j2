@@ -14,7 +14,7 @@ services:
       - PGID=1000
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.{{ domain_name }}`)"
+      - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.{{ domainname_infra }}`)"
       - "traefik.http.routers.prowlarr.tls=true"
       - "traefik.http.routers.prowlarr.tls.certresolver=letsencrypt"
     volumes:
@@ -41,7 +41,7 @@ services:
       - "TZ=Europe/Berlin"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.bazarr.rule=Host(`bazarr.{{ domain_name }}`)"
+      - "traefik.http.routers.bazarr.rule=Host(`bazarr.{{ domainname_infra }}`)"
       - "traefik.http.routers.bazarr.tls=true"
       - "traefik.http.routers.bazarr.tls.certresolver=letsencrypt"
     volumes:
@@ -70,7 +70,7 @@ services:
       - "UMASK=002"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.radarr.rule=Host(`radarr.{{ domain_name }}`)"
+      - "traefik.http.routers.radarr.rule=Host(`radarr.{{ domainname_infra }}`)"
       - "traefik.http.routers.radarr.tls=true"
       - "traefik.http.routers.radarr.tls.certresolver=letsencrypt"
     volumes:
@@ -105,7 +105,7 @@ services:
       - "UMASK=002"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.lidarr.rule=Host(`lidarr.{{ domain_name }}`)"
+      - "traefik.http.routers.lidarr.rule=Host(`lidarr.{{ domainname_infra }}`)"
       - "traefik.http.routers.lidarr.tls=true"
       - "traefik.http.routers.lidarr.tls.certresolver=letsencrypt"
     volumes:
@@ -139,7 +139,7 @@ services:
       - PGID=1000
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.sonarr.rule=Host(`sonarr.{{ domain_name }}`)"
+      - "traefik.http.routers.sonarr.rule=Host(`sonarr.{{ domainname_infra }}`)"
       - "traefik.http.routers.sonarr.tls=true"
       - "traefik.http.routers.sonarr.tls.certresolver=letsencrypt"
     volumes:
@@ -238,19 +238,19 @@ services:
     labels:
       - "traefik.enable=true"
       # Gluetun Built-in HTTP control server
-      - "traefik.http.routers.gluetun.rule=Host(`gluetun.{{ domain_name }}`)"
+      - "traefik.http.routers.gluetun.rule=Host(`gluetun.{{ domainname_infra }}`)"
       - "traefik.http.routers.gluetun.service=gluetun"
       - "traefik.http.services.gluetun.loadbalancer.server.port=8000"
       - "traefik.http.routers.gluetun.tls=true"
       - "traefik.http.routers.gluetun.tls.certresolver=letsencrypt"
       # Qbittorrent
-      - "traefik.http.routers.qbittorrent.rule=Host(`qbittorrent.{{ domain_name }}`)"
+      - "traefik.http.routers.qbittorrent.rule=Host(`qbittorrent.{{ domainname_infra }}`)"
       - "traefik.http.routers.qbittorrent.service=qbittorrent"
       - "traefik.http.services.qbittorrent.loadbalancer.server.port=8080"
       - "traefik.http.routers.qbittorrent.tls=true"
       - "traefik.http.routers.qbittorrent.tls.certresolver=letsencrypt"
       # Transmission
-      - "traefik.http.routers.transmission.rule=Host(`transmission.{{ domain_name }}`)"
+      - "traefik.http.routers.transmission.rule=Host(`transmission.{{ domainname_infra }}`)"
       - "traefik.http.routers.transmission.service=transmission"
       - "traefik.http.services.transmission.loadbalancer.server.port=9091"
       - "traefik.http.routers.transmission.tls=true"
@@ -286,7 +286,7 @@ services:
       - PATH_PATTERN=BOOK_TITLE
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.librofm.rule=Host(`librofm.{{ domain_name }}`)"
+      - "traefik.http.routers.librofm.rule=Host(`librofm.{{ domainname_infra }}`)"
       - "traefik.http.routers.librofm.tls=true"
       - "traefik.http.routers.librofm.tls.certresolver=letsencrypt"
     volumes:
@@ -327,7 +327,7 @@ services:
     env_file: .environment_vars
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.jellyseerr.rule=Host(`jellyseerr.{{ domain_name }}`)"
+      - "traefik.http.routers.jellyseerr.rule=Host(`jellyseerr.{{ domainname_infra }}`)"
       - "traefik.http.routers.jellyseerr.tls=true"
       - "traefik.http.routers.jellyseerr.tls.certresolver=letsencrypt"
     ports:

@@ -1,7 +1,7 @@
 TZ="Europe/Berlin"
 NEXTAUTH_SECRET="{{ vault_karakeep_nextauth }}"
 MEILI_MASTER_KEY="{{ vault_karakeep_meili }}"
-NEXTAUTH_URL="https://karakeep.{{ domain_name }}"
+NEXTAUTH_URL="https://karakeep.{{ domainname_infra }}"
 OPENAI_API_KEY=ollama
 OPENAI_BASE_URL=http://{{ hostvars['host-malcolm']['host_ipv4'] }}:11434/v1
 INFERENCE_TEXT_MODEL=gemma4:e4b

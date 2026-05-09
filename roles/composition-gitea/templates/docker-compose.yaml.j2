@@ -14,14 +14,14 @@ services:
       - GITEA__indexer__REPO_INDEXER_ENABLED="true"
     healthcheck:
       # checks availability of Gitea's front-end with curl
-      test: ["CMD", "curl", "-f", "gitea.{{ domain_name }}"]
+      test: ["CMD", "curl", "-f", "gitea.{{ domainname_infra }}"]
       interval: 10s
       retries: 3
       start_period: 30s
       timeout: 10s
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.gitea.rule=Host(`gitea.{{ domain_name }}`)"
+      - "traefik.http.routers.gitea.rule=Host(`gitea.{{ domainname_infra }}`)"
       - "traefik.http.routers.gitea.tls=true"
       - "traefik.http.routers.gitea.tls.certresolver=letsencrypt"
       - "traefik.http.services.gitea.loadbalancer.server.port=3000"

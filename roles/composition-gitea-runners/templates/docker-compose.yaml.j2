@@ -10,7 +10,7 @@ services:
       - "{{ gitea_runner_port }}:{{ gitea_runner_port }}"
     environment:
       - "CONFIG_FILE=/config.yaml"
-      - "GITEA_INSTANCE_URL=https://gitea.{{ domain_name }}"
+      - "GITEA_INSTANCE_URL=https://gitea.{{ domainname_infra }}"
       - "GITEA_RUNNER_REGISTRATION_TOKEN={{ gitea_runner_registration }}"
       - "GITEA_RUNNER_JOB_CONTAINER_NETWORK={{ default_docker_network }}"
       - "GITEA_RUNNER_NAME={{ ansible_facts['hostname'] }}-runner01"
@@ -38,7 +38,7 @@ services:
   #     - "{{ gitea_runner_port }}:{{ gitea_runner_port }}"
   #   environment:
   #     - "CONFIG_FILE=/config.yaml"
-  #     - "GITEA_INSTANCE_URL=https://gitea.{{ domain_name }}"
+  #     - "GITEA_INSTANCE_URL=https://gitea.{{ domainname_infra }}"
   #     - "GITEA_RUNNER_REGISTRATION_TOKEN={{ gitea_runner_registration }}"
   #     - "GITEA_RUNNER_JOB_CONTAINER_NETWORK={{ default_docker_network }}"
   #     - "GITEA_RUNNER_NAME={{ ansible_facts['hostname'] }}-runner02"

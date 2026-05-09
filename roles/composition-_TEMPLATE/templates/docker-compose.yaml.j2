@@ -10,7 +10,7 @@ services:
     env_file: .environment_vars
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.SUBDOMAIN.rule=Host(`SUBDOMAIN.{{ domain_name }}`)"
+      - "traefik.http.routers.SUBDOMAIN.rule=Host(`SUBDOMAIN.{{ domainname_infra }}`)"
       - "traefik.http.routers.SUBDOMAIN.tls=true"
       - "traefik.http.routers.SUBDOMAIN.tls.certresolver=letsencrypt"
       # - "traefik.http.services.SUBDOMAIN.loadbalancer.server.port=PORT"

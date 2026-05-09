@@ -11,7 +11,7 @@ services:
       - "127.0.0.1:8983:8080"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.firefly.rule=Host(`firefly.{{ domain_name }}`)"
+      - "traefik.http.routers.firefly.rule=Host(`firefly.{{ domainname_infra }}`)"
       - "traefik.http.routers.firefly.tls=true"
       - "traefik.http.routers.firefly.tls.certresolver=letsencrypt"
     volumes:
@@ -71,7 +71,7 @@ services:
       - '127.0.0.1:8111:8080'
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.firefly-importer.rule=Host(`firefly-importer.{{ domain_name }}`)"
+      - "traefik.http.routers.firefly-importer.rule=Host(`firefly-importer.{{ domainname_infra }}`)"
       - "traefik.http.routers.firefly-importer.tls=true"
       - "traefik.http.routers.firefly-importer.tls.certresolver=letsencrypt"
     networks:

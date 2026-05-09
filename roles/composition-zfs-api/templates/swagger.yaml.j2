@@ -19,7 +19,7 @@ info:
     name: MIT
 
 servers:
-  - url: https://zfs-api.{{ ansible_facts['hostname'] }}.{{ domain_name }}
+  - url: https://zfs-api.{{ ansible_facts['hostname'] }}.{{ domainname_infra }}
     description: Production server (Traefik HTTPS)
   - url: http://zfs-api:8000
     description: Docker network (internal)

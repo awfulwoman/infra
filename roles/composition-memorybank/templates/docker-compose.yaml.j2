@@ -23,7 +23,7 @@ services:
       - backend
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.memorybank.rule=Host(`memorybank.{{ domain_name }}`)"
+      - "traefik.http.routers.memorybank.rule=Host(`memorybank.{{ domainname_infra }}`)"
       - "traefik.http.routers.memorybank.tls=true"
       - "traefik.http.routers.memorybank.tls.certresolver=letsencrypt"
       - "traefik.http.services.memorybank.loadbalancer.server.port=80"

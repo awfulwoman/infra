@@ -10,7 +10,7 @@ services:
     env_file: .environment_vars
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.ladder.rule=Host(`ladder.{{ domain_name }}`)"
+      - "traefik.http.routers.ladder.rule=Host(`ladder.{{ domainname_infra }}`)"
       - "traefik.http.routers.ladder.tls=true"
       - "traefik.http.routers.ladder.tls.certresolver=letsencrypt"
     volumes:
