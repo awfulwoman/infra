@@ -3,4 +3,4 @@ k3s_etcd_datastore: true
 
 environment_config:
   CLUSTER_DOMAIN: "{{ domainname_infra }}"
-  CLUSTER_CERTS_EMAIL: "{{ vault_cert_email }}"
+  CLUSTER_CERTS_EMAIL: "certs@{{ domainname_infra }}"
