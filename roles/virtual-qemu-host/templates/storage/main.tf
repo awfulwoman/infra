@@ -27,7 +27,7 @@ resource "libvirt_pool" "pool" {
 # The Terraform provider does not yet support ZFS pools so this would have to be done manually.
 
 provider "libvirt" {
-   uri = "qemu+ssh://ubuntu@host-storage.i.affordablepotatoes.com/system"
+   uri = "qemu+ssh://ubuntu@server-64gb-storage.i.affordablepotatoes.com/system"
 }
 
 variable "network_name" {

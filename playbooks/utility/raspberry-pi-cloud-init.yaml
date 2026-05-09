@@ -1,5 +1,5 @@
 - name: Write Raspberry Pi cloud-init user-data
-  hosts: host-malcolm
+  hosts: apple-macmini-m4-16gb-malcolm
   connection: local
   gather_facts: false
   roles:
