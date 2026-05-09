@@ -1,0 +1,15 @@
+- name: DeeDee Server - ZFS API
+  hosts: raspberry-pi4-2gb-deedee
+  vars:
+    compositions:
+      - zfs-api
+  roles:
+    - role: composition-reverseproxy
+    - role: composition-container-management
+    - role: composition-zfs-api
+      tags: [compositions, zfs]
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:

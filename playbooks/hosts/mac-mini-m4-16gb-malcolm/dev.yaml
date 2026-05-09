@@ -1,0 +1,5 @@
+---
+- name: Malcolm
+  hosts: mac-mini-m4-16gb-malcolm
+  roles:
+    - role: monitoring-healthchecksio

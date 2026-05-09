@@ -1,0 +1,5 @@
+- name: Run all hardware tasks on Raspberry Pis
+  hosts: raspberry_pi
+  roles:
+    - role: hardware-raspberry-pi
+      tags: [hardware]

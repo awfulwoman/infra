@@ -1,0 +1,32 @@
+---
+- name: Malcolm, the little power-efficient Mac Mini
+  hosts: mac-mini-m4-16gb-malcolm
+  roles:
+    - role: monitoring-healthchecksio
+      monitoring_healthchecksio_ping_type: start
+      tags: [monitoring]
+    - role: bootstrap-macos-server
+      tags: [bootstrap]
+    - role: hardware-apple
+      tags: [hardware]
+    - role: automation-key-updater
+      tags: [automation]
+    - role: automation-infra
+      tags: [automation]
+    - role: system-repos
+      tags: [system]
+    - role: system-ollama
+      tags: [system]
+    - role: system-claude
+      tags: [system]
+    - role: ansible-core
+      tags: [ansible]
+    - role: system-git
+      tags: [system]
+    - role: system-nvm
+      tags: [system, system-nvm]
+    - role: system-obsidian-headless
+      tags: [system, system-obsidian-headless]
+    - role: monitoring-healthchecksio
+      monitoring_healthchecksio_ping_type: success
+      tags: [monitoring]

@@ -1,9 +1,0 @@
-- name: Run certbot role
-  hosts: host-raspberry-pi4-2gb-deedee
-  roles:
-    - role: infra-certbot
-
-  handlers:
-    - name: Reboot host
-      become: true
-      ansible.builtin.reboot:

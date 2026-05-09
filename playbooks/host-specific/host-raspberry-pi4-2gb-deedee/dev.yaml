@@ -1,9 +1,0 @@
-- name: DeeDee development playbook
-  hosts: host-raspberry-pi4-2gb-deedee
-  roles:
-    - role: system-repos
-
-  handlers:
-    - name: Reboot host
-      become: true
-      ansible.builtin.reboot:

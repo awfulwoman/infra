@@ -1,0 +1,11 @@
+- name: PiKVM - a weirdly angry system
+  hosts: raspberry-pi4-2gb-pikvm
+  roles:
+    - role: monitoring-healthchecksio
+      monitoring_healthchecksio_ping_type: start
+      tags: [monitoring]
+    - role: system-pikvm
+      tags: [system]
+    - role: monitoring-healthchecksio
+      monitoring_healthchecksio_ping_type: success
+      tags: [monitoring]

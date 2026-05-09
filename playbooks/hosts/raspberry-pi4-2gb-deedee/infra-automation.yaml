@@ -1,0 +1,8 @@
+- name: Build infra automation
+  hosts: raspberry-pi4-2gb-deedee
+  roles: []
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:

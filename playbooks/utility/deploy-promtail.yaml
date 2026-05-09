@@ -1,11 +1,11 @@
 ---
 - name: Deploy Promtail to all Docker hosts
   hosts:
-    - host-generic-64gb-storage
+    - generic-64gb-storage
     - homebrain
     - deedee
-    - host-generic-8gb-backups
-    - host-albion
+    - generic-8gb-backups
+    - albion
     - belinda
     - sites
 

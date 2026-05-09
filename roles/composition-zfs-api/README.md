@@ -101,7 +101,7 @@ This role requires:
 ### Example Host Configuration
 
 ```yaml
-# In host_vars/host-generic-64gb-storage/core.yaml
+# In host_vars/generic-64gb-storage/core.yaml
 roles:
   - system-zfs
   - system-zfs-policy
@@ -245,7 +245,7 @@ scrape_configs:
           - 'zfs-api.homebrain.xberg.ber.domain.com:8000'
           - 'zfs-api.deedee.xberg.ber.domain.com:8000'
           - 'zfs-api.backups.xberg.ber.domain.com:8000'
-          - 'zfs-api.host-albion.location.city.domain.com:8000'
+          - 'zfs-api.albion.location.city.domain.com:8000'
         labels:
           job: 'zfs'
           environment: 'homelab'

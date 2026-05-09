@@ -21,17 +21,14 @@ This is a personal home infrastructure management repository using Infrastructur
 ansible-galaxy install -r meta/requirements.yaml
 ```
 
-Playbooks are arranged to be cascading:
+Playbooks are organised into two directories:
 
 ```bash
-# Run all Core playbooks
-ansible-playbook playbooks/core.yaml
+# Run a group playbook (e.g. bootstrap all Ubuntu servers)
+ansible-playbook playbooks/groups/ubuntu/bootstrap.yaml
 
-# Run all Core bare-metal playbooks
-ansible-playbook playbooks/baremetal/core.yaml
-
-# Run only the Core host-generic-64gb-storage playbook
-ansible-playbook playbooks/host-specific/host-generic-64gb-storage/core.yaml
+# Run a host-specific playbook
+ansible-playbook playbooks/hosts/generic-64gb-storage/core.yaml
 ```
 
 ## Github
@@ -62,8 +59,8 @@ The primary configuration management tool. Structure:
     - `network-register-subdomain`: DNS subdomain registration
     - `network-ip-address-forwarding`: IPv4 forwarding via sysctl
   - `infra-*`: Infrastructure resources provisioned via Terraform
-- **`playbooks/`**: Organized by target type (`baremetal/`, `clusters/`, `virtual/`, `personal/`, `utility/`)
-  - Each target has several playbook files:
+- **`playbooks/`**: Split into `hosts/` (per-host) and `groups/` (per-group), plus `utility/`
+  - Each host directory has several playbook files:
     - `core.yaml`: This configures the entire host, including Docker Compose
     - `compositions.yaml`: This configures just Docker Compose applications
     - `dev.yaml`: For adhoc and experimental tasks

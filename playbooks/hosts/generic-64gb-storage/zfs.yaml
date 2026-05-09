@@ -1,0 +1,13 @@
+- name: ZFS and backup stuff
+  hosts: generic-64gb-storage
+  roles:
+    - role: system-zfs
+      tags: [system, zfs]
+    - role: system-zfs-policy
+      tags: [system, zfs]
+    - role: backups-zfs-client
+      tags: [backups, zfs]
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:

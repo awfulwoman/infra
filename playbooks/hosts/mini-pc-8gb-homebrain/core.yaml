@@ -1,0 +1,57 @@
+- name: Home Automation - making lights go on and off in an overly-complicated way
+  hosts: mini-pc-8gb-homebrain
+  roles:
+    - role: monitoring-healthchecksio
+      monitoring_healthchecksio_ping_type: start
+      tags: [monitoring]
+    - role: bootstrap-ubuntu-server
+      tags: [bootstrap]
+    - role: network-netplan
+      tags: [network]
+    - role: system-zfs
+      tags: [system, zfs]
+    - role: system-zfs-policy
+      tags: [system, zfs]
+    - role: infothrill.nullmailer
+      become: true
+    - role: server-nut
+      tags: [server]
+    - role: system-mqtt2cmd
+      tags: [system]
+    - role: hardware-rtl-433
+      tags: [hardware]
+    - role: backups-zfs-client
+      tags: [backups, zfs]
+    - role: system-beep
+      tags: [system]
+    - role: system-shoutrrr
+      become: true
+      tags: [system]
+    - role: composition-reverseproxy
+      tags: [compositions]
+    - role: composition-container-management
+      tags: [compositions]
+    - role: composition-homeassistant
+      tags: [compositions]
+    - role: composition-matter
+      tags: [compositions]
+    - role: composition-owntracks
+      tags: [compositions]
+    - role: composition-mqtt
+      tags: [compositions]
+    - role: composition-zigbee2mqtt
+      tags: [compositions]
+    - role: composition-watchyourlan
+      tags: [compositions]
+    - role: composition-zfs-api
+      tags: [compositions, zfs]
+    - role: system-promtail
+      tags: [system, promtail]
+    - role: monitoring-healthchecksio
+      monitoring_healthchecksio_ping_type: success
+      tags: [monitoring]
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:

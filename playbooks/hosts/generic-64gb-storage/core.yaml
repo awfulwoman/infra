@@ -1,0 +1,96 @@
+---
+- name: NAS and general workloads
+  hosts: generic-64gb-storage
+  roles:
+    - role: monitoring-healthchecksio
+      monitoring_healthchecksio_ping_type: start
+      tags: [monitoring]
+    - role: bootstrap-ubuntu-server
+      tags: [bootstrap]
+    - role: network-netplan
+      tags: [network]
+    - role: hardware-host-bus-adapter
+      tags: [hardware]
+    - role: system-wakeonlan
+      tags: [system]
+    - role: client-nut
+      tags: [client]
+    - role: system-zfs
+      tags: [system, zfs]
+    - role: system-zfs-policy
+      tags: [system, zfs]
+    - role: system-mqtt2cmd
+      tags: [system]
+    - role: infothrill.nullmailer
+      become: true
+    - role: server-nfs
+      tags: [server]
+    - role: virtual-qemu-host
+      tags: [virtual]
+    - role: backups-zfs-client
+      tags: [backups, zfs]
+    - role: composition-zfs-api
+      tags: [compositions, zfs]
+    - role: composition-victoriametrics
+      tags: [compositions]
+    - role: composition-loki
+      tags: [compositions, loki]
+    - role: composition-reverseproxy
+      tags: [compositions]
+    - role: composition-container-management
+      tags: [compositions]
+    - role: composition-github2karakeep
+      tags: [compositions]
+    - role: composition-finances
+      tags: [compositions]
+    - role: composition-gitea
+      tags: [compositions]
+    - role: composition-gitea-runners
+      tags: [compositions]
+    - role: composition-jellyfin
+      tags: [compositions]
+    - role: composition-immich
+      tags: [compositions]
+    - role: composition-llm-inference-calculator
+      tags: [compositions, composition-llm-inference-calculator]
+    - role: composition-audiobookshelf
+      tags: [compositions]
+    - role: composition-downloads
+      tags: [compositions]
+    - role: composition-syncthing
+      tags: [compositions]
+    - role: composition-karakeep
+      tags: [compositions]
+    - role: composition-freshrss
+      tags: [compositions]
+    - role: composition-tubesync
+      tags: [compositions]
+    - role: composition-homepage
+      tags: [compositions]
+    - role: composition-piper
+      tags: [compositions]
+    - role: composition-gotosocial
+      tags: [compositions]
+    - role: composition-libretranslate
+      tags: [compositions]
+    - role: composition-n8n
+      tags: [compositions, composition-n8n]
+    - role: composition-memorybank
+      tags: [compositions]
+    - role: system-emailbackup
+      tags: [system]
+    - role: system-smartmontools
+      tags: [system]
+    - role: system-promtail
+      tags: [system, promtail]
+    # - role: system-sleepuntil
+    #   become: true
+    # - role: system-powertop
+    - role: monitoring-healthchecksio
+      monitoring_healthchecksio_ping_type: success
+      tags: [monitoring]
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:

@@ -1,8 +1,0 @@
-- name: Storage NAS
-  hosts: host-generic-64gb-storage
-  roles:
-    - role: composition-splitwise
-  handlers:
-    - name: Reboot host
-      become: true
-      ansible.builtin.reboot:

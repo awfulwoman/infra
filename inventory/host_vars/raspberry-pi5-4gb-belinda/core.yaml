@@ -1,0 +1,89 @@
+# -------------------------------------------------------------------
+# IDENTITY
+# -------------------------------------------------------------------
+host_type: baremetal
+host_name: raspberry-pi5-4gb-belinda
+host_region: ber
+host_site: kberg
+host_pfqdn: "{{ host_name }}.{{ host_site }}.{{ host_region }}"
+host_fqdn: "{{ host_pfqdn }}.{{ domain_name }}"
+host_description: "Raspberry Pi 5 backup server"
+
+# -------------------------------------------------------------------
+# NETWORK
+# Hint: Use `network_netplan_config:` for more fine-grained control
+# Docs: roles/network-netplan/README.md
+# -------------------------------------------------------------------
+host_ipv4: 192.168.1.117
+host_primary_interface: "eth0"
+host_ipv4_subnet: 24
+tailscale_exit_node: false
+
+# -------------------------------------------------------------------
+# ANSIBLE
+# -------------------------------------------------------------------
+ansible_host: "{{ host_ipv4 }}" # TODO: Replace this with `host_fqdn` once DNS infra is up and running
+ansible_user: "{{ vault_server_username }}"
+ansible_become_password: "{{ vault_password }}"
+
+# -------------------------------------------------------------------
+# UBUNTUPRO
+# -------------------------------------------------------------------
+ubuntupro_attach: false
+
+# -------------------------------------------------------------------
+# BOOTSTRAP
+# -------------------------------------------------------------------
+bootstrap_ubuntu_timezone: "Europe/Berlin"
+
+# -------------------------------------------------------------------
+# HARDWARE
+# -------------------------------------------------------------------
+raspberry_pi_wifi: false
+raspberry_pi_bluetooth: false
+raspberry_pi_hide_undervoltage_warnings: false
+raspberry_pi_boot_config_location: /boot/firmware/config.txt
+raspberry_pi_config_overrides:
+  - "dtoverlay=cooling_fan"
+  - "dtparam=pciex1"
+  - "dtparam=pciex1_gen=3" # https://docs.radxa.com/en/accessories/storage/penta-sata-hat/penta-for-rpi5
+
+
+# -------------------------------------------------------------------
+# ZFS
+# -------------------------------------------------------------------
+
+zfs:
+  slowpool:
+    vdevs:
+      - type: mirror
+        disks:
+          - /dev/disk/by-id/scsi-SATA_WDC_WeD20SPZX-22U_WD-WX12A6317XCK
+          - /dev/disk/by-id/scsi-SATA_WDC_WD20SPZX-22U_WD-WX82E2125JHD
+    datasets:
+      compositions:
+      backups:
+        datasets:
+          raw:
+            properties:
+              encryption: aes-256-gcm
+              keylocation: "{{ vault_zfs_default_encryption_passphrase_path }}"
+              keyformat: passphrase
+
+# -------------------------------------------------------------------
+# COMPOSITIONS
+# -------------------------------------------------------------------
+compositions_dataset: slowpool/compositions
+# compositions list moved to playbook (see playbooks/hosts/raspberry-pi5-4gb-belinda/core.yaml)
+
+# -------------------------------------------------------------------
+# BACKUPS
+# -------------------------------------------------------------------
+backups_zfs_server_local_dataset: slowpool/backups/raw
+backups_zfs_server_offsite_enabled: false
+backups_zfs_server_offsite_bwlimit: 3M
+
+# -------------------------------------------------------------------
+# ZFS POLICY
+# -------------------------------------------------------------------
+system_zfs_policy_snapshots_enable: false

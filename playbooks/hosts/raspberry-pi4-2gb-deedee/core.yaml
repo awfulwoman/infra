@@ -1,0 +1,49 @@
+- name: DeeDee - aw man, we're off to Yonkers
+  hosts: raspberry-pi4-2gb-deedee
+  roles:
+    - role: monitoring-healthchecksio
+      monitoring_healthchecksio_ping_type: start
+      tags: [monitoring]
+    - role: hardware-raspberry-pi
+      tags: [hardware]
+    - role: bootstrap-ubuntu-server
+      tags: [bootstrap]
+    - role: network-netplan
+      tags: [network]
+    - role: infothrill.nullmailer
+      become: true
+    - role: system-sshkey
+      tags: [system]
+    - role: system-repos
+      tags: [system]
+    - role: system-zfs
+      tags: [system, zfs]
+    - role: infra-public-resources
+      tags: [infra]
+    - role: infra-private-resources
+      tags: [infra]
+    - role: infra-named
+      tags: [infra]
+    - role: infra-certbot
+      tags: [infra]
+    - role: system-claude
+      tags: [system]
+    - role: composition-reverseproxy
+      tags: [compositions]
+    - role: composition-container-management
+      tags: [compositions]
+    - role: composition-zfs-api
+      tags: [compositions, zfs]
+    - role: backups-zfs-client
+      tags: [backups, zfs]
+    - role: script-share-personal-site
+    - role: system-promtail
+      tags: [system, promtail]
+    - role: monitoring-healthchecksio
+      monitoring_healthchecksio_ping_type: success
+      tags: [monitoring]
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:
