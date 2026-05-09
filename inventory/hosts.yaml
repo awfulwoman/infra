@@ -23,7 +23,7 @@ all:
         minipc-8gb-test-router:
         raspberry-pi4-2gb-deedee:
         raspberry-pi4-4gb-randolph:
-        raspberry-pi4-8gb-randy:
+        raspberry-pi4-8gb-norman:
         raspberry-pi5-4gb-belinda:
 
 
@@ -41,7 +41,7 @@ all:
         minipc-8gb-test-router:
         raspberry-pi4-2gb-deedee:
         raspberry-pi4-4gb-randolph:
-        raspberry-pi4-8gb-randy:
+        raspberry-pi4-8gb-norman:
         raspberry-pi5-4gb-belinda:
 
     # -------------------------------------------------------------------
@@ -62,7 +62,7 @@ all:
         raspberry-pi4-2gb-pikvm:
         raspberry-pi4-2gb-deedee:
         raspberry-pi4-4gb-randolph:
-        raspberry-pi4-8gb-randy:
+        raspberry-pi4-8gb-norman:
         raspberry-pi5-4gb-belinda:
 
 
@@ -88,7 +88,7 @@ all:
         raspberry-pi5-4gb-belinda:
         raspberry-pi4-2gb-deedee:
         # raspberry-pi4-4gb-randolph:
-        # raspberry-pi4-8gb-randy:
+        # raspberry-pi4-8gb-norman:
 
     # -------------------------------------------------------------------
     # ZFS REPLICATION SOURCES
@@ -101,7 +101,7 @@ all:
         vps-hetzner-public01:
         raspberry-pi4-2gb-deedee:
         # raspberry-pi4-4gb-randolph:
-        # raspberry-pi4-8gb-randy:
+        # raspberry-pi4-8gb-norman:
 
     # -------------------------------------------------------------------
     # ZFS REPLICATION DESTINATIONS
