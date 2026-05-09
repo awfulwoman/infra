@@ -42,11 +42,11 @@ terraform_working_dir: /opt/terraform
 hetzner_floating_ip: 78.47.163.140
 
 nullmailer_mail_recipient: "hardcoded@{{ domainname_personal }}"
-nullmailer_relay_host: "smtp.{{ vault_mailbox_domain }}"
+nullmailer_relay_host: "smtp.{{ vault_mailprovider_domain }}"
 nullmailer_relay_port: 465
-nullmailer_relay_user: "{{ vault_mailbox_user }}"
-nullmailer_relay_pass: "{{ vault_mailbox_password }}"
-nullmailer_allmailfrom: "{{ vault_mailbox_user }}"
+nullmailer_relay_user: "{{ vault_mailprovider_user }}"
+nullmailer_relay_pass: "{{ vault_mailprovider_password }}"
+nullmailer_allmailfrom: "{{ vault_mailprovider_user }}"
 
 # Environment Variables
 environment_config:
