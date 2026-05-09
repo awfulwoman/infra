@@ -1,9 +1,8 @@
----
-- name: Dev stuff
-  hosts: host-homebrain
+- name: Home Automation Server - Compositions
+  hosts: host-mini-pc-8gb-homebrain
   vars:
     compositions:
-      - container-management
+      - zfs-api
   roles:
     - role: composition-reverseproxy
     - role: composition-container-management
@@ -14,6 +13,7 @@
     - role: composition-zigbee2mqtt
     - role: composition-watchyourlan
     - role: composition-zfs-api
+      tags: [compositions, zfs]
 
   handlers:
     - name: Reboot host

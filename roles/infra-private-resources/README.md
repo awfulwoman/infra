@@ -5,9 +5,9 @@ Manages local VM infrastructure using Terraform and libvirt.
 ## Architecture
 
 **Control Plane**: `dns` host runs Terraform and manages VM lifecycle
-**Hypervisor**: `host-storage` runs libvirt and executes VMs
+**Hypervisor**: `host-generic-64gb-storage` runs libvirt and executes VMs
 
-Terraform on dns connects to libvirt on host-storage via SSH.
+Terraform on dns connects to libvirt on host-generic-64gb-storage via SSH.
 
 ## Security Model
 
@@ -63,7 +63,7 @@ restrict,pty,command="/usr/local/bin/libvirt-only" ssh-ed25519 AAAA...
 - `libvirt-clients` package (for qemu+ssh:// transport)
 - SSH connectivity to hypervisor
 
-### Hypervisor (host-storage)
+### Hypervisor (host-generic-64gb-storage)
 - libvirt installed and running (via `virtual-qemu-host` role)
 - KVM enabled
 - ZFS datasets for VM storage
@@ -72,7 +72,7 @@ restrict,pty,command="/usr/local/bin/libvirt-only" ssh-ed25519 AAAA...
 
 ### Hypervisor Connection
 ```yaml
-infra_privateresources_hypervisor_host: "host-storage"
+infra_privateresources_hypervisor_host: "host-generic-64gb-storage"
 infra_privateresources_hypervisor_user: "libvirt-remote"
 infra_privateresources_bridge_interface: "enp2s0"
 ```
@@ -137,7 +137,7 @@ Note: SSH config automatically uses correct service account credentials.
 - `~/.ssh/libvirt-remote_ed25519` - Dedicated SSH key
 - `~/.ssh/config` - SSH client configuration
 
-### Hypervisor (host-storage)
+### Hypervisor (host-generic-64gb-storage)
 - `/usr/local/bin/libvirt-only` - Forced command security wrapper
 - `/fastpool/pools/vms/` - ZFS datasets for VM storage
 - `/slowpool/images/ubuntu/` - Cached cloud images
@@ -155,10 +155,10 @@ sudo grep libvirt-ssh /var/log/syslog
 
 ```bash
 # Test SSH connection
-ssh awful@dns "ssh host-storage virsh version"
+ssh awful@dns "ssh host-generic-64gb-storage virsh version"
 
 # Verify forced command blocks unauthorized access
-ssh awful@dns "ssh host-storage ls /"
+ssh awful@dns "ssh host-generic-64gb-storage ls /"
 # Should fail with "Command not allowed"
 ```
 

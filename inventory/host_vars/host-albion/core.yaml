@@ -87,7 +87,7 @@ downloads_dir: "/fastpool/downloads"
 # NFS
 # -------------------------------------------------------------------
 nfs_mounts:
-  - remote_server: "host-storage"
+  - remote_server: "host-generic-64gb-storage"
     remote_path: "/slowpool/shared/media"
     local_path: "/fastpool/storage-share"
     # mount_options: "defaults,_netdev,x-systemd.after=network-online.target"

@@ -13,10 +13,10 @@ Define `nfs_mounts` in `host_vars` as a list of mount definitions:
 
 ```yaml
 nfs_mounts:
-  - remote_server: host-storage
+  - remote_server: host-generic-64gb-storage
     remote_path: /slowpool/shared/media
     local_path: /mnt/media
-  - remote_server: host-backups
+  - remote_server: host-generic-8gb-backups
     remote_path: /fastpool/archive
     local_path: /mnt/archive
     nfsclient_mount_options: "defaults,_netdev,ro"  # optional per-mount override

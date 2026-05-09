@@ -1,5 +1,5 @@
 - name: Testbed for dual-NIC Linux router setup
-  hosts: host-test-router
+  hosts: host-mini-pc-test-router
   roles:
     - role: monitoring-healthchecksio
       monitoring_healthchecksio_ping_type: start

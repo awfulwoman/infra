@@ -1,5 +1,5 @@
 - name: Out on the internet server
-  hosts: host-sites
+  hosts: host-hetzner-sites
   roles:
     - role: monitoring-healthchecksio
       monitoring_healthchecksio_ping_type: start

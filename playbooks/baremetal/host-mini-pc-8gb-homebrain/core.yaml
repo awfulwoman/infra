@@ -1,5 +1,5 @@
 - name: Home Automation - making lights go on and off in an overly-complicated way
-  hosts: host-homebrain
+  hosts: host-mini-pc-8gb-homebrain
   roles:
     - role: monitoring-healthchecksio
       monitoring_healthchecksio_ping_type: start

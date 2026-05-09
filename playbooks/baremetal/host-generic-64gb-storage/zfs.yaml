@@ -1,5 +1,5 @@
 - name: ZFS and backup stuff
-  hosts: host-homebrain
+  hosts: host-generic-64gb-storage
   roles:
     - role: system-zfs
       tags: [system, zfs]

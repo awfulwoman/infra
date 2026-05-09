@@ -1,9 +1,11 @@
 - name: ZFS and backup stuff
-  hosts: host-backups
+  hosts: host-mini-pc-8gb-homebrain
   roles:
     - role: system-zfs
       tags: [system, zfs]
-    - role: backups-zfs-server
+    - role: system-zfs-policy
+      tags: [system, zfs]
+    - role: backups-zfs-client
       tags: [backups, zfs]
   handlers:
     - name: Reboot host

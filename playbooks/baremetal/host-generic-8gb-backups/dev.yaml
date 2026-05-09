@@ -1,5 +1,5 @@
 - name: Backup Server (dev work)
-  hosts: host-backups
+  hosts: host-generic-8gb-backups
   gather_facts: true
   roles:
     - role: backups-zfs-server

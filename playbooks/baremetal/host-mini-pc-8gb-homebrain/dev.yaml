@@ -1,6 +1,9 @@
 ---
-- name: Home Automation Server - Compositions
-  hosts: host-homebrain
+- name: Dev stuff
+  hosts: host-mini-pc-8gb-homebrain
+  vars:
+    compositions:
+      - container-management
   roles:
     - role: composition-reverseproxy
     - role: composition-container-management

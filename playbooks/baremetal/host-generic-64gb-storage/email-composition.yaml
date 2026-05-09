@@ -1,5 +1,5 @@
 - name: Email backup
-  hosts: host-storage
+  hosts: host-generic-64gb-storage
   roles:
     - role: system-zfs
     - role: system-emailbackup

@@ -1,6 +1,6 @@
 ---
 - name: NAS and general workloads
-  hosts: host-storage
+  hosts: host-generic-64gb-storage
   roles:
     - role: monitoring-healthchecksio
       monitoring_healthchecksio_ping_type: start

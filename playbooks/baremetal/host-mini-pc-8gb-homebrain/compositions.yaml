@@ -1,8 +1,6 @@
+---
 - name: Home Automation Server - Compositions
-  hosts: host-homebrain
-  vars:
-    compositions:
-      - zfs-api
+  hosts: host-mini-pc-8gb-homebrain
   roles:
     - role: composition-reverseproxy
     - role: composition-container-management
@@ -13,7 +11,6 @@
     - role: composition-zigbee2mqtt
     - role: composition-watchyourlan
     - role: composition-zfs-api
-      tags: [compositions, zfs]
 
   handlers:
     - name: Reboot host

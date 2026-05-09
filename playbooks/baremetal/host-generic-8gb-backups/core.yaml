@@ -1,5 +1,5 @@
 - name: Backup Server
-  hosts: host-backups
+  hosts: host-generic-8gb-backups
   roles:
     - role: monitoring-healthchecksio
       monitoring_healthchecksio_ping_type: start

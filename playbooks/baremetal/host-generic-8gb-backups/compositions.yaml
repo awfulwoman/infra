@@ -1,5 +1,5 @@
 - name: Backups - Compositions
-  hosts: host-backups
+  hosts: host-generic-8gb-backups
   roles:
     - role: composition-container-management
     - role: composition-reverseproxy

@@ -1,5 +1,5 @@
 - name: Backups Server - ZFS API
-  hosts: host-backups
+  hosts: host-generic-8gb-backups
   vars:
     compositions:
       - zfs-api

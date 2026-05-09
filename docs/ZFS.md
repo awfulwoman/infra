@@ -111,7 +111,7 @@ This happens every time the scripts run, meaning newly-created children are imme
 
 Docker automatically creates ZFS datasets for volumes when using the ZFS storage driver. These datasets aren't in your inventory because Docker creates them dynamically based on `docker-compose.yaml` files.
 
-**Example from `host-storage`:**
+**Example from `host-generic-64gb-storage`:**
 
 ```yaml
 zfs:

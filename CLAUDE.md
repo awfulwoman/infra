@@ -30,8 +30,8 @@ ansible-playbook playbooks/core.yaml
 # Run all Core bare-metal playbooks
 ansible-playbook playbooks/baremetal/core.yaml
 
-# Run only the Core host-storage playbook
-ansible-playbook playbooks/baremetal/host-storage/core.yaml
+# Run only the Core host-generic-64gb-storage playbook
+ansible-playbook playbooks/baremetal/host-generic-64gb-storage/core.yaml
 ```
 
 ## Github

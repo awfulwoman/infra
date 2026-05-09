@@ -54,25 +54,25 @@ switch:
   - platform: wake_on_lan
     name: Server Storage WOL
     mac: 34:60:f9:bb:3d:16
-    host: host-storage
+    host: host-generic-64gb-storage
     turn_off:
       service: mqtt.publish
       data:
         qos: 0
         retain: false
         payload: suspend
-        topic: servers/host-storage
+        topic: servers/host-generic-64gb-storage
   - platform: wake_on_lan
     name: Server Backups WOL
     mac: 60:a4:4c:40:52:57
-    host: host-backups
+    host: host-generic-8gb-backups
     turn_off:
       service: mqtt.publish
       data:
         qos: 0
         retain: false
         payload: suspend
-        topic: servers/host-backups
+        topic: servers/host-generic-8gb-backups
 
 #############################################################################
 # TIME/DATE SENSORS
