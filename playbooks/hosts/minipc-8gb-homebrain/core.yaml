@@ -27,6 +27,8 @@
     - role: system-shoutrrr
       become: true
       tags: [system]
+    - role: composition-mqtt # must run before owntracks and zigbee2mqtt
+      tags: [compositions]
     - role: composition-reverseproxy
       tags: [compositions]
     - role: composition-container-management
@@ -36,8 +38,6 @@
     - role: composition-matter
       tags: [compositions]
     - role: composition-owntracks
-      tags: [compositions]
-    - role: composition-mqtt
       tags: [compositions]
     - role: composition-zigbee2mqtt
       tags: [compositions]

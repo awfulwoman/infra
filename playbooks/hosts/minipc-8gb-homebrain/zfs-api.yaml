@@ -4,12 +4,12 @@
     compositions:
       - zfs-api
   roles:
+    - role: composition-mqtt # must run before owntracks and zigbee2mqtt
     - role: composition-reverseproxy
     - role: composition-container-management
     - role: composition-homeassistant
     - role: composition-matter
     - role: composition-owntracks
-    - role: composition-mqtt
     - role: composition-zigbee2mqtt
     - role: composition-watchyourlan
     - role: composition-zfs-api
