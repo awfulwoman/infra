@@ -2,26 +2,50 @@
   hosts: server-64gb-storage
   roles:
     - role: composition-zfs-api
+      tags: [compositions, composition-zfs-api, zfs]
     - role: composition-victoriametrics
+      tags: [compositions, composition-victoriametrics, monitoring]
+    - role: composition-loki
+      tags: [compositions, loki]
     - role: composition-reverseproxy
-    - role: composition-memorybank
+      tags: [compositions, composition-reverseproxy]
     - role: composition-container-management
+      tags: [compositions, composition-container-management]
     - role: composition-github2karakeep
-    - role: composition-audiobookshelf
-    - role: composition-jellyfin
-    - role: composition-immich
-    - role: composition-downloads
+      tags: [compositions, composition-github2karakeep]
     - role: composition-finances
+      tags: [compositions, composition-finances]
     - role: composition-gitea
+      tags: [compositions, composition-gitea]
     - role: composition-gitea-runners
-    - role: composition-syncthing
-    - role: composition-karakeep
-    - role: composition-freshrss
-    - role: composition-tubesync
-    - role: composition-homepage
-    - role: composition-piper
-    - role: composition-gotosocial
-    - role: composition-libretranslate
-    - role: composition-open-webui
+      tags: [compositions, composition-gitea-runners]
+    - role: composition-jellyfin
+      tags: [compositions, composition-jellyfin]
+    - role: composition-immich
+      tags: [compositions, composition-immich]
     - role: composition-llm-inference-calculator
+      tags: [compositions, composition-llm-inference-calculator]
+    - role: composition-audiobookshelf
+      tags: [compositions, composition-audiobookshelf]
+    - role: composition-downloads
+      tags: [compositions, composition-downloads]
+    - role: composition-syncthing
+      tags: [compositions, composition-syncthing]
+    - role: composition-karakeep
+      tags: [compositions, composition-karakeep]
+    - role: composition-freshrss
+      tags: [compositions, composition-freshrss]
+    - role: composition-tubesync
+      tags: [compositions, composition-tubesync]
+    - role: composition-homepage
+      tags: [compositions, composition-homepage]
+    - role: composition-piper
+      tags: [compositions, composition-piper]
+    - role: composition-gotosocial
+      tags: [compositions, composition-gotosocial]
+    - role: composition-libretranslate
+      tags: [compositions, composition-libretranslate]
     - role: composition-n8n
+      tags: [compositions, composition-n8n]
+    - role: composition-memorybank
+      tags: [compositions, composition-memorybank]
