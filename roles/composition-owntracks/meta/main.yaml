@@ -2,4 +2,3 @@ dependencies:
   - role: composition-common
     vars:
       composition_name: owntracks
-  - role: composition-mqtt

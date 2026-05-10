@@ -2,4 +2,3 @@ dependencies:
   - role: composition-common
     vars:
       composition_name: zigbee2mqtt
-  - role: composition-mqtt
