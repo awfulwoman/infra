@@ -3,6 +3,7 @@
 # -------------------------------------------------------------------
 host_type: baremetal
 host_name: raspberry-pi4-2gb-deedee
+host_name_short: deedee
 host_region: ber
 host_site: xberg
 host_pfqdn: "{{ host_name }}.{{ host_site }}.{{ host_region }}"

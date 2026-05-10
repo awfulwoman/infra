@@ -3,6 +3,7 @@
 # -------------------------------------------------------------------
 host_type: baremetal
 host_name: server-64gb-storage
+host_name_short: storage
 host_description: "Central storage device"
 host_region: ber
 host_site: xberg

@@ -3,6 +3,7 @@
 # -------------------------------------------------------------------
 host_type: baremetal
 host_name: apple-macmini-m4-16gb-malcolm
+host_name_short: malcolm
 host_region: ber
 host_site: xberg
 # host_pfqdn: "{{ host_name }}.{{ host_site }}.{{ host_region }}"

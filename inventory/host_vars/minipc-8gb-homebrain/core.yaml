@@ -3,6 +3,7 @@
 # -------------------------------------------------------------------
 host_type: baremetal
 host_name: minipc-8gb-homebrain
+host_name_short: homebrain
 host_region: ber
 host_site: xberg
 host_pfqdn: "{{ host_name }}.{{ host_site }}.{{ host_region }}"

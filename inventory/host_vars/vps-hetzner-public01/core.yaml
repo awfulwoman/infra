@@ -3,6 +3,7 @@
 # -------------------------------------------------------------------
 host_type: virtual
 host_name: vps-hetzner-public01
+host_name_short: public01
 host_region: hetzner
 host_site: cloud
 host_pfqdn: "{{ host_name }}.{{ host_site }}.{{ host_region }}"
