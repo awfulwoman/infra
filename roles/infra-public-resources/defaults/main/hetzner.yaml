@@ -140,7 +140,7 @@ infra_publicresources_hetzner_domain:
         id: aw_txt_spf
       - type: TXT
         hostname: db4fb4d222c289b319600fb0f87e82491cf603ce
-        value: 96f3e1d37f563d3215ed3dd71a276711d21fcd7a
+        value: 96f3e1d37f563d3215ed3dd71a276711d21fcd7a # Authenticate domain with mail provider
         id: aw_txt_mailprovider
       - type: CNAME
         hostname: mbo0004._domainkey
