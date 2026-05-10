@@ -19,7 +19,7 @@
     - role: system-zfs
       tags: [system, zfs]
     - role: infra-public-resources
-      tags: [infra]
+      tags: [infra, infra-public-resources]
     - role: infra-private-resources
       tags: [infra]
     - role: infra-named

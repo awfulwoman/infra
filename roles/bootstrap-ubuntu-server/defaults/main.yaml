@@ -1,4 +1,5 @@
 bootstrap_ubuntu_timezone: "Europe/Berlin"
+bootstrap_ubuntu_apt_packages_extra: []
 bootstrap_ubuntu_apt_packages:
   - curl
   - locales

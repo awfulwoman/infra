@@ -87,3 +87,9 @@ automation_infra_ansible_playbook_bin: /fastpool/repos/infra/.venv/bin/ansible-p
 # CLAUDE
 # -------------------------------------------------------------------
 system_claude_settings_path: "/fastpool/claude/settings"
+
+# -------------------------------------------------------------------
+# APT
+# -------------------------------------------------------------------
+# bootstrap_ubuntu_apt_packages_extra:
+#   - terraform
