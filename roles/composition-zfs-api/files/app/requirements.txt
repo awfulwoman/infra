@@ -1,6 +1,6 @@
 fastapi==0.136.1
 uvicorn[standard]==0.44.0
-pydantic==2.12.5
+pydantic==2.13.4
 python-dateutil==2.9.0.post0
 pyyaml==6.0.3
 prometheus-client==0.25.0
