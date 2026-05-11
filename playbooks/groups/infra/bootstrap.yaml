@@ -1,0 +1,9 @@
+- name: Bootstrap host
+  hosts: infra
+  roles:
+    - role: bootstrap-ubuntu-server
+      when: ansible_facts['os_family'] == 'Debian'
+      tags: [bootstrap, debian, ubuntu]
+    - role: bootstrap-macos-server
+      when: ansible_facts['os_family'] == 'Darwin'
+      tags: [bootstrap, darwin, macos]
