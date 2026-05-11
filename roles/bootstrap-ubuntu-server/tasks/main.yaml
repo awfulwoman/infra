@@ -20,23 +20,32 @@
   register: hetzner_sources
   changed_when: "'changed' in hetzner_sources.stdout"
 
-- name: Ensure apt repository is added
+- name: Ensure ubuntu apt repository is configured
   become: true
   ansible.builtin.deb822_repository:
     name: ubuntu
     types: deb
-    uris: http://ports.ubuntu.com/ubuntu-ports/
-    suites: "{{ ansible_facts['distribution_release'] }}"
+    uris: >-
+      {{ 'http://ports.ubuntu.com/ubuntu-ports/'
+         if ansible_facts['architecture'] == 'aarch64'
+         else 'http://archive.ubuntu.com/ubuntu' }}
+    suites:
+      - "{{ ansible_facts['distribution_release'] }}"
+      - "{{ ansible_facts['distribution_release'] }}-updates"
+      - "{{ ansible_facts['distribution_release'] }}-backports"
     components: main restricted universe multiverse
     signed_by: /usr/share/keyrings/ubuntu-archive-keyring.gpg
     state: present
 
-- name: Ensure apt repository is added
+- name: Ensure ubuntu-security apt repository is configured
   become: true
   ansible.builtin.deb822_repository:
     name: ubuntu-security
     types: deb
-    uris: http://ports.ubuntu.com/ubuntu-ports/
+    uris: >-
+      {{ 'http://ports.ubuntu.com/ubuntu-ports/'
+         if ansible_facts['architecture'] == 'aarch64'
+         else 'http://security.ubuntu.com/ubuntu' }}
     suites: "{{ ansible_facts['distribution_release'] }}-security"
     components: main restricted universe multiverse
     signed_by: /usr/share/keyrings/ubuntu-archive-keyring.gpg
