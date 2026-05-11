@@ -15,11 +15,11 @@ host_description: "Hetzner cloud server for public services"
 # Hint: Use `network_netplan_config:` for more fine-grained control
 # Docs: roles/network-netplan/README.md
 # -------------------------------------------------------------------
-host_ipv4: 188.245.37.81
+host_ipv4: 188.245.37.81 # DHCP assigned IP for this server - may change if server is reprovisioned
 host_primary_interface: enp1s0
 network_netplan_mode: dhcp
 host_ipv4_extra:
-  - 78.47.163.140/32
+  - "{{ hetzner_floating_ip }}/32" # Assign permanent floating IP to this server
 network_netplan_nameservers: ["185.12.64.1", "185.12.64.2"]
 
 # -------------------------------------------------------------------
