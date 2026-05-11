@@ -1,3 +1,10 @@
+![raspberry-pi4-2gb-deedee - Core Playbook](https://healthchecks.io/b/2/29c2522c-f8a4-4836-b616-2731639f04db.svg)
+![minipc-8gb-homebrain - Core Playbook](https://healthchecks.io/b/2/756a0dc0-80bf-4334-89b6-1796d8d491f9.svg)
+![apple-macmini-m4-16gb-malcolm - Core Playbook](https://healthchecks.io/b/2/0a00872f-fbdc-42a5-acb9-f1393ddc4656.svg)
+![vps-hetzner-public01 - Core Playbook](https://healthchecks.io/b/2/fa0d848f-18a1-45fa-8bee-09f8ab35eba4.svg)
+![server-64gb-storage - Core Playbook](https://healthchecks.io/b/2/4c77dd7f-f14a-41fb-894c-deb703e7b88d.svg)
+![raspberry-pi5-4gb-belinda - Core Playbook](https://healthchecks.io/b/2/c59b3144-155c-4727-880b-4ec89c0556f9.svg)
+
 # My Home Infra
 
 Hello, good evening, etc. Welcome to the repo where I keep all my home infrastructure.
@@ -9,13 +16,6 @@ Most of it is Ansible, as it's great for configuring individual machines, but yo
 Credentials are stored in this repo, encrypted.
 
 I access everything though Tailscale, which is an annoying dependency. But I keep the integration as light as possible so that I can detach my infra from them when they inevitably turn evil.
-
-![raspberry-pi4-2gb-deedee - Core Playbook](https://healthchecks.io/b/2/29c2522c-f8a4-4836-b616-2731639f04db.svg)
-![minipc-8gb-homebrain - Core Playbook](https://healthchecks.io/b/2/756a0dc0-80bf-4334-89b6-1796d8d491f9.svg)
-![apple-macmini-m4-16gb-malcolm - Core Playbook](https://healthchecks.io/b/2/0a00872f-fbdc-42a5-acb9-f1393ddc4656.svg)
-![vps-hetzner-public01 - Core Playbook](https://healthchecks.io/b/2/fa0d848f-18a1-45fa-8bee-09f8ab35eba4.svg)
-![server-64gb-storage - Core Playbook](https://healthchecks.io/b/2/4c77dd7f-f14a-41fb-894c-deb703e7b88d.svg)
-![raspberry-pi5-4gb-belinda - Core Playbook](https://healthchecks.io/b/2/c59b3144-155c-4727-880b-4ec89c0556f9.svg)
 
 ## Installation
 
