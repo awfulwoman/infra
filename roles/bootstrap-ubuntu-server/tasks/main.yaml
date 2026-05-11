@@ -1,6 +1,7 @@
 # Bootstraps an Ubuntu machine
 
 - name: Remove Hetzner mirror stanzas from ubuntu.sources
+  become: true
   ansible.builtin.shell:
     cmd: |
       python3 << 'EOF'
