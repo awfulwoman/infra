@@ -31,8 +31,11 @@ network_netplan_interface: "{{ host_primary_interface | default('eth0') }}"
 # Netmask/CIDR
 network_netplan_subnet: "{{ host_ipv4_subnet | default(24) }}"
 
-# Configuration mode: auto-detect based on host_ipv4
+# Configuration mode: auto-detect based on host_ipv4, or set explicitly to 'dhcp'/'static'
 network_netplan_mode: "{{ 'static' if (host_ipv4 | default('', true)) else 'dhcp' }}"
+
+# Additional static IP addresses (CIDRs) to assign to the primary interface alongside DHCP or static
+host_ipv4_extra: []
 
 # Auto-apply via handler
 network_netplan_auto_apply: true

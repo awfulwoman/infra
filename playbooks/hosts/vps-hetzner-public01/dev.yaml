@@ -1,12 +1,10 @@
 - name: Out on the internet server
   hosts: vps-hetzner-public01
-  # vars:
-  #   compositions:
-  #     - awfulwoman
   roles:
-    # - role: compositions
-    - role: system-zfs
-    - role: system-zfs-policy
+    - role: network-netplan
+      tags: [network]
+    - role: bootstrap-ubuntu-server
+      tags: [bootstrap]
 
   handlers:
     - name: Reboot host

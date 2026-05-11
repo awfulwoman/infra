@@ -8,10 +8,13 @@
             'renderer': network_netplan_renderer,
             'ethernets': {
               network_netplan_interface: (
-                {'dhcp4': true, 'nameservers': {'addresses': network_netplan_nameservers}}
+                (
+                  {'dhcp4': true, 'nameservers': {'addresses': network_netplan_nameservers}}
+                  | combine({'addresses': host_ipv4_extra} if host_ipv4_extra else {})
+                )
                 if network_netplan_mode == 'dhcp'
                 else {
-                  'addresses': [host_ipv4 ~ '/' ~ network_netplan_subnet],
+                  'addresses': [host_ipv4 ~ '/' ~ network_netplan_subnet] + host_ipv4_extra,
                   'routes': [{'to': 'default', 'via': network_netplan_gateway}],
                   'nameservers': {'addresses': network_netplan_nameservers}
                 }

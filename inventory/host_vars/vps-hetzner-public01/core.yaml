@@ -17,6 +17,10 @@ host_description: "Hetzner cloud server for public services"
 # -------------------------------------------------------------------
 host_ipv4: 188.245.37.81
 host_primary_interface: enp1s0
+network_netplan_mode: dhcp
+host_ipv4_extra:
+  - 78.47.163.140/32
+network_netplan_nameservers: ["185.12.64.1", "185.12.64.2"]
 
 # -------------------------------------------------------------------
 # ANSIBLE

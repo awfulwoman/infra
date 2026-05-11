@@ -1,5 +1,47 @@
 # Bootstraps an Ubuntu machine
 
+- name: Remove Hetzner mirror stanzas from ubuntu.sources
+  ansible.builtin.shell:
+    cmd: |
+      python3 << 'EOF'
+      import re, sys
+      path = '/etc/apt/sources.list.d/ubuntu.sources'
+      with open(path) as f:
+          original = f.read()
+      stanzas = re.split(r'\n{2,}', original.strip())
+      filtered = [s for s in stanzas if 'mirror.hetzner.com' not in s]
+      result = '\n\n'.join(filtered) + '\n'
+      if result == original:
+          sys.exit(0)
+      with open(path, 'w') as f:
+          f.write(result)
+      print('changed')
+      EOF
+  register: hetzner_sources
+  changed_when: "'changed' in hetzner_sources.stdout"
+
+- name: Ensure apt repository is added
+  become: true
+  ansible.builtin.deb822_repository:
+    name: ubuntu
+    types: deb
+    uris: http://ports.ubuntu.com/ubuntu-ports/
+    suites: "{{ ansible_facts['distribution_release'] }}"
+    components: main restricted universe multiverse
+    signed_by: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+    state: present
+
+- name: Ensure apt repository is added
+  become: true
+  ansible.builtin.deb822_repository:
+    name: ubuntu-security
+    types: deb
+    uris: http://ports.ubuntu.com/ubuntu-ports/
+    suites: "{{ ansible_facts['distribution_release'] }}-security"
+    components: main restricted universe multiverse
+    signed_by: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+    state: present
+
 - name: Ensure core apt packages are installed
   become: true
   ansible.builtin.apt:

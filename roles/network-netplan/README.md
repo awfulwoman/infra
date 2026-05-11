@@ -29,6 +29,17 @@ This approach is necessary because Ansible YAML files cannot use variable
 expressions as dict keys, so the interface-name-keyed structure netplan requires
 must be assembled at task execution time.
 
+## Additional IP addresses
+
+Set `host_ipv4_extra` in `host_vars` to assign additional static CIDRs to the primary interface alongside DHCP or the primary static IP. Works in both modes.
+
+```yaml
+# Hetzner Cloud: DHCP primary + routed additional IP
+network_netplan_mode: dhcp
+host_ipv4_extra:
+  - 78.47.163.140/32
+```
+
 ## Multi-interface / custom config
 
 Set `network_netplan_config` in `host_vars` using netplan-native format.
