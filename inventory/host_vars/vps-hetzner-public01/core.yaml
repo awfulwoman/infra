@@ -16,6 +16,7 @@ host_description: "Hetzner cloud server for public services"
 # Docs: roles/network-netplan/README.md
 # -------------------------------------------------------------------
 host_ipv4: 188.245.37.81
+host_primary_interface: enp1s0
 
 # -------------------------------------------------------------------
 # ANSIBLE
