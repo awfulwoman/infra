@@ -1,0 +1,4 @@
+- name: PiKVM setup role
+  no_log: true
+  ansible.builtin.include_role:
+    name: system-pikvm
