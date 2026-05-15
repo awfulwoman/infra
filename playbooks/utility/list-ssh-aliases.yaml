@@ -1,0 +1,15 @@
+- name: Write SSH config blocks for all managed hosts
+  hosts: infra
+  gather_facts: false
+  tasks:
+    - name: Write SSH config block
+      ansible.builtin.blockinfile:
+        path: "~/.ssh/config"
+        create: true
+        mode: "0600"
+        marker: "# {mark} ANSIBLE MANAGED: {{ host_name }}"
+        block: |
+          Host {{ host_name }} {{ host_name_medium }} {{ host_name_short }}
+            User {{ vault_server_username }}
+      delegate_to: localhost
+      throttle: 1
