@@ -10,6 +10,7 @@
         marker: "# {mark} ANSIBLE MANAGED: {{ host_name }}"
         block: |
           Host {{ host_name }} {{ host_name_medium }} {{ host_name_short }}
+            HostName {{ ansible_host }}
             User {{ vault_server_username }}
       delegate_to: localhost
       throttle: 1
