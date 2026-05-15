@@ -3,6 +3,7 @@
 # -------------------------------------------------------------------
 host_type: baremetal
 host_name: raspberry-pi4-8gb-norman
+host_name_medium: pi-norman
 host_name_short: norman
 host_region: ber
 host_site: xberg

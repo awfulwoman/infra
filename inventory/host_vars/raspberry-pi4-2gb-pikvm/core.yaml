@@ -3,6 +3,7 @@
 # -------------------------------------------------------------------
 host_type: baremetal
 host_name: raspberry-pi4-2gb-pikvm
+host_name_medium: pi-pikvm
 host_name_short: pikvm
 host_region: ber
 host_site: xberg

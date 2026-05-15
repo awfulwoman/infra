@@ -3,6 +3,7 @@
 # -------------------------------------------------------------------
 host_type: baremetal
 host_name: minipc-8gb-test-router
+host_name_medium: minipc-test-router
 host_name_short: test-router
 host_region: ber
 host_site: xberg

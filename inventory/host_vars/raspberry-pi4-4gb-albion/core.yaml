@@ -10,6 +10,7 @@ ansible_become_password: "{{ vault_password }}"
 # -------------------------------------------------------------------
 host_type: baremetal
 host_name: raspberry-pi4-4gb-albion
+host_name_medium: pi-albion
 host_name_short: albion
 host_region: ldn
 host_site: camden

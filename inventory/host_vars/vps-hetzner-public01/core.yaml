@@ -3,6 +3,7 @@
 # -------------------------------------------------------------------
 host_type: virtual
 host_name: vps-hetzner-public01
+host_name_medium: vps-public01
 host_name_short: public01
 host_region: hetzner
 host_site: cloud

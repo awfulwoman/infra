@@ -3,6 +3,7 @@
 # -------------------------------------------------------------------
 host_type: baremetal
 host_name: raspberry-pi5-4gb-belinda
+host_name_medium: pi-belinda
 host_name_short: belinda
 host_region: ber
 host_site: kberg

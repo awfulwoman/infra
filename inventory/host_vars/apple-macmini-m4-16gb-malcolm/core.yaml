@@ -3,13 +3,12 @@
 # -------------------------------------------------------------------
 host_type: baremetal
 host_name: apple-macmini-m4-16gb-malcolm
+host_name_medium: macmini-malcolm
 host_name_short: malcolm
 host_region: ber
 host_site: xberg
-# host_pfqdn: "{{ host_name }}.{{ host_site }}.{{ host_region }}"
-# host_fqdn: "{{ host_pfqdn }}.{{ domainname_infra }}"
-host_pfqdn: malcolm.buru-jazz
-host_fqdn: malcolm.buru-jazz.ts.net
+host_pfqdn: "{{ host_name }}.{{ host_site }}.{{ host_region }}"
+host_fqdn: "{{ host_pfqdn }}.{{ domainname_infra }}"
 host_description: "Mac Mini M4 16GB"
 
 # -------------------------------------------------------------------
