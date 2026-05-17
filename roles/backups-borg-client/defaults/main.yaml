@@ -1,0 +1,21 @@
+---
+# Connection
+borg_storage_box_port: 23
+# borg_storage_box_host: ""   # required - e.g. u123456.your-storagebox.de
+# borg_storage_box_user: ""   # required - e.g. u123456
+
+# Paths
+borg_repo_path: "./backups/{{ inventory_hostname }}"
+borg_ssh_key_path: /root/.ssh/borg_ed25519
+borg_passphrase_file: /etc/borg/passphrase
+borg_config_dir: /etc/borg
+
+# Retention
+borg_keep_daily: 7
+borg_keep_weekly: 4
+borg_keep_monthly: 6
+borg_keep_yearly: 2
+
+# Schedule (daily at 02:30 by default)
+borg_backup_hour: "2"
+borg_backup_minute: "30"

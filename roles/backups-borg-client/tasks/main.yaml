@@ -1,0 +1,128 @@
+---
+- name: Assert required variables are set
+  ansible.builtin.assert:
+    that:
+      - borg_storage_box_host is defined and borg_storage_box_host | length > 0
+      - borg_storage_box_user is defined and borg_storage_box_user | length > 0
+      - vault_borg_passphrase is defined and vault_borg_passphrase | length > 0
+    fail_msg: "borg_storage_box_host, borg_storage_box_user, and vault_borg_passphrase must be set"
+
+- name: Install borgbackup
+  become: true
+  ansible.builtin.apt:
+    name: borgbackup
+    state: present
+
+- name: Create borg config directory
+  become: true
+  ansible.builtin.file:
+    path: "{{ borg_config_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0700"
+
+- name: Ensure root .ssh directory exists
+  become: true
+  ansible.builtin.file:
+    path: /root/.ssh
+    state: directory
+    owner: root
+    group: root
+    mode: "0700"
+
+- name: Generate Borg SSH keypair
+  become: true
+  ansible.builtin.command:
+    cmd: "ssh-keygen -t ed25519 -f {{ borg_ssh_key_path }} -N '' -C 'borg@{{ inventory_hostname }}'"
+    creates: "{{ borg_ssh_key_path }}"
+
+- name: Read Borg SSH public key
+  become: true
+  ansible.builtin.slurp:
+    src: "{{ borg_ssh_key_path }}.pub"
+  register: _borg_pubkey
+
+- name: Display SSH public key for storage box registration
+  ansible.builtin.debug:
+    msg: "Add to Hetzner Storage Box authorized_keys: {{ _borg_pubkey['content'] | b64decode | trim }}"
+
+- name: Install Borg passphrase file
+  become: true
+  ansible.builtin.copy:
+    content: "{{ vault_borg_passphrase }}"
+    dest: "{{ borg_passphrase_file }}"
+    owner: root
+    group: root
+    mode: "0600"
+
+- name: Ensure root known_hosts exists
+  become: true
+  ansible.builtin.file:
+    path: /root/.ssh/known_hosts
+    state: touch
+    owner: root
+    group: root
+    mode: "0600"
+    modification_time: preserve
+    access_time: preserve
+
+- name: Scan storage box SSH host keys
+  become: true
+  ansible.builtin.command:
+    cmd: "ssh-keyscan -p {{ borg_storage_box_port }} {{ borg_storage_box_host }}"
+  register: _borg_hostkey_scan
+  changed_when: false
+  failed_when: false
+
+- name: Warn if storage box is unreachable
+  ansible.builtin.debug:
+    msg: >-
+      Could not reach {{ borg_storage_box_host }}:{{ borg_storage_box_port }} for host key scanning.
+      Add the host key manually to /root/.ssh/known_hosts before the first backup run.
+  when: _borg_hostkey_scan.rc != 0
+
+- name: Add storage box host keys to root known_hosts
+  become: true
+  ansible.builtin.known_hosts:
+    path: /root/.ssh/known_hosts
+    name: "[{{ borg_storage_box_host }}]:{{ borg_storage_box_port }}"
+    key: "[{{ borg_storage_box_host }}]:{{ borg_storage_box_port }} {{ item.split(' ', 1)[1] }}"
+    state: present
+  loop: "{{ _borg_hostkey_scan.stdout_lines | reject('match', '^#') | reject('match', '^$') | list }}"
+  when: _borg_hostkey_scan.rc == 0
+
+- name: Install borg backup script
+  become: true
+  ansible.builtin.template:
+    src: borg-backup.sh.j2
+    dest: /usr/local/sbin/borg-backup
+    owner: root
+    group: root
+    mode: "0750"
+
+- name: Install borg-backup systemd service
+  become: true
+  ansible.builtin.template:
+    src: borg-backup.service.j2
+    dest: /etc/systemd/system/borg-backup.service
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Install borg-backup systemd timer
+  become: true
+  ansible.builtin.template:
+    src: borg-backup.timer.j2
+    dest: /etc/systemd/system/borg-backup.timer
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Enable and start borg-backup timer
+  become: true
+  ansible.builtin.systemd_service:
+    name: borg-backup.timer
+    daemon_reload: true
+    enabled: true
+    state: started

@@ -44,6 +44,7 @@ Relevant roles:
 - `backups-zfs-server`: configures a host that replicates snapshots to itself via a pull mechanism. At least one host with this role is critical for backup operations.
 - `backups-zfs-client`: configures a host to enable hosts configured with `backups-zfs-server` to _pull__ dataset snapshots from it.
 - `backups-zfs-offsite`: configures a host to enable hosts configured with `backups-zfs-server` to _push_ datasets snapshots to it.
+- `backups-borg-client`: installs Borg on a source host and backs up datasets with `policy: high` or `policy: critical` directly to a Hetzner Storage Box. This is the current offsite backup mechanism.
 
 ## Advanced Dataset Policy Management
 
@@ -322,7 +323,7 @@ This table shows how each policy dictates how widely snapshots are replicated ac
 | `critical`       | TRUE    | TRUE     |
 
 - `Onsite`: Snapshots are replicated to the main onsite backup host via a pull action.
-- `Offsite`: Snapshots of that dataset on the backup host are _push_ replicated to a remote backup host.
+- `Offsite`: Datasets are backed up directly from source hosts to a Hetzner Storage Box via Borg. See [Offsite Backups](offsite-backups.md).
 
 **Onsite** replication hosts are trusted. Datasets on them are encrypted, but the ZFS key is loaded, allowing datasets to be accessed.
 

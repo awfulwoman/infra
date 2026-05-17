@@ -1,0 +1,10 @@
+[Unit]
+Description=Borg offsite backup timer
+
+[Timer]
+OnCalendar=*-*-* {{ borg_backup_hour }}:{{ borg_backup_minute }}:00
+Persistent=true
+RandomizedDelaySec=300
+
+[Install]
+WantedBy=timers.target
