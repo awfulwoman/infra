@@ -1,0 +1,31 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  op-connect-api:
+    image: 1password/connect-api:latest
+    restart: unless-stopped
+    volumes:
+      - "{{ composition_config }}/1password-credentials.json:/home/opuser/.op/1password-credentials.json:ro"
+      - "op-connect-data:/home/opuser/.op/data"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.op-connect.rule=Host(`{{ composition_onepassword_connect_subdomain }}.{{ domainname_infra }}`)"
+      - "traefik.http.routers.op-connect.tls=true"
+      - "traefik.http.routers.op-connect.tls.certresolver=letsencrypt"
+      - "traefik.http.services.op-connect.loadbalancer.server.port=8080"
+    networks:
+      - "{{ default_docker_network }}"
+
+  op-connect-sync:
+    image: 1password/connect-sync:latest
+    restart: unless-stopped
+    volumes:
+      - "{{ composition_config }}/1password-credentials.json:/home/opuser/.op/1password-credentials.json:ro"
+      - "op-connect-data:/home/opuser/.op/data"
+
+volumes:
+  op-connect-data:
+
+networks:
+  "{{ default_docker_network }}":
+    external: true
