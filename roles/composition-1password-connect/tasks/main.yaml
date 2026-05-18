@@ -25,8 +25,8 @@
 # ----------------------------
 
 - name: "Deploy 1password-credentials.json"
-  ansible.builtin.template:
-    src: credentials.j2
+  ansible.builtin.copy:
+    content: "{{ vault_onepassword_connect_credentials | b64decode }}"
     dest: "{{ composition_config }}/1password-credentials.json"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
