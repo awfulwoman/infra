@@ -2,4 +2,3 @@ dependencies:
   - role: composition-common
     vars:
       composition_name: onepassword-connect
-  - role: composition-reverseproxy

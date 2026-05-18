@@ -6,7 +6,7 @@ services:
     restart: unless-stopped
     volumes:
       - "{{ composition_config }}/1password-credentials.json:/home/opuser/.op/1password-credentials.json:ro"
-      - "{{ composition_config }}/data:/home/opuser/.op/data"
+      - "op-connect-data:/home/opuser/.op/data"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.op-connect.rule=Host(`{{ composition_onepassword_connect_subdomain }}.{{ domainname_infra }}`)"
@@ -21,7 +21,10 @@ services:
     restart: unless-stopped
     volumes:
       - "{{ composition_config }}/1password-credentials.json:/home/opuser/.op/1password-credentials.json:ro"
-      - "{{ composition_config }}/data:/home/opuser/.op/data"
+      - "op-connect-data:/home/opuser/.op/data"
+
+volumes:
+  op-connect-data:
 
 networks:
   "{{ default_docker_network }}":
