@@ -21,4 +21,4 @@
     - role: system-docker
       tags: [system, docker]
     - role: composition-1password-connect
-      tags: [compositions, connect]
+      tags: [compositions, connect, composition-1password-connect]
