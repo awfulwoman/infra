@@ -18,3 +18,7 @@
       tags: [system, zfs, system-zfs]
     - role: system-zfs-policy
       tags: [system, zfs, system-zfs-policy]
+    - role: system-docker
+      tags: [system, docker]
+    - role: composition-1password-connect
+      tags: [compositions, connect]
