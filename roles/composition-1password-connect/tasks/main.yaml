@@ -24,6 +24,14 @@
 # Specific tasks
 # ----------------------------
 
+- name: "Create data directory"
+  ansible.builtin.file:
+    path: "{{ composition_config }}/data"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0755"
+
 - name: "Deploy 1password-credentials.json"
   ansible.builtin.copy:
     content: "{{ vault_onepassword_connect_credentials | b64decode }}"
