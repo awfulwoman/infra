@@ -2,6 +2,8 @@
 name: "{{ composition_name }}"
 services:
   op-connect-api:
+    cap_add:
+      - NET_BROADCAST
     image: 1password/connect-api:latest
     restart: unless-stopped
     volumes:
@@ -13,12 +15,18 @@ services:
       - "traefik.http.routers.op-connect.tls=true"
       - "traefik.http.routers.op-connect.tls.certresolver=letsencrypt"
       - "traefik.http.services.op-connect.loadbalancer.server.port=8080"
+    env_file: .environment_vars
     networks:
       - "{{ default_docker_network }}"
 
   op-connect-sync:
+    cap_add:
+      - NET_BROADCAST
     image: 1password/connect-sync:latest
     restart: unless-stopped
+    env_file: .environment_vars
+    networks:
+      - "{{ default_docker_network }}"
     volumes:
       - "{{ composition_config }}/1password-credentials.json:/home/opuser/.op/1password-credentials.json:ro"
       - "op-connect-data:/home/opuser/.op/data"
