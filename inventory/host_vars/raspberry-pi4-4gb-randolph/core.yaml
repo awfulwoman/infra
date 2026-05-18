@@ -38,3 +38,17 @@ raspberry_pi_boot_config_location: /boot/firmware/config.txt
 # UBUNTUPRO
 # -------------------------------------------------------------------
 ubuntupro_attach: false
+
+# -------------------------------------------------------------------
+# ZFS
+# -------------------------------------------------------------------
+
+zfs:
+  fastpool:
+    vdevs:
+      - type: stripe
+        disks: "/dev/disk/by-id/usb-USB_SanDisk_3.2Gen1_04019e9fe6c6a78c38433ef74ac7c349509bbebdf62487b32caa928ab040d565e70500000000000000000000aca7d3dcff9c801891558107a32b60e7-0:0"
+    datasets:
+      compositions:
+        policy: critical
+        children_inherit_policy: true
