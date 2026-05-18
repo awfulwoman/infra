@@ -57,6 +57,7 @@ Services that support the broader infrastructure: ingress routing, DNS, and visi
 | Role                               | Description                                           |
 | ---------------------------------- | ----------------------------------------------------- |
 | `composition-reverseproxy`         | Traefik-based ingress with automatic TLS certificates |
+| `composition-1password-connect`    | Self-hosted secrets server synced from 1Password      |
 | `composition-pihole`               | Network-wide DNS ad blocker and local DNS management  |
 | `composition-watchyourlan`         | Network device discovery and monitoring               |
 | `composition-ladder`               | Privacy-preserving web proxy for bypassing paywalls   |
