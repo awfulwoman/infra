@@ -35,6 +35,20 @@ Server is pinned to `SERVER_CITIES=zurich, SERVER_COUNTRIES=switzerland`.
 
 All media services share `{{ shared_media_path }}` mounted at `/data`, with the standard Servarr folder layout (`/data/downloads/torrents`, etc.).
 
+## qBittorrent Lock File Cleanup
+
+qBittorrent writes three files on startup that are meaningless in a container context — single-instance enforcement is guaranteed by Docker, and the IPC socket for passing magnet links to a running instance is never used headlessly:
+
+| File | Purpose |
+|------|---------|
+| `lockfile` | PID-based single-instance guard |
+| `ipc-socket` | Unix socket for passing magnet URIs to a running instance |
+| `qBittorrent-data.conf.lock` | Qt config file write lock |
+
+These files live in the config volume and survive container restarts. After an unclean shutdown, the stale PID/socket causes every subsequent qbittorrent-nox startup to detect a "running" instance and exit immediately — producing a 502 from Traefik.
+
+A `custom-cont-init.d` script (`templates/qbittorrent-remove-locks.sh`) is deployed and mounted at `/custom-cont-init.d/remove-locks.sh`. LSIO containers execute scripts from this directory before s6 starts any services, so the lock files are always cleared before qbittorrent-nox launches.
+
 ## Integrations
 
 - **Traefik**: All services exposed at their respective subdomains on `{{ domainname_infra }}` with Let's Encrypt TLS.
