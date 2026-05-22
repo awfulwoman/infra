@@ -33,3 +33,10 @@
     src: meta-data.j2
     dest: "{{ ubuntu_cloud_init_mount_path }}/meta-data"
     mode: "0644"
+
+- name: Write cloud-init network-config
+  ansible.builtin.template:
+    src: network-config.j2
+    dest: "{{ ubuntu_cloud_init_mount_path }}/network-config"
+    mode: "0644"
+  when: ubuntu_cloud_init_ip | length > 0

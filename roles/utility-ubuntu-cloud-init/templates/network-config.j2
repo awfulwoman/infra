@@ -1,0 +1,10 @@
+version: 2
+ethernets:
+  {{ ubuntu_cloud_init_interface }}:
+    addresses:
+      - {{ ubuntu_cloud_init_ip }}/{{ ubuntu_cloud_init_prefix }}
+    routes:
+      - to: default
+        via: {{ ubuntu_cloud_init_gateway }}
+    nameservers:
+      addresses: {{ ubuntu_cloud_init_dns | to_json }}

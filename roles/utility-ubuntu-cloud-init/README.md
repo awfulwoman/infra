@@ -38,3 +38,20 @@ ansible-playbook playbooks/utility/ubuntu-cloud-init.yaml \
 | `ubuntu_cloud_init_ssh_pwauth` | `false` | Allow SSH password auth |
 | `ubuntu_cloud_init_package_update` | `false` | Run `apt-get update` on first boot |
 | `ubuntu_cloud_init_package_upgrade` | `false` | Run `apt-get upgrade` on first boot |
+| `ubuntu_cloud_init_ip` | `""` | Static IP address — omit or leave empty for DHCP |
+| `ubuntu_cloud_init_prefix` | `24` | Subnet prefix length |
+| `ubuntu_cloud_init_gateway` | `""` | Default gateway |
+| `ubuntu_cloud_init_interface` | `eth0` | Network interface name (check `ip link` on the target) |
+| `ubuntu_cloud_init_dns` | `[1.1.1.1, 8.8.8.8]` | DNS resolvers |
+
+## Static IP example
+
+```bash
+ansible-playbook playbooks/utility/ubuntu-cloud-init.yaml \
+  -e ubuntu_cloud_init_hostname=my-new-server \
+  -e ubuntu_cloud_init_ip=192.168.1.50 \
+  -e ubuntu_cloud_init_gateway=192.168.1.1 \
+  -e ubuntu_cloud_init_interface=enp3s0
+```
+
+The interface name varies by hardware — common values are `eth0`, `enp3s0`, `ens18`. Check with `ip link` on the target before provisioning, or look up the NIC's predictable name from its PCI slot.
