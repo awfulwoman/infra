@@ -1,0 +1,35 @@
+# Writes cloud-init seed data to a FAT32 USB drive labeled 'cidata'
+
+- name: Check cidata volume is mounted
+  ansible.builtin.stat:
+    path: "{{ ubuntu_cloud_init_mount_path }}"
+  register: ubuntu_mount_stat
+
+- name: Assert cidata volume is present
+  ansible.builtin.assert:
+    that:
+      - ubuntu_mount_stat.stat.exists
+      - ubuntu_mount_stat.stat.isdir
+    fail_msg: "{{ ubuntu_cloud_init_mount_path }} not found — format a FAT32 USB drive labeled 'cidata' and mount it."
+
+- name: Fetch SSH public keys from GitHub
+  ansible.builtin.uri:
+    url: "https://github.com/{{ ubuntu_cloud_init_github_username }}.keys"
+    return_content: true
+  register: ubuntu_github_keys_raw
+
+- name: Set SSH keys fact
+  ansible.builtin.set_fact:
+    ubuntu_github_keys: "{{ ubuntu_github_keys_raw.content.splitlines() | select('match', '.+') | list }}"
+
+- name: Write cloud-init user-data
+  ansible.builtin.template:
+    src: user-data.yaml.j2
+    dest: "{{ ubuntu_cloud_init_mount_path }}/user-data"
+    mode: "0644"
+
+- name: Write cloud-init meta-data
+  ansible.builtin.template:
+    src: meta-data.j2
+    dest: "{{ ubuntu_cloud_init_mount_path }}/meta-data"
+    mode: "0644"

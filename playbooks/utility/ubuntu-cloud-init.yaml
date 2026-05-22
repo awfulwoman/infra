@@ -1,0 +1,6 @@
+- name: Write Ubuntu cloud-init seed data to cidata USB
+  hosts: apple-macmini-m4-16gb-malcolm
+  connection: local
+  gather_facts: false
+  roles:
+    - utility-ubuntu-cloud-init

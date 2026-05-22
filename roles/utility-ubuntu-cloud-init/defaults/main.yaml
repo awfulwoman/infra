@@ -1,0 +1,12 @@
+ubuntu_cloud_init_mount_path: /Volumes/cidata
+ubuntu_cloud_init_hostname: ubuntu-server
+ubuntu_cloud_init_timezone: Europe/Berlin
+ubuntu_cloud_init_username: "{{ vault_server_username }}"
+ubuntu_cloud_init_groups:
+  - users
+  - adm
+  - sudo
+ubuntu_cloud_init_github_username: awfulwoman
+ubuntu_cloud_init_ssh_pwauth: false
+ubuntu_cloud_init_package_update: false
+ubuntu_cloud_init_package_upgrade: false

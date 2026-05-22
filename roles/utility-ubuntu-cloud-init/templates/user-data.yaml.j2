@@ -1,0 +1,21 @@
+#cloud-config
+hostname: {{ ubuntu_cloud_init_hostname }}
+timezone: {{ ubuntu_cloud_init_timezone }}
+
+users:
+  - name: {{ ubuntu_cloud_init_username }}
+    groups: {{ ubuntu_cloud_init_groups | join(',') }}
+    shell: /bin/bash
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    plain_text_passwd: "{{ vault_server_password }}"
+    lock_passwd: false
+    ssh_authorized_keys:
+{% for key in ubuntu_github_keys %}
+      - {{ key }}
+{% endfor %}
+
+enable_ssh: true
+ssh_pwauth: {{ ubuntu_cloud_init_ssh_pwauth | lower }}
+
+package_update: {{ ubuntu_cloud_init_package_update | lower }}
+package_upgrade: {{ ubuntu_cloud_init_package_upgrade | lower }}
