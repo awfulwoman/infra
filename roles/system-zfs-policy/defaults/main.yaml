@@ -55,3 +55,16 @@ system_zfs_policy_timer_monthly: "*-*-01 00:20"
 system_zfs_policy_timer_yearly: "*-01-01 00:25"
 system_zfs_policy_timer_prune: "*:30"
 system_zfs_policy_timer_cache: "*:0/5"  # Every 5 minutes
+
+# Healthchecks.io integration
+# When enabled, creates one dead-man's-switch check per snapshot type and pings
+# it after each successful run.
+system_zfs_policy_healthchecksio_enabled: false
+system_zfs_policy_healthchecksio_api_key: "{{ vault_healthchecks_rw_apikey }}"
+
+# MQTT staleness alerting
+# When enabled, publishes snapshot staleness status to MQTT after each cache update.
+system_zfs_policy_mqtt_enabled: false
+system_zfs_policy_mqtt_host: "mqtt.{{ domainname_infra }}"
+system_zfs_policy_mqtt_topic_prefix: "homeinfra/monitoring/zfs"
+system_zfs_policy_stale_threshold_multiplier: 2
