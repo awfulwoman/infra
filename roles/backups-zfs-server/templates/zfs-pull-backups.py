@@ -3,6 +3,7 @@ import subprocess
 import sys
 import argparse
 from datetime import datetime, timedelta
+import json
 import re
 import os
 import atexit
@@ -431,6 +432,54 @@ def pulldatasets(host, name, dataset, user, destination):
 
     print('\n')
 
+def get_newest_autosnap_time(dataset):
+    """Return the datetime of the newest autosnap snapshot for a local dataset, or None."""
+    snapshots = get_local_snapshots(dataset)
+    autosnap_snaps = [s for s in snapshots if s.startswith('autosnap_')]
+    if not autosnap_snaps:
+        return None
+    newest = autosnap_snaps[-1]
+    match = re.match(r'^autosnap_(\d{4}-\d{2}-\d{2}_\d{2}:\d{2}:\d{2})_', newest)
+    if match:
+        return datetime.strptime(match.group(1), "%Y-%m-%d_%H:%M:%S")
+    return None
+
+
+def publish_mqtt_status(name, datasets, destination, mqtt_host, mqtt_topic_prefix, stale_multiplier=2):
+    """Publish pull status to MQTT after a successful pull."""
+    now = datetime.now()
+    stale_threshold = timedelta(hours=stale_multiplier * 2)
+
+    stale_datasets = []
+    healthy_datasets = []
+    for dataset in datasets:
+        local_ds = f"{destination}/{name}/{dataset}"
+        newest_time = get_newest_autosnap_time(local_ds)
+        if newest_time is None or (now - newest_time) > stale_threshold:
+            stale_datasets.append(dataset)
+        else:
+            healthy_datasets.append(dataset)
+
+    topic = f"{mqtt_topic_prefix}/{name}/backups"
+    payload = json.dumps({
+        "ok": len(stale_datasets) == 0,
+        "host": name,
+        "pulled_at": now.strftime("%Y-%m-%dT%H:%M:%S"),
+        "stale_datasets": stale_datasets,
+        "healthy_datasets": healthy_datasets,
+    })
+
+    cmd = ["mosquitto_pub", "-h", mqtt_host, "-t", topic, "-m", payload]
+    try:
+        result = subprocess.run(cmd, capture_output=True, timeout=10, check=False)
+        if result.returncode != 0:
+            error(f"mosquitto_pub failed: {result.stderr.decode().strip()}")
+        else:
+            debug(f"Published MQTT status to {topic}")
+    except Exception as e:
+        error(f"Failed to publish MQTT status: {e}")
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Backup ZFS datasets from a remote host.')
     parser.add_argument('--host', help='Remote host address for SSH')
@@ -440,6 +489,9 @@ if __name__ == "__main__":
     parser.add_argument('--destination', default=DEFAULT_destination, help='Local dataset to receive backups (default: %(default)s)')
     parser.add_argument('--debug', default=DEFAULT_debug, help='Debug code', action=argparse.BooleanOptionalAction)
     parser.add_argument('--quiet', '-q', default=DEFAULT_quiet, help='Suppress informational output (errors still shown)', action=argparse.BooleanOptionalAction)
+    parser.add_argument('--mqtt-host', type=str, default=None, help='MQTT broker hostname (enables MQTT publish)')
+    parser.add_argument('--mqtt-topic-prefix', type=str, default='homeinfra/monitoring/zfs', help='MQTT topic prefix')
+    parser.add_argument('--mqtt-name', type=str, default=None, help='Host name to use in MQTT topic (defaults to --name)')
     args = parser.parse_args()
 
     _quiet = args.quiet
@@ -466,3 +518,14 @@ if __name__ == "__main__":
     signal.signal(signal.SIGHUP, signal_handler)
 
     preflight(args.host, name, args.datasets, args.user, args.destination)
+
+    if args.mqtt_host:
+        mqtt_name = args.mqtt_name if args.mqtt_name else name
+        publish_mqtt_status(
+            name=mqtt_name,
+            datasets=args.datasets,
+            destination=args.destination,
+            mqtt_host=args.mqtt_host,
+            mqtt_topic_prefix=args.mqtt_topic_prefix,
+            stale_multiplier={{ backups_zfs_server_stale_threshold_multiplier }},
+        )
