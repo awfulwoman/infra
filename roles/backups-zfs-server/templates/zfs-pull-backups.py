@@ -493,7 +493,7 @@ def publish_mqtt_status(name, datasets, destination, mqtt_host, mqtt_topic_prefi
         "healthy_datasets": healthy_datasets,
     })
 
-    cmd = ["mosquitto_pub", "-h", mqtt_host, "-t", topic, "-m", payload]
+    cmd = ["mosquitto_pub", "-h", mqtt_host, "-t", topic, "-m", payload, "-r"]
     try:
         result = subprocess.run(cmd, capture_output=True, timeout=10, check=False)
         if result.returncode != 0:
