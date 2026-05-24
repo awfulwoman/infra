@@ -93,7 +93,7 @@
         system_zfs_policy_hc_ping_urls: >-
           {{ system_zfs_policy_hc_ping_urls | default({}) | combine({item.item.type: 'https://hc-ping.com/' ~ item.uuid}) }}
       loop: "{{ _hc_checks.results }}"
-      when: item.uuid is defined and item.uuid
+      when: item.uuid is defined and item.uuid is not false
 
 - name: Deploy snapshot services
   become: true
