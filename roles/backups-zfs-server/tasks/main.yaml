@@ -239,6 +239,8 @@
       {% if backups_zfs_server_healthchecksio_enabled and _hc_uuid %}
       if [ $PULL_EXIT -eq 0 ]; then
         curl -fsS --retry 3 --max-time 10 https://hc-ping.com/{{ _hc_uuid }}
+      else
+        curl -fsS --retry 3 --max-time 10 https://hc-ping.com/{{ _hc_uuid }}/fail
       fi
       {% endif %}
       exit $PULL_EXIT
