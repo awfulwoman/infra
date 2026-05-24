@@ -1,6 +1,6 @@
 - name: ZFS Backup Clients
-  import_playbook: clients.yaml
+  import_playbook: ../zfs_backup_clients/core.yaml
 - name: ZFS Offsite Servers
-  import_playbook: offsite.yaml
+  import_playbook: ../zfs_backup_offsite/core.yaml
 - name: ZFS Backup Servers
-  import_playbook: servers.yaml
+  import_playbook: ../zfs_backup_servers/core.yaml

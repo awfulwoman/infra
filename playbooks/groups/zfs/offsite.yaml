@@ -1,9 +1,0 @@
-- name: ZFS backups offsite
-  hosts: zfs-backup-offsite
-  roles:
-    - role: system-zfs
-      tags: [system, zfs]
-    - role: backups-zfs-archive-offsite
-      tags: [backups, zfs]
-    - role: composition-zfs-api
-      tags: [compositions, zfs]
