@@ -84,6 +84,8 @@ compositions_dataset: slowpool/compositions
 backups_zfs_server_local_dataset: slowpool/backups/raw
 backups_zfs_server_offsite_enabled: false
 backups_zfs_server_offsite_bwlimit: 3M
+backups_zfs_server_healthchecksio_enabled: true
+backups_zfs_server_mqtt_enabled: true
 
 # -------------------------------------------------------------------
 # ZFS POLICY
