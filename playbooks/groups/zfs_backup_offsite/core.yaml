@@ -1,0 +1,14 @@
+- name: ZFS Backup Offsite
+  hosts: zfs_backup_offsite
+  roles:
+    - role: system-zfs
+      tags: [system, zfs, system-zfs]
+    - role: composition-zfs-api
+      tags: [compositions, zfs, composition-zfs-api]
+    - role: backups-zfs-archive-offsite
+      tags: [zfs, backups-zfs-archive-offsite]
+
+  handlers:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:
