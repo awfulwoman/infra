@@ -458,6 +458,7 @@ def publish_mqtt_discovery(name, mqtt_host, mqtt_topic_prefix):
         "payload_off": "OFF",
         "device_class": "problem",
         "unique_id": f"zfs_backups_{safe_id}",
+        "json_attributes_topic": state_topic,
     })
     cmd = ["mosquitto_pub", "-h", mqtt_host, "-t", discovery_topic, "-m", payload, "-r"]
     try:
