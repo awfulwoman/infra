@@ -149,6 +149,19 @@
   notify:
     - Reload systemd daemon
 
+- name: Stat cache file path
+  become: true
+  ansible.builtin.stat:
+    path: "{{ system_zfs_policy_cache_file }}"
+  register: _cache_file_stat
+
+- name: Remove cache file path if it is a directory (stale state from old role version)
+  become: true
+  ansible.builtin.file:
+    path: "{{ system_zfs_policy_cache_file }}"
+    state: absent
+  when: _cache_file_stat.stat.exists and _cache_file_stat.stat.isdir
+
 - name: Ensure cache directory exists
   become: true
   ansible.builtin.file:
