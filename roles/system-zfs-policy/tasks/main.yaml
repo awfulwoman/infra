@@ -89,10 +89,10 @@
         grace: "{{ item.grace }}"
         tz: Europe/Berlin
       loop:
-        - { type: hourly,  schedule: "@hourly",  grace: 5400  }
-        - { type: daily,   schedule: "@daily",   grace: 90000 }
-        - { type: monthly, schedule: "@monthly", grace: 2764800 }
-        - { type: yearly,  schedule: "@yearly",  grace: 34128000 }
+        - { type: hourly,  schedule: "0 * * * *",  grace: 5400    }
+        - { type: daily,   schedule: "0 0 * * *",  grace: 90000   }
+        - { type: monthly, schedule: "0 0 1 * *",  grace: 2764800 }
+        - { type: yearly,  schedule: "0 0 1 1 *",  grace: 2592000 }
       register: _hc_checks
 
     - name: Build HC ping URL map
