@@ -49,6 +49,7 @@ zfs:
       compositions:
         state: present
         policy: critical
+        snapshots_discover_children: true
 
 # -------------------------------------------------------------------
 # MISC
@@ -69,3 +70,9 @@ cnames:
   - esphome.{{ domainname_infra }}
   - mctest.{{ domainname_infra }}
   - lan.{{ domainname_infra }}
+
+# -------------------------------------------------------------------
+# ZFS POLICY
+# -------------------------------------------------------------------
+system_zfs_policy_healthchecksio_enabled: true
+system_zfs_policy_mqtt_enabled: true

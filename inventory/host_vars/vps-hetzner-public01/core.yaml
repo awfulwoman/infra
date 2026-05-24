@@ -48,6 +48,7 @@ zfs:
     datasets:
       compositions:
         policy: critical
+        snapshots_discover_children: true
       sites:
         datasets:
           awfulwoman:
@@ -63,3 +64,9 @@ zfs:
 
 traefik_providers:
   - gotosocial
+
+# -------------------------------------------------------------------
+# ZFS POLICY
+# -------------------------------------------------------------------
+system_zfs_policy_healthchecksio_enabled: true
+system_zfs_policy_mqtt_enabled: true

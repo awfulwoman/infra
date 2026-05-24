@@ -52,6 +52,7 @@ zfs:
       compositions:
         policy: critical
         children_inherit_policy: true
+        snapshots_discover_children: true
         datasets:
           awfulwoman:
             policy: none
@@ -95,3 +96,9 @@ system_claude_settings_path: "/fastpool/claude/settings"
 # -------------------------------------------------------------------
 # bootstrap_ubuntu_apt_packages_extra:
 #   - terraform
+
+# -------------------------------------------------------------------
+# ZFS POLICY
+# -------------------------------------------------------------------
+system_zfs_policy_healthchecksio_enabled: true
+system_zfs_policy_mqtt_enabled: true

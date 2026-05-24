@@ -52,3 +52,10 @@ zfs:
       compositions:
         policy: critical
         children_inherit_policy: true
+        snapshots_discover_children: true
+
+# -------------------------------------------------------------------
+# ZFS POLICY
+# -------------------------------------------------------------------
+system_zfs_policy_healthchecksio_enabled: true
+system_zfs_policy_mqtt_enabled: true
