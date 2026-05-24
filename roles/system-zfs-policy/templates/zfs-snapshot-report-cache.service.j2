@@ -4,7 +4,12 @@ After=zfs.target
 
 [Service]
 Type=oneshot
-ExecStart={{ system_zfs_policy_script_path }}/zfs-snapshot-report --cache-file {{ system_zfs_policy_cache_file }}
+ExecStart={{ system_zfs_policy_script_path }}/zfs-snapshot-report \
+  --cache-file {{ system_zfs_policy_cache_file }}{% if system_zfs_policy_mqtt_enabled %} \
+  --mqtt-publish \
+  --mqtt-host {{ system_zfs_policy_mqtt_host }} \
+  --mqtt-topic {{ system_zfs_policy_mqtt_topic_prefix }}/{{ host_name }}/snapshots{% endif %}
+
 StandardOutput=journal
 StandardError=journal
 

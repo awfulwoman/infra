@@ -6,6 +6,13 @@
     fail_msg: "The 'zfs' variable must be defined in host_vars to use this role"
     quiet: true
 
+- name: Install mosquitto-clients for MQTT publishing
+  become: true
+  when: system_zfs_policy_mqtt_enabled
+  ansible.builtin.apt:
+    name: mosquitto-clients
+    state: present
+
 - name: Ensure script directory exists
   become: true
   ansible.builtin.file:
