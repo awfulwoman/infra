@@ -5,8 +5,8 @@ After=zfs.target
 [Service]
 Type=oneshot
 ExecStart={{ system_zfs_policy_script_path }}/zfs-snapshot --type monthly
-{% if system_zfs_policy_healthchecksio_enabled and system_zfs_policy_hc_ping_urls is defined %}
-ExecStartPost=curl -fsS --retry 3 --max-time 10 {{ system_zfs_policy_hc_ping_urls['monthly'] }}
+{% if system_zfs_policy_healthchecksio_enabled and system_zfs_policy_hc_ping_url is defined %}
+ExecStartPost=curl -fsS --retry 3 --max-time 10 {{ system_zfs_policy_hc_ping_url }}
 {% endif %}
 StandardOutput=journal
 StandardError=journal
