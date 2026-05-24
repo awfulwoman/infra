@@ -14,3 +14,15 @@ backups_zfs_server_offsite_group: zfs-backup-offsite # The ansible group contain
 backups_zfs_server_offsite_cron_hour: "2" # Run offsite push at 2 AM (after pull completes)
 backups_zfs_server_offsite_cron_minute: "30"
 backups_zfs_server_offsite_bwlimit: "" # Bandwidth limit (e.g., "10m" for 10MB/s), empty for unlimited
+
+# Healthchecks.io integration
+# When enabled, creates one check per client host and pings after each successful pull.
+backups_zfs_server_healthchecksio_enabled: false
+backups_zfs_server_healthchecksio_api_key: "{{ vault_healthchecks_rw_apikey }}"
+
+# MQTT staleness alerting
+# When enabled, publishes pull status to MQTT after each successful pull.
+backups_zfs_server_mqtt_enabled: false
+backups_zfs_server_mqtt_host: "mqtt.{{ domainname_infra }}"
+backups_zfs_server_mqtt_topic_prefix: "homeinfra/monitoring/zfs"
+backups_zfs_server_stale_threshold_multiplier: 2
