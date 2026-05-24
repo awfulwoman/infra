@@ -12,6 +12,7 @@ import subprocess
 import sys
 import argparse
 import re
+from datetime import datetime, timedelta
 
 # Policy definitions (injected by Ansible)
 POLICIES = json.loads(r'''{{ system_zfs_policy_definitions | to_json }}''')
@@ -28,6 +29,15 @@ SNAPSHOT_PATTERN = re.compile(
 )
 
 SNAPSHOT_TYPES = ['hourly', 'daily', 'monthly', 'yearly']
+
+STALE_MULTIPLIER = {{ system_zfs_policy_stale_threshold_multiplier }}
+
+STALE_THRESHOLDS = {
+    'hourly':  timedelta(hours=STALE_MULTIPLIER),
+    'daily':   timedelta(days=STALE_MULTIPLIER),
+    'monthly': timedelta(days=30 * STALE_MULTIPLIER),
+    'yearly':  timedelta(days=365 * STALE_MULTIPLIER),
+}
 
 _debug = False
 
@@ -197,6 +207,65 @@ def get_unmanaged_datasets(all_snapshots_grouped):
             })
 
     return unmanaged
+
+
+def get_most_granular_interval(policy_name):
+    """Return the finest interval with retention > 0 for the given policy, or None."""
+    policy_def = POLICIES.get(policy_name, POLICIES['none'])
+    for interval in SNAPSHOT_TYPES:
+        if policy_def.get(interval, 0) > 0:
+            return interval
+    return None
+
+
+def check_staleness(managed_datasets, all_snapshots_grouped):
+    """Return (stale, healthy) lists of dataset names."""
+    stale = []
+    healthy = []
+    now = datetime.now()
+
+    for ds_info in managed_datasets:
+        dataset = ds_info['dataset']
+        policy = ds_info['policy']
+        interval = get_most_granular_interval(policy)
+
+        if interval is None:
+            continue  # policy=none, not monitored
+
+        snapshots = all_snapshots_grouped.get(dataset, [])
+        interval_snaps = [s for s in snapshots if parse_snapshot(s) and parse_snapshot(s)[1] == interval]
+
+        if not interval_snaps:
+            stale.append(dataset)
+            continue
+
+        newest_ts_str, _ = parse_snapshot(interval_snaps[-1])
+        newest_dt = datetime.strptime(newest_ts_str, "%Y-%m-%d_%H:%M:%S")
+
+        if (now - newest_dt) > STALE_THRESHOLDS[interval]:
+            stale.append(dataset)
+        else:
+            healthy.append(dataset)
+
+    return stale, healthy
+
+
+def publish_mqtt(host_name, stale, healthy, mqtt_host, mqtt_topic):
+    """Publish snapshot status to MQTT via mosquitto_pub."""
+    payload = json.dumps({
+        "ok": len(stale) == 0,
+        "host": host_name,
+        "checked_at": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
+        "stale": stale,
+        "healthy": healthy,
+    })
+    cmd = ["mosquitto_pub", "-h", mqtt_host, "-t", mqtt_topic, "-m", payload]
+    try:
+        result = subprocess.run(cmd, capture_output=True, timeout=10, check=False)
+        if result.returncode != 0:
+            error(f"mosquitto_pub failed: {result.stderr.decode().strip()}")
+    except Exception as e:
+        error(f"Failed to publish MQTT: {e}")
 
 
 def gather_report_data():
@@ -372,11 +441,41 @@ def main():
         metavar='PATH',
         help='Write JSON output to cache file (for API consumption)'
     )
+    parser.add_argument(
+        '--mqtt-publish',
+        action='store_true',
+        help='Publish staleness status to MQTT'
+    )
+    parser.add_argument(
+        '--mqtt-host',
+        type=str,
+        default='localhost',
+        help='MQTT broker hostname'
+    )
+    parser.add_argument(
+        '--mqtt-topic',
+        type=str,
+        help='MQTT topic to publish to'
+    )
     args = parser.parse_args()
 
     _debug = args.debug
 
     report = gather_report_data()
+
+    if args.mqtt_publish:
+        if not args.mqtt_topic:
+            error("--mqtt-topic is required with --mqtt-publish")
+            sys.exit(1)
+        all_snaps = get_all_snapshots_grouped()
+        stale, healthy = check_staleness(report['managed'], all_snaps)
+        publish_mqtt(
+            host_name="{{ host_name }}",
+            stale=stale,
+            healthy=healthy,
+            mqtt_host=args.mqtt_host,
+            mqtt_topic=args.mqtt_topic,
+        )
 
     # If cache file specified, write JSON to it atomically
     if args.cache_file:
