@@ -250,6 +250,28 @@ def check_staleness(managed_datasets, all_snapshots_grouped):
     return stale, healthy
 
 
+def publish_mqtt_discovery(host_name, mqtt_host, state_topic):
+    """Publish HA MQTT discovery config for the snapshot binary sensor."""
+    safe_id = host_name.replace('-', '_').replace('.', '_')
+    discovery_topic = f"homeassistant/binary_sensor/zfs_snapshots_{safe_id}/config"
+    payload = json.dumps({
+        "name": f"{host_name} ZFS Snapshots",
+        "state_topic": state_topic,
+        "value_template": "{{ '{{' }} 'ON' if not value_json.ok else 'OFF' {{ '}}' }}",
+        "payload_on": "ON",
+        "payload_off": "OFF",
+        "device_class": "problem",
+        "unique_id": f"zfs_snapshots_{safe_id}",
+    })
+    cmd = ["mosquitto_pub", "-h", mqtt_host, "-t", discovery_topic, "-m", payload, "-r"]
+    try:
+        result = subprocess.run(cmd, capture_output=True, timeout=10, check=False)
+        if result.returncode != 0:
+            error(f"mosquitto_pub discovery failed: {result.stderr.decode().strip()}")
+    except Exception as e:
+        error(f"Failed to publish MQTT discovery: {e}")
+
+
 def publish_mqtt(host_name, stale, healthy, mqtt_host, mqtt_topic):
     """Publish snapshot status to MQTT via mosquitto_pub."""
     payload = json.dumps({
@@ -469,6 +491,7 @@ def main():
             sys.exit(1)
         all_snaps = get_all_snapshots_grouped()
         stale, healthy = check_staleness(report['managed'], all_snaps)
+        publish_mqtt_discovery("{{ host_name }}", args.mqtt_host, args.mqtt_topic)
         publish_mqtt(
             host_name="{{ host_name }}",
             stale=stale,

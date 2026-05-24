@@ -445,6 +445,29 @@ def get_newest_autosnap_time(dataset):
     return None
 
 
+def publish_mqtt_discovery(name, mqtt_host, mqtt_topic_prefix):
+    """Publish HA MQTT discovery config for the pull binary sensor."""
+    safe_id = name.replace('-', '_').replace('.', '_')
+    state_topic = f"{mqtt_topic_prefix}/{name}/backups"
+    discovery_topic = f"homeassistant/binary_sensor/zfs_backups_{safe_id}/config"
+    payload = json.dumps({
+        "name": f"{name} ZFS Backups",
+        "state_topic": state_topic,
+        "value_template": "{{ '{{' }} 'ON' if not value_json.ok else 'OFF' {{ '}}' }}",
+        "payload_on": "ON",
+        "payload_off": "OFF",
+        "device_class": "problem",
+        "unique_id": f"zfs_backups_{safe_id}",
+    })
+    cmd = ["mosquitto_pub", "-h", mqtt_host, "-t", discovery_topic, "-m", payload, "-r"]
+    try:
+        result = subprocess.run(cmd, capture_output=True, timeout=10, check=False)
+        if result.returncode != 0:
+            error(f"mosquitto_pub discovery failed: {result.stderr.decode().strip()}")
+    except Exception as e:
+        error(f"Failed to publish MQTT discovery: {e}")
+
+
 def publish_mqtt_status(name, datasets, destination, mqtt_host, mqtt_topic_prefix, stale_multiplier=2):
     """Publish pull status to MQTT after a successful pull."""
     now = datetime.now()
@@ -521,6 +544,7 @@ if __name__ == "__main__":
 
     if args.mqtt_host:
         mqtt_name = args.mqtt_name if args.mqtt_name else name
+        publish_mqtt_discovery(mqtt_name, args.mqtt_host, args.mqtt_topic_prefix)
         publish_mqtt_status(
             name=mqtt_name,
             datasets=args.datasets,
