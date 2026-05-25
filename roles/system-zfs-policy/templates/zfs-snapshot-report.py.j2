@@ -260,7 +260,7 @@ def publish_mqtt_discovery(host_name, mqtt_host, state_topic):
         "value_template": "{{ '{{' }} 'ON' if not value_json.ok else 'OFF' {{ '}}' }}",
         "payload_on": "ON",
         "payload_off": "OFF",
-        "device_class": "problem",
+        "device_class": "safety",
         "unique_id": f"zfs_snapshots_{safe_id}",
         "json_attributes_topic": state_topic,
     })
@@ -273,7 +273,7 @@ def publish_mqtt_discovery(host_name, mqtt_host, state_topic):
         error(f"Failed to publish MQTT discovery: {e}")
 
 
-def publish_mqtt(host_name, stale, healthy, mqtt_host, mqtt_topic):
+def publish_mqtt(host_name, stale, healthy, managed, mqtt_host, mqtt_topic):
     """Publish snapshot status to MQTT via mosquitto_pub."""
     payload = json.dumps({
         "ok": len(stale) == 0,
@@ -281,6 +281,7 @@ def publish_mqtt(host_name, stale, healthy, mqtt_host, mqtt_topic):
         "checked_at": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
         "stale": stale,
         "healthy": healthy,
+        "datasets": [d for d in managed if d["policy"] != "none"],
     })
     cmd = ["mosquitto_pub", "-h", mqtt_host, "-t", mqtt_topic, "-m", payload, "-r"]
     try:
@@ -497,6 +498,7 @@ def main():
             host_name="{{ host_name }}",
             stale=stale,
             healthy=healthy,
+            managed=report['managed'],
             mqtt_host=args.mqtt_host,
             mqtt_topic=args.mqtt_topic,
         )

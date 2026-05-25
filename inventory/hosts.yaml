@@ -87,7 +87,7 @@ all:
         vps-hetzner-public01:
         raspberry-pi5-4gb-belinda:
         raspberry-pi4-2gb-deedee:
-        # raspberry-pi4-4gb-randolph:
+        raspberry-pi4-4gb-randolph:
         # raspberry-pi4-8gb-norman:
 
     # -------------------------------------------------------------------
@@ -100,7 +100,7 @@ all:
         minipc-8gb-homebrain:
         vps-hetzner-public01:
         raspberry-pi4-2gb-deedee:
-        # raspberry-pi4-4gb-randolph:
+        raspberry-pi4-4gb-randolph:
         # raspberry-pi4-8gb-norman:
 
     # -------------------------------------------------------------------

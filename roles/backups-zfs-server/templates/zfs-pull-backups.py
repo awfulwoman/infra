@@ -456,7 +456,7 @@ def publish_mqtt_discovery(name, mqtt_host, mqtt_topic_prefix):
         "value_template": "{{ '{{' }} 'ON' if not value_json.ok else 'OFF' {{ '}}' }}",
         "payload_on": "ON",
         "payload_off": "OFF",
-        "device_class": "problem",
+        "device_class": "safety",
         "unique_id": f"zfs_backups_{safe_id}",
         "json_attributes_topic": state_topic,
     })
