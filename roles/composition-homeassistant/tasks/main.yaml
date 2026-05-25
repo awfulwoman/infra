@@ -64,6 +64,7 @@
     mode: "0644"
   loop:
     - zfs-snapshot-card.js
+    - zfs-backup-card.js
 
 - name: Run Configure DNS role
   ansible.builtin.include_role:
