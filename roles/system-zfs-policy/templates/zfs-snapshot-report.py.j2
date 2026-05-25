@@ -90,6 +90,38 @@ def get_all_snapshots_grouped():
         return {}
 
 
+def get_zfs_children(dataset):
+    """Query ZFS for all child datasets under a parent (excluding the parent itself)."""
+    cmd = ["zfs", "list", "-H", "-o", "name", "-r", dataset]
+    try:
+        result = subprocess.run(cmd, capture_output=True, check=False)
+        if result.returncode != 0:
+            debug(f"Could not list children of {dataset}: {result.stderr.decode().strip()}")
+            return []
+        all_datasets = result.stdout.decode().strip().splitlines()
+        return [ds for ds in all_datasets if ds != dataset]
+    except Exception as e:
+        debug(f"Error discovering children of {dataset}: {e}")
+        return []
+
+
+def expand_datasets_with_children(datasets):
+    """Expand datasets with snapshots_discover_children=true by querying ZFS at runtime.
+
+    Children inherit the parent's policy, mirroring the snapshot script's behavior.
+    """
+    declared = {ds['dataset'] for ds in datasets}
+    expanded = []
+    for ds_info in datasets:
+        expanded.append(ds_info)
+        if ds_info.get('snapshots_discover_children', False):
+            for child in get_zfs_children(ds_info['dataset']):
+                if child not in declared:
+                    debug(f"  Discovered child: {child} (inheriting policy: {ds_info['policy']})")
+                    expanded.append({'dataset': child, 'policy': ds_info['policy']})
+    return expanded
+
+
 def get_snapshots(dataset, all_snapshots_grouped=None):
     """Get all snapshots for a dataset.
 
@@ -181,14 +213,15 @@ def get_all_system_datasets():
         return []
 
 
-def get_unmanaged_datasets(all_snapshots_grouped):
+def get_unmanaged_datasets(all_snapshots_grouped, expanded_datasets):
     """Get datasets that exist on the system but are not in policy structure.
 
     Args:
         all_snapshots_grouped: Dict mapping dataset name to list of snapshots
+        expanded_datasets: Full list of managed datasets including discovered children
     """
     system_datasets = get_all_system_datasets()
-    managed_datasets = {ds['dataset'] for ds in DATASETS}
+    managed_datasets = {ds['dataset'] for ds in expanded_datasets}
 
     unmanaged = []
     for dataset in system_datasets:
@@ -297,9 +330,10 @@ def gather_report_data():
     # Get all snapshots in a single command for performance
     all_snapshots_grouped = get_all_snapshots_grouped()
 
+    expanded_datasets = expand_datasets_with_children(DATASETS)
     managed = []
 
-    for ds_info in DATASETS:
+    for ds_info in expanded_datasets:
         dataset = ds_info['dataset']
         policy = ds_info['policy']
         policy_name = get_policy_name(policy)
@@ -317,7 +351,7 @@ def gather_report_data():
             'retention': retention,
         })
 
-    unmanaged = get_unmanaged_datasets(all_snapshots_grouped)
+    unmanaged = get_unmanaged_datasets(all_snapshots_grouped, expanded_datasets)
 
     return {
         'managed': managed,
