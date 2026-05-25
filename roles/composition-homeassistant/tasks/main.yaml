@@ -47,6 +47,24 @@
   notify:
     - Restart HA
 
+- name: Ensure HA www directory exists
+  ansible.builtin.file:
+    path: "{{ composition_root }}/config/homeassistant/www"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0755"
+
+- name: Deploy custom Lovelace cards
+  ansible.builtin.template:
+    src: "ha/www/{{ item }}"
+    dest: "{{ composition_root }}/config/homeassistant/www/{{ item }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0644"
+  loop:
+    - zfs-snapshot-card.js
+
 - name: Run Configure DNS role
   ansible.builtin.include_role:
     name: "network-register-subdomain"
