@@ -1,0 +1,23 @@
+TZ="Europe/Berlin"
+
+# Postgres
+POSTGRES_DB=paperless
+POSTGRES_USER=paperless
+POSTGRES_PASSWORD={{ paperless_ngx_db_password }}
+
+# paperless-ngx
+PAPERLESS_REDIS=redis://broker:6379
+PAPERLESS_DBHOST=db
+PAPERLESS_DBNAME=paperless
+PAPERLESS_DBUSER=paperless
+PAPERLESS_DBPASS={{ paperless_ngx_db_password }}
+PAPERLESS_SECRET_KEY={{ paperless_ngx_secret_key }}
+PAPERLESS_URL=https://paperless.{{ domainname_infra }}
+PAPERLESS_TIME_ZONE=Europe/Berlin
+PAPERLESS_OCR_LANGUAGE=eng
+PAPERLESS_TIKA_ENABLED=1
+PAPERLESS_TIKA_GOTENBERG_ENDPOINT=http://gotenberg:3000
+PAPERLESS_TIKA_ENDPOINT=http://tika:9998
+PAPERLESS_ADMIN_USER={{ paperless_ngx_admin_user }}
+PAPERLESS_ADMIN_PASSWORD={{ paperless_ngx_admin_password }}
+PAPERLESS_ADMIN_MAIL={{ paperless_ngx_admin_mail }}

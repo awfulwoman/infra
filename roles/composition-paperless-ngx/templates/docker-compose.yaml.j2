@@ -1,0 +1,89 @@
+name: "{{ composition_name }}"
+services:
+  broker:
+    container_name: paperless_redis
+    image: docker.io/library/redis:7
+    restart: unless-stopped
+    volumes:
+      - "{{ composition_config }}/redis:/data"
+    networks:
+      - "{{ default_docker_network }}"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  db:
+    container_name: paperless_db
+    image: docker.io/library/postgres:16
+    restart: unless-stopped
+    env_file: .environment_vars
+    volumes:
+      - "{{ composition_config }}/postgres:/var/lib/postgresql/data"
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U paperless -d paperless"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  gotenberg:
+    container_name: paperless_gotenberg
+    image: docker.io/gotenberg/gotenberg:8
+    restart: unless-stopped
+    command:
+      - "gotenberg"
+      - "--chromium-disable-javascript=true"
+      - "--chromium-allow-list=file:///tmp/.*"
+    networks:
+      - "{{ default_docker_network }}"
+
+  tika:
+    container_name: paperless_tika
+    image: docker.io/apache/tika:latest
+    restart: unless-stopped
+    networks:
+      - "{{ default_docker_network }}"
+
+  webserver:
+    container_name: paperless_webserver
+    image: ghcr.io/paperless-ngx/paperless-ngx:latest
+    restart: unless-stopped
+    env_file: .environment_vars
+    depends_on:
+      db:
+        condition: service_healthy
+      broker:
+        condition: service_healthy
+      gotenberg:
+        condition: service_started
+      tika:
+        condition: service_started
+    volumes:
+      - "{{ composition_config }}/data:/usr/src/paperless/data"
+      - "{{ composition_config }}/media:/usr/src/paperless/media"
+      - "{{ composition_config }}/export:/usr/src/paperless/export"
+      - "{{ composition_config }}/consume:/usr/src/paperless/consume"
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.paperless.rule=Host(`paperless.{{ domainname_infra }}`)"
+      - "traefik.http.routers.paperless.tls=true"
+      - "traefik.http.routers.paperless.tls.certresolver=letsencrypt"
+      - "traefik.http.services.paperless.loadbalancer.server.port=8000"
+    healthcheck:
+      test: ["CMD", "curl", "-fs", "-S", "--max-time", "2", "http://localhost:8000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 1m
+
+networks:
+  "{{ default_docker_network }}":
+    external: true

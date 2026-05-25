@@ -1,0 +1,11 @@
+# Composition name (used by composition-common dependency)
+composition_name: paperless-ngx
+
+composition_paperless_ngx_subdomains:
+  - paperless
+
+paperless_ngx_db_password: "{{ vault_paperless_ngx_db_password }}"
+paperless_ngx_secret_key: "{{ vault_paperless_ngx_secret_key }}"
+paperless_ngx_admin_user: admin
+paperless_ngx_admin_password: "{{ vault_paperless_ngx_admin_password }}"
+paperless_ngx_admin_mail: "{{ vault_paperless_ngx_admin_mail }}"

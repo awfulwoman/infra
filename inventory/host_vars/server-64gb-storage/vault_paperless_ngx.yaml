@@ -1,0 +1,5 @@
+# Encrypt this file with: ansible-vault encrypt inventory/host_vars/server-64gb-storage/vault_paperless_ngx.yaml
+vault_paperless_ngx_db_password: CHANGEME
+vault_paperless_ngx_secret_key: CHANGEME
+vault_paperless_ngx_admin_password: CHANGEME
+vault_paperless_ngx_admin_mail: CHANGEME
