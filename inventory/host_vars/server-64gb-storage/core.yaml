@@ -178,3 +178,4 @@ cnames:
   - translate.{{ domainname_infra }}
   - loki.{{ domainname_infra }}
   - chat.{{ domainname_infra }}
+  - paperless.{{ domainname_infra }}
