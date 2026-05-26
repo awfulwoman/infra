@@ -27,19 +27,18 @@ class ZfsBackupCard extends HTMLElement {
       ? new Date(attrs.pulled_at).toLocaleString(undefined, { dateStyle: 'short', timeStyle: 'short' })
       : '';
 
-    const staleRows = stale.map(ds => `
-      <div class="row">
-        <span class="icon bad">✕</span>
-        <span class="dataset bad" title="${ds}">${ds}</span>
-      </div>
-    `).join('');
+    const renderRow = (ds, bad) => {
+      const name = typeof ds === 'object' ? ds.dataset : ds;
+      const policy = typeof ds === 'object' ? ds.policy : null;
+      const badge = policy ? `<span class="policy policy-${policy}">${policy}</span>` : '';
+      return `<div class="row">
+        <span class="icon ${bad ? 'bad' : 'ok'}">${bad ? '✕' : '✓'}</span>
+        <span class="dataset ${bad ? 'bad' : ''}" title="${name}">${name}${badge}</span>
+      </div>`;
+    };
 
-    const healthyRows = healthy.map(ds => `
-      <div class="row">
-        <span class="icon ok">✓</span>
-        <span class="dataset" title="${ds}">${ds}</span>
-      </div>
-    `).join('');
+    const staleRows = stale.map(ds => renderRow(ds, true)).join('');
+    const healthyRows = healthy.map(ds => renderRow(ds, false)).join('');
 
     this.shadowRoot.innerHTML = `
       <ha-card>
@@ -110,6 +109,23 @@ class ZfsBackupCard extends HTMLElement {
             white-space: nowrap;
           }
           .dataset.bad { color: var(--bad); font-weight: 500; }
+          .policy {
+            display: inline-block;
+            font-family: var(--font-family-body, sans-serif);
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            padding: 1px 4px;
+            border-radius: 3px;
+            margin-left: 4px;
+            vertical-align: middle;
+            opacity: 0.75;
+          }
+          .policy-critical { background: rgba(244,67,54,0.15); color: var(--error-color, #f44336); }
+          .policy-high     { background: rgba(255,152,0,0.15); color: var(--warning-color, #ff9800); }
+          .policy-low      { background: rgba(33,150,243,0.15); color: var(--info-color, #2196f3); }
+          .policy-none     { background: rgba(0,0,0,0.07); color: var(--secondary-text-color); }
           .missing { padding: 16px; color: var(--bad); font-size: 13px; }
         </style>
         <div class="header">

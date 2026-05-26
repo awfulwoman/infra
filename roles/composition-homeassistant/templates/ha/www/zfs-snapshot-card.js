@@ -39,7 +39,10 @@ class ZfsSnapshotCard extends HTMLElement {
         return `<td class="${bad ? 'bad' : ''}">${count}<span class="retain">/${retain}</span></td>`;
       }).join('');
       return `<tr class="${isStale ? 'stale-row' : ''}">
-        <td class="dataset" title="${d.dataset}">${d.dataset}</td>
+        <td class="dataset" title="${d.dataset}">
+          ${d.dataset}
+          <span class="policy policy-${d.policy}">${d.policy}</span>
+        </td>
         ${cells}
       </tr>`;
     }).join('');
@@ -115,6 +118,23 @@ class ZfsSnapshotCard extends HTMLElement {
           td:not(.dataset) { text-align: right; }
           td.bad { color: var(--bad); font-weight: 500; }
           .retain { color: var(--muted); font-weight: normal; }
+          .policy {
+            display: inline-block;
+            font-family: var(--font-family-body, sans-serif);
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            padding: 1px 4px;
+            border-radius: 3px;
+            margin-left: 4px;
+            vertical-align: middle;
+            opacity: 0.75;
+          }
+          .policy-critical { background: rgba(244,67,54,0.15); color: var(--bad); }
+          .policy-high     { background: rgba(255,152,0,0.15); color: var(--warn); }
+          .policy-low      { background: rgba(33,150,243,0.15); color: var(--info-color, #2196f3); }
+          .policy-none     { background: rgba(0,0,0,0.07); color: var(--muted); }
           tr.stale-row td { background: rgba(244, 67, 54, 0.06); }
           tr:last-child td { border-bottom: none; }
           .missing { padding: 16px; color: var(--bad); font-size: 13px; }
