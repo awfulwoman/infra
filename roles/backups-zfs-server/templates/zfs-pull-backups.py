@@ -469,14 +469,44 @@ def publish_mqtt_discovery(name, mqtt_host, mqtt_topic_prefix):
         error(f"Failed to publish MQTT discovery: {e}")
 
 
+def get_local_backup_datasets(name, datasets, destination):
+    """Return all local datasets under this host's backup destination.
+
+    Expands each requested dataset to include its local children, so that
+    discovered children (pulled via snapshots_discover_children) are reported.
+    """
+    result_datasets = []
+    for dataset in datasets:
+        local_parent = f"{destination}/{name}/{dataset}"
+        try:
+            result = subprocess.run(
+                ["zfs", "list", "-H", "-o", "name", "-r", local_parent],
+                capture_output=True, check=False
+            )
+            if result.returncode == 0:
+                children = result.stdout.decode().strip().splitlines()
+                # Strip the destination prefix to get relative dataset names
+                prefix = f"{destination}/{name}/"
+                result_datasets.extend(
+                    ds[len(prefix):] for ds in children if ds.startswith(prefix)
+                )
+            else:
+                result_datasets.append(dataset)
+        except Exception:
+            result_datasets.append(dataset)
+    return result_datasets
+
+
 def publish_mqtt_status(name, datasets, destination, mqtt_host, mqtt_topic_prefix, stale_multiplier=2):
     """Publish pull status to MQTT after a successful pull."""
     now = datetime.now()
     stale_threshold = timedelta(hours=stale_multiplier * 2)
 
+    all_datasets = get_local_backup_datasets(name, datasets, destination)
+
     stale_datasets = []
     healthy_datasets = []
-    for dataset in datasets:
+    for dataset in all_datasets:
         local_ds = f"{destination}/{name}/{dataset}"
         newest_time = get_newest_autosnap_time(local_ds)
         if newest_time is None or (now - newest_time) > stale_threshold:
