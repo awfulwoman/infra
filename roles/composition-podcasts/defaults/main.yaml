@@ -1,5 +1,0 @@
-# Composition name (used by composition-common dependency)
-composition_name: podcasts
-
-composition_podcasts_subdomains:
-  - podcasts
