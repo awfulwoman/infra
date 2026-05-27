@@ -2,7 +2,7 @@ name: "{{ composition_name }}"
 services:
   broker:
     container_name: paperless_redis
-    image: docker.io/library/redis:7
+    image: docker.io/library/redis:8
     restart: unless-stopped
     volumes:
       - "{{ composition_config }}/redis:/data"
