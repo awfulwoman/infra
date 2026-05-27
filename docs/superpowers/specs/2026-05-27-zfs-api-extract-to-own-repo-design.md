@@ -17,10 +17,13 @@ Move the Python application currently embedded in `roles/composition-zfs-api/fil
 
 **CI: `.github/workflows/docker.yaml`**
 - Trigger: push to `main`
-- Builds image and pushes `ghcr.io/awfulwoman/zfs-api:latest` to GHCR
+- Multi-arch build for `linux/amd64` and `linux/arm64` — the fleet includes `raspberry-pi4-4gb-albion` (ARM64). Uses `docker/setup-qemu-action`, `docker/setup-buildx-action`, `docker/login-action`, and `docker/build-push-action` with `platforms: linux/amd64,linux/arm64`.
+- Pushes `ghcr.io/awfulwoman/zfs-api:latest` to GHCR
 - Repository is public; no registry auth required to pull
 
 **No semver tagging.** `latest` only.
+
+**Dockerfile contract:** The new repo's Dockerfile MUST use `WORKDIR /app` so that `main.py` resolves `Path(__file__).parent / "swagger.yaml"` to `/app/swagger.yaml`, matching the volume mount path defined in the composition role. The current Dockerfile's unusual `WORKDIR .` should be cleaned up as part of the move.
 
 ## Changes to `composition-zfs-api` in this repo
 
@@ -66,6 +69,41 @@ Add volume mount for the host-specific swagger spec:
 - **Initial deploy:** Ansible runs `docker compose up`; Docker pulls the image from GHCR since it's not cached
 - **App updates:** Push to `awfulwoman/zfs-api` main → GitHub Actions builds → pushes `latest` to GHCR → Watchtower (via `composition-container-management`) detects the new digest and restarts the container automatically
 - **Config updates:** Ansible rerenders templates and restarts compose — no image pull involved
+
+## Cutover ordering
+
+The migration must happen in this order to avoid broken Ansible runs:
+
+1. Create the `awfulwoman/zfs-api` repo with code + CI workflow
+2. Push to `main` and wait for the first successful CI build — confirm `ghcr.io/awfulwoman/zfs-api:latest` exists and contains both `linux/amd64` and `linux/arm64` manifests
+3. Merge the infra-repo changes (this PR)
+4. Roll out per host (see below)
+
+If step 3 happens before step 2, every host running the playbook will fail at `docker compose up` because the image doesn't exist.
+
+## Rollout & verification
+
+Deploy to **one host first** (recommend `server-64gb-storage` — it's the primary target and has the most ZFS state to exercise):
+
+1. Run the host's composition playbook
+2. Verify the container is running: `docker ps | grep zfs-api`
+3. Verify endpoints respond:
+   - `curl -s https://zfs-api.<host>.<domain>/api/v1/health`
+   - `curl -s https://zfs-api.<host>.<domain>/api/v1/pools | jq`
+   - `curl -s https://zfs-api.<host>.<domain>/metrics | head`
+4. Verify Swagger UI shows the correct server URL: `https://zfs-api.<host>.<domain>/api/docs`
+
+Only after the first host passes, roll out to: `minipc-8gb-homebrain`, `deedee`, `server-8gb-backups`, then `raspberry-pi4-4gb-albion` (ARM target — verify last to confirm multi-arch image works).
+
+## Post-cutover cleanup
+
+After successful rollout, each host will still have the old locally-built `zfs-api` image in its local Docker cache (unused but taking disk). Optional one-time cleanup per host:
+
+```bash
+docker image prune -f
+```
+
+Not blocking — Watchtower and Ansible don't care about it.
 
 ## What does NOT change
 
