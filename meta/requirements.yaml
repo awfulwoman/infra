@@ -3,7 +3,7 @@
 # ansible-galaxy collection install -r meta/requirements.yaml
 roles:
   - name: xanmanning.k3s
-    version: v3.6.2
+    version: v3.6.4
   - name: robertdebock.digitalocean_agent
     version: 3.1.9
   - name: infothrill.nullmailer
