@@ -1,20 +1,16 @@
 name: "{{ composition_name }}"
 services:
   zfs-api:
-    build:
-      context: "{{ composition_config }}/app"
+    image: ghcr.io/awfulwoman/zfs-api:latest
     container_name: {{ composition_zfs_api_container_name }}
     restart: unless-stopped
-    privileged: true  # Required for ZFS device access
+    privileged: true
     volumes:
-      # ZFS device access (read-only)
       - /dev/zfs:/dev/zfs:ro
-      # ZFS policy scripts (zfs-snapshot-report)
       - {{ composition_zfs_api_zfs_policy_path }}:{{ composition_zfs_api_zfs_policy_path }}:ro
-      # ZFS policy logs
       - {{ composition_zfs_api_zfs_log_path }}:{{ composition_zfs_api_zfs_log_path }}:ro
-      # Snapshot report cache (read-only)
       - {{ system_zfs_policy_cache_file }}:{{ system_zfs_policy_cache_file }}:ro
+      - {{ composition_config }}/app/swagger.yaml:/app/swagger.yaml:ro
     env_file: .environment_vars
 {% if composition_zfs_api_traefik_enabled %}
     labels:

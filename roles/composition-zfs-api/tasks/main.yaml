@@ -38,82 +38,20 @@
 # Specific tasks
 # ----------------------------
 
-- name: Create directories
+- name: Create app directory
   become: true
   ansible.builtin.file:
-    path: "{{ composition_config }}/{{ dir_item }}"
+    path: "{{ composition_config }}/app"
     state: directory
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0774"
-  loop_control:
-    loop_var: dir_item
-  loop:
-    - app
-    - app/routers
-    - app/utils
-
-- name: Copy app files
-  become: true
-  ansible.builtin.copy:
-    src: "app/{{ app_module }}"
-    dest: "{{ composition_config }}/app/{{ app_module }}"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    mode: "0774"
-  loop_control:
-    loop_var: app_module
-  loop:
-    - main.py
-    - Dockerfile
-    - requirements.txt
-
-- name: Copy router modules
-  become: true
-  ansible.builtin.copy:
-    src: "app/routers/{{ router_module }}"
-    dest: "{{ composition_config }}/app/routers/{{ router_module }}"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    mode: "0774"
-  loop_control:
-    loop_var: router_module
-  loop:
-    - __init__.py
-    - pools.py
-    - datasets.py
-    - snapshots.py
-    - backups.py
-    - metrics.py
-
-- name: Copy utils modules
-  become: true
-  ansible.builtin.copy:
-    src: "app/utils/{{ util_module }}"
-    dest: "{{ composition_config }}/app/utils/{{ util_module }}"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    mode: "0774"
-  loop_control:
-    loop_var: util_module
-  loop:
-    - __init__.py
-    - zfs_commands.py
-    - parsers.py
 
 - name: "Create Swagger API documentation"
   become: true
   ansible.builtin.template:
     src: swagger.yaml.j2
     dest: "{{ composition_config }}/app/swagger.yaml"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    mode: "0774"
-
-- name: "Create compose file"
-  ansible.builtin.template:
-    src: docker-compose.yaml.j2
-    dest: "{{ composition_root }}/docker-compose.yaml"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0774"
@@ -132,6 +70,5 @@
   community.docker.docker_compose_v2:
     project_src: "{{ composition_root }}"
     state: present
-    build: always
     remove_orphans: true
   notify: Restart Traefik
