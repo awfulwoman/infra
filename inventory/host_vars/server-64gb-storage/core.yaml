@@ -82,6 +82,8 @@ zfs:
     datasets:
       shared:
         datasets:
+          documents:
+            policy: critical
           models:
             policy: high
           photos:
