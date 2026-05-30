@@ -37,24 +37,28 @@
     - export
     - consume
 
-- name: Create translation directories
+- name: Create scripts directory
   ansible.builtin.file:
-    path: "{{ composition_config }}/{{ dir_item }}"
+    path: "{{ composition_config }}/scripts"
     state: directory
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0774"
-  loop_control:
-    loop_var: dir_item
-  loop:
-    - scripts
-    - translator
+  when: paperless_ngx_translate_enabled
+
+- name: Create translator build context directory
+  ansible.builtin.file:
+    path: "{{ composition_root }}/translator"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"
   when: paperless_ngx_translate_enabled
 
 - name: Render translator build context
   ansible.builtin.template:
     src: "translator/{{ tpl_item }}.j2"
-    dest: "{{ composition_config }}/translator/{{ tpl_item }}"
+    dest: "{{ composition_root }}/translator/{{ tpl_item }}"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0644"
