@@ -1,0 +1,7 @@
+# code: language=ansible
+
+- name: Rebuild translator
+  community.docker.docker_compose_v2_build:
+    project_src: "{{ composition_root }}"
+    services:
+      - translator
