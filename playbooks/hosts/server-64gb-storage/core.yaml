@@ -50,7 +50,7 @@
     - role: composition-jellyfin
       tags: [compositions]
     - role: composition-immich
-      tags: [compositions]
+      tags: [compositions, composition-immich]
     - role: composition-llm-inference-calculator
       tags: [compositions, composition-llm-inference-calculator]
     - role: composition-audiobookshelf
