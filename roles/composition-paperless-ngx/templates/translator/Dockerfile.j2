@@ -1,0 +1,33 @@
+FROM python:3.12-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONPATH=/app
+
+WORKDIR /app
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt
+
+COPY ocr_cleanup.py /app/ocr_cleanup.py
+COPY app.py /app/app.py
+COPY test_translator.py /app/test_translator.py
+
+ENV PAPERLESS_URL=http://placeholder \
+    PAPERLESS_API_TOKEN=placeholder \
+    LIBRETRANSLATE_URL=http://placeholder \
+    LIBRETRANSLATE_API_KEY=placeholder \
+    REDIS_URL=redis://placeholder:6379/1
+
+RUN pytest -q test_translator.py
+
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
+    CMD curl -fs http://localhost:5000/healthz || exit 1
+
+EXPOSE 5000
+
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "1", "--threads", "4", "--access-logfile", "-", "app:app"]
