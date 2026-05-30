@@ -22,8 +22,8 @@ paperless_ngx_translate_target_lang: "en"
 # When the detected source language matches any of these, translation is skipped.
 paperless_ngx_translate_skip_source_langs:
   - en
-# Detection confidence below which translation is skipped (LibreTranslate returns 0-100).
-paperless_ngx_translate_min_confidence: 50
+# Detection confidence below which translation is skipped (LibreTranslate returns a float in [0, 1]).
+paperless_ngx_translate_min_confidence: 0.5
 # Max characters per /translate request. LibreTranslate's default char-limit is 5000.
 paperless_ngx_translate_chunk_size: 4000
 paperless_ngx_translate_ocr_cleanup_enabled: true
