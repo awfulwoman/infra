@@ -78,7 +78,7 @@
     - role: composition-memorybank
       tags: [compositions]
     - role: composition-paperless-ngx
-      tags: [compositions]
+      tags: [compositions, composition-paperless-ngx]
     - role: system-emailbackup
       tags: [system]
     - role: system-smartmontools

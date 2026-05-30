@@ -16,7 +16,7 @@ services:
 
   db:
     container_name: paperless_db
-    image: docker.io/library/postgres:18
+    image: docker.io/library/postgres:16
     restart: unless-stopped
     env_file: .environment_vars
     volumes:
