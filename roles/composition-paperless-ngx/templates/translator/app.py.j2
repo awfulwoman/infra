@@ -1,0 +1,374 @@
+"""Paperless-ngx auto-translation sidecar.
+
+A single-consumer worker pulls document IDs from a Redis queue, fetches
+the document content from paperless, applies OCR cleanup, detects the
+language via LibreTranslate, translates non-English content in chunks,
+and POSTs the translation back to paperless as a Note.
+
+The Flask HTTP surface (/translate, /status, /healthz) is intentionally
+small — the queue is the contract, not the API.
+"""
+from __future__ import annotations
+
+import datetime as dt
+import json
+import logging
+import os
+import random
+import sys
+import threading
+import time
+from typing import Iterator
+
+import redis
+import requests
+from flask import Flask, jsonify, request
+
+import ocr_cleanup
+
+# ---------------------------------------------------------------------------
+# Config (all values come from env; the role renders these via .env file)
+# ---------------------------------------------------------------------------
+PAPERLESS_URL = os.environ["PAPERLESS_URL"].rstrip("/")
+PAPERLESS_API_TOKEN = os.environ["PAPERLESS_API_TOKEN"]
+LIBRETRANSLATE_URL = os.environ["LIBRETRANSLATE_URL"].rstrip("/")
+LIBRETRANSLATE_API_KEY = os.environ["LIBRETRANSLATE_API_KEY"]
+REDIS_URL = os.environ["REDIS_URL"]
+TARGET_LANG = os.environ.get("TARGET_LANG", "en")
+SKIP_SOURCE_LANGS = {
+    s.strip() for s in os.environ.get("SKIP_SOURCE_LANGS", "en").split(",") if s.strip()
+}
+MIN_CONFIDENCE = float(os.environ.get("MIN_CONFIDENCE", "0.5"))
+CHUNK_SIZE = int(os.environ.get("CHUNK_SIZE", "4000"))
+OCR_CLEANUP_ENABLED = os.environ.get("OCR_CLEANUP_ENABLED", "true").lower() == "true"
+
+QUEUE_KEY = "paperless-translate:queue"
+COMPLETED_KEY = "paperless-translate:completed"
+FAILED_KEY = "paperless-translate:failed"
+INFLIGHT_KEY = "paperless-translate:in_flight"
+NOTE_PREFIX = "**Auto-translation"
+MAX_RETRIES = 5
+HTTP_TIMEOUT = 30
+
+# ---------------------------------------------------------------------------
+# Logging
+# ---------------------------------------------------------------------------
+logging.basicConfig(
+    level=logging.INFO,
+    stream=sys.stdout,
+    format="%(message)s",
+)
+log = logging.getLogger("translator")
+
+
+def emit(event: str, **fields):
+    record = {"ts": dt.datetime.utcnow().isoformat() + "Z", "event": event, **fields}
+    log.info(json.dumps(record))
+
+
+# ---------------------------------------------------------------------------
+# Redis
+# ---------------------------------------------------------------------------
+r = redis.from_url(REDIS_URL, decode_responses=True)
+
+
+# ---------------------------------------------------------------------------
+# Paperless client
+# ---------------------------------------------------------------------------
+def _paperless_headers() -> dict:
+    return {
+        "Authorization": f"Token {PAPERLESS_API_TOKEN}",
+        "Content-Type": "application/json",
+    }
+
+
+def paperless_get_document(doc_id: int) -> dict:
+    resp = requests.get(
+        f"{PAPERLESS_URL}/api/documents/{doc_id}/",
+        headers=_paperless_headers(),
+        timeout=HTTP_TIMEOUT,
+    )
+    resp.raise_for_status()
+    return resp.json()
+
+
+def paperless_get_notes(doc_id: int) -> list[dict]:
+    resp = requests.get(
+        f"{PAPERLESS_URL}/api/documents/{doc_id}/notes/",
+        headers=_paperless_headers(),
+        timeout=HTTP_TIMEOUT,
+    )
+    resp.raise_for_status()
+    body = resp.json()
+    return body if isinstance(body, list) else body.get("results", [])
+
+
+def paperless_add_note(doc_id: int, note: str) -> None:
+    resp = requests.post(
+        f"{PAPERLESS_URL}/api/documents/{doc_id}/notes/",
+        headers=_paperless_headers(),
+        json={"note": note},
+        timeout=HTTP_TIMEOUT,
+    )
+    resp.raise_for_status()
+
+
+def already_translated(doc_id: int) -> bool:
+    try:
+        for n in paperless_get_notes(doc_id):
+            note_text = n.get("note") or ""
+            if note_text.startswith(NOTE_PREFIX):
+                return True
+    except requests.RequestException as e:
+        emit("paperless.notes.error", doc=doc_id, error=str(e))
+    return False
+
+
+# ---------------------------------------------------------------------------
+# LibreTranslate client
+# ---------------------------------------------------------------------------
+def lt_detect(text: str) -> tuple[str, float]:
+    """Return (language_code, confidence) where confidence is in [0, 1]."""
+    sample = text[:2000]
+    resp = requests.post(
+        f"{LIBRETRANSLATE_URL}/detect",
+        json={"q": sample, "api_key": LIBRETRANSLATE_API_KEY},
+        timeout=HTTP_TIMEOUT,
+    )
+    resp.raise_for_status()
+    body = resp.json()
+    if not body:
+        return ("", 0.0)
+    top = body[0]
+    return (top.get("language", ""), float(top.get("confidence", 0.0)))
+
+
+def lt_translate_chunk(text: str, source: str) -> str:
+    resp = requests.post(
+        f"{LIBRETRANSLATE_URL}/translate",
+        json={
+            "q": text,
+            "source": source,
+            "target": TARGET_LANG,
+            "format": "text",
+            "api_key": LIBRETRANSLATE_API_KEY,
+        },
+        timeout=HTTP_TIMEOUT,
+    )
+    if resp.status_code == 400:
+        raise UnsupportedLanguage(source)
+    resp.raise_for_status()
+    return resp.json()["translatedText"]
+
+
+class UnsupportedLanguage(Exception):
+    def __init__(self, source: str):
+        super().__init__(source)
+        self.source = source
+
+
+# ---------------------------------------------------------------------------
+# Chunking
+# ---------------------------------------------------------------------------
+def chunk_text(text: str, chunk_size: int) -> Iterator[str]:
+    """Yield successive chunks of `text` no longer than `chunk_size`.
+
+    Prefers to split on paragraph boundaries, then sentence boundaries,
+    then hard-splits at the size limit.
+    """
+    if not text:
+        return
+    if len(text) <= chunk_size:
+        yield text
+        return
+
+    remaining = text
+    while remaining:
+        if len(remaining) <= chunk_size:
+            yield remaining
+            return
+        window = remaining[:chunk_size]
+        split_at = window.rfind("\n\n")
+        if split_at < chunk_size // 2:
+            split_at = window.rfind(". ")
+            if split_at > 0:
+                split_at += 1
+        if split_at < chunk_size // 4:
+            split_at = chunk_size
+        yield remaining[:split_at]
+        remaining = remaining[split_at:].lstrip()
+
+
+# ---------------------------------------------------------------------------
+# Worker
+# ---------------------------------------------------------------------------
+def build_note(translated: str, source: str) -> str:
+    ts = dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
+    return (
+        f"{NOTE_PREFIX} ({source} → {TARGET_LANG}, LibreTranslate)**\n"
+        f"_Generated {ts}_\n\n"
+        f"{translated}"
+    )
+
+
+def build_skip_note(reason: str) -> str:
+    ts = dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
+    return f"{NOTE_PREFIX} skipped ({reason})**\n_Checked {ts}_"
+
+
+def build_failure_note(reason: str) -> str:
+    ts = dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
+    return f"{NOTE_PREFIX} FAILED**\n_Attempted {ts}_\n\nReason: {reason}"
+
+
+def process_one(doc_id: int) -> None:
+    if already_translated(doc_id):
+        emit("skip.already_translated", doc=doc_id)
+        r.incr(COMPLETED_KEY)
+        return
+
+    try:
+        doc = paperless_get_document(doc_id)
+    except requests.RequestException as e:
+        emit("paperless.get.error", doc=doc_id, error=str(e))
+        raise
+
+    content = (doc.get("content") or "").strip()
+    if len(content) < 20:
+        paperless_add_note(doc_id, build_skip_note("empty content"))
+        emit("skip.empty", doc=doc_id)
+        r.incr(COMPLETED_KEY)
+        return
+
+    if OCR_CLEANUP_ENABLED:
+        content = ocr_cleanup.clean(content)
+
+    lang, conf = lt_detect(content)
+    emit("detect", doc=doc_id, lang=lang, conf=conf)
+
+    if conf < MIN_CONFIDENCE:
+        paperless_add_note(doc_id, build_skip_note("low confidence"))
+        r.incr(COMPLETED_KEY)
+        return
+
+    if lang in SKIP_SOURCE_LANGS:
+        paperless_add_note(doc_id, build_skip_note(f"source: {lang}"))
+        r.incr(COMPLETED_KEY)
+        return
+
+    try:
+        translated_parts = []
+        for chunk in chunk_text(content, CHUNK_SIZE):
+            translated_parts.append(lt_translate_chunk(chunk, source=lang))
+        translated = "\n\n".join(translated_parts)
+    except UnsupportedLanguage as e:
+        paperless_add_note(doc_id, build_skip_note(f"unsupported source: {e.source}"))
+        emit("skip.unsupported", doc=doc_id, lang=e.source)
+        r.incr(COMPLETED_KEY)
+        return
+
+    paperless_add_note(doc_id, build_note(translated, lang))
+    emit("translated", doc=doc_id, lang=lang, chars=len(translated))
+    r.incr(COMPLETED_KEY)
+
+
+def run_worker() -> None:
+    emit("worker.start")
+    while True:
+        try:
+            popped = r.brpop(QUEUE_KEY, timeout=0)
+        except redis.RedisError as e:
+            emit("redis.error", error=str(e))
+            time.sleep(5)
+            continue
+
+        _, doc_id_raw = popped
+        try:
+            doc_id = int(doc_id_raw)
+        except ValueError:
+            emit("worker.bad_payload", payload=doc_id_raw)
+            continue
+
+        r.set(INFLIGHT_KEY, doc_id)
+        attempt = 0
+        while True:
+            try:
+                process_one(doc_id)
+                break
+            except requests.RequestException as e:
+                attempt += 1
+                if attempt > MAX_RETRIES:
+                    try:
+                        paperless_add_note(doc_id, build_failure_note(str(e)))
+                    except requests.RequestException:
+                        pass
+                    r.incr(FAILED_KEY)
+                    emit("worker.fail", doc=doc_id, error=str(e))
+                    break
+                delay = min(16, 2 ** (attempt - 1)) + random.uniform(0, 0.5)
+                emit("worker.retry", doc=doc_id, attempt=attempt, sleep=round(delay, 2), error=str(e))
+                time.sleep(delay)
+        r.delete(INFLIGHT_KEY)
+
+
+# ---------------------------------------------------------------------------
+# HTTP API
+# ---------------------------------------------------------------------------
+app = Flask(__name__)
+
+
+@app.post("/translate")
+def http_translate():
+    data = request.get_json(silent=True) or {}
+    doc_id = data.get("document_id")
+    if not isinstance(doc_id, int):
+        return jsonify({"error": "document_id (int) required"}), 400
+    if already_translated(doc_id):
+        return jsonify({"already_processed": True, "document_id": doc_id}), 200
+    r.lpush(QUEUE_KEY, doc_id)
+    return jsonify({"queued": True, "document_id": doc_id}), 202
+
+
+@app.get("/status")
+def http_status():
+    return jsonify({
+        "queued": r.llen(QUEUE_KEY),
+        "in_flight": 1 if r.exists(INFLIGHT_KEY) else 0,
+        "completed_total": int(r.get(COMPLETED_KEY) or 0),
+        "failed_total": int(r.get(FAILED_KEY) or 0),
+    }), 200
+
+
+@app.get("/healthz")
+def http_healthz():
+    checks = {"redis": False, "libretranslate": False, "paperless": False}
+    try:
+        checks["redis"] = bool(r.ping())
+    except redis.RedisError:
+        pass
+    try:
+        checks["libretranslate"] = requests.get(
+            f"{LIBRETRANSLATE_URL}/languages", timeout=5
+        ).ok
+    except requests.RequestException:
+        pass
+    try:
+        checks["paperless"] = requests.get(
+            f"{PAPERLESS_URL}/api/", headers=_paperless_headers(), timeout=5
+        ).status_code < 500
+    except requests.RequestException:
+        pass
+    ok = all(checks.values())
+    return jsonify(checks), (200 if ok else 503)
+
+
+def _start_worker_once():
+    t = threading.Thread(target=run_worker, name="translator-worker", daemon=True)
+    t.start()
+
+
+_start_worker_once()
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
