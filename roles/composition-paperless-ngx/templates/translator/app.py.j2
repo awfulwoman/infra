@@ -62,14 +62,15 @@ log = logging.getLogger("translator")
 
 
 def emit(event: str, **fields):
-    record = {"ts": dt.datetime.utcnow().isoformat() + "Z", "event": event, **fields}
+    record = {"ts": dt.datetime.now(dt.timezone.utc).isoformat() + "Z", "event": event, **fields}
     log.info(json.dumps(record))
 
 
 # ---------------------------------------------------------------------------
 # Redis
 # ---------------------------------------------------------------------------
-r = redis.from_url(REDIS_URL, decode_responses=True)
+_pool = redis.ConnectionPool.from_url(REDIS_URL, decode_responses=True)
+r = redis.Redis(connection_pool=_pool)
 
 
 # ---------------------------------------------------------------------------
@@ -158,7 +159,10 @@ def lt_translate_chunk(text: str, source: str) -> str:
     if resp.status_code == 400:
         raise UnsupportedLanguage(source)
     resp.raise_for_status()
-    return resp.json()["translatedText"]
+    result = resp.json().get("translatedText")
+    if result is None:
+        raise RuntimeError(f"LibreTranslate returned unexpected response: {resp.text[:200]}")
+    return result
 
 
 class UnsupportedLanguage(Exception):
@@ -193,7 +197,7 @@ def chunk_text(text: str, chunk_size: int) -> Iterator[str]:
             split_at = window.rfind(". ")
             if split_at > 0:
                 split_at += 1
-        if split_at < chunk_size // 4:
+        if split_at <= 0 or split_at < chunk_size // 4:
             split_at = chunk_size
         yield remaining[:split_at]
         remaining = remaining[split_at:].lstrip()
@@ -203,7 +207,7 @@ def chunk_text(text: str, chunk_size: int) -> Iterator[str]:
 # Worker
 # ---------------------------------------------------------------------------
 def build_note(translated: str, source: str) -> str:
-    ts = dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
+    ts = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     return (
         f"{NOTE_PREFIX} ({source} → {TARGET_LANG}, LibreTranslate)**\n"
         f"_Generated {ts}_\n\n"
@@ -212,12 +216,12 @@ def build_note(translated: str, source: str) -> str:
 
 
 def build_skip_note(reason: str) -> str:
-    ts = dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
+    ts = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     return f"{NOTE_PREFIX} skipped ({reason})**\n_Checked {ts}_"
 
 
 def build_failure_note(reason: str) -> str:
-    ts = dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
+    ts = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     return f"{NOTE_PREFIX} FAILED**\n_Attempted {ts}_\n\nReason: {reason}"
 
 
@@ -291,24 +295,34 @@ def run_worker() -> None:
 
         r.set(INFLIGHT_KEY, doc_id)
         attempt = 0
-        while True:
-            try:
-                process_one(doc_id)
-                break
-            except requests.RequestException as e:
-                attempt += 1
-                if attempt > MAX_RETRIES:
+        try:
+            while True:
+                try:
+                    process_one(doc_id)
+                    break
+                except requests.RequestException as e:
+                    attempt += 1
+                    if attempt > MAX_RETRIES:
+                        try:
+                            paperless_add_note(doc_id, build_failure_note(str(e)))
+                        except requests.RequestException:
+                            pass
+                        r.incr(FAILED_KEY)
+                        emit("worker.fail", doc=doc_id, error=str(e))
+                        break
+                    delay = min(16, 2 ** (attempt - 1)) + random.uniform(0, 0.5)
+                    emit("worker.retry", doc=doc_id, attempt=attempt, sleep=round(delay, 2), error=str(e))
+                    time.sleep(delay)
+                except Exception as e:
+                    r.incr(FAILED_KEY)
+                    emit("worker.unexpected_error", doc=doc_id, error=str(e))
                     try:
                         paperless_add_note(doc_id, build_failure_note(str(e)))
                     except requests.RequestException:
                         pass
-                    r.incr(FAILED_KEY)
-                    emit("worker.fail", doc=doc_id, error=str(e))
                     break
-                delay = min(16, 2 ** (attempt - 1)) + random.uniform(0, 0.5)
-                emit("worker.retry", doc=doc_id, attempt=attempt, sleep=round(delay, 2), error=str(e))
-                time.sleep(delay)
-        r.delete(INFLIGHT_KEY)
+        finally:
+            r.delete(INFLIGHT_KEY)
 
 
 # ---------------------------------------------------------------------------
@@ -367,7 +381,8 @@ def _start_worker_once():
     t.start()
 
 
-_start_worker_once()
+if os.environ.get("START_WORKER", "true").lower() != "false":
+    _start_worker_once()
 
 
 if __name__ == "__main__":
