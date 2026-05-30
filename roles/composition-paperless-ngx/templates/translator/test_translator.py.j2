@@ -1,0 +1,52 @@
+"""Unit tests for translator pure functions.
+
+Run via `pytest -q` inside the translator image during Docker build.
+"""
+from __future__ import annotations
+
+import ocr_cleanup
+from app import chunk_text
+
+
+def test_hyphen_linebreak_joined():
+    src = "Versiche-\nrungsschein"
+    assert ocr_cleanup.fix_hyphen_linebreaks(src) == "Versicherungsschein"
+
+
+def test_smart_quotes_normalised():
+    src = "“Hallo” — sagte er"
+    assert ocr_cleanup.normalise_quotes(src) == '"Hallo" - sagte er'
+
+
+def test_whitespace_collapsed():
+    src = "ein    Text  \nmit \n\n\n\nlücken"
+    out = ocr_cleanup.collapse_whitespace(src)
+    assert "    " not in out
+    assert "\n\n\n" not in out
+
+
+def test_clean_idempotent():
+    src = "Versiche-\nrungs-  schein  "
+    once = ocr_cleanup.clean(src)
+    twice = ocr_cleanup.clean(once)
+    assert once == twice
+
+
+def test_chunk_small_text_single_chunk():
+    chunks = list(chunk_text("hello world", chunk_size=100))
+    assert chunks == ["hello world"]
+
+
+def test_chunk_splits_on_paragraph_when_possible():
+    text = "para one.\n\n" + ("x" * 50) + "\n\npara three."
+    chunks = list(chunk_text(text, chunk_size=60))
+    assert all(0 < len(c) <= 60 for c in chunks)
+    assert "para one." in chunks[0]
+    assert "para three." in chunks[-1]
+
+
+def test_chunk_hard_splits_when_no_breakpoint():
+    text = "x" * 10_000
+    chunks = list(chunk_text(text, chunk_size=4000))
+    assert all(len(c) <= 4000 for c in chunks)
+    assert "".join(chunks) == text
