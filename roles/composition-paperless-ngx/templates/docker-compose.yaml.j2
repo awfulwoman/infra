@@ -73,7 +73,7 @@ services:
 {% endif %}
     volumes:
       - "{{ composition_config }}/data:/usr/src/paperless/data"
-      - "{{ composition_config }}/media:/usr/src/paperless/media"
+      - "{{ paperless_ngx_translate_media_path }}:/usr/src/paperless/media"
       - "{{ composition_config }}/export:/usr/src/paperless/export"
       - "{{ composition_config }}/consume:/usr/src/paperless/consume"
 {% if paperless_ngx_translate_enabled %}

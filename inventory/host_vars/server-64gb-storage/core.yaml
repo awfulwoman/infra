@@ -84,6 +84,8 @@ zfs:
         datasets:
           documents:
             policy: critical
+            datasets:
+              paperless-ngx:
           models:
             policy: high
           photos:
@@ -139,6 +141,8 @@ system_zfs_policy_healthchecksio_enabled: true
 # -------------------------------------------------------------------
 # Media storage
 shared_media_path: /slowpool/shared/media
+
+paperless_ngx_translate_media_path: "/slowpool/shared/documents/paperless-ngx"
 
 # -------------------------------------------------------------------
 # NFS

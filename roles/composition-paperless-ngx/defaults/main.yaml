@@ -11,6 +11,12 @@ paperless_ngx_admin_password: "{{ vault_paperless_ngx_admin_password }}"
 paperless_ngx_admin_mail: "{{ vault_paperless_ngx_admin_mail }}"
 
 # ----------------------------
+# Storage
+# ----------------------------
+
+paperless_ngx_translate_media_path: "{{ composition_config }}/media"
+
+# ----------------------------
 # Auto-translation
 # ----------------------------
 
