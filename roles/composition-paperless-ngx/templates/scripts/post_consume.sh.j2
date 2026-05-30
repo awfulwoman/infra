@@ -1,0 +1,20 @@
+#!/bin/sh
+# Fire-and-forget hook called by paperless-ngx after a document is consumed.
+# Paperless sets DOCUMENT_ID in the environment. We never block on the response.
+
+set -u
+
+if [ -z "${DOCUMENT_ID:-}" ]; then
+    echo "post_consume: DOCUMENT_ID not set; nothing to do"
+    exit 0
+fi
+
+curl --max-time 5 -fsS \
+    -X POST \
+    -H "Content-Type: application/json" \
+    -d "{\"document_id\": ${DOCUMENT_ID}}" \
+    http://translator:5000/translate \
+    >/dev/null 2>&1 \
+    || echo "post_consume: translator unreachable for doc ${DOCUMENT_ID}"
+
+exit 0
