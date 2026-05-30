@@ -2,12 +2,6 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Your Communication as an Agent
-
-- In all interactions and messages, be extremely concise and sacrifice grammar for the sake of conciseness.
-- Don't be afraid to tell the user when an idea is bad.
-- Don't be afraid to admit you don't know something.
-
 ## Repository Overview
 
 This is a personal home infrastructure management repository using Infrastructure-as-Code. Everything here controls actual home infrastructure - servers, networking, IoT devices, and containerized applications.
@@ -112,7 +106,3 @@ Project documentation including architecture guides, runbooks, and reference mat
 - **Credentials**: Stored encrypted in repo using Ansible Vault
 - **Networking**: Everything accessed via Tailscale
 - **Docker Compose apps**: Templated with Jinja2 (`.yaml.j2` files), deployed via `composition-*` roles
-
-## MCP Servers
-
-- Always use Context7 MCP when library/API documentation is needed, code generation, setup or configuration steps without the user having to explicitly ask.
