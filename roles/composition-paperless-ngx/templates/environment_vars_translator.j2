@@ -1,0 +1,11 @@
+PAPERLESS_URL=http://webserver:8000
+PAPERLESS_API_TOKEN={{ paperless_ngx_api_token }}
+LIBRETRANSLATE_URL={{ paperless_ngx_translate_libretranslate_url }}
+LIBRETRANSLATE_API_KEY={{ paperless_ngx_translate_libretranslate_api_key }}
+REDIS_URL=redis://broker:6379/1
+TARGET_LANG={{ paperless_ngx_translate_target_lang }}
+SKIP_SOURCE_LANGS={{ paperless_ngx_translate_skip_source_langs | join(',') }}
+MIN_CONFIDENCE={{ paperless_ngx_translate_min_confidence }}
+CHUNK_SIZE={{ paperless_ngx_translate_chunk_size }}
+OCR_CLEANUP_ENABLED={{ paperless_ngx_translate_ocr_cleanup_enabled | string | lower }}
+START_WORKER=true
