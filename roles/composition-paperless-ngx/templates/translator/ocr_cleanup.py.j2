@@ -1,0 +1,46 @@
+"""OCR cleanup transforms applied before translation.
+
+Pure functions; deterministic; no I/O.
+"""
+from __future__ import annotations
+
+import re
+
+_HYPHEN_LINEBREAK = re.compile(r"(\w+)-\n(\w+)")
+_MULTI_NEWLINE = re.compile(r"\n{3,}")
+_MULTI_SPACE = re.compile(r"[ \t]{2,}")
+_TRAILING_WS_PER_LINE = re.compile(r"[ \t]+\n")
+_SMART_QUOTES = {
+    "“": '"',
+    "”": '"',
+    "‘": "'",
+    "’": "'",
+    "–": "-",
+    "—": "-",
+}
+
+
+def fix_hyphen_linebreaks(text: str) -> str:
+    """Join word-fragments split across a hyphenated line break."""
+    return _HYPHEN_LINEBREAK.sub(r"\1\2", text)
+
+
+def collapse_whitespace(text: str) -> str:
+    text = _TRAILING_WS_PER_LINE.sub("\n", text)
+    text = _MULTI_SPACE.sub(" ", text)
+    text = _MULTI_NEWLINE.sub("\n\n", text)
+    return text
+
+
+def normalise_quotes(text: str) -> str:
+    for src, dst in _SMART_QUOTES.items():
+        text = text.replace(src, dst)
+    return text
+
+
+def clean(text: str) -> str:
+    """Apply all cleanup steps in order."""
+    text = fix_hyphen_linebreaks(text)
+    text = normalise_quotes(text)
+    text = collapse_whitespace(text)
+    return text.strip()
