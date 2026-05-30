@@ -9,3 +9,23 @@ paperless_ngx_secret_key: "{{ vault_paperless_ngx_secret_key }}"
 paperless_ngx_admin_user: admin
 paperless_ngx_admin_password: "{{ vault_paperless_ngx_admin_password }}"
 paperless_ngx_admin_mail: "{{ vault_paperless_ngx_admin_mail }}"
+
+# ----------------------------
+# Auto-translation
+# ----------------------------
+
+paperless_ngx_translate_enabled: true
+# URL of an existing LibreTranslate instance reachable on the default Docker network.
+paperless_ngx_translate_libretranslate_url: "http://libretranslate:5000"
+paperless_ngx_translate_libretranslate_api_key: "{{ vault_paperless_ngx_libretranslate_api_key }}"
+paperless_ngx_translate_target_lang: "en"
+# When the detected source language matches any of these, translation is skipped.
+paperless_ngx_translate_skip_source_langs:
+  - en
+# Detection confidence below which translation is skipped (LibreTranslate returns 0-100).
+paperless_ngx_translate_min_confidence: 50
+# Max characters per /translate request. LibreTranslate's default char-limit is 5000.
+paperless_ngx_translate_chunk_size: 4000
+paperless_ngx_translate_ocr_cleanup_enabled: true
+# Paperless REST API token used by the translator to read documents and POST notes.
+paperless_ngx_api_token: "{{ vault_paperless_ngx_api_token }}"
