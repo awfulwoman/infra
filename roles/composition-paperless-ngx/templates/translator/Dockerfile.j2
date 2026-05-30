@@ -5,6 +5,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONPATH=/app
 
 WORKDIR /app
+RUN useradd -r -u 1001 -m app
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends curl \
@@ -21,9 +22,12 @@ ENV PAPERLESS_URL=http://placeholder \
     PAPERLESS_API_TOKEN=placeholder \
     LIBRETRANSLATE_URL=http://placeholder \
     LIBRETRANSLATE_API_KEY=placeholder \
-    REDIS_URL=redis://placeholder:6379/1
+    REDIS_URL=redis://placeholder:6379/1 \
+    START_WORKER=false
 
 RUN pytest -q test_translator.py
+RUN chown -R app /app
+USER app
 
 HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
     CMD curl -fs http://localhost:5000/healthz || exit 1
