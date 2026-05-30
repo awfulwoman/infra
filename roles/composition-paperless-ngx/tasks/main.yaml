@@ -37,6 +37,56 @@
     - export
     - consume
 
+- name: Create translation directories
+  ansible.builtin.file:
+    path: "{{ composition_config }}/{{ dir_item }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"
+  loop_control:
+    loop_var: dir_item
+  loop:
+    - scripts
+    - translator
+  when: paperless_ngx_translate_enabled
+
+- name: Render translator build context
+  ansible.builtin.template:
+    src: "translator/{{ tpl_item }}.j2"
+    dest: "{{ composition_config }}/translator/{{ tpl_item }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0644"
+  loop_control:
+    loop_var: tpl_item
+  loop:
+    - Dockerfile
+    - requirements.txt
+    - app.py
+    - ocr_cleanup.py
+    - test_translator.py
+  when: paperless_ngx_translate_enabled
+  notify: Rebuild translator
+
+- name: Render post-consume script
+  ansible.builtin.template:
+    src: scripts/post_consume.sh.j2
+    dest: "{{ composition_config }}/scripts/post_consume.sh"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0755"
+  when: paperless_ngx_translate_enabled
+
+- name: Render translator env file
+  ansible.builtin.template:
+    src: environment_vars_translator.j2
+    dest: "{{ composition_root }}/.environment_vars_translator"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0660"
+  when: paperless_ngx_translate_enabled
+
 - name: Run Configure DNS role
   ansible.builtin.include_role:
     name: "network-register-subdomain"
