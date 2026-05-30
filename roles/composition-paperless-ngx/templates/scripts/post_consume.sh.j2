@@ -12,7 +12,7 @@ fi
 curl --max-time 5 -fsS \
     -X POST \
     -H "Content-Type: application/json" \
-    -d "{\"document_id\": ${DOCUMENT_ID}}" \
+    -d "$(printf '{"document_id": %d}' "${DOCUMENT_ID}")" \
     http://translator:5000/translate \
     >/dev/null 2>&1 \
     || echo "post_consume: translator unreachable for doc ${DOCUMENT_ID}"
