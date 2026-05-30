@@ -10,3 +10,4 @@ __pycache__
 .vagrant
 .worktrees
 .env
+.claude/scheduled_tasks.lock
