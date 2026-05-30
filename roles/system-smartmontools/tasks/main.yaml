@@ -1,4 +1,10 @@
-- name: "Ensure /etc/smartd.conf exists"
+- name: Ensure smartmontools is installed
+  become: true
+  ansible.builtin.apt:
+    name: smartmontools
+    state: present
+
+- name: Ensure /etc/smartd.conf exists
   become: true
   ansible.builtin.template:
     src: smartd.conf.j2
@@ -7,10 +13,19 @@
     group: "root"
     mode: "0644"
   when: smartmontools_drives is defined
+  notify: Restart smartd
 
 - name: Log smartmontools_drives
   ansible.builtin.debug:
     var: smartmontools_drives
+
+- name: Ensure smartd service is enabled and started
+  become: true
+  ansible.builtin.service:
+    name: smartd
+    enabled: true
+    state: started
+  when: smartmontools_drives is defined
 
 - name: Ensure drive database is updated daily
   become: true
