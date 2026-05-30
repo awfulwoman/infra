@@ -54,6 +54,10 @@ services:
     image: ghcr.io/paperless-ngx/paperless-ngx:latest
     restart: unless-stopped
     env_file: .environment_vars
+{% if paperless_ngx_translate_enabled %}
+    environment:
+      PAPERLESS_POST_CONSUME_SCRIPT: "/usr/src/paperless/scripts/post_consume.sh"
+{% endif %}
     depends_on:
       db:
         condition: service_healthy
@@ -63,11 +67,18 @@ services:
         condition: service_started
       tika:
         condition: service_started
+{% if paperless_ngx_translate_enabled %}
+      translator:
+        condition: service_started
+{% endif %}
     volumes:
       - "{{ composition_config }}/data:/usr/src/paperless/data"
       - "{{ composition_config }}/media:/usr/src/paperless/media"
       - "{{ composition_config }}/export:/usr/src/paperless/export"
       - "{{ composition_config }}/consume:/usr/src/paperless/consume"
+{% if paperless_ngx_translate_enabled %}
+      - "{{ composition_config }}/scripts:/usr/src/paperless/scripts:ro"
+{% endif %}
       - /etc/localtime:/etc/localtime:ro
     networks:
       - "{{ default_docker_network }}"
@@ -84,6 +95,25 @@ services:
       retries: 3
       start_period: 1m
 
+{% if paperless_ngx_translate_enabled %}
+  translator:
+    container_name: paperless_translator
+    build:
+      context: ./translator
+    restart: unless-stopped
+    env_file: .environment_vars_translator
+    depends_on:
+      broker:
+        condition: service_healthy
+    networks:
+      - "{{ default_docker_network }}"
+    healthcheck:
+      test: ["CMD", "curl", "-fs", "http://localhost:5000/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+{% endif %}
 networks:
   "{{ default_docker_network }}":
     external: true
