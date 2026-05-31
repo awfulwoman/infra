@@ -80,7 +80,7 @@
     - role: composition-paperless-ngx
       tags: [compositions, composition-paperless-ngx]
     - role: composition-kagimcp
-      tags: [compositions]
+      tags: [compositions, composition-kagimcp]
     - role: system-emailbackup
       tags: [system, system-emailbackup]
     - role: system-smartmontools
