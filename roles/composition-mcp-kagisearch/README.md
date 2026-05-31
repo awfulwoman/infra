@@ -11,9 +11,8 @@ Get your API key from https://kagi.com/settings?p=api, then:
 
 **Global** (all projects, stored in `~/.claude/`):
 ```bash
-claude mcp add --transport http --scope user \
-  --header "Authorization: Bearer <YOUR_KAGI_API_KEY>" \
-  kagi https://kagimcp.{{ domainname_infra }}/mcp
+claude mcp add --transport http --scope user kagi https://kagimcp.{{ domainname_infra }}/mcp \
+  --header "Authorization: Bearer <YOUR_KAGI_API_KEY>"
 ```
 
 **Project** (shared with repo, stored in `.claude/`):
