@@ -8,5 +8,5 @@ description: Use when deploying Ansible playbooks to hosts or groups, selecting
 - `core.yaml` (if present) is the default playbook for a host or group
 - Read the `name` key of a playbook to determine relevancy to the task at hand
 - Each host or group can have multiple task-specific playbooks
-- Deploy all of a type of role using a tag based on the relevant prefix (e.g. `compositions` for composition-* roles)
-- Each role has its name as a unique tag, allowing individual deployment
+- Deploy all roles of a certain type using a tag based on the relevant prefix (e.g. `compositions` for composition-* roles)
+- Each role has its name as a unique tag, allowing fine-grained deployment
