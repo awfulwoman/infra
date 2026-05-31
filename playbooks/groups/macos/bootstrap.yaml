@@ -1,4 +1,5 @@
 - name: MacOS Servers Bootstrap
   hosts: macos_servers
   roles:
-    - role: bootstrap-macos-server
+  - role: bootstrap-macos-server
+    tags: [bootstrap, bootstrap-macos-server]

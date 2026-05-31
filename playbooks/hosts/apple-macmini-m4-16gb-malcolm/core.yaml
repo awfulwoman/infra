@@ -2,31 +2,31 @@
 - name: Malcolm, the little power-efficient Mac Mini
   hosts: apple-macmini-m4-16gb-malcolm
   roles:
-    - role: monitoring-healthchecksio
-      monitoring_healthchecksio_ping_type: start
-      tags: [monitoring]
-    - role: bootstrap-macos-server
-      tags: [bootstrap]
-    - role: hardware-apple
-      tags: [hardware]
-    - role: automation-key-updater
-      tags: [automation]
-    - role: automation-infra
-      tags: [automation]
-    - role: system-repos
-      tags: [system]
-    - role: system-ollama
-      tags: [system]
-    - role: system-claude
-      tags: [system]
-    - role: ansible-core
-      tags: [ansible]
-    - role: system-git
-      tags: [system]
-    - role: system-nvm
-      tags: [system, system-nvm]
-    - role: system-obsidian-headless
-      tags: [system, system-obsidian-headless]
-    - role: monitoring-healthchecksio
-      monitoring_healthchecksio_ping_type: success
-      tags: [monitoring]
+  - role: monitoring-healthchecksio
+    monitoring_healthchecksio_ping_type: start
+    tags: [monitoring, monitoring-healthchecksio]
+  - role: bootstrap-macos-server
+    tags: [bootstrap, bootstrap-macos-server]
+  - role: hardware-apple
+    tags: [hardware, hardware-apple]
+  - role: automation-key-updater
+    tags: [automation, automation-key-updater]
+  - role: automation-infra
+    tags: [automation, automation-infra]
+  - role: system-repos
+    tags: [system, system-repos]
+  - role: system-ollama
+    tags: [system, system-ollama]
+  - role: system-claude
+    tags: [system, system-claude]
+  - role: ansible-core
+    tags: [ansible, ansible-core]
+  - role: system-git
+    tags: [system, system-git]
+  - role: system-nvm
+    tags: [system, system-nvm]
+  - role: system-obsidian-headless
+    tags: [system, system-obsidian-headless]
+  - role: monitoring-healthchecksio
+    monitoring_healthchecksio_ping_type: success
+    tags: [monitoring, monitoring-healthchecksio]

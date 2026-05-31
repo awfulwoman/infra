@@ -1,10 +1,11 @@
 - name: Run certbot role
   hosts: raspberry-pi4-2gb-deedee
   roles:
-    - role: infra-dhcpd
-    - role: infra-named
-
+  - role: infra-dhcpd
+    tags: [infra, infra-dhcpd]
+  - role: infra-named
+    tags: [infra, infra-named]
   handlers:
-    - name: Reboot host
-      become: true
-      ansible.builtin.reboot:
+  - name: Reboot host
+    become: true
+    ansible.builtin.reboot:

@@ -2,20 +2,28 @@
   hosts: minipc-8gb-homebrain
   vars:
     compositions:
-      - zfs-api
+    - zfs-api
   roles:
-    - role: composition-mqtt # must run before owntracks and zigbee2mqtt
-    - role: composition-reverseproxy
-    - role: composition-container-management
-    - role: composition-homeassistant
-    - role: composition-matter
-    - role: composition-owntracks
-    - role: composition-zigbee2mqtt
-    - role: composition-watchyourlan
-    - role: composition-zfs-api
-      tags: [compositions, zfs]
+  - role: composition-mqtt   # must run before owntracks and zigbee2mqtt
+    tags: [composition, composition-mqtt]
+  - role: composition-reverseproxy
+    tags: [composition, composition-reverseproxy]
+  - role: composition-container-management
+    tags: [composition, composition-container-management]
+  - role: composition-homeassistant
+    tags: [composition, composition-homeassistant]
+  - role: composition-matter
+    tags: [composition, composition-matter]
+  - role: composition-owntracks
+    tags: [composition, composition-owntracks]
+  - role: composition-zigbee2mqtt
+    tags: [composition, composition-zigbee2mqtt]
+  - role: composition-watchyourlan
+    tags: [composition, composition-watchyourlan]
+  - role: composition-zfs-api
+    tags: [composition, zfs, composition-zfs-api]
 
   handlers:
-    - name: Reboot host
-      become: true
-      ansible.builtin.reboot:
+  - name: Reboot host
+    become: true
+    ansible.builtin.reboot:

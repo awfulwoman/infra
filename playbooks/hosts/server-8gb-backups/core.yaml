@@ -1,41 +1,41 @@
 - name: Backup Server
   hosts: server-8gb-backups
   roles:
-    - role: monitoring-healthchecksio
-      monitoring_healthchecksio_ping_type: start
-      tags: [monitoring]
-    - role: bootstrap-ubuntu-server
-      tags: [bootstrap]
-    - role: network-netplan
-      tags: [network]
-    - role: client-nut
-      tags: [client]
-    - role: infothrill.nullmailer
-      become: true
-    - role: system-wakeonlan
-      tags: [system]
-    - role: system-zfs
-      tags: [system, zfs]
+  - role: monitoring-healthchecksio
+    monitoring_healthchecksio_ping_type: start
+    tags: [monitoring, monitoring-healthchecksio]
+  - role: bootstrap-ubuntu-server
+    tags: [bootstrap, bootstrap-ubuntu-server]
+  - role: network-netplan
+    tags: [network, network-netplan]
+  - role: client-nut
+    tags: [client, client-nut]
+  - role: infothrill.nullmailer
+    become: true
+  - role: system-wakeonlan
+    tags: [system, system-wakeonlan]
+  - role: system-zfs
+    tags: [system, zfs, system-zfs]
     # - role: system-msmtp
-    - role: system-mqtt2cmd
-      tags: [system]
-    - role: backups-zfs-server
-      zfsbackup_pushover: false
-      zfsbackup_run_after_wake: false
-      tags: [backups, zfs]
-    - role: composition-container-management
-      tags: [compositions]
-    - role: composition-reverseproxy
-      tags: [compositions]
-    - role: composition-zfs-api
-      tags: [compositions, zfs]
-    - role: system-promtail
-      tags: [system, promtail]
-    - role: monitoring-healthchecksio
-      monitoring_healthchecksio_ping_type: success
-      tags: [monitoring]
+  - role: system-mqtt2cmd
+    tags: [system, system-mqtt2cmd]
+  - role: backups-zfs-server
+    zfsbackup_pushover: false
+    zfsbackup_run_after_wake: false
+    tags: [backups, zfs, backups-zfs-server]
+  - role: composition-container-management
+    tags: [composition, composition-container-management]
+  - role: composition-reverseproxy
+    tags: [composition, composition-reverseproxy]
+  - role: composition-zfs-api
+    tags: [composition, zfs, composition-zfs-api]
+  - role: system-promtail
+    tags: [system, promtail, system-promtail]
+  - role: monitoring-healthchecksio
+    monitoring_healthchecksio_ping_type: success
+    tags: [monitoring, monitoring-healthchecksio]
 
   handlers:
-    - name: Reboot host
-      become: true
-      ansible.builtin.reboot:
+  - name: Reboot host
+    become: true
+    ansible.builtin.reboot:

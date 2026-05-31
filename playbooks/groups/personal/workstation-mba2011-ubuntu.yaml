@@ -2,10 +2,11 @@
 - name: Laptop
   hosts: host-mba2011
   roles:
-    - role: bootstrap-intel-macbook
-    - role: bootstrap-ubuntu-server
-
+  - role: bootstrap-intel-macbook
+    tags: [bootstrap, bootstrap-intel-macbook]
+  - role: bootstrap-ubuntu-server
+    tags: [bootstrap, bootstrap-ubuntu-server]
   handlers:
-    - name: Reboot host
-      become: true
-      ansible.builtin.reboot:
+  - name: Reboot host
+    become: true
+    ansible.builtin.reboot:

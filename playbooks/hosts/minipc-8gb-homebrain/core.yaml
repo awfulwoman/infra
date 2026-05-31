@@ -1,57 +1,57 @@
 - name: Home Automation - making lights go on and off in an overly-complicated way
   hosts: minipc-8gb-homebrain
   roles:
-    - role: monitoring-healthchecksio
-      monitoring_healthchecksio_ping_type: start
-      tags: [monitoring]
-    - role: bootstrap-ubuntu-server
-      tags: [bootstrap]
-    - role: network-netplan
-      tags: [network]
-    - role: system-zfs
-      tags: [system, zfs]
-    - role: system-zfs-policy
-      tags: [system, zfs]
-    - role: infothrill.nullmailer
-      become: true
-    - role: server-nut
-      tags: [server]
-    - role: system-mqtt2cmd
-      tags: [system]
-    - role: hardware-rtl-433
-      tags: [hardware]
-    - role: backups-zfs-client
-      tags: [backups, zfs]
-    - role: system-beep
-      tags: [system]
-    - role: system-shoutrrr
-      become: true
-      tags: [system]
-    - role: composition-mqtt # must run before owntracks and zigbee2mqtt
-      tags: [compositions]
-    - role: composition-reverseproxy
-      tags: [compositions]
-    - role: composition-container-management
-      tags: [compositions]
-    - role: composition-homeassistant
-      tags: [compositions]
-    - role: composition-matter
-      tags: [compositions]
-    - role: composition-owntracks
-      tags: [compositions]
-    - role: composition-zigbee2mqtt
-      tags: [compositions]
-    - role: composition-watchyourlan
-      tags: [compositions]
-    - role: composition-zfs-api
-      tags: [compositions, zfs]
-    - role: system-promtail
-      tags: [system, promtail]
-    - role: monitoring-healthchecksio
-      monitoring_healthchecksio_ping_type: success
-      tags: [monitoring]
+  - role: monitoring-healthchecksio
+    monitoring_healthchecksio_ping_type: start
+    tags: [monitoring, monitoring-healthchecksio]
+  - role: bootstrap-ubuntu-server
+    tags: [bootstrap, bootstrap-ubuntu-server]
+  - role: network-netplan
+    tags: [network, network-netplan]
+  - role: system-zfs
+    tags: [system, zfs, system-zfs]
+  - role: system-zfs-policy
+    tags: [system, zfs, system-zfs-policy]
+  - role: infothrill.nullmailer
+    become: true
+  - role: server-nut
+    tags: [server, server-nut]
+  - role: system-mqtt2cmd
+    tags: [system, system-mqtt2cmd]
+  - role: hardware-rtl-433
+    tags: [hardware, hardware-rtl-433]
+  - role: backups-zfs-client
+    tags: [backups, zfs, backups-zfs-client]
+  - role: system-beep
+    tags: [system, system-beep]
+  - role: system-shoutrrr
+    become: true
+    tags: [system, system-shoutrrr]
+  - role: composition-mqtt   # must run before owntracks and zigbee2mqtt
+    tags: [composition, composition-mqtt]
+  - role: composition-reverseproxy
+    tags: [composition, composition-reverseproxy]
+  - role: composition-container-management
+    tags: [composition, composition-container-management]
+  - role: composition-homeassistant
+    tags: [composition, composition-homeassistant]
+  - role: composition-matter
+    tags: [composition, composition-matter]
+  - role: composition-owntracks
+    tags: [composition, composition-owntracks]
+  - role: composition-zigbee2mqtt
+    tags: [composition, composition-zigbee2mqtt]
+  - role: composition-watchyourlan
+    tags: [composition, composition-watchyourlan]
+  - role: composition-zfs-api
+    tags: [composition, zfs, composition-zfs-api]
+  - role: system-promtail
+    tags: [system, promtail, system-promtail]
+  - role: monitoring-healthchecksio
+    monitoring_healthchecksio_ping_type: success
+    tags: [monitoring, monitoring-healthchecksio]
 
   handlers:
-    - name: Reboot host
-      become: true
-      ansible.builtin.reboot:
+  - name: Reboot host
+    become: true
+    ansible.builtin.reboot:

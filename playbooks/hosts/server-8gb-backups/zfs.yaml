@@ -1,11 +1,11 @@
 - name: ZFS and backup stuff
   hosts: server-8gb-backups
   roles:
-    - role: system-zfs
-      tags: [system, zfs]
-    - role: backups-zfs-server
-      tags: [backups, zfs]
+  - role: system-zfs
+    tags: [system, zfs, system-zfs]
+  - role: backups-zfs-server
+    tags: [backups, zfs, backups-zfs-server]
   handlers:
-    - name: Reboot host
-      become: true
-      ansible.builtin.reboot:
+  - name: Reboot host
+    become: true
+    ansible.builtin.reboot:

@@ -1,14 +1,12 @@
 - name: Update Terraform
   hosts: raspberry-pi4-2gb-deedee
   roles:
-    - role: infra-public-resources
-      tags:
-        terraform-public
-    - role: infra-private-resources
-      tags:
-        terraform-private
+  - role: infra-public-resources
+    tags: [infra, terraform-public, infra-public-resources]
+  - role: infra-private-resources
+    tags: [infra, terraform-private, infra-private-resources]
 
   handlers:
-    - name: Reboot host
-      become: true
-      ansible.builtin.reboot:
+  - name: Reboot host
+    become: true
+    ansible.builtin.reboot:

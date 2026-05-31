@@ -1,16 +1,16 @@
 - name: Confgure ZFS, ZFS policy, ZFS backups, and ZFS monitoring on a host
   hosts: zfs_backup_clients
   roles:
-    - role: system-zfs
-      tags: [system, zfs, system-zfs]
-    - role: system-zfs-policy
-      tags: [system, zfs, system-zfs-policy]
-    - role: backups-zfs-client
-      tags: [backups, zfs, backups-zfs-client]
-    - role: composition-zfs-api
-      tags: [compositions, zfs, composition-zfs-api]
+  - role: system-zfs
+    tags: [system, zfs, system-zfs]
+  - role: system-zfs-policy
+    tags: [system, zfs, system-zfs-policy]
+  - role: backups-zfs-client
+    tags: [backups, zfs, backups-zfs-client]
+  - role: composition-zfs-api
+    tags: [composition, zfs, composition-zfs-api]
 
   handlers:
-    - name: Reboot host
-      become: true
-      ansible.builtin.reboot:
+  - name: Reboot host
+    become: true
+    ansible.builtin.reboot:

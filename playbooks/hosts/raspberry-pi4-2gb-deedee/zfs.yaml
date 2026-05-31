@@ -1,13 +1,13 @@
 - name: ZFS and backup stuff
   hosts: raspberry-pi4-2gb-deedee
   roles:
-    - role: system-zfs
-      tags: [system, zfs]
-    - role: system-zfs-policy
-      tags: [system, zfs]
-    - role: backups-zfs-client
-      tags: [backups, zfs]
+  - role: system-zfs
+    tags: [system, zfs, system-zfs]
+  - role: system-zfs-policy
+    tags: [system, zfs, system-zfs-policy]
+  - role: backups-zfs-client
+    tags: [backups, zfs, backups-zfs-client]
   handlers:
-    - name: Reboot host
-      become: true
-      ansible.builtin.reboot:
+  - name: Reboot host
+    become: true
+    ansible.builtin.reboot:

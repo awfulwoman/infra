@@ -2,4 +2,5 @@
 - name: Malcolm
   hosts: apple-macmini-m4-16gb-malcolm
   roles:
-    - role: monitoring-healthchecksio
+  - role: monitoring-healthchecksio
+    tags: [monitoring, monitoring-healthchecksio]

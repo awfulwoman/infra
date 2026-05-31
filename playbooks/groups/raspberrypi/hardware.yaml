@@ -1,5 +1,5 @@
 - name: Confgure all Raspberry Pi-secific hardware
   hosts: raspberry_pi
   roles:
-    - role: hardware-raspberry-pi
-      tags: [hardware]
+  - role: hardware-raspberry-pi
+    tags: [hardware, hardware-raspberry-pi]

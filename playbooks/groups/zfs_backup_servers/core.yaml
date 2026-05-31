@@ -1,20 +1,20 @@
 - name: Configure a host to pull ZFS backups from clients
   hosts: zfs_backup_servers
   roles:
-    - role: system-zfs
-      tags: [system, zfs]
-    - role: system-zfs-policy
-      tags: [system, zfs]
-    - role: backups-zfs-server
-      tags: [backups, zfs]
-    - role: composition-container-management
-      tags: [composition, composition-container-managements]
-    - role: composition-reverseproxy
-      tags: [compositions, composition-reverseproxy]
-    - role: composition-zfs-api
-      tags: [compositions, zfs, composition-zfs-api]
+  - role: system-zfs
+    tags: [system, zfs, system-zfs]
+  - role: system-zfs-policy
+    tags: [system, zfs, system-zfs-policy]
+  - role: backups-zfs-server
+    tags: [backups, zfs, backups-zfs-server]
+  - role: composition-container-management
+    tags: [composition, composition-container-management]
+  - role: composition-reverseproxy
+    tags: [composition, composition-reverseproxy]
+  - role: composition-zfs-api
+    tags: [composition, zfs, composition-zfs-api]
 
   handlers:
-    - name: Reboot host
-      become: true
-      ansible.builtin.reboot:
+  - name: Reboot host
+    become: true
+    ansible.builtin.reboot:

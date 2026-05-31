@@ -1,4 +1,5 @@
 - name: Configure networking on a host
   hosts: ubuntu_servers
   roles:
-    - role: network-netplan
+  - role: network-netplan
+    tags: [network, network-netplan]

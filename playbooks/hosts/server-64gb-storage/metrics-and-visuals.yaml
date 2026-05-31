@@ -2,11 +2,11 @@
   hosts: server-64gb-storage
 
   roles:
-    - role: composition-victoriametrics
-    - role: composition-grafana
-
-
+  - role: composition-victoriametrics
+    tags: [composition, composition-victoriametrics]
+  - role: composition-grafana
+    tags: [composition, composition-grafana]
   handlers:
-    - name: Reboot host
-      become: true
-      ansible.builtin.reboot:
+  - name: Reboot host
+    become: true
+    ansible.builtin.reboot:

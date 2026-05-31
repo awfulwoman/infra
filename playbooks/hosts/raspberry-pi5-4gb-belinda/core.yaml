@@ -1,38 +1,38 @@
 - name: Belinda the Backup Server
   hosts: raspberry-pi5-4gb-belinda
   roles:
-    - role: monitoring-healthchecksio
-      monitoring_healthchecksio_ping_type: start
-      tags: [monitoring]
-    - role: bootstrap-ubuntu-server
-      tags: [bootstrap]
-    - role: network-netplan
-      tags: [network]
-    - role: hardware-raspberry-pi
-      tags: [hardware]
-    - role: system-zfs
-      tags: [system, zfs]
-    - role: system-zfs-policy
-      tags: [system, zfs]
-    - role: backups-zfs-server
-      tags: [backups, zfs]
-    - role: composition-container-management
-      tags: [compositions]
-    - role: composition-reverseproxy
-      tags: [compositions]
-    - role: composition-zfs-api
-      tags: [compositions, zfs]
-    - role: client-nut
-      tags: [client]
-    - role: infothrill.nullmailer
-      become: true
-    - role: system-promtail
-      tags: [system, promtail]
-    - role: monitoring-healthchecksio
-      monitoring_healthchecksio_ping_type: success
-      tags: [monitoring]
+  - role: monitoring-healthchecksio
+    monitoring_healthchecksio_ping_type: start
+    tags: [monitoring, monitoring-healthchecksio]
+  - role: bootstrap-ubuntu-server
+    tags: [bootstrap, bootstrap-ubuntu-server]
+  - role: network-netplan
+    tags: [network, network-netplan]
+  - role: hardware-raspberry-pi
+    tags: [hardware, hardware-raspberry-pi]
+  - role: system-zfs
+    tags: [system, zfs, system-zfs]
+  - role: system-zfs-policy
+    tags: [system, zfs, system-zfs-policy]
+  - role: backups-zfs-server
+    tags: [backups, zfs, backups-zfs-server]
+  - role: composition-container-management
+    tags: [composition, composition-container-management]
+  - role: composition-reverseproxy
+    tags: [composition, composition-reverseproxy]
+  - role: composition-zfs-api
+    tags: [composition, zfs, composition-zfs-api]
+  - role: client-nut
+    tags: [client, client-nut]
+  - role: infothrill.nullmailer
+    become: true
+  - role: system-promtail
+    tags: [system, promtail, system-promtail]
+  - role: monitoring-healthchecksio
+    monitoring_healthchecksio_ping_type: success
+    tags: [monitoring, monitoring-healthchecksio]
 
   handlers:
-    - name: Reboot host
-      become: true
-      ansible.builtin.reboot:
+  - name: Reboot host
+    become: true
+    ansible.builtin.reboot:

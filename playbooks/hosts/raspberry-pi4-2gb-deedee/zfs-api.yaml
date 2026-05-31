@@ -2,14 +2,16 @@
   hosts: raspberry-pi4-2gb-deedee
   vars:
     compositions:
-      - zfs-api
+    - zfs-api
   roles:
-    - role: composition-reverseproxy
-    - role: composition-container-management
-    - role: composition-zfs-api
-      tags: [compositions, zfs]
+  - role: composition-reverseproxy
+    tags: [composition, composition-reverseproxy]
+  - role: composition-container-management
+    tags: [composition, composition-container-management]
+  - role: composition-zfs-api
+    tags: [composition, zfs, composition-zfs-api]
 
   handlers:
-    - name: Reboot host
-      become: true
-      ansible.builtin.reboot:
+  - name: Reboot host
+    become: true
+    ansible.builtin.reboot:

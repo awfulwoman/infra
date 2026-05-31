@@ -1,9 +1,9 @@
 - name: Bootstrap a host to a minimum functional standard
   hosts: infra
   roles:
-    - role: bootstrap-ubuntu-server
-      when: ansible_facts['os_family'] == 'Debian'
-      tags: [bootstrap, debian, ubuntu]
-    - role: bootstrap-macos-server
-      when: ansible_facts['os_family'] == 'Darwin'
-      tags: [bootstrap, darwin, macos]
+  - role: bootstrap-ubuntu-server
+    when: ansible_facts['os_family'] == 'Debian'
+    tags: [bootstrap, debian, ubuntu, bootstrap-ubuntu-server]
+  - role: bootstrap-macos-server
+    when: ansible_facts['os_family'] == 'Darwin'
+    tags: [bootstrap, darwin, macos, bootstrap-macos-server]
