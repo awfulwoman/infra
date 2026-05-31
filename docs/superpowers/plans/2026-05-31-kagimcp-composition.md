@@ -4,7 +4,7 @@
 
 **Goal:** Deploy the Kagi MCP server as a Docker Compose composition on server-64gb-storage, accessible at `kagimcp.<domain>/mcp` via Traefik with TLS.
 
-**Architecture:** A new `composition-kagimcp` Ansible role bundles a `Dockerfile.j2` template (installs `kagimcp` from PyPI), a Docker Compose file with Traefik labels, and an env file containing the Kagi API key from Ansible Vault. The role follows the standard `composition-*` pattern: depends on `composition-common`, templates files to `{{ composition_root }}`, registers a DNS subdomain, then starts the container.
+**Architecture:** A new `composition-mcp-kagisearch` Ansible role bundles a `Dockerfile.j2` template (installs `kagimcp` from PyPI), a Docker Compose file with Traefik labels, and an env file containing the Kagi API key from Ansible Vault. The role follows the standard `composition-*` pattern: depends on `composition-common`, templates files to `{{ composition_root }}`, registers a DNS subdomain, then starts the container.
 
 **Tech Stack:** Ansible, Docker Compose v2, Traefik (existing), Ansible Vault (beanpod identity), Python 3.12 slim image, kagimcp PyPI package
 
@@ -14,13 +14,13 @@
 
 | Action | Path |
 |---|---|
-| Create | `roles/composition-kagimcp/defaults/main.yaml` |
-| Create | `roles/composition-kagimcp/meta/main.yaml` |
-| Create | `roles/composition-kagimcp/tasks/main.yaml` |
-| Create | `roles/composition-kagimcp/templates/Dockerfile.j2` |
-| Create | `roles/composition-kagimcp/templates/docker-compose.yaml.j2` |
-| Create | `roles/composition-kagimcp/templates/environment_vars.j2` |
-| Create | `inventory/host_vars/server-64gb-storage/vault_kagimcp.yaml` |
+| Create | `roles/composition-mcp-kagisearch/defaults/main.yaml` |
+| Create | `roles/composition-mcp-kagisearch/meta/main.yaml` |
+| Create | `roles/composition-mcp-kagisearch/tasks/main.yaml` |
+| Create | `roles/composition-mcp-kagisearch/templates/Dockerfile.j2` |
+| Create | `roles/composition-mcp-kagisearch/templates/docker-compose.yaml.j2` |
+| Create | `roles/composition-mcp-kagisearch/templates/environment_vars.j2` |
+| Create | `inventory/host_vars/server-64gb-storage/vault_mcp_kagisearch.yaml` |
 | Modify | `playbooks/hosts/server-64gb-storage/core.yaml` |
 
 ---
@@ -28,20 +28,20 @@
 ### Task 1: Create vault entry for Kagi API key
 
 **Files:**
-- Create: `inventory/host_vars/server-64gb-storage/vault_kagimcp.yaml`
+- Create: `inventory/host_vars/server-64gb-storage/vault_mcp_kagisearch.yaml`
 
 - [ ] **Step 1: Encrypt your Kagi API key**
 
 Find your Kagi API key at https://kagi.com/settings?p=api (you must have an existing key — do not generate a new one here). Then encrypt it:
 
 ```bash
-ansible-vault encrypt_string "YOUR_KAGI_API_KEY_HERE" --name 'vault_kagimcp_kagi_api_key'
+ansible-vault encrypt_string "YOUR_KAGI_API_KEY_HERE" --name 'vault_mcp_kagisearch_kagi_api_key'
 ```
 
 The output will look like:
 
 ```
-vault_kagimcp_kagi_api_key: !vault |
+vault_mcp_kagisearch_kagi_api_key: !vault |
           $ANSIBLE_VAULT;1.2;AES256;beanpod
           61333035...
           ...
@@ -49,10 +49,10 @@ vault_kagimcp_kagi_api_key: !vault |
 
 - [ ] **Step 2: Create the vault file**
 
-Create `inventory/host_vars/server-64gb-storage/vault_kagimcp.yaml` and paste the output from step 1 as the entire file content. Example structure (your encrypted value will differ):
+Create `inventory/host_vars/server-64gb-storage/vault_mcp_kagisearch.yaml` and paste the output from step 1 as the entire file content. Example structure (your encrypted value will differ):
 
 ```yaml
-vault_kagimcp_kagi_api_key: !vault |
+vault_mcp_kagisearch_kagi_api_key: !vault |
           $ANSIBLE_VAULT;1.2;AES256;beanpod
           61333035396466386632316362363232356530313165656464663438323035303635306165633631
           3665323561316536306632326466316432303733663836350a376635616461316161616663346363
@@ -68,16 +68,16 @@ vault_kagimcp_kagi_api_key: !vault |
 
 ```bash
 ansible -i inventory/hosts.yaml server-64gb-storage -m debug \
-  -a "var=vault_kagimcp_kagi_api_key"
+  -a "var=vault_mcp_kagisearch_kagi_api_key"
 ```
 
-Expected: output showing the plaintext API key value under `vault_kagimcp_kagi_api_key`.
+Expected: output showing the plaintext API key value under `vault_mcp_kagisearch_kagi_api_key`.
 
 - [ ] **Step 4: Commit**
 
 ```bash
-git add inventory/host_vars/server-64gb-storage/vault_kagimcp.yaml
-git commit -m "feat(composition-kagimcp): add vault entry for Kagi API key"
+git add inventory/host_vars/server-64gb-storage/vault_mcp_kagisearch.yaml
+git commit -m "feat(composition-mcp-kagisearch): add vault entry for Kagi API key"
 ```
 
 ---
@@ -85,13 +85,13 @@ git commit -m "feat(composition-kagimcp): add vault entry for Kagi API key"
 ### Task 2: Create role defaults and meta
 
 **Files:**
-- Create: `roles/composition-kagimcp/defaults/main.yaml`
-- Create: `roles/composition-kagimcp/meta/main.yaml`
+- Create: `roles/composition-mcp-kagisearch/defaults/main.yaml`
+- Create: `roles/composition-mcp-kagisearch/meta/main.yaml`
 
 - [ ] **Step 1: Create the directory structure**
 
 ```bash
-mkdir -p roles/composition-kagimcp/{defaults,meta,tasks,templates}
+mkdir -p roles/composition-mcp-kagisearch/{defaults,meta,tasks,templates}
 ```
 
 - [ ] **Step 2: Create defaults/main.yaml**
@@ -100,9 +100,9 @@ mkdir -p roles/composition-kagimcp/{defaults,meta,tasks,templates}
 # code: language=ansible
 composition_name: kagimcp
 
-composition_kagimcp_version: "1.0.0"
+composition_mcp_kagisearch_version: "1.0.0"
 
-composition_kagimcp_subdomains:
+composition_mcp_kagisearch_subdomains:
   - kagimcp
 ```
 
@@ -118,9 +118,9 @@ dependencies:
 - [ ] **Step 4: Commit**
 
 ```bash
-git add roles/composition-kagimcp/defaults/main.yaml \
-        roles/composition-kagimcp/meta/main.yaml
-git commit -m "feat(composition-kagimcp): add role defaults and meta"
+git add roles/composition-mcp-kagisearch/defaults/main.yaml \
+        roles/composition-mcp-kagisearch/meta/main.yaml
+git commit -m "feat(composition-mcp-kagisearch): add role defaults and meta"
 ```
 
 ---
@@ -128,7 +128,7 @@ git commit -m "feat(composition-kagimcp): add role defaults and meta"
 ### Task 3: Create Dockerfile template
 
 **Files:**
-- Create: `roles/composition-kagimcp/templates/Dockerfile.j2`
+- Create: `roles/composition-mcp-kagisearch/templates/Dockerfile.j2`
 
 - [ ] **Step 1: Create templates/Dockerfile.j2**
 
@@ -142,7 +142,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
-RUN pip install kagimcp=={{ composition_kagimcp_version }}
+RUN pip install kagimcp=={{ composition_mcp_kagisearch_version }}
 
 ENV PORT=8000
 EXPOSE 8000
@@ -150,13 +150,13 @@ EXPOSE 8000
 CMD ["sh", "-c", "kagimcp --http --host 0.0.0.0 --port ${PORT}"]
 ```
 
-Note: `{{ composition_kagimcp_version }}` is an Ansible variable substituted at template time — the resulting `Dockerfile` on the server contains the literal version string.
+Note: `{{ composition_mcp_kagisearch_version }}` is an Ansible variable substituted at template time — the resulting `Dockerfile` on the server contains the literal version string.
 
 - [ ] **Step 2: Commit**
 
 ```bash
-git add roles/composition-kagimcp/templates/Dockerfile.j2
-git commit -m "feat(composition-kagimcp): add Dockerfile template"
+git add roles/composition-mcp-kagisearch/templates/Dockerfile.j2
+git commit -m "feat(composition-mcp-kagisearch): add Dockerfile template"
 ```
 
 ---
@@ -164,7 +164,7 @@ git commit -m "feat(composition-kagimcp): add Dockerfile template"
 ### Task 4: Create Docker Compose template
 
 **Files:**
-- Create: `roles/composition-kagimcp/templates/docker-compose.yaml.j2`
+- Create: `roles/composition-mcp-kagisearch/templates/docker-compose.yaml.j2`
 
 - [ ] **Step 1: Create templates/docker-compose.yaml.j2**
 
@@ -196,8 +196,8 @@ networks:
 - [ ] **Step 2: Commit**
 
 ```bash
-git add roles/composition-kagimcp/templates/docker-compose.yaml.j2
-git commit -m "feat(composition-kagimcp): add Docker Compose template"
+git add roles/composition-mcp-kagisearch/templates/docker-compose.yaml.j2
+git commit -m "feat(composition-mcp-kagisearch): add Docker Compose template"
 ```
 
 ---
@@ -205,19 +205,19 @@ git commit -m "feat(composition-kagimcp): add Docker Compose template"
 ### Task 5: Create environment vars template
 
 **Files:**
-- Create: `roles/composition-kagimcp/templates/environment_vars.j2`
+- Create: `roles/composition-mcp-kagisearch/templates/environment_vars.j2`
 
 - [ ] **Step 1: Create templates/environment_vars.j2**
 
 ```
-KAGI_API_KEY="{{ vault_kagimcp_kagi_api_key }}"
+KAGI_API_KEY="{{ vault_mcp_kagisearch_kagi_api_key }}"
 ```
 
 - [ ] **Step 2: Commit**
 
 ```bash
-git add roles/composition-kagimcp/templates/environment_vars.j2
-git commit -m "feat(composition-kagimcp): add environment vars template"
+git add roles/composition-mcp-kagisearch/templates/environment_vars.j2
+git commit -m "feat(composition-mcp-kagisearch): add environment vars template"
 ```
 
 ---
@@ -225,7 +225,7 @@ git commit -m "feat(composition-kagimcp): add environment vars template"
 ### Task 6: Create role tasks
 
 **Files:**
-- Create: `roles/composition-kagimcp/tasks/main.yaml`
+- Create: `roles/composition-mcp-kagisearch/tasks/main.yaml`
 
 - [ ] **Step 1: Create tasks/main.yaml**
 
@@ -260,7 +260,7 @@ git commit -m "feat(composition-kagimcp): add environment vars template"
   ansible.builtin.include_role:
     name: "network-register-subdomain"
   vars:
-    configure_dns_subdomains: "{{ composition_kagimcp_subdomains }}"
+    configure_dns_subdomains: "{{ composition_mcp_kagisearch_subdomains }}"
 
 - name: Start Docker Compose project
   community.docker.docker_compose_v2:
@@ -274,8 +274,8 @@ git commit -m "feat(composition-kagimcp): add environment vars template"
 - [ ] **Step 2: Commit**
 
 ```bash
-git add roles/composition-kagimcp/tasks/main.yaml
-git commit -m "feat(composition-kagimcp): add role tasks"
+git add roles/composition-mcp-kagisearch/tasks/main.yaml
+git commit -m "feat(composition-mcp-kagisearch): add role tasks"
 ```
 
 ---
@@ -290,7 +290,7 @@ git commit -m "feat(composition-kagimcp): add role tasks"
 In `playbooks/hosts/server-64gb-storage/core.yaml`, add after the `composition-paperless-ngx` block (currently around line 80-81):
 
 ```yaml
-    - role: composition-kagimcp
+    - role: composition-mcp-kagisearch
       tags: [compositions]
 ```
 
@@ -299,7 +299,7 @@ The surrounding context should look like:
 ```yaml
     - role: composition-paperless-ngx
       tags: [compositions, composition-paperless-ngx]
-    - role: composition-kagimcp
+    - role: composition-mcp-kagisearch
       tags: [compositions]
     - role: system-emailbackup
 ```
@@ -308,7 +308,7 @@ The surrounding context should look like:
 
 ```bash
 git add playbooks/hosts/server-64gb-storage/core.yaml
-git commit -m "feat(composition-kagimcp): add to storage host playbook"
+git commit -m "feat(composition-mcp-kagisearch): add to storage host playbook"
 ```
 
 ---

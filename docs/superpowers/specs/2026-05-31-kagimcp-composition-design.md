@@ -16,7 +16,7 @@ Deploy [kagimcp](https://github.com/kagisearch/kagimcp) — the official Kagi MC
 ## Role Structure
 
 ```
-roles/composition-kagimcp/
+roles/composition-mcp-kagisearch/
   defaults/main.yaml          # composition_name, version pin, subdomains list
   meta/main.yaml              # dependency: composition-common
   tasks/main.yaml             # template files, DNS registration, compose up
@@ -31,14 +31,14 @@ roles/composition-kagimcp/
 | Variable | Default | Description |
 |---|---|---|
 | `composition_name` | `kagimcp` | Used by composition-common to set paths |
-| `composition_kagimcp_version` | `"1.0.0"` | PyPI version pin; bump to upgrade |
-| `composition_kagimcp_subdomains` | `[kagimcp]` | Subdomain(s) registered in DNS |
+| `composition_mcp_kagisearch_version` | `"1.0.0"` | PyPI version pin; bump to upgrade |
+| `composition_mcp_kagisearch_subdomains` | `[kagimcp]` | Subdomain(s) registered in DNS |
 
 ## Vault
 
-New vault file: `inventory/host_vars/server-64gb-storage/vault_kagimcp.yaml`
+New vault file: `inventory/host_vars/server-64gb-storage/vault_mcp_kagisearch.yaml`
 
-Contains `vault_kagimcp_kagi_api_key` encrypted with `ansible-vault encrypt_string`.
+Contains `vault_mcp_kagisearch_kagi_api_key` encrypted with `ansible-vault encrypt_string`.
 
 ## Data Flow
 
@@ -52,10 +52,10 @@ Contains `vault_kagimcp_kagi_api_key` encrypted with `ansible-vault encrypt_stri
 Add to `playbooks/hosts/server-64gb-storage/core.yaml` in the compositions section:
 
 ```yaml
-- role: composition-kagimcp
+- role: composition-mcp-kagisearch
   tags: [compositions]
 ```
 
 ## Upgrade Path
 
-To upgrade kagimcp: bump `composition_kagimcp_version` in `defaults/main.yaml` and re-run the playbook. `build: always` ensures the image is rebuilt with the new version.
+To upgrade kagimcp: bump `composition_mcp_kagisearch_version` in `defaults/main.yaml` and re-run the playbook. `build: always` ensures the image is rebuilt with the new version.

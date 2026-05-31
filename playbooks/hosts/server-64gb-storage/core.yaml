@@ -79,8 +79,8 @@
       tags: [compositions]
     - role: composition-paperless-ngx
       tags: [compositions, composition-paperless-ngx]
-    - role: composition-kagimcp
-      tags: [compositions, composition-kagimcp]
+    - role: composition-mcp-kagisearch
+      tags: [compositions, composition-mcp-kagisearch]
     - role: system-emailbackup
       tags: [system, system-emailbackup]
     - role: system-smartmontools

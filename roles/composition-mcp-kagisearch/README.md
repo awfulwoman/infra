@@ -1,4 +1,4 @@
-# composition-kagimcp
+# composition-mcp-kagisearch
 
 Kagi MCP server — exposes Kagi search and content extraction to MCP clients.
 

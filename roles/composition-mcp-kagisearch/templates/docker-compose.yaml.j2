@@ -1,0 +1,22 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  mcp-kagisearch:
+    container_name: mcp-kagisearch
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file: .environment_vars
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mcp-kagisearch.rule=Host(`kagimcp.{{ domainname_infra }}`)"
+      - "traefik.http.routers.mcp-kagisearch.tls=true"
+      - "traefik.http.routers.mcp-kagisearch.tls.certresolver=letsencrypt"
+      - "traefik.http.services.mcp-kagisearch.loadbalancer.server.port=8000"
+    networks:
+      - "{{ default_docker_network }}"
+
+networks:
+  "{{ default_docker_network }}":
+    external: true

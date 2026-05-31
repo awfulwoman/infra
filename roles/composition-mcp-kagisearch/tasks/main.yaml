@@ -28,7 +28,7 @@
   ansible.builtin.include_role:
     name: "network-register-subdomain"
   vars:
-    configure_dns_subdomains: "{{ composition_kagimcp_subdomains }}"
+    configure_dns_subdomains: "{{ composition_mcp_kagisearch_subdomains }}"
 
 - name: Start Docker Compose project
   community.docker.docker_compose_v2:

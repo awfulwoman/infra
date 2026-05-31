@@ -1,0 +1,7 @@
+# code: language=ansible
+composition_name: mcp-kagisearch
+
+composition_mcp_kagisearch_version: "1.0.0"
+
+composition_mcp_kagisearch_subdomains:
+  - kagimcp

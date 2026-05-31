@@ -1,4 +1,4 @@
 dependencies:
   - role: composition-common
     vars:
-      composition_name: kagimcp
+      composition_name: mcp-kagisearch

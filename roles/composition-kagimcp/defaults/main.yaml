@@ -1,7 +1,0 @@
-# code: language=ansible
-composition_name: kagimcp
-
-composition_kagimcp_version: "1.0.0"
-
-composition_kagimcp_subdomains:
-  - kagimcp
