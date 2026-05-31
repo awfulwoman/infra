@@ -1,5 +1,25 @@
 # code: language=ansible
 
+# ----------------------------
+# Migration: remove old composition-kagimcp
+# ----------------------------
+
+- name: "Remove old kagimcp container (renamed to mcp-kagisearch)"
+  community.docker.docker_container:
+    name: kagimcp
+    state: absent
+
+- name: "Remove old kagimcp ZFS dataset (renamed to mcp-kagisearch)"
+  become: true
+  community.general.zfs:
+    name: "{{ compositions_dataset }}/kagimcp"
+    state: absent
+  failed_when: false
+
+# ----------------------------
+# Core tasks
+# ----------------------------
+
 - name: "Create Dockerfile"
   ansible.builtin.template:
     src: Dockerfile.j2
