@@ -36,14 +36,6 @@
     group: "{{ ansible_user }}"
     mode: "0644"
 
-- name: "Create .env file"
-  ansible.builtin.template:
-    src: environment_vars.j2
-    dest: "{{ composition_root }}/.environment_vars"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    mode: "0644"
-
 - name: Register DNS subdomain
   ansible.builtin.include_role:
     name: "network-register-subdomain"
