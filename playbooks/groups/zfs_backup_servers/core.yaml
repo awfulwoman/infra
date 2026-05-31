@@ -1,4 +1,4 @@
-- name: ZFS Backup Servers
+- name: Configure a host to pull ZFS backups from clients
   hosts: zfs_backup_servers
   roles:
     - role: system-zfs

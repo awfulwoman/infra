@@ -1,4 +1,4 @@
-- name: Bootstrap host
+- name: Bootstrap a host to a minimum functional standard
   hosts: infra
   roles:
     - role: bootstrap-ubuntu-server

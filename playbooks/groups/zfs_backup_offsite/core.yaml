@@ -1,4 +1,4 @@
-- name: ZFS Backup Offsite
+- name: Configure a ZFS offsite backup server
   hosts: zfs_backup_offsite
   roles:
     - role: system-zfs

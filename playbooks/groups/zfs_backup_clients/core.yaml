@@ -1,4 +1,4 @@
-- name: ZFS Backup Clients
+- name: Confgure ZFS, ZFS policy, ZFS backups, and ZFS monitoring on a host
   hosts: zfs_backup_clients
   roles:
     - role: system-zfs

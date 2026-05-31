@@ -1,4 +1,4 @@
-- name: Run all hardware tasks on Raspberry Pis
+- name: Confgure all Raspberry Pi-secific hardware
   hosts: raspberry_pi
   roles:
     - role: hardware-raspberry-pi

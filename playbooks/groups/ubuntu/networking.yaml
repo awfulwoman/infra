@@ -1,4 +1,4 @@
-- name: Networking config
+- name: Configure networking on a host
   hosts: ubuntu_servers
   roles:
     - role: network-netplan

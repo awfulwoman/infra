@@ -1,4 +1,4 @@
-- name: Reboot all immediately
+- name: Reboot all hosts
   hosts: infra
   tasks:
     - name: Reboot host

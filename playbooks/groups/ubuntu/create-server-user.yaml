@@ -1,5 +1,5 @@
-- name: Create server user
-  hosts: oggcamp-demo
+- name: Create standard server user
+  hosts: ubuntu
   vars:
     ansible_user: root
   tasks:
