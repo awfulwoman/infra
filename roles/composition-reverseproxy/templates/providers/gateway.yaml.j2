@@ -1,0 +1,40 @@
+tls:
+  options:
+    default:
+      minVersion: VersionTLS13
+      sniStrict: true
+
+http:
+  routers:
+    gateway:
+      service: gateway
+      rule: "Host(`gateway.{{ domainname_infra }}`)"
+      tls:
+        certresolver: letsencrypt
+      entrypoints:
+        - web
+        - websecure
+      middlewares:
+        - secHeaders
+        - https-redirect
+
+  middlewares:
+    secHeaders:
+      headers:
+        browserXssFilter: true
+        contentTypeNosniff: true
+        frameDeny: true
+        sslRedirect: true
+        stsIncludeSubdomains: true
+        stsSeconds: 31536000
+        customFrameOptionsValue: SAMEORIGIN
+    https-redirect:
+      redirectScheme:
+        scheme: https
+
+  services:
+    gateway:
+      loadBalancer:
+        passHostHeader: true
+        servers:
+          - url: "http://192.168.1.150:4000"

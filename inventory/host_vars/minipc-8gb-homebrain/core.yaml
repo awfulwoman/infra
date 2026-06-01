@@ -63,6 +63,7 @@ traefik_providers:
   - homeassistant
   - esphome
   - watchyourlan
+  - gateway
 
 cnames:
   - homeassistant.{{ domainname_infra }}
@@ -70,6 +71,7 @@ cnames:
   - esphome.{{ domainname_infra }}
   - mctest.{{ domainname_infra }}
   - lan.{{ domainname_infra }}
+  - gateway.{{ domainname_infra }}
 
 # -------------------------------------------------------------------
 # ZFS POLICY
