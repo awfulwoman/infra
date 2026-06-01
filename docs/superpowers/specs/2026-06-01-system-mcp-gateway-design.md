@@ -32,7 +32,7 @@ Defined in `defaults/main.yaml`:
 |---|---|---|
 | `system_mcp_gateway_base_dir` | `{{ awfulwoman_opt_dir }}` | Base for all deployed service apps |
 | `system_mcp_gateway_repo_dir` | `{{ system_mcp_gateway_base_dir }}/gateway` | Where the role clones to |
-| `system_mcp_gateway_repo_url` | `https://github.com/awfulwoman/gateway.git` | |
+| `system_mcp_gateway_repo_url` | `git@github.com:awfulwoman/gateway.git` | |
 | `system_mcp_gateway_repo_version` | `main` | Branch/tag/commit to deploy |
 | `system_mcp_gateway_imap_host` | `imap.mailbox.org` | |
 | `system_mcp_gateway_imap_port` | `993` | |

@@ -8,7 +8,7 @@ Installs and runs the [gateway](https://github.com/awfulwoman/gateway) MCP serve
 |---|---|---|
 | `system_mcp_gateway_base_dir` | `{{ awfulwoman_opt_dir }}` | Base directory for deployed service apps |
 | `system_mcp_gateway_repo_dir` | `{{ system_mcp_gateway_base_dir }}/gateway` | Clone destination |
-| `system_mcp_gateway_repo_url` | `https://github.com/awfulwoman/gateway.git` | |
+| `system_mcp_gateway_repo_url` | `git@github.com:awfulwoman/gateway.git` | |
 | `system_mcp_gateway_repo_version` | `main` | Branch/tag to deploy |
 | `system_mcp_gateway_imap_host` | `imap.mailbox.org` | |
 | `system_mcp_gateway_imap_port` | `993` | |
