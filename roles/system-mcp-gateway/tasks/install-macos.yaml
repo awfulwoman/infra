@@ -37,6 +37,7 @@
     src: env.j2
     dest: "{{ system_mcp_gateway_repo_dir }}/.env"
     mode: "0600"
+  register: gateway_env
 
 - name: Ensure LaunchAgents directory exists
   ansible.builtin.file:
@@ -51,15 +52,15 @@
     mode: "0644"
   register: gateway_plist
 
-- name: Unload service before reload on plist change # noqa: no-handler
+- name: Unload service before reload on plist or .env change # noqa: no-handler
   ansible.builtin.command: "launchctl unload {{ ansible_facts.user_dir }}/Library/LaunchAgents/com.awfulwoman.gateway.plist"
-  when: gateway_plist.changed
+  when: gateway_plist.changed or gateway_env.changed
   changed_when: false
   failed_when: false
 
 - name: Load service # noqa: no-handler
   ansible.builtin.command: "launchctl load {{ ansible_facts.user_dir }}/Library/LaunchAgents/com.awfulwoman.gateway.plist"
-  when: gateway_plist.changed
+  when: gateway_plist.changed or gateway_env.changed
   register: gateway_load
   changed_when: gateway_load.rc == 0
   failed_when: false
