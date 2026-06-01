@@ -1,1 +1,27 @@
 ---
+- name: Ensure uv is installed via Homebrew
+  community.general.homebrew:
+    name: uv
+    state: present
+
+- name: Ensure /opt/awfulwoman base directory exists
+  become: true
+  ansible.builtin.file:
+    path: "{{ system_mcp_gateway_base_dir }}"
+    state: directory
+    mode: "0755"
+    owner: "{{ ansible_user }}"
+    group: staff
+
+- name: Ensure gateway repo is cloned/updated
+  ansible.builtin.git:
+    repo: "{{ system_mcp_gateway_repo_url }}"
+    dest: "{{ system_mcp_gateway_repo_dir }}"
+    version: "{{ system_mcp_gateway_repo_version }}"
+    update: true
+
+- name: Ensure Python dependencies are installed
+  ansible.builtin.command:
+    cmd: uv sync
+    chdir: "{{ system_mcp_gateway_repo_dir }}"
+  changed_when: false
