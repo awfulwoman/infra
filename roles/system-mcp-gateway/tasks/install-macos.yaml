@@ -75,14 +75,8 @@
     msg: "WARNING: TCC permission grant skipped - only supported on macOS 15.x. Grant Calendar/Reminders/Contacts access manually for the gateway process."
   when: ansible_facts['distribution_version'] is version('15', '<')
 
-- name: Find real path to uv binary (macOS 15 only)
-  ansible.builtin.command: which uv
-  register: uv_which
-  changed_when: false
-  when: ansible_facts['distribution_version'] is version('15', '>=')
-
-- name: Resolve uv symlink to real binary path (macOS 15 only)
-  ansible.builtin.command: "python3 -c \"import os; print(os.path.realpath('{{ uv_which.stdout }}'))\""
+- name: Resolve uv symlink to real binary path
+  ansible.builtin.command: "python3 -c \"import os; print(os.path.realpath('/opt/homebrew/bin/uv'))\""
   register: uv_real
   changed_when: false
   when: ansible_facts['distribution_version'] is version('15', '>=')
