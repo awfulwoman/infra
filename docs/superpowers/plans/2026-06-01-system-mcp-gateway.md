@@ -21,7 +21,7 @@
 
 ```yaml
 ---
-system_mcp_gateway_base_dir: /opt/awfulwoman
+system_mcp_gateway_base_dir: "{{ awfulwoman_opt_dir }}"
 system_mcp_gateway_repo_dir: "{{ system_mcp_gateway_base_dir }}/gateway"
 system_mcp_gateway_repo_url: "https://github.com/awfulwoman/gateway.git"
 system_mcp_gateway_repo_version: main

@@ -38,6 +38,9 @@ systemd_service_path: /etc/systemd/system
 # Terraform
 terraform_working_dir: /opt/terraform
 
+# Deployed apps base directory
+awfulwoman_opt_dir: /opt/awfulwoman
+
 # Hetzner
 hetzner_floating_ip: 78.47.163.140
 

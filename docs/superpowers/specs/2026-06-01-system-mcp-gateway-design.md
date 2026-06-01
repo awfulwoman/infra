@@ -30,7 +30,7 @@ Defined in `defaults/main.yaml`:
 
 | Variable | Default | Notes |
 |---|---|---|
-| `system_mcp_gateway_base_dir` | `/opt/awfulwoman` | Base for all deployed service apps |
+| `system_mcp_gateway_base_dir` | `{{ awfulwoman_opt_dir }}` | Base for all deployed service apps |
 | `system_mcp_gateway_repo_dir` | `{{ system_mcp_gateway_base_dir }}/gateway` | Where the role clones to |
 | `system_mcp_gateway_repo_url` | `https://github.com/awfulwoman/gateway.git` | |
 | `system_mcp_gateway_repo_version` | `main` | Branch/tag/commit to deploy |
