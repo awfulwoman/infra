@@ -22,7 +22,7 @@
 
 - name: Ensure Python dependencies are installed
   ansible.builtin.command:
-    cmd: uv sync
+    cmd: /opt/homebrew/bin/uv sync
     chdir: "{{ system_mcp_gateway_repo_dir }}"
   changed_when: false
 
