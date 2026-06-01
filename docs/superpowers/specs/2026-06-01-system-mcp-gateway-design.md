@@ -85,12 +85,12 @@ Follows `system-ollama` pattern:
 
 ## macOS Version Guard for TCC
 
-The TCC step runs only when:
+The TCC step runs on macOS 15 and later:
 ```yaml
-when: ansible_facts['distribution_version'] is version('15', '>=') and ansible_facts['distribution_version'] is version('16', '<')
+when: ansible_facts['distribution_version'] is version('15', '>=')
 ```
 
-If version is outside this range, a `ansible.builtin.debug` message warns the operator to manually grant Calendar/Reminders/Contacts permissions.
+On older macOS versions, a `ansible.builtin.debug` message warns the operator to grant permissions manually.
 
 ## What the Role Does NOT Do
 

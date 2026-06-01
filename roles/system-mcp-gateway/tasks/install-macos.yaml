@@ -73,19 +73,19 @@
 - name: Check macOS version for TCC compatibility
   ansible.builtin.debug:
     msg: "WARNING: TCC permission grant skipped - only supported on macOS 15.x. Grant Calendar/Reminders/Contacts access manually for the gateway process."
-  when: not (ansible_facts['distribution_version'] is version('15', '>=') and ansible_facts['distribution_version'] is version('16', '<'))
+  when: ansible_facts['distribution_version'] is version('15', '<')
 
 - name: Find real path to uv binary (macOS 15 only)
   ansible.builtin.command: which uv
   register: uv_which
   changed_when: false
-  when: ansible_facts['distribution_version'] is version('15', '>=') and ansible_facts['distribution_version'] is version('16', '<')
+  when: ansible_facts['distribution_version'] is version('15', '>=')
 
 - name: Resolve uv symlink to real binary path (macOS 15 only)
   ansible.builtin.command: "python3 -c \"import os; print(os.path.realpath('{{ uv_which.stdout }}'))\""
   register: uv_real
   changed_when: false
-  when: ansible_facts['distribution_version'] is version('15', '>=') and ansible_facts['distribution_version'] is version('16', '<')
+  when: ansible_facts['distribution_version'] is version('15', '>=')
 
 - name: Grant TCC permissions for Calendar, Reminders, Contacts (macOS 15 only)
   ansible.builtin.command: >
@@ -100,4 +100,4 @@
       ('kTCCServiceAddressBook', 'org.python.python', 0, 2, 3, 1, NULL, 'UNUSED'),
       ('kTCCServiceAddressBook', '{{ uv_real.stdout }}', 1, 2, 3, 1, NULL, 'UNUSED');"
   changed_when: false
-  when: ansible_facts['distribution_version'] is version('15', '>=') and ansible_facts['distribution_version'] is version('16', '<')
+  when: ansible_facts['distribution_version'] is version('15', '>=')
