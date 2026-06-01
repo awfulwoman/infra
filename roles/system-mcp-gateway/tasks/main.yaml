@@ -1,0 +1,4 @@
+---
+- name: Install gateway MCP server (macOS)
+  ansible.builtin.include_tasks: install-macos.yaml
+  when: ansible_facts['os_family'] == 'Darwin'
