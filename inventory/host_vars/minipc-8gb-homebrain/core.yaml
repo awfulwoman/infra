@@ -59,6 +59,11 @@ composition_motioneye_usbdevice: /dev/video0
 
 docker_port_open: true
 
+composition_reverseproxy_subdomains:
+  - "whoami.{{ ansible_facts['hostname'] }}"
+  - "traefik.{{ ansible_facts['hostname'] }}"
+  - gateway
+
 traefik_providers:
   - homeassistant
   - esphome
