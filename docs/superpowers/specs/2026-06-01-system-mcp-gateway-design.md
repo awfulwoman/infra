@@ -10,7 +10,7 @@ An Ansible role that installs and runs the `gateway` app as a persistent launchd
 
 ## Approach
 
-The role depends on the gateway repo being present on disk — managed by the existing `system-repos` role. The user adds `awfulwoman/gateway` to `system_repos` in malcolm's host_vars. The role handles everything after the repo is cloned: deps, config, service, and macOS permissions.
+The role is self-contained: it clones the gateway repo to `/opt/awfulwoman/gateway` and manages the full lifecycle from there. `/opt/awfulwoman/` is the new base for deployed service apps, separate from `~/Code/awfulwoman/` which holds repos the user works in. No dependency on `system-repos`.
 
 ## Role Structure
 
@@ -30,7 +30,10 @@ Defined in `defaults/main.yaml`:
 
 | Variable | Default | Notes |
 |---|---|---|
-| `system_mcp_gateway_repo_dir` | `{{ system_repos_base_dir }}/awfulwoman/gateway` | Where system-repos clones to |
+| `system_mcp_gateway_base_dir` | `/opt/awfulwoman` | Base for all deployed service apps |
+| `system_mcp_gateway_repo_dir` | `{{ system_mcp_gateway_base_dir }}/gateway` | Where the role clones to |
+| `system_mcp_gateway_repo_url` | `https://github.com/awfulwoman/gateway.git` | |
+| `system_mcp_gateway_repo_version` | `main` | Branch/tag/commit to deploy |
 | `system_mcp_gateway_imap_host` | `imap.mailbox.org` | |
 | `system_mcp_gateway_imap_port` | `993` | |
 | `system_mcp_gateway_imap_username` | `""` | Set in host_vars |
@@ -50,21 +53,20 @@ system_mcp_gateway_obsidian_vault_path: "{{ ansible_facts.user_dir }}/Obsidian"
 system_mcp_gateway_karakeep_base_url: "https://karakeep.{{ domainname_infra }}"
 ```
 
-Also add to `system_repos` in the same file:
-```yaml
-- repo: awfulwoman/gateway
-```
+No changes to `system_repos`.
 
 ## Task Sequence (`tasks/install-macos.yaml`)
 
-1. **Install `uv` via Homebrew** — `community.general.homebrew: name=uv state=present`. Malcolm's current homebrew formulae list doesn't include `uv`; the role adds it rather than requiring the operator to update host_vars first.
-2. **`uv sync`** — run inside `system_mcp_gateway_repo_dir` to install Python deps from the lock file.
-3. **Deploy `.env`** — template `env.j2` → `{{ system_mcp_gateway_repo_dir }}/.env`, mode `0600`. Contains all `GATEWAY_*` env vars.
-4. **Ensure logs dir exists** — `{{ system_mcp_gateway_repo_dir }}/logs/`, mode `0755`.
-5. **Deploy launchd plist** — template `launchd.plist.j2` → `~/Library/LaunchAgents/com.awfulwoman.gateway.plist`, register result.
-6. **Reload service on plist change** — unload then load (same pattern as `system-ollama`, `# noqa: no-handler`).
-7. **Ensure service is running** — `launchctl list com.awfulwoman.gateway`, fail if rc != 0.
-8. **Grant TCC permissions** — macOS 15 only (skip + debug message otherwise). Uses `sqlite3` on `~/Library/Application Support/com.apple.TCC/TCC.db`. Grants `kTCCServiceCalendar`, `kTCCServiceReminders`, `kTCCServiceAddressBook` to both `org.python.python` (bundle type 0) and the real path of the `uv` binary (bundle type 1). Requires finding the real `uv` path via `which uv` + `python3 -c "import os; print(os.path.realpath(...))"`. All TCC tasks run without `become: true` (TCC.db is per-user).
+1. **Install `uv` via Homebrew** — `community.general.homebrew: name=uv state=present`. Malcolm's current homebrew formulae list doesn't include `uv`; the role adds it directly.
+2. **Ensure `/opt/awfulwoman/` exists** — `ansible.builtin.file`, owned by `ansible_user`, group `staff`, mode `0755`. Uses `become: true`.
+3. **Clone/update gateway repo** — `ansible.builtin.git` from `system_mcp_gateway_repo_url` to `system_mcp_gateway_repo_dir`, version `system_mcp_gateway_repo_version`. Owned by `ansible_user`.
+4. **`uv sync`** — `ansible.builtin.command: uv sync`, `chdir: system_mcp_gateway_repo_dir`. Idempotent via `changed_when`.
+5. **Deploy `.env`** — template `env.j2` → `{{ system_mcp_gateway_repo_dir }}/.env`, mode `0600`. Contains all `GATEWAY_*` env vars.
+6. **Ensure logs dir exists** — `{{ system_mcp_gateway_repo_dir }}/logs/`, mode `0755`.
+7. **Deploy launchd plist** — template `launchd.plist.j2` → `~/Library/LaunchAgents/com.awfulwoman.gateway.plist`, register result.
+8. **Reload service on plist change** — unload then load (same pattern as `system-ollama`, `# noqa: no-handler`).
+9. **Ensure service is running** — `launchctl list com.awfulwoman.gateway`, fail if rc != 0.
+10. **Grant TCC permissions** — macOS 15 only (skip + debug message otherwise). Uses `sqlite3` on `~/Library/Application Support/com.apple.TCC/TCC.db`. Grants `kTCCServiceCalendar`, `kTCCServiceReminders`, `kTCCServiceAddressBook` to both `org.python.python` (bundle type 0) and the real path of the `uv` binary (bundle type 1). Requires finding the real `uv` path via `which uv` + `python3 -c "import os; print(os.path.realpath(...))"`. All TCC tasks run without `become: true` (TCC.db is per-user).
 
 `tasks/main.yaml` guards the whole thing:
 ```yaml
@@ -82,10 +84,10 @@ Standard `GATEWAY_*` env vars rendered from role variables. All credential field
 
 Follows `system-ollama` pattern:
 - Label: `com.awfulwoman.gateway`
-- ProgramArguments: path to `uv`, `run`, `gateway`, `--transport`, `http`
+- ProgramArguments: `/opt/homebrew/bin/uv`, `run`, `gateway`, `--transport`, `http`
 - WorkingDirectory: `{{ system_mcp_gateway_repo_dir }}`
 - RunAtLoad: true, KeepAlive: true
-- StandardOutPath/StandardErrorPath: `logs/gateway.{log,err}` inside repo
+- StandardOutPath/StandardErrorPath: `{{ system_mcp_gateway_repo_dir }}/logs/gateway.{log,err}`
 - EnvironmentVariables: PATH including `/opt/homebrew/bin`
 
 ## macOS Version Guard for TCC
@@ -99,7 +101,6 @@ If version is outside this range, a `ansible.builtin.debug` message warns the op
 
 ## What the Role Does NOT Do
 
-- Clone the repo (handled by `system-repos`)
 - Register the MCP server with Claude Code (manual step, documented in README)
 
 ## Manual Step After Deployment
@@ -119,4 +120,4 @@ Add to `playbooks/hosts/apple-macmini-m4-16gb-malcolm/core.yaml`:
   tags: [system, system-mcp-gateway]
 ```
 
-Placed after `system-repos` (which must have run first to clone the gateway repo).
+No ordering constraint relative to `system-repos`.
