@@ -28,12 +28,12 @@ system_mcp_gateway_repo_version: main
 
 system_mcp_gateway_imap_host: "imap.mailbox.org"
 system_mcp_gateway_imap_port: 993
-system_mcp_gateway_imap_username: ""
-system_mcp_gateway_imap_password: ""
+system_mcp_gateway_imap_username: "{{ vault_mailprovider_user }}"
+system_mcp_gateway_imap_password: "{{ vault_mailprovider_password }}"
 
-system_mcp_gateway_obsidian_vault_path: ""
+system_mcp_gateway_obsidian_vault_path: "{{ ansible_facts.user_dir }}/Obsidian"
 
-system_mcp_gateway_karakeep_base_url: ""
+system_mcp_gateway_karakeep_base_url: "https://karakeep.{{ domainname_infra }}"
 system_mcp_gateway_karakeep_api_key: ""
 
 system_mcp_gateway_server_host: "127.0.0.1"
@@ -325,16 +325,16 @@ Installs and runs the [gateway](https://github.com/awfulwoman/gateway) MCP serve
 
 | Variable | Default | Description |
 |---|---|---|
-| `system_mcp_gateway_base_dir` | `/opt/awfulwoman` | Base directory for deployed service apps |
+| `system_mcp_gateway_base_dir` | `{{ awfulwoman_opt_dir }}` | Base directory for deployed service apps |
 | `system_mcp_gateway_repo_dir` | `{{ system_mcp_gateway_base_dir }}/gateway` | Clone destination |
 | `system_mcp_gateway_repo_url` | `https://github.com/awfulwoman/gateway.git` | |
 | `system_mcp_gateway_repo_version` | `main` | Branch/tag to deploy |
 | `system_mcp_gateway_imap_host` | `imap.mailbox.org` | |
 | `system_mcp_gateway_imap_port` | `993` | |
-| `system_mcp_gateway_imap_username` | `""` | |
-| `system_mcp_gateway_imap_password` | `""` | Store in vault |
-| `system_mcp_gateway_obsidian_vault_path` | `""` | Absolute path to vault |
-| `system_mcp_gateway_karakeep_base_url` | `""` | |
+| `system_mcp_gateway_imap_username` | `{{ vault_mailprovider_user }}` | Override if needed |
+| `system_mcp_gateway_imap_password` | `{{ vault_mailprovider_password }}` | Override if needed |
+| `system_mcp_gateway_obsidian_vault_path` | `{{ ansible_facts.user_dir }}/Obsidian` | Override if needed |
+| `system_mcp_gateway_karakeep_base_url` | `https://karakeep.{{ domainname_infra }}` | Override if needed |
 | `system_mcp_gateway_karakeep_api_key` | `""` | Optional |
 | `system_mcp_gateway_server_host` | `127.0.0.1` | |
 | `system_mcp_gateway_server_port` | `4000` | |
@@ -361,11 +361,10 @@ git commit -m "docs(system-mcp-gateway): add README"
 
 ---
 
-### Task 7: Wire into malcolm's playbook and host_vars
+### Task 7: Wire into malcolm's playbook
 
 **Files:**
 - Modify: `playbooks/hosts/apple-macmini-m4-16gb-malcolm/core.yaml`
-- Modify: `inventory/host_vars/apple-macmini-m4-16gb-malcolm/core.yaml`
 
 - [ ] **Step 1: Add role to malcolm's `core.yaml` playbook**
 
@@ -376,21 +375,7 @@ In `playbooks/hosts/apple-macmini-m4-16gb-malcolm/core.yaml`, add after the `sys
     tags: [system, system-mcp-gateway]
 ```
 
-- [ ] **Step 2: Add variables to malcolm's host_vars**
-
-In `inventory/host_vars/apple-macmini-m4-16gb-malcolm/core.yaml`, add a new section at the end:
-
-```yaml
-# -------------------------------------------------------------------
-# MCP GATEWAY
-# -------------------------------------------------------------------
-system_mcp_gateway_imap_username: "{{ vault_mailprovider_user }}"
-system_mcp_gateway_imap_password: "{{ vault_mailprovider_password }}"
-system_mcp_gateway_obsidian_vault_path: "{{ ansible_facts.user_dir }}/Obsidian"
-system_mcp_gateway_karakeep_base_url: "https://karakeep.{{ domainname_infra }}"
-```
-
-- [ ] **Step 3: Verify syntax**
+- [ ] **Step 2: Verify syntax**
 
 ```bash
 ansible-playbook --syntax-check playbooks/hosts/apple-macmini-m4-16gb-malcolm/core.yaml
@@ -398,10 +383,10 @@ ansible-playbook --syntax-check playbooks/hosts/apple-macmini-m4-16gb-malcolm/co
 
 Expected: no errors.
 
-- [ ] **Step 4: Commit**
+- [ ] **Step 3: Commit**
 
 ```bash
-git add playbooks/hosts/apple-macmini-m4-16gb-malcolm/core.yaml inventory/host_vars/apple-macmini-m4-16gb-malcolm/core.yaml
+git add playbooks/hosts/apple-macmini-m4-16gb-malcolm/core.yaml
 git commit -m "feat(malcolm): wire system-mcp-gateway into core playbook"
 ```
 

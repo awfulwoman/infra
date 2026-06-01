@@ -36,24 +36,17 @@ Defined in `defaults/main.yaml`:
 | `system_mcp_gateway_repo_version` | `main` | Branch/tag/commit to deploy |
 | `system_mcp_gateway_imap_host` | `imap.mailbox.org` | |
 | `system_mcp_gateway_imap_port` | `993` | |
-| `system_mcp_gateway_imap_username` | `""` | Set in host_vars |
-| `system_mcp_gateway_imap_password` | `""` | Set in host_vars from vault |
-| `system_mcp_gateway_obsidian_vault_path` | `""` | Set in host_vars |
-| `system_mcp_gateway_karakeep_base_url` | `""` | Set in host_vars |
+| `system_mcp_gateway_imap_username` | `{{ vault_mailprovider_user }}` | Override if needed |
+| `system_mcp_gateway_imap_password` | `{{ vault_mailprovider_password }}` | Override if needed |
+| `system_mcp_gateway_obsidian_vault_path` | `{{ ansible_facts.user_dir }}/Obsidian` | Override if needed |
+| `system_mcp_gateway_karakeep_base_url` | `https://karakeep.{{ domainname_infra }}` | Override if needed |
 | `system_mcp_gateway_karakeep_api_key` | `""` | Optional, leave empty to disable |
 | `system_mcp_gateway_server_host` | `127.0.0.1` | |
 | `system_mcp_gateway_server_port` | `4000` | |
 
-### Malcolm host_vars additions (`core.yaml`)
+### Malcolm host_vars
 
-```yaml
-system_mcp_gateway_imap_username: "{{ vault_mailprovider_user }}"
-system_mcp_gateway_imap_password: "{{ vault_mailprovider_password }}"
-system_mcp_gateway_obsidian_vault_path: "{{ ansible_facts.user_dir }}/Obsidian"
-system_mcp_gateway_karakeep_base_url: "https://karakeep.{{ domainname_infra }}"
-```
-
-No changes to `system_repos`.
+No changes needed — all credential and path defaults resolve correctly from group vars and facts. Override in host_vars only if a host differs from the standard configuration.
 
 ## Task Sequence (`tasks/install-macos.yaml`)
 
