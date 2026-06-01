@@ -27,6 +27,8 @@
     tags: [system, system-nvm]
   - role: system-obsidian-headless
     tags: [system, system-obsidian-headless]
+  - role: system-mcp-gateway
+    tags: [system, system-mcp-gateway]
   - role: monitoring-healthchecksio
     monitoring_healthchecksio_ping_type: success
     tags: [monitoring, monitoring-healthchecksio]
