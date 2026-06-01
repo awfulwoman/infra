@@ -40,7 +40,7 @@ Defined in `defaults/main.yaml`:
 | `system_mcp_gateway_imap_password` | `{{ vault_mailprovider_password }}` | Override if needed |
 | `system_mcp_gateway_obsidian_vault_path` | `{{ ansible_facts.user_dir }}/Obsidian` | Override if needed |
 | `system_mcp_gateway_karakeep_base_url` | `https://karakeep.{{ domainname_infra }}` | Override if needed |
-| `system_mcp_gateway_karakeep_api_key` | `""` | Optional, leave empty to disable |
+| `system_mcp_gateway_karakeep_api_key` | `{{ vault_karakeep_api }}` | Override if needed |
 | `system_mcp_gateway_server_host` | `127.0.0.1` | |
 | `system_mcp_gateway_server_port` | `4000` | |
 
