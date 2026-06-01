@@ -25,3 +25,15 @@
     cmd: uv sync
     chdir: "{{ system_mcp_gateway_repo_dir }}"
   changed_when: false
+
+- name: Ensure logs directory exists
+  ansible.builtin.file:
+    path: "{{ system_mcp_gateway_repo_dir }}/logs"
+    state: directory
+    mode: "0755"
+
+- name: Deploy .env configuration
+  ansible.builtin.template:
+    src: env.j2
+    dest: "{{ system_mcp_gateway_repo_dir }}/.env"
+    mode: "0600"
