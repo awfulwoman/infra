@@ -55,6 +55,17 @@
     create: true
     mode: "0644"
 
+- name: Allow admin users to run DNS flush commands without password
+  become: true
+  community.general.sudoers:
+    name: flush-dns
+    group: admin
+    commands:
+      - /usr/bin/dscacheutil -flushcache
+      - /usr/bin/killall -HUP mDNSResponder
+    nopassword: true
+    state: present
+
 - name: Ensure default consumer apps are absent
   become: true
   ansible.builtin.file:

@@ -1,13 +1,15 @@
 #!/bin/bash
 # Flush DNS cache on MacOS
-# Usage: sudo ./flush-dns.sh
 
-if [[ $EUID -ne 0 ]]; then
-  echo "This script must be run with sudo" >&2
-  exit 1
+sudo dscacheutil -flushcache
+sudo killall -HUP mDNSResponder
+
+# Tailscale caches NXDOMAIN responses independently of the system DNS cache.
+# Cycling the connection is the only reliable way to flush it.
+# tailscale communicates via IPC socket — no sudo needed.
+if command -v tailscale &>/dev/null; then
+  tailscale down
+  tailscale up
 fi
-
-dscacheutil -flushcache
-killall -HUP mDNSResponder
 
 echo "DNS cache flushed"
