@@ -7,7 +7,7 @@ services:
     restart: unless-stopped
     env_file: .environment_vars
     depends_on:
-      db:
+      vikunja-db:
         condition: service_healthy
     volumes:
       - "{{ composition_config }}/files:/app/vikunja/files"
@@ -20,14 +20,8 @@ services:
       - "traefik.http.services.vikunja.loadbalancer.server.port=3456"
     networks:
       - "{{ default_docker_network }}"
-    healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3456/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 30s
 
-  db:
+  vikunja-db:
     container_name: vikunja_db
     image: postgres:18
     restart: unless-stopped
