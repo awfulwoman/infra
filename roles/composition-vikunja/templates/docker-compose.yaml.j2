@@ -33,7 +33,7 @@ services:
     restart: unless-stopped
     env_file: .environment_vars
     volumes:
-      - "{{ composition_config }}/postgres:/var/lib/postgresql/data"
+      - "{{ composition_config }}/postgres:/var/lib/postgresql"
       - /etc/localtime:/etc/localtime:ro
     networks:
       - "{{ default_docker_network }}"
