@@ -79,6 +79,8 @@
     tags: [composition, composition-memorybank]
   - role: composition-paperless-ngx
     tags: [composition, composition-paperless-ngx]
+  - role: composition-vikunja
+    tags: [composition, composition-vikunja]
   - role: composition-mcp-kagisearch
     tags: [composition, composition-mcp-kagisearch]
   - role: system-emailbackup
