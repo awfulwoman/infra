@@ -19,6 +19,7 @@
     dest: "{{ system_mcp_gateway_repo_dir }}"
     version: "{{ system_mcp_gateway_repo_version }}"
     update: true
+  register: gateway_git
 
 - name: Ensure Python dependencies are installed
   ansible.builtin.command:
@@ -54,13 +55,13 @@
 
 - name: Unload service before reload on plist or .env change # noqa: no-handler
   ansible.builtin.command: "launchctl unload {{ ansible_facts.user_dir }}/Library/LaunchAgents/com.awfulwoman.gateway.plist"
-  when: gateway_plist.changed or gateway_env.changed
+  when: gateway_plist.changed or gateway_env.changed or gateway_git.changed
   changed_when: false
   failed_when: false
 
 - name: Load service # noqa: no-handler
   ansible.builtin.command: "launchctl load {{ ansible_facts.user_dir }}/Library/LaunchAgents/com.awfulwoman.gateway.plist"
-  when: gateway_plist.changed or gateway_env.changed
+  when: gateway_plist.changed or gateway_env.changed or gateway_git.changed
   register: gateway_load
   changed_when: gateway_load.rc == 0
   failed_when: false
