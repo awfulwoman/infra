@@ -9,7 +9,7 @@ host_region: ber
 host_site: xberg
 host_pfqdn: "{{ host_name }}.{{ host_site }}.{{ host_region }}"
 host_fqdn: "{{ host_pfqdn }}.{{ domainname_infra }}"
-host_description: "Mac Mini M4 16GB"
+host_description: "Mac Mini M4 16GB - used for LLM and MacOS-specific workloads"
 
 # -------------------------------------------------------------------
 # NETWORK
