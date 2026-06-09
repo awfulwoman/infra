@@ -6,17 +6,11 @@ Chives is a Telegram-connected AI agent with calendar, reminders, contacts, emai
 
 ## Prerequisites
 
-Add the Telegram bot token to the host's vault credentials file:
+Add the following to `inventory/host_vars/apple-macmini-m4-16gb-malcolm/vault_credentials.yaml` before running:
 
 ```bash
 ansible-vault encrypt_string "$(echo -n 'YOUR_TELEGRAM_BOT_TOKEN')" --name 'vault_chives_telegram_token'
-```
-
-For `vault_chives_telegram_chat_ids`, add it as a YAML list directly in the vault file via `ansible-vault edit inventory/host_vars/apple-macmini-m4-16gb-malcolm/vault_credentials.yaml`:
-
-```yaml
-vault_chives_telegram_chat_ids:
-  - 123456789
+ansible-vault encrypt_string '123456789' --name 'vault_chives_telegram_chat_ids'
 ```
 
 ## Variables
@@ -31,7 +25,7 @@ vault_chives_telegram_chat_ids:
 | `system_agent_chives_llm_model` | `gemma4:12b-mlx` | Ollama model name |
 | `system_agent_chives_llm_api_key` | `ollama` | |
 | `system_agent_chives_telegram_token` | `{{ vault_chives_telegram_token }}` | |
-| `system_agent_chives_telegram_chat_ids` | `{{ vault_chives_telegram_chat_ids }}` | JSON list of allowed chat IDs |
+| `system_agent_chives_telegram_chat_ids` | `{{ vault_chives_telegram_chat_ids }}` | Allowed Telegram chat ID |
 | `system_agent_chives_imap_host` | `imap.mailbox.org` | |
 | `system_agent_chives_imap_port` | `993` | |
 | `system_agent_chives_imap_username` | `{{ vault_mailprovider_user }}` | Shared with system-mcp-gateway |
