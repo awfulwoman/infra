@@ -9,7 +9,7 @@ system_agent_chives_llm_model: "gemma4:12b-mlx"
 system_agent_chives_llm_api_key: "ollama"
 
 system_agent_chives_telegram_token: "{{ vault_chives_telegram_token }}"
-system_agent_chives_telegram_chat_ids: "{{ vault_chives_telegram_chat_ids }}"
+system_agent_chives_telegram_chat_ids: "{{ vault_chives_telegram_chat_id }}"
 
 system_agent_chives_imap_host: "imap.mailbox.org"
 system_agent_chives_imap_port: 993

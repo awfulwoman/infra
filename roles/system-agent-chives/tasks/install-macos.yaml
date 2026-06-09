@@ -37,6 +37,7 @@
     cmd: /opt/homebrew/bin/uv sync
     chdir: "{{ system_agent_chives_repo_dir }}"
   changed_when: false
+  when: not ansible_check_mode
 
 - name: Ensure logs directory exists
   ansible.builtin.file:

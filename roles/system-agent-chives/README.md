@@ -10,7 +10,7 @@ Add the following to `inventory/group_vars/infra/vault_telegram.yaml` (or the re
 
 ```bash
 ansible-vault encrypt_string "$(echo -n 'YOUR_TELEGRAM_BOT_TOKEN')" --name 'vault_chives_telegram_token'
-ansible-vault encrypt_string '123456789' --name 'vault_chives_telegram_chat_ids'
+ansible-vault encrypt_string '123456789' --name 'vault_chives_telegram_chat_id'
 ```
 
 ## Variables
@@ -25,7 +25,7 @@ ansible-vault encrypt_string '123456789' --name 'vault_chives_telegram_chat_ids'
 | `system_agent_chives_llm_model` | `gemma4:12b-mlx` | Ollama model name |
 | `system_agent_chives_llm_api_key` | `ollama` | |
 | `system_agent_chives_telegram_token` | `{{ vault_chives_telegram_token }}` | |
-| `system_agent_chives_telegram_chat_ids` | `{{ vault_chives_telegram_chat_ids }}` | Allowed Telegram chat ID |
+| `system_agent_chives_telegram_chat_ids` | `{{ vault_chives_telegram_chat_id }}` | Allowed Telegram chat ID |
 | `system_agent_chives_imap_host` | `imap.mailbox.org` | |
 | `system_agent_chives_imap_port` | `993` | |
 | `system_agent_chives_imap_username` | `{{ vault_mailprovider_user }}` | Shared with system-mcp-gateway |
