@@ -52,7 +52,7 @@ system_ollama_env:
   OLLAMA_MAX_LOADED_MODELS: 4
   OLLAMA_ORIGINS: "*"
   OLLAMA_CONTEXT_LENGTH: 8192 # Default is 4096, but many models can handle more context, and the M4's unified memory allows for it
-  # OLLAMA_KEEP_ALIVE: -1 # Keep models loaded indefinitely (default is to unload after 5 minutes of inactivity)
+  OLLAMA_KEEP_ALIVE: -1 # Keep models loaded indefinitely
   OLLAMA_FLASH_ATTENTION: 1 # Reduce VRAM usage at the cost of some speed
   OLLAMA_KV_CACHE_TYPE: q8_0 # f16 (default), q8_0, q4_0
 
