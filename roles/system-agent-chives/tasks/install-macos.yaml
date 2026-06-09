@@ -1,0 +1,45 @@
+---
+- name: Unload legacy chives service if running
+  ansible.builtin.command: >
+    launchctl unload {{ ansible_facts.user_dir }}/Library/LaunchAgents/com.chives.agent.plist
+  changed_when: false
+  failed_when: false
+
+- name: Remove legacy chives launchd plist
+  ansible.builtin.file:
+    path: "{{ ansible_facts.user_dir }}/Library/LaunchAgents/com.chives.agent.plist"
+    state: absent
+
+- name: Ensure uv is installed via Homebrew
+  community.general.homebrew:
+    name: uv
+    state: present
+
+- name: Ensure /opt/awfulwoman base directory exists
+  become: true
+  ansible.builtin.file:
+    path: "{{ system_agent_chives_base_dir }}"
+    state: directory
+    mode: "0755"
+    owner: "{{ ansible_user }}"
+    group: staff
+
+- name: Ensure chives repo is cloned/updated
+  ansible.builtin.git:
+    repo: "{{ system_agent_chives_repo_url }}"
+    dest: "{{ system_agent_chives_repo_dir }}"
+    version: "{{ system_agent_chives_repo_version }}"
+    update: true
+  register: chives_git
+
+- name: Ensure Python dependencies are installed
+  ansible.builtin.command:
+    cmd: /opt/homebrew/bin/uv sync
+    chdir: "{{ system_agent_chives_repo_dir }}"
+  changed_when: false
+
+- name: Ensure logs directory exists
+  ansible.builtin.file:
+    path: "{{ system_agent_chives_repo_dir }}/logs"
+    state: directory
+    mode: "0755"
