@@ -84,3 +84,31 @@
   register: chives_status
   changed_when: false
   failed_when: chives_status.rc != 0
+
+- name: Check macOS version for TCC compatibility
+  ansible.builtin.debug:
+    msg: >
+      WARNING: TCC permission grant skipped - only supported on macOS 15.x.
+      Grant Calendar/Reminders/Contacts access manually for the chives process.
+  when: ansible_facts['distribution_version'] is version('15', '<')
+
+- name: Resolve uv symlink to real binary path
+  ansible.builtin.command: "python3 -c \"import os; print(os.path.realpath('/opt/homebrew/bin/uv'))\""
+  register: uv_real
+  changed_when: false
+  when: ansible_facts['distribution_version'] is version('15', '>=')
+
+- name: Grant TCC permissions for Calendar, Reminders, Contacts (macOS 15 only)
+  ansible.builtin.command: >
+    sqlite3 "{{ ansible_facts.user_dir }}/Library/Application Support/com.apple.TCC/TCC.db"
+    "INSERT OR REPLACE INTO access
+      (service, client, client_type, auth_value, auth_reason, auth_version, csreq, indirect_object_identifier)
+    VALUES
+      ('kTCCServiceCalendar', 'org.python.python', 0, 2, 3, 1, NULL, 'UNUSED'),
+      ('kTCCServiceCalendar', '{{ uv_real.stdout }}', 1, 2, 3, 1, NULL, 'UNUSED'),
+      ('kTCCServiceReminders', 'org.python.python', 0, 2, 3, 1, NULL, 'UNUSED'),
+      ('kTCCServiceReminders', '{{ uv_real.stdout }}', 1, 2, 3, 1, NULL, 'UNUSED'),
+      ('kTCCServiceAddressBook', 'org.python.python', 0, 2, 3, 1, NULL, 'UNUSED'),
+      ('kTCCServiceAddressBook', '{{ uv_real.stdout }}', 1, 2, 3, 1, NULL, 'UNUSED');"
+  changed_when: false
+  when: ansible_facts['distribution_version'] is version('15', '>=')
