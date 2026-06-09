@@ -43,3 +43,44 @@
     path: "{{ system_agent_chives_repo_dir }}/logs"
     state: directory
     mode: "0755"
+
+- name: Ensure LaunchAgents directory exists
+  ansible.builtin.file:
+    path: "{{ ansible_facts.user_dir }}/Library/LaunchAgents"
+    state: directory
+    mode: "0755"
+
+- name: Deploy launchd plist
+  ansible.builtin.template:
+    src: launchd.plist.j2
+    dest: "{{ ansible_facts.user_dir }}/Library/LaunchAgents/com.awfulwoman.chives.plist"
+    mode: "0644"
+  register: chives_plist
+
+- name: Deploy .env configuration
+  ansible.builtin.template:
+    src: env.j2
+    dest: "{{ system_agent_chives_repo_dir }}/.env"
+    mode: "0600"
+  register: chives_env
+
+- name: Unload service before reload on plist or .env change # noqa: no-handler
+  ansible.builtin.command: >
+    launchctl unload {{ ansible_facts.user_dir }}/Library/LaunchAgents/com.awfulwoman.chives.plist
+  when: chives_plist.changed or chives_env.changed or chives_git.changed
+  changed_when: false
+  failed_when: false
+
+- name: Load service # noqa: no-handler
+  ansible.builtin.command: >
+    launchctl load {{ ansible_facts.user_dir }}/Library/LaunchAgents/com.awfulwoman.chives.plist
+  when: chives_plist.changed or chives_env.changed or chives_git.changed
+  register: chives_load
+  changed_when: chives_load.rc == 0
+  failed_when: false
+
+- name: Ensure service is running
+  ansible.builtin.command: launchctl list com.awfulwoman.chives
+  register: chives_status
+  changed_when: false
+  failed_when: chives_status.rc != 0
