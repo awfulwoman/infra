@@ -6,11 +6,17 @@ Chives is a Telegram-connected AI agent with calendar, reminders, contacts, emai
 
 ## Prerequisites
 
-Add the following to the host's vault credentials file before running:
+Add the Telegram bot token to the host's vault credentials file:
 
 ```bash
 ansible-vault encrypt_string "$(echo -n 'YOUR_TELEGRAM_BOT_TOKEN')" --name 'vault_chives_telegram_token'
-ansible-vault encrypt_string '[123456789]' --name 'vault_chives_telegram_chat_ids'
+```
+
+For `vault_chives_telegram_chat_ids`, add it as a YAML list directly in the vault file via `ansible-vault edit inventory/host_vars/apple-macmini-m4-16gb-malcolm/vault_credentials.yaml`:
+
+```yaml
+vault_chives_telegram_chat_ids:
+  - 123456789
 ```
 
 ## Variables
