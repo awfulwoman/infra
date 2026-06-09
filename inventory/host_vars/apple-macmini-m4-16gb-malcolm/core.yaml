@@ -57,8 +57,6 @@ system_ollama_env:
   OLLAMA_KV_CACHE_TYPE: q8_0 # f16 (default), q8_0, q4_0
 
 system_ollama_models:
-  - gemma3:4b
-  - gemma3:12b
   - gemma4:e4b # MoE (mixture of experts), 4B active params per token
   - gemma4:12b-mlx
   - qwen3:14b
