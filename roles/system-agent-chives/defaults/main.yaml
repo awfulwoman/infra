@@ -1,0 +1,21 @@
+---
+system_agent_chives_base_dir: "{{ awfulwoman_opt_dir }}"
+system_agent_chives_repo_dir: "{{ system_agent_chives_base_dir }}/chives"
+system_agent_chives_repo_url: "git@github.com:awfulwoman/chives.git"
+system_agent_chives_repo_version: main
+
+system_agent_chives_llm_base_url: "http://localhost:11434/v1"
+system_agent_chives_llm_model: "gemma4:12b-mlx"
+system_agent_chives_llm_api_key: "ollama"
+
+system_agent_chives_telegram_token: "{{ vault_chives_telegram_token }}"
+system_agent_chives_telegram_chat_ids: "{{ vault_chives_telegram_chat_ids }}"
+
+system_agent_chives_imap_host: "imap.mailbox.org"
+system_agent_chives_imap_port: 993
+system_agent_chives_imap_username: "{{ vault_mailprovider_user }}"
+system_agent_chives_imap_password: "{{ vault_mailprovider_password }}"
+
+system_agent_chives_morning_brief_time: "08:00"
+system_agent_chives_event_reminder_minutes: 15
+system_agent_chives_idle_checkin_hours: 0
