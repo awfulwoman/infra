@@ -29,6 +29,8 @@
     tags: [system, system-obsidian-headless]
   - role: system-mcp-gateway
     tags: [system, system-mcp-gateway]
+  - role: system-agent-chives
+    tags: [system, system-agent-chives]
   - role: monitoring-healthchecksio
     monitoring_healthchecksio_ping_type: success
     tags: [monitoring, monitoring-healthchecksio]
