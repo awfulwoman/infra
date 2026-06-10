@@ -17,5 +17,4 @@ ubuntu_cloud_init_prefix: 24
 ubuntu_cloud_init_gateway: ""
 ubuntu_cloud_init_interface: eth0
 ubuntu_cloud_init_dns:
-  - 1.1.1.1
-  - 8.8.8.8
+  - 192.168.1.1
