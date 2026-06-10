@@ -1,0 +1,22 @@
+name: "{{ composition_name }}"
+services:
+  nominatim:
+    container_name: nominatim
+    image: mediagis/nominatim:5.3
+    restart: unless-stopped
+    env_file: .environment_vars
+    volumes:
+      - "{{ composition_config }}/postgres:/var/lib/postgresql/16/main"
+      - "{{ composition_config }}/flatnode:/nominatim/flatnode"
+    networks:
+      - "{{ default_docker_network }}"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nominatim.rule=Host(`nominatim.{{ domainname_infra }}`)"
+      - "traefik.http.routers.nominatim.tls=true"
+      - "traefik.http.routers.nominatim.tls.certresolver=letsencrypt"
+      - "traefik.http.services.nominatim.loadbalancer.server.port=8080"
+
+networks:
+  "{{ default_docker_network }}":
+    external: true

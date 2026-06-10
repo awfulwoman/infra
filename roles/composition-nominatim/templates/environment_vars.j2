@@ -1,0 +1,14 @@
+TZ="Europe/Berlin"
+
+# Data source - PBF extract URL for your region (https://download.geofabrik.de/)
+PBF_URL={{ nominatim_pbf_url }}
+REPLICATION_URL={{ nominatim_replication_url }}
+
+# Update mode: none, continuous, once, catch-up
+UPDATE_MODE={{ nominatim_update_mode }}
+
+# Performance
+THREADS={{ nominatim_threads }}
+GUNICORN_WORKERS={{ nominatim_gunicorn_workers }}
+POSTGRES_SHARED_BUFFERS={{ nominatim_postgres_shared_buffers }}
+POSTGRES_EFFECTIVE_CACHE_SIZE={{ nominatim_postgres_effective_cache_size }}

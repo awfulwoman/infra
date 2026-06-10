@@ -1,0 +1,26 @@
+# Composition name (used by composition-common dependency)
+composition_name: nominatim
+
+composition_nominatim_subdomains:
+  - nominatim
+
+# ----------------------------
+# Data source
+# ----------------------------
+
+# URL of an OSM PBF extract to import on first run.
+# Find regional extracts at https://download.geofabrik.de/
+nominatim_pbf_url: "https://download.geofabrik.de/europe/monaco-latest.osm.pbf"
+nominatim_replication_url: "https://planet.openstreetmap.org/replication/hour/"
+
+# Update mode: none, continuous, once, catch-up
+nominatim_update_mode: "none"
+
+# ----------------------------
+# Performance
+# ----------------------------
+
+nominatim_threads: 4
+nominatim_gunicorn_workers: 4
+nominatim_postgres_shared_buffers: "512MB"
+nominatim_postgres_effective_cache_size: "1GB"
