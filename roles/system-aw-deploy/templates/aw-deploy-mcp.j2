@@ -76,7 +76,8 @@ async def list_tools():
             description=(
                 "Given a GitHub repo URL (any format: HTTPS, SSH, with/without .git), find the Ansible roles "
                 "and playbooks in the infra repo that deploy it, and show the exact aw-deploy command to use. "
-                "Call this first when asked to deploy a repo you don't know the playbook path for."
+                "Call this first when asked to deploy a repo you don't know the playbook path for. "
+                "If you don't know the repo URL, run `git remote get-url origin` in the project directory first."
             ),
             inputSchema={
                 "type": "object",
