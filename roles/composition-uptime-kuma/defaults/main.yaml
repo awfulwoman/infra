@@ -1,4 +1,12 @@
 composition_name: uptime-kuma
 
+# Tag applied to monitors created by Ansible. Only monitors with this tag
+# will be deleted during sync — monitors created via the UI are never touched.
+composition_uptime_kuma_monitor_tag: ansible-managed
+
+# Subdomain Traefik exposes the REST sidecar on.
+composition_uptime_kuma_api_subdomain: uptime-kuma-api
+
 composition_uptime_kuma_subdomains:
   - uptime-kuma
+  - "{{ composition_uptime_kuma_api_subdomain }}"

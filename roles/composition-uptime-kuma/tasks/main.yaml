@@ -18,7 +18,16 @@
     dest: "{{ composition_root }}/.environment_vars"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: "0774"
+    mode: "0660"
+
+- name: "Copy uptime-kuma-api sidecar sources"
+  ansible.builtin.copy:
+    src: api/
+    dest: "{{ composition_root }}/api/"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0664"
+    directory_mode: "0775"
 
 - name: Run Configure DNS role
   ansible.builtin.include_role:
@@ -37,3 +46,71 @@
     build: always
     remove_orphans: true
   notify: Restart Traefik
+
+# ----------------------------
+# Sync monitors from inventory
+# ----------------------------
+
+- name: "Wait for uptime-kuma-api /health"
+  ansible.builtin.uri:
+    url: "https://{{ composition_uptime_kuma_api_subdomain }}.{{ domainname_infra }}/health"
+    method: GET
+    status_code: 200
+    validate_certs: true
+  register: uptime_kuma_api_health
+  retries: 30
+  delay: 5
+  until: uptime_kuma_api_health.status == 200
+
+- name: "Reset desired monitors list"
+  ansible.builtin.set_fact:
+    composition_uptime_kuma_desired_monitors: []
+
+- name: "Append ping monitors for each infra host"
+  ansible.builtin.set_fact:
+    composition_uptime_kuma_desired_monitors: >-
+      {{ composition_uptime_kuma_desired_monitors + [{
+           'name': hostvars[ping_host]['host_name_short'],
+           'type': 'ping',
+           'hostname': hostvars[ping_host]['host_ipv4'],
+         }] }}
+  loop: "{{ groups['infra'] }}"
+  loop_control:
+    loop_var: ping_host
+
+- name: "Append HTTP monitors for each cname"
+  ansible.builtin.set_fact:
+    composition_uptime_kuma_desired_monitors: >-
+      {{ composition_uptime_kuma_desired_monitors + [{
+           'name': cname_item,
+           'type': 'http',
+           'url': 'https://' ~ cname_item,
+         }] }}
+  loop: "{{ groups['infra']
+            | map('extract', hostvars)
+            | selectattr('cnames', 'defined')
+            | map(attribute='cnames')
+            | flatten }}"
+  loop_control:
+    loop_var: cname_item
+
+- name: "Sync monitors to uptime-kuma-api"
+  ansible.builtin.uri:
+    url: "https://{{ composition_uptime_kuma_api_subdomain }}.{{ domainname_infra }}/monitors/sync"
+    method: POST
+    headers:
+      X-API-Key: "{{ vault_uptime_kuma_api_key }}"
+    body_format: json
+    body:
+      monitors: "{{ composition_uptime_kuma_desired_monitors }}"
+    status_code: 200
+    validate_certs: true
+  register: composition_uptime_kuma_sync_result
+
+- name: "Show monitor sync summary"
+  ansible.builtin.debug:
+    msg: >-
+      Uptime Kuma sync — created: {{ composition_uptime_kuma_sync_result.json.created }},
+      deleted: {{ composition_uptime_kuma_sync_result.json.deleted }},
+      skipped: {{ composition_uptime_kuma_sync_result.json.skipped }},
+      errors: {{ composition_uptime_kuma_sync_result.json.errors | length }}

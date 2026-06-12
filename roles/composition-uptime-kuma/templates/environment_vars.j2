@@ -1,1 +1,8 @@
 TZ="Europe/Berlin"
+
+# uptime-kuma-api sidecar
+UPTIME_KUMA_URL=http://uptime-kuma:3001
+UPTIME_KUMA_USERNAME={{ vault_uptime_kuma_username }}
+UPTIME_KUMA_PASSWORD={{ vault_uptime_kuma_password }}
+API_KEY={{ vault_uptime_kuma_api_key }}
+MONITOR_TAG={{ composition_uptime_kuma_monitor_tag }}
