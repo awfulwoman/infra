@@ -14,9 +14,10 @@ RUNS_DIR = STATE_DIR / "runs"
 LOCK_FILE = STATE_DIR / "run.lock"
 MAX_RUNS = 30
 
-# Ensure Homebrew and common tool paths are available in subprocesses, since
-# macOS non-login shells do not include /opt/homebrew/bin in PATH.
-_EXTRA_PATHS = ["/opt/homebrew/bin", "/usr/local/bin"]
+# Ensure ansible tools and Homebrew are available in subprocesses. The infra
+# venv bin is first so its ansible-playbook takes precedence on machines where
+# ansible lives there (e.g. the laptop) rather than in Homebrew.
+_EXTRA_PATHS = [str(INFRA_DIR / ".venv/bin"), "/opt/homebrew/bin", "/usr/local/bin"]
 _current_path = os.environ.get("PATH", "")
 _path_parts = _current_path.split(":")
 for _p in reversed(_EXTRA_PATHS):
