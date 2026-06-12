@@ -13,6 +13,8 @@ os.environ.setdefault("UPTIME_KUMA_USERNAME", "test-user")
 os.environ.setdefault("UPTIME_KUMA_PASSWORD", "test-pass")
 os.environ.setdefault("API_KEY", "test-key")
 os.environ.setdefault("MONITOR_TAG", "ansible-managed")
+os.environ.setdefault("HOST_TAG", "hosts")
+os.environ.setdefault("COMPOSITION_TAG", "compositions")
 
 from app import create_app  # noqa: E402
 
@@ -22,10 +24,14 @@ def mock_kuma():
     """Mock UptimeKumaApi instance used as the active session."""
     mock = MagicMock()
     mock.get_monitors.return_value = []
-    mock.get_tags.return_value = [{"id": 1, "name": "ansible-managed", "color": "#7c8eef"}]
+    mock.get_tags.return_value = [
+        {"id": 1, "name": "ansible-managed", "color": "#7c8eef"},
+        {"id": 2, "name": "hosts", "color": "#2ecc71"},
+        {"id": 3, "name": "compositions", "color": "#e67e22"},
+    ]
     mock.add_monitor.return_value = {"msg": "Added Successfully.", "monitorID": 99}
     mock.delete_monitor.return_value = {"msg": "Deleted Successfully."}
-    mock.add_tag.return_value = {"id": 1, "name": "ansible-managed", "color": "#7c8eef"}
+    mock.add_tag.return_value = {"id": 99, "name": "new-tag", "color": "#95a5a6"}
     mock.add_monitor_tag.return_value = {"msg": "Added Successfully."}
     return mock
 
@@ -146,10 +152,12 @@ def test_sync_creates_missing_monitors(client, mock_kuma):
     assert body["deleted"] == 0
     assert body["skipped"] == 0
     assert mock_kuma.add_monitor.call_count == 2
-    assert mock_kuma.add_monitor_tag.call_count == 2
+    # 2 tags per monitor: ansible-managed + type tag (hosts or compositions)
+    assert mock_kuma.add_monitor_tag.call_count == 4
 
 
-def test_sync_skips_existing_managed_monitors(client, mock_kuma):
+def test_sync_updates_existing_monitors_missing_type_tag(client, mock_kuma):
+    # Existing monitor has ansible-managed but not the hosts type tag — gets it added
     mock_kuma.get_monitors.return_value = [
         {
             "id": 7,
@@ -168,9 +176,37 @@ def test_sync_skips_existing_managed_monitors(client, mock_kuma):
     assert response.status_code == 200
     body = response.get_json()
     assert body["created"] == 0
-    assert body["deleted"] == 0
+    assert body["updated"] == 1
+    assert body["skipped"] == 0
+    mock_kuma.add_monitor.assert_not_called()
+    mock_kuma.add_monitor_tag.assert_called_once()
+    mock_kuma.delete_monitor.assert_not_called()
+
+
+def test_sync_skips_existing_managed_monitors_with_all_tags(client, mock_kuma):
+    # Existing monitor already has both ansible-managed and type tag — fully skipped
+    mock_kuma.get_monitors.return_value = [
+        {
+            "id": 7,
+            "name": "homebrain",
+            "type": "ping",
+            "hostname": "192.168.1.130",
+            "tags": [{"name": "ansible-managed"}, {"name": "hosts"}],
+        },
+    ]
+    desired = {
+        "monitors": [
+            {"name": "homebrain", "type": "ping", "hostname": "192.168.1.130"},
+        ]
+    }
+    response = client.post("/monitors/sync", headers=auth_headers(), json=desired)
+    assert response.status_code == 200
+    body = response.get_json()
+    assert body["created"] == 0
+    assert body["updated"] == 0
     assert body["skipped"] == 1
     mock_kuma.add_monitor.assert_not_called()
+    mock_kuma.add_monitor_tag.assert_not_called()
     mock_kuma.delete_monitor.assert_not_called()
 
 
