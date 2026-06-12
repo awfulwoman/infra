@@ -53,10 +53,10 @@
 
 - name: "Wait for uptime-kuma-api /health"
   ansible.builtin.uri:
-    url: "https://{{ composition_uptime_kuma_api_subdomain }}.{{ domainname_infra }}/health"
+    url: "http://localhost:5001/health"
     method: GET
     status_code: 200
-    validate_certs: true
+  delegate_to: "{{ inventory_hostname }}"
   register: uptime_kuma_api_health
   retries: 30
   delay: 5
@@ -96,7 +96,7 @@
 
 - name: "Sync monitors to uptime-kuma-api"
   ansible.builtin.uri:
-    url: "https://{{ composition_uptime_kuma_api_subdomain }}.{{ domainname_infra }}/monitors/sync"
+    url: "http://localhost:5001/monitors/sync"
     method: POST
     headers:
       X-API-Key: "{{ vault_uptime_kuma_api_key }}"
@@ -104,7 +104,7 @@
     body:
       monitors: "{{ composition_uptime_kuma_desired_monitors }}"
     status_code: 200
-    validate_certs: true
+  delegate_to: "{{ inventory_hostname }}"
   register: composition_uptime_kuma_sync_result
 
 - name: "Show monitor sync summary"
