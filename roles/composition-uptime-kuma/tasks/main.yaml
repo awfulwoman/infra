@@ -30,7 +30,6 @@
       - "--exclude=__pycache__"
       - "--exclude=.pytest_cache"
       - "--exclude=*.pyc"
-  delegate_to: "{{ inventory_hostname }}"
 
 - name: Run Configure DNS role
   ansible.builtin.include_role:
