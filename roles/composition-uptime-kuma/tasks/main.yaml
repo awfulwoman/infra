@@ -104,6 +104,7 @@
     body:
       monitors: "{{ composition_uptime_kuma_desired_monitors }}"
     status_code: 200
+    timeout: 120
   delegate_to: "{{ inventory_hostname }}"
   register: composition_uptime_kuma_sync_result
 
