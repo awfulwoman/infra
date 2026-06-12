@@ -1,0 +1,135 @@
+#!/usr/bin/env python3
+"""Run Ansible playbooks from the infra repo."""
+import argparse
+import fcntl
+import os
+import subprocess
+import sys
+from datetime import datetime, timezone
+from pathlib import Path
+
+INFRA_DIR = Path(os.environ.get("AW_INFRA_DIR", Path.home() / "Code/awfulwoman/infra"))
+STATE_DIR = Path(os.environ.get("AW_STATE_DIR", Path.home() / ".local/state/aw-deploy"))
+RUNS_DIR = STATE_DIR / "runs"
+LOCK_FILE = STATE_DIR / "run.lock"
+MAX_RUNS = 30
+
+
+def _ensure_dirs():
+    RUNS_DIR.mkdir(parents=True, exist_ok=True)
+
+
+def _prune_runs():
+    runs = sorted(RUNS_DIR.glob("*.log"))
+    for old in runs[:-MAX_RUNS]:
+        old.unlink()
+
+
+def cmd_run(args):
+    playbook_path = INFRA_DIR / args.playbook
+    if not playbook_path.exists():
+        print(f"error: playbook not found: {playbook_path}", file=sys.stderr)
+        sys.exit(65)
+
+    cmd = ["ansible-playbook", str(playbook_path)]
+    if args.limit:
+        cmd += ["--limit", args.limit]
+    if args.tags:
+        cmd += ["--tags", args.tags]
+    for kv in args.extra_vars or []:
+        cmd += ["--extra-vars", kv]
+    if args.check:
+        cmd += ["--check"]
+
+    _ensure_dirs()
+
+    lock_fd = open(LOCK_FILE, "w")
+    try:
+        fcntl.flock(lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError:
+        print("error: another aw-deploy run is in progress", file=sys.stderr)
+        sys.exit(64)
+
+    ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S")
+    slug = args.playbook.replace("/", "-").replace(".yaml", "")
+    log_path = RUNS_DIR / f"{ts}-{slug}.log"
+
+    try:
+        with open(log_path, "w") as log_fh:
+            proc = subprocess.Popen(
+                cmd,
+                cwd=str(INFRA_DIR),
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+            )
+            for line in proc.stdout:
+                sys.stdout.buffer.write(line)
+                sys.stdout.buffer.flush()
+                log_fh.buffer.write(line)
+            proc.wait()
+    finally:
+        fcntl.flock(lock_fd, fcntl.LOCK_UN)
+        lock_fd.close()
+
+    _prune_runs()
+    sys.exit(proc.returncode)
+
+
+def cmd_list(args):
+    playbooks_dir = INFRA_DIR / "playbooks"
+    if not playbooks_dir.exists():
+        print(f"error: playbooks dir not found: {playbooks_dir}", file=sys.stderr)
+        sys.exit(65)
+    for p in sorted(playbooks_dir.rglob("*.yaml")):
+        print(str(p.relative_to(INFRA_DIR)))
+
+
+def cmd_hosts(args):
+    result = subprocess.run(
+        ["ansible-inventory", "--graph"],
+        cwd=str(INFRA_DIR),
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0:
+        print(result.stderr, file=sys.stderr)
+        sys.exit(result.returncode)
+    print(result.stdout)
+
+
+def cmd_logs(args):
+    _ensure_dirs()
+    runs = sorted(RUNS_DIR.glob("*.log"))
+    for log in runs[-(args.tail or 5):]:
+        print(f"\n=== {log.name} ===")
+        print(log.read_text())
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Run Ansible playbooks from the infra repo")
+    sub = parser.add_subparsers(dest="command", required=True)
+
+    p_run = sub.add_parser("run", help="Run a playbook")
+    p_run.add_argument("playbook", help="Path relative to infra repo root, e.g. playbooks/hosts/apple-macmini-m4-16gb-malcolm/core.yaml")
+    p_run.add_argument("--limit", help="Limit to a specific host or group")
+    p_run.add_argument("--tags", help="Comma-separated Ansible tags")
+    p_run.add_argument("--extra-vars", action="append", metavar="KEY=VALUE")
+    p_run.add_argument("--check", action="store_true", help="Dry run (passes --check to ansible-playbook)")
+    p_run.set_defaults(func=cmd_run)
+
+    p_list = sub.add_parser("list", help="List available playbooks")
+    p_list.set_defaults(func=cmd_list)
+
+    p_hosts = sub.add_parser("hosts", help="List inventory hosts and groups")
+    p_hosts.set_defaults(func=cmd_hosts)
+
+    p_logs = sub.add_parser("logs", help="Show recent run logs")
+    p_logs.add_argument("--tail", type=int, default=5, metavar="N", help="Number of recent runs to show (default: 5)")
+    p_logs.set_defaults(func=cmd_logs)
+
+    args = parser.parse_args()
+    args.func(args)
+
+
+if __name__ == "__main__":
+    main()
