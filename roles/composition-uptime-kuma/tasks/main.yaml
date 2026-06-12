@@ -20,14 +20,17 @@
     group: "{{ ansible_user }}"
     mode: "0660"
 
-- name: "Copy uptime-kuma-api sidecar sources"
-  ansible.builtin.copy:
+- name: "Sync uptime-kuma-api sidecar sources"
+  ansible.posix.synchronize:
     src: api/
     dest: "{{ composition_root }}/api/"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    mode: "0664"
-    directory_mode: "0775"
+    delete: true
+    rsync_opts:
+      - "--exclude=.venv"
+      - "--exclude=__pycache__"
+      - "--exclude=.pytest_cache"
+      - "--exclude=*.pyc"
+  delegate_to: "{{ inventory_hostname }}"
 
 - name: Run Configure DNS role
   ansible.builtin.include_role:
