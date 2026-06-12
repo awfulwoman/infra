@@ -1,0 +1,6 @@
+---
+system_aw_deploy_install_dir: /usr/local/bin
+system_aw_deploy_opt_dir: "{{ awfulwoman_opt_dir }}/aw-deploy"
+system_aw_deploy_venv_dir: "{{ system_aw_deploy_opt_dir }}/venv"
+system_aw_deploy_infra_dir: "{{ ansible_facts.user_dir }}/Code/awfulwoman/infra"
+system_aw_deploy_state_dir: "{{ ansible_facts.user_dir }}/.local/state/aw-deploy"
