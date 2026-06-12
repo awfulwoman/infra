@@ -1,0 +1,4 @@
+composition_name: uptime-kuma
+
+composition_uptime_kuma_subdomains:
+  - uptime-kuma
