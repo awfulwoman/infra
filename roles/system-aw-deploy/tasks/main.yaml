@@ -16,7 +16,7 @@
     path: "{{ system_aw_deploy_opt_dir }}"
     state: directory
     mode: "0755"
-    owner: "{{ ansible_user }}"
+    owner: "{{ ansible_facts['user_id'] }}"
     group: staff
 
 - name: "Ensure state/runs directory exists"
@@ -27,15 +27,15 @@
 
 - name: "Create Python venv"
   ansible.builtin.command:
-    cmd: /opt/homebrew/bin/uv venv {{ system_aw_deploy_venv_dir }}
+    cmd: /opt/homebrew/bin/uv venv "{{ system_aw_deploy_venv_dir }}"
     creates: "{{ system_aw_deploy_venv_dir }}/bin/python3"
 
 - name: "Install mcp package into venv"
   ansible.builtin.command:
     cmd: /opt/homebrew/bin/uv pip install mcp
+    creates: "{{ system_aw_deploy_venv_dir }}/lib/python3/site-packages/mcp"
   environment:
     VIRTUAL_ENV: "{{ system_aw_deploy_venv_dir }}"
-  changed_when: false
   when: not ansible_check_mode
 
 - name: "Install aw-deploy CLI"
