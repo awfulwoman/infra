@@ -8,7 +8,14 @@ from mcp.server import Server
 from mcp.server.stdio import stdio_server
 from mcp import types
 
-AW_DEPLOY = os.environ.get("AW_DEPLOY_BIN", "/usr/local/bin/aw-deploy")
+_AW_DEPLOY_CANDIDATES = [
+    Path("/usr/local/bin/aw-deploy"),
+    Path.home() / ".local/bin/aw-deploy",
+]
+AW_DEPLOY = os.environ.get(
+    "AW_DEPLOY_BIN",
+    str(next((p for p in _AW_DEPLOY_CANDIDATES if p.exists()), _AW_DEPLOY_CANDIDATES[0])),
+)
 STATE_DIR = Path(os.environ.get("AW_STATE_DIR", Path.home() / ".local/state/aw-deploy"))
 RUNS_DIR = STATE_DIR / "runs"
 
