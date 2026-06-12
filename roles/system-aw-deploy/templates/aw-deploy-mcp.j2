@@ -2,7 +2,6 @@
 """Stdio MCP server: thin wrapper around the aw-deploy CLI."""
 import asyncio
 import os
-import subprocess
 from pathlib import Path
 
 from mcp.server import Server
@@ -82,6 +81,8 @@ async def list_tools():
 
 @server.call_tool()
 async def call_tool(name: str, arguments: dict):
+    arguments = arguments or {}
+
     if name == "run_playbook":
         cmd = [AW_DEPLOY, "run", arguments["playbook"]]
         if arguments.get("limit"):
@@ -92,19 +93,49 @@ async def call_tool(name: str, arguments: dict):
             cmd += ["--extra-vars", ev]
         if arguments.get("check"):
             cmd += ["--check"]
-        result = subprocess.run(cmd, capture_output=True, text=True)
-        output = result.stdout + result.stderr
-        if result.returncode != 0:
-            return [types.TextContent(type="text", text=f"FAILED (exit {result.returncode}):\n{output}")]
-        return [types.TextContent(type="text", text=output)]
+        try:
+            proc = await asyncio.create_subprocess_exec(
+                *cmd,
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.STDOUT,
+            )
+            stdout, _ = await proc.communicate()
+            output = stdout.decode(errors="replace")
+            if proc.returncode != 0:
+                return [types.TextContent(type="text", text=f"FAILED (exit {proc.returncode}):\n{output}")]
+            return [types.TextContent(type="text", text=output)]
+        except FileNotFoundError:
+            return [types.TextContent(type="text", text=f"FAILED: aw-deploy binary not found at {AW_DEPLOY}")]
 
     if name == "list_playbooks":
-        result = subprocess.run([AW_DEPLOY, "list"], capture_output=True, text=True)
-        return [types.TextContent(type="text", text=result.stdout or result.stderr)]
+        try:
+            proc = await asyncio.create_subprocess_exec(
+                AW_DEPLOY, "list",
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE,
+            )
+            stdout, stderr = await proc.communicate()
+            output = stdout.decode(errors="replace") or stderr.decode(errors="replace")
+            if proc.returncode != 0:
+                return [types.TextContent(type="text", text=f"FAILED (exit {proc.returncode}):\n{output}")]
+            return [types.TextContent(type="text", text=output)]
+        except FileNotFoundError:
+            return [types.TextContent(type="text", text=f"FAILED: aw-deploy binary not found at {AW_DEPLOY}")]
 
     if name == "list_hosts":
-        result = subprocess.run([AW_DEPLOY, "hosts"], capture_output=True, text=True)
-        return [types.TextContent(type="text", text=result.stdout or result.stderr)]
+        try:
+            proc = await asyncio.create_subprocess_exec(
+                AW_DEPLOY, "hosts",
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE,
+            )
+            stdout, stderr = await proc.communicate()
+            output = stdout.decode(errors="replace") or stderr.decode(errors="replace")
+            if proc.returncode != 0:
+                return [types.TextContent(type="text", text=f"FAILED (exit {proc.returncode}):\n{output}")]
+            return [types.TextContent(type="text", text=output)]
+        except FileNotFoundError:
+            return [types.TextContent(type="text", text=f"FAILED: aw-deploy binary not found at {AW_DEPLOY}")]
 
     if name == "last_run":
         if not RUNS_DIR.exists():
@@ -114,7 +145,11 @@ async def call_tool(name: str, arguments: dict):
         runs = sorted(RUNS_DIR.glob(pattern))
         if not runs:
             return [types.TextContent(type="text", text="No matching runs found.")]
-        return [types.TextContent(type="text", text=f"{runs[-1].name}:\n\n{runs[-1].read_text()}")]
+        try:
+            content = runs[-1].read_text(errors="replace")
+        except OSError as e:
+            return [types.TextContent(type="text", text=f"Could not read log: {e}")]
+        return [types.TextContent(type="text", text=f"{runs[-1].name}:\n\n{content}")]
 
     return [types.TextContent(type="text", text=f"Unknown tool: {name}")]
 
