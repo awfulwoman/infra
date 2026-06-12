@@ -47,11 +47,12 @@ def cmd_run(args):
     try:
         fcntl.flock(lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
     except BlockingIOError:
+        lock_fd.close()
         print("error: another aw-deploy run is in progress", file=sys.stderr)
         sys.exit(64)
 
     ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S")
-    slug = args.playbook.replace("/", "-").replace(".yaml", "")
+    slug = args.playbook.replace("/", "-").removesuffix(".yaml")
     log_path = RUNS_DIR / f"{ts}-{slug}.log"
 
     try:
@@ -67,12 +68,13 @@ def cmd_run(args):
                 sys.stdout.buffer.flush()
                 log_fh.buffer.write(line)
             proc.wait()
+        _prune_runs()
+        exit_code = proc.returncode
     finally:
         fcntl.flock(lock_fd, fcntl.LOCK_UN)
         lock_fd.close()
 
-    _prune_runs()
-    sys.exit(proc.returncode)
+    sys.exit(exit_code)
 
 
 def cmd_list(args):
@@ -100,7 +102,7 @@ def cmd_hosts(args):
 def cmd_logs(args):
     _ensure_dirs()
     runs = sorted(RUNS_DIR.glob("*.log"))
-    for log in runs[-(args.tail or 5):]:
+    for log in runs[-args.tail:]:
         print(f"\n=== {log.name} ===")
         print(log.read_text())
 
