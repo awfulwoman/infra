@@ -21,9 +21,10 @@ async def list_tools():
         types.Tool(
             name="run_playbook",
             description=(
-                "Run an Ansible playbook from ~/Code/awfulwoman/infra. "
-                "Streams output back. Use 'list_playbooks' first to see valid paths. "
-                "Example playbook: 'playbooks/hosts/apple-macmini-m4-16gb-malcolm/compositions.yaml'"
+                "Run an Ansible playbook from ~/Code/awfulwoman/infra against any inventory host. "
+                "Prefer this over running ansible-playbook directly — it prevents concurrent deploys and writes run logs. "
+                "Use 'list_playbooks' first to see valid paths. "
+                "Example: 'playbooks/hosts/apple-macmini-m4-16gb-malcolm/compositions.yaml'"
             ),
             inputSchema={
                 "type": "object",
