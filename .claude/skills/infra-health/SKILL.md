@@ -84,6 +84,5 @@ Most cnames map 1:1 (subdomain = composition_name). Non-obvious exceptions:
 
 Some cnames point at non-Docker services or external forwarding and will always appear rogue:
 
-- `mctest` — motioneye test camera (may be absent if composition not deployed)
-- `gateway` — MCP gateway (only deployed where explicitly in playbook)
+- `gateway` — MCP gateway service; source repo is `awfulwoman/gateway`. Only deployed where explicitly included in the host playbook.
 - `traefik_providers` entries (homeassistant, esphome, watchyourlan, gateway) are Traefik router config, not separate compose projects
