@@ -114,6 +114,7 @@
   ansible.builtin.debug:
     msg: >-
       Uptime Kuma sync — created: {{ composition_uptime_kuma_sync_result.json.created }},
+      updated: {{ composition_uptime_kuma_sync_result.json.updated }},
       deleted: {{ composition_uptime_kuma_sync_result.json.deleted }},
       skipped: {{ composition_uptime_kuma_sync_result.json.skipped }},
       errors: {{ composition_uptime_kuma_sync_result.json.errors | length }}
