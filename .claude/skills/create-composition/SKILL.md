@@ -172,6 +172,8 @@ Generate and encrypt:
 ansible-vault encrypt_string "$(openssl rand -hex 32)" --name 'vault_<name>_secret_key'
 ```
 
+If this a key or password that will never be used by a user in a GUI then you may create and commit them without interaction.
+
 Reference in `defaults/main.yaml`:
 ```yaml
 <name>_secret_key: "{{ vault_<name>_secret_key }}"
