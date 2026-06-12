@@ -31,6 +31,8 @@
     tags: [system, system-mcp-gateway]
   - role: system-agent-chives
     tags: [system, system-agent-chives]
+  - role: system-aw-deploy
+    tags: [system, system-aw-deploy]
   - role: monitoring-healthchecksio
     monitoring_healthchecksio_ping_type: success
     tags: [monitoring, monitoring-healthchecksio]

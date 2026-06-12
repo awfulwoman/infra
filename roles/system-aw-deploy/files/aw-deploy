@@ -14,6 +14,16 @@ RUNS_DIR = STATE_DIR / "runs"
 LOCK_FILE = STATE_DIR / "run.lock"
 MAX_RUNS = 30
 
+# Ensure Homebrew and common tool paths are available in subprocesses, since
+# macOS non-login shells do not include /opt/homebrew/bin in PATH.
+_EXTRA_PATHS = ["/opt/homebrew/bin", "/usr/local/bin"]
+_current_path = os.environ.get("PATH", "")
+_path_parts = _current_path.split(":")
+for _p in reversed(_EXTRA_PATHS):
+    if _p not in _path_parts:
+        _path_parts.insert(0, _p)
+os.environ["PATH"] = ":".join(_path_parts)
+
 
 def _ensure_dirs():
     RUNS_DIR.mkdir(parents=True, exist_ok=True)
