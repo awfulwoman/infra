@@ -194,11 +194,18 @@ def create_app(
                 created += 1
             except ValueError as exc:
                 errors.append({"spec": spec, "error": str(exc)})
+            except Exception as exc:
+                invalidate_session()
+                log.warning("create_and_tag failed, session invalidated: %s", exc)
+                errors.append({"spec": spec, "error": str(exc)})
 
         for name, monitor in managed_by_name.items():
             if name not in desired_names:
-                api.delete_monitor(monitor["id"])
-                deleted += 1
+                try:
+                    api.delete_monitor(monitor["id"])
+                    deleted += 1
+                except Exception as exc:
+                    errors.append({"name": name, "error": str(exc)})
 
         return jsonify({
             "created": created,
