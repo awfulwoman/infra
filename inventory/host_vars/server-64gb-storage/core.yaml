@@ -183,3 +183,18 @@ cnames:
   - loki.{{ domainname_infra }}
   - chat.{{ domainname_infra }}
   - paperless.{{ domainname_infra }}
+  - qbittorrent.{{ domainname_infra }}
+  - gluetun.{{ domainname_infra }}
+  - bazarr.{{ domainname_infra }}
+  - transmission.{{ domainname_infra }}
+  - n8n.{{ domainname_infra }}
+  - memorybank.{{ domainname_infra }}
+  - vikunja.{{ domainname_infra }}
+  - uptime-kuma.{{ domainname_infra }}
+  - kagimcp.{{ domainname_infra }}
+  - firefly.{{ domainname_infra }}
+  - firefly-importer.{{ domainname_infra }}
+  - zfs.metrics.{{ domainname_infra }}
+  - zfs-api.server-64gb-storage.{{ domainname_infra }}
+  - jellyfin-vue.{{ domainname_infra }}
+  - llmcalc.{{ domainname_infra }}

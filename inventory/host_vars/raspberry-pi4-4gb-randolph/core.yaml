@@ -59,3 +59,9 @@ zfs:
 # -------------------------------------------------------------------
 system_zfs_policy_healthchecksio_enabled: true
 system_zfs_policy_mqtt_enabled: true
+
+# -------------------------------------------------------------------
+# CNAMES
+# -------------------------------------------------------------------
+cnames:
+  - connect.{{ domainname_infra }}

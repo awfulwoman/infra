@@ -77,6 +77,10 @@ cnames:
   - mctest.{{ domainname_infra }}
   - lan.{{ domainname_infra }}
   - gateway.{{ domainname_infra }}
+  - owntracks.{{ domainname_infra }}
+  - owntracks-recorder.{{ domainname_infra }}
+  - zigbee2mqtt.{{ domainname_infra }}
+  - zfs-api.minipc-8gb-homebrain.{{ domainname_infra }}
 
 # -------------------------------------------------------------------
 # ZFS POLICY

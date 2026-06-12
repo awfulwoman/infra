@@ -102,3 +102,9 @@ system_claude_settings_path: "/fastpool/claude/settings"
 # -------------------------------------------------------------------
 system_zfs_policy_healthchecksio_enabled: true
 system_zfs_policy_mqtt_enabled: true
+
+# -------------------------------------------------------------------
+# CNAMES
+# -------------------------------------------------------------------
+cnames:
+  - zfs-api.raspberry-pi4-2gb-deedee.{{ domainname_infra }}

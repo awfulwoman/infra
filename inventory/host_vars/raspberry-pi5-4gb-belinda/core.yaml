@@ -91,3 +91,9 @@ backups_zfs_server_mqtt_enabled: true
 # ZFS POLICY
 # -------------------------------------------------------------------
 system_zfs_policy_snapshots_enable: false
+
+# -------------------------------------------------------------------
+# CNAMES
+# -------------------------------------------------------------------
+cnames:
+  - zfs-api.raspberry-pi5-4gb-belinda.{{ domainname_infra }}

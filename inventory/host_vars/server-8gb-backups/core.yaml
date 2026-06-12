@@ -55,3 +55,9 @@ backups_zfs_server_offsite_enabled: false
 # -------------------------------------------------------------------
 
 compositions_dataset: slowpool/compositions
+
+# -------------------------------------------------------------------
+# CNAMES
+# -------------------------------------------------------------------
+cnames:
+  - zfs-api.server-8gb-backups.{{ domainname_infra }}

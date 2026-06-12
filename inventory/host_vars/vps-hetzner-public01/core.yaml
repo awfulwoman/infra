@@ -70,3 +70,9 @@ traefik_providers:
 # -------------------------------------------------------------------
 system_zfs_policy_healthchecksio_enabled: true
 system_zfs_policy_mqtt_enabled: true
+
+# -------------------------------------------------------------------
+# CNAMES
+# -------------------------------------------------------------------
+cnames:
+  - zfs-api.vps-hetzner-public01.{{ domainname_infra }}
