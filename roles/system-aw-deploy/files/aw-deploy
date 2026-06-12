@@ -3,6 +3,7 @@
 import argparse
 import fcntl
 import os
+import re
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -118,6 +119,86 @@ def cmd_logs(args):
         print(log.read_text())
 
 
+def _parse_github_slug(url: str) -> str:
+    """Return 'org/repo' from any GitHub URL format."""
+    url = url.strip().rstrip("/")
+    if url.endswith(".git"):
+        url = url[:-4]
+    m = re.match(r"git@github\.com:([^/]+/[^/]+)$", url)
+    if m:
+        return m.group(1)
+    m = re.match(r"(?:https?://)?github\.com/([^/]+/[^/]+)$", url)
+    if m:
+        return m.group(1)
+    if re.match(r"^[^/@:]+/[^/]+$", url):
+        return url
+    raise ValueError(f"cannot parse as GitHub URL: {url!r}")
+
+
+def _find_playbooks_for_role(role_name: str) -> list:
+    """Return [(playbook_rel_path, [tags])] for playbooks that include role_name."""
+    results = []
+    for pb in sorted((INFRA_DIR / "playbooks").rglob("*.yaml")):
+        lines = pb.read_text(errors="replace").splitlines()
+        for i, line in enumerate(lines):
+            if re.search(rf"\brole:\s+{re.escape(role_name)}\b", line):
+                tags = []
+                for j in range(i + 1, min(i + 6, len(lines))):
+                    tl = lines[j].strip()
+                    m = re.match(r"tags:\s*\[([^\]]+)\]", tl)
+                    if m:
+                        tags = [t.strip() for t in m.group(1).split(",")]
+                        break
+                    if re.match(r"-\s*role:|^role:", tl):
+                        break
+                results.append((str(pb.relative_to(INFRA_DIR)), tags))
+                break
+    return results
+
+
+def cmd_repo(args):
+    try:
+        slug = _parse_github_slug(args.url)
+    except ValueError as e:
+        print(f"error: {e}", file=sys.stderr)
+        sys.exit(65)
+
+    repo_name = slug.split("/")[1]
+    roles_dir = INFRA_DIR / "roles"
+
+    # Search roles/ for the full slug first, fall back to repo name alone
+    matched_roles = set()
+    for term in [slug, repo_name]:
+        result = subprocess.run(
+            ["grep", "-rl", "--include=*.yaml", term, str(roles_dir)],
+            capture_output=True, text=True,
+        )
+        for path in result.stdout.strip().splitlines():
+            parts = Path(path).relative_to(roles_dir).parts
+            if parts:
+                matched_roles.add(parts[0])
+        if matched_roles:
+            break  # slug match is specific enough; skip repo_name search
+
+    if not matched_roles:
+        print(f"No roles found referencing '{slug}'.")
+        return
+
+    print(f"Roles referencing '{slug}':\n")
+    for role in sorted(matched_roles):
+        playbooks = _find_playbooks_for_role(role)
+        if playbooks:
+            for pb_path, tags in playbooks:
+                tag_str = ",".join(tags) if tags else role
+                print(f"  role:     {role}")
+                print(f"  playbook: {pb_path}")
+                print(f"  deploy:   aw-deploy run {pb_path} --tags {tag_str}")
+                print()
+        else:
+            print(f"  role: {role}  (no playbook includes this role)")
+            print()
+
+
 def main():
     parser = argparse.ArgumentParser(description="Run Ansible playbooks from the infra repo")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -139,6 +220,10 @@ def main():
     p_logs = sub.add_parser("logs", help="Show recent run logs")
     p_logs.add_argument("--tail", type=int, default=5, metavar="N", help="Number of recent runs to show (default: 5)")
     p_logs.set_defaults(func=cmd_logs)
+
+    p_repo = sub.add_parser("repo", help="Find roles and playbooks that deploy a GitHub repo")
+    p_repo.add_argument("url", help="GitHub repo URL (any format: HTTPS, SSH, with/without .git)")
+    p_repo.set_defaults(func=cmd_repo)
 
     args = parser.parse_args()
     args.func(args)

@@ -72,6 +72,24 @@ async def list_tools():
             inputSchema={"type": "object", "properties": {}},
         ),
         types.Tool(
+            name="find_repo",
+            description=(
+                "Given a GitHub repo URL (any format: HTTPS, SSH, with/without .git), find the Ansible roles "
+                "and playbooks in the infra repo that deploy it, and show the exact aw-deploy command to use. "
+                "Call this first when asked to deploy a repo you don't know the playbook path for."
+            ),
+            inputSchema={
+                "type": "object",
+                "required": ["url"],
+                "properties": {
+                    "url": {
+                        "type": "string",
+                        "description": "GitHub repo URL, e.g. git@github.com:awfulwoman/gateway.git or https://github.com/awfulwoman/gateway",
+                    },
+                },
+            },
+        ),
+        types.Tool(
             name="last_run",
             description="Show the log from the most recent aw-deploy run, optionally filtered by playbook name fragment.",
             inputSchema={
@@ -134,6 +152,21 @@ async def call_tool(name: str, arguments: dict):
         try:
             proc = await asyncio.create_subprocess_exec(
                 AW_DEPLOY, "hosts",
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE,
+            )
+            stdout, stderr = await proc.communicate()
+            output = stdout.decode(errors="replace") or stderr.decode(errors="replace")
+            if proc.returncode != 0:
+                return [types.TextContent(type="text", text=f"FAILED (exit {proc.returncode}):\n{output}")]
+            return [types.TextContent(type="text", text=output)]
+        except FileNotFoundError:
+            return [types.TextContent(type="text", text=f"FAILED: aw-deploy binary not found at {AW_DEPLOY}")]
+
+    if name == "find_repo":
+        try:
+            proc = await asyncio.create_subprocess_exec(
+                AW_DEPLOY, "repo", arguments["url"],
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE,
             )
