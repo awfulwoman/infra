@@ -42,6 +42,8 @@ Watch for key events with Monitor, covering both success and failure signals:
 tail -f /path/to/output | grep --line-buffered -E "changed:|failed:|PLAY RECAP|fatal|ERROR|<role-specific summary>"
 ```
 
+**Stop the Monitor** as soon as a terminal signal (`PLAY RECAP`, `fatal`, `ERROR`) is seen — the Monitor has no built-in stop condition and will tail indefinitely if not cancelled.
+
 Use SSH to proactively check the host if progress stalls — don't wait for a timeout:
 ```bash
 ssh <host> 'docker ps --filter name=<service> --format "table {{.Names}}\t{{.Status}}"'
