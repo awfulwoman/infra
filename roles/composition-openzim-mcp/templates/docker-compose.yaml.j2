@@ -1,0 +1,28 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  openzim-mcp:
+    container_name: openzim-mcp
+    image: "ghcr.io/cameronrye/openzim-mcp:{{ composition_openzim_mcp_version }}"
+    restart: unless-stopped
+    env_file: .environment_vars
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/localhost/8000'"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.openzim-mcp.rule=Host(`zim.{{ domainname_infra }}`)"
+      - "traefik.http.routers.openzim-mcp.tls=true"
+      - "traefik.http.routers.openzim-mcp.tls.certresolver=letsencrypt"
+      - "traefik.http.services.openzim-mcp.loadbalancer.server.port=8000"
+    volumes:
+      - "{{ composition_openzim_mcp_zim_path }}:/data:ro"
+    networks:
+      - "{{ default_docker_network }}"
+
+networks:
+  "{{ default_docker_network }}":
+    external: true

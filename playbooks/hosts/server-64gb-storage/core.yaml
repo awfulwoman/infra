@@ -85,6 +85,8 @@
     tags: [composition, composition-uptime-kuma]
   - role: composition-mcp-kagisearch
     tags: [composition, composition-mcp-kagisearch]
+  - role: composition-openzim-mcp
+    tags: [composition, composition-openzim-mcp]
   - role: system-emailbackup
     tags: [system, system-emailbackup]
   - role: system-smartmontools

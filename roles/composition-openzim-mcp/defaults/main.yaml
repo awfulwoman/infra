@@ -1,0 +1,10 @@
+# code: language=ansible
+composition_name: openzim-mcp
+
+composition_openzim_mcp_version: "latest"
+composition_openzim_mcp_zim_path: "/slowpool/shared/zim"
+
+composition_openzim_mcp_subdomains:
+  - zim
+
+composition_openzim_mcp_auth_token: "{{ vault_openzim_mcp_auth_token }}"
