@@ -24,6 +24,45 @@
 # Specific tasks
 # ----------------------------
 
+- name: Create ZIM library directory
+  ansible.builtin.file:
+    path: "{{ composition_openzim_mcp_zim_download_path }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0755"
+  become: true
+
+- name: Deploy ZIM download script
+  ansible.builtin.template:
+    src: download-zim-library.sh.j2
+    dest: /usr/local/bin/download-zim-library.sh
+    owner: root
+    group: root
+    mode: "0755"
+  become: true
+
+- name: Deploy ZIM download systemd service
+  ansible.builtin.template:
+    src: zim-library-download.service.j2
+    dest: /etc/systemd/system/zim-library-download.service
+    owner: root
+    group: root
+    mode: "0644"
+  become: true
+
+- name: Enable ZIM download service
+  ansible.builtin.systemd:
+    name: zim-library-download
+    enabled: true
+    daemon_reload: true
+  become: true
+
+- name: Start ZIM download service (non-blocking)
+  ansible.builtin.command: systemctl start --no-block zim-library-download
+  become: true
+  changed_when: false
+
 - name: Run Configure DNS role
   ansible.builtin.include_role:
     name: "network-register-subdomain"

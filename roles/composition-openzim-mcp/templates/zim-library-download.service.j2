@@ -1,0 +1,15 @@
+[Unit]
+Description=Download ZIM library files for openzim-mcp
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User={{ ansible_user }}
+ExecStart=/usr/local/bin/download-zim-library.sh
+RemainAfterExit=yes
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

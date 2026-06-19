@@ -1,0 +1,29 @@
+#!/bin/bash
+# code: language=ansible
+set -euo pipefail
+
+ZIM_DIR="{{ composition_openzim_mcp_zim_download_path }}"
+EMAIL="status@{{ domainname_personal }}"
+downloaded=0
+
+{% for zim in composition_openzim_mcp_zim_files %}
+if [ ! -f "${ZIM_DIR}/{{ zim.dest }}" ]; then
+    echo "Downloading {{ zim.dest }}..."
+    wget -q --show-progress -O "${ZIM_DIR}/{{ zim.dest }}.tmp" "{{ zim.url }}"
+    mv "${ZIM_DIR}/{{ zim.dest }}.tmp" "${ZIM_DIR}/{{ zim.dest }}"
+    downloaded=$((downloaded + 1))
+fi
+{% endfor %}
+
+if [ "$downloaded" -gt 0 ]; then
+    echo "Subject: ZIM library download complete on {{ ansible_facts['hostname'] }}
+From: {{ ansible_facts['hostname'] }}@{{ domainname_personal }}
+To: ${EMAIL}
+
+${downloaded} ZIM file(s) downloaded to ${ZIM_DIR}:
+
+{% for zim in composition_openzim_mcp_zim_files %}
+  - {{ zim.dest }}
+{% endfor %}
+" | sendmail "${EMAIL}"
+fi
