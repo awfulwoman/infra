@@ -82,6 +82,8 @@ zfs:
     datasets:
       shared:
         datasets:
+          zim:
+            policy: high
           documents:
             policy: critical
             datasets:
