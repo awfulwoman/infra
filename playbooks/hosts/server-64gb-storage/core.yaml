@@ -87,6 +87,8 @@
     tags: [composition, composition-mcp-kagisearch]
   - role: composition-openzim-mcp
     tags: [composition, composition-openzim-mcp]
+  - role: composition-agentmemory
+    tags: [composition, composition-agentmemory]
   - role: system-emailbackup
     tags: [system, system-emailbackup]
   - role: system-smartmontools

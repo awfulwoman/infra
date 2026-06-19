@@ -1,0 +1,40 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  agentmemory:
+    container_name: agentmemory
+    build:
+      context: ./build
+      dockerfile: Dockerfile
+      args:
+        AGENTMEMORY_VERSION: "{{ composition_agentmemory_version }}"
+        III_VERSION: "{{ composition_agentmemory_iii_version }}"
+        III_SDK_VERSION: "{{ composition_agentmemory_iii_version }}"
+    restart: unless-stopped
+    env_file: .environment_vars
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.agentmemory.rule=Host(`agentmemory.{{ domainname_infra }}`)"
+      - "traefik.http.routers.agentmemory.tls=true"
+      - "traefik.http.routers.agentmemory.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.agentmemory.service=agentmemory"
+      - "traefik.http.services.agentmemory.loadbalancer.server.port=3111"
+      - "traefik.http.routers.agentmemory-viewer.rule=Host(`agentmemory-viewer.{{ domainname_infra }}`)"
+      - "traefik.http.routers.agentmemory-viewer.tls=true"
+      - "traefik.http.routers.agentmemory-viewer.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.agentmemory-viewer.service=agentmemory-viewer"
+      - "traefik.http.services.agentmemory-viewer.loadbalancer.server.port=3114"
+    volumes:
+      - "{{ composition_config }}:/data"
+    networks:
+      - "{{ default_docker_network }}"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:3111/agentmemory/livez || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+
+networks:
+  "{{ default_docker_network }}":
+    external: true
