@@ -19,6 +19,14 @@ Fetch the project's GitHub page or install docs. Look for:
 - Any data dirs that must exist before first run
 - Secrets or passwords that need generating
 
+Then probe the image to determine the correct healthcheck tool:
+
+```bash
+scripts/check-image-healthcheck-tools.sh <image>:<tag>
+```
+
+This reports the OS and available tools (`bash`, `wget`, `curl`, `nc`) and recommends the right healthcheck pattern. Use the recommendation when writing the `healthcheck:` block in `docker-compose.yaml.j2`. See `.claude/rules/docker-healthcheck.md` for the patterns.
+
 ## Step 2 — Directory structure
 
 ```

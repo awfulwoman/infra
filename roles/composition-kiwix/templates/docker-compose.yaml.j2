@@ -1,0 +1,29 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  kiwix:
+    container_name: kiwix
+    image: "ghcr.io/kiwix/kiwix-serve:{{ composition_kiwix_version }}"
+    restart: unless-stopped
+    command: "*.zim"
+    env_file: .environment_vars
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:8080/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.kiwix.rule=Host(`kiwix.{{ domainname_infra }}`)"
+      - "traefik.http.routers.kiwix.tls=true"
+      - "traefik.http.routers.kiwix.tls.certresolver=letsencrypt"
+      - "traefik.http.services.kiwix.loadbalancer.server.port=8080"
+    volumes:
+      - "{{ composition_kiwix_zim_path }}:/data:ro"
+    networks:
+      - "{{ default_docker_network }}"
+
+networks:
+  "{{ default_docker_network }}":
+    external: true

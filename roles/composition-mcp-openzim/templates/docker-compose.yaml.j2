@@ -5,6 +5,7 @@ services:
     container_name: openzim-mcp
     image: "ghcr.io/cameronrye/openzim-mcp:{{ composition_openzim_mcp_version }}"
     restart: unless-stopped
+    command: ["{{ composition_openzim_mcp_container_zim_path }}"]
     env_file: .environment_vars
     healthcheck:
       test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/localhost/8000'"]
