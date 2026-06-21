@@ -12,5 +12,11 @@ composition_openzim_mcp_subdomains:
 composition_openzim_mcp_auth_token: "{{ vault_openzim_mcp_auth_token }}"
 
 composition_openzim_mcp_zim_files:
-  - url: "https://lb.download.kiwix.org/zim/wikipedia/wikipedia_en_all_maxi_2026-02.zim"
-    dest: "wikipedia_en_all_maxi_2026-02.zim"
+  - url: https://lb.download.kiwix.org/zim/wikipedia/wikipedia_en_all_maxi_2026-02.zim
+    dest: wikipedia_en_all_maxi_2026-02.zim
+  - url: https://lb.download.kiwix.org/zim/other/zimgit-water_en_2024-08.zim
+    dest: zimgit-water_en_2024-08.zim
+  - url: https://lb.download.kiwix.org/zim/other/restarters_en_all_maxi_2026-04.zim
+    dest: restarters_en_all_maxi_2026-04.zim
+  - url: https://lb.download.kiwix.org/zim/other/trueprepper.com_en_all_2026-05.zim
+    dest: trueprepper.com_en_all_2026-05.zim
