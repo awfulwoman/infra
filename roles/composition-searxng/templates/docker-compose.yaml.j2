@@ -8,7 +8,7 @@ services:
     env_file: .environment_vars
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.searxng.rule=Host(`searxng.{{ domainname_infra }}`)"
+      - "traefik.http.routers.searxng.rule=Host(`searxng.{{ domainname_infra }}`) || Host(`search.{{ domainname_infra }}`)"
       - "traefik.http.routers.searxng.tls=true"
       - "traefik.http.routers.searxng.tls.certresolver=letsencrypt"
       - "traefik.http.services.searxng.loadbalancer.server.port=8080"
