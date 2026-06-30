@@ -1,0 +1,7 @@
+# code: language=ansible
+composition_name: mcp-searxng
+
+composition_mcp_searxng_subdomains:
+  - searchmcp
+
+composition_mcp_searxng_auth_token: "{{ vault_mcp_searxng_auth_token }}"
