@@ -8,6 +8,7 @@ composition_openzim_mcp_container_zim_path: "/data/library"
 
 composition_openzim_mcp_subdomains:
   - zim
+  - wiki
 
 composition_openzim_mcp_auth_token: "{{ vault_openzim_mcp_auth_token }}"
 
