@@ -1,0 +1,54 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  searxng:
+    container_name: searxng
+    image: searxng/searxng:latest
+    restart: unless-stopped
+    env_file: .environment_vars
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.searxng.rule=Host(`searxng.{{ domainname_infra }}`)"
+      - "traefik.http.routers.searxng.tls=true"
+      - "traefik.http.routers.searxng.tls.certresolver=letsencrypt"
+      - "traefik.http.services.searxng.loadbalancer.server.port=8080"
+    volumes:
+      - "{{ composition_config }}/searxng:/etc/searxng:rw"
+      - /etc/localtime:/etc/localtime:ro
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+    networks:
+      - "{{ default_docker_network }}"
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:8080/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  redis:
+    container_name: searxng-redis
+    image: redis:alpine
+    command: redis-server --save 30 1 --loglevel warning
+    restart: unless-stopped
+    volumes:
+      - "{{ composition_config }}/redis:/data"
+    networks:
+      - "{{ default_docker_network }}"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+networks:
+  "{{ default_docker_network }}":
+    external: true

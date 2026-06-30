@@ -1,0 +1,7 @@
+# code: language=ansible
+composition_name: searxng
+
+composition_searxng_subdomains:
+  - searxng
+
+composition_searxng_secret_key: "{{ vault_searxng_secret_key }}"

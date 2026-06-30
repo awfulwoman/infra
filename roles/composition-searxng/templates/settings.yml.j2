@@ -1,0 +1,8 @@
+use_default_settings: true
+
+valkey:
+  url: redis://redis:6379/0
+
+server:
+  secret_key: "{{ composition_searxng_secret_key }}"
+  limiter: false

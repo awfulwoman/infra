@@ -87,6 +87,8 @@
     tags: [composition, composition-mcp-kagisearch]
   - role: composition-mcp-openzim
     tags: [composition, composition-mcp-openzim]
+  - role: composition-searxng
+    tags: [composition, composition-searxng]
   - role: composition-kiwix
     tags: [composition, composition-kiwix]
   - role: system-emailbackup
