@@ -1,7 +1,13 @@
 - name: Ensure ollama is installed via Homebrew
   community.general.homebrew:
     name: ollama
-    state: present
+    state: latest
+    update_homebrew: true
+  register: ollama_brew
+
+- name: DEBUG
+  ansible.builtin.debug:
+    var: ollama_brew
 
 - name: Ensure LaunchAgents directory exists
   ansible.builtin.file:
@@ -20,15 +26,15 @@
     mode: "0644"
   register: ollama_plist
 
-- name: Unload service before reload on plist change # noqa: no-handler
+- name: Unload service before reload on plist change or upgrade # noqa: no-handler
   ansible.builtin.command: "launchctl unload {{ ansible_facts.user_dir }}/Library/LaunchAgents/com.awfulwoman.ollama.plist"
-  when: ollama_plist.changed
-  changed_when: false
+  when: ollama_plist.changed or ollama_brew.changed
+  # changed_when: false
   failed_when: false
 
 - name: Ensure service is loaded # noqa: no-handler
   ansible.builtin.command: "launchctl load {{ ansible_facts.user_dir }}/Library/LaunchAgents/com.awfulwoman.ollama.plist"
-  when: ollama_plist.changed
+  when: ollama_plist.changed or ollama_brew.changed
   register: launchctl_load
   changed_when: launchctl_load.rc == 0
   failed_when: false
