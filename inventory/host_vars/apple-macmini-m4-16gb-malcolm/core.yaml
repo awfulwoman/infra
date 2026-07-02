@@ -72,8 +72,11 @@ system_claude_profile_file: ".zshrc"
 # OBSIDIAN
 # -------------------------------------------------------------------
 system_obsidian_headless_vaults:
-  - name: "Personal"
-    path: "{{ ansible_facts['user_dir'] }}/Obsidian"
+  - name: "Charlie"
+    path: "{{ ansible_facts['user_dir'] }}/Documents/Personal/Charlie"
+    password: "{{ vault_obsidian_vault_key }}"
+  - name: "AgentMemory"
+    path: "{{ ansible_facts['user_dir'] }}/Documents/Personal/AgentMemory"
     password: "{{ vault_obsidian_vault_key }}"
 
 # -------------------------------------------------------------------
