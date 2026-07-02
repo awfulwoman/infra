@@ -14,3 +14,6 @@ system_obsidian_headless_user: "{{ ansible_facts['user_id'] }}"
 
 # Resolved at install time via `which ob`; override only if needed.
 system_obsidian_headless_ob_bin: "ob"
+
+# How often (seconds) to run a one-shot sync on macOS (launchd StartInterval).
+system_obsidian_headless_sync_interval: 300
