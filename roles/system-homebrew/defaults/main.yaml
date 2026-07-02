@@ -6,3 +6,4 @@ system_homebrew_bin: >-
   }}
 
 system_homebrew_formulae: []
+system_homebrew_casks: []

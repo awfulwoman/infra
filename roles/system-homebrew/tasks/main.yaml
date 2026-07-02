@@ -53,3 +53,12 @@
     name: "{{ system_homebrew_formulae }}"
     path: "{{ system_homebrew_bin | dirname }}"
     state: present
+
+- name: Ensure Homebrew casks are installed
+  community.general.homebrew_cask:
+    name: "{{ system_homebrew_casks }}"
+    path: "{{ system_homebrew_bin | dirname }}"
+    state: present
+  when:
+    - ansible_facts['system'] == 'Darwin'
+    - system_homebrew_casks | length > 0
