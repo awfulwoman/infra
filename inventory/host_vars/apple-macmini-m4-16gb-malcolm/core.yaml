@@ -108,6 +108,7 @@ automation_infra_playbooks:
 # MCP GATEWAY
 # -------------------------------------------------------------------
 system_mcp_gateway_server_host: "0.0.0.0"
+system_mcp_gateway_obsidian_vault_path: "{{ ansible_facts.user_dir }}/Documents/Personal/Charlie"
 
 # -------------------------------------------------------------------
 # HOMEBREW
