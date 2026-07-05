@@ -35,7 +35,7 @@
     project_src: "{{ composition_root }}"
     state: present
     build: never
-    pull_policy: always
+    pull: always
     remove_orphans: true
   notify: Restart Traefik
 
