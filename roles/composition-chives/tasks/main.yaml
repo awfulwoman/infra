@@ -40,6 +40,13 @@
     group: "{{ ansible_user }}"
     mode: "0755"
 
+- name: "Register DNS subdomain"
+  ansible.builtin.include_role:
+    name: "network-register-subdomain"
+  vars:
+    configure_dns_subdomains:
+      - "{{ composition_name }}"
+
 - name: "Start Docker Compose project"
   community.docker.docker_compose_v2:
     project_src: "{{ composition_root }}"
