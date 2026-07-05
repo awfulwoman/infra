@@ -1,14 +1,6 @@
-composition_name: chives
-
 composition_chives_llm_base_url: "http://192.168.1.150:11434/v1"
 composition_chives_llm_model: "qwen3:14b"
 composition_chives_llm_api_key: "ollama"
-
-composition_chives_telegram_allowed_chat_ids: "[888261035]"
-
-composition_chives_imap_host: "imap.mailbox.org"
-composition_chives_imap_port: 993
-composition_chives_imap_username: "charlie@whalecoiner.com"
 
 composition_chives_morning_brief_time: "08:00"
 composition_chives_event_reminder_minutes: 15

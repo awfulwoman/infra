@@ -16,10 +16,10 @@
     group: "{{ ansible_user }}"
     mode: "0600"
 
-- name: "Create mcps.yaml"
+- name: "Create config.yaml"
   ansible.builtin.template:
-    src: mcps.yaml.j2
-    dest: "{{ composition_config }}/mcps.yaml"
+    src: config.yaml.j2
+    dest: "{{ composition_config }}/config.yaml"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0644"

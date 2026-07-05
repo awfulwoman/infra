@@ -1,21 +1,21 @@
-TZ="Europe/London"
+TZ="Europe/Berlin"
 
 CHIVES_LLM__BASE_URL={{ composition_chives_llm_base_url }}
 CHIVES_LLM__MODEL={{ composition_chives_llm_model }}
 CHIVES_LLM__API_KEY={{ composition_chives_llm_api_key }}
 
-CHIVES_TELEGRAM__BOT_TOKEN={{ vault_chives_telegram_bot_token }}
-CHIVES_TELEGRAM__ALLOWED_CHAT_IDS={{ composition_chives_telegram_allowed_chat_ids }}
+CHIVES_TELEGRAM__BOT_TOKEN={{ vault_chives_telegram_token }}
+CHIVES_TELEGRAM__ALLOWED_CHAT_IDS=[{{ vault_chives_telegram_chat_id }}]
 
-CHIVES_IMAP__HOST={{ composition_chives_imap_host }}
-CHIVES_IMAP__PORT={{ composition_chives_imap_port }}
-CHIVES_IMAP__USERNAME={{ composition_chives_imap_username }}
-CHIVES_IMAP__PASSWORD={{ vault_chives_imap_password }}
+CHIVES_IMAP__HOST=imap.{{ vault_mailprovider_domain }}
+CHIVES_IMAP__PORT=993
+CHIVES_IMAP__USERNAME={{ vault_mailprovider_user }}
+CHIVES_IMAP__PASSWORD={{ vault_mailprovider_password }}
 
 CHIVES_MORNING_BRIEF_TIME={{ composition_chives_morning_brief_time }}
 CHIVES_EVENT_REMINDER_MINUTES={{ composition_chives_event_reminder_minutes }}
 CHIVES_IDLE_CHECKIN_HOURS={{ composition_chives_idle_checkin_hours }}
 
-CHIVES_MCP_CONFIG_PATH=/app/mcps.yaml
+CHIVES_MCP_CONFIG_PATH=/app/config.yaml
 CHIVES_STATE_PATH=/app/state
 CHIVES_PROFILE_PATH=/app/profile

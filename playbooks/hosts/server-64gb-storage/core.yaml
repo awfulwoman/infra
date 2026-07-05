@@ -94,6 +94,8 @@
   - role: composition-kiwix
     tags: [composition, composition-kiwix]
   - role: composition-chives
+    vars:
+      composition_name: chives
     tags: [composition, composition-chives]
   - role: composition-open-webui
     tags: [composition, composition-open-webui]
