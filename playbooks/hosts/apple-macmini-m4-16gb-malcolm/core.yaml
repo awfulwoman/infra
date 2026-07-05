@@ -17,8 +17,8 @@
     tags: [system, system-repos]
   - role: system-ollama
     tags: [system, system-ollama]
-  - role: system-chatterbox
-    tags: [system, system-chatterbox]
+  - role: system-tts-chatterbox
+    tags: [system, system-tts-chatterbox]
   - role: system-claude
     tags: [system, system-claude]
   - role: ansible-core
