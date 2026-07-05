@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.awfulwoman.chatterbox</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>{{ system_chatterbox_base_dir }}/venv/bin/python</string>
+        <string>{{ system_chatterbox_base_dir }}/server.py</string>
+        <string>--host</string>
+        <string>{{ system_chatterbox_host }}</string>
+        <string>--port</string>
+        <string>{{ system_chatterbox_port }}</string>
+{% if system_chatterbox_voice_path %}
+        <string>--voice</string>
+        <string>{{ system_chatterbox_voice_path }}</string>
+{% endif %}
+        <string>--exaggeration</string>
+        <string>{{ system_chatterbox_exaggeration }}</string>
+        <string>--cfg-weight</string>
+        <string>{{ system_chatterbox_cfg_weight }}</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>StandardOutPath</key>
+    <string>{{ system_chatterbox_base_dir }}/logs/chatterbox.log</string>
+    <key>StandardErrorPath</key>
+    <string>{{ system_chatterbox_base_dir }}/logs/chatterbox.err</string>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+        <key>HOME</key>
+        <string>{{ ansible_facts.user_dir }}</string>
+    </dict>
+</dict>
+</plist>
