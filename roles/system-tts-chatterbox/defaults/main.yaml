@@ -2,6 +2,7 @@
 system_chatterbox_base_dir: "{{ awfulwoman_opt_dir }}/chatterbox"
 system_chatterbox_host: "0.0.0.0"
 system_chatterbox_port: 10200
-system_chatterbox_default_voice: ""  # file stem in voices/; uses first alphabetically if empty
+system_chatterbox_default_voice: ""        # file stem in voices/; uses first alphabetically if empty
+system_chatterbox_include_default_voice: false  # expose Chatterbox's built-in speaker as a "default" voice
 system_chatterbox_exaggeration: 0.5  # emotion exaggeration (0.25–2.0; lower = more neutral)
 system_chatterbox_cfg_weight: 0.5    # pacing control (0.0–1.0; lower = slower/more expressive)

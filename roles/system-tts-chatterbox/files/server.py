@@ -40,6 +40,7 @@ async def handle_connection(
     model,
     voice_conds: dict,
     default_voice: str,
+    exaggeration: float,
     cfg_weight: float,
     lock: threading.Lock,
 ) -> None:
@@ -82,6 +83,9 @@ async def handle_connection(
             def generate():
                 with lock:
                     model.conds = conds
+                    if conds is None:
+                        # No reference audio — use Chatterbox's built-in default speaker
+                        return model.generate(text, exaggeration=exaggeration, cfg_weight=cfg_weight)
                     return model.generate(text, cfg_weight=cfg_weight)
 
             wav = await loop.run_in_executor(None, generate)
@@ -128,6 +132,7 @@ async def main() -> None:
     parser.add_argument("--port", type=int, default=10200)
     parser.add_argument("--voices-dir", required=True, help="Directory of reference audio files")
     parser.add_argument("--default-voice", default="", help="Default voice name (file stem); uses first alphabetically if unset")
+    parser.add_argument("--include-default-voice", action="store_true", help="Expose a 'default' voice using Chatterbox's built-in speaker")
     parser.add_argument("--exaggeration", type=float, default=0.5)
     parser.add_argument("--cfg-weight", type=float, default=0.5)
     parser.add_argument("--debug", action="store_true")
@@ -171,6 +176,9 @@ async def main() -> None:
         model.prepare_conditionals(wav_path, exaggeration=args.exaggeration)
         voice_conds[name] = model.conds
 
+    if args.include_default_voice:
+        voice_conds["default"] = None  # sentinel: use model's built-in speaker, no reference audio
+
     default_voice = args.default_voice if args.default_voice in voice_conds else next(iter(voice_conds))
     _LOGGER.info("Default voice: %s", default_voice)
 
@@ -193,7 +201,7 @@ async def main() -> None:
                         name=name,
                         attribution=_attribution,
                         installed=True,
-                        description=f"Cloned voice: {name}",
+                        description="Built-in default speaker" if name == "default" else f"Cloned voice: {name}",
                         version=None,
                         languages=["en-us"],
                         speakers=[TtsVoiceSpeaker(name=name)],
@@ -206,7 +214,7 @@ async def main() -> None:
 
     lock = threading.Lock()
     handler = lambda r, w: handle_connection(
-        r, w, wyoming_info, model, voice_conds, default_voice, args.cfg_weight, lock
+        r, w, wyoming_info, model, voice_conds, default_voice, args.exaggeration, args.cfg_weight, lock
     )
     server = await asyncio.start_server(handler, args.host, args.port)
     _LOGGER.info("Listening on %s:%d", args.host, args.port)

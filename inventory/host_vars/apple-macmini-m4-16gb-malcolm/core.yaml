@@ -45,7 +45,7 @@ hardware_apple_wifi_interface: en1
 # -------------------------------------------------------------------
 # CHATTERBOX
 # -------------------------------------------------------------------
-system_chatterbox_voice_path: "/opt/awfulwoman/chatterbox/voice.m4a"
+system_chatterbox_include_default_voice: true
 
 # -------------------------------------------------------------------
 # OLLAMA
