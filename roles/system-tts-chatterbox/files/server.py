@@ -4,6 +4,7 @@
 import argparse
 import asyncio
 import logging
+import re
 import subprocess
 import tempfile
 import threading
@@ -17,6 +18,13 @@ SAMPLE_WIDTH = 2  # 16-bit PCM
 CHANNELS = 1
 CHUNK_FRAMES = 4096
 VOICE_EXTENSIONS = {".wav", ".m4a", ".mp3", ".flac", ".ogg"}
+
+_SENTENCE_RE = re.compile(r'(?<=[.!?])\s+(?=[A-Z"\'])')
+
+
+def split_sentences(text: str) -> list[str]:
+    parts = _SENTENCE_RE.split(text.strip())
+    return [s.strip() for s in parts if s.strip()]
 
 
 def ensure_wav(voice_path: str) -> str:
@@ -41,15 +49,37 @@ async def handle_connection(
     voice_conds: dict,
     default_voice: str,
     cfg_weight: float,
+    stream_sentences: bool,
     lock: threading.Lock,
 ) -> None:
     from wyoming.audio import AudioChunk, AudioStart, AudioStop
     from wyoming.event import async_read_event, async_write_event
     from wyoming.info import Describe
     from wyoming.tts import Synthesize
+    import numpy as np
 
     addr = writer.get_extra_info("peername")
     _LOGGER.debug("Connection from %s", addr)
+
+    async def send_wav(wav, timestamp: int) -> int:
+        samples = wav.squeeze(0).cpu().numpy()
+        pcm = (samples * 32767).clip(-32768, 32767).astype(np.int16).tobytes()
+        chunk_bytes = CHUNK_FRAMES * SAMPLE_WIDTH
+        for i in range(0, len(pcm), chunk_bytes):
+            chunk = pcm[i : i + chunk_bytes]
+            await async_write_event(
+                AudioChunk(
+                    rate=SAMPLE_RATE,
+                    width=SAMPLE_WIDTH,
+                    channels=CHANNELS,
+                    audio=chunk,
+                    timestamp=timestamp,
+                ).event(),
+                writer,
+            )
+            timestamp += len(chunk) // SAMPLE_WIDTH
+        return timestamp
+
     try:
         while True:
             event = await async_read_event(reader)
@@ -74,43 +104,27 @@ async def handle_connection(
                 await async_write_event(AudioStop().event(), writer)
                 continue
 
-            _LOGGER.info("Synthesizing [%s]: %.60s…", voice_name, text)
-
             conds = voice_conds[voice_name]
             loop = asyncio.get_event_loop()
-
-            def generate():
-                with lock:
-                    model.conds = conds
-                    return model.generate(text, cfg_weight=cfg_weight)
-
-            wav = await loop.run_in_executor(None, generate)
-
-            import numpy as np
-            samples = wav.squeeze(0).cpu().numpy()
-            pcm = (samples * 32767).clip(-32768, 32767).astype(np.int16).tobytes()
+            sentences = split_sentences(text) if stream_sentences else [text]
+            _LOGGER.info("Synthesizing [%s] %d segment(s): %.60s…", voice_name, len(sentences), text)
 
             await async_write_event(
                 AudioStart(rate=SAMPLE_RATE, width=SAMPLE_WIDTH, channels=CHANNELS).event(),
                 writer,
             )
-            chunk_bytes = CHUNK_FRAMES * SAMPLE_WIDTH
             timestamp = 0
-            for i in range(0, len(pcm), chunk_bytes):
-                chunk = pcm[i : i + chunk_bytes]
-                await async_write_event(
-                    AudioChunk(
-                        rate=SAMPLE_RATE,
-                        width=SAMPLE_WIDTH,
-                        channels=CHANNELS,
-                        audio=chunk,
-                        timestamp=timestamp,
-                    ).event(),
-                    writer,
-                )
-                timestamp += len(chunk) // SAMPLE_WIDTH
+            for sentence in sentences:
+                def generate(s=sentence):
+                    with lock:
+                        model.conds = conds
+                        return model.generate(s, cfg_weight=cfg_weight)
+
+                wav = await loop.run_in_executor(None, generate)
+                timestamp = await send_wav(wav, timestamp)
+
             await async_write_event(AudioStop().event(), writer)
-            _LOGGER.info("Finished (%d samples)", len(pcm) // SAMPLE_WIDTH)
+            _LOGGER.info("Finished (%d samples)", timestamp)
 
     except Exception:
         _LOGGER.exception("Error handling connection from %s", addr)
@@ -130,6 +144,8 @@ async def main() -> None:
     parser.add_argument("--default-voice", default="", help="Default voice name (file stem); uses first alphabetically if unset")
     parser.add_argument("--exaggeration", type=float, default=0.5)
     parser.add_argument("--cfg-weight", type=float, default=0.5)
+    parser.add_argument("--stream-sentences", action="store_true",
+                        help="Generate and stream each sentence individually to reduce time-to-first-audio")
     parser.add_argument("--debug", action="store_true")
     args = parser.parse_args()
 
@@ -206,7 +222,7 @@ async def main() -> None:
 
     lock = threading.Lock()
     handler = lambda r, w: handle_connection(
-        r, w, wyoming_info, model, voice_conds, default_voice, args.cfg_weight, lock
+        r, w, wyoming_info, model, voice_conds, default_voice, args.cfg_weight, args.stream_sentences, lock
     )
     server = await asyncio.start_server(handler, args.host, args.port)
     _LOGGER.info("Listening on %s:%d", args.host, args.port)
