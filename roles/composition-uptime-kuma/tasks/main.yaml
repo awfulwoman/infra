@@ -98,6 +98,9 @@
     timeout: 120
   delegate_to: "{{ inventory_hostname }}"
   register: composition_uptime_kuma_sync_result
+  retries: 6
+  delay: 15
+  until: composition_uptime_kuma_sync_result.status == 200
 
 - name: "Show monitor sync summary"
   ansible.builtin.debug:
