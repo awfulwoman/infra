@@ -19,10 +19,6 @@
     tags: [system, system-ollama]
   - role: system-tts-chatterbox
     tags: [system, system-tts-chatterbox]
-  - role: system-tts-kokoro
-    tags: [system, system-tts-kokoro]
-  - role: system-tts-f5
-    tags: [system, system-tts-f5]
   - role: system-claude
     tags: [system, system-claude]
   - role: ansible-core
@@ -35,8 +31,6 @@
     tags: [system, system-obsidian-headless]
   - role: system-mcp-gateway
     tags: [system, system-mcp-gateway]
-  - role: system-agent-chives
-    tags: [system, system-agent-chives]
   - role: system-aw-deploy
     tags: [system, system-aw-deploy]
   - role: monitoring-healthchecksio

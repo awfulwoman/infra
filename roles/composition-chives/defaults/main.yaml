@@ -1,5 +1,5 @@
 composition_chives_llm_base_url: "http://192.168.1.150:11434/v1"
-composition_chives_llm_model: "gemma4:12b-mlx"
+composition_chives_llm_model: "qwen3.5:4b"
 composition_chives_llm_api_key: "ollama"
 
 composition_chives_morning_brief_time: "08:00"
@@ -7,4 +7,5 @@ composition_chives_event_reminder_minutes: 15
 composition_chives_idle_checkin_hours: 0
 
 # Gateway MCP server URL (Malcolm runs the HTTP gateway at port 4000)
-composition_chives_gateway_mcp_url: "http://192.168.1.150:4000/mcp"
+composition_chives_mcps:
+  - url: "http://192.168.1.150:4000/mcp"

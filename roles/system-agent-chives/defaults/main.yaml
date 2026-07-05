@@ -5,7 +5,7 @@ system_agent_chives_repo_url: "git@github.com:awfulwoman/chives.git"
 system_agent_chives_repo_version: main
 
 system_agent_chives_llm_base_url: "http://localhost:11434/v1"
-system_agent_chives_llm_model: "gemma4:12b-mlx"
+system_agent_chives_llm_model: "qwen3.5:4b"
 system_agent_chives_llm_api_key: "ollama"
 
 system_agent_chives_telegram_token: "{{ vault_chives_telegram_token }}"
