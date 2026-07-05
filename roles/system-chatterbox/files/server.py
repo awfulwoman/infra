@@ -176,6 +176,14 @@ async def main() -> None:
     device = "mps" if torch.backends.mps.is_available() else "cpu"
     _LOGGER.info("Loading Chatterbox on %s…", device)
     model = ChatterboxTTS.from_pretrained(device=device)
+
+    if args.voice:
+        _LOGGER.info("Pre-computing voice conditionals…")
+        model.prepare_conditionals(args.voice, exaggeration=args.exaggeration)
+        args.voice = None  # generate() will reuse model.conds
+
+    _LOGGER.info("Warming up MPS graph…")
+    model.generate("Warm up.", cfg_weight=args.cfg_weight)
     _LOGGER.info("Model ready")
 
     handler = lambda r, w: handle_connection(
