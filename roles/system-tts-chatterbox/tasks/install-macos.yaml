@@ -26,11 +26,13 @@
     mode: "0755"
   register: chatterbox_server
 
-- name: Deploy voice reference file
-  ansible.builtin.copy:
-    src: voice.m4a
-    dest: "{{ system_chatterbox_base_dir }}/voice.m4a"
-    mode: "0644"
+- name: Sync voice reference files
+  ansible.posix.synchronize:
+    src: "{{ role_path }}/files/voices/"
+    dest: "{{ system_chatterbox_base_dir }}/voices/"
+    delete: true
+    checksum: true
+  register: chatterbox_voices
 
 - name: Ensure Python venv exists
   ansible.builtin.command:
@@ -62,13 +64,13 @@
 
 - name: Unload service before reload on change # noqa: no-handler
   ansible.builtin.command: "launchctl unload {{ ansible_facts.user_dir }}/Library/LaunchAgents/com.awfulwoman.chatterbox.plist"
-  when: chatterbox_plist.changed or chatterbox_server.changed
+  when: chatterbox_plist.changed or chatterbox_server.changed or chatterbox_voices.changed
   changed_when: false
   failed_when: false
 
 - name: Load service # noqa: no-handler
   ansible.builtin.command: "launchctl load {{ ansible_facts.user_dir }}/Library/LaunchAgents/com.awfulwoman.chatterbox.plist"
-  when: chatterbox_plist.changed or chatterbox_server.changed
+  when: chatterbox_plist.changed or chatterbox_server.changed or chatterbox_voices.changed
   register: chatterbox_load
   changed_when: chatterbox_load.rc == 0
   failed_when: false

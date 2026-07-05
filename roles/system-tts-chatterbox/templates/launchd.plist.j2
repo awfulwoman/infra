@@ -12,9 +12,11 @@
         <string>{{ system_chatterbox_host }}</string>
         <string>--port</string>
         <string>{{ system_chatterbox_port }}</string>
-{% if system_chatterbox_voice_path %}
-        <string>--voice</string>
-        <string>{{ system_chatterbox_voice_path }}</string>
+        <string>--voices-dir</string>
+        <string>{{ system_chatterbox_base_dir }}/voices</string>
+{% if system_chatterbox_default_voice %}
+        <string>--default-voice</string>
+        <string>{{ system_chatterbox_default_voice }}</string>
 {% endif %}
         <string>--exaggeration</string>
         <string>{{ system_chatterbox_exaggeration }}</string>
@@ -35,6 +37,8 @@
         <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
         <key>HOME</key>
         <string>{{ ansible_facts.user_dir }}</string>
+        <key>HF_TOKEN</key>
+        <string>{{ vault_huggingface_token }}</string>
     </dict>
 </dict>
 </plist>
