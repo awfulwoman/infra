@@ -1,0 +1,6 @@
+---
+system_kokoro_base_dir: "{{ awfulwoman_opt_dir }}/kokoro"
+system_kokoro_host: "0.0.0.0"
+system_kokoro_port: 10201
+system_kokoro_voice: "af_heart"  # default preset voice (see VOICES in server.py for options)
+system_kokoro_speed: 1.0         # speech rate multiplier (0.5–2.0)

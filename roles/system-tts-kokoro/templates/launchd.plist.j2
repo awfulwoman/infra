@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.awfulwoman.kokoro</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>{{ system_kokoro_base_dir }}/venv/bin/python</string>
+        <string>{{ system_kokoro_base_dir }}/server.py</string>
+        <string>--host</string>
+        <string>{{ system_kokoro_host }}</string>
+        <string>--port</string>
+        <string>{{ system_kokoro_port }}</string>
+        <string>--voice</string>
+        <string>{{ system_kokoro_voice }}</string>
+        <string>--speed</string>
+        <string>{{ system_kokoro_speed }}</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>StandardOutPath</key>
+    <string>{{ system_kokoro_base_dir }}/logs/kokoro.log</string>
+    <key>StandardErrorPath</key>
+    <string>{{ system_kokoro_base_dir }}/logs/kokoro.err</string>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+        <key>HOME</key>
+        <string>{{ ansible_facts.user_dir }}</string>
+    </dict>
+</dict>
+</plist>

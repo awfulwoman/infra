@@ -1,0 +1,74 @@
+---
+- name: Ensure uv is installed via Homebrew
+  community.general.homebrew:
+    name: uv
+    state: present
+
+- name: Ensure kokoro base directory exists
+  become: true
+  ansible.builtin.file:
+    path: "{{ system_kokoro_base_dir }}"
+    state: directory
+    mode: "0755"
+    owner: "{{ ansible_user }}"
+    group: staff
+
+- name: Ensure logs directory exists
+  ansible.builtin.file:
+    path: "{{ system_kokoro_base_dir }}/logs"
+    state: directory
+    mode: "0755"
+
+- name: Deploy Wyoming server script
+  ansible.builtin.copy:
+    src: server.py
+    dest: "{{ system_kokoro_base_dir }}/server.py"
+    mode: "0755"
+  register: kokoro_server
+
+- name: Ensure Python venv exists
+  ansible.builtin.command:
+    cmd: /opt/homebrew/bin/uv venv "{{ system_kokoro_base_dir }}/venv" --python 3.11
+    creates: "{{ system_kokoro_base_dir }}/venv/bin/python"
+
+- name: Install Python dependencies
+  ansible.builtin.command:
+    cmd: >
+      /opt/homebrew/bin/uv pip install
+      --python "{{ system_kokoro_base_dir }}/venv/bin/python"
+      kokoro
+      wyoming
+      numpy
+  changed_when: false
+
+- name: Ensure LaunchAgents directory exists
+  ansible.builtin.file:
+    path: "{{ ansible_facts.user_dir }}/Library/LaunchAgents"
+    state: directory
+    mode: "0755"
+
+- name: Deploy launchd plist
+  ansible.builtin.template:
+    src: launchd.plist.j2
+    dest: "{{ ansible_facts.user_dir }}/Library/LaunchAgents/com.awfulwoman.kokoro.plist"
+    mode: "0644"
+  register: kokoro_plist
+
+- name: Unload service before reload on change # noqa: no-handler
+  ansible.builtin.command: "launchctl unload {{ ansible_facts.user_dir }}/Library/LaunchAgents/com.awfulwoman.kokoro.plist"
+  when: kokoro_plist.changed or kokoro_server.changed
+  changed_when: false
+  failed_when: false
+
+- name: Load service # noqa: no-handler
+  ansible.builtin.command: "launchctl load {{ ansible_facts.user_dir }}/Library/LaunchAgents/com.awfulwoman.kokoro.plist"
+  when: kokoro_plist.changed or kokoro_server.changed
+  register: kokoro_load
+  changed_when: kokoro_load.rc == 0
+  failed_when: false
+
+- name: Ensure service is running
+  ansible.builtin.command: launchctl list com.awfulwoman.kokoro
+  register: kokoro_status
+  changed_when: false
+  failed_when: kokoro_status.rc != 0
