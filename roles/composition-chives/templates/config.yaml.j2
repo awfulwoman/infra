@@ -1,1 +1,1 @@
-mcp_servers: "{{ composition_chives_mcps }}"
+{{ {'mcp_servers': composition_chives_mcps} | to_nice_yaml(indent=2) }}
