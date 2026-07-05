@@ -28,8 +28,7 @@ services:
 
   uptime-kuma-api:
     container_name: uptime-kuma-api
-    build:
-      context: ./api
+    image: ghcr.io/awfulwoman/uptime-kuma-api:latest
     restart: unless-stopped
     env_file: .environment_vars
     depends_on:
