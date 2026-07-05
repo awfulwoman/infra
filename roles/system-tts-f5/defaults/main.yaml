@@ -1,0 +1,5 @@
+---
+system_f5_base_dir: "{{ awfulwoman_opt_dir }}/f5-tts"
+system_f5_host: "0.0.0.0"
+system_f5_port: 10202
+system_f5_speed: 1.0  # speech rate multiplier (0.5–2.0)

@@ -3,28 +3,28 @@
 <plist version="1.0">
 <dict>
     <key>Label</key>
-    <string>com.awfulwoman.kokoro</string>
+    <string>com.awfulwoman.f5-tts</string>
     <key>ProgramArguments</key>
     <array>
-        <string>{{ system_kokoro_base_dir }}/venv/bin/python</string>
-        <string>{{ system_kokoro_base_dir }}/server.py</string>
+        <string>{{ system_f5_base_dir }}/venv/bin/python</string>
+        <string>{{ system_f5_base_dir }}/server.py</string>
         <string>--host</string>
-        <string>{{ system_kokoro_host }}</string>
+        <string>{{ system_f5_host }}</string>
         <string>--port</string>
-        <string>{{ system_kokoro_port }}</string>
+        <string>{{ system_f5_port }}</string>
         <string>--voice</string>
-        <string>{{ system_kokoro_voice }}</string>
+        <string>{{ system_f5_base_dir }}/voice.m4a</string>
         <string>--speed</string>
-        <string>{{ system_kokoro_speed }}</string>
+        <string>{{ system_f5_speed }}</string>
     </array>
     <key>RunAtLoad</key>
     <true/>
     <key>KeepAlive</key>
     <true/>
     <key>StandardOutPath</key>
-    <string>{{ system_kokoro_base_dir }}/logs/kokoro.log</string>
+    <string>{{ system_f5_base_dir }}/logs/f5-tts.log</string>
     <key>StandardErrorPath</key>
-    <string>{{ system_kokoro_base_dir }}/logs/kokoro.err</string>
+    <string>{{ system_f5_base_dir }}/logs/f5-tts.err</string>
     <key>EnvironmentVariables</key>
     <dict>
         <key>PATH</key>
@@ -32,7 +32,9 @@
         <key>HOME</key>
         <string>{{ ansible_facts.user_dir }}</string>
         <key>VIRTUAL_ENV</key>
-        <string>{{ system_kokoro_base_dir }}/venv</string>
+        <string>{{ system_f5_base_dir }}/venv</string>
+        <key>PYTORCH_ENABLE_MPS_FALLBACK</key>
+        <string>1</string>
         <key>HF_TOKEN</key>
         <string>{{ vault_huggingface_token }}</string>
     </dict>

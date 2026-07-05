@@ -21,6 +21,8 @@
     tags: [system, system-tts-chatterbox]
   - role: system-tts-kokoro
     tags: [system, system-tts-kokoro]
+  - role: system-tts-f5
+    tags: [system, system-tts-f5]
   - role: system-claude
     tags: [system, system-claude]
   - role: ansible-core

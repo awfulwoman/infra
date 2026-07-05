@@ -1,0 +1,80 @@
+---
+- name: Ensure uv is installed via Homebrew
+  community.general.homebrew:
+    name: uv
+    state: present
+
+- name: Ensure F5-TTS base directory exists
+  become: true
+  ansible.builtin.file:
+    path: "{{ system_f5_base_dir }}"
+    state: directory
+    mode: "0755"
+    owner: "{{ ansible_user }}"
+    group: staff
+
+- name: Ensure logs directory exists
+  ansible.builtin.file:
+    path: "{{ system_f5_base_dir }}/logs"
+    state: directory
+    mode: "0755"
+
+- name: Deploy Wyoming server script
+  ansible.builtin.copy:
+    src: server.py
+    dest: "{{ system_f5_base_dir }}/server.py"
+    mode: "0755"
+  register: f5_server
+
+- name: Deploy voice reference file
+  ansible.builtin.copy:
+    src: voice.m4a
+    dest: "{{ system_f5_base_dir }}/voice.m4a"
+    mode: "0644"
+
+- name: Ensure Python venv exists
+  ansible.builtin.command:
+    cmd: /opt/homebrew/bin/uv venv "{{ system_f5_base_dir }}/venv" --python 3.11
+    creates: "{{ system_f5_base_dir }}/venv/bin/python"
+
+- name: Install Python dependencies
+  ansible.builtin.command:
+    cmd: >
+      /opt/homebrew/bin/uv pip install
+      --python "{{ system_f5_base_dir }}/venv/bin/python"
+      f5-tts
+      wyoming
+      numpy
+  changed_when: false
+
+- name: Ensure LaunchAgents directory exists
+  ansible.builtin.file:
+    path: "{{ ansible_facts.user_dir }}/Library/LaunchAgents"
+    state: directory
+    mode: "0755"
+
+- name: Deploy launchd plist
+  ansible.builtin.template:
+    src: launchd.plist.j2
+    dest: "{{ ansible_facts.user_dir }}/Library/LaunchAgents/com.awfulwoman.f5-tts.plist"
+    mode: "0644"
+  register: f5_plist
+
+- name: Unload service before reload on change # noqa: no-handler
+  ansible.builtin.command: "launchctl unload {{ ansible_facts.user_dir }}/Library/LaunchAgents/com.awfulwoman.f5-tts.plist"
+  when: f5_plist.changed or f5_server.changed
+  changed_when: false
+  failed_when: false
+
+- name: Load service # noqa: no-handler
+  ansible.builtin.command: "launchctl load {{ ansible_facts.user_dir }}/Library/LaunchAgents/com.awfulwoman.f5-tts.plist"
+  when: f5_plist.changed or f5_server.changed
+  register: f5_load
+  changed_when: f5_load.rc == 0
+  failed_when: false
+
+- name: Ensure service is running
+  ansible.builtin.command: launchctl list com.awfulwoman.f5-tts
+  register: f5_status
+  changed_when: false
+  failed_when: f5_status.rc != 0
