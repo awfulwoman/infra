@@ -50,6 +50,7 @@ async def handle_connection(
     default_voice: str,
     cfg_weight: float,
     stream_sentences: bool,
+    use_turbo: bool,
     lock: threading.Lock,
 ) -> None:
     from wyoming.audio import AudioChunk, AudioStart, AudioStop
@@ -114,11 +115,12 @@ async def handle_connection(
                 writer,
             )
             timestamp = 0
+            gen_kw = {} if use_turbo else {"cfg_weight": cfg_weight}
             for sentence in sentences:
                 def generate(s=sentence):
                     with lock:
                         model.conds = conds
-                        return model.generate(s, cfg_weight=cfg_weight)
+                        return model.generate(s, **gen_kw)
 
                 wav = await loop.run_in_executor(None, generate)
                 timestamp = await send_wav(wav, timestamp)
@@ -143,9 +145,12 @@ async def main() -> None:
     parser.add_argument("--voices-dir", required=True, help="Directory of reference audio files")
     parser.add_argument("--default-voice", default="", help="Default voice name (file stem); uses first alphabetically if unset")
     parser.add_argument("--exaggeration", type=float, default=0.5)
-    parser.add_argument("--cfg-weight", type=float, default=0.5)
+    parser.add_argument("--cfg-weight", type=float, default=0.5,
+                        help="Ignored when --turbo (no CFG in turbo mode)")
     parser.add_argument("--stream-sentences", action="store_true",
                         help="Generate and stream each sentence individually to reduce time-to-first-audio")
+    parser.add_argument("--no-turbo", action="store_true",
+                        help="Use standard Chatterbox model instead of Turbo (slower, supports CFG/exaggeration)")
     parser.add_argument("--debug", action="store_true")
     args = parser.parse_args()
 
@@ -164,7 +169,11 @@ async def main() -> None:
                 return audio
         perth.PerthImplicitWatermarker = _NoOpWatermarker
 
-    from chatterbox.tts import ChatterboxTTS
+    use_turbo = not args.no_turbo
+    if use_turbo:
+        from chatterbox.tts_turbo import ChatterboxTurboTTS as ModelClass
+    else:
+        from chatterbox.tts import ChatterboxTTS as ModelClass
 
     voices_dir = Path(args.voices_dir)
     voice_files = sorted(
@@ -175,8 +184,9 @@ async def main() -> None:
         raise SystemExit(f"No voice files found in {voices_dir}")
 
     device = "mps" if torch.backends.mps.is_available() else "cpu"
-    _LOGGER.info("Loading Chatterbox on %s…", device)
-    model = ChatterboxTTS.from_pretrained(device=device)
+    model_label = "ChatterboxTurbo" if use_turbo else "Chatterbox"
+    _LOGGER.info("Loading %s on %s…", model_label, device)
+    model = ModelClass.from_pretrained(device=device)
 
     _LOGGER.info("Pre-computing conditionals for %d voice(s)…", len(voice_files))
     voice_conds = {}
@@ -192,7 +202,8 @@ async def main() -> None:
 
     _LOGGER.info("Warming up MPS graph…")
     model.conds = voice_conds[default_voice]
-    model.generate("Warm up.", cfg_weight=args.cfg_weight)
+    kw = {} if use_turbo else {"cfg_weight": args.cfg_weight}
+    model.generate("Warm up.", **kw)
     _LOGGER.info("Model ready")
 
     _attribution = Attribution(name="Resemble AI", url="https://github.com/resemble-ai/chatterbox")
@@ -222,7 +233,7 @@ async def main() -> None:
 
     lock = threading.Lock()
     handler = lambda r, w: handle_connection(
-        r, w, wyoming_info, model, voice_conds, default_voice, args.cfg_weight, args.stream_sentences, lock
+        r, w, wyoming_info, model, voice_conds, default_voice, args.cfg_weight, args.stream_sentences, use_turbo, lock
     )
     server = await asyncio.start_server(handler, args.host, args.port)
     _LOGGER.info("Listening on %s:%d", args.host, args.port)

@@ -6,3 +6,4 @@ system_chatterbox_default_voice: ""  # file stem in voices/; uses first alphabet
 system_chatterbox_exaggeration: 0.5    # emotion exaggeration (0.25–2.0; lower = more neutral)
 system_chatterbox_cfg_weight: 0.5      # pacing control (0.0–1.0; lower = slower/more expressive)
 system_chatterbox_stream_sentences: true  # split text into sentences and stream each independently
+system_chatterbox_turbo: true             # use ChatterboxTurbo (~2x faster, voice cloning, no CFG/exaggeration)

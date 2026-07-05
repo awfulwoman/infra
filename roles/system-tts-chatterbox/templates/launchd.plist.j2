@@ -26,6 +26,9 @@
 {% if system_chatterbox_stream_sentences %}
         <string>--stream-sentences</string>
 {% endif %}
+{% if not system_chatterbox_turbo %}
+        <string>--no-turbo</string>
+{% endif %}
     </array>
     <key>RunAtLoad</key>
     <true/>
