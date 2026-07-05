@@ -20,17 +20,6 @@
     group: "{{ ansible_user }}"
     mode: "0660"
 
-- name: "Sync uptime-kuma-api sidecar sources"
-  ansible.posix.synchronize:
-    src: api/
-    dest: "{{ composition_root }}/api/"
-    delete: true
-    rsync_opts:
-      - "--exclude=.venv"
-      - "--exclude=__pycache__"
-      - "--exclude=.pytest_cache"
-      - "--exclude=*.pyc"
-
 - name: Run Configure DNS role
   ansible.builtin.include_role:
     name: "network-register-subdomain"
@@ -45,7 +34,7 @@
   community.docker.docker_compose_v2:
     project_src: "{{ composition_root }}"
     state: present
-    build: always
+    build: never
     remove_orphans: true
   notify: Restart Traefik
 
