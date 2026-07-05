@@ -1,0 +1,24 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  chives:
+    container_name: chives
+    image: ghcr.io/awfulwoman/chives:latest
+    restart: unless-stopped
+    env_file: .environment_vars
+    volumes:
+      - "{{ composition_config }}/state:/app/state"
+      - "{{ composition_config }}/profile:/app/profile"
+      - "{{ composition_config }}/mcps.yaml:/app/mcps.yaml:ro"
+    networks:
+      - "{{ default_docker_network }}"
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/localhost/8080'"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+networks:
+  "{{ default_docker_network }}":
+    external: true
