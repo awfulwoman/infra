@@ -7,6 +7,6 @@ composition_chives_event_reminder_minutes: 15
 composition_chives_idle_checkin_hours: 0
 
 # Gateway MCP server URL (Malcolm runs the HTTP gateway at port 4000)
-composition_chives_mcps:
-  - url: "http://mcp-searxng:3000/mcp"
-    auth_key: "{{ vault_mcp_searxng_auth_token }}"
+composition_chives_mcps: []
+  # - url: "http://mcp-searxng:3000/mcp"
+  #   auth_key: "{{ vault_mcp_searxng_auth_token }}"
