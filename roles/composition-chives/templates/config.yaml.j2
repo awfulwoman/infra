@@ -1,3 +1,4 @@
+{% if composition_chives_mcps %}
 mcp_servers:
 {% for mcp in composition_chives_mcps %}
   - url: {{ mcp.url }}
@@ -5,3 +6,6 @@ mcp_servers:
     auth_key: {{ mcp.auth_key }}
 {% endif %}
 {% endfor %}
+{% else %}
+mcp_servers: []
+{% endif %}
