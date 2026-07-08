@@ -1,5 +1,5 @@
 composition_chives_llm_base_url: "http://192.168.1.150:11434/v1"
-composition_chives_llm_model: "qwen3.5:4b"
+composition_chives_llm_model: "{{ llm_default_model }}"
 composition_chives_llm_api_key: "ollama"
 
 composition_chives_morning_brief_time: "08:00"

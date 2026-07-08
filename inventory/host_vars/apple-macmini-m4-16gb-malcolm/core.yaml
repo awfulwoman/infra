@@ -51,9 +51,9 @@ hardware_apple_wifi_interface: en1
 # -------------------------------------------------------------------
 system_ollama_env:
   OLLAMA_HOST: "0.0.0.0:11434"
-  OLLAMA_NO_CLOUD: 1 # Disable usage of Ollama's cloud models and websearch
-  OLLAMA_NUM_PARALLEL: 1
-  OLLAMA_MAX_LOADED_MODELS: 1
+  # OLLAMA_NO_CLOUD: 1 # Disable usage of Ollama's cloud models and websearch
+  OLLAMA_NUM_PARALLEL: 4
+  OLLAMA_MAX_LOADED_MODELS: 4
   OLLAMA_ORIGINS: "*"
   OLLAMA_CONTEXT_LENGTH: 8192
   OLLAMA_KEEP_ALIVE: -1 # Keep models loaded indefinitely
@@ -61,7 +61,7 @@ system_ollama_env:
   OLLAMA_KV_CACHE_TYPE: q8_0 # f16 (default), q8_0, q4_0
 
 system_ollama_models:
-  - qwen3.5:4b
+  - "{{ llm_default_model }}"
 
 # -------------------------------------------------------------------
 # CLAUDE
