@@ -13,6 +13,8 @@ security_sudoers_passwordless:
   - "{{ vault_server_username }}"
 
 llm_default_model: "gemma4:31b-cloud"
+llm_default_host: "{{ hostvars['apple-macmini-m4-16gb-malcolm']['host_ipv4'] }}"
+llm_default_openai_uri: "https://{{ llm_default_host }}:11434/v1"
 
 # Locale
 config_system_locale: 'en_GB.UTF-8'
