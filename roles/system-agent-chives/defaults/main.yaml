@@ -11,7 +11,7 @@ system_agent_chives_llm_api_key: "ollama"
 system_agent_chives_telegram_token: "{{ vault_chives_telegram_token }}"
 system_agent_chives_telegram_chat_ids: "{{ vault_chives_telegram_chat_id }}"
 
-system_agent_chives_imap_host: "imap.mailbox.org"
+system_agent_chives_imap_host: "imap.{{ vault_mailprovider_domain }}"
 system_agent_chives_imap_port: 993
 system_agent_chives_imap_username: "{{ vault_mailprovider_user }}"
 system_agent_chives_imap_password: "{{ vault_mailprovider_password }}"
