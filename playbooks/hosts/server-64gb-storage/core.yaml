@@ -96,6 +96,8 @@
   - role: composition-chives
     vars:
       composition_name: chives
+      composition_chives_mcps: []
+        - url: "httsp://gateway.{{ domainname_infra }}/mcp"
     tags: [composition, composition-chives]
   - role: composition-open-webui
     tags: [composition, composition-open-webui]
