@@ -203,3 +203,4 @@ cnames:
   - zfs-api.server-64gb-storage.{{ domainname_infra }}
   - jellyfin-vue.{{ domainname_infra }}
   - llmcalc.{{ domainname_infra }}
+  - nominatim.{{ domainname_infra }}

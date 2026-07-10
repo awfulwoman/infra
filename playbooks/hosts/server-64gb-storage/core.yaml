@@ -110,6 +110,8 @@
     # - role: system-sleepuntil
     #   become: true
     # - role: system-powertop
+  - role: composition-nominatim
+    tags: [composition, composition-nominatim]
   - role: monitoring-healthchecksio
     monitoring_healthchecksio_ping_type: success
     tags: [monitoring, monitoring-healthchecksio]

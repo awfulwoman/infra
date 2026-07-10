@@ -1,0 +1,32 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  nominatim:
+    container_name: nominatim
+    image: mediagis/nominatim:5.3
+    restart: unless-stopped
+    env_file: .environment_vars
+    shm_size: "{{ composition_nominatim_shm_size }}"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nominatim.rule=Host(`nominatim.{{ domainname_infra }}`)"
+      - "traefik.http.routers.nominatim.tls=true"
+      - "traefik.http.routers.nominatim.tls.certresolver=letsencrypt"
+      - "traefik.http.services.nominatim.loadbalancer.server.port=8080"
+    volumes:
+      - nominatim-data:/var/lib/postgresql/16/main
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/localhost/8080'"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - "{{ default_docker_network }}"
+
+volumes:
+  nominatim-data:
+
+networks:
+  "{{ default_docker_network }}":
+    external: true
