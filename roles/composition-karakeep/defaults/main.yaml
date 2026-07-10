@@ -3,3 +3,6 @@ composition_name: karakeep
 
 composition_karakeep_subdomains:
   - karakeep
+
+# Default is 30s; some bookmarks time out indexing into Meilisearch at that value
+composition_karakeep_search_job_timeout_sec: 90
