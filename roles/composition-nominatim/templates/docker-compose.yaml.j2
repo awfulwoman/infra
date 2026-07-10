@@ -15,6 +15,7 @@ services:
       - "traefik.http.services.nominatim.loadbalancer.server.port=8080"
     volumes:
       - nominatim-data:/var/lib/postgresql/16/main
+      - "{{ composition_config }}/pbf:/nominatim/pbf"
     healthcheck:
       test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/localhost/8080'"]
       interval: 30s

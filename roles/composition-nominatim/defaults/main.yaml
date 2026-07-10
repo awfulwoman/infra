@@ -2,7 +2,6 @@ composition_name: nominatim
 composition_nominatim_subdomains:
   - nominatim
 
-composition_nominatim_pbf_url: "https://download.geofabrik.de/europe-latest.osm.pbf"
 composition_nominatim_replication_url: "https://download.geofabrik.de/europe-updates/"
 composition_nominatim_shm_size: "8gb"
 composition_nominatim_password: "{{ vault_nominatim_password }}"
