@@ -1,0 +1,176 @@
+#!/usr/bin/env python3
+"""Sync Mastodon bookmarks to Karakeep."""
+
+import json
+import logging
+import os
+import time
+from pathlib import Path
+
+import requests
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(message)s",
+)
+log = logging.getLogger(__name__)
+
+MASTODON_BASE_URL = os.environ["MASTODON_BASE_URL"].rstrip("/")
+MASTODON_ACCESS_TOKEN = os.environ["MASTODON_ACCESS_TOKEN"]
+KARAKEEP_URL = os.environ["KARAKEEP_URL"].rstrip("/")
+KARAKEEP_TOKEN = os.environ["KARAKEEP_TOKEN"]
+POLL_INTERVAL = int(os.environ.get("POLL_INTERVAL", "3600"))
+DEFAULT_TAG = os.environ.get("DEFAULT_TAG", "mastodon")
+
+STATE_FILE = Path("/data/seen_ids.json")
+
+
+def load_seen_ids() -> set:
+    if STATE_FILE.exists():
+        return set(json.loads(STATE_FILE.read_text()))
+    return set()
+
+
+def save_seen_ids(ids: set) -> None:
+    STATE_FILE.write_text(json.dumps(sorted(ids)))
+
+
+def fetch_bookmarks() -> list:
+    """Fetch all bookmarks from Mastodon, following pagination."""
+    headers = {"Authorization": f"Bearer {MASTODON_ACCESS_TOKEN}"}
+    url = f"{MASTODON_BASE_URL}/api/v1/bookmarks"
+    bookmarks = []
+
+    while url:
+        resp = requests.get(url, headers=headers, timeout=30)
+        resp.raise_for_status()
+        bookmarks.extend(resp.json())
+
+        # Follow Link header for next page
+        link = resp.headers.get("Link", "")
+        url = None
+        for part in link.split(","):
+            part = part.strip()
+            if 'rel="next"' in part:
+                url = part.split(";")[0].strip().strip("<>")
+                break
+
+    return bookmarks
+
+
+def extract_url(status: dict) -> str | None:
+    """Return the canonical URL for a bookmarked status."""
+    # Prefer the original post URL (reblog or direct)
+    reblog = status.get("reblog")
+    if reblog:
+        return reblog.get("url")
+    return status.get("url")
+
+
+def karakeep_bookmark_exists(url: str) -> bool:
+    """Check if a URL is already bookmarked in Karakeep."""
+    headers = {"Authorization": f"Bearer {KARAKEEP_TOKEN}"}
+    resp = requests.get(
+        f"{KARAKEEP_URL}/api/v1/bookmarks",
+        headers=headers,
+        params={"url": url},
+        timeout=30,
+    )
+    if resp.status_code == 200:
+        data = resp.json()
+        return bool(data.get("bookmarks"))
+    return False
+
+
+def create_karakeep_bookmark(url: str) -> bool:
+    """Create a bookmark in Karakeep. Returns True on success."""
+    headers = {
+        "Authorization": f"Bearer {KARAKEEP_TOKEN}",
+        "Content-Type": "application/json",
+    }
+    payload = {"type": "link", "url": url}
+    resp = requests.post(
+        f"{KARAKEEP_URL}/api/v1/bookmarks",
+        headers=headers,
+        json=payload,
+        timeout=30,
+    )
+    if resp.status_code in (200, 201):
+        bookmark_id = resp.json().get("id")
+        if bookmark_id and DEFAULT_TAG:
+            tag_karakeep_bookmark(bookmark_id, DEFAULT_TAG)
+        return True
+    log.warning("Failed to create bookmark for %s: %s %s", url, resp.status_code, resp.text)
+    return False
+
+
+def tag_karakeep_bookmark(bookmark_id: str, tag: str) -> None:
+    """Attach a tag to an existing Karakeep bookmark."""
+    headers = {
+        "Authorization": f"Bearer {KARAKEEP_TOKEN}",
+        "Content-Type": "application/json",
+    }
+    # Create or resolve the tag first
+    resp = requests.post(
+        f"{KARAKEEP_URL}/api/v1/tags",
+        headers=headers,
+        json={"name": tag},
+        timeout=30,
+    )
+    if resp.status_code not in (200, 201):
+        log.warning("Could not create tag %r: %s", tag, resp.status_code)
+        return
+    tag_id = resp.json().get("id")
+    if not tag_id:
+        return
+
+    requests.post(
+        f"{KARAKEEP_URL}/api/v1/bookmarks/{bookmark_id}/tags",
+        headers=headers,
+        json={"tagIds": [tag_id]},
+        timeout=30,
+    )
+
+
+def sync() -> None:
+    seen_ids = load_seen_ids()
+    log.info("Fetching Mastodon bookmarks from %s", MASTODON_BASE_URL)
+
+    try:
+        bookmarks = fetch_bookmarks()
+    except Exception as exc:
+        log.error("Failed to fetch bookmarks: %s", exc)
+        return
+
+    log.info("Found %d bookmark(s)", len(bookmarks))
+    new_count = 0
+
+    for status in bookmarks:
+        status_id = status.get("id")
+        if status_id in seen_ids:
+            continue
+
+        url = extract_url(status)
+        if not url:
+            seen_ids.add(status_id)
+            continue
+
+        log.info("Importing %s", url)
+        if create_karakeep_bookmark(url):
+            new_count += 1
+
+        seen_ids.add(status_id)
+
+    save_seen_ids(seen_ids)
+    log.info("Done. Imported %d new bookmark(s).", new_count)
+
+
+if __name__ == "__main__":
+    log.info("mastodon2karakeep starting (poll interval: %ds)", POLL_INTERVAL)
+    while True:
+        try:
+            sync()
+        except Exception as exc:
+            log.error("Sync error: %s", exc)
+        log.info("Sleeping %ds until next sync", POLL_INTERVAL)
+        time.sleep(POLL_INTERVAL)

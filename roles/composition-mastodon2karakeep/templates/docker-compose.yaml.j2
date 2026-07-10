@@ -1,0 +1,18 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  mastodon2karakeep:
+    container_name: mastodon2karakeep
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file: .environment_vars
+    volumes:
+      - "{{ composition_config }}:/data"
+    networks:
+      - "{{ default_docker_network }}"
+
+networks:
+  "{{ default_docker_network }}":
+    external: true

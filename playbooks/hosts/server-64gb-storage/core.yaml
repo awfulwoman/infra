@@ -41,6 +41,8 @@
     tags: [composition, composition-container-management]
   - role: composition-github2karakeep
     tags: [composition, composition-github2karakeep]
+  - role: composition-mastodon2karakeep
+    tags: [composition, composition-mastodon2karakeep]
   - role: composition-finances
     tags: [composition, composition-finances]
   - role: composition-gitea

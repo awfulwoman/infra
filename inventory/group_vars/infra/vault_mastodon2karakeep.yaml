@@ -1,0 +1,5 @@
+vault_mastodon2karakeep_token: !vault |
+  # To populate: ansible-vault encrypt_string "$(cat)" --name 'vault_mastodon2karakeep_token'
+  # Generate a Mastodon access token at https://gts.awfulwoman.com/settings/applications
+  # with the `read:bookmarks` scope.
+  PLACEHOLDER
