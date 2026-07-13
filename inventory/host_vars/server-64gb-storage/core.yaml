@@ -48,6 +48,9 @@ zfs:
         policy: critical
         snapshots_discover_children: true
         datasets: {}
+      shared:
+        datasets:
+          nominatim:
       pools:
         datasets:
           vms:

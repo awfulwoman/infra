@@ -31,6 +31,40 @@
     configure_dns_subdomains: "{{ composition_nominatim_subdomains }}"
 
 # ----------------------------
+# Migrate data to ZFS dataset
+# ----------------------------
+
+- name: Check if old nominatim Docker volume exists
+  community.docker.docker_volume_info:
+    name: nominatim_nominatim-data
+  register: _old_volume
+
+- name: Check if ZFS dataset is empty
+  ansible.builtin.find:
+    paths: /fastpool/shared/nominatim
+    file_type: any
+  register: _new_path_contents
+  when: _old_volume.exists
+
+- name: Migrate nominatim data from Docker volume to ZFS dataset
+  when: _old_volume.exists and (_new_path_contents.matched | default(0)) == 0
+  block:
+    - name: Stop nominatim container
+      community.docker.docker_compose_v2:
+        project_src: "{{ composition_root }}"
+        state: stopped
+
+    - name: Rsync data to ZFS dataset
+      ansible.builtin.shell:
+        cmd: rsync -a /var/lib/docker/volumes/nominatim_nominatim-data/_data/ /fastpool/shared/nominatim/
+      become: true
+
+    - name: Remove old Docker volume
+      community.docker.docker_volume:
+        name: nominatim_nominatim-data
+        state: absent
+
+# ----------------------------
 # Start composition
 # ----------------------------
 

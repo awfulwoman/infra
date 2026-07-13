@@ -14,7 +14,7 @@ services:
       - "traefik.http.routers.nominatim.tls.certresolver=letsencrypt"
       - "traefik.http.services.nominatim.loadbalancer.server.port=8080"
     volumes:
-      - nominatim-data:/var/lib/postgresql/16/main
+      - "/fastpool/shared/nominatim:/var/lib/postgresql/16/main"
       - "{{ composition_config }}/pbf:/nominatim/pbf"
     healthcheck:
       test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/localhost/8080'"]
@@ -24,9 +24,6 @@ services:
       start_period: 60s
     networks:
       - "{{ default_docker_network }}"
-
-volumes:
-  nominatim-data:
 
 networks:
   "{{ default_docker_network }}":
