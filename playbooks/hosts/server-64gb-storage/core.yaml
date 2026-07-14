@@ -60,7 +60,7 @@
   - role: composition-syncthing
     tags: [composition, composition-syncthing]
   - role: composition-karakeep
-    tags: [composition, composition-karakeep]
+    tags: [composition, composition-karakeep, ollama]
   - role: composition-freshrss
     tags: [composition, composition-freshrss]
   - role: composition-tubesync
@@ -96,16 +96,18 @@
   - role: composition-chives
     vars:
       composition_name: chives
+      composition_chives_telegram_token: "{{ vault_chives_telegram_token }}"
+      composition_chives_telegram_chat_id: "{{ vault_chives_telegram_chat_id }}"
       composition_chives_mcps:
-        - url: "http://mcp-searxng:3000/mcp"
+        - url: "http://mcp-searxng:3000/mcp" # on same host
           auth_key: "{{ vault_mcp_searxng_auth_token }}"
     tags: [composition, composition-chives, ollama]
   - role: composition-chives
     vars:
       composition_name: holly
       composition_chives_mcps:
-        - url: "https://gateway.{{ domainname_infra }}/mcp"
-        - url: "http://mcp-searxng:3000/mcp"
+        - url: "https://gateway.{{ domainname_infra }}/mcp" # on Malcolm
+        - url: "http://mcp-searxng:3000/mcp" # on same host
           auth_key: "{{ vault_mcp_searxng_auth_token }}"
     tags: [composition, composition-chives, ollama]
   - role: composition-open-webui

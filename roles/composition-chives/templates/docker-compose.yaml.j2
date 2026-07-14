@@ -12,8 +12,6 @@ services:
       - "traefik.http.routers.{{ composition_name }}.tls=true"
       - "traefik.http.routers.{{ composition_name }}.tls.certresolver=letsencrypt"
       - "traefik.http.services.{{ composition_name }}.loadbalancer.server.port=8080"
-    ports:
-      - "8090:8080"
     volumes:
       - "{{ composition_config }}/state:/app/state"
       - "{{ composition_config }}/profile:/app/profile"

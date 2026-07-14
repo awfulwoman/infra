@@ -3,9 +3,12 @@ composition_chives_llm_base_url: "{{ llm_default_openai_uri }}"
 composition_chives_llm_model: "{{ llm_default_model }}"
 composition_chives_llm_api_key: "ollama"
 
-composition_chives_morning_brief_time: "08:00"
 composition_chives_event_reminder_minutes: 15
 composition_chives_idle_checkin_hours: 0
+
+# Telegram is optional — leave blank to run without it
+composition_chives_telegram_token: ""
+composition_chives_telegram_chat_id: ""
 
 # Gateway MCP server URL (Malcolm runs the HTTP gateway at port 4000)
 composition_chives_mcps: []

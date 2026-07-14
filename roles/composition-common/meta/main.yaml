@@ -1,2 +1,4 @@
+allow_duplicates: true
+
 dependencies:
   - role: system-docker
