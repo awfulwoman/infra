@@ -7,6 +7,9 @@ services:
     restart: unless-stopped
     env_file: .environment_vars
     shm_size: "{{ composition_nominatim_shm_size }}"
+    mem_limit: "{{ composition_nominatim_mem_limit }}"
+    command: >
+      sh -c "sed -i 's/nominatim import /nominatim import --osm2pgsql-cache {{ composition_nominatim_import_cache }} /g' /app/init.sh && /app/start.sh"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.nominatim.rule=Host(`nominatim.{{ domainname_infra }}`)"

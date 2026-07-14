@@ -4,4 +4,6 @@ composition_nominatim_subdomains:
 
 composition_nominatim_replication_url: "https://download.geofabrik.de/europe-updates/"
 composition_nominatim_shm_size: "8gb"
+composition_nominatim_import_cache: 8192
+composition_nominatim_mem_limit: "16g"
 composition_nominatim_password: "{{ vault_nominatim_password }}"
