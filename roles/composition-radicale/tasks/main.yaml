@@ -1,0 +1,68 @@
+# code: language=ansible
+
+# ----------------------------
+# Core tasks
+# ----------------------------
+
+- name: "Create compose file"
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ composition_root }}/docker-compose.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0644"
+
+- name: "Create .env file"
+  ansible.builtin.template:
+    src: environment_vars.j2
+    dest: "{{ composition_root }}/.environment_vars"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0644"
+
+# ----------------------------
+# Specific tasks
+# ----------------------------
+
+- name: Create collections directory
+  become: true
+  ansible.builtin.file:
+    path: "{{ composition_config }}/collections"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0755"
+
+- name: Ensure passlib is installed (required by htpasswd module)
+  become: true
+  ansible.builtin.apt:
+    name: python3-passlib
+    state: present
+
+- name: Create htpasswd file
+  community.general.htpasswd:
+    path: "{{ composition_config }}/users"
+    name: "{{ radicale_username }}"
+    password: "{{ radicale_password }}"
+    crypt_scheme: bcrypt
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0644"
+
+- name: Run Configure DNS role
+  ansible.builtin.include_role:
+    name: "network-register-subdomain"
+  vars:
+    configure_dns_subdomains: "{{ composition_radicale_subdomains }}"
+
+# ----------------------------
+# Start composition
+# ----------------------------
+
+- name: Start Docker Compose project
+  community.docker.docker_compose_v2:
+    project_src: "{{ composition_root }}"
+    state: present
+    build: always
+    remove_orphans: true
+  notify: Restart Traefik
