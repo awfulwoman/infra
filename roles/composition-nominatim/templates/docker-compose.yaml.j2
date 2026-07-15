@@ -9,7 +9,7 @@ services:
     shm_size: "{{ composition_nominatim_shm_size }}"
     mem_limit: "{{ composition_nominatim_mem_limit }}"
     command: >
-      sh -c "sed -i 's|nominatim import --osm-file|nominatim import --osm2pgsql-cache {{ composition_nominatim_import_cache }} --osm-file|g' /app/init.sh && /app/start.sh"
+      sh -c "mkdir -p /nominatim/flat-nodes && chown nominatim:nominatim /nominatim/flat-nodes && sed -i 's|nominatim import --osm-file|nominatim import --osm2pgsql-cache {{ composition_nominatim_import_cache }} --osm-file|g' /app/init.sh && /app/start.sh"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.nominatim.rule=Host(`nominatim.{{ domainname_infra }}`)"
@@ -19,6 +19,7 @@ services:
     volumes:
       - "/fastpool/shared/nominatim:/var/lib/postgresql/16/main"
       - "{{ composition_config }}/pbf:/nominatim/pbf"
+      - "{{ composition_config }}/flat-nodes:/nominatim/flat-nodes"
     healthcheck:
       test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/localhost/8080'"]
       interval: 30s
