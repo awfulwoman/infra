@@ -18,5 +18,9 @@ system_mcp_gateway_reminders_base_url: "https://radicale.{{ domainname_infra }}"
 system_mcp_gateway_reminders_username: charlie
 system_mcp_gateway_reminders_password: "{{ vault_radicale_password }}"
 
+system_mcp_gateway_reminders_db_path: "{{ system_mcp_gateway_repo_dir }}/data/reminders.db"
+system_mcp_gateway_reminders_api_tokens: ""
+system_mcp_gateway_reminders_nominatim_url: "https://nominatim.{{ domainname_infra }}"
+
 system_mcp_gateway_server_host: "127.0.0.1"
 system_mcp_gateway_server_port: 4000
