@@ -11,13 +11,16 @@ Serves two surfaces on one port (4000), fronted by a single Traefik router:
   `composition_gateway_reminders_api_tokens`.
 
 Reminders and Contacts are backed by [`composition-radicale`](../composition-radicale)
-(CalDAV/CardDAV) — a dependency of this role (see `meta/main.yaml`), so it's always
-provisioned before Gateway starts. Gateway reaches it over the shared Docker network by
-container name (`http://radicale:5232`); Radicale is never exposed to Gateway's own
-clients directly. Both tool groups work identically on every platform this image
-targets — there's no more macOS-only capability gap versus the previous
-launchd-on-macOS deployment (Contacts used to depend on `pyobjc`, unavailable in the
-container; it's now CardDAV, so it isn't).
+(CalDAV/CardDAV) — **not** a role dependency (nesting it in `meta/main.yaml` clobbers
+this role's own `composition_root`/`composition_config` facts, redirecting this role's
+compose file into Radicale's directory — see the comment in `meta/main.yaml` if
+tempted to add it back). Ordering is instead guaranteed by `core.yaml` listing
+`composition-radicale` before `composition-gateway`; keep it that way. Gateway reaches
+it over the shared Docker network by container name (`http://radicale:5232`); Radicale
+is never exposed to Gateway's own clients directly. Both tool groups work identically
+on every platform this image targets — there's no more macOS-only capability gap versus
+the previous launchd-on-macOS deployment (Contacts used to depend on `pyobjc`,
+unavailable in the container; it's now CardDAV, so it isn't).
 
 Obsidian notes/issues tools read/write a vault bind-mounted from the host — this role
 does **not** sync that vault itself. Run

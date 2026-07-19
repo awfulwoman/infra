@@ -1,6 +1,11 @@
 dependencies:
   - role: composition-common
-  # Reminders and Contacts are backed by Radicale, reached over the shared Docker
-  # network by container name — it must be up first. Listed here (not just in
-  # core.yaml's role order) so the ordering holds regardless of playbook edits.
-  - role: composition-radicale
+# Reminders and Contacts are backed by Radicale, reached over the shared Docker network
+# by container name — it must be up first. NOT declared as a role dependency here: doing
+# so nests composition-radicale's own (correctly composition_name-scoped) call to
+# composition-common as a sibling of this role's composition-common call, and the second
+# set_fact of composition_root/composition_config sticks for the rest of the play,
+# silently redirecting this role's own "Create compose file"/"Create .env file"/"Start
+# Docker Compose project" tasks into Radicale's directory instead of Gateway's. Ordering
+# is guaranteed by core.yaml listing composition-radicale before composition-gateway
+# instead — keep it that way.
