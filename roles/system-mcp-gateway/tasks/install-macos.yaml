@@ -41,6 +41,19 @@
     state: directory
     mode: "0755"
 
+- name: Ensure data directory exists
+  ansible.builtin.file:
+    path: "{{ system_mcp_gateway_repo_dir }}/data"
+    state: directory
+    mode: "0755"
+
+- name: Deploy Google Calendar OAuth token
+  no_log: true
+  ansible.builtin.copy:
+    content: "{{ system_mcp_gateway_gcal_token_json }}"
+    dest: "{{ system_mcp_gateway_gcal_token_path }}"
+    mode: "0600"
+
 - name: Deploy .env configuration
   ansible.builtin.template:
     src: env.j2
@@ -82,7 +95,7 @@
 
 - name: Check macOS version for TCC compatibility
   ansible.builtin.debug:
-    msg: "WARNING: TCC permission grant skipped - only supported on macOS 15.x. Grant Calendar/Reminders/Contacts access manually for the gateway process."
+    msg: "WARNING: TCC permission grant skipped - only supported on macOS 15.x. Grant Reminders/Contacts access manually for the gateway process."
   when: ansible_facts['distribution_version'] is version('15', '<')
 
 - name: Resolve uv symlink to real binary path
@@ -91,14 +104,12 @@
   changed_when: false
   when: ansible_facts['distribution_version'] is version('15', '>=')
 
-- name: Grant TCC permissions for Calendar, Reminders, Contacts (macOS 15 only)
+- name: Grant TCC permissions for Reminders, Contacts (macOS 15 only)
   ansible.builtin.command: >
     sqlite3 "{{ ansible_facts.user_dir }}/Library/Application Support/com.apple.TCC/TCC.db"
     "INSERT OR REPLACE INTO access
       (service, client, client_type, auth_value, auth_reason, auth_version, csreq, indirect_object_identifier)
     VALUES
-      ('kTCCServiceCalendar', 'org.python.python', 0, 2, 3, 1, NULL, 'UNUSED'),
-      ('kTCCServiceCalendar', '{{ uv_real.stdout }}', 1, 2, 3, 1, NULL, 'UNUSED'),
       ('kTCCServiceReminders', 'org.python.python', 0, 2, 3, 1, NULL, 'UNUSED'),
       ('kTCCServiceReminders', '{{ uv_real.stdout }}', 1, 2, 3, 1, NULL, 'UNUSED'),
       ('kTCCServiceAddressBook', 'org.python.python', 0, 2, 3, 1, NULL, 'UNUSED'),
