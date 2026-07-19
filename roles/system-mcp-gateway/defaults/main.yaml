@@ -14,10 +14,6 @@ system_mcp_gateway_obsidian_vault_path: "{{ ansible_facts.user_dir }}/Obsidian"
 system_mcp_gateway_karakeep_base_url: "https://karakeep.{{ domainname_infra }}"
 system_mcp_gateway_karakeep_api_key: "{{ vault_karakeep_api }}"
 
-system_mcp_gateway_reminders_base_url: "https://radicale.{{ domainname_infra }}"
-system_mcp_gateway_reminders_username: charlie
-system_mcp_gateway_reminders_password: "{{ vault_radicale_password }}"
-
 system_mcp_gateway_reminders_db_path: "{{ system_mcp_gateway_repo_dir }}/data/reminders.db"
 system_mcp_gateway_reminders_api_tokens: "{{ vault_gateway_reminders_api_token_iphone }}"
 system_mcp_gateway_reminders_nominatim_url: "https://nominatim.{{ domainname_infra }}"
