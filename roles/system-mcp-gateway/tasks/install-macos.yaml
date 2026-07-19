@@ -4,6 +4,14 @@
     name: uv
     state: present
 
+- name: Env vars for gw run locally on this host
+  no_log: true
+  ansible.builtin.include_role:
+    name: system-environment
+  vars:
+    environment_config:
+      GATEWAY_TOKEN: "{{ system_mcp_gateway_cli_token }}"
+
 - name: Ensure /opt/awfulwoman base directory exists
   become: true
   ansible.builtin.file:
