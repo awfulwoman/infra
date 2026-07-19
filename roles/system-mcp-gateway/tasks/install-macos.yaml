@@ -47,13 +47,6 @@
     state: directory
     mode: "0755"
 
-- name: Deploy Google Calendar OAuth token
-  no_log: true
-  ansible.builtin.copy:
-    content: "{{ system_mcp_gateway_gcal_token_json }}"
-    dest: "{{ system_mcp_gateway_gcal_token_path }}"
-    mode: "0600"
-
 - name: Deploy .env configuration
   ansible.builtin.template:
     src: env.j2
