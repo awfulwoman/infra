@@ -1,0 +1,28 @@
+# Managed by Ansible - do not edit manually
+# roles/composition-gateway
+
+GATEWAY_IMAP__HOST={{ composition_gateway_imap_host }}
+GATEWAY_IMAP__PORT={{ composition_gateway_imap_port }}
+GATEWAY_IMAP__USERNAME={{ composition_gateway_imap_username }}
+GATEWAY_IMAP__PASSWORD={{ composition_gateway_imap_password }}
+
+GATEWAY_OBSIDIAN__VAULT_PATH=/vault
+
+GATEWAY_GCAL__TOKEN_JSON={{ composition_gateway_gcal_token_json }}
+
+GATEWAY_KARAKEEP__BASE_URL={{ composition_gateway_karakeep_base_url }}
+GATEWAY_KARAKEEP__API_KEY={{ composition_gateway_karakeep_api_key }}
+
+GATEWAY_REMINDERS__DB_PATH=/data/reminders.db
+GATEWAY_REMINDERS__API_TOKENS={{ composition_gateway_reminders_api_tokens }}
+GATEWAY_REMINDERS__NOMINATIM_URL={{ composition_gateway_reminders_nominatim_url }}
+
+GATEWAY_SERVER__HOST=0.0.0.0
+GATEWAY_SERVER__PORT=4000
+GATEWAY_SERVER__AUTH_TOKENS={{ composition_gateway_server_auth_tokens }}
+
+GATEWAY_OWNTRACKS__BASE_URL={{ composition_gateway_owntracks_base_url }}
+GATEWAY_OWNTRACKS__USERNAME={{ composition_gateway_owntracks_username }}
+GATEWAY_OWNTRACKS__PASSWORD={{ composition_gateway_owntracks_password }}
+GATEWAY_OWNTRACKS__OWNTRACKS_USER={{ composition_gateway_owntracks_user }}
+GATEWAY_OWNTRACKS__OWNTRACKS_DEVICE={{ composition_gateway_owntracks_device }}

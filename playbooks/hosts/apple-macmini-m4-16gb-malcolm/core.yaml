@@ -29,8 +29,6 @@
     tags: [system, system-nvm]
   - role: system-obsidian-headless
     tags: [system, system-obsidian-headless]
-  - role: system-mcp-gateway
-    tags: [system, system-mcp-gateway]
   - role: system-aw-deploy
     tags: [system, system-aw-deploy]
   - role: monitoring-healthchecksio

@@ -73,9 +73,6 @@ system_claude_profile_file: ".zshrc"
 # OBSIDIAN
 # -------------------------------------------------------------------
 system_obsidian_headless_vaults:
-  - name: "Charlie"
-    path: "{{ ansible_facts['user_dir'] }}/Documents/Personal/Charlie"
-    password: "{{ vault_obsidian_vault_key }}"
   - name: "AgentMemory"
     path: "{{ ansible_facts['user_dir'] }}/Documents/Personal/AgentMemory"
     password: "{{ vault_obsidian_vault_key }}"
@@ -101,15 +98,6 @@ automation_infra_playbooks:
   - hosts/raspberry-pi5-4gb-belinda/core.yaml
   - hosts/apple-macmini-m4-16gb-malcolm/core.yaml
   - hosts/vps-hetzner-public01/core.yaml
-
-# -------------------------------------------------------------------
-# HOMEBREW
-# -------------------------------------------------------------------
-# -------------------------------------------------------------------
-# MCP GATEWAY
-# -------------------------------------------------------------------
-system_mcp_gateway_server_host: "0.0.0.0"
-system_mcp_gateway_obsidian_vault_path: "{{ ansible_facts.user_dir }}/Documents/Personal/Charlie"
 
 # -------------------------------------------------------------------
 # HOMEBREW

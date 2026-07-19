@@ -29,6 +29,10 @@
     tags: [virtual, virtual-qemu-host]
   - role: backups-zfs-client
     tags: [backups, zfs, backups-zfs-client]
+  - role: system-nvm
+    tags: [system, system-nvm]
+  - role: system-obsidian-headless
+    tags: [system, system-obsidian-headless]
   - role: composition-zfs-api
     tags: [composition, zfs, composition-zfs-api]
   - role: composition-victoriametrics
@@ -77,6 +81,8 @@
     tags: [composition, composition-n8n]
   - role: composition-memorybank
     tags: [composition, composition-memorybank]
+  - role: composition-gateway
+    tags: [composition, composition-gateway]
   - role: composition-paperless-ngx
     tags: [composition, composition-paperless-ngx]
   - role: composition-vikunja
@@ -108,7 +114,8 @@
     vars:
       composition_name: holly
       composition_chives_mcps:
-        - url: "https://gateway.{{ domainname_infra }}/mcp" # on Malcolm
+        - url: "http://gateway:4000/mcp" # on same host
+          auth_key: "{{ vault_gateway_mcp_token }}"
         - url: "http://mcp-searxng:3000/mcp" # on same host
           auth_key: "{{ vault_mcp_searxng_auth_token }}"
     tags: [composition, composition-chives, ollama]

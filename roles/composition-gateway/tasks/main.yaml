@@ -1,0 +1,47 @@
+# code: language=ansible
+
+- name: Assert Obsidian vault path is configured
+  ansible.builtin.assert:
+    that:
+      - composition_gateway_obsidian_vault_path | length > 0
+    fail_msg: >-
+      composition_gateway_obsidian_vault_path must point at a synced vault on
+      this host (see the system-obsidian-headless role).
+    quiet: true
+
+- name: "Create compose file"
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ composition_root }}/docker-compose.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0644"
+
+- name: "Create .env file"
+  ansible.builtin.template:
+    src: environment_vars.j2
+    dest: "{{ composition_root }}/.environment_vars"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0600"
+
+- name: Create db data directory
+  ansible.builtin.file:
+    path: "{{ composition_config }}/db"
+    state: directory
+    mode: "0755"
+
+- name: Run Configure DNS role
+  ansible.builtin.include_role:
+    name: "network-register-subdomain"
+  vars:
+    configure_dns_subdomains:
+      - "{{ composition_name }}"
+
+- name: Start Docker Compose project
+  community.docker.docker_compose_v2:
+    project_src: "{{ composition_root }}"
+    state: present
+    pull: always
+    remove_orphans: true
+  notify: Restart Traefik

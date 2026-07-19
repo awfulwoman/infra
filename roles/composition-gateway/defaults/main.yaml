@@ -1,0 +1,28 @@
+# Composition name (used by composition-common dependency)
+composition_name: gateway
+
+composition_gateway_imap_host: "imap.mailbox.org"
+composition_gateway_imap_port: 993
+composition_gateway_imap_username: "{{ vault_mailprovider_user }}"
+composition_gateway_imap_password: "{{ vault_mailprovider_password }}"
+
+# Absolute path on the host to a synced Obsidian vault (e.g. from
+# system-obsidian-headless). Must be set per-host; there is no sane default.
+composition_gateway_obsidian_vault_path: ""
+
+composition_gateway_gcal_token_json: "{{ vault_gateway_gcal_token_json }}"
+
+composition_gateway_karakeep_base_url: "https://karakeep.{{ domainname_infra }}"
+composition_gateway_karakeep_api_key: "{{ vault_karakeep_api }}"
+
+composition_gateway_owntracks_base_url: "https://owntracks-recorder.{{ domainname_infra }}"
+composition_gateway_owntracks_username: ""
+composition_gateway_owntracks_password: ""
+composition_gateway_owntracks_user: charlie
+composition_gateway_owntracks_device: iphone
+
+composition_gateway_reminders_api_tokens: "{{ vault_gateway_reminders_api_token_iphone }}"
+composition_gateway_reminders_nominatim_url: "https://nominatim.{{ domainname_infra }}"
+
+# Same secret as the CLI token used on Malcolm — the server enforces it on /mcp.
+composition_gateway_server_auth_tokens: "{{ vault_gateway_mcp_token }}"

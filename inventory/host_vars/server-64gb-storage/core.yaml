@@ -142,6 +142,19 @@ system_zfs_policy_mqtt_enabled: true
 system_zfs_policy_healthchecksio_enabled: true
 
 # -------------------------------------------------------------------
+# OBSIDIAN
+# -------------------------------------------------------------------
+system_obsidian_headless_vaults:
+  - name: "Charlie"
+    path: "{{ ansible_facts['user_dir'] }}/obsidian-vaults/Charlie"
+    password: "{{ vault_obsidian_vault_key }}"
+
+# -------------------------------------------------------------------
+# MCP GATEWAY
+# -------------------------------------------------------------------
+composition_gateway_obsidian_vault_path: "{{ ansible_facts['user_dir'] }}/obsidian-vaults/Charlie"
+
+# -------------------------------------------------------------------
 # MISC
 # -------------------------------------------------------------------
 # Media storage
@@ -194,6 +207,7 @@ cnames:
   - transmission.{{ domainname_infra }}
   - n8n.{{ domainname_infra }}
   - memorybank.{{ domainname_infra }}
+  - gateway.{{ domainname_infra }}
   - vikunja.{{ domainname_infra }}
   - uptime-kuma.{{ domainname_infra }}
   - kagimcp.{{ domainname_infra }}
