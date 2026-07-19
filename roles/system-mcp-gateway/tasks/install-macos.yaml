@@ -41,12 +41,6 @@
     state: directory
     mode: "0755"
 
-- name: Ensure data directory exists
-  ansible.builtin.file:
-    path: "{{ system_mcp_gateway_repo_dir }}/data"
-    state: directory
-    mode: "0755"
-
 - name: Deploy .env configuration
   ansible.builtin.template:
     src: env.j2
