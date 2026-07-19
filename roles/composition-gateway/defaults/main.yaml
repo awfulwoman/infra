@@ -1,7 +1,7 @@
 # Composition name (used by composition-common dependency)
 composition_name: gateway
 
-composition_gateway_imap_host: "imap.mailbox.org"
+composition_gateway_imap_host: "imap.{{ vault_mailprovider_domain }}"
 composition_gateway_imap_port: 993
 composition_gateway_imap_username: "{{ vault_mailprovider_user }}"
 composition_gateway_imap_password: "{{ vault_mailprovider_password }}"
