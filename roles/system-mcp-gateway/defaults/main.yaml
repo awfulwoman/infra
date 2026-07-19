@@ -25,7 +25,7 @@ system_mcp_gateway_reminders_nominatim_url: "https://nominatim.{{ domainname_inf
 system_mcp_gateway_server_host: "127.0.0.1"
 system_mcp_gateway_server_port: 4000
 
-# Not yet enforced server-side (GATEWAY_SERVER__AUTH_TOKENS in env.j2 is still
-# empty) — this just makes gw, run locally on this host, ready with a token for
-# when it is.
+# Same secret, two uses: the server enforces it on /mcp, and gw (run locally on
+# this host) is pre-armed with it so it doesn't 401 the moment enforcement lands.
 system_mcp_gateway_cli_token: "{{ vault_gateway_mcp_token }}"
+system_mcp_gateway_server_auth_tokens: "{{ vault_gateway_mcp_token }}"
