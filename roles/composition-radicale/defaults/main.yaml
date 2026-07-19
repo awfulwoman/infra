@@ -1,7 +1,0 @@
-# Composition name (used by composition-common dependency)
-composition_name: radicale
-composition_radicale_subdomains:
-  - radicale
-
-radicale_username: charlie
-radicale_password: "{{ vault_radicale_password }}"
