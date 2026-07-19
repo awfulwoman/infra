@@ -27,6 +27,10 @@ repo_name: infra
 # Docker
 default_docker_network: guineanet
 
+# Radicale (CalDAV/CardDAV) — shared between composition-radicale (which provisions
+# this as its htpasswd user) and composition-gateway (which authenticates as it)
+radicale_username: charlie
+
 # Ansible
 ansible_path: "/opt/ansible"
 ansible_log_path: "{{ ansible_path }}/logs"

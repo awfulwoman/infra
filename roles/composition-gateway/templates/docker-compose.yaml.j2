@@ -7,7 +7,6 @@ services:
     restart: unless-stopped
     env_file: .environment_vars
     volumes:
-      - "{{ composition_config }}/db:/data"
       - "{{ composition_gateway_obsidian_vault_path }}:/vault"
       - /etc/localtime:/etc/localtime:ro
     labels:

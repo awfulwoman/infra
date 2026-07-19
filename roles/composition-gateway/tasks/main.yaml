@@ -25,12 +25,6 @@
     group: "{{ ansible_user }}"
     mode: "0600"
 
-- name: Create db data directory
-  ansible.builtin.file:
-    path: "{{ composition_config }}/db"
-    state: directory
-    mode: "0755"
-
 - name: Run Configure DNS role
   ansible.builtin.include_role:
     name: "network-register-subdomain"

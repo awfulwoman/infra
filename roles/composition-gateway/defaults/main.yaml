@@ -24,5 +24,14 @@ composition_gateway_owntracks_device: iphone
 composition_gateway_reminders_api_tokens: "{{ vault_gateway_reminders_api_token_iphone }}"
 composition_gateway_reminders_nominatim_url: "https://nominatim.{{ domainname_infra }}"
 
+# Radicale (CalDAV/CardDAV) — storage backend for Reminders and Contacts, reached over
+# the shared Docker network by container name (never exposed to clients directly).
+# Credentials are shared with composition-radicale, which provisions this same account.
+composition_gateway_radicale_base_url: "http://radicale:5232"
+composition_gateway_radicale_username: "{{ radicale_username }}"
+composition_gateway_radicale_password: "{{ vault_radicale_password }}"
+composition_gateway_radicale_contacts_path: "/{{ radicale_username }}/contacts/"
+composition_gateway_radicale_default_list: "Reminders"
+
 # Same secret as the CLI token used on Malcolm — the server enforces it on /mcp.
 composition_gateway_server_auth_tokens: "{{ vault_gateway_mcp_token }}"

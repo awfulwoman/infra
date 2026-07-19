@@ -3,5 +3,6 @@ composition_name: radicale
 composition_radicale_subdomains:
   - radicale
 
-radicale_username: charlie
+# radicale_username lives in inventory/group_vars/infra/core.yaml — shared with
+# composition-gateway, which authenticates to this same account.
 radicale_password: "{{ vault_radicale_password }}"

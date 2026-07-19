@@ -81,14 +81,14 @@
     tags: [composition, composition-n8n]
   - role: composition-memorybank
     tags: [composition, composition-memorybank]
+  - role: composition-radicale
+    tags: [composition, composition-radicale]
   - role: composition-gateway
     tags: [composition, composition-gateway]
   - role: composition-paperless-ngx
     tags: [composition, composition-paperless-ngx]
   - role: composition-vikunja
     tags: [composition, composition-vikunja]
-  - role: composition-radicale
-    tags: [composition, composition-radicale]
   - role: composition-uptime-kuma
     tags: [composition, composition-uptime-kuma]
   - role: composition-mcp-kagisearch

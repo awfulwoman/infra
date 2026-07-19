@@ -1,2 +1,6 @@
 dependencies:
   - role: composition-common
+  # Reminders and Contacts are backed by Radicale, reached over the shared Docker
+  # network by container name — it must be up first. Listed here (not just in
+  # core.yaml's role order) so the ordering holds regardless of playbook edits.
+  - role: composition-radicale
