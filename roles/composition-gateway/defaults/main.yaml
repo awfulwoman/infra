@@ -10,7 +10,11 @@ composition_gateway_imap_password: "{{ vault_mailprovider_password }}"
 # system-obsidian-headless). Must be set per-host; there is no sane default.
 composition_gateway_obsidian_vault_path: ""
 
-composition_gateway_gcal_token_json: "{{ vault_gateway_gcal_token_json }}"
+# Commented out until the OAuth bootstrap flow has been run and its output vaulted
+# as vault_gateway_gcal_token_json (see gateway repo README, "Google Calendar setup").
+# Calendar tools will fail lazily on first use until this is set; nothing else in
+# Gateway depends on it.
+# composition_gateway_gcal_token_json: "{{ vault_gateway_gcal_token_json }}"
 
 composition_gateway_karakeep_base_url: "https://karakeep.{{ domainname_infra }}"
 composition_gateway_karakeep_api_key: "{{ vault_karakeep_api }}"
