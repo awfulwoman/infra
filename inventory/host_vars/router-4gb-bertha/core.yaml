@@ -1,0 +1,36 @@
+# -------------------------------------------------------------------
+# IDENTITY
+# -------------------------------------------------------------------
+host_type: baremetal
+host_name: router-4gb-bertha
+host_name_medium: router-bertha
+host_name_short: bertha
+host_region: ber
+host_site: xberg
+host_pfqdn: "{{ host_name }}.{{ host_site }}.{{ host_region }}"
+host_fqdn: "{{ host_pfqdn }}.{{ domainname_infra }}"
+host_description: "Primary home dual-NIC Linux router"
+
+# -------------------------------------------------------------------
+# NETWORK
+# Hint: Use `network_netplan_config:` for more fine-grained control
+# Docs: roles/network-netplan/README.md
+# -------------------------------------------------------------------
+host_ipv4: 192.168.1.1
+host_primary_interface: "enp1s0"
+host_ipv4_subnet: 24
+network_netplan_config:
+  ethernets:
+    enp1s0: # WAN - our normal networ
+      dhcp: true
+    enp3s0: # LAN - the new network
+      addresses: [192.168.1.1/24]
+      nameservers:
+        addresses: [192.168.1.1]
+
+# -------------------------------------------------------------------
+# ANSIBLE
+# -------------------------------------------------------------------
+ansible_host: "{{ host_ipv4 }}"
+ansible_user: "{{ vault_server_username }}"
+ansible_become_password: "{{ vault_password }}"

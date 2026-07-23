@@ -14,6 +14,7 @@ all:
     infra:
       hosts:
         # raspberry-pi4-4gb-albion:
+        router-4gb-bertha:
         server-8gb-backups:
         minipc-8gb-homebrain:
         apple-macmini-m4-16gb-malcolm:
@@ -34,6 +35,7 @@ all:
     ubuntu_servers:
       hosts:
         # raspberry-pi4-4gb-albion:
+        router-4gb-bertha:
         server-8gb-backups:
         minipc-8gb-homebrain:
         vps-hetzner-public01:
