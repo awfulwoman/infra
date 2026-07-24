@@ -31,6 +31,7 @@
     chain: POSTROUTING
     out_interface: "{{ wan_iface }}"
     jump: MASQUERADE
+  notify: Save iptables rules
 
 - name: Allow forwarding from LAN to WAN
   become: true
@@ -39,6 +40,7 @@
     in_interface: "{{ lan_iface }}"
     out_interface: "{{ wan_iface }}"
     jump: ACCEPT
+  notify: Save iptables rules
 
 - name: Allow established/related return traffic WAN to LAN
   become: true
@@ -48,22 +50,4 @@
     out_interface: "{{ lan_iface }}"
     ctstate: ESTABLISHED,RELATED
     jump: ACCEPT
-
-- name: Allow HTTP/HTTPS forwarding explicitly (optional, if FORWARD default policy is DROP)
-  become: true
-  ansible.builtin.iptables:
-    chain: FORWARD
-    in_interface: "{{ lan_iface }}"
-    out_interface: "{{ wan_iface }}"
-    protocol: tcp
-    destination_port: "{{ item }}"
-    jump: ACCEPT
-  loop:
-    - "80"
-    - "443"
-
-- name: Save iptables rules persistently
-  become: true
-  ansible.builtin.shell: iptables-save > /etc/iptables/rules.v4
-  args:
-    creates: /etc/iptables/rules.v4
+  notify: Save iptables rules

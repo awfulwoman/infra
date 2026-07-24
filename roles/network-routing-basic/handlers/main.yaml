@@ -1,0 +1,8 @@
+# Persist the live iptables ruleset whenever a rule changes, so it survives a
+# reboot. Replaces the old run-once `iptables-save … creates:` task, which only
+# ever saved on the very first run and silently dropped every later change.
+- name: Save iptables rules
+  become: true
+  ansible.builtin.command:
+    cmd: netfilter-persistent save
+  changed_when: false
