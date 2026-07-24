@@ -1,3 +1,13 @@
+- name: Assert WAN and LAN interfaces are set
+  ansible.builtin.assert:
+    that:
+      - wan_iface | length > 0
+      - lan_iface | length > 0
+      - wan_iface != lan_iface
+    fail_msg: >-
+      wan_iface and lan_iface must both be set (and differ) for this host.
+      Set them in host_vars to match the netplan layout.
+
 - name: Enable IP forwarding
   become: true
   ansible.posix.sysctl:
