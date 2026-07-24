@@ -38,6 +38,30 @@
     mode: "0644"
     validate: named-checkconf %s
 
+# A CNAME is a singleton RR type: two CNAMEs at the same owner name make named
+# reject the ENTIRE zone ("multiple RRs of singleton type"), taking down all
+# DNS. The forward zone aggregates `cnames` from every host in bind_ansible_group,
+# so a name declared on two hosts collides. Catch it here, before rendering.
+- name: Collect all CNAMEs contributed to the forward zone
+  ansible.builtin.set_fact:
+    bind_all_cnames: "{{ bind_all_cnames | default([]) + (hostvars[item].cnames | default([])) }}"
+  loop: "{{ groups[bind_ansible_group] | default([]) }}"
+  loop_control:
+    label: "{{ item }}"
+
+- name: Fail early if duplicate CNAMEs would make named reject the zone
+  ansible.builtin.assert:
+    that:
+      - (bind_all_cnames | default([])) | length == (bind_all_cnames | default([]) | unique | length)
+    fail_msg: >-
+      Duplicate CNAME(s) declared across hosts in group '{{ bind_ansible_group }}':
+      {{ bind_all_cnames | community.general.counter | dict2items
+         | selectattr('value', 'gt', 1) | map(attribute='key') | list | join(', ') }}.
+      A CNAME is a singleton RR type, so named would reject the whole zone.
+      Remove each duplicate from all but the one host that actually serves it.
+    success_msg: "No duplicate CNAMEs across group '{{ bind_ansible_group }}'."
+    quiet: true
+
 - name: Check for zone changes
   become: true
   ansible.builtin.template:

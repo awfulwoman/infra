@@ -16,22 +16,53 @@ host_description: "Primary home dual-NIC Linux router"
 # Hint: Use `network_netplan_config:` for more fine-grained control
 # Docs: roles/network-netplan/README.md
 # -------------------------------------------------------------------
-host_ipv4: 192.168.1.1
-host_primary_interface: "enp1s0"
-host_mac: "1c:61:b4:6d:6f:cd"
+host_ipv4: 192.168.1.1 # bertha's LAN address (on enp1s0)
+host_mac: "1c:61:b4:6d:6f:cd" # enp1s0 (LAN) NIC
 host_ipv4_subnet: 24
+# The WAN (enp2s0) is the netplan "primary" and runs DHCP off the Fritz!Box.
+# Making the WAN the DHCP primary is deliberate: static mode would have the role
+# emit `default via {{ network_netplan_gateway }}` (192.168.1.1) — a default
+# route pointing at bertha ITSELF, which black-holes all outbound traffic. In
+# DHCP mode the upstream (Fritz!Box, 192.168.178.1) supplies the default route.
+host_primary_interface: "enp2s0"
+network_netplan_mode: dhcp
 network_netplan_config:
   ethernets:
-    enp1s0: # WAN - ISP side
-      dhcp: true
-    enp3s0: # LAN - home side
+    enp2s0: # WAN - to Fritz!Box / internet (DHCP supplies default route + gw)
+      dhcp4: true
+    enp1s0: # LAN - home side, bertha is the gateway here (NO default route)
       addresses: [192.168.1.1/24]
       nameservers:
         addresses: [192.168.1.1]
 
 # NIC roles for network-routing-basic (must match netplan above)
-wan_iface: enp1s0 # WAN - ISP side
-lan_iface: enp3s0 # LAN - home side
+wan_iface: enp2s0 # WAN - to Fritz!Box / internet
+lan_iface: enp1s0 # LAN - home side
+
+# -------------------------------------------------------------------
+# DHCP SERVER (infra-dhcpd) — bertha is the LAN's DHCP server
+# -------------------------------------------------------------------
+# Role default is `false`, which installs the daemon but leaves it stopped.
+dhcpd_enabled: true
+# Bind to the LAN NIC. The role default is `enp3s0` — which doesn't exist on
+# this host, so the server was serving nobody (clients had stale/foreign IPs).
+dhcpd_interface: enp1s0
+# Hand out ONLY the router as resolver. The role default appends 8.8.8.8 as a
+# secondary, which would let clients bypass bertha's authoritative/split-horizon
+# DNS whenever they fall through to it.
+dhcpd_dns_servers:
+  - 192.168.1.1
+
+# -------------------------------------------------------------------
+# DNS SERVER (infra-named) — bertha is the LAN's primary authoritative DNS
+# -------------------------------------------------------------------
+# Role default advertises dns01 -> 192.168.1.2 (deedee). bertha now takes over:
+# this also sets the SOA primary (template uses [0]) and its glue A/PTR records.
+bind_records_nameservers:
+  - name: dns01
+    ip: 192.168.1.1
+# NOTE: bind_records_a (apex/www -> 192.168.1.116 storage) left at the role
+# default for now — that's a service-topology decision, revisit separately.
 
 # -------------------------------------------------------------------
 # ANSIBLE

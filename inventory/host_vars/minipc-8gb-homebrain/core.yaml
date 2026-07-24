@@ -77,7 +77,6 @@ cnames:
   - esphome.{{ domainname_infra }}
   - mqtt.{{ domainname_infra }}
   - lan.{{ domainname_infra }}
-  - gateway.{{ domainname_infra }}
   - owntracks.{{ domainname_infra }}
   - owntracks-recorder.{{ domainname_infra }}
   - zigbee2mqtt.{{ domainname_infra }}
