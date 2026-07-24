@@ -29,6 +29,10 @@ network_netplan_config:
       nameservers:
         addresses: [192.168.1.1]
 
+# NIC roles for network-routing-basic (must match netplan above)
+wan_iface: enp1s0 # WAN - ISP side
+lan_iface: enp3s0 # LAN - home side
+
 # -------------------------------------------------------------------
 # ANSIBLE
 # -------------------------------------------------------------------
