@@ -3,3 +3,15 @@
 # Each host MUST override these (see host_vars); an assert enforces it.
 wan_iface: ""
 lan_iface: ""
+
+# Firewall hardening: default-DROP the INPUT (router self-protection) and
+# FORWARD (inter-segment) chains, with an allow-list for management/services and
+# LAN<->WAN forwarding. Off by default; enable per-host once the WAN/LAN roles
+# are confirmed correct — a wrong rule locks out the only management path, so
+# deploy behind a dead-man's switch. SSH is allowed only from the LAN and
+# Tailscale, never the WAN.
+network_routing_firewall: false
+
+# TCP/UDP ports the router accepts on INPUT from the LAN when hardening is on.
+network_routing_input_tcp_ports: ["22", "53"] # SSH, DNS/tcp
+network_routing_input_udp_ports: ["53", "67"] # DNS/udp, DHCP server

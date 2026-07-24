@@ -39,6 +39,10 @@ network_netplan_config:
 wan_iface: enp2s0 # WAN - to Fritz!Box / internet
 lan_iface: enp1s0 # LAN - home side
 
+# Harden the router: default-DROP INPUT + FORWARD, allow-list management/services
+# from the LAN and Tailscale only. WAN cannot reach the router or initiate forwards.
+network_routing_firewall: true
+
 # -------------------------------------------------------------------
 # DHCP SERVER (infra-dhcpd) — bertha is the LAN's DHCP server
 # -------------------------------------------------------------------

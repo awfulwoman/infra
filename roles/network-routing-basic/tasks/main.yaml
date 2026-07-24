@@ -51,3 +51,85 @@
     ctstate: ESTABLISHED,RELATED
     jump: ACCEPT
   notify: Save iptables rules
+
+# --- Firewall hardening (optional, per-host) --------------------------------
+# All ACCEPT rules are added BEFORE the default-DROP policies below, so existing
+# (established) sessions and the LAN management path are never cut mid-apply.
+# The WAN is deliberately NOT allowed to reach the router or initiate forwards.
+- name: Allow INPUT on loopback
+  become: true
+  ansible.builtin.iptables:
+    chain: INPUT
+    in_interface: lo
+    jump: ACCEPT
+  notify: Save iptables rules
+  when: network_routing_firewall
+
+- name: Allow INPUT established/related
+  become: true
+  ansible.builtin.iptables:
+    chain: INPUT
+    ctstate: ESTABLISHED,RELATED
+    jump: ACCEPT
+  notify: Save iptables rules
+  when: network_routing_firewall
+
+- name: Allow INPUT from Tailscale (out-of-band management backstop)
+  become: true
+  ansible.builtin.iptables:
+    chain: INPUT
+    in_interface: tailscale0
+    jump: ACCEPT
+  notify: Save iptables rules
+  when: network_routing_firewall
+
+- name: Allow INPUT TCP services from LAN
+  become: true
+  ansible.builtin.iptables:
+    chain: INPUT
+    in_interface: "{{ lan_iface }}"
+    protocol: tcp
+    destination_port: "{{ item }}"
+    jump: ACCEPT
+  loop: "{{ network_routing_input_tcp_ports }}"
+  notify: Save iptables rules
+  when: network_routing_firewall
+
+- name: Allow INPUT UDP services from LAN
+  become: true
+  ansible.builtin.iptables:
+    chain: INPUT
+    in_interface: "{{ lan_iface }}"
+    protocol: udp
+    destination_port: "{{ item }}"
+    jump: ACCEPT
+  loop: "{{ network_routing_input_udp_ports }}"
+  notify: Save iptables rules
+  when: network_routing_firewall
+
+- name: Allow INPUT ICMP from LAN
+  become: true
+  ansible.builtin.iptables:
+    chain: INPUT
+    in_interface: "{{ lan_iface }}"
+    protocol: icmp
+    jump: ACCEPT
+  notify: Save iptables rules
+  when: network_routing_firewall
+
+# Policies LAST: by now every needed ACCEPT is in place.
+- name: Set FORWARD policy to DROP
+  become: true
+  ansible.builtin.iptables:
+    chain: FORWARD
+    policy: DROP
+  notify: Save iptables rules
+  when: network_routing_firewall
+
+- name: Set INPUT policy to DROP
+  become: true
+  ansible.builtin.iptables:
+    chain: INPUT
+    policy: DROP
+  notify: Save iptables rules
+  when: network_routing_firewall
