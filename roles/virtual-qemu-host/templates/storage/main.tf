@@ -27,7 +27,7 @@ resource "libvirt_pool" "pool" {
 # The Terraform provider does not yet support ZFS pools so this would have to be done manually.
 
 provider "libvirt" {
-   uri = "qemu+ssh://ubuntu@server-64gb-storage.i.affordablepotatoes.com/system"
+   uri = "qemu+ssh://ubuntu@{{ hostvars['server-64gb-storage'].host_pfqdn }}.{{ domainname_infra }}/system"
 }
 
 variable "network_name" {
@@ -45,7 +45,7 @@ variable "network_cidr" {
 variable "domain_name" {
   type    = string
   description = "Network domain name for guests attached to the network."
-  default = "k8s.i.affordablepotatoes.com"
+  default = "k8s.{{ domainname_infra }}"
 }
 
 variable "pool_name" {
