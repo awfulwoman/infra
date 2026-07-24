@@ -10,7 +10,7 @@ services:
     env_file: .environment_vars
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.homepage.rule=Host(`home.{{ domainname_infra }}`)"
+      - "traefik.http.routers.homepage.rule=Host(`home.{{ domainname_infra }}`) || Host(`{{ domainname_infra }}`) || Host(`www.{{ domainname_infra }}`)"
       - "traefik.http.routers.homepage.tls=true"
       - "traefik.http.routers.homepage.tls.certresolver=letsencrypt"
       # - "homepage.group=GROUP"
