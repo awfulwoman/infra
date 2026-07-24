@@ -1,5 +1,9 @@
 bind_domain: "{{ domainname_infra }}"
 bind_default_ttl: 604800 # 1 week
+# Addresses BIND binds to (BIND address-match-list syntax). Default `any;`
+# matches BIND's own default. Override per host to exclude untrusted interfaces.
+bind_listen_on: "any;"
+bind_listen_on_v6: "any;"
 bind_iprange_segment: 192.168
 bind_iprange_reversed: "{{ bind_iprange_segment | string | split('.') | reverse | join('.') }}"
 bind_ansible_group: infra

@@ -21,6 +21,15 @@ options {
   directory "/var/cache/bind";
 
   # -----------------------------------------------------------
+  # Listening interfaces
+  # -----------------------------------------------------------
+  # Restrict which local addresses BIND binds to. Defaults to `any` (BIND's own
+  # default); hosts that face an untrusted interface (e.g. a router's WAN)
+  # override these to keep DNS off it — defence in depth alongside the firewall.
+  listen-on { {{ bind_listen_on }} };
+  listen-on-v6 { {{ bind_listen_on_v6 }} };
+
+  # -----------------------------------------------------------
   # Queries
   # -----------------------------------------------------------
 

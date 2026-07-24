@@ -67,6 +67,12 @@ bind_records_nameservers:
     ip: 192.168.1.1
 # Apex/www A records now live in group_vars/infra (shared infra-zone topology).
 
+# Keep BIND off the WAN (Fritz!Box) side — bind everywhere EXCEPT that subnet.
+# The firewall already blocks WAN:53, this removes the listener too (defence in
+# depth). LAN is IPv4-only, so no v6 DNS listener is needed at all.
+bind_listen_on: "!192.168.178.0/24; any;"
+bind_listen_on_v6: "none;"
+
 # -------------------------------------------------------------------
 # ANSIBLE
 # -------------------------------------------------------------------
