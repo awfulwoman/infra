@@ -4,21 +4,15 @@
     - role: monitoring-healthchecksio
       monitoring_healthchecksio_ping_type: start
       tags: [monitoring, monitoring-healthchecksio]
-    # bootstrap must run first: apt (needs bertha's WAN internet). If the WAN
-    # is down this fails early, before any networking is touched — a safe abort.
     - role: bootstrap-ubuntu-server
       tags: [bootstrap, bootstrap-ubuntu-server]
-    # netplan applies the dual-NIC layout. LAN IP stays 192.168.1.1/enp3s0, so
-    # the Ansible management path is preserved across `netplan apply`.
     - role: network-netplan
       tags: [network, network-netplan]
-    # NAT + FORWARD-ACCEPT only. Deliberately NOT hardening INPUT here — that
-    # would risk locking out the sole (Ethernet) management path. See core.yaml notes.
     - role: network-routing-basic
       tags: [network, routing, network-routing-basic]
-    # - role: infothrill.nullmailer
-    #   become: true
-    #   tags: [infothrill.nullmailer]
+    - role: infothrill.nullmailer
+      become: true
+      tags: [infothrill.nullmailer]
     - role: system-sshkey
       tags: [system, system-sshkey]
     - role: infra-dhcpd
