@@ -75,7 +75,7 @@
 - name: Check for reverse zone changes
   become: true
   ansible.builtin.template:
-    src: db.zone
+    src: db.reverse.zone
     dest: "/etc/bind/zones/db.{{ bind_domain }}.reverse.zone"
     owner: root
     group: bind
