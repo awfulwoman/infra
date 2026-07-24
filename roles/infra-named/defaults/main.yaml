@@ -19,12 +19,15 @@ bind_records_nameservers:
     ip: 192.168.1.2
   # - name: "dns02"
   #   ip: 172.16.0.3
-# Manually created A records
-bind_records_a:
-  - name: "@"
-    ip: 192.168.1.116
-  - name: "www"
-    ip: 192.168.1.116
+# Manually created A records — deployment-specific zone data, so set these where
+# the topology lives (e.g. group_vars/infra), not in this generic role default.
+# The db.zone/db.reverse.zone templates guard on `is defined`, so leaving it
+# unset here is safe. Example shape:
+# bind_records_a:
+#   - name: "@"     # zone apex
+#     ip: 192.0.2.10
+#   - name: "www"
+#     ip: 192.0.2.10
 # bind_dnssec_keys:
 #   - name: "{{ bind_domain }}."
 #     algorithm: "HMAC-SHA512"

@@ -27,6 +27,16 @@ repo_name: infra
 # Docker
 default_docker_network: guineanet
 
+# DNS — authoritative A records for the infra zone (served by infra-named).
+# Moved here from the infra-named role default: this is deployment topology, not
+# generic role behaviour. Apex + www point at storage, which fronts services via
+# its reverse proxy. Referencing host_ipv4 keeps it correct if storage moves.
+bind_records_a:
+  - name: "@" # zone apex ({{ domainname_infra }})
+    ip: "{{ hostvars['server-64gb-storage']['host_ipv4'] }}"
+  - name: "www"
+    ip: "{{ hostvars['server-64gb-storage']['host_ipv4'] }}"
+
 # Radicale (CalDAV/CardDAV) — shared between composition-radicale (which provisions
 # this as its htpasswd user) and composition-gateway (which authenticates as it)
 radicale_username: charlie

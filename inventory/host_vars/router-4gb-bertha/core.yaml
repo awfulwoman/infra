@@ -65,8 +65,7 @@ dhcpd_dns_servers:
 bind_records_nameservers:
   - name: dns01
     ip: 192.168.1.1
-# NOTE: bind_records_a (apex/www -> 192.168.1.116 storage) left at the role
-# default for now — that's a service-topology decision, revisit separately.
+# Apex/www A records now live in group_vars/infra (shared infra-zone topology).
 
 # -------------------------------------------------------------------
 # ANSIBLE
