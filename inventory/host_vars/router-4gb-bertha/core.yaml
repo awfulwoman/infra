@@ -18,12 +18,13 @@ host_description: "Primary home dual-NIC Linux router"
 # -------------------------------------------------------------------
 host_ipv4: 192.168.1.1
 host_primary_interface: "enp1s0"
+host_mac: "1c:61:b4:6d:6f:cd"
 host_ipv4_subnet: 24
 network_netplan_config:
   ethernets:
-    enp1s0: # WAN - our normal networ
+    enp1s0: # WAN - ISP side
       dhcp: true
-    enp3s0: # LAN - the new network
+    enp3s0: # LAN - home side
       addresses: [192.168.1.1/24]
       nameservers:
         addresses: [192.168.1.1]

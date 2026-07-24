@@ -15,17 +15,17 @@ all:
       hosts:
         # raspberry-pi4-4gb-albion:
         router-4gb-bertha:
-        server-8gb-backups:
+        # server-8gb-backups:
         minipc-8gb-homebrain:
-        apple-macmini-m4-16gb-malcolm:
-        raspberry-pi4-2gb-pikvm:
-        vps-hetzner-public01:
+        # apple-macmini-m4-16gb-malcolm:
+        # raspberry-pi4-2gb-pikvm:
+        # vps-hetzner-public01:
         server-64gb-storage:
-        minipc-8gb-test-router:
-        raspberry-pi4-2gb-deedee:
-        raspberry-pi4-4gb-randolph:
-        raspberry-pi4-8gb-norman:
-        raspberry-pi5-4gb-belinda:
+        # minipc-8gb-test-router:
+        # raspberry-pi4-2gb-deedee:
+        # raspberry-pi4-4gb-randolph:
+        # raspberry-pi4-8gb-norman:
+        # raspberry-pi5-4gb-belinda:
 
 
     # -------------------------------------------------------------------

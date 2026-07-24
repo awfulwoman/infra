@@ -13,7 +13,7 @@ subnet {{ dhcpd_subnet }} netmask {{ dhcpd_subnet_mask }} {
 }
 
 # Static leases - unmanaged devices
-{% for host in groups[dhcpd_unmanaged_group] %}
+{# {% for host in groups[dhcpd_unmanaged_group] %}
   {% set h = hostvars[host] %}
   {% if h.host_ipv4 and h.host_mac %}
 host {{ host }} {
@@ -22,4 +22,4 @@ host {{ host }} {
   option host-name "{{ h.host_name }}";
 }
   {% endif %}
-{% endfor %}
+{% endfor %} #}

@@ -19,6 +19,7 @@ host_fqdn: "{{ host_pfqdn }}.{{ domainname_infra }}"
 host_ipv4: 192.168.1.116
 host_primary_interface: "enp3s0"
 host_ipv4_subnet: 24
+host_mac: "34:60:f9:bb:3d:16"
 
 # -------------------------------------------------------------------
 # ANSIBLE

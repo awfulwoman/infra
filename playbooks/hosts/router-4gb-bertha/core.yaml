@@ -1,23 +1,25 @@
 - name: Testbed for dual-NIC Linux router setup
   hosts: router-4gb-bertha
   roles:
-    - role: monitoring-healthchecksio
-      monitoring_healthchecksio_ping_type: start
-      tags: [monitoring, monitoring-healthchecksio]
-    - role: bootstrap-ubuntu-server
-      tags: [bootstrap, bootstrap-ubuntu-server]
-    - role: network-netplan
-      tags: [network, network-netplan]
+    # - role: monitoring-healthchecksio
+    #   monitoring_healthchecksio_ping_type: start
+    #   tags: [monitoring, monitoring-healthchecksio]
+    # - role: bootstrap-ubuntu-server
+    #   tags: [bootstrap, bootstrap-ubuntu-server]
+    # - role: network-netplan
+    #   tags: [network, network-netplan]
+    - role: network-routing-basic
     - role: infothrill.nullmailer
       become: true
     - role: system-sshkey
       tags: [system, system-sshkey]
-      # - role: system-zfs
-      # - role: infra-public-resources
-      # - role: infra-named
-      # - role: infra-certbot
-      # - role: compositions
-      # - role: backups-zfs-client
+    # - role: system-zfs
+    # - role: infra-public-resources
+    - role: infra-dhcpd
+    - role: infra-named
+    - role: infra-certbot
+    # - role: compositions
+    # - role: backups-zfs-client
     - role: monitoring-healthchecksio
       monitoring_healthchecksio_ping_type: success
       tags: [monitoring, monitoring-healthchecksio]
