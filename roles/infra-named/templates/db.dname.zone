@@ -1,0 +1,19 @@
+#jinja2: lstrip_blocks:True
+; Legacy-domain alias zone for {{ item }} — DNAMEs the whole subtree onto
+; {{ bind_domain }} so e.g. jellyfin.{{ item }} resolves to jellyfin.{{ bind_domain }}.
+; Static serial: this zone only changes if the alias/target changes (bump then).
+$TTL {{ bind_default_ttl }}
+$ORIGIN {{ item }}.
+@                                        IN      SOA       {{ bind_records_nameservers[0].name }}.{{ bind_domain }}. admin.{{ domainname_infra }}. (
+  2026072401 ; Serial
+  604800 ; Refresh
+  86400 ; Retry
+  2419200 ; Expire
+  604800 ; Negative Cache TTL
+)
+
+; Nameserver (lives in the primary domain)
+                                         IN      NS        {{ bind_records_nameservers[0].name }}.{{ bind_domain }}.
+
+; Alias the entire subtree onto the current infra domain
+                                         IN      DNAME     {{ bind_domain }}.

@@ -4,6 +4,9 @@ bind_default_ttl: 604800 # 1 week
 # matches BIND's own default. Override per host to exclude untrusted interfaces.
 bind_listen_on: "any;"
 bind_listen_on_v6: "any;"
+# Legacy/aliased domains to serve as DNAME redirects onto bind_domain, so devices
+# still searching an old internal domain resolve to current records. Empty = none.
+bind_dname_aliases: []
 bind_iprange_segment: 192.168
 bind_iprange_reversed: "{{ bind_iprange_segment | string | split('.') | reverse | join('.') }}"
 bind_ansible_group: infra

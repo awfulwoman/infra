@@ -128,6 +128,19 @@
   notify:
     - Restart named
 
+- name: Deploy legacy-domain DNAME alias zones
+  become: true
+  ansible.builtin.template:
+    src: db.dname.zone
+    dest: "/etc/bind/zones/db.{{ item }}.zone"
+    owner: root
+    group: bind
+    mode: "0644"
+    validate: "named-checkzone {{ item }} %s"
+  loop: "{{ bind_dname_aliases | default([]) }}"
+  notify:
+    - Restart named
+
 - name: Ensure services are started and enabled
   become: true
   ansible.builtin.systemd:

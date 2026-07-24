@@ -73,6 +73,12 @@ bind_records_nameservers:
 bind_listen_on: "!192.168.178.0/24; any;"
 bind_listen_on_v6: "none;"
 
+# Serve the previous internal domain as a DNAME alias onto the current one, so
+# devices still hard-coded to search i.affordablepotatoes.com resolve to the
+# ewwww.eu records (e.g. jellyfin.i.affordablepotatoes.com -> jellyfin.ewwww.eu).
+bind_dname_aliases:
+  - i.affordablepotatoes.com
+
 # -------------------------------------------------------------------
 # ANSIBLE
 # -------------------------------------------------------------------

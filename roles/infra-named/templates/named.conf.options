@@ -120,3 +120,16 @@ zone "{{ bind_iprange_reversed }}.in-addr.arpa" {
   type primary;
   file "/etc/bind/zones/db.{{ bind_domain }}.reverse.zone";
 };
+
+# -----------------------------------------------------------
+# Legacy-domain aliases (DNAME the whole subtree onto {{ bind_domain }})
+# so devices still searching an old domain resolve to current records.
+# -----------------------------------------------------------
+{% if bind_dname_aliases is defined %}
+{% for alias in bind_dname_aliases %}
+zone "{{ alias }}" {
+  type primary;
+  file "/etc/bind/zones/db.{{ alias }}.zone";
+};
+{% endfor %}
+{% endif %}
