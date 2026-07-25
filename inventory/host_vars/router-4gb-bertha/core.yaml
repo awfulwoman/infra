@@ -30,8 +30,20 @@ network_netplan_config:
   ethernets:
     enp2s0: # WAN - to Fritz!Box / internet (DHCP supplies default route + gw)
       dhcp4: true
+      # Stay IPv4-only on the WAN. Without these, the interface silently
+      # SLAAC-autoconfigures a *public, globally-routable* IPv6 address from
+      # the Fritz!Box's RAs — and since there's no ip6tables ruleset, that
+      # address is completely unfiltered. accept-ra:false stops RA-driven
+      # autoconfig; dhcp6:false stops DHCPv6. Link-local (fe80::) remains,
+      # which is harmless (not routable off-link).
+      dhcp6: false
+      accept-ra: false
     enp1s0: # LAN - home side, bertha is the gateway here (NO default route)
       addresses: [192.168.1.1/24]
+      # A router must never learn routing from its own LAN clients. A live
+      # check found another LAN device (f4:34:f0:2e:f4:c3) sending RAs that
+      # this interface was willing to accept. Refuse them.
+      accept-ra: false
       nameservers:
         addresses: [192.168.1.1]
 
