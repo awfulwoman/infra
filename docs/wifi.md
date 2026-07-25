@@ -2,10 +2,10 @@
 
 The home network's wireless access points are **not** managed by this
 repository. They're plain OpenWrt boxes, configured by hand, tracked in
-`inventory/hosts-unmanaged.yaml` (`unmanaged-ap-bedroom`,
-`unmanaged-ap-livingroom`, `unmanaged-ap-pantry`) with only `host_ipv4` set —
-no `host_mac`, no Ansible role, no config management. Diagnosing anything
-wireless means SSHing into the AP itself.
+`inventory/hosts-unmanaged.yaml` (`unmanaged-ap-livingroom`,
+`unmanaged-ap-pantry`) with only `host_ipv4` set — no `host_mac`, no Ansible
+role, no config management. Diagnosing anything wireless means SSHing into
+the AP itself.
 
 ## Living room coverage is split across two physical APs, by band
 
