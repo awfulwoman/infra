@@ -19,12 +19,12 @@ all:
           host_name: ap-livingroom
           host_description: Living Room Access Point
           host_ipv4: 192.168.1.140
-          host_mac: false
+          host_mac: "60:e3:27:78:8c:d5"
         unmanaged-ap-pantry:
           host_name: ap-pantry
           host_description: Pantry Access Point
           host_ipv4: 192.168.1.141
-          host_mac: false
+          host_mac: "e8:de:27:d6:b0:4e"
 
         # AV
         unmanaged-av-appletv:
