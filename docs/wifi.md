@@ -1,20 +1,18 @@
 # WiFi
 
 The home network's wireless access points are **not** managed by this
-repository. They're plain OpenWrt boxes, configured by hand, tracked only as
-placeholders in `inventory/hosts-unmanaged.yaml`
-(`unmanaged-ap-bedroom`, `unmanaged-ap-livingroom`, `unmanaged-ap-pantry`) with
-no `host_ipv4`/`host_mac` filled in. Ansible has no visibility into them —
-diagnosing anything wireless means SSHing into the AP itself.
+repository. They're plain OpenWrt boxes, configured by hand, tracked in
+`inventory/hosts-unmanaged.yaml` (`unmanaged-ap-bedroom`,
+`unmanaged-ap-livingroom`, `unmanaged-ap-pantry`) with only `host_ipv4` set —
+no `host_mac`, no Ansible role, no config management. Diagnosing anything
+wireless means SSHing into the AP itself.
 
-## Living room: two physical APs, split by band
+## Living room coverage is split across two physical APs, by band
 
-The living room is covered by **two** separate AP units, not one:
-
-| IP              | Hostname                | Band   | SSID                        | Notes |
-|-----------------|--------------------------|--------|------------------------------|-------|
-| `192.168.1.140` | `accesspoint-livingroom` | 5 GHz  | `Affordable Potatoes`        | OpenWrt 22.03.0, QCA9880. `radio1` (2.4 GHz) hardware is present but its AP interface is disabled (`wireless.default_radio1.disabled='1'`) — this unit does not broadcast 2.4 GHz. |
-| `192.168.1.141` | *(not yet documented)*  | 2.4 GHz | `Affordable Potatoes 2.4Ghz` (assumed) | The actual 2.4 GHz source for this area. |
+| Inventory name        | IP              | Hostname                | Band    | SSID                                    | Notes |
+|------------------------|-----------------|--------------------------|---------|-------------------------------------------|-------|
+| `unmanaged-ap-livingroom` | `192.168.1.140` | `accesspoint-livingroom` | 5 GHz   | `Affordable Potatoes`                     | OpenWrt 22.03.0, QCA9880. `radio1` (2.4 GHz) hardware is present but its AP interface is disabled (`wireless.default_radio1.disabled='1'`) — this unit does not broadcast 2.4 GHz. |
+| `unmanaged-ap-pantry`     | `192.168.1.141` | *(not yet confirmed)*   | 2.4 GHz | `Affordable Potatoes 2.4Ghz` (assumed)    | Physically in the pantry, but its 2.4 GHz signal is what actually reaches the living room's ESP32 devices — `.140` in the living room itself only does 5 GHz. |
 
 Both presumably share the passphrase configured in `.140`'s
 `wireless.default_radio0.key` (not reproduced here — treat as a secret, not
@@ -29,7 +27,7 @@ is still up, phones and laptops (dual-band) reconnect to 5 GHz without
 noticing, `bertha` and the rest of the LAN look completely healthy. Only the
 2.4 GHz-only devices go dark.
 
-**Incident, 2026-07-25**: `192.168.1.141` lost power. All four voice
+**Incident, 2026-07-25**: `unmanaged-ap-pantry` (`192.168.1.141`) lost power. All four voice
 assistants (`Voice PE Living Room`, `Voice PE Bedroom`,
 `Home Assistant Voice 096e3a`/Kitchen, and a fourth unit) went `unavailable`
 in Home Assistant simultaneously and stayed that way. The failure mode was
