@@ -12,14 +12,9 @@ all:
         unmanaged-kvm-tesmart-8port:
           host_name: kvm-tesmart-8port
           host_ipv4: 192.168.1.10
-          ost_description: Rack-mounted KVM switch, supporting PiKVM
+          host_description: Rack-mounted KVM switch, supporting PiKVM
 
         # Access Points
-        unmanaged-ap-bedroom:
-          host_name: ap-bedroom
-          host_description: Bedroom Access Point
-          host_ipv4: false
-          host_mac: false
         unmanaged-ap-livingroom:
           host_name: ap-livingroom
           host_description: Living Room Access Point
