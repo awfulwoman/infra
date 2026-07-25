@@ -173,18 +173,23 @@ all:
         unmanaged-satellite-homeassistant-voice-bedroom:
           host_name: satellite-homeassistant-voice-bedroom
           host_description: Bedroom HA Voice
-          host_ipv4: false
-          host_mac: false
+          host_ipv4: 192.168.1.248
+          host_mac: "20:f8:3b:09:4a:8b"
         unmanaged-satellite-homeassistant-voice-kitchen:
           host_name: satellite-homeassistant-voice-kitchen
           host_description: Kitchen HA Voice
-          host_ipv4: false
-          host_mac: false
+          host_ipv4: 192.168.1.210
+          host_mac: "20:f8:3b:09:6e:3a"
         unmanaged-satellite-homeassistant-voice-livingroom:
           host_name: satellite-homeassistant-voice-livingroom
           host_description: Living Room HA Voice
-          host_ipv4: false
-          host_mac: false
+          host_ipv4: 192.168.1.220
+          host_mac: "20:f8:3b:09:16:82"
+        unmanaged-satellite-homeassistant-voice-charlie:
+          host_name: satellite-homeassistant-voice-charlie
+          host_description: Charlie's HA Voice
+          host_ipv4: 192.168.1.171
+          host_mac: "20:f8:3b:0a:91:8c"
 
         # Tablets
         unmanaged-tablet-ipad-bedroom:

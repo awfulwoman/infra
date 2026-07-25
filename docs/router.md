@@ -72,6 +72,13 @@ through and bypass bertha's split-horizon DNS.
 > at the default means the server serves nobody; the `dhcpd_interface`
 > override is mandatory here.
 
+Static leases for unmanaged IoT devices come from the `unmanaged` inventory
+group (`host_ipv4`/`host_mac` in `inventory/hosts-unmanaged.yaml`) — see
+`roles/infra-dhcpd/README.md`. If a device with a static lease looks
+unreachable, check the WiFi layer before the DHCP layer: see
+[wifi.md](wifi.md) for a case where the DHCP config was blameless but the
+device still couldn't get online.
+
 ## DNS
 
 `infra-named` (BIND9) is authoritative for the internal domain and does
