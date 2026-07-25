@@ -72,6 +72,24 @@
     - network-netplan
     - netplan
 
+# The Ubuntu Server installer (subiquity) writes 00-installer-config.yaml with
+# whatever networking was chosen at install time. netplan merges ALL files in
+# /etc/netplan, so this stale file's settings silently combine with — and, for
+# any key it defines that 50-primary-interface.yaml does not, override — the
+# role's authoritative config. On a router this is dangerous: the installer's
+# `routes: default via <self>` reasserted on `netplan apply` and black-holed
+# all outbound traffic. 50-primary-interface.yaml is the single source of truth
+# for this role, so the installer file must not linger.
+- name: Remove Ubuntu installer netplan configuration if present
+  become: true
+  ansible.builtin.file:
+    path: /etc/netplan/00-installer-config.yaml
+    state: absent
+  notify: Apply netplan
+  tags:
+    - network-netplan
+    - netplan
+
 - name: Deploy primary interface netplan configuration
   become: true
   ansible.builtin.template:

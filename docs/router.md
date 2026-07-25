@@ -135,6 +135,17 @@ default route pointing at *itself* — which black-holes all outbound traffic.
 Bertha sidesteps this by making the WAN the **DHCP primary**, so the upstream
 Fritz!Box (`192.168.178.1`) supplies the real default route.
 
+**Stale installer netplan file.** netplan merges *every* file in
+`/etc/netplan`, so a leftover `00-installer-config.yaml` (written by the
+Ubuntu installer) silently combines with the role's authoritative
+`50-primary-interface.yaml`. On bertha the installer file carried the exact
+self-referential `default via 192.168.1.1` route above; it lay dormant until a
+`netplan apply` re-merged it and black-holed the WAN. The `network-netplan`
+role now removes `00-installer-config.yaml` on every run so it can't resurface.
+Corollary: **any `netplan apply` on a router re-evaluates all files and has the
+same blast radius as a routing change — treat even a one-line IPv6 edit as a
+routing change and stage it behind a rollback safety net.**
+
 **Duplicate-CNAME zone failure.** `infra-named` aggregates `cnames` from every
 host in the `infra` group into one forward zone. A CNAME is a singleton RR
 type, so the same name declared on two hosts makes named reject the *entire*
