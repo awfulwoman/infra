@@ -35,6 +35,8 @@
     tags: [composition, composition-container-management]
   - role: composition-homeassistant
     tags: [composition, composition-homeassistant]
+  - role: composition-homeassistant-personal
+    tags: [composition, composition-homeassistant-personal]
   - role: composition-matter
     tags: [composition, composition-matter]
   - role: composition-owntracks

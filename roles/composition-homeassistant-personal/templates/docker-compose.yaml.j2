@@ -1,0 +1,29 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  homeassistant-personal:
+    container_name: homeassistant-personal
+    image: ghcr.io/home-assistant/home-assistant:2026.7
+    restart: unless-stopped
+    env_file: .environment_vars
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.homeassistant-personal.rule=Host(`ha-personal.{{ domainname_infra }}`)"
+      - "traefik.http.routers.homeassistant-personal.tls=true"
+      - "traefik.http.routers.homeassistant-personal.tls.certresolver=letsencrypt"
+      - "traefik.http.services.homeassistant-personal.loadbalancer.server.port=8123"
+    volumes:
+      - "{{ composition_config }}/homeassistant:/config"
+      - "/etc/localtime:/etc/localtime:ro"
+    networks:
+      - "{{ default_docker_network }}"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "-s", "-o", "/dev/null", "http://localhost:8123/"]
+      interval: 1m
+      timeout: 10s
+      retries: 3
+      start_period: 2m
+
+networks:
+  "{{ default_docker_network }}":
+    external: true

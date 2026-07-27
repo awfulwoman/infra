@@ -74,6 +74,7 @@ traefik_providers:
 cnames:
   - homeassistant.{{ domainname_infra }}
   - ha.{{ domainname_infra }}
+  - ha-personal.{{ domainname_infra }}
   - esphome.{{ domainname_infra }}
   - mqtt.{{ domainname_infra }}
   - lan.{{ domainname_infra }}

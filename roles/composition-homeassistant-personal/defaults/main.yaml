@@ -1,0 +1,5 @@
+# Composition name (used by composition-common dependency)
+composition_name: homeassistant-personal
+
+composition_homeassistant_personal_subdomains:
+  - ha-personal

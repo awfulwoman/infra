@@ -1,0 +1,5 @@
+- name: Restart Home Assistant Personal
+  community.docker.docker_container:
+    name: homeassistant-personal
+    state: started
+    restart: true

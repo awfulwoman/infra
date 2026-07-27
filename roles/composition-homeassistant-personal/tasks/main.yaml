@@ -1,0 +1,53 @@
+# code: language=ansible
+
+- name: "Create compose file"
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ composition_root }}/docker-compose.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0644"
+
+- name: "Create .env file"
+  ansible.builtin.template:
+    src: environment_vars.j2
+    dest: "{{ composition_root }}/.environment_vars"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0644"
+
+- name: Ensure HA config directory exists
+  ansible.builtin.file:
+    path: "{{ composition_config }}/homeassistant"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"
+
+- name: Copy over HA configuration.yaml
+  ansible.builtin.template:
+    src: ha/configuration.yaml
+    dest: "{{ composition_root }}/config/homeassistant/configuration.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0640"
+  notify:
+    - Restart Home Assistant Personal
+
+- name: Run Configure DNS role
+  ansible.builtin.include_role:
+    name: "network-register-subdomain"
+  vars:
+    configure_dns_subdomains: "{{ composition_homeassistant_personal_subdomains }}"
+
+# ----------------------------
+# Start composition
+# ----------------------------
+
+- name: Start Docker Compose project
+  community.docker.docker_compose_v2:
+    project_src: "{{ composition_root }}"
+    state: present
+    build: always
+    remove_orphans: true
+  notify: Restart Traefik
