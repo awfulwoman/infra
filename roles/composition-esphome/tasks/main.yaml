@@ -47,12 +47,9 @@
     - device-sensor-atmosphere-ext
     - kc868-a16
 
-- name: Template shared ESPHome boilerplate packages
-  # These are the canonical files also published at the repo-root esphome/
-  # directory for devices outside this Ansible-managed fleet (see
-  # esphome/README.md) - not duplicated here, just deployed from there.
+- name: Template ESPHome packages
   ansible.builtin.template:
-    src: "{{ role_path }}/../../esphome/packages/{{ item }}"
+    src: "esphome/packages/{{ item }}"
     dest: "{{ composition_config }}/esphome/packages/{{ item }}"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
@@ -63,14 +60,6 @@
     - ota.yaml
     - wifi.yaml
     - time.yaml
-
-- name: Template device-specific ESPHome packages
-  ansible.builtin.template:
-    src: "esphome/packages/{{ item }}"
-    dest: "{{ composition_config }}/esphome/packages/{{ item }}"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-  loop:
     - buzzer.yaml
 
 - name: Copy fonts

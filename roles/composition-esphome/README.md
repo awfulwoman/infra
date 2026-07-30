@@ -16,9 +16,38 @@ packages:
   api: !include packages/api.yaml
 ```
 
-These packages are the same ones published at the top-level [`esphome/packages/`](../../esphome/README.md) in this repo, which remains the source for any device *outside* this Ansible-managed fleet that still pulls them via the `remote_package:` URL mechanism. `packages/buzzer.yaml`, however, is device-fleet-specific (RTTTL tunes) and isn't part of that shared boilerplate, so it's copied as a static file straight into the ESPHome config's `packages/` directory instead.
+These packages live in `templates/esphome/packages/` and are deployed alongside the device configs to `{{ composition_config }}/esphome/packages/`, so the `!include` paths resolve inside the container's `/config` mount. This used to be a separately-published top-level `esphome/` directory that outside devices could pull via a `remote_package:` GitHub URL fetch; that mechanism has been retired now that every known device is managed by this role — everything now deploys from, and only from, this role.
 
-`device-controller-projector.yaml` is fully self-contained (no shared packages) — it was authored directly in the ESPHome dashboard and carries its own inline `api`/`ota` credentials, which are still vaulted here (`vault_esphome_projector_api_key`, `vault_esphome_projector_ota_password`).
+`packages/buzzer.yaml` (RTTTL tunes) is device-fleet-specific rather than shared ESPHome boilerplate, but is deployed the same way.
+
+`device-controller-projector.yaml` is fully self-contained (no shared packages) — it was authored directly in the ESPHome dashboard and carries its own inline `api`/`ota` credentials, which are still vaulted here (`vault_esphome_projector_api_key`, `vault_esphome_projector_ota_password`). Its RS-232 protocol is documented in [`VIEWSONIC-PROJECTOR-COMMANDS.md`](VIEWSONIC-PROJECTOR-COMMANDS.md).
+
+### Authoring a new device
+
+New device configs should set these substitutions and import whichever packages they need:
+
+```yaml
+substitutions:
+  secret_api_key: !secret api_key
+  secret_ota_password: !secret ota_password
+  secret_wifi_ssid: !secret wifi_ssid
+  secret_wifi_password: !secret wifi_password
+  secret_wifi_domain: !secret wifi_domain
+  name: "device-some-name"
+  friendly_name: "Human Readable Name"
+  comment: "What this device does"
+  area: "Living Room"
+  board: "nodemcu-32s"
+
+packages:
+  esphome: !include packages/esphome.yaml
+  logger: !include packages/logger.yaml
+  api: !include packages/api.yaml
+  ota: !include packages/ota.yaml
+  wifi: !include packages/wifi.yaml
+```
+
+Packages can't see Ansible substitutions directly — only `!secret` — which is why `secrets.yaml` exists as the bridge between vaulted Ansible variables and ESPHome's own config format.
 
 ## Secrets
 

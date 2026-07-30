@@ -78,9 +78,9 @@ GitOps-based cluster management for the "workloads" cluster:
 
 The Flux/Kubernetes cluster (`flux/`) is experimental, and should be ignored for now.
 
-### ESPHome (`esphome/`)
+### ESPHome (`roles/composition-esphome/`)
 
-Configuration for embedded devices. Uses a package-based system where device configs import from `esphome/packages/` (`esphome.yaml`, `wifi.yaml`, `logger.yaml`, `ota.yaml`, `api.yaml`, `time.yaml`).
+Configuration for embedded devices, deployed by the `composition-esphome` role. Device configs (`templates/esphome/`) import shared boilerplate as local packages (`templates/esphome/packages/`: `esphome.yaml`, `wifi.yaml`, `logger.yaml`, `ota.yaml`, `api.yaml`, `time.yaml`).
 
 Devices must define substitutions for secrets since secrets can't be used inside imported code.
 
