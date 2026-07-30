@@ -1,0 +1,152 @@
+substitutions:
+  secret_api_key: !secret api_key
+  secret_ota_password: !secret ota_password
+  secret_wifi_ssid: !secret wifi_ssid
+  secret_wifi_password: !secret wifi_password
+  secret_wifi_domain: !secret wifi_domain
+  name: "device-controller-audiovisual"
+  friendly_name: "AV Controller"
+  comment: "Infrared controller for Hifi"
+  area: "Living Room"
+  board: "nodemcu-32s"
+
+# Boilerplate import
+packages:
+  esphome: !include packages/esphome.yaml
+  logger: !include packages/logger.yaml
+  api: !include packages/api.yaml
+  ota: !include packages/ota.yaml
+  wifi: !include packages/wifi.yaml
+
+esp32:
+  framework:
+    type: esp-idf
+
+bluetooth_proxy:
+
+## KY-022 infrared receiver
+# remote_receiver:
+#   pin:
+#     number: GPIO23
+#     inverted: True
+#     mode: INPUT_PULLUP
+#   dump: raw
+
+# Infrared Transmitter
+remote_transmitter:
+  pin: GPIO21
+  # Infrared remotes use a 50% carrier signal
+  carrier_duty_percent: 50%
+
+binary_sensor:
+  - platform: homeassistant
+    name: "Hifi Ping"
+    entity_id: binary_sensor.hifi
+    id: hifi_ping
+
+switch:
+  - platform: template
+    name: Hifi Power
+    icon: mdi:audio-video
+    restore_mode: DISABLED
+    turn_on_action:
+      - remote_transmitter.transmit_raw:
+          carrier_frequency: 38kHz
+          code: [9007, -4508, 555, -1692, 555, -570, 554, -1692, 555, -572, 552, -594, 529, -595, 529, -571, 552, -1694, 554, -570, 553, -1695, 553, -570, 553, -1690, 558, -593, 530, -1693, 554, -1694, 555, -572, 551, -1693, 555, -1693, 555, -1693, 554, -571, 554, -1692, 555, -594, 529, -594, 530, -1691, 557, -569, 554, -594, 529, -572, 552, -1693, 554, -593, 531, -1693, 555, -1690, 557, -594, 530]
+    turn_off_action:
+      - remote_transmitter.transmit_raw:
+          carrier_frequency: 38kHz
+          code: [9007, -4508, 555, -1692, 555, -570, 554, -1692, 555, -572, 552, -594, 529, -595, 529, -571, 552, -1694, 554, -570, 553, -1695, 553, -570, 553, -1690, 558, -593, 530, -1693, 554, -1694, 555, -572, 551, -1693, 555, -1693, 555, -1693, 554, -571, 554, -1692, 555, -594, 529, -594, 530, -1691, 557, -569, 554, -594, 529, -572, 552, -1693, 554, -593, 531, -1693, 555, -1690, 557, -594, 530]
+    lambda: !lambda |-
+      if (id(hifi_ping).state) {
+        return true;
+      } else {
+        return false;
+      }
+
+button:
+  - platform: template
+    name: Hifi Volume Increase
+    icon: mdi:volume-plus
+    on_press:
+      - remote_transmitter.transmit_raw:
+          carrier_frequency: 38kHz
+          code: [9007, -4510, 555, -1694, 554, -572, 552, -1693, 555, -570, 553, -573, 551, -571, 553, -571, 552, -1694, 554, -570, 553, -1693, 555, -571, 553, -1695, 552, -594, 530, -1694, 554, -1692, 556, -572, 552, -1692, 556, -1692, 555, -1695, 554, -1691, 556, -1694, 553, -595, 530, -572, 551, -1692, 557, -572, 551, -594, 530, -572, 552, -593, 530, -573, 550, -1693, 555, -1693, 554, -594, 530]
+  - platform: template
+    name: Hifi Volume Decrease
+    icon: mdi:volume-minus
+    on_press:
+      - remote_transmitter.transmit_raw:
+          carrier_frequency: 38kHz
+          code: [8983, -4530, 556, -1693, 555, -571, 552, -1693, 555, -573, 550, -572, 552, -570, 553, -571, 552, -1693, 555, -594, 529, -1693, 555, -569, 554, -1693, 555, -594, 530, -1692, 556, -1692, 554, -571, 554, -593, 530, -1692, 555, -1692, 556, -1693, 555, -1692, 554, -572, 553, -593, 530, -1692, 555, -1692, 556, -594, 530, -569, 576, -547, 555, -593, 530, -1692, 577, -1670, 579, -570, 531]
+
+
+
+
+
+
+
+
+# # 433 Receiver
+# remote_receiver:
+#   pin: GPIO22
+#   # dump: raw
+#   dump:
+#       - rc_switch
+#   tolerance: 100%
+#   filter: 250us
+#   idle: 4ms
+#   buffer_size: 2kb
+
+# # 433 Transmitter
+# remote_transmitter:
+#   pin: GPIO21
+#   carrier_duty_percent: 100%
+
+# switch:
+#   - platform: template
+#     name: Screen down
+#     turn_on_action:
+#       - remote_transmitter.transmit_rc_switch_raw:
+#           code: '00000000'
+#           protocol: 2
+#       - remote_transmitter.transmit_rc_switch_raw:
+#           code: '00001000000000000000000'
+#           protocol: 1
+#       - remote_transmitter.transmit_rc_switch_raw:
+#           code: '00000000'
+#           protocol: 1
+#       - remote_transmitter.transmit_rc_switch_raw:
+#           code: '000000000000000000000'
+#           protocol: 1
+#       - remote_transmitter.transmit_rc_switch_raw:
+#           code: '00000000000000000000000'
+#           protocol: 1
+#       - remote_transmitter.transmit_rc_switch_raw:
+#           code: '0000000001000'
+#           protocol: 6
+#       - remote_transmitter.transmit_rc_switch_raw:
+#           code: '00000000000000000000000'
+#           protocol: 1
+
+# [18:04:45][D][remote.rc_switch:261]: Received RCSwitch Raw: protocol=2 data='00000000'
+# [18:04:48][D][remote.rc_switch:261]: Received RCSwitch Raw: protocol=1 data='00001000000000000000000'
+# [18:04:48][D][remote.rc_switch:261]: Received RCSwitch Raw: protocol=1 data='00000000'
+# [18:04:48][D][remote.rc_switch:261]: Received RCSwitch Raw: protocol=1 data='000000000000000000000'
+# [18:04:49][D][remote.rc_switch:261]: Received RCSwitch Raw: protocol=1 data='00000000000000000000000'
+# [18:04:49][D][remote.rc_switch:261]: Received RCSwitch Raw: protocol=6 data='0000000001000'
+# [18:04:49][D][remote.rc_switch:261]: Received RCSwitch Raw: protocol=1 data='00000000000000000000000'
+
+
+  # - platform: template
+  #   name: Screen up
+  #   turn_on_action:
+  #     - remote_transmitter.transmit_rc_switch_raw:
+  #         code: '11000101010'
+  #         protocol: 7
+  # - platform: template
+  #   name: Screen stop
+  #   turn_on_action:
+  #     - remote_transmitter.transmit_rc_switch_raw:
+  #         code: '001000101010110001001000001000101010110000010001010'
+  #         protocol: 7

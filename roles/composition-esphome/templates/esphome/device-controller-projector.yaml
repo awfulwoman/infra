@@ -1,0 +1,130 @@
+substitutions:
+  name: device-controller-projector
+  friendly_name: Projector Controller
+
+esphome:
+  name: ${name}
+  includes:
+    - uart_read_line_sensor.h
+
+esp32:
+  board: nodemcu-32s
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+  level: VERBOSE # makes uart stream available in esphome logstream
+  baud_rate: 0 # disable logging over uart
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "{{ vault_esphome_projector_api_key }}"
+
+ota:
+  password: "{{ vault_esphome_projector_ota_password }}"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  domain: .i.affordablepotatoes.com
+
+captive_portal:
+
+uart:
+  tx_pin: 22
+  rx_pin: 23
+  # tx_pin: 21
+  # rx_pin: 22
+  baud_rate: 115200
+  # baud_rate: 9600
+  data_bits: 8
+  parity: NONE
+  id: external_uart
+  stop_bits: 1
+
+  debug:
+    direction: BOTH
+    dummy_receiver: false
+    after:
+        bytes: 4
+    sequence:
+      - lambda: |-
+          UARTDebug::log_int(direction, bytes, ',');
+    # UARTDebug::log_hex(direction, bytes, ':');
+
+
+# switch:
+#   - platform: uart
+#     uart_id: external_uart
+#     name: "Power"
+#     data: [0x06, 0x14, 0x00, 0x04, 0x00, 0x34, 0x11, 0x00, 0x00, 0x5D]
+#     icon: "mdi:power"
+
+# Get Projector Status
+# GET: 0x07 0x14 0x00 0x05 0x00 0x34 0x00 0x00 0x11 0x26 0x84
+
+# Returned Projector status
+# Warm up :0x05 0x14 0x00 0x03 0x00 0x00 0x00 0x01 0x18
+# Cool down :0x05 0x14 0x00 0x03 0x00 0x00 0x00 0x03 0x1A
+# Power On :0x05 0x14 0x00 0x03 0x00 0x00 0x00 0x02 0x19
+# Power Down :0x05 0x14 0x00 0x03 0x00 0x00 0x00 0x00 0x17
+
+# Power status
+# GET: 0x06 0x14 0x00 0x04 0x00 0x34 0x11 0x00 0x00 0x5D
+
+# Returned
+# ON: 0x05 0x14 0x00 0x03 0x00 0x00 0x00 0x01 0x18
+# OFF: 0x05 0x14 0x00 0x03 0x00 0x00 0x00 0x00 0x17
+
+text_sensor:
+  - platform: custom
+    lambda: |-
+      auto my_custom_sensor = new UartReadLineSensor(id(external_uart));
+      App.register_component(my_custom_sensor);
+      return {my_custom_sensor};
+    text_sensors:
+      name: "Uart Readline"
+      internal: False
+      id: "uart_readline"
+      on_value:
+        then:
+          - lambda: |-
+              ESP_LOGD("main", "VALUE: %s", x.c_str());
+
+
+switch:
+  - platform: template
+    name: "Power"
+    lambda: |-
+      if (id(uart_readline).state == "[0x05, 0x14, 0x00, 0x03, 0x00, 0x00, 0x00, 0x01, 0x18]") {
+        return true;
+      } else if(id(uart_readline).state == "0x051400030000000017") {
+        return false;
+      } else {
+        return {};
+      }
+    turn_on_action:
+      - uart.write: [0x06, 0x14, 0x00, 0x04, 0x00, 0x34, 0x11, 0x00, 0x00, 0x5D]
+    turn_off_action:
+      - uart.write: [0x06, 0x14, 0x00, 0x04, 0x00, 0x34, 0x11, 0x00, 0x00, 0x5E]
+
+interval:
+  - interval: 10s
+    then:
+      # Power status
+      # 0x07 0x14 0x00 0x05 0x00 0x34 0x00 0x00 0x11 0x00 0x5E
+      - uart.write:
+          id: external_uart
+          data: [0x07, 0x14, 0x00, 0x05, 0x00, 0x34, 0x00, 0x00, 0x11, 0x00, 0x5E]
+
+
+
+
+# switch:
+#   - platform: uart
+#     uart_id: external_uart
+#     name: "Power"
+#     data: [0x06, 0x14, 0x00, 0x04, 0x00, 0x34, 0x11, 0x00, 0x00, 0x5D]
+#     icon: "mdi:power"

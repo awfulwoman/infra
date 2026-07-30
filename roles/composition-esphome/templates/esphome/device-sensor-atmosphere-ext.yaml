@@ -1,0 +1,80 @@
+substitutions:
+  secret_api_key: !secret api_key
+  secret_ota_password: !secret ota_password
+  secret_wifi_ssid: !secret wifi_ssid
+  secret_wifi_password: !secret wifi_password
+  secret_ap_password: !secret ap_password
+  secret_wifi_domain: !secret wifi_domain
+  name: "device-sensor-atmosphere-ext"
+  friendly_name: "Outdoors atmosphere"
+  comment: "Atmospheric sensor on balcony"
+  area: "Living Room"
+  board: "nodemcu-32s"
+
+packages:
+  esphome: !include packages/esphome.yaml
+  wifi: !include packages/wifi.yaml
+  ota: !include packages/ota.yaml
+  api: !include packages/api.yaml
+logger:
+  logs:
+    switch: NONE # https://community.home-assistant.io/t/how-to-disable-esphome-logger-for-just-one-switch/405095/5
+
+
+esp32:
+  framework:
+    type: esp-idf
+
+# -----------------------------------------
+# SENSORS
+# -----------------------------------------
+
+# https://esphome.io/components/i2c.html#i2c
+i2c:
+  sda: 21
+  scl: 22
+  scan: true
+sensor:
+  # https://esphome.io/components/sensor/bme280.html
+  - platform: bme280_i2c
+    temperature:
+      name: "Temperature"
+      oversampling: 16x
+    pressure:
+      name: "Pressure"
+    humidity:
+      name: "Humidity"
+    address: 0x76
+    update_interval: 15s
+  # https://esphome.io/components/sensor/bh1750.html
+  - platform: bh1750
+    name: "Lux"
+    address: 0x23
+    update_interval: 60s
+# binary_sensor:
+  - platform: adc
+    pin: 36
+    name: "Raining"
+    icon: "mdi:water"
+    update_interval: 60s
+    # filters:
+    #   invert:
+switch:
+  - platform: gpio
+    pin:
+      number: 25
+      mode: output
+    id: greenLED
+
+# interval:
+ # - interval: 10000ms
+ #   then:
+ #     - switch.toggle: greenLED
+
+
+interval:
+  - interval: 30000ms
+    then:
+      - switch.turn_on: greenLED
+      - delay: 100ms
+      - switch.turn_off: greenLED

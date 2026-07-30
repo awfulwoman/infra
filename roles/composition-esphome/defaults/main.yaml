@@ -1,0 +1,11 @@
+# Composition name (used by composition-common dependency)
+composition_name: esphome
+
+composition_esphome_subdomains:
+  - esphome
+
+# Not a secret - legacy internal search domain, also referenced as a DNAME
+# alias in host_vars/router-4gb-bertha/core.yaml. ESPHome devices can't use
+# substitutions inside imported packages, so this is passed through as a
+# templated !secret instead.
+composition_esphome_wifi_domain: ".i.affordablepotatoes.com"

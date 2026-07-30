@@ -1,0 +1,58 @@
+substitutions:
+  secret_api_key: !secret api_key
+  secret_ota_password: !secret ota_password
+  secret_wifi_ssid: !secret wifi_ssid
+  secret_wifi_password: !secret wifi_password
+  secret_wifi_domain: !secret wifi_domain
+  name: "device-display-charlie-work"
+  friendly_name: "Matrix Display"
+  comment: "Time and Work State"
+  area: "Living Room"
+  board: "nodemcu-32s"
+
+# Boilerplate import
+packages:
+  esphome: !include packages/esphome.yaml
+  logger: !include packages/logger.yaml
+  api: !include packages/api.yaml
+  ota: !include packages/ota.yaml
+  wifi: !include packages/wifi.yaml
+  time: !include packages/time.yaml
+
+##########
+# globals:
+#   - id: display_message
+#     type: std::string
+#     initial_value: 'Meeting'
+
+spi:
+  clk_pin: GPIO23
+  mosi_pin: GPIO22
+
+display:
+  - platform: max7219digit
+    cs_pin: GPIO19
+    num_chips: 4
+    intensity: 1
+    scroll_enable: false
+    rotate_chip: 0
+    reverse_enable: false
+    # lambda: |-
+    #   it.strftime(0, 0, id(digit_font), "%H:%M", id(hass_time).now());
+
+    lambda: |-
+      if (id(matrix_text).has_state() && id(matrix_text).state != "unknown" && id(matrix_text).state != "") {
+        it.printf(0, 0, id(digit_font), "%s", id(matrix_text).state.c_str());
+      } else {
+        it.strftime(0, 0, id(digit_font), "%H:%M", id(sntp_time).now());
+      }
+font:
+  - file: "fonts/pixelmix.ttf"
+    id: digit_font
+    size: 8
+
+text_sensor:
+  - platform: homeassistant
+    name: "Matrix Text"
+    id: matrix_text
+    entity_id: input_text.matrix_text

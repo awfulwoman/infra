@@ -27,7 +27,6 @@
     loop_var: dir_item
   loop:
     - media
-    - esphome
     - homeassistant
 
 - name: Copy over HA config files

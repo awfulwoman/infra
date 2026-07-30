@@ -1,0 +1,141 @@
+substitutions:
+  secret_api_key: !secret api_key
+  secret_ota_password: !secret ota_password
+  secret_wifi_ssid: !secret wifi_ssid
+  secret_wifi_password: !secret wifi_password
+  name: "kc868-a16"
+  friendly_name: "Kincony KC868-A16"
+  comment: "A board of many inputs"
+  area: "Living Room"
+
+# Boilerplate import
+packages:
+  esphome: !include packages/esphome.yaml
+  logger: !include packages/logger.yaml
+  api: !include packages/api.yaml
+  ota: !include packages/ota.yaml
+
+ethernet:
+  type: LAN8720
+  mdc_pin: GPIO23
+  mdio_pin: GPIO18
+  clk_mode: GPIO17_OUT
+  phy_addr: 0
+
+  manual_ip:
+    static_ip: 192.168.1.15
+    gateway: 192.168.1.1
+    subnet: 255.255.255.0
+
+
+# Application Specific Config
+i2c:
+  sda: 4
+  scl: 5
+  scan: true
+  id: bus_a
+
+uart:
+  - id: rs485
+    tx_pin: GPIO13
+    rx_pin: GPIO16
+    baud_rate: 9600
+
+# Example configuration entry
+pcf8574:
+  - id: 'pcf8574_hub_in_1'  # for input channel 1-8
+    address: 0x21
+
+  - id: 'pcf8574_hub_in_2'  # for input channel 9-16
+    address: 0x22
+
+  - id: 'pcf8574_hub_out_1'  # for output channel 1-8
+    address: 0x24
+
+  - id: 'pcf8574_hub_out_2'  # for output channel 9-16
+    address: 0x25
+
+# Individual outputs
+
+binary_sensor:
+  - platform: gpio
+    name: "Switch 1"
+    pin:
+      pcf8574: pcf8574_hub_in_2
+      number: 1
+      # One of INPUT or OUTPUT
+      mode: INPUT
+      inverted: false
+
+
+  - platform: gpio
+    name: "Water"
+    pin:
+      pcf8574: pcf8574_hub_in_2
+      # Use pin number 0
+      number: 0
+      # One of INPUT or OUTPUT
+      mode: INPUT
+      inverted: true
+
+
+
+switch:
+  - platform: gpio
+    name: "Relay Test"
+    id: relay_1
+    pin:
+      pcf8574: pcf8574_hub_out_1
+      number: 0
+      mode: OUTPUT
+      inverted: true
+
+  - platform: gpio
+    name: "LED Test"
+    id: relay_7
+    pin:
+      pcf8574: pcf8574_hub_out_1
+      number: 6
+      mode: OUTPUT
+      inverted: true
+
+  - platform: gpio
+    name: "Siren Test"
+    id: relay_8
+    pin:
+      pcf8574: pcf8574_hub_out_1
+      number: 7
+      mode: OUTPUT
+      inverted: true
+
+
+sensor:
+  - platform: sdm_meter
+    phase_a:
+      current:
+        name: "SDM630 Current"
+      voltage:
+        name: "SDM630 Voltage"
+      active_power:
+        name: "SDM630 Power"
+      power_factor:
+        name: "SDM630 Power Factor"
+      apparent_power:
+        name: "SDM630 Apparent Power"
+      reactive_power:
+        name: "SDM630 Reactive Power"
+      phase_angle:
+        name: "SDM630 Phase Angle"
+    frequency:
+      name: "SDM630 Frequency"
+    total_power:
+      name: "SDM630 Total Power"
+    import_active_energy:
+      name: "SDM630 Import Active Energy"
+    export_active_energy:
+      name: "SDM630 Export Active Energy"
+    import_reactive_energy:
+      name: "SDM630 Import Reactive Energy"
+    export_reactive_energy:
+      name: "SDM630 Export Reactive Energy"
+    update_interval: 60s

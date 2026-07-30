@@ -1,0 +1,112 @@
+# code: language=ansible
+- name: "Create compose file"
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ composition_root }}/docker-compose.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
+- name: "Create .env file"
+  ansible.builtin.template:
+    src: environment_vars.j2
+    dest: "{{ composition_root }}/.environment_vars"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
+- name: Create directories
+  ansible.builtin.file:
+    path: "{{ composition_config }}/{{ dir_item }}"
+    state: directory
+  loop_control:
+    loop_var: dir_item
+  loop:
+    - esphome
+    - esphome/packages
+    - esphome/fonts
+
+- name: Template secrets.yaml
+  ansible.builtin.template:
+    src: esphome/secrets.yaml
+    dest: "{{ composition_config }}/esphome/secrets.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0640'
+
+- name: Template device configs
+  ansible.builtin.template:
+    src: "esphome/{{ device_config_file }}.yaml"
+    dest: "{{ composition_config }}/esphome/{{ device_config_file }}.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+  loop_control:
+    loop_var: device_config_file
+  loop:
+    - device-controller-audiovisual
+    - device-controller-projector
+    - device-display-charlie-work
+    - device-sensor-atmosphere-ext
+    - kc868-a16
+
+- name: Template shared ESPHome boilerplate packages
+  # These are the canonical files also published at the repo-root esphome/
+  # directory for devices outside this Ansible-managed fleet (see
+  # esphome/README.md) - not duplicated here, just deployed from there.
+  ansible.builtin.template:
+    src: "{{ role_path }}/../../esphome/packages/{{ item }}"
+    dest: "{{ composition_config }}/esphome/packages/{{ item }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+  loop:
+    - esphome.yaml
+    - logger.yaml
+    - api.yaml
+    - ota.yaml
+    - wifi.yaml
+    - time.yaml
+
+- name: Template device-specific ESPHome packages
+  ansible.builtin.template:
+    src: "esphome/packages/{{ item }}"
+    dest: "{{ composition_config }}/esphome/packages/{{ item }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+  loop:
+    - buzzer.yaml
+
+- name: Copy fonts
+  ansible.builtin.copy:
+    src: "esphome/fonts/{{ item }}"
+    dest: "{{ composition_config }}/esphome/fonts/{{ item }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+  loop:
+    - pixelmix.ttf
+    - pixelmix_bold.ttf
+
+- name: Template C++ includes
+  ansible.builtin.template:
+    src: "esphome/{{ item }}"
+    dest: "{{ composition_config }}/esphome/{{ item }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+  loop:
+    - uart_read_line_sensor.h
+    - viewsonic_projector.h
+
+- name: Run Configure DNS role
+  ansible.builtin.include_role:
+    name: "network-register-subdomain"
+  vars:
+    configure_dns_subdomains: "{{ composition_esphome_subdomains }}"
+
+# ----------------------------
+# Start composition
+# ----------------------------
+
+- name: Start Docker Compose project
+  community.docker.docker_compose_v2:
+    project_src: "{{ composition_root }}"
+    state: present
+    build: always
+    remove_orphans: true
+  notify: Restart Traefik

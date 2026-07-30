@@ -37,6 +37,8 @@
     tags: [composition, composition-homeassistant]
   - role: composition-homeassistant-personal
     tags: [composition, composition-homeassistant-personal]
+  - role: composition-esphome
+    tags: [composition, composition-esphome]
   - role: composition-matter
     tags: [composition, composition-matter]
   - role: composition-owntracks

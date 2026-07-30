@@ -4,4 +4,3 @@ composition_name: homeassistant
 composition_homeassistant_subdomains:
   - homeassistant
   - ha
-  - esphome
