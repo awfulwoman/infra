@@ -66,6 +66,35 @@
     - not ansible_check_mode
     - system_apple_calendar_server_keychain_password | length > 0
 
+- name: "Stat the signing cert on disk"
+  ansible.builtin.stat:
+    path: "{{ ansible_facts.user_dir }}/.local/state/apple-calendar-server/signing-cert.pem"
+  register: calendar_signing_cert
+
+- name: "Check if signing cert is already trusted (System keychain)"
+  ansible.builtin.command:
+    cmd: security find-certificate -c awfulwoman-apple-calendar-server-signing /Library/Keychains/System.keychain
+  register: calendar_cert_trusted
+  changed_when: false
+  failed_when: false
+
+# A self-signed codesigning cert isn't trusted by default, so codesign refuses to
+# use it ("no identity found"). Trust it in the admin domain (needs root, hence
+# become) — the private key stays in the user's login keychain; only the public
+# cert is added, scoped to the code-signing policy.
+- name: "Trust signing cert for code signing (admin domain)"
+  become: true
+  ansible.builtin.command:
+    cmd: >
+      security add-trusted-cert -d -r trustRoot -p codeSign
+      -k /Library/Keychains/System.keychain
+      {{ ansible_facts.user_dir }}/.local/state/apple-calendar-server/signing-cert.pem
+  changed_when: true
+  when:
+    - not ansible_check_mode
+    - calendar_signing_cert.stat.exists
+    - calendar_cert_trusted.rc != 0
+
 - name: "Re-sign interpreter with the stable identity"
   ansible.builtin.command:
     cmd: ./scripts/sign_runtime.sh
