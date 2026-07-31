@@ -1,0 +1,30 @@
+---
+system_apple_calendar_server_repo: awfulwoman/apple-calendar-server
+system_apple_calendar_server_git_host: github.com
+system_apple_calendar_server_repo_version: HEAD
+system_apple_calendar_server_repo_update: true
+system_apple_calendar_server_repo_dir: "{{ system_repos_base_dir }}/awfulwoman/apple-calendar-server"
+system_apple_calendar_server_plist_label: com.awfulwoman.apple-calendar-server
+
+system_apple_calendar_server_host: 127.0.0.1
+system_apple_calendar_server_port: 4101
+system_apple_calendar_server_default_calendar: Calendar
+system_apple_calendar_server_db_path: "{{ ansible_facts.user_dir }}/.local/state/apple-calendar-server/meta.db"
+
+# Default window for GET /events when the client sends no start/end (EventKit has
+# no all-events query, so listing is always over a bounded range).
+system_apple_calendar_server_window_past_days: 30
+system_apple_calendar_server_window_future_days: 365
+
+# Shared with composition-gateway, which authenticates to this same service.
+# NOTE: add vault_gateway_calendar_server_token to the vault before running.
+system_apple_calendar_server_bearer_tokens: "{{ vault_gateway_calendar_server_token }}"
+
+# Login-keychain password, needed ONLY the first time the signing cert is
+# provisioned (to run `security set-key-partition-list` non-interactively so
+# codesign can later use the key headlessly). After the cert exists this is
+# unused. Set in Malcolm's host_vars from vault, e.g.
+#   system_apple_calendar_server_keychain_password: "{{ vault_password }}"
+# Left empty: cert provisioning is skipped and must be run by hand once
+# (scripts/setup_signing_cert.sh on Malcolm) — signing on later deploys still works.
+system_apple_calendar_server_keychain_password: ""
