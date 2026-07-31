@@ -22,11 +22,13 @@ image targets — no macOS-only capability gap versus the previous launchd-on-ma
 deployment (it used to depend on `pyobjc`, unavailable in the container; it's now
 CardDAV, so it isn't).
 
-Reminders are backed by
-[`system-apple-reminders-server`](../system-apple-reminders-server), running natively
-on **Malcolm**, a different host — EventKit needs a macOS GUI session for the
-Reminders permission grant, so unlike Contacts this can't move into the container.
-Gateway reaches it over Tailscale MagicDNS, not the shared Docker network.
+Reminders and Calendar are backed by
+[`system-apple-reminders-server`](../system-apple-reminders-server) and
+[`system-apple-calendar-server`](../system-apple-calendar-server), both running
+natively on **Malcolm**, a different host — EventKit needs a macOS GUI session for
+the Reminders/Calendar permission grant, so unlike Contacts these can't move into
+the container. Gateway reaches both over Tailscale MagicDNS, not the shared Docker
+network. Calendar replaces the previous Google Calendar OAuth backend.
 
 Obsidian notes/issues tools read/write a vault bind-mounted from the host — this role
 does **not** sync that vault itself. Run
@@ -39,7 +41,8 @@ point `composition_gateway_obsidian_vault_path` at its synced vault path.
 |----------|---------|-------------|
 | `composition_gateway_obsidian_vault_path` | *(none — required)* | Host path to a synced Obsidian vault, bind-mounted at `/vault` |
 | `composition_gateway_imap_host/username/password` | mailbox.org + vault creds | IMAP account for the Email tool |
-| `composition_gateway_gcal_token_json` | `vault_gateway_gcal_token_json` | Google Calendar OAuth credentials JSON (see gateway repo's README for bootstrap) |
+| `composition_gateway_calendar_server_base_url` | Malcolm's Tailscale MagicDNS name, port 4101 | apple-calendar-server backend for Calendar (see `system-apple-calendar-server`) |
+| `composition_gateway_calendar_server_bearer_token` | `vault_gateway_calendar_server_token` | Shared secret with `system-apple-calendar-server` |
 | `composition_gateway_karakeep_base_url/api_key` | karakeep subdomain + vault key | Karakeep bookmarking service |
 | `composition_gateway_owntracks_*` | owntracks-recorder subdomain | Location tool |
 | `composition_gateway_reminders_api_tokens` | `vault_gateway_reminders_api_token_iphone` | Bearer tokens for `/v1/*` (device clients) |
