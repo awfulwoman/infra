@@ -99,6 +99,8 @@
   ansible.builtin.command:
     cmd: ./scripts/sign_runtime.sh
     chdir: "{{ system_apple_reminders_server_repo_dir }}"
+  environment:
+    KEYCHAIN_PASSWORD: "{{ system_apple_reminders_server_keychain_password }}"
   changed_when: false
   when: not ansible_check_mode
 
