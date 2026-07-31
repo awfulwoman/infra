@@ -79,16 +79,16 @@
   failed_when: false
 
 # A self-signed codesigning cert isn't trusted by default, so codesign refuses to
-# use it ("no identity found"). Trust it in the admin domain (needs root, hence
-# become) — the private key stays in the user's login keychain; only the public
-# cert is added, scoped to the code-signing policy.
-- name: "Trust signing cert for code signing (admin domain)"
+# use it ("no identity found"). macOS blocks setting trust settings over SSH even
+# as root, so trust_signing_cert.sh briefly relaxes the trust-settings auth right,
+# adds the trusted cert (admin domain), and restores the right. become = root;
+# the private key stays in the user's login keychain, only the public cert is
+# trusted, scoped to codeSign.
+- name: "Trust signing cert for code signing (headless, admin domain)"
   become: true
   ansible.builtin.command:
-    cmd: >
-      security add-trusted-cert -d -r trustRoot -p codeSign
-      -k /Library/Keychains/System.keychain
-      {{ ansible_facts.user_dir }}/.local/state/apple-reminders-server/signing-cert.pem
+    cmd: ./scripts/trust_signing_cert.sh {{ ansible_facts.user_dir }}/.local/state/apple-reminders-server/signing-cert.pem
+    chdir: "{{ system_apple_reminders_server_repo_dir }}"
   changed_when: true
   when:
     - not ansible_check_mode
