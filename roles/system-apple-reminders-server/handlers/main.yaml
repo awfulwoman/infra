@@ -1,0 +1,5 @@
+---
+- name: Reload apple-reminders-server launchd agent
+  ansible.builtin.shell: >
+    launchctl bootout gui/$(id -u) {{ ansible_facts.user_dir }}/Library/LaunchAgents/{{ system_apple_reminders_server_plist_label }}.plist 2>/dev/null || true &&
+    launchctl bootstrap gui/$(id -u) {{ ansible_facts.user_dir }}/Library/LaunchAgents/{{ system_apple_reminders_server_plist_label }}.plist

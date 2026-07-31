@@ -10,17 +10,23 @@ Serves two surfaces on one port (4000), fronted by a single Traefik router:
 - `/v1/*` — the native reminders JSON-HTTP API for phone/iPad clients, auth via
   `composition_gateway_reminders_api_tokens`.
 
-Reminders and Contacts are backed by [`composition-radicale`](../composition-radicale)
-(CalDAV/CardDAV) — **not** a role dependency (nesting it in `meta/main.yaml` clobbers
-this role's own `composition_root`/`composition_config` facts, redirecting this role's
-compose file into Radicale's directory — see the comment in `meta/main.yaml` if
-tempted to add it back). Ordering is instead guaranteed by `core.yaml` listing
-`composition-radicale` before `composition-gateway`; keep it that way. Gateway reaches
-it over the shared Docker network by container name (`http://radicale:5232`); Radicale
-is never exposed to Gateway's own clients directly. Both tool groups work identically
-on every platform this image targets — there's no more macOS-only capability gap versus
-the previous launchd-on-macOS deployment (Contacts used to depend on `pyobjc`,
-unavailable in the container; it's now CardDAV, so it isn't).
+Contacts are backed by [`composition-radicale`](../composition-radicale) (CardDAV) —
+**not** a role dependency (nesting it in `meta/main.yaml` clobbers this role's own
+`composition_root`/`composition_config` facts, redirecting this role's compose file
+into Radicale's directory — see the comment in `meta/main.yaml` if tempted to add it
+back). Ordering is instead guaranteed by `core.yaml` listing `composition-radicale`
+before `composition-gateway`; keep it that way. Gateway reaches it over the shared
+Docker network by container name (`http://radicale:5232`); Radicale is never exposed
+to Gateway's own clients directly. Contacts work identically on every platform this
+image targets — no macOS-only capability gap versus the previous launchd-on-macOS
+deployment (it used to depend on `pyobjc`, unavailable in the container; it's now
+CardDAV, so it isn't).
+
+Reminders are backed by
+[`system-apple-reminders-server`](../system-apple-reminders-server), running natively
+on **Malcolm**, a different host — EventKit needs a macOS GUI session for the
+Reminders permission grant, so unlike Contacts this can't move into the container.
+Gateway reaches it over Tailscale MagicDNS, not the shared Docker network.
 
 Obsidian notes/issues tools read/write a vault bind-mounted from the host — this role
 does **not** sync that vault itself. Run
@@ -37,9 +43,10 @@ point `composition_gateway_obsidian_vault_path` at its synced vault path.
 | `composition_gateway_karakeep_base_url/api_key` | karakeep subdomain + vault key | Karakeep bookmarking service |
 | `composition_gateway_owntracks_*` | owntracks-recorder subdomain | Location tool |
 | `composition_gateway_reminders_api_tokens` | `vault_gateway_reminders_api_token_iphone` | Bearer tokens for `/v1/*` (device clients) |
-| `composition_gateway_radicale_base_url/username/password` | `http://radicale:5232` + shared `radicale_username`/`vault_radicale_password` | CalDAV/CardDAV backend for Reminders + Contacts (see `composition-radicale`) |
+| `composition_gateway_reminders_server_base_url` | Malcolm's Tailscale MagicDNS name, port 4100 | apple-reminders-server backend for Reminders (see `system-apple-reminders-server`) |
+| `composition_gateway_reminders_server_bearer_token` | `vault_gateway_reminders_server_token` | Shared secret with `system-apple-reminders-server` |
+| `composition_gateway_radicale_base_url/username/password` | `http://radicale:5232` + shared `radicale_username`/`vault_radicale_password` | CardDAV backend for Contacts (see `composition-radicale`) |
 | `composition_gateway_radicale_contacts_path` | `/{{ radicale_username }}/contacts/` | CardDAV addressbook collection |
-| `composition_gateway_radicale_default_list` | `Reminders` | CalDAV collection used when a reminder doesn't name a list |
 | `composition_gateway_server_auth_tokens` | `vault_gateway_mcp_token` | Bearer token(s) required on `/mcp` |
 
 ## Volumes

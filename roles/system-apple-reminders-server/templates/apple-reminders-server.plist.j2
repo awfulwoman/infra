@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>{{ system_apple_reminders_server_plist_label }}</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>{{ system_apple_reminders_server_repo_dir }}/.venv/bin/python3</string>
+        <string>-m</string>
+        <string>apple_reminders_server.main</string>
+    </array>
+    <key>WorkingDirectory</key>
+    <string>{{ system_apple_reminders_server_repo_dir }}</string>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>StandardOutPath</key>
+    <string>{{ system_apple_reminders_server_repo_dir }}/logs/apple-reminders-server.log</string>
+    <key>StandardErrorPath</key>
+    <string>{{ system_apple_reminders_server_repo_dir }}/logs/apple-reminders-server.err</string>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/usr/local/bin:/usr/bin:/bin:/opt/homebrew/bin</string>
+    </dict>
+</dict>
+</plist>

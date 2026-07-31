@@ -90,6 +90,15 @@ system_repos:
 system_repos_base_dir: "{{ ansible_facts.user_dir }}/Code"
 
 # -------------------------------------------------------------------
+# APPLE REMINDERS SERVER
+# -------------------------------------------------------------------
+# Login-keychain password, used only to headlessly provision the code-signing
+# cert that keeps the Reminders TCC grant stable. On macOS the login keychain is
+# unlocked with the account login password — the same secret already used for
+# ansible_become_password above.
+system_apple_reminders_server_keychain_password: "{{ vault_password }}"
+
+# -------------------------------------------------------------------
 # AUTOMATIONS
 # -------------------------------------------------------------------
 automation_infra_playbooks:
