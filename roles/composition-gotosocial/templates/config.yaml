@@ -465,15 +465,12 @@ instance-deliver-to-shared-inboxes: true
 # Default: false
 instance-inject-mastodon-version: false
 
-# String. 24hr time of day formatted as hh:mm.
-# Examples: ["14:30", "00:00", "04:00"]
-# Default: "23:00" (11pm).
-instance-subscriptions-process-from: "23:00"
-
-# Duration. Period between subscription updates.
-# Examples: ["24h", "72h", "12h"]
-# Default: "24h" (once per day).
-instance-subscriptions-process-every: "6h"
+# String. Cron expression (see https://crontab.guru/ for help) governing when
+# subscriptions are processed. Replaces the removed instance-subscriptions-process-from
+# (23:00) + instance-subscriptions-process-every (6h) pair — this expression
+# reproduces that same schedule: 23:00, 05:00, 11:00, 17:00 daily.
+# Default: "0 23 * * *" (once per day, at 11pm).
+instance-subscriptions-process-cron: "0 23,5,11,17 * * *"
 
 # String. Allows you to customize if and how stats are served to
 # crawlers at the /api/v1|v2/instance and /nodeinfo endpoints.
@@ -693,30 +690,23 @@ media-ffmpeg-pool-size: 1
 # what these settings do, with some customization examples, see the docs:
 # https://docs.gotosocial.org/en/latest/admin/media_caching#cleanup
 
-# Int. Number of days to cache media from remote instances before
-# they are removed from the cache. When remote media is removed from
-# the cache, it is deleted from storage but the database entries for
-# the media are kept so that it can be fetched again if requested by a user.
+# Human-readable duration. How long to cache media from remote instances before
+# they are removed from the cache. When remote media is removed from the cache,
+# it is deleted from storage but the database entries for the media are kept so
+# that it can be fetched again if requested by a user.
 #
 # If this is set to 0, then media from remote instances will be cached indefinitely.
 #
-# Examples: [30, 60, 7, 0]
-# Default: 7
-media-remote-cache-days: 7
+# Examples: ["7 days", "1 week", "1 month", 0]
+# Default: "7 days"
+media-remote-cache-duration: "7 days"
 
-# String. 24hr time of day formatted as hh:mm.
-# Examples: ["14:30", "00:00", "04:00"]
-# Default: "00:00" (midnight).
-media-cleanup-from: "00:00"
-
-# Duration. Period between media cleanup runs.
-# More than once per 24h is not recommended
-# is likely overkill. Setting this to something
-# very low like once every 10 minutes will probably
-# cause lag and possibly other issues.
-# Examples: ["24h", "72h", "12h"]
-# Default: "24h" (once per day).
-media-cleanup-every: "24h"
+# String. Cron expression (see https://crontab.guru/ for help) governing when
+# media cleanup runs. Replaces the removed media-cleanup-from (00:00) +
+# media-cleanup-every (24h) pair — this expression reproduces that same
+# schedule: once daily at midnight.
+# Default: "0 0 * * *" (once per day, at midnight).
+media-cleanup-cron: "0 0 * * *"
 
 ##########################
 ##### STORAGE CONFIG #####
