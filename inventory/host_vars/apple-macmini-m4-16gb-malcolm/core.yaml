@@ -17,7 +17,7 @@ host_description: "Mac Mini M4 16GB - used for LLM and MacOS-specific workloads"
 # Docs: roles/network-netplan/README.md
 # -------------------------------------------------------------------
 host_primary_interface: "en0"
-host_ipv4: 192.168.1.150
+host_ipv4: 192.168.1.121
 host_ipv4_subnet: 24
 host_mac: "1c:f6:4c:3e:51:a5"
 
