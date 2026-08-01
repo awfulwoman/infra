@@ -8,7 +8,17 @@ cd "$SCRIPT_DIR/.."
 
 ansible-galaxy collection install -r meta/requirements.yaml --upgrade
 
-find playbooks/hosts -name "core.yaml" | sort | while read -r playbook; do
+failed=()
+
+while read -r playbook; do
     echo "==> Running $playbook"
-    ansible-playbook "$playbook"
-done
+    if ! ansible-playbook "$playbook"; then
+        failed+=("$playbook")
+    fi
+done < <(find playbooks/hosts -name "core.yaml" | sort)
+
+if [ "${#failed[@]}" -gt 0 ]; then
+    echo "==> Failed playbooks:"
+    printf '  %s\n' "${failed[@]}"
+    exit 1
+fi
