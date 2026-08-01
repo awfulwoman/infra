@@ -10,7 +10,7 @@ All physical and virtual machines managed by this infrastructure.
 | `minipc-8gb-homebrain`    | Home automation hub                      | 192.168.1.130   |
 | `server-64gb-storage` | Central storage device      | 192.168.1.116   |
 | `server-8gb-backups`  | Dedicated backup server *(sunsetted)* | 192.168.1.118   |
-| `malcolm`      | Mac Mini M4 16GB — Ollama / AI workloads | 192.168.1.150   |
+| `malcolm`      | Mac Mini M4 16GB — Ollama / AI workloads | 192.168.1.99    |
 | `pikvm`        | KVM over IP device                       | 192.168.1.111   |
 | `belinda`      | Raspberry Pi 5 backup server             | 192.168.1.117   |
 

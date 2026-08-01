@@ -1,0 +1,42 @@
+---
+- name: Fail if host_ipv4 is not set
+  ansible.builtin.fail:
+    msg: "network-macos-static: host_ipv4 is not set"
+  when: not (host_ipv4 | default(false))
+  tags: [network-macos-static]
+
+- name: Get current IPv4 configuration
+  ansible.builtin.command: networksetup -getinfo "{{ network_macos_static_service }}"
+  register: network_macos_static_ipv4_current
+  changed_when: false
+  check_mode: false
+  tags: [network-macos-static]
+
+- name: Get current DNS servers
+  ansible.builtin.command: networksetup -getdnsservers "{{ network_macos_static_service }}"
+  register: network_macos_static_dns_current
+  changed_when: false
+  check_mode: false
+  tags: [network-macos-static]
+
+- name: Set static IPv4 configuration
+  become: true
+  ansible.builtin.command: >
+    networksetup -setmanual "{{ network_macos_static_service }}"
+    {{ host_ipv4 }} {{ network_macos_static_netmask }} {{ network_macos_static_gateway }}
+  when: >
+    ('Manual Configuration' not in network_macos_static_ipv4_current.stdout)
+    or ('IP address: ' + host_ipv4 not in network_macos_static_ipv4_current.stdout)
+    or ('Subnet mask: ' + network_macos_static_netmask not in network_macos_static_ipv4_current.stdout)
+    or ('Router: ' + network_macos_static_gateway not in network_macos_static_ipv4_current.stdout)
+  tags: [network-macos-static]
+
+- name: Set static DNS servers
+  become: true
+  ansible.builtin.command: >
+    networksetup -setdnsservers "{{ network_macos_static_service }}"
+    {{ network_macos_static_nameservers | join(' ') }}
+  when: >
+    ("There aren't any DNS Servers" in network_macos_static_dns_current.stdout)
+    or (network_macos_static_dns_current.stdout_lines != network_macos_static_nameservers | map('string') | list)
+  tags: [network-macos-static]

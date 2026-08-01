@@ -1,0 +1,9 @@
+---
+# Network service name as shown by `networksetup -listallnetworkservices`
+# (this is a service name, not a device name like en0)
+network_macos_static_service: "Ethernet"
+
+network_macos_static_netmask: "255.255.255.0"
+network_macos_static_gateway: "192.168.1.1"
+network_macos_static_nameservers:
+  - 192.168.1.1

@@ -9,6 +9,8 @@
     tags: [bootstrap, bootstrap-macos-server]
   - role: hardware-apple
     tags: [hardware, hardware-apple]
+  - role: network-macos-static
+    tags: [network, network-macos-static]
   - role: automation-key-updater
     tags: [automation, automation-key-updater]
   - role: automation-infra
