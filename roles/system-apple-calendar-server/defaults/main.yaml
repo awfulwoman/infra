@@ -6,7 +6,10 @@ system_apple_calendar_server_repo_update: true
 system_apple_calendar_server_repo_dir: "{{ system_repos_base_dir }}/awfulwoman/apple-calendar-server"
 system_apple_calendar_server_plist_label: com.awfulwoman.apple-calendar-server
 
-system_apple_calendar_server_host: 127.0.0.1
+# 0.0.0.0 so composition-gateway (a different host, reached over Tailscale) can
+# connect — Malcolm's Tailscale interface has no stable, predictable IP to bind to
+# specifically. Every endpoint requires a bearer token regardless of interface.
+system_apple_calendar_server_host: 0.0.0.0
 system_apple_calendar_server_port: 4101
 system_apple_calendar_server_default_calendar: Calendar
 system_apple_calendar_server_db_path: "{{ ansible_facts.user_dir }}/.local/state/apple-calendar-server/meta.db"

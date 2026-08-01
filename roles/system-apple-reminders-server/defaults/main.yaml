@@ -6,7 +6,10 @@ system_apple_reminders_server_repo_update: true
 system_apple_reminders_server_repo_dir: "{{ system_repos_base_dir }}/awfulwoman/apple-reminders-server"
 system_apple_reminders_server_plist_label: com.awfulwoman.apple-reminders-server
 
-system_apple_reminders_server_host: 127.0.0.1
+# 0.0.0.0 so composition-gateway (a different host, reached over Tailscale) can
+# connect — Malcolm's Tailscale interface has no stable, predictable IP to bind to
+# specifically. Every endpoint requires a bearer token regardless of interface.
+system_apple_reminders_server_host: 0.0.0.0
 system_apple_reminders_server_port: 4100
 system_apple_reminders_server_default_list: Reminders
 system_apple_reminders_server_db_path: "{{ ansible_facts.user_dir }}/.local/state/apple-reminders-server/meta.db"
