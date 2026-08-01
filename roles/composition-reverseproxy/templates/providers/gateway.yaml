@@ -39,4 +39,4 @@ http:
           flushInterval: "100ms"
         passHostHeader: true
         servers:
-          - url: "http://192.168.1.150:4000"
+          - url: "http://{{ llm_default_host }}:4000"

@@ -1,9 +1,9 @@
 # Composition name (used by composition-common dependency)
 composition_name: open-webui
 
-# Ollama API URL. Defaults to the shared llm_default_host (Malcolm).
+# Ollama API URL. Defaults to the shared llm_default_ollama_base_url (Malcolm).
 # Override per-host if Ollama is running elsewhere.
-composition_open_webui_ollama_base_url: "http://{{ llm_default_host }}:11434"
+composition_open_webui_ollama_base_url: "{{ llm_default_ollama_base_url }}"
 
 composition_open_webui_subdomains:
   - chat

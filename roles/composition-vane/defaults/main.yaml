@@ -1,5 +1,6 @@
 # Composition name (used by composition-common dependency)
 composition_name: vane
 
-# Ollama API URL
-vane_ollama_api_url: "http://192.168.1.150:11434"
+# Ollama API URL. Defaults to the shared llm_default_ollama_base_url (Malcolm).
+# Override per-host if Ollama is running elsewhere.
+vane_ollama_api_url: "{{ llm_default_ollama_base_url }}"
