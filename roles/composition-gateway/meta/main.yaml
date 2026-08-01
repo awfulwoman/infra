@@ -1,13 +1,2 @@
 dependencies:
   - role: composition-common
-# Neither Reminders nor Contacts are backed by Radicale any more (both moved to
-# apple-reminders-server / apple-contacts-server on Malcolm) — composition-radicale
-# is no longer a functional dependency of this role at runtime. It's still listed
-# before composition-gateway in core.yaml for now; if that ordering is ever removed,
-# do NOT "fix" it by declaring composition-radicale as a role dependency here — doing
-# so nests composition-radicale's own (correctly composition_name-scoped) call to
-# composition-common as a sibling of this role's composition-common call, and the
-# second set_fact of composition_root/composition_config sticks for the rest of the
-# play, silently redirecting this role's own "Create compose file"/"Create .env
-# file"/"Start Docker Compose project" tasks into Radicale's directory instead of
-# Gateway's.

@@ -81,8 +81,6 @@
     tags: [composition, composition-n8n]
   - role: composition-memorybank
     tags: [composition, composition-memorybank]
-  - role: composition-radicale
-    tags: [composition, composition-radicale]
   - role: composition-gateway
     tags: [composition, composition-gateway]
   - role: composition-paperless-ngx

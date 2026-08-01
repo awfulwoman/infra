@@ -30,21 +30,11 @@ composition_gateway_owntracks_device: iphone
 composition_gateway_reminders_api_tokens: "{{ vault_gateway_reminders_api_token_iphone }}"
 composition_gateway_reminders_nominatim_url: "https://nominatim.{{ domainname_infra }}"
 
-# Radicale (CardDAV) — no longer used by any registered Gateway tool (Contacts
-# moved to apple-contacts-server below). Left configured only because
-# composition-radicale still runs and gateway's historical migration scripts under
-# scripts/ still speak CardDAV directly.
-composition_gateway_radicale_base_url: "http://radicale:5232"
-composition_gateway_radicale_username: "{{ radicale_username }}"
-composition_gateway_radicale_password: "{{ vault_radicale_password }}"
-composition_gateway_radicale_contacts_path: "/{{ radicale_username }}/contacts/"
-
 # apple-contacts-server (real macOS Contacts via the Contacts framework) — storage
 # backend for Contacts, running natively on Malcolm (a different host — the
 # Contacts framework needs a macOS GUI session, so it can't run in this container).
 # Reached over Tailscale MagicDNS, not the shared Docker network. Token is shared
-# with system-apple-contacts-server, which provisions this same service. Replaces
-# Radicale as the contacts backend.
+# with system-apple-contacts-server, which provisions this same service.
 composition_gateway_contacts_server_base_url: "http://apple-macmini-m4-16gb-malcolm.{{ vault_tailscale_tailnet_name }}:4102"
 composition_gateway_contacts_server_bearer_token: "{{ vault_gateway_contacts_server_token }}"
 

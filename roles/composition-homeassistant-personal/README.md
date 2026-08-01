@@ -11,18 +11,14 @@ no need for local hardware discovery.
 
 1. Visit `https://ha-personal.{{ domainname_infra }}` and complete the HA
    onboarding wizard (create the admin account).
-2. Add the CalDAV integration to surface Gateway's Reminders as todo lists:
-   **Settings → Devices & Services → Add Integration → CalDAV**
-   - URL: `https://radicale.{{ domainname_infra }}/{{ radicale_username }}/`
-   - Username: `{{ radicale_username }}`
-   - Password: the shared Radicale password (`vault_radicale_password`)
-   - Select the calendar collection(s) to import — these appear as `todo.*`
-     entities.
 
-This reuses the same Radicale account Gateway's reminders/contacts tools
-already authenticate as (see [`composition-gateway`](../composition-gateway)
-and [`composition-radicale`](../composition-radicale)) — no new credentials
-are created.
+Previously, step 2 added a CalDAV integration pointed at Radicale to surface
+Gateway's Reminders as `todo.*` entities. Radicale has been removed
+(`composition-radicale`); Reminders now lives behind
+[`system-apple-reminders-server`](../system-apple-reminders-server), which
+speaks plain REST, not CalDAV, so this integration has no direct replacement.
+If this instance still has that CalDAV integration configured, remove it from
+**Settings → Devices & Services** — it will otherwise show as unavailable.
 
 ## Ports
 

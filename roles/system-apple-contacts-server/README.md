@@ -4,8 +4,7 @@ Installs [`apple-contacts-server`](https://github.com/awfulwoman/apple-contacts-
 as a per-user LaunchAgent on this host — a small authorised REST API in front of the
 real macOS Contacts app (via the `Contacts` framework), used by
 [`composition-gateway`](../composition-gateway) as its contacts backend (replacing
-Radicale — see [`composition-radicale`](../composition-radicale), which no longer
-backs anything gateway reads).
+the previous Radicale/CardDAV backend).
 
 ## Requirements
 
@@ -70,7 +69,7 @@ no longer recurs after `uv sync` or Python upgrades.
 ## Reaching it from Gateway
 
 Gateway runs on `server-64gb-storage`, a different host, so this isn't reachable over
-a shared Docker network the way Radicale is. `composition-gateway` reaches it over
+a shared Docker network. `composition-gateway` reaches it over
 Tailscale MagicDNS at `apple-macmini-m4-16gb-malcolm.{{ vault_tailscale_tailnet_name }}`
 — no public DNS registration, no Traefik (Malcolm runs no composition roles at all).
 

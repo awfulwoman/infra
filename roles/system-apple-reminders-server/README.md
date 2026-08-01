@@ -4,8 +4,7 @@ Installs [`apple-reminders-server`](https://github.com/awfulwoman/apple-reminder
 as a per-user LaunchAgent on this host — a small authorised REST API in front of the
 real macOS Reminders app (via `EventKit`), used by
 [`composition-gateway`](../composition-gateway) as its reminders backend (replacing
-Radicale, which now only backs Contacts — see
-[`composition-radicale`](../composition-radicale)).
+the previous Radicale/CalDAV backend).
 
 ## Requirements
 
@@ -71,7 +70,7 @@ recurs after `uv sync` or Python upgrades.
 ## Reaching it from Gateway
 
 Gateway runs on `server-64gb-storage`, a different host, so this isn't reachable over
-a shared Docker network the way Radicale is. `composition-gateway` reaches it over
+a shared Docker network. `composition-gateway` reaches it over
 Tailscale MagicDNS at `apple-macmini-m4-16gb-malcolm.{{ vault_tailscale_tailnet_name }}`
 — no public DNS registration, no Traefik (Malcolm runs no composition roles at all).
 
