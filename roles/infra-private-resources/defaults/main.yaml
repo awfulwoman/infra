@@ -34,6 +34,10 @@ infra_privateresources_vms:
     dns: "192.168.122.1"
     mac_address: "52:54:00:00:02:00"
     graphics: false
+    # Disabled 2026-08-01: was silently autostarting on every host reboot,
+    # contending for disk I/O alongside ~70 Docker containers also starting at
+    # once. Start manually with `virsh start vm-claude-dev` when needed.
+    autostart: false
 
   # - id: homeautomation
   #   name: "vm-homeautomation"
@@ -47,6 +51,7 @@ infra_privateresources_vms:
   #   dns: "192.168.122.1"
   #   mac_address: "52:54:00:00:02:01"
   #   graphics: false
+  #   autostart: false
 
   # - id: downloads
   #   name: "vm-downloads"
@@ -60,6 +65,7 @@ infra_privateresources_vms:
   #   dns: "192.168.122.1"
   #   mac_address: "52:54:00:00:02:02"
   #   graphics: false
+  #   autostart: false
 
   # - id: media
   #   name: "vm-media"
@@ -73,3 +79,4 @@ infra_privateresources_vms:
   #   dns: "192.168.122.1"
   #   mac_address: "52:54:00:00:02:03"
   #   graphics: false
+  #   autostart: false

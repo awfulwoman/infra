@@ -182,8 +182,12 @@ resource "libvirt_domain" "{{ vm.id }}" {
     {% endif %}
   }
 
-  # Start after creation and on host boot
+  # Start after creation
   running   = true
-  autostart = true
+  # Whether to start this VM automatically on host boot. Per-VM, defaults to
+  # false — a VM silently autostarting on every reboot (competing for I/O with
+  # everything else that comes up at the same time) should be a deliberate,
+  # reviewable choice per VM, not a blanket default.
+  autostart = {{ vm.autostart | default(false) }}
 }
 {% endfor %}
