@@ -19,6 +19,8 @@
     tags: [system, system-apple-reminders-server]
   - role: system-apple-calendar-server
     tags: [system, system-apple-calendar-server]
+  - role: system-apple-contacts-server
+    tags: [system, system-apple-contacts-server]
   - role: system-ollama
     tags: [system, system-ollama]
   - role: system-tts-chatterbox

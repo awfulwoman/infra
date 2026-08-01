@@ -10,25 +10,19 @@ Serves two surfaces on one port (4000), fronted by a single Traefik router:
 - `/v1/*` — the native reminders JSON-HTTP API for phone/iPad clients, auth via
   `composition_gateway_reminders_api_tokens`.
 
-Contacts are backed by [`composition-radicale`](../composition-radicale) (CardDAV) —
-**not** a role dependency (nesting it in `meta/main.yaml` clobbers this role's own
-`composition_root`/`composition_config` facts, redirecting this role's compose file
-into Radicale's directory — see the comment in `meta/main.yaml` if tempted to add it
-back). Ordering is instead guaranteed by `core.yaml` listing `composition-radicale`
-before `composition-gateway`; keep it that way. Gateway reaches it over the shared
-Docker network by container name (`http://radicale:5232`); Radicale is never exposed
-to Gateway's own clients directly. Contacts work identically on every platform this
-image targets — no macOS-only capability gap versus the previous launchd-on-macOS
-deployment (it used to depend on `pyobjc`, unavailable in the container; it's now
-CardDAV, so it isn't).
-
-Reminders and Calendar are backed by
-[`system-apple-reminders-server`](../system-apple-reminders-server) and
-[`system-apple-calendar-server`](../system-apple-calendar-server), both running
-natively on **Malcolm**, a different host — EventKit needs a macOS GUI session for
-the Reminders/Calendar permission grant, so unlike Contacts these can't move into
-the container. Gateway reaches both over Tailscale MagicDNS, not the shared Docker
-network. Calendar replaces the previous Google Calendar OAuth backend.
+Reminders, Calendar, and Contacts are backed by
+[`system-apple-reminders-server`](../system-apple-reminders-server),
+[`system-apple-calendar-server`](../system-apple-calendar-server), and
+[`system-apple-contacts-server`](../system-apple-contacts-server), all three
+running natively on **Malcolm**, a different host — EventKit/Contacts need a
+macOS GUI session for their permission grant, so none of these can move into the
+container. Gateway reaches all three over Tailscale MagicDNS, not the shared
+Docker network. Calendar replaces the previous Google Calendar OAuth backend;
+Contacts replaces the previous Radicale/CardDAV backend (see
+`composition-radicale`, no longer a functional dependency of this role — the
+`meta/main.yaml` comment there explains why it's still listed before
+`composition-gateway` in `core.yaml` and why it should stay that way rather than
+becoming a declared role dependency).
 
 Obsidian notes/issues tools read/write a vault bind-mounted from the host — this role
 does **not** sync that vault itself. Run
@@ -48,8 +42,10 @@ point `composition_gateway_obsidian_vault_path` at its synced vault path.
 | `composition_gateway_reminders_api_tokens` | `vault_gateway_reminders_api_token_iphone` | Bearer tokens for `/v1/*` (device clients) |
 | `composition_gateway_reminders_server_base_url` | Malcolm's Tailscale MagicDNS name, port 4100 | apple-reminders-server backend for Reminders (see `system-apple-reminders-server`) |
 | `composition_gateway_reminders_server_bearer_token` | `vault_gateway_reminders_server_token` | Shared secret with `system-apple-reminders-server` |
-| `composition_gateway_radicale_base_url/username/password` | `http://radicale:5232` + shared `radicale_username`/`vault_radicale_password` | CardDAV backend for Contacts (see `composition-radicale`) |
-| `composition_gateway_radicale_contacts_path` | `/{{ radicale_username }}/contacts/` | CardDAV addressbook collection |
+| `composition_gateway_contacts_server_base_url` | Malcolm's Tailscale MagicDNS name, port 4102 | apple-contacts-server backend for Contacts (see `system-apple-contacts-server`) |
+| `composition_gateway_contacts_server_bearer_token` | `vault_gateway_contacts_server_token` | Shared secret with `system-apple-contacts-server` |
+| `composition_gateway_radicale_base_url/username/password` | `http://radicale:5232` + shared `radicale_username`/`vault_radicale_password` | No longer read by any registered tool; kept only for gateway's historical migration scripts (see `composition-radicale`) |
+| `composition_gateway_radicale_contacts_path` | `/{{ radicale_username }}/contacts/` | Same — legacy only |
 | `composition_gateway_server_auth_tokens` | `vault_gateway_mcp_token` | Bearer token(s) required on `/mcp` |
 
 ## Volumes
@@ -58,8 +54,8 @@ point `composition_gateway_obsidian_vault_path` at its synced vault path.
 |------|---------|
 | `composition_gateway_obsidian_vault_path` (host) → `/vault` | Obsidian vault, read/write |
 
-Reminders and Contacts have no local volume here — they live in Radicale's own storage
-(see `composition-radicale`'s Volumes table).
+Reminders, Calendar, and Contacts have no local volume here — they live in the real
+Reminders/Calendar/Contacts apps on Malcolm, fronted by their own sidecar services.
 
 ## DNS
 

@@ -105,6 +105,12 @@ system_apple_reminders_server_keychain_password: "{{ vault_password }}"
 system_apple_calendar_server_keychain_password: "{{ vault_password }}"
 
 # -------------------------------------------------------------------
+# APPLE CONTACTS SERVER
+# -------------------------------------------------------------------
+# Same login-keychain password, for the contacts server's own signing cert.
+system_apple_contacts_server_keychain_password: "{{ vault_password }}"
+
+# -------------------------------------------------------------------
 # AUTOMATIONS
 # -------------------------------------------------------------------
 automation_infra_playbooks:

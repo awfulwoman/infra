@@ -1,0 +1,134 @@
+# code: language=ansible
+---
+- name: "Assert macOS"
+  ansible.builtin.assert:
+    that: ansible_facts['os_family'] == 'Darwin'
+    fail_msg: "system-apple-contacts-server is macOS-only"
+
+- name: "Ensure uv is installed"
+  community.general.homebrew:
+    name: uv
+    state: present
+
+- name: "Check if git host is in known_hosts"
+  ansible.builtin.command:
+    cmd: "ssh-keygen -F {{ system_apple_contacts_server_git_host }}"
+  register: contacts_known_hosts_check
+  changed_when: false
+  failed_when: false
+
+- name: "Add git host to known_hosts"
+  ansible.builtin.shell: >
+    ssh-keyscan {{ system_apple_contacts_server_git_host }}
+    >> {{ ansible_facts.user_dir }}/.ssh/known_hosts
+  when: contacts_known_hosts_check.rc != 0
+  changed_when: true
+
+- name: "Ensure repo parent directory exists"
+  ansible.builtin.file:
+    path: "{{ system_apple_contacts_server_repo_dir | dirname }}"
+    state: directory
+    mode: "0755"
+
+- name: "Clone/update apple-contacts-server repo"
+  ansible.builtin.git:
+    repo: "git@{{ system_apple_contacts_server_git_host }}:{{ system_apple_contacts_server_repo }}.git"
+    dest: "{{ system_apple_contacts_server_repo_dir }}"
+    version: "{{ system_apple_contacts_server_repo_version }}"
+    update: "{{ system_apple_contacts_server_repo_update }}"
+
+- name: "Sync Python dependencies"
+  ansible.builtin.command:
+    cmd: /opt/homebrew/bin/uv sync
+    chdir: "{{ system_apple_contacts_server_repo_dir }}"
+  changed_when: false
+  when: not ansible_check_mode
+
+# TCC grants Contacts access to a *code identity*. An ad-hoc-signed interpreter
+# is identified only by its cdhash, which changes on every `uv sync`/Python bump,
+# so the grant silently reverts to denied. Signing the interpreter with a stable
+# self-signed cert + fixed identifier makes TCC match on the Designated
+# Requirement instead, so the grant survives rebuilds. See the service repo's
+# scripts/{setup_signing_cert,sign_runtime}.sh and README.
+- name: "Provision stable code-signing identity"
+  ansible.builtin.command:
+    cmd: ./scripts/setup_signing_cert.sh
+    chdir: "{{ system_apple_contacts_server_repo_dir }}"
+  environment:
+    KEYCHAIN_PASSWORD: "{{ system_apple_contacts_server_keychain_password }}"
+  register: signing_cert
+  changed_when: "'Created self-signed' in signing_cert.stdout"
+  # Only headless-provision when we have the keychain password to run
+  # set-key-partition-list; otherwise run setup_signing_cert.sh by hand on Malcolm
+  # once (the sign step below then succeeds). Avoids creating a cert whose key
+  # codesign can't reach non-interactively.
+  when:
+    - not ansible_check_mode
+    - system_apple_contacts_server_keychain_password | length > 0
+
+- name: "Stat the signing cert on disk"
+  ansible.builtin.stat:
+    path: "{{ ansible_facts.user_dir }}/.local/state/apple-contacts-server/signing-cert.pem"
+  register: contacts_signing_cert
+
+- name: "Check if signing cert is already trusted (System keychain)"
+  ansible.builtin.command:
+    cmd: security find-certificate -c awfulwoman-apple-contacts-server-signing /Library/Keychains/System.keychain
+  register: contacts_cert_trusted
+  changed_when: false
+  failed_when: false
+
+# A self-signed codesigning cert isn't trusted by default, so codesign refuses to
+# use it ("no identity found"). macOS blocks setting trust settings over SSH even
+# as root, so trust_signing_cert.sh briefly relaxes the trust-settings auth right,
+# adds the trusted cert (admin domain), and restores the right. become = root;
+# the private key stays in the user's login keychain, only the public cert is
+# trusted, scoped to codeSign.
+- name: "Trust signing cert for code signing (headless, admin domain)"
+  become: true
+  ansible.builtin.command:
+    cmd: ./scripts/trust_signing_cert.sh {{ ansible_facts.user_dir }}/.local/state/apple-contacts-server/signing-cert.pem
+    chdir: "{{ system_apple_contacts_server_repo_dir }}"
+  changed_when: true
+  when:
+    - not ansible_check_mode
+    - contacts_signing_cert.stat.exists
+    - contacts_cert_trusted.rc != 0
+
+- name: "Re-sign interpreter with the stable identity"
+  ansible.builtin.command:
+    cmd: ./scripts/sign_runtime.sh
+    chdir: "{{ system_apple_contacts_server_repo_dir }}"
+  environment:
+    KEYCHAIN_PASSWORD: "{{ system_apple_contacts_server_keychain_password }}"
+  changed_when: false
+  when: not ansible_check_mode
+
+- name: "Write .env file"
+  ansible.builtin.template:
+    src: env.j2
+    dest: "{{ system_apple_contacts_server_repo_dir }}/.env"
+    mode: "0600"
+
+- name: "Ensure log directory exists"
+  ansible.builtin.file:
+    path: "{{ system_apple_contacts_server_repo_dir }}/logs"
+    state: directory
+    mode: "0755"
+
+- name: "Deploy LaunchAgent plist"
+  ansible.builtin.template:
+    src: apple-contacts-server.plist.j2
+    dest: "{{ ansible_facts.user_dir }}/Library/LaunchAgents/{{ system_apple_contacts_server_plist_label }}.plist"
+    mode: "0644"
+  notify: Reload apple-contacts-server launchd agent
+
+- name: "Check if launchd agent is bootstrapped"
+  ansible.builtin.shell: launchctl print gui/$(id -u)/{{ system_apple_contacts_server_plist_label }}
+  register: launchd_check
+  failed_when: false
+  changed_when: false
+
+- name: "Bootstrap launchd agent"
+  ansible.builtin.shell: launchctl bootstrap gui/$(id -u) {{ ansible_facts.user_dir }}/Library/LaunchAgents/{{ system_apple_contacts_server_plist_label }}.plist
+  when: launchd_check.rc != 0
