@@ -101,16 +101,16 @@
     tags: [composition, composition-kiwix]
   - role: composition-chives
     vars:
-      composition_name: chives
-      composition_chives_telegram_token: "{{ vault_chives_telegram_token }}"
-      composition_chives_telegram_chat_id: "{{ vault_chives_telegram_chat_id }}"
+      composition_name: nabu
       composition_chives_mcps:
         - url: "http://mcp-searxng:3000/mcp" # on same host
           auth_key: "{{ vault_mcp_searxng_auth_token }}"
     tags: [composition, composition-chives, ollama]
   - role: composition-chives
     vars:
-      composition_name: holly
+      composition_name: jarvis # Just until I get custom wake words working
+      composition_chives_telegram_token: "{{ vault_chives_telegram_token }}"
+      composition_chives_telegram_chat_id: "{{ vault_chives_telegram_chat_id }}"
       composition_chives_mcps:
         - url: "http://gateway:4000/mcp" # on same host
           auth_key: "{{ vault_gateway_mcp_token }}"
@@ -135,6 +135,6 @@
     tags: [monitoring, monitoring-healthchecksio]
 
   handlers:
-  - name: Reboot host
-    become: true
-    ansible.builtin.reboot:
+    - name: Reboot host
+      become: true
+      ansible.builtin.reboot:
