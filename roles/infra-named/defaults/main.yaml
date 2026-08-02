@@ -43,3 +43,53 @@ bind_records_nameservers:
 # bind_records_mx:
 # Manually created TXT records
 # bind_records_txt:
+
+# -------------------------------------------------------------------
+# DNS FILTERING — Response Policy Zones (RPZ)
+# -------------------------------------------------------------------
+# Pi-hole-style ad/tracker blocking done natively in BIND. Off by default: this
+# role also serves hosts that are not the LAN's resolver, and filtering is only
+# meaningful where every client's DNS actually lands. Enable in host_vars.
+# When false, no response-policy block is emitted and no timer is installed, so
+# the rendered config is byte-identical to before.
+bind_rpz_enabled: false
+
+# Blocklists to fetch, in the order BIND should consult them. Each needs a
+# `name` (the zone origin — arbitrary, but must be unique and stable, since it
+# is also the `rndc reload` target) and a `url` serving a ready-made RPZ zone.
+# HaGeZi publishes native .rpz files, so nothing needs converting. Tiers:
+#   light.txt     ~42k domains  (relaxed)
+#   multi.txt    ~181k domains  (balanced — the sane default)
+#   pro.txt      ~216k domains  (more aggressive telemetry blocking)
+#   tif.mini.txt          (malware/phishing threat intel, layer alongside)
+# Mirror if raw.githubusercontent is unreachable:
+#   https://cdn.jsdelivr.net/gh/hagezi/dns-blocklists@latest/rpz/multi.txt
+bind_rpz_zones:
+  - name: rpz.hagezi-multi
+    url: https://raw.githubusercontent.com/hagezi/dns-blocklists/main/rpz/multi.txt
+
+bind_rpz_dir: /etc/bind/zones/rpz
+bind_rpz_refresh_script: /usr/local/sbin/bind-rpz-refresh
+bind_rpz_service_name: bind-rpz-refresh
+
+# Domains that must NEVER be blocked. Rendered into a local RPZ zone that is
+# listed FIRST in response-policy, so a passthru match wins over any blocklist.
+# The defaults protect our own authoritative names: a public blocklist has no
+# business shadowing the internal zone or the legacy DNAME subtree.
+bind_rpz_allowlist: "{{ [bind_domain] + (bind_dname_aliases | default([])) + (bind_rpz_allowlist_extra | default([])) }}"
+# Set this in host_vars to allowlist a blocklist false positive without having
+# to restate the protected defaults above.
+bind_rpz_allowlist_extra: []
+
+# systemd OnCalendar expression for the refresh timer. Upstream lists change
+# daily; the script does a conditional GET, so a no-op run costs ~nothing.
+bind_rpz_refresh_schedule: daily
+
+# Floor for a plausible blocklist download, in bytes. A proxy error page or a
+# truncated transfer is far smaller than any real list; anything under this is
+# rejected before it can reach named-checkzone.
+bind_rpz_min_bytes: 100000
+
+# Blocked-query log. Separate from the general named log so "why is this site
+# broken?" is one grep away.
+bind_rpz_log_file: /var/log/named/rpz.log

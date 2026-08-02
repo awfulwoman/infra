@@ -1,0 +1,106 @@
+#!/usr/bin/env bash
+#
+# Refresh BIND Response Policy Zones from upstream blocklists.
+#
+# MANAGED BY ANSIBLE (roles/infra-named) — local edits will be overwritten.
+#
+# Run by {{ bind_rpz_service_name }}.timer ({{ bind_rpz_refresh_schedule }}), and once by the
+# role itself so the zone files exist before named.conf.options references them.
+#
+# The guiding rule: a bad download must never be able to take DNS down. Nothing
+# is installed until named-checkzone has accepted it, and the previous good zone
+# stays in place if anything goes wrong.
+
+set -euo pipefail
+
+ZONE_DIR="{{ bind_rpz_dir }}"
+MIN_BYTES={{ bind_rpz_min_bytes }}
+
+failed=0
+updated=0
+
+tmpdir="$(mktemp -d)"
+trap 'rm -rf "$tmpdir"' EXIT
+
+refresh_zone() {
+  local origin="$1" url="$2"
+  local dest="${ZONE_DIR}/db.${origin}"
+  local etag="${ZONE_DIR}/.${origin}.etag"
+  local tmp="${tmpdir}/${origin}"
+
+  # Conditional GET: these lists are ~10MB and change once a day, so most runs
+  # should transfer nothing at all. --etag-compare on a missing file is a plain
+  # unconditional GET, which is what we want on the very first run.
+  if ! curl --silent --show-error --location --fail \
+       --max-time 300 --retry 3 --retry-delay 5 \
+       --etag-compare "$etag" --etag-save "$etag" \
+       --output "$tmp" "$url"; then
+    echo "ERROR: ${origin}: download failed from ${url}" >&2
+    return 1
+  fi
+
+  # 304 Not Modified leaves an empty body behind: nothing to do.
+  if [[ ! -s "$tmp" ]]; then
+    echo "${origin}: unchanged"
+    return 0
+  fi
+
+  # A proxy error page or a truncated transfer is orders of magnitude smaller
+  # than any real blocklist. Reject it before it can reach named-checkzone.
+  local size
+  size="$(stat -c %s "$tmp")"
+  if (( size < MIN_BYTES )); then
+    echo "ERROR: ${origin}: download is only ${size} bytes (minimum ${MIN_BYTES}), refusing" >&2
+    # Drop the saved ETag so the next run re-fetches instead of getting a 304
+    # against the body we just threw away.
+    rm -f "$etag"
+    return 1
+  fi
+
+  if ! named-checkzone -q "$origin" "$tmp"; then
+    echo "ERROR: ${origin}: named-checkzone rejected the downloaded zone, keeping the existing one" >&2
+    rm -f "$etag"
+    return 1
+  fi
+
+  if [[ -f "$dest" ]] && cmp --silent "$tmp" "$dest"; then
+    echo "${origin}: unchanged"
+    return 0
+  fi
+
+  install -o root -g bind -m 0644 "$tmp" "${dest}.new"
+  mv -f "${dest}.new" "$dest"
+  echo "${origin}: updated (${size} bytes)"
+  updated=1
+
+  # Reload just this zone rather than restarting named — a restart would throw
+  # away the resolver cache every single day. On the role's first run named does
+  # not know the zone yet, so a failure here is expected and not fatal; the
+  # named.conf.options change that follows triggers a full restart.
+  #
+  # The new rules do not take effect the instant this returns: named rebuilds
+  # the RPZ summary database no more often than `min-update-interval` (60s by
+  # default), so expect up to a minute of lag before queries are blocked. That
+  # is a non-issue for a daily refresh, but it looks exactly like a broken
+  # reload if you test immediately.
+  if ! rndc reload "$origin" >/dev/null 2>&1; then
+    echo "${origin}: rndc reload skipped (zone not yet known to named)"
+  fi
+}
+
+mkdir -p "$ZONE_DIR"
+
+{% for item in bind_rpz_zones %}
+refresh_zone "{{ item.name }}" "{{ item.url }}" || failed=1
+{% endfor %}
+
+if (( failed )); then
+  echo "One or more policy zones failed to refresh; existing zones left in place." >&2
+  exit 1
+fi
+
+if (( updated )); then
+  echo "RPZ refresh complete: zones updated"
+else
+  echo "RPZ refresh complete: no changes"
+fi
