@@ -48,6 +48,63 @@ Hosts without `host_tailscale_ipv4` are skipped. No PTR records are generated �
 Tailscale addresses reverse under `100.in-addr.arpa`, which this role does not
 serve, and MagicDNS already covers it.
 
+## Split-horizon DNS
+
+Off unless `bind_views_enabled: true`. Currently on for bertha only, since that
+is the resolver the tailnet points at.
+
+Every service name in this zone is a CNAME onto a host's `host_pfqdn`, and that
+resolves to the host's LAN address. Fine at home; useless on a phone in a hotel,
+which gets `192.168.1.116` back for `radarr.<domain>` and cannot route to it.
+
+With views on, the same zone is rendered twice from the same template. The only
+thing that differs is which inventory variable the host A records come from:
+
+| | `radarr.<domain>` → | |
+|---|---|---|
+| LAN client (`192.168.1.0/24`) | `server-64gb-storage.kberg.ber` | `192.168.1.116` |
+| Tailnet client (`100.64.0.0/10`) | `server-64gb-storage.kberg.ber` | `100.80.1.116` |
+
+The CNAMEs are byte-identical between views — only the A record moves. Traefik
+listens on all interfaces so it answers on either address, and the certificates
+come from Let's Encrypt over DNS-01, so they validate wherever the request
+lands. Nothing about the compositions changes.
+
+| Variable | Default | Purpose |
+|----------|---------|---------|
+| `bind_views_enabled` | `false` | Master switch |
+| `bind_views` | tailscale, internal | View name, `match-clients`, which address variable to use, and which zone file |
+
+### This does not work on its own
+
+Split horizon only decides *what answer* a tailnet client gets. It cannot make
+the client ask bertha in the first place — that is a Tailscale admin console
+setting (**DNS → Nameservers**, bertha's Tailscale address, with *Restrict to
+domain* set to the infra domain if you want split DNS rather than a global
+resolver). Without it the phone never reaches this zone at all.
+
+Which is the other reason `host_tailscale_ipv4` matters: the nameserver entry
+needs a Tailscale address that does not move.
+
+### Things worth knowing
+
+* **LAN-only devices vanish from the tailnet view.** Anything in the `unmanaged`
+  group has no Tailscale address, so it is absent rather than published at an
+  unreachable `192.168.x`. NXDOMAIN fails immediately; a dead LAN address hangs.
+* **`ts.<host>` names are unchanged in both views** — that is how you ask for the
+  tailnet path deliberately, from either side.
+* **`in-view` is why view order matters.** The zones that are identical in both
+  (reverse, DNAME aliases) are loaded once in the first view and referenced from
+  the second, so BIND holds one copy. The declaration order is a hard
+  requirement: `in-view` can only point at a view already defined.
+* **BIND requires every zone to be inside a view once any view exists.** Debian's
+  stock `named.conf` breaks that by including `named.conf.default-zones` at the
+  top level, so enabling views makes this role take over `/etc/bind/named.conf`
+  and move that include inside each view. **Turning views back off does not
+  restore Debian's file** — put the include back by hand or
+  `apt-get install --reinstall bind9`.
+* **Ad-blocking costs twice as much with views on** — see below.
+
 ## DNS filtering (Response Policy Zones)
 
 Optional Pi-hole-style ad/tracker blocking, done natively in BIND rather than by
@@ -132,5 +189,24 @@ journalctl -u bind-rpz-refresh
 
 Loading Multi Normal takes named's RSS to roughly 250 MB and adds ~2s to
 startup. Fine on bertha (4 GB); check before enabling on anything smaller.
+
+**Per view.** With `bind_views_enabled` the policy zones are loaded once in each
+view, so two views means roughly 500 MB. Unlike the reverse and DNAME zones they
+cannot be shared with `in-view`: named rejects an in-view reference as a
+response-policy target —
+
+```
+named.conf.options:203: response-policy zone 'rpz.allowlist' for view internal
+  is not a primary or secondary zone
+```
+
+Still comfortable on bertha, but it is the reason to drop to `light.txt` rather
+than reach for `pro.txt` on a box with views enabled.
+
+That per-view loading is also why `bind-rpz-refresh` issues one
+`rndc reload <zone> IN <view>` per view. The bare `rndc reload <zone>` the
+script used before views existed now fails outright — `zone was found in
+multiple views` — and reloading only one view would leave the other serving
+yesterday's blocklist.
 
 This is just personal stuff. Not for use by anyone, etc.

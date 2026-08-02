@@ -26,6 +26,61 @@ bind_unmanaged_group: unmanaged
 # which this role does not serve — MagicDNS already handles that.
 bind_tailscale_records_enabled: true
 bind_tailscale_record_prefix: ts
+
+# -------------------------------------------------------------------
+# SPLIT-HORIZON DNS (BIND views)
+# -------------------------------------------------------------------
+# Off by default: this role also serves hosts where there is nothing to split,
+# and enabling it restructures named.conf (see below). Turn it on in host_vars
+# for the resolver the tailnet actually points at.
+#
+# The problem it solves: every name in this zone is a CNAME onto a host's
+# `host_pfqdn`, which resolves to that host's LAN address. A client on the
+# tailnet — a phone away from home — gets 192.168.1.x back and cannot reach it.
+#
+# With views on, the same zone is rendered twice from the same template. The
+# only difference is which inventory variable the host A records are taken from:
+# `host_ipv4` for LAN clients, `host_tailscale_ipv4` for tailnet clients. Every
+# CNAME is byte-identical between the two, so a name resolves to whichever
+# address the asking client can actually route to. Traefik listens on all
+# interfaces and the certificates come from Let's Encrypt over DNS-01, so a
+# request works the same whichever address it lands on.
+#
+# Views are matched in the order declared and the first match wins, so the
+# specific view (Tailscale) must come before the catch-all. That ordering is
+# also a hard requirement of BIND's `in-view`, which the zones that are
+# identical in both views (reverse, DNAME aliases) use to load the data once and
+# share it. The RPZ blocklists cannot: named rejects an in-view reference as a
+# response-policy target, so each view loads its own copy and the memory cost of
+# filtering doubles. See "Costs" in the role README.
+#
+# BIND requires that when ANY view exists, EVERY zone lives inside one. Debian's
+# stock named.conf includes named.conf.default-zones at the top level, which
+# breaks that rule, so enabling views also makes the role take over
+# /etc/bind/named.conf and move that include inside each view. Disabling views
+# again does not restore Debian's file — see the role README.
+bind_views_enabled: false
+bind_views:
+  - name: tailscale
+    match_clients: "Tailscale;"
+    address_var: host_tailscale_ipv4
+    zone_file: "db.{{ bind_domain }}.tailscale.zone"
+  - name: internal
+    match_clients: "any;"
+    address_var: host_ipv4
+    zone_file: "db.{{ bind_domain }}.zone"
+
+# Which forward zones actually get rendered. With views off, only the internal
+# one — so the zone file on disk keeps the name and content it has always had.
+bind_zone_renders: >-
+  {{ bind_views if (bind_views_enabled | bool)
+     else (bind_views | rejectattr('name', 'equalto', 'tailscale') | list) }}
+
+# Which inventory variable the forward-zone A records are read from. Set per
+# render by the loop in tasks/main.yaml; this default is what a non-view
+# deployment gets.
+bind_zone_address_var: host_ipv4
+
 # Define ACL groups for using this DNS server
 bind_acl_groups:
   - name: LAN

@@ -16,6 +16,19 @@ set -euo pipefail
 ZONE_DIR="{{ bind_rpz_dir }}"
 MIN_BYTES={{ bind_rpz_min_bytes }}
 
+# With split-horizon views, `rndc reload <zone>` fails outright:
+#   rndc: 'reload' failed: multiple
+#   zone 'rpz.hagezi-multi' was found in multiple views
+# and every view holds its own copy of the policy zones (named will not accept
+# an in-view reference as a response-policy target), so each one needs its own
+# reload or a view is left serving yesterday's blocklist.
+# Empty when views are off, which takes the plain no-view path below. The count
+# is templated in rather than measured with bash's array-length expansion,
+# because that spelling opens with the same two characters as a Jinja comment
+# and stops this file rendering at all.
+RNDC_VIEWS=({% for view in bind_views %}{% if bind_views_enabled %}"{{ view.name }}" {% endif %}{% endfor %})
+RNDC_VIEW_COUNT={{ bind_views | length if bind_views_enabled else 0 }}
+
 failed=0
 updated=0
 
@@ -83,8 +96,17 @@ refresh_zone() {
   # default), so expect up to a minute of lag before queries are blocked. That
   # is a non-issue for a daily refresh, but it looks exactly like a broken
   # reload if you test immediately.
-  if ! rndc reload "$origin" >/dev/null 2>&1; then
-    echo "${origin}: rndc reload skipped (zone not yet known to named)"
+  if (( RNDC_VIEW_COUNT == 0 )); then
+    if ! rndc reload "$origin" >/dev/null 2>&1; then
+      echo "${origin}: rndc reload skipped (zone not yet known to named)"
+    fi
+  else
+    local view
+    for view in "${RNDC_VIEWS[@]}"; do
+      if ! rndc reload "$origin" IN "$view" >/dev/null 2>&1; then
+        echo "${origin}: rndc reload skipped for view ${view} (zone not yet known to named)"
+      fi
+    done
   fi
 }
 

@@ -127,6 +127,22 @@
     daemon_reload: true
   when: bind_rpz_enabled
 
+# Must precede named.conf.options: that file is what grows the view statements,
+# and the moment it has them a named.conf still including named.conf.default-zones
+# at the top level is invalid. `validate` only checks the fragment in hand, so an
+# out-of-order deploy would pass here and fail at restart.
+- name: Ensure named.conf keeps every zone inside a view
+  become: true
+  ansible.builtin.template:
+    src: named.conf
+    dest: /etc/bind/named.conf
+    owner: root
+    group: bind
+    mode: "0644"
+  when: bind_views_enabled
+  notify:
+    - Restart named
+
 - name: Ensure config file exist
   become: true
   ansible.builtin.template:
@@ -163,14 +179,23 @@
     success_msg: "No duplicate CNAMEs across group '{{ bind_ansible_group }}'."
     quiet: true
 
+# One render per view. With views off `bind_zone_renders` holds only the
+# internal entry, so this stays the single `db.<domain>.zone` it has always been.
+# `bind_zone_address_var` is the whole difference between the two: which
+# inventory variable the host A records are read from.
 - name: Check for zone changes
   become: true
   ansible.builtin.template:
     src: db.zone
-    dest: "/etc/bind/zones/db.{{ bind_domain }}.zone"
+    dest: "/etc/bind/zones/{{ item.zone_file }}"
     owner: root
     group: bind
     mode: "0644"
+  loop: "{{ bind_zone_renders }}"
+  loop_control:
+    label: "{{ item.name }}"
+  vars:
+    bind_zone_address_var: "{{ item.address_var }}"
   register: zone_check
 
 - name: Check for reverse zone changes
@@ -187,12 +212,16 @@
   become: true
   ansible.builtin.template:
     src: db.zone
-    dest: "/etc/bind/zones/db.{{ bind_domain }}.zone"
+    dest: "/etc/bind/zones/{{ item.zone_file }}"
     owner: root
     group: bind
     mode: "0644"
     validate: named-checkzone {{ bind_domain }} %s
-  when: zone_check.changed
+  loop: "{{ zone_check.results | selectattr('changed') | map(attribute='item') | list }}"
+  loop_control:
+    label: "{{ item.name }}"
+  vars:
+    bind_zone_address_var: "{{ item.address_var }}"
   notify:
     - Restart named
 
@@ -212,10 +241,12 @@
 - name: Replace serial in zone file if changed
   become: true
   ansible.builtin.lineinfile:
-    path: "/etc/bind/zones/db.{{ bind_domain }}.zone"
+    path: "/etc/bind/zones/{{ item.zone_file }}"
     regexp: "^  1234567890 ; Serial"
     line: "  {{ now(utc=true, fmt='%y%m%d%H%M') }} ; Serial"
-  when: zone_check.changed
+  loop: "{{ zone_check.results | selectattr('changed') | map(attribute='item') | list }}"
+  loop_control:
+    label: "{{ item.name }}"
   notify:
     - Restart named
 

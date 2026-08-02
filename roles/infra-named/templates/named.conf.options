@@ -1,4 +1,123 @@
 #jinja2: lstrip_blocks:True, trim_blocks:True
+{#
+  Zone declarations are macros because split horizon renders them twice: once
+  per view, differing only in which forward zone file is loaded. `share_from`
+  names an earlier view to take the zone from via `in-view`, which loads the
+  data once and shares it — used for the zones that are identical in both views
+  (reverse, DNAME aliases). The RPZ zones cannot use it: named rejects an
+  in-view reference as a response-policy target, so those are loaded per-view.
+#}
+{% macro forward_zone(ind, zone_file) %}
+{{ ind }}zone "{{ bind_domain }}" {
+{{ ind }}  type primary;
+{{ ind }}  file "/etc/bind/zones/{{ zone_file }}";
+
+{{ ind }}  # -----------------------------------------------------------
+{{ ind }}  # DNSSEC
+{{ ind }}  # -----------------------------------------------------------
+{{ ind }}  # Public keys
+  {% if bind_dnssec_keys is defined and bind_dnssec_keys | length > 0 %}
+{{ ind }}  include "/etc/bind/keys.conf";
+  {% endif %}
+
+{{ ind }}  # -----------------------------------------------------------
+{{ ind }}  # Zone transfers
+{{ ind }}  # -----------------------------------------------------------
+
+{{ ind }}  # Allow zone info to be copied to a secondary NS
+{{ ind }}  allow-transfer {
+{{ ind }}    localhost;
+  {% if bind_acl_groups is defined %}
+    {% for item in bind_acl_groups %}
+{{ ind }}    {{ item.name }};
+    {% endfor %}
+  {% endif %}
+{{ ind }}  };
+
+{{ ind }}  # Allow dynamic updates
+{{ ind }}  # allow-update
+
+{{ ind }}};
+{% endmacro %}
+{% macro reverse_zone(ind, share_from) %}
+{% if share_from %}
+{{ ind }}zone "{{ bind_iprange_reversed }}.in-addr.arpa" {
+{{ ind }}  in-view {{ share_from }};
+{{ ind }}};
+{% else %}
+{{ ind }}zone "{{ bind_iprange_reversed }}.in-addr.arpa" {
+{{ ind }}  type primary;
+{{ ind }}  file "/etc/bind/zones/db.{{ bind_domain }}.reverse.zone";
+{{ ind }}};
+{% endif %}
+{% endmacro %}
+{% macro dname_zones(ind, share_from) %}
+{% if bind_dname_aliases is defined %}
+  {% for alias in bind_dname_aliases %}
+{% if share_from %}
+{{ ind }}zone "{{ alias }}" {
+{{ ind }}  in-view {{ share_from }};
+{{ ind }}};
+{% else %}
+{{ ind }}zone "{{ alias }}" {
+{{ ind }}  type primary;
+{{ ind }}  file "/etc/bind/zones/db.{{ alias }}.zone";
+{{ ind }}};
+{% endif %}
+  {% endfor %}
+{% endif %}
+{% endmacro %}
+{% macro rpz_policy(ind) %}
+{{ ind }}# -----------------------------------------------------------
+{{ ind }}# DNS filtering (Response Policy Zones)
+{{ ind }}# -----------------------------------------------------------
+{{ ind }}# Policy zones are consulted in the order listed and, for matches of the same
+{{ ind }}# trigger type (ours are all QNAME), the first zone listed wins. The local
+{{ ind }}# allowlist MUST therefore come first, so a passthru always beats a blocklist.
+{{ ind }}#
+{{ ind }}# qname-wait-recurse no: answer straight from the policy zone instead of
+{{ ind }}# recursing first only to throw the answer away. The whole point is that we
+{{ ind }}# never contact the ad domain.
+{{ ind }}response-policy {
+{{ ind }}  zone "rpz.allowlist" policy passthru;
+  {% for item in bind_rpz_zones %}
+{{ ind }}  zone "{{ item.name }}";
+  {% endfor %}
+{{ ind }}} qname-wait-recurse no;
+{% endmacro %}
+{% macro rpz_zones(ind) %}
+{{ ind }}# -----------------------------------------------------------
+{{ ind }}# Response Policy Zones
+{{ ind }}# -----------------------------------------------------------
+{{ ind }}# Policy data, not published data: clients may be *affected* by these zones but
+{{ ind }}# must not be able to query or transfer them.
+{{ ind }}#
+{{ ind }}# The allowlist is rendered by Ansible from `bind_rpz_allowlist`. The blocklists
+{{ ind }}# are fetched, validated and installed by {{ bind_rpz_refresh_script }},
+{{ ind }}# never templated — Ansible only guarantees they exist before named sees them.
+{{ ind }}#
+{{ ind }}# These are declared primary in EVERY view, unlike the other shared zones:
+{{ ind }}# named rejects a response-policy target that is an in-view reference
+{{ ind }}# ("not a primary or secondary zone"). So each view holds its own copy of
+{{ ind }}# the blocklist, and the memory cost is per-view — see the role README.
+
+{{ ind }}zone "rpz.allowlist" {
+{{ ind }}  type primary;
+{{ ind }}  file "{{ bind_rpz_dir }}/db.rpz.allowlist";
+{{ ind }}  allow-query { none; };
+{{ ind }}  allow-transfer { none; };
+{{ ind }}};
+
+  {% for item in bind_rpz_zones %}
+{{ ind }}zone "{{ item.name }}" {
+{{ ind }}  type primary;
+{{ ind }}  file "{{ bind_rpz_dir }}/db.{{ item.name }}";
+{{ ind }}  allow-query { none; };
+{{ ind }}  allow-transfer { none; };
+{{ ind }}};
+
+  {% endfor %}
+{% endmacro %}
 
 # -----------------------------------------------------------
 # ACL Groups
@@ -81,55 +200,18 @@ options {
   # them. Beware! - if the forwarders are down, the NS will not
   # answer non-authoritative queries at all!
   # forward only;
-{% if bind_rpz_enabled %}
+{% if bind_rpz_enabled and not bind_views_enabled %}
 
-  # -----------------------------------------------------------
-  # DNS filtering (Response Policy Zones)
-  # -----------------------------------------------------------
-  # Policy zones are consulted in the order listed and, for matches of the same
-  # trigger type (ours are all QNAME), the first zone listed wins. The local
-  # allowlist MUST therefore come first, so a passthru always beats a blocklist.
-  #
-  # qname-wait-recurse no: answer straight from the policy zone instead of
-  # recursing first only to throw the answer away. The whole point is that we
-  # never contact the ad domain.
-  response-policy {
-    zone "rpz.allowlist" policy passthru;
-{% for item in bind_rpz_zones %}
-    zone "{{ item.name }}";
-{% endfor %}
-  } qname-wait-recurse no;
+{{ rpz_policy('  ') }}
 {% endif %}
 
 };
 {% if bind_rpz_enabled %}
 
 # -----------------------------------------------------------
-# Response Policy Zones
+# Blocked-query log. `logging` is a top-level statement — it cannot go
+# inside a view, so it stays here whether or not views are in use.
 # -----------------------------------------------------------
-# Policy data, not published data: clients may be *affected* by these zones but
-# must not be able to query or transfer them.
-#
-# The allowlist is rendered by Ansible from `bind_rpz_allowlist`. The blocklists
-# are fetched, validated and installed by {{ bind_rpz_refresh_script }},
-# never templated — Ansible only guarantees they exist before named sees them.
-
-zone "rpz.allowlist" {
-  type primary;
-  file "{{ bind_rpz_dir }}/db.rpz.allowlist";
-  allow-query { none; };
-  allow-transfer { none; };
-};
-
-{% for item in bind_rpz_zones %}
-zone "{{ item.name }}" {
-  type primary;
-  file "{{ bind_rpz_dir }}/db.{{ item.name }}";
-  allow-query { none; };
-  allow-transfer { none; };
-};
-
-{% endfor %}
 logging {
   channel rpz_log {
     file "{{ bind_rpz_log_file }}" versions 3 size 10m;
@@ -140,53 +222,54 @@ logging {
   category rpz { rpz_log; };
 };
 {% endif %}
+{% if not bind_views_enabled %}
+{% if bind_rpz_enabled %}
 
-zone "{{ bind_domain }}" {
-  type primary;
-  file "/etc/bind/zones/db.{{ bind_domain }}.zone";
+{{ rpz_zones('') }}
+{% endif %}
 
-  # -----------------------------------------------------------
-  # DNSSEC
-  # -----------------------------------------------------------
-  # Public keys
-  {% if bind_dnssec_keys is defined and bind_dnssec_keys | length > 0 %}
-  include "/etc/bind/keys.conf";
-  {% endif %}
+{{ forward_zone('', 'db.' + bind_domain + '.zone') }}
 
-  # -----------------------------------------------------------
-  # Zone transfers
-  # -----------------------------------------------------------
-
-  # Allow zone info to be copied to a secondary NS
-  allow-transfer {
-    localhost;
-    {% if bind_acl_groups is defined %}
-      {% for item in bind_acl_groups %}
-        {{ item.name }};
-      {% endfor %}
-    {% endif %}
-  };
-
-  # Allow dynamic updates
-  # allow-update
-
-};
-
-
-zone "{{ bind_iprange_reversed }}.in-addr.arpa" {
-  type primary;
-  file "/etc/bind/zones/db.{{ bind_domain }}.reverse.zone";
-};
-
+{{ reverse_zone('', '') }}
 # -----------------------------------------------------------
 # Legacy-domain aliases (DNAME the whole subtree onto {{ bind_domain }})
 # so devices still searching an old domain resolve to current records.
 # -----------------------------------------------------------
-{% if bind_dname_aliases is defined %}
-{% for alias in bind_dname_aliases %}
-zone "{{ alias }}" {
-  type primary;
-  file "/etc/bind/zones/db.{{ alias }}.zone";
+{{ dname_zones('', '') }}
+{% else %}
+
+# -----------------------------------------------------------
+# Split-horizon views
+# -----------------------------------------------------------
+# Declared most-specific first: BIND matches views in order and stops at the
+# first hit, so the catch-all must come last. That order is also what lets the
+# later view `in-view` the shared zones out of the earlier one.
+#
+# Debian's named.conf.default-zones (root hints, localhost, RFC1918 reverse) is
+# included per-view rather than at the top level, because BIND requires every
+# zone to live inside a view once any view exists. roles/infra-named templates
+# /etc/bind/named.conf to drop the top-level include.
+{% for view in bind_views %}
+{% set share_from = bind_views[0].name if not loop.first else '' %}
+
+view "{{ view.name }}" {
+  match-clients { {{ view.match_clients }} };
+
+  include "/etc/bind/named.conf.default-zones";
+{% if bind_rpz_enabled %}
+
+{{ rpz_policy('  ') }}
+
+{{ rpz_zones('  ') }}
+{% endif %}
+
+{{ forward_zone('  ', view.zone_file) }}
+
+{{ reverse_zone('  ', share_from) }}
+{% if bind_dname_aliases | default([]) | length > 0 %}
+  # Legacy-domain aliases (DNAME the whole subtree onto {{ bind_domain }})
+{{ dname_zones('  ', share_from) }}
+{% endif %}
 };
 {% endfor %}
 {% endif %}

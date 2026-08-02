@@ -75,9 +75,11 @@ dhcpd_dns_servers:
 # -------------------------------------------------------------------
 # Role default advertises dns01 -> 192.168.1.2 (deedee). bertha now takes over:
 # this also sets the SOA primary (template uses [0]) and its glue A/PTR records.
+# By host rather than by address, so the tailnet view advertises dns01 at
+# bertha's Tailscale address — a resolver a roaming client can actually reach.
 bind_records_nameservers:
   - name: dns01
-    ip: 192.168.1.1
+    host: router-4gb-bertha
 # Apex/www A records now live in group_vars/infra (shared infra-zone topology).
 
 # Keep BIND off the WAN (Fritz!Box) side — bind everywhere EXCEPT that subnet.
@@ -85,6 +87,15 @@ bind_records_nameservers:
 # depth). LAN is IPv4-only, so no v6 DNS listener is needed at all.
 bind_listen_on: "!192.168.178.0/24; any;"
 bind_listen_on_v6: "none;"
+
+# -------------------------------------------------------------------
+# SPLIT-HORIZON DNS
+# -------------------------------------------------------------------
+# bertha is the resolver the tailnet points at, so it is the one host where
+# splitting the zone is meaningful. LAN clients get 192.168.1.x, tailnet clients
+# get 100.80.x.x, for the same names. See the infra-named README before
+# enabling: this also makes the role take over /etc/bind/named.conf.
+bind_views_enabled: true
 
 # Serve the previous internal domain as a DNAME alias onto the current one, so
 # devices still hard-coded to search i.affordablepotatoes.com resolve to the
