@@ -19,6 +19,7 @@ host_description: "Primary home dual-NIC Linux router"
 host_ipv4: 192.168.1.1 # bertha's LAN address (on enp1s0)
 host_mac: "1c:61:b4:6d:6f:cd" # enp1s0 (LAN) NIC
 host_ipv4_subnet: 24
+host_tailscale_ipv4: 100.80.1.1
 # The WAN (enp2s0) is the netplan "primary" and runs DHCP off the Fritz!Box.
 # Making the WAN the DHCP primary is deliberate: static mode would have the role
 # emit `default via {{ network_netplan_gateway }}` (192.168.1.1) — a default

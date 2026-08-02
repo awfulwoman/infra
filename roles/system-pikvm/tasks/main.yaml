@@ -89,6 +89,11 @@
   no_log: true
   when: not tailscale_connected and tailscaleup_result.rc != 0
 
+# Must follow enrolment: a device only has an address to correct once it exists.
+- name: Ensure the Tailnet address matches inventory
+  ansible.builtin.include_role:
+    name: network-tailscale-address
+
 - name: Ensure packages are updated
   ansible.builtin.command:
     cmd: pikvm-update --no-reboot

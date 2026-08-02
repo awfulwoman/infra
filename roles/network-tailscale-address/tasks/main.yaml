@@ -1,0 +1,118 @@
+# code: language=ansible
+
+- name: Pin the Tailscale address declared in inventory
+  when:
+    - tailscale_address_enforce | bool
+    - host_tailscale_ipv4 is defined
+    - host_tailscale_ipv4 | default('', true) | length > 0
+  block:
+
+    # Catch a typo here rather than as an opaque 400 from the API. Tailscale
+    # only hands out addresses from the CGNAT block 100.64.0.0/10.
+    - name: Assert the declared address is inside Tailscale's CGNAT range
+      ansible.builtin.assert:
+        that:
+          - host_tailscale_ipv4 is match('^100\.(6[4-9]|[7-9][0-9]|1[01][0-9]|12[0-7])\.')
+        fail_msg: >-
+          host_tailscale_ipv4 for {{ inventory_hostname }} is
+          '{{ host_tailscale_ipv4 }}', which is outside 100.64.0.0/10.
+          Tailscale will not accept it.
+        success_msg: "{{ host_tailscale_ipv4 }} is a usable Tailscale address."
+        quiet: true
+
+    - name: Read the address Tailscale currently has for this host
+      ansible.builtin.command:
+        cmd: tailscale ip -4
+      register: tailscale_current_ipv4_raw
+      changed_when: false
+      failed_when: false
+
+    - name: Set current Tailscale address fact
+      ansible.builtin.set_fact:
+        tailscale_current_ipv4: >-
+          {{ (tailscale_current_ipv4_raw.stdout_lines | default([]) | first | default('')) | trim }}
+
+    # Nothing to do on a host that is not enrolled (the address is assigned at
+    # enrolment, so there is no device to re-address yet) or already correct.
+    - name: Move the device onto its inventory address
+      when:
+        - tailscale_current_ipv4 | length > 0
+        - tailscale_current_ipv4 != host_tailscale_ipv4
+      block:
+
+        - name: Obtain a Tailscale API token
+          ansible.builtin.include_role:
+            name: network-tailscale-token
+
+        # Matching on the address the host itself reports, rather than on
+        # hostname, avoids picking the wrong device when a name has been reused
+        # or when Tailscale has suffixed it (`storage-1`).
+        - name: List the devices in the tailnet
+          ansible.builtin.uri:
+            url: "{{ tailscale_api_base }}/tailnet/-/devices"
+            method: GET
+            headers:
+              Authorization: "Bearer {{ tailscale_api_token }}"
+            status_code: 200
+          register: tailscale_devices_response
+          no_log: true
+
+        - name: Identify this host's device
+          ansible.builtin.set_fact:
+            tailscale_device_id: >-
+              {{ tailscale_devices_response.json.devices
+                 | selectattr('addresses', 'contains', tailscale_current_ipv4)
+                 | map(attribute='id') | first | default('') }}
+
+        - name: Assert the device was found
+          ansible.builtin.assert:
+            that:
+              - tailscale_device_id | length > 0
+            fail_msg: >-
+              No device in the tailnet holds {{ tailscale_current_ipv4 }}, so
+              {{ inventory_hostname }} cannot be re-addressed. The OAuth client
+              may be scoped to a different tailnet.
+            quiet: true
+
+        # Reassigning drops every existing connection to this machine, including
+        # this Ansible connection if it runs over the tailnet.
+        #
+        # no_log keeps the bearer token out of the failure output, so the status
+        # is checked separately below rather than by `status_code` — otherwise a
+        # rejected address fails with nothing to go on.
+        - name: Set the device's Tailscale IPv4 address
+          ansible.builtin.uri:
+            url: "{{ tailscale_api_base }}/device/{{ tailscale_device_id }}/ip"
+            method: POST
+            headers:
+              Authorization: "Bearer {{ tailscale_api_token }}"
+            body_format: json
+            body:
+              ipv4: "{{ host_tailscale_ipv4 }}"
+            status_code: [200, 204]
+          register: tailscale_address_set
+          changed_when: tailscale_address_set.status | default(0) in [200, 204]
+          failed_when: false
+          no_log: true
+
+        - name: Assert Tailscale accepted the address
+          ansible.builtin.assert:
+            that:
+              - tailscale_address_set.status | default(0) in [200, 204]
+            fail_msg: >-
+              Tailscale refused {{ host_tailscale_ipv4 }} for
+              {{ inventory_hostname }} (HTTP
+              {{ tailscale_address_set.status | default('no response') }}).
+              403 means the OAuth client lacks write access to the devices:core
+              scope; another 4xx usually means the address is already held by a
+              different device.
+            quiet: true
+
+        - name: Wait for tailscaled to pick up the new address
+          ansible.builtin.command:
+            cmd: tailscale ip -4
+          register: tailscale_address_verify
+          changed_when: false
+          until: host_tailscale_ipv4 in tailscale_address_verify.stdout_lines
+          retries: "{{ tailscale_address_verify_retries | int }}"
+          delay: "{{ tailscale_address_verify_delay | int }}"

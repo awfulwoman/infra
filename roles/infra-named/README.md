@@ -8,6 +8,7 @@ This role will:
 * Gather info about machines in the Ansible inventory.
 * Assign inventory FQDNs to inventory IP addresses.
 * Discover application cnames and map them to inventory FQDNs.
+* Publish each host's Tailscale address under a `ts.` name.
 * Generate zone files (normal and reverse).
 
 This setup should also allow an external DHCP server to make changes via [DDNS](https://en.wikipedia.org/wiki/Dynamic_DNS).
@@ -20,6 +21,32 @@ named-checkzone DOMAINNAME /etc/bind/zones/db.DOMAINNAME.zone
 # Check reverse zone file
 named-checkzone 168.192.in-addr.arpa /etc/bind/zones/db.DOMAINNAME.reverse.zone
 ```
+
+## Tailscale addresses
+
+Every host declares its Tailscale address as `host_tailscale_ipv4` in its
+`host_vars` (the [`network-tailscale-address`](../network-tailscale-address/README.md)
+role is what holds the device to it). This role publishes those alongside the
+LAN A records, so each host ends up with a name for both paths to it:
+
+```text
+server-64gb-storage.kberg.ber                IN  A  192.168.1.116
+ts.server-64gb-storage.kberg.ber             IN  A  100.80.1.116
+```
+
+That is the addressable form of "everything is accessed via Tailscale": a
+composition on one host can reach a service on another over the tailnet by name,
+rather than by a hardcoded `100.x` that changes the next time a device is
+re-enrolled.
+
+| Variable | Default | Purpose |
+|----------|---------|---------|
+| `bind_tailscale_records_enabled` | `true` | Emit the `ts.` A records at all |
+| `bind_tailscale_record_prefix` | `ts` | Label prefixed to `host_pfqdn` |
+
+Hosts without `host_tailscale_ipv4` are skipped. No PTR records are generated —
+Tailscale addresses reverse under `100.in-addr.arpa`, which this role does not
+serve, and MagicDNS already covers it.
 
 ## DNS filtering (Response Policy Zones)
 

@@ -1,0 +1,5 @@
+galaxy_info:
+  role_name: network-tailscale-address
+  description: Pins a host's Tailscale IPv4 address to the value declared in inventory
+  min_ansible_version: "2.14"
+dependencies: []

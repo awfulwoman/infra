@@ -1,24 +1,15 @@
 # code: language=ansible
 
-- name: Exchange OAuth credentials for Bearer token
-  ansible.builtin.uri:
-    url: https://api.tailscale.com/api/v2/oauth/token
-    method: POST
-    body_format: form-urlencoded
-    body:
-      grant_type: client_credentials
-      client_id: "{{ tailscale_oauth_client_id }}"
-      client_secret: "{{ tailscale_oauth_client_secret }}"
-    status_code: 200
-  register: tailscale_oauth_token_response
-  no_log: true
+- name: Obtain a Tailscale API token
+  ansible.builtin.include_role:
+    name: network-tailscale-token
 
 - name: Generate one-time Tailscale auth key
   ansible.builtin.uri:
-    url: https://api.tailscale.com/api/v2/tailnet/-/keys
+    url: "{{ tailscale_api_base }}/tailnet/-/keys"
     method: POST
     headers:
-      Authorization: "Bearer {{ tailscale_oauth_token_response.json.access_token }}"
+      Authorization: "Bearer {{ tailscale_api_token }}"
     body_format: json
     body:
       capabilities:

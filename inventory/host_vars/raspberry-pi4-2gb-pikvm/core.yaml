@@ -19,6 +19,7 @@ host_description: "KVM over IP device"
 host_ipv4: 192.168.1.111
 host_primary_interface: "enp3s0"
 host_ipv4_subnet: 24
+host_tailscale_ipv4: 100.80.1.111
 
 
 # -------------------------------------------------------------------

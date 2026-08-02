@@ -210,6 +210,11 @@
     tailscale_up_skip: "{{ tailscale_connected }}"
   when: tailscale_exit_node is defined and tailscale_exit_node is true
 
+# Must follow enrolment: a device only has an address to correct once it exists.
+- name: Tailscale - pin the inventory address
+  ansible.builtin.include_role:
+    name: network-tailscale-address
+
 - name: Git
   ansible.builtin.include_role:
     name: system-git

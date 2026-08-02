@@ -50,6 +50,17 @@ $ORIGIN    {{ bind_domain }}.
   {% endif %}
 {% endfor %}
 
+; A records - Tailscale addresses from Ansible inventory (managed hosts)
+{% if bind_tailscale_records_enabled %}
+  {% for host in groups[bind_ansible_group] %}
+    {% if (hostvars[host].host_pfqdn is defined) and (hostvars[host].host_tailscale_ipv4 is defined) %}
+      {% if hostvars[host].host_tailscale_ipv4 %}
+        {{- '%-40s' | format(bind_tailscale_record_prefix + '.' + hostvars[host].host_pfqdn) }} IN      A         {{ hostvars[host].host_tailscale_ipv4 }}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
 ; cnames - from Ansible inventory
 {% for host in groups[bind_ansible_group] %}
   {% if hostvars[host].cnames is defined %}

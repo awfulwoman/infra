@@ -11,6 +11,21 @@ bind_iprange_segment: 192.168
 bind_iprange_reversed: "{{ bind_iprange_segment | string | split('.') | reverse | join('.') }}"
 bind_ansible_group: infra
 bind_unmanaged_group: unmanaged
+
+# -------------------------------------------------------------------
+# TAILSCALE RECORDS
+# -------------------------------------------------------------------
+# Publish each managed host's Tailscale address (`host_tailscale_ipv4` in
+# host_vars, held there by the network-tailscale-address role) as
+# `<prefix>.<host_pfqdn>.<bind_domain>`, alongside the LAN A record. That gives
+# every host a name for each path to it: the bare pfqdn over the LAN, the `ts.`
+# name over the tailnet — useful from a host that has no LAN route, and stable
+# in a way a raw 100.x address in a config file is not.
+# Hosts with no `host_tailscale_ipv4` are skipped.
+# No PTRs are generated: Tailscale addresses reverse under 100.in-addr.arpa,
+# which this role does not serve — MagicDNS already handles that.
+bind_tailscale_records_enabled: true
+bind_tailscale_record_prefix: ts
 # Define ACL groups for using this DNS server
 bind_acl_groups:
   - name: LAN

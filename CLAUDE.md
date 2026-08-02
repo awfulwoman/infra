@@ -52,6 +52,9 @@ The primary configuration management tool. Structure:
     - `network-netplan`: Netplan-based network configuration for primary interface (supports static IP and DHCP)
     - `network-register-subdomain`: DNS subdomain registration
     - `network-ip-address-forwarding`: IPv4 forwarding via sysctl
+    - `network-tailscale-token`: Exchanges Tailscale OAuth credentials for an API bearer token
+    - `network-tailscale-authkey`: Mints a one-time Tailscale enrolment key
+    - `network-tailscale-address`: Pins a host's Tailscale IPv4 to the inventory's `host_tailscale_ipv4`
   - `infra-*`: Infrastructure resources provisioned via Terraform
 - **`playbooks/`**: Split into `hosts/` (per-host) and `groups/` (per-group), plus `utility/`
   - Each host directory has several playbook files:
