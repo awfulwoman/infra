@@ -34,7 +34,7 @@ Roles run in this order (each builds on the previous):
   static `192.168.1.1`.
 - `network-routing-basic`: IPv4 forwarding, NAT, and the firewall.
 - `infra-dhcpd`: the LAN's DHCP server.
-- `infra-named`: the LAN's authoritative DNS server.
+- `infra-named`: the LAN's authoritative DNS server, and its ad blocker.
 
 ## NAT and forwarding
 
@@ -95,6 +95,34 @@ Legacy devices still searching the previous internal domain
 (`i.affordablepotatoes.com`) resolve via a **DNAME alias** onto the current
 domain (`bind_dname_aliases`), so e.g. `jellyfin.i.affordablepotatoes.com`
 resolves to the current `jellyfin.*` record without touching those devices.
+
+## Ad blocking
+
+Because `infra-dhcpd` hands out bertha as the *only* resolver, blocking here
+cannot be bypassed by a client picking its own DNS server. That is done with
+BIND **Response Policy Zones** rather than a Pi-hole: RPZ is the same "lie about
+ad domains" mechanism, in the resolver already running, so the router keeps its
+no-Docker footprint and the inventory-generated zones above stay untouched.
+
+`bind_rpz_enabled: true` pulls HaGeZi Multi Normal (~181k domains) as a policy
+zone. A daily systemd timer (`bind-rpz-refresh.timer`) re-fetches it, validates
+it with `named-checkzone`, and `rndc reload`s just that zone — never installing
+a list that fails validation, and never restarting named (which would throw away
+the resolver cache). Loading the list costs named about 250 MB of RSS.
+
+A local `rpz.allowlist` policy zone is listed **first**, so an `rpz-passthru`
+entry there beats every blocklist. It always contains the internal domain and
+the DNAME aliases, so no public blocklist can shadow our own names.
+
+**Runbook — a site is broken and you suspect blocking:**
+
+```bash
+# The RPZ log names the exact rule that fired
+grep <domain> /var/log/named/rpz.log
+```
+
+Then add the domain to `bind_rpz_allowlist_extra` in bertha's host_vars and
+re-run the role. See `roles/infra-named/README.md` for the blocklist tiers.
 
 ## IPv6 stance: intentionally IPv4-only
 
@@ -164,4 +192,4 @@ assertion that fails early, listing the offending duplicates.
 - `network-netplan`: netplan rendering (see `roles/network-netplan/README.md`).
 - `network-routing-basic`: forwarding, NAT, and firewall.
 - `infra-dhcpd`: LAN DHCP server.
-- `infra-named`: LAN authoritative / split-horizon DNS.
+- `infra-named`: LAN authoritative / split-horizon DNS, plus RPZ ad blocking.

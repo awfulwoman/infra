@@ -92,6 +92,22 @@ bind_dname_aliases:
   - i.affordablepotatoes.com
 
 # -------------------------------------------------------------------
+# DNS FILTERING (infra-named RPZ) — network-wide ad/tracker blocking
+# -------------------------------------------------------------------
+# dhcpd hands out bertha as the ONLY resolver, so filtering here cannot be
+# bypassed by a client picking a different DNS server. Role default is `false`;
+# this is the one host where it makes sense.
+bind_rpz_enabled: true
+# HaGeZi Multi Normal: ~181k domains, the balanced tier. See the role README for
+# the other tiers and how to layer the malware/phishing list alongside.
+bind_rpz_zones:
+  - name: rpz.hagezi-multi
+    url: https://raw.githubusercontent.com/hagezi/dns-blocklists/main/rpz/multi.txt
+# Domains a blocklist gets wrong. The internal domain and the DNAME alias above
+# are protected automatically — only add genuine false positives here.
+bind_rpz_allowlist_extra: []
+
+# -------------------------------------------------------------------
 # ANSIBLE
 # -------------------------------------------------------------------
 ansible_host: "{{ host_ipv4 }}"

@@ -1,0 +1,15 @@
+[Unit]
+Description=Refresh BIND RPZ blocklists
+Documentation=https://github.com/hagezi/dns-blocklists
+After=network-online.target named.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart={{ bind_rpz_refresh_script }}
+StandardOutput=journal
+StandardError=journal
+TimeoutStartSec=1800
+
+[Install]
+WantedBy=multi-user.target

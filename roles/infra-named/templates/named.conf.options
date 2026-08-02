@@ -81,8 +81,65 @@ options {
   # them. Beware! - if the forwarders are down, the NS will not
   # answer non-authoritative queries at all!
   # forward only;
+{% if bind_rpz_enabled %}
+
+  # -----------------------------------------------------------
+  # DNS filtering (Response Policy Zones)
+  # -----------------------------------------------------------
+  # Policy zones are consulted in the order listed and, for matches of the same
+  # trigger type (ours are all QNAME), the first zone listed wins. The local
+  # allowlist MUST therefore come first, so a passthru always beats a blocklist.
+  #
+  # qname-wait-recurse no: answer straight from the policy zone instead of
+  # recursing first only to throw the answer away. The whole point is that we
+  # never contact the ad domain.
+  response-policy {
+    zone "rpz.allowlist" policy passthru;
+{% for item in bind_rpz_zones %}
+    zone "{{ item.name }}";
+{% endfor %}
+  } qname-wait-recurse no;
+{% endif %}
 
 };
+{% if bind_rpz_enabled %}
+
+# -----------------------------------------------------------
+# Response Policy Zones
+# -----------------------------------------------------------
+# Policy data, not published data: clients may be *affected* by these zones but
+# must not be able to query or transfer them.
+#
+# The allowlist is rendered by Ansible from `bind_rpz_allowlist`. The blocklists
+# are fetched, validated and installed by {{ bind_rpz_refresh_script }},
+# never templated — Ansible only guarantees they exist before named sees them.
+
+zone "rpz.allowlist" {
+  type primary;
+  file "{{ bind_rpz_dir }}/db.rpz.allowlist";
+  allow-query { none; };
+  allow-transfer { none; };
+};
+
+{% for item in bind_rpz_zones %}
+zone "{{ item.name }}" {
+  type primary;
+  file "{{ bind_rpz_dir }}/db.{{ item.name }}";
+  allow-query { none; };
+  allow-transfer { none; };
+};
+
+{% endfor %}
+logging {
+  channel rpz_log {
+    file "{{ bind_rpz_log_file }}" versions 3 size 10m;
+    severity info;
+    print-time yes;
+    print-category yes;
+  };
+  category rpz { rpz_log; };
+};
+{% endif %}
 
 zone "{{ bind_domain }}" {
   type primary;

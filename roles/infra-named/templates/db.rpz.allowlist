@@ -1,0 +1,31 @@
+#jinja2: lstrip_blocks:True, trim_blocks:True
+; Local RPZ allowlist — the escape hatch for blocklist false positives.
+; Listed FIRST in response-policy, so a match here beats every blocklist.
+;
+; Managed by Ansible (roles/infra-named). To allowlist a domain, add it to
+; `bind_rpz_allowlist_extra` in host_vars and re-run the role — do not edit
+; this file on the host, it will be overwritten.
+;
+; Names are relative to the zone origin, which is how RPZ works: an entry
+; `example.com` here matches a query for `example.com`, and `*.example.com`
+; matches everything beneath it.
+$TTL {{ bind_default_ttl }}
+$ORIGIN rpz.allowlist.
+@ IN SOA {{ bind_records_nameservers[0].name }}.{{ bind_domain }}. admin.{{ domainname_infra }}. (
+{# Serial is derived from the allowlist contents: stable across no-op runs (so #}
+{# the role stays idempotent) and different whenever the list changes. It is    #}
+{# deliberately not monotonic — this zone never transfers (allow-transfer none) #}
+{# and a change here notifies a full `Restart named`, which loads zone files    #}
+{# without comparing serials at all.                                            #}
+  {{ (bind_rpz_allowlist | unique | sort | join(',') | hash('sha1'))[:8] | int(base=16) }} ; Serial
+  604800 ; Refresh
+  86400 ; Retry
+  2419200 ; Expire
+  604800 ; Negative Cache TTL
+)
+  IN NS {{ bind_records_nameservers[0].name }}.{{ bind_domain }}.
+
+{% for domain in bind_rpz_allowlist | unique | sort %}
+{{ domain }} CNAME rpz-passthru.
+*.{{ domain }} CNAME rpz-passthru.
+{% endfor %}

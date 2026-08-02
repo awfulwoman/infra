@@ -1,0 +1,13 @@
+[Unit]
+Description=Refresh BIND RPZ blocklists on a schedule
+Requires={{ bind_rpz_service_name }}.service
+
+[Timer]
+OnCalendar={{ bind_rpz_refresh_schedule }}
+# Spread the fetch out rather than hammering the CDN on the hour, and don't let
+# a reboot-time run collide with named still coming up.
+RandomizedDelaySec=3600
+Persistent=true
+
+[Install]
+WantedBy=timers.target
