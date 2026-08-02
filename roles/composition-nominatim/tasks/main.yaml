@@ -69,9 +69,12 @@
 # ----------------------------
 
 - name: Start Docker Compose project
+  # Kept stopped: OSM import was OOM-crash-looping and causing memory
+  # pressure on other services. Set back to `present` once import sizing
+  # (composition_nominatim_mem_limit / _import_cache) is retested.
   community.docker.docker_compose_v2:
     project_src: "{{ composition_root }}"
-    state: present
+    state: stopped
     build: always
     remove_orphans: true
   notify: Restart Traefik
