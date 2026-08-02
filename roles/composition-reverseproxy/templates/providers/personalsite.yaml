@@ -48,4 +48,6 @@ http:
       loadBalancer:
         passHostHeader: true
         servers:
-          - url: "http://100.106.129.23:8085"
+          # Reached over the tailnet, by inventory fact rather than a literal
+          # 100.x, so a re-addressed device does not silently break the site.
+          - url: "http://{{ hostvars['server-64gb-storage']['host_tailscale_ipv4'] }}:8085"

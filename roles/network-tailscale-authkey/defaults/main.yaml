@@ -1,3 +1,8 @@
 # code: language=ansible
 
+# Kept alongside network-tailscale-token's own default: `include_role` does not
+# expose an included role's defaults to the including role, so each role that
+# builds an API URL needs its own copy.
+tailscale_api_base: https://api.tailscale.com/api/v2
+
 tailscale_authkey_expiry_seconds: 300

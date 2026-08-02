@@ -24,6 +24,7 @@ host_description: "Remote node in London"
 # Docs: roles/network-netplan/README.md
 # -------------------------------------------------------------------
 host_primary_interface: "eth0"
+host_tailscale_ipv4: 100.80.2.2
 tailscale_exit_node: true
 
 # -------------------------------------------------------------------

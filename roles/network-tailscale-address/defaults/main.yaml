@@ -1,0 +1,15 @@
+# code: language=ansible
+
+# Kept alongside network-tailscale-token's own default: `include_role` does not
+# expose an included role's defaults to the including role, so each role that
+# builds an API URL needs its own copy.
+tailscale_api_base: https://api.tailscale.com/api/v2
+
+# Master switch. When false the role is a no-op, which is the escape hatch for a
+# host that must keep whatever address Tailscale handed it.
+tailscale_address_enforce: true
+
+# After a reassignment, how long to wait for tailscaled to start answering with
+# the new address before failing.
+tailscale_address_verify_retries: 12
+tailscale_address_verify_delay: 5

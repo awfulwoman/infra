@@ -1,0 +1,5 @@
+galaxy_info:
+  role_name: network-tailscale-token
+  description: Exchanges Tailscale OAuth client credentials for a short-lived API bearer token
+  min_ansible_version: "2.14"
+dependencies: []

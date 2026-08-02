@@ -19,6 +19,7 @@ host_description: "Mac Mini M4 16GB - used for LLM and MacOS-specific workloads"
 host_primary_interface: "en0"
 host_ipv4: 192.168.1.99
 host_ipv4_subnet: 24
+host_tailscale_ipv4: 100.80.1.99
 host_mac: "1c:f6:4c:3e:51:a5"
 
 # -------------------------------------------------------------------

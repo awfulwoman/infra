@@ -1,0 +1,25 @@
+# code: language=ansible
+
+# The token is a host fact, so a play that touches the Tailscale API more than
+# once (generate an auth key, then set the device address) exchanges credentials
+# only on the first include.
+
+- name: Exchange OAuth credentials for Bearer token
+  ansible.builtin.uri:
+    url: "{{ tailscale_api_base }}/oauth/token"
+    method: POST
+    body_format: form-urlencoded
+    body:
+      grant_type: client_credentials
+      client_id: "{{ tailscale_oauth_client_id }}"
+      client_secret: "{{ tailscale_oauth_client_secret }}"
+    status_code: 200
+  register: tailscale_oauth_token_response
+  no_log: true
+  when: tailscale_api_token is not defined
+
+- name: Set tailscale_api_token fact
+  ansible.builtin.set_fact:
+    tailscale_api_token: "{{ tailscale_oauth_token_response.json.access_token }}"
+  no_log: true
+  when: tailscale_api_token is not defined

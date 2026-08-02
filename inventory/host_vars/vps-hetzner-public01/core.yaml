@@ -22,6 +22,7 @@ network_netplan_mode: dhcp
 host_ipv4_extra:
   - "{{ hetzner_floating_ip }}/32" # Assign permanent floating IP to this server
 network_netplan_nameservers: ["185.12.64.1", "185.12.64.2"]
+host_tailscale_ipv4: 100.80.2.1
 
 # -------------------------------------------------------------------
 # ANSIBLE

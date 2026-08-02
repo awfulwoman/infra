@@ -18,6 +18,7 @@ host_description: "Runs infrastructure tasks"
 # -------------------------------------------------------------------
 host_ipv4: 192.168.1.4
 host_ipv4_subnet: 24
+host_tailscale_ipv4: 100.80.1.4
 host_primary_interface: "eth0"
 host_mac: "e4:5f:01:34:5f:0e"
 
