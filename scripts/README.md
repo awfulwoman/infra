@@ -1,13 +1,38 @@
 # Scripts
 
-Various useful scripts and whatnots.
+This directory holds scripts for infrastructure tasks.
 
-## Preparing a machine for Ansible
+## Ansible playbooks and roles
 
-These two scripts will prepare a machine for being controlled by Ansible, and particularly via ansible-pull.
+* [Run all core playbooks](run-core.sh) — runs every host's core playbook in sequence. It updates Galaxy dependencies first.
+* [Fix playbook tags](fix-playbook-tags.py) — adds missing type and role-name tags to custom roles in every playbook.
+* [Refactor compositions to composition-common](refactor-compositions.py) — converts composition-* roles to use the composition-common dependency.
+* [Convert playbooks to direct composition roles](update-playbooks-compositions.py) — replaces the compositions role with individual composition-* role entries.
 
-* [Ubuntu](bootstrap-ansible-ubuntu-server.sh)
-* [Mac](bootstrap-ansible-mac.sh)
+## Prepare a machine for Ansible
+
+These two scripts prepare a machine for Ansible control, especially for ansible-pull.
+
+* [Ubuntu](ansible-pull/bootstrap-ansible-ubuntu-server.sh)
+* [Mac](ansible-pull/bootstrap-ansible-mac.sh)
+
+## DNS
+
+* [Flush DNS cache on Mac](flush-dns-macos.sh) — flushes the macOS DNS cache, and cycles Tailscale to clear its cache too.
+* [Flush DNS cache on Ubuntu](flush-dns-ubuntu.sh) — restarts systemd-resolved to flush the DNS cache. Run with sudo.
+
+## Docker
+
+* [Check image healthcheck tools](check-image-healthcheck-tools.sh) — reports the OS and the available healthcheck tools for a Docker image.
+
+## Secrets
+
+* [Generate a Laravel app key](generate-laravel-key.sh) — generates a Laravel APP_KEY in the format `base64:<32 random bytes>`.
+* [Write a password to 1Password](op-infra-write.py) — generates a password and stores it in the 1Password Infra vault, through Connect.
+
+## Backups
+
+* [Suspend backups](suspend-backups.sh) — publishes a suspend message to server-8gb-backups over MQTT.
 
 ## Firmware
 
