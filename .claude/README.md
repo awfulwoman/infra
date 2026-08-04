@@ -1,51 +1,37 @@
 # Claude Code Configuration
 
-Project-specific configuration for [Claude Code](https://claude.ai/code).
-
-This directory extends the project instructions in `CLAUDE.md` at the repository root. Rules here are automatically loaded alongside that file.
+This directory extends the project instructions in `CLAUDE.md`, at the
+repository root. Claude Code loads the rules here alongside that file.
 
 ## Structure
 
 | Directory/File | Description |
 |----------------|-------------|
-| `agents/` | Custom agent definitions |
-| `commands/` | Custom slash commands |
-| `rules/` | Project rules automatically loaded into context |
-| `skills/` | Project-scoped skills (each in its own `<name>/SKILL.md` subdirectory) |
+| `rules/` | Project rules, loaded into context automatically |
+| `skills/` | Project-scoped skills, each in its own `<name>/SKILL.md` subdirectory |
+| `settings.json` | Shared settings, checked into the repo |
 | `settings.local.json` | Local settings (gitignored) |
-
-## Agents
-
-Invoke agents by typing `@"agent-name (agent)"` in a message.
-
-| Agent | Description |
-|-------|-------------|
-| **content-gap-reviewer** | Identifies missing content in documentation or configuration |
-
-## Commands
-
-Invoke commands by typing `/command-name` in a message.
-
-| Command | Description |
-|---------|-------------|
-| `/commit` | Analyse changes, draft a commit message following conventional commits format, stage files, and commit |
-| `/log` | Document the current work session to `worklog/` for continuity across sessions |
 
 ## Skills
 
-Invoke skills by typing `/skill-name` in a message. Each skill lives in its own subdirectory: `skills/<name>/SKILL.md`.
+To invoke a skill, type `/skill-name` in a message. Each skill lives in its
+own subdirectory: `skills/<name>/SKILL.md`.
 
 | Skill | Description |
 |-------|-------------|
-| `ansible-deploy` | Deploy Ansible playbooks to hosts or groups, selecting the right playbook and tags |
-| `create-composition` | Create a new Docker Compose-based Ansible role (`composition-*`) from a GitHub repo or install docs |
+| `ansible-deploy` | Deploy Ansible playbooks to hosts or groups, and select the right playbook and tags |
+| `create-composition` | Create a new Docker Compose-based Ansible role (`composition-*`), from a GitHub repo or install docs |
+| `infra-health` | Check that infra hosts are reachable, that compositions run and stay healthy, and find cnames in host_vars with no matching composition |
 
 ## Rules
 
-Rules in `rules/` are automatically included in Claude's context alongside `CLAUDE.md`:
+Claude Code loads rules in `rules/` into context automatically, alongside
+`CLAUDE.md`.
 
 | Rule | Description |
 |------|-------------|
-| **editorconfig.md** | Honour `.editorconfig` formatting |
-| **precommit.md** | Run pre-commit hooks before committing |
-| **python.md** | Use virtual environments for Python |
+| `ansible-facts.md` | Access Ansible facts through the `ansible_facts` dict, not top-level `ansible_*` variables |
+| `ansible-vault.md` | Generate secrets inline with `openssl rand -hex 32` when you vault them, not with a placeholder |
+| `docker-healthcheck.md` | Use a shell TCP probe for Docker healthchecks, not `wget`/`curl`, unless the image confirms support |
+| `precommit.md` | Install and run `pre-commit` before every commit |
+| `python.md` | No virtual environment is necessary for this project. `ansible` and `pre-commit` come from Homebrew |
