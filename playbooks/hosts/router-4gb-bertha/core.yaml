@@ -1,4 +1,4 @@
-- name: Testbed for dual-NIC Linux router setup
+- name: Bertha, lovely Bertha. Sometimes I think you're a dream!
   hosts: router-4gb-bertha
   roles:
     - role: monitoring-healthchecksio
@@ -19,7 +19,7 @@
       tags: [infra, infra-dhcpd]
     - role: infra-named
       tags: [infra, infra-named]
-    # - role: infra-certbot
+    - role: infra-certbot
     - role: monitoring-healthchecksio
       monitoring_healthchecksio_ping_type: success
       tags: [monitoring, monitoring-healthchecksio]
