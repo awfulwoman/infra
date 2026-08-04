@@ -1,7 +1,0 @@
-- name: Email backup
-  hosts: server-64gb-storage
-  roles:
-  - role: system-zfs
-    tags: [system, system-zfs]
-  - role: system-emailbackup
-    tags: [system, system-emailbackup]
