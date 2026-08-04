@@ -1,36 +1,36 @@
 # Router (bertha)
 
-`router-4gb-bertha` is the home network's router and gateway — a dual-NIC
-Linux box that sits between the LAN and the upstream Fritz!Box, doing NAT,
-DHCP, and authoritative DNS for the internal network. It replaced `deedee` as
-the primary DHCP/DNS server.
+`router-4gb-bertha` is the home network's router and gateway. It is a
+dual-NIC Linux host between the LAN and the upstream Fritz!Box. It does NAT,
+DHCP, and authoritative DNS for the internal network. It replaced `deedee`
+as the primary DHCP and DNS server.
 
-All of bertha's configuration lives in
-`inventory/host_vars/router-4gb-bertha/core.yaml` and is applied by
-`playbooks/hosts/router-4gb-bertha/core.yaml`.
+Bertha's configuration lives in
+`inventory/host_vars/router-4gb-bertha/core.yaml`.
+`playbooks/hosts/router-4gb-bertha/core.yaml` applies it.
 
 ## NIC layout
 
-Bertha has two physical NICs. Getting their roles right is load-bearing —
-swapping them (or misnaming a third that doesn't exist) black-holes all
-outbound traffic.
+Bertha has two physical NICs, and their roles must be correct. If you swap
+them, or name a third NIC that does not exist, all outbound traffic
+black-holes.
 
 | NIC      | Role | Address               | Notes |
 |----------|------|-----------------------|-------|
 | `enp2s0` | WAN  | DHCP from Fritz!Box   | Upstream gateway `192.168.178.1`; supplies the default route |
 | `enp1s0` | LAN  | `192.168.1.1/24` (static) | Bertha is the gateway for the `192.168.1.0/24` home network |
 
-The `wan_iface` / `lan_iface` host_vars must always match the netplan
-`ethernets:` keys above — `network-routing-basic` asserts they are set and
-distinct before touching any rules.
+The `wan_iface` and `lan_iface` host_vars must always match the netplan
+`ethernets:` keys above. `network-routing-basic` runs an assert task that
+checks both are set and distinct before it changes any rules.
 
 ## The role stack
 
 Roles run in this order (each builds on the previous):
 
-- `bootstrap-ubuntu-server`: base host setup. Needs a working WAN first.
-- `network-netplan`: renders netplan. The WAN is the netplan **primary** in
-  `dhcp` mode — see the default-route trap below for why. Preserves the LAN's
+- `bootstrap-ubuntu-server`: base host setup. It needs a working WAN first.
+- `network-netplan`: renders netplan. The WAN is the netplan **primary**, in
+  `dhcp` mode — see the default-route trap below for why. It keeps the LAN's
   static `192.168.1.1`.
 - `network-routing-basic`: IPv4 forwarding, NAT, and the firewall.
 - `infra-dhcpd`: the LAN's DHCP server.
@@ -43,14 +43,14 @@ outbound traffic on the WAN (`enp2s0`), so the `192.168.1.0/24` LAN reaches
 the internet through a single upstream address. FORWARD rules permit
 LAN→WAN and established/related return traffic.
 
-iptables rules are made reboot-safe via `iptables-persistent`: every
-rule-modifying task notifies a single `Save iptables rules` handler that runs
-`netfilter-persistent save`.
+`iptables-persistent` makes iptables rules reboot-safe: every
+rule-modifying task notifies a single `Save iptables rules` handler, which
+runs `netfilter-persistent save`.
 
 ## Firewall
 
-Hardening is gated on `network_routing_firewall: true`. When enabled, INPUT
-and FORWARD default to **DROP**, with an allow-list for:
+The `network_routing_firewall: true` setting turns hardening on. When it is
+enabled, INPUT and FORWARD default to **DROP**, with an allow-list for:
 
 - loopback and established/related traffic,
 - Tailscale (`tailscale0`) — the out-of-band management backstop,
@@ -58,61 +58,65 @@ and FORWARD default to **DROP**, with an allow-list for:
   (`network_routing_input_tcp_ports` / `network_routing_input_udp_ports`),
 - ICMP from the LAN.
 
-The WAN cannot reach the router or initiate forwards. Because Tailscale is a
-separate tunnel, tightening the firewall can't lock you out of management.
+The WAN cannot reach the router or start forwards. Tailscale is a separate
+tunnel, so tightening the firewall cannot lock you out of management.
 
 ## DHCP
 
-`infra-dhcpd` runs the ISC DHCP server, bound to the LAN NIC only
+`infra-dhcpd` runs the ISC DHCP server. It binds to the LAN NIC only
 (`dhcpd_interface: enp1s0`). It hands out **only** bertha (`192.168.1.1`) as
-the resolver — deliberately not a public secondary — so clients can't fall
-through and bypass bertha's split-horizon DNS.
+the resolver. This is deliberate: it is not a public secondary, so clients
+cannot fall through and bypass bertha's split-horizon DNS.
 
-> The role default binds to `enp3s0`, a NIC bertha does not have. Leaving it
-> at the default means the server serves nobody; the `dhcpd_interface`
-> override is mandatory here.
+> The role default binds to `enp3s0`, a NIC bertha does not have. At the
+> default, the server serves nobody. The `dhcpd_interface` override is
+> mandatory here.
 
 Static leases for unmanaged IoT devices come from the `unmanaged` inventory
-group (`host_ipv4`/`host_mac` in `inventory/hosts-unmanaged.yaml`) — see
-`roles/infra-dhcpd/README.md`. If a device with a static lease looks
-unreachable, check the WiFi layer before the DHCP layer: see
-[wifi.md](wifi.md) for a case where the DHCP config was blameless but the
-device still couldn't get online.
+group (`host_ipv4`/`host_mac` in `inventory/hosts-unmanaged.yaml`). See
+`roles/infra-dhcpd/README.md` for details. If a device with a static lease
+looks unreachable, check the WiFi layer before the DHCP layer. See
+[wifi.md](wifi.md) for a case where the DHCP config was not at fault, but
+the device did not connect.
 
 ## DNS
 
-`infra-named` (BIND9) is authoritative for the internal domain and does
-split-horizon resolution — the LAN gets internal answers, the outside world
-gets the public view. Bertha advertises itself as the sole nameserver
-(`dns01 → 192.168.1.1`).
+`infra-named` (BIND9) is authoritative for the internal domain. It does
+split-horizon resolution: the LAN gets internal answers, and the outside
+world gets the public view. Bertha advertises itself as the sole
+nameserver (`dns01 → 192.168.1.1`).
 
-BIND is deliberately kept off the WAN: `bind_listen_on` binds everywhere
+BIND is deliberately kept off the WAN. `bind_listen_on` binds everywhere
 *except* the WAN subnet (`!192.168.178.0/24; any;`), and `bind_listen_on_v6`
-is `none;`. The firewall already blocks WAN:53 — this removes the listener
+is `none;`. The firewall already blocks WAN:53. This removes the listener
 too, as defence in depth.
 
 Legacy devices still searching the previous internal domain
-(`i.affordablepotatoes.com`) resolve via a **DNAME alias** onto the current
-domain (`bind_dname_aliases`), so e.g. `jellyfin.i.affordablepotatoes.com`
-resolves to the current `jellyfin.*` record without touching those devices.
+(`i.affordablepotatoes.com`) resolve through a **DNAME alias** to the
+current domain (`bind_dname_aliases`). For example,
+`jellyfin.i.affordablepotatoes.com` resolves to the current `jellyfin.*`
+record. The devices need no change.
 
 ## Ad blocking
 
-Because `infra-dhcpd` hands out bertha as the *only* resolver, blocking here
-cannot be bypassed by a client picking its own DNS server. That is done with
-BIND **Response Policy Zones** rather than a Pi-hole: RPZ is the same "lie about
-ad domains" mechanism, in the resolver already running, so the router keeps its
-no-Docker footprint and the inventory-generated zones above stay untouched.
+Because `infra-dhcpd` hands out bertha as the *only* resolver, a client
+cannot bypass ad blocking by choice of a different DNS server. Blocking
+uses BIND **Response Policy Zones**, not a Pi-hole. RPZ uses the same "lie
+about ad domains" mechanism, but it runs inside the BIND resolver that
+already runs on bertha. This keeps the router's no-Docker footprint, and
+leaves the inventory-generated zones above untouched.
 
-`bind_rpz_enabled: true` pulls HaGeZi Multi Normal (~181k domains) as a policy
-zone. A daily systemd timer (`bind-rpz-refresh.timer`) re-fetches it, validates
-it with `named-checkzone`, and `rndc reload`s just that zone — never installing
-a list that fails validation, and never restarting named (which would throw away
-the resolver cache). Loading the list costs named about 250 MB of RSS.
+`bind_rpz_enabled: true` pulls HaGeZi Multi Normal (~181k domains) as a
+policy zone. A daily systemd timer (`bind-rpz-refresh.timer`) re-fetches
+it, validates it with `named-checkzone`, and `rndc reload`s just that zone.
+It never installs a list that fails validation. It never restarts named,
+because a restart throws away the resolver cache. Loading the list costs
+named about 250 MB of RSS.
 
-A local `rpz.allowlist` policy zone is listed **first**, so an `rpz-passthru`
-entry there beats every blocklist. It always contains the internal domain and
-the DNAME aliases, so no public blocklist can shadow our own names.
+A local `rpz.allowlist` policy zone is listed **first**, so an
+`rpz-passthru` entry there beats every blocklist. It always contains the
+internal domain and the DNAME aliases, so no public blocklist can shadow
+our own names.
 
 **Runbook — a site is broken and you suspect blocking:**
 
@@ -121,8 +125,9 @@ the DNAME aliases, so no public blocklist can shadow our own names.
 grep <domain> /var/log/named/rpz.log
 ```
 
-Then add the domain to `bind_rpz_allowlist_extra` in bertha's host_vars and
-re-run the role. See `roles/infra-named/README.md` for the blocklist tiers.
+Add the domain to `bind_rpz_allowlist_extra` in bertha's host_vars. Then
+re-run the role. See `roles/infra-named/README.md` for the blocklist
+tiers.
 
 ## IPv6 stance: intentionally IPv4-only
 
@@ -142,50 +147,55 @@ enp1s0: # LAN
 
 Why this matters:
 
-- **WAN (`enp2s0`)** — without `accept-ra: false` / `dhcp6: false`, the
-  interface silently SLAAC-autoconfigures a *public, globally-routable* IPv6
-  address from the Fritz!Box's router advertisements. With no `ip6tables`
-  ruleset anywhere, that address would be completely unfiltered. Suppressing
-  it keeps bertha's WAN attack surface to the (firewalled) IPv4 side only.
-  Link-local (`fe80::`) remains, which is harmless — it isn't routable
-  off-link.
+- **WAN (`enp2s0`)** — without `accept-ra: false` and `dhcp6: false`, the
+  interface silently SLAAC-autoconfigures a *public, globally-routable*
+  IPv6 address from the Fritz!Box's router advertisements. There is no
+  `ip6tables` ruleset, so that address is completely unfiltered. The
+  setting keeps bertha's WAN attack surface to the firewalled IPv4 side
+  only. Link-local (`fe80::`) remains. This is harmless: it is not
+  routable off-link.
 - **LAN (`enp1s0`)** — a router must never learn routing from its own
-  clients. A live check found another LAN device sending router
-  advertisements that this interface was willing to accept;
-  `accept-ra: false` refuses them.
+  clients. A live check found another LAN device that sent router
+  advertisements. This interface accepted them by default. `accept-ra:
+  false` refuses them now.
 
-A full dual-stack build (DHCPv6-PD on the WAN via `dhcpcd`, RA/SLAAC to the
-LAN via `radvd`, an `ip6tables` mirror of the v4 firewall) was scoped and
-deliberately deferred: IPv6 has no NAT, so every LAN device would become
-directly internet-addressable, making the v6 firewall load-bearing rather
-than optional. The smaller "suppress the unprotected WAN address" change above
-was chosen instead.
+A full dual-stack build was scoped, and deliberately deferred. It needs
+three things: DHCPv6-PD on the WAN through `dhcpcd`, RA/SLAAC to the LAN
+through `radvd`, and an `ip6tables` mirror of the v4 firewall. IPv6 has no
+NAT, so every LAN device becomes directly internet-addressable without a
+v6 firewall. This makes the v6 firewall load-bearing, not optional.
+Bertha uses the smaller "suppress the unprotected WAN address" change
+above instead.
 
 ## Design traps worth remembering
 
-**Netplan static-mode default-route trap.** In `static` mode the
-`network-netplan` role emits `default via {{ network_netplan_gateway }}`. On a
-router whose "gateway" default equals its own LAN IP (`192.168.1.1`), that's a
-default route pointing at *itself* — which black-holes all outbound traffic.
-Bertha sidesteps this by making the WAN the **DHCP primary**, so the upstream
-Fritz!Box (`192.168.178.1`) supplies the real default route.
+**Netplan static-mode default-route trap.** In `static` mode, the
+`network-netplan` role emits `default via {{ network_netplan_gateway }}`.
+On a router whose "gateway" default equals its own LAN IP
+(`192.168.1.1`), that is a default route that points at *itself*. This
+black-holes all outbound traffic. Bertha sidesteps this by making the WAN
+the **DHCP primary**, so the upstream Fritz!Box (`192.168.178.1`) supplies
+the real default route.
 
 **Stale installer netplan file.** netplan merges *every* file in
-`/etc/netplan`, so a leftover `00-installer-config.yaml` (written by the
-Ubuntu installer) silently combines with the role's authoritative
-`50-primary-interface.yaml`. On bertha the installer file carried the exact
-self-referential `default via 192.168.1.1` route above; it lay dormant until a
-`netplan apply` re-merged it and black-holed the WAN. The `network-netplan`
-role now removes `00-installer-config.yaml` on every run so it can't resurface.
-Corollary: **any `netplan apply` on a router re-evaluates all files and has the
-same blast radius as a routing change — treat even a one-line IPv6 edit as a
-routing change and stage it behind a rollback safety net.**
+`/etc/netplan`. A leftover `00-installer-config.yaml`, written by the
+Ubuntu installer, silently combines with the role's authoritative
+`50-primary-interface.yaml`. On bertha, the installer file carried the
+exact self-referential `default via 192.168.1.1` route above. It lay
+dormant until a `netplan apply` re-merged it, and black-holed the WAN. The
+`network-netplan` role now removes `00-installer-config.yaml` on every
+run, so it cannot resurface.
 
-**Duplicate-CNAME zone failure.** `infra-named` aggregates `cnames` from every
-host in the `infra` group into one forward zone. A CNAME is a singleton RR
-type, so the same name declared on two hosts makes named reject the *entire*
-zone (all DNS goes down). The role guards against this with a pre-render
-assertion that fails early, listing the offending duplicates.
+Corollary: any `netplan apply` on a router re-evaluates all files. It has
+the same blast radius as a routing change. **Treat even a one-line IPv6
+edit as a routing change, and stage it behind a rollback safety net.**
+
+**Duplicate-CNAME zone failure.** `infra-named` aggregates `cnames` from
+every host in the `infra` group into one forward zone. A CNAME is a
+singleton RR type. If the same name is declared on two hosts, named
+rejects the *entire* zone, and all DNS goes down. The role guards against
+this with a pre-render assertion that fails early. The assertion lists
+the offending duplicates.
 
 ## Relevant roles
 
