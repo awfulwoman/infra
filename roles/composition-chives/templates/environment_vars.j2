@@ -9,6 +9,11 @@ CHIVES_TELEGRAM__BOT_TOKEN={{ composition_chives_telegram_token }}
 CHIVES_TELEGRAM__ALLOWED_CHAT_IDS=[{{ composition_chives_telegram_chat_id }}]
 {% endif %}
 
+{% if composition_chives_editor_username %}
+CHIVES_EDITOR__USERNAME={{ composition_chives_editor_username }}
+CHIVES_EDITOR__PASSWORD={{ composition_chives_editor_password }}
+{% endif %}
+
 CHIVES_IMAP__HOST=imap.{{ vault_mailprovider_domain }}
 CHIVES_IMAP__PORT=993
 CHIVES_IMAP__USERNAME={{ vault_mailprovider_user }}
