@@ -94,7 +94,16 @@ backups_zfs_server_mqtt_enabled: true
 system_zfs_policy_snapshots_enable: false
 
 # -------------------------------------------------------------------
-# CNAMES
+# COMPOSITIONS
+# Internal DNS for this host is derived from this list by the dns_records
+# filter (roles/infra-named) instead of a hand-maintained cnames: list.
+# reverseproxy's default labels (whoami/traefik) are suppressed here: they
+# were never actually registered as cnames for this host, and exposing a
+# Traefik dashboard/debug endpoint should be a deliberate call, not a side
+# effect of this migration.
 # -------------------------------------------------------------------
-cnames:
-  - zfs-api.raspberry-pi5-4gb-belinda.{{ domainname_infra }}
+compositions:
+  - composition: reverseproxy
+    labels: []
+  - container-management
+  - zfs-api

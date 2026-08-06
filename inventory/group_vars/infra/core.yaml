@@ -50,6 +50,12 @@ bind_records_a:
 composition_subdomains:
   1password-connect:
     - connect
+  reverseproxy:
+    - "whoami.{host}"
+    - "traefik.{host}"
+  container-management: []
+  zfs-api:
+    - "zfs-api.{host}"
 
 # Ansible
 ansible_path: "/opt/ansible"
