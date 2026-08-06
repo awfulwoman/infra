@@ -20,6 +20,7 @@ These two scripts prepare a machine for Ansible control, especially for ansible-
 
 * [Flush DNS cache on Mac](flush-dns-macos.sh) — flushes the macOS DNS cache, and cycles Tailscale to clear its cache too.
 * [Flush DNS cache on Ubuntu](flush-dns-ubuntu.sh) — restarts systemd-resolved to flush the DNS cache. Run with sudo.
+* [Snapshot domain resolution + TLS state](snapshot-domains.sh) — captures, per registered service name and from both a LAN and remote (public01) vantage, the CNAME chain, resolved IP, HTTPS status, and served cert subject/issuer/expiry. See [docs/snapshots/README.md](../docs/snapshots/README.md).
 
 ## Docker
 

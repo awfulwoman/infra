@@ -1,0 +1,621 @@
+{
+  "services": {
+    "audiobookshelf.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "error": "openssl timed out",
+      "https_status": "000",
+      "resolved_ips": [
+        "100.127.225.25"
+      ]
+    },
+    "bazarr.ewwww.eu": {
+      "cert_expiry": "Oct 12 08:37:29 2026 GMT",
+      "cert_issuer": "C=US, O=Let's Encrypt, CN=YR1",
+      "cert_subject": "CN=bazarr.ewwww.eu",
+      "cname_chain": [],
+      "https_status": "200",
+      "resolved_ips": [
+        "100.80.1.116"
+      ]
+    },
+    "chat.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "error": "openssl timed out",
+      "https_status": "000",
+      "resolved_ips": [
+        "100.127.225.25"
+      ]
+    },
+    "connect.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "error": "openssl timed out",
+      "https_status": "000",
+      "resolved_ips": [
+        "100.97.193.114"
+      ]
+    },
+    "esphome.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "error": "openssl timed out",
+      "https_status": "000",
+      "resolved_ips": [
+        "100.87.245.26"
+      ]
+    },
+    "firefly-importer.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "error": "openssl timed out",
+      "https_status": "000",
+      "resolved_ips": [
+        "100.127.225.25"
+      ]
+    },
+    "firefly.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "error": "openssl timed out",
+      "https_status": "000",
+      "resolved_ips": [
+        "100.127.225.25"
+      ]
+    },
+    "freshrss.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "error": "openssl timed out",
+      "https_status": "000",
+      "resolved_ips": [
+        "100.127.225.25"
+      ]
+    },
+    "gateway.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "error": "openssl timed out",
+      "https_status": "000",
+      "resolved_ips": [
+        "100.127.225.25"
+      ]
+    },
+    "gitea.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "error": "openssl timed out",
+      "https_status": "000",
+      "resolved_ips": [
+        "100.127.225.25"
+      ]
+    },
+    "gluetun.ewwww.eu": {
+      "cert_expiry": "Oct 14 19:43:56 2026 GMT",
+      "cert_issuer": "C=US, O=Let's Encrypt, CN=YR1",
+      "cert_subject": "CN=gluetun.ewwww.eu",
+      "cname_chain": [],
+      "https_status": "404",
+      "resolved_ips": [
+        "100.80.1.116"
+      ]
+    },
+    "ha-personal.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "error": "openssl timed out",
+      "https_status": "000",
+      "resolved_ips": [
+        "100.87.245.26"
+      ]
+    },
+    "ha.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "https_status": "000",
+      "resolved_ips": [
+        "100.80.1.130"
+      ]
+    },
+    "home.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "error": "openssl timed out",
+      "https_status": "000",
+      "resolved_ips": [
+        "100.127.225.25"
+      ]
+    },
+    "homeassistant.ewwww.eu": {
+      "cert_expiry": "Oct 12 15:58:27 2026 GMT",
+      "cert_issuer": "C=US, O=Let's Encrypt, CN=YR1",
+      "cert_subject": "CN=homeassistant.ewwww.eu",
+      "cname_chain": [],
+      "https_status": "200",
+      "resolved_ips": [
+        "100.80.1.130"
+      ]
+    },
+    "immich.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "error": "openssl timed out",
+      "https_status": "000",
+      "resolved_ips": [
+        "100.127.225.25"
+      ]
+    },
+    "jellyfin-vue.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "error": "openssl timed out",
+      "https_status": "000",
+      "resolved_ips": [
+        "100.127.225.25"
+      ]
+    },
+    "jellyfin.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "error": "openssl timed out",
+      "https_status": "000",
+      "resolved_ips": [
+        "100.127.225.25"
+      ]
+    },
+    "jellyseerr.ewwww.eu": {
+      "cert_expiry": "Oct 12 08:34:54 2026 GMT",
+      "cert_issuer": "C=US, O=Let's Encrypt, CN=YR2",
+      "cert_subject": "CN=jellyseerr.ewwww.eu",
+      "cname_chain": [],
+      "https_status": "307",
+      "resolved_ips": [
+        "100.80.1.116"
+      ]
+    },
+    "kagimcp.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "error": "openssl timed out",
+      "https_status": "000",
+      "resolved_ips": [
+        "100.127.225.25"
+      ]
+    },
+    "karakeep.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "error": "openssl timed out",
+      "https_status": "000",
+      "resolved_ips": [
+        "100.127.225.25"
+      ]
+    },
+    "lan.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "error": "openssl timed out",
+      "https_status": "000",
+      "resolved_ips": [
+        "100.87.245.26"
+      ]
+    },
+    "libation.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "https_status": "000",
+      "resolved_ips": [
+        "100.80.1.116"
+      ]
+    },
+    "librofm.ewwww.eu": {
+      "cert_expiry": "Oct 12 08:36:51 2026 GMT",
+      "cert_issuer": "C=US, O=Let's Encrypt, CN=YR2",
+      "cert_subject": "CN=librofm.ewwww.eu",
+      "cname_chain": [],
+      "https_status": "200",
+      "resolved_ips": [
+        "100.80.1.116"
+      ]
+    },
+    "lidarr.ewwww.eu": {
+      "cert_expiry": "Oct 12 08:35:45 2026 GMT",
+      "cert_issuer": "C=US, O=Let's Encrypt, CN=YR2",
+      "cert_subject": "CN=lidarr.ewwww.eu",
+      "cname_chain": [],
+      "https_status": "302",
+      "resolved_ips": [
+        "100.80.1.116"
+      ]
+    },
+    "llmcalc.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "error": "openssl timed out",
+      "https_status": "000",
+      "resolved_ips": [
+        "100.127.225.25"
+      ]
+    },
+    "loki.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "error": "openssl timed out",
+      "https_status": "000",
+      "resolved_ips": [
+        "100.127.225.25"
+      ]
+    },
+    "memorybank.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "error": "openssl timed out",
+      "https_status": "000",
+      "resolved_ips": [
+        "100.127.225.25"
+      ]
+    },
+    "mqtt.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "error": "openssl timed out",
+      "https_status": "000",
+      "resolved_ips": [
+        "100.87.245.26"
+      ]
+    },
+    "musicassistant.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "error": "openssl timed out",
+      "https_status": "000",
+      "resolved_ips": [
+        "100.106.129.23"
+      ]
+    },
+    "n8n.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "error": "openssl timed out",
+      "https_status": "000",
+      "resolved_ips": [
+        "100.127.225.25"
+      ]
+    },
+    "nominatim.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "error": "openssl timed out",
+      "https_status": "000",
+      "resolved_ips": [
+        "100.127.225.25"
+      ]
+    },
+    "owntracks-recorder.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "error": "openssl timed out",
+      "https_status": "000",
+      "resolved_ips": [
+        "100.87.245.26"
+      ]
+    },
+    "owntracks.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "error": "openssl timed out",
+      "https_status": "000",
+      "resolved_ips": [
+        "100.87.245.26"
+      ]
+    },
+    "paperless.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "error": "openssl timed out",
+      "https_status": "000",
+      "resolved_ips": [
+        "100.127.225.25"
+      ]
+    },
+    "prowlarr.ewwww.eu": {
+      "cert_expiry": "Oct 13 05:47:50 2026 GMT",
+      "cert_issuer": "C=US, O=Let's Encrypt, CN=YR1",
+      "cert_subject": "CN=prowlarr.ewwww.eu",
+      "cname_chain": [],
+      "https_status": "302",
+      "resolved_ips": [
+        "100.80.1.116"
+      ]
+    },
+    "qbittorrent.ewwww.eu": {
+      "cert_expiry": "Oct 15 03:30:02 2026 GMT",
+      "cert_issuer": "C=US, O=Let's Encrypt, CN=YR1",
+      "cert_subject": "CN=qbittorrent.ewwww.eu",
+      "cname_chain": [],
+      "https_status": "200",
+      "resolved_ips": [
+        "100.80.1.116"
+      ]
+    },
+    "radarr.ewwww.eu": {
+      "cert_expiry": "Oct 13 05:46:54 2026 GMT",
+      "cert_issuer": "C=US, O=Let's Encrypt, CN=YR2",
+      "cert_subject": "CN=radarr.ewwww.eu",
+      "cname_chain": [],
+      "https_status": "302",
+      "resolved_ips": [
+        "100.80.1.116"
+      ]
+    },
+    "search.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "error": "openssl timed out",
+      "https_status": "000",
+      "resolved_ips": [
+        "100.127.225.25"
+      ]
+    },
+    "searchmcp.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "error": "openssl timed out",
+      "https_status": "000",
+      "resolved_ips": [
+        "100.127.225.25"
+      ]
+    },
+    "searxng.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "error": "openssl timed out",
+      "https_status": "000",
+      "resolved_ips": [
+        "100.127.225.25"
+      ]
+    },
+    "sonarr.ewwww.eu": {
+      "cert_expiry": "Oct 12 08:33:04 2026 GMT",
+      "cert_issuer": "C=US, O=Let's Encrypt, CN=YR1",
+      "cert_subject": "CN=sonarr.ewwww.eu",
+      "cname_chain": [],
+      "https_status": "200",
+      "resolved_ips": [
+        "100.80.1.116"
+      ]
+    },
+    "syncthing.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "https_status": "no A record",
+      "resolved_ips": []
+    },
+    "traefik.server-64gb-storage.xberg.ber.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "https_status": "no A record",
+      "resolved_ips": []
+    },
+    "translate.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "error": "openssl timed out",
+      "https_status": "000",
+      "resolved_ips": [
+        "100.127.225.25"
+      ]
+    },
+    "transmission.ewwww.eu": {
+      "cert_expiry": "Oct 16 03:30:32 2026 GMT",
+      "cert_issuer": "C=US, O=Let's Encrypt, CN=YR1",
+      "cert_subject": "CN=transmission.ewwww.eu",
+      "cname_chain": [],
+      "https_status": "301",
+      "resolved_ips": [
+        "100.80.1.116"
+      ]
+    },
+    "tubesync.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "error": "openssl timed out",
+      "https_status": "000",
+      "resolved_ips": [
+        "100.127.225.25"
+      ]
+    },
+    "uptime-kuma.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "error": "openssl timed out",
+      "https_status": "000",
+      "resolved_ips": [
+        "100.127.225.25"
+      ]
+    },
+    "vikunja.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "error": "openssl timed out",
+      "https_status": "000",
+      "resolved_ips": [
+        "100.127.225.25"
+      ]
+    },
+    "wallabag.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "error": "openssl timed out",
+      "https_status": "000",
+      "resolved_ips": [
+        "100.106.129.23"
+      ]
+    },
+    "zfs-api.minipc-8gb-homebrain.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "error": "openssl timed out",
+      "https_status": "000",
+      "resolved_ips": [
+        "100.87.245.26"
+      ]
+    },
+    "zfs-api.raspberry-pi4-2gb-deedee.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "error": "openssl timed out",
+      "https_status": "000",
+      "resolved_ips": [
+        "100.78.236.118"
+      ]
+    },
+    "zfs-api.raspberry-pi5-4gb-belinda.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "error": "openssl timed out",
+      "https_status": "000",
+      "resolved_ips": [
+        "100.104.71.66"
+      ]
+    },
+    "zfs-api.server-64gb-storage.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "error": "openssl timed out",
+      "https_status": "000",
+      "resolved_ips": [
+        "100.127.225.25"
+      ]
+    },
+    "zfs-api.server-8gb-backups.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "https_status": "no A record",
+      "resolved_ips": []
+    },
+    "zfs-api.vps-hetzner-public01.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "error": "openssl timed out",
+      "https_status": "000",
+      "resolved_ips": [
+        "100.86.19.3"
+      ]
+    },
+    "zfs.metrics.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "error": "openssl timed out",
+      "https_status": "000",
+      "resolved_ips": [
+        "100.127.225.25"
+      ]
+    },
+    "zigbee2mqtt.ewwww.eu": {
+      "cert_expiry": null,
+      "cert_issuer": null,
+      "cert_subject": null,
+      "cname_chain": [],
+      "error": "openssl timed out",
+      "https_status": "000",
+      "resolved_ips": [
+        "100.87.245.26"
+      ]
+    }
+  },
+  "vantage": "lan"
+}

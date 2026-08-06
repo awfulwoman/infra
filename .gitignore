@@ -11,3 +11,4 @@ __pycache__
 .worktrees
 .env
 .claude/scheduled_tasks.lock
+scripts/snapshot-domains-names.json

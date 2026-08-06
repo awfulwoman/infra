@@ -12,3 +12,4 @@ Architecture guides and reference material for this infrastructure.
 | [wifi.md](wifi.md) | Wireless APs (unmanaged) — band layout and the 2.4GHz-only IoT trap |
 | [zfs.md](zfs.md) | ZFS architecture, policy-driven snapshots, and replication strategy |
 | [1password-connect.md](1password-connect.md) | Self-hosted secrets management via 1Password Connect |
+| [snapshots/README.md](snapshots/README.md) | Domain snapshot harness — DNS/TLS baseline from LAN and remote vantages |

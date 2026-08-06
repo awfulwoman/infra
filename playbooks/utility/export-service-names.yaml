@@ -1,0 +1,17 @@
+- name: Export every declared service name across infra hosts
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    output_path: "{{ playbook_dir }}/../../scripts/snapshot-domains-names.json"
+  tasks:
+    - name: Collect cnames declared on each infra host
+      ansible.builtin.set_fact:
+        service_names: "{{ (service_names | default([])) + (hostvars[item].cnames | default([])) }}"
+      loop: "{{ groups['infra'] }}"
+
+    - name: Write sorted, de-duplicated service name list
+      ansible.builtin.copy:
+        content: "{{ (service_names | unique | sort) | to_nice_json }}\n"
+        dest: "{{ output_path }}"
+        mode: "0644"
