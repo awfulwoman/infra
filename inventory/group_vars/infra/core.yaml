@@ -73,6 +73,87 @@ composition_subdomains:
     - zigbee2mqtt
   watchyourlan:
     - lan
+  victoriametrics:
+    - zfs.metrics
+  loki:
+    - loki
+  github2karakeep: []
+  finances:
+    - firefly
+    - firefly-importer
+  gitea:
+    - gitea
+  gitea-runners: []
+  jellyfin:
+    - jellyfin
+    - jellyfin-vue
+  immich:
+    - immich
+  llm-inference-calculator:
+    - llmcalc
+  audiobookshelf:
+    - audiobookshelf
+  downloads:
+    - qbittorrent
+    - prowlarr
+    - sonarr
+    - radarr
+    - gluetun
+    - lidarr
+    - bazarr
+    - librofm
+    - libation
+    - transmission
+    - jellyseerr
+  # Role default is "syncthing.{host}"; overridden per-host where the live
+  # cname predates that per-host convention (e.g. server-64gb-storage).
+  syncthing:
+    - "syncthing.{host}"
+  karakeep:
+    - karakeep
+  freshrss:
+    - freshrss
+  tubesync:
+    - tubesync
+  homepage:
+    - home
+  piper: []
+  # Has its own external domain (gts.awfulwoman.com) via its own ACME cert —
+  # out of scope for the internal wildcard/derived zone entirely.
+  gotosocial: []
+  libretranslate:
+    - translate
+  n8n:
+    - n8n
+  memorybank:
+    - memorybank
+  # No default declared in the role itself (composition_name IS the label,
+  # same as chives, but gateway is single-instance with a fixed name).
+  gateway:
+    - gateway
+  paperless-ngx:
+    - paperless
+  vikunja:
+    - vikunja
+  uptime-kuma:
+    - uptime-kuma
+    - uptime-kuma-api
+  mcp-kagisearch:
+    - kagimcp
+  mcp-openzim:
+    - zim
+    - wiki
+  searxng:
+    - searxng
+    - search
+  mcp-searxng:
+    - searchmcp
+  kiwix:
+    - kiwix
+  open-webui:
+    - chat
+  nominatim:
+    - nominatim
 
 # Ansible
 ansible_path: "/opt/ansible"
