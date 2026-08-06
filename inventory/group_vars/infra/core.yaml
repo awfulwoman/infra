@@ -38,6 +38,19 @@ bind_records_a:
   - name: "www"
     ip: "{{ hostvars['server-64gb-storage']['host_ipv4'] }}"
 
+# DNS — per-composition default subdomains, keyed by the name used in a host's
+# compositions: list (the composition-<name> role directory, not necessarily its
+# internal composition_name var — those can differ, e.g. composition-1password-
+# connect's composition_name is onepassword-connect). A role's own defaults/
+# main.yaml isn't visible here: Ansible only merges a role's defaults into
+# hostvars for a host that role has actually run on, but infra-named renders
+# every host's compositions from a single play on the router. This is the one
+# place that's globally visible regardless of execution order. Seeded with just
+# the #265 pilot composition; the rest migrate in #266.
+composition_subdomains:
+  1password-connect:
+    - connect
+
 # Ansible
 ansible_path: "/opt/ansible"
 ansible_log_path: "{{ ansible_path }}/logs"

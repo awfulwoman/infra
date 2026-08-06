@@ -139,16 +139,48 @@
   notify:
     - Restart named
 
-# A CNAME is a singleton RR type: two CNAMEs at the same owner name make named
-# reject the ENTIRE zone ("multiple RRs of singleton type"), taking down all
-# DNS. The forward zone aggregates `cnames` from every host in bind_ansible_group,
-# so a name declared on two hosts collides. Catch it here, before rendering.
-- name: Collect all CNAMEs contributed to the forward zone
+# Hosts that declare `compositions:` (data-driven, see #265) get their internal
+# CNAMEs derived by the dns_records filter instead of a hand-maintained `cnames:`
+# list. Both styles coexist during the migration (#266 moves the rest over).
+- name: Build dns_records filter input from hosts using data-driven compositions
   ansible.builtin.set_fact:
-    bind_all_cnames: "{{ bind_all_cnames | default([]) + (hostvars[item].cnames | default([])) }}"
+    dns_records_hosts: >-
+      {{
+        (dns_records_hosts | default({})) | combine({
+          item: {
+            'fqdn': hostvars[item].host_pfqdn,
+            'tailscale_ipv4': hostvars[item].host_tailscale_ipv4,
+            'compositions': hostvars[item].compositions,
+          }
+        })
+      }}
   loop: "{{ groups[bind_ansible_group] | default([]) }}"
   loop_control:
     label: "{{ item }}"
+  when: hostvars[item].compositions is defined
+
+- name: Derive DNS records for data-driven hosts
+  ansible.builtin.set_fact:
+    dns_records_derived: "{{ (dns_records_hosts | default({})) | dns_records(composition_subdomains | default({})) }}"
+
+# A CNAME is a singleton RR type: two CNAMEs at the same owner name make named
+# reject the ENTIRE zone ("multiple RRs of singleton type"), taking down all
+# DNS. The forward zone aggregates `cnames` from every host in bind_ansible_group
+# plus every label the dns_records filter derives, so a name declared twice
+# (hand-written or derived, on any host) collides. Catch it here, before rendering.
+- name: Collect all CNAMEs contributed to the forward zone
+  ansible.builtin.set_fact:
+    bind_all_cnames: >-
+      {{
+        (bind_all_cnames | default([]) + (hostvars[item].cnames | default([])))
+      }}
+  loop: "{{ groups[bind_ansible_group] | default([]) }}"
+  loop_control:
+    label: "{{ item }}"
+
+- name: Add derived CNAMEs to the duplicate-check set
+  ansible.builtin.set_fact:
+    bind_all_cnames: "{{ (bind_all_cnames | default([])) + (dns_records_derived.cnames.keys() | map('regex_replace', '$', '.' + bind_domain) | list) }}"
 
 - name: Fail early if duplicate CNAMEs would make named reject the zone
   ansible.builtin.assert:

@@ -62,7 +62,9 @@ system_zfs_policy_healthchecksio_enabled: true
 system_zfs_policy_mqtt_enabled: true
 
 # -------------------------------------------------------------------
-# CNAMES
+# COMPOSITIONS
+# Internal DNS for this host is derived from this list by the dns_records
+# filter (roles/infra-named) instead of a hand-maintained cnames: list.
 # -------------------------------------------------------------------
-cnames:
-  - connect.{{ domainname_infra }}
+compositions:
+  - 1password-connect

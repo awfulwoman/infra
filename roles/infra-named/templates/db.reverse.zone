@@ -71,3 +71,15 @@ $ORIGIN {{ bind_iprange_reversed }}.IN-ADDR.ARPA.
     {% endif %}
   {% endif %}
 {% endfor %}
+
+; cnames - derived from dns_records filter (data-driven compositions, see #265)
+{% for host in groups[bind_ansible_group] %}
+  {% if hostvars[host].compositions is defined and hostvars[host].host_ipv4 is not none %}
+    {% set record_ip_split = hostvars[host].host_ipv4.split('.')[0:4] -%}
+    {% for label, target in (dns_records_derived.cnames.items() | sort) %}
+      {% if target == hostvars[host].host_pfqdn %}
+        {{- '%-40s' | format(record_ip_split[3] + '.' + record_ip_split[2])  }} IN      PTR      {{ label }}.{{ bind_domain }}.
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+{% endfor %}

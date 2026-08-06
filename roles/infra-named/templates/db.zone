@@ -69,3 +69,10 @@ $ORIGIN    {{ bind_domain }}.
     {% endfor %}
   {% endif %}
 {% endfor %}
+
+; cnames - derived from dns_records filter (data-driven compositions, see #265)
+{% if dns_records_derived is defined %}
+  {% for label, target in dns_records_derived.cnames.items() | sort %}
+      {{- '%-40s' | format(label + '.' + bind_domain + '.') }} IN      CNAME     {{ target }}
+  {% endfor %}
+{% endif %}
