@@ -61,28 +61,36 @@ composition_motioneye_usbdevice: /dev/video0
 
 docker_port_open: true
 
-composition_reverseproxy_subdomains:
-  - "whoami.{{ ansible_facts['hostname'] }}"
-  - "traefik.{{ ansible_facts['hostname'] }}"
-  - gateway
-
 traefik_providers:
   - homeassistant
   - esphome
   - watchyourlan
   - gateway
 
-cnames:
-  - homeassistant.{{ domainname_infra }}
-  - ha.{{ domainname_infra }}
-  - ha-personal.{{ domainname_infra }}
-  - esphome.{{ domainname_infra }}
-  - mqtt.{{ domainname_infra }}
-  - lan.{{ domainname_infra }}
-  - owntracks.{{ domainname_infra }}
-  - owntracks-recorder.{{ domainname_infra }}
-  - zigbee2mqtt.{{ domainname_infra }}
-  - zfs-api.minipc-8gb-homebrain.{{ domainname_infra }}
+# -------------------------------------------------------------------
+# COMPOSITIONS
+# Internal DNS for this host is derived from this list by the dns_records
+# filter (roles/infra-named) instead of a hand-maintained cnames: list.
+# reverseproxy's default labels (whoami/traefik) are suppressed here, plus
+# the extra 'gateway' this host used to override in: none of the three were
+# ever actually registered as cnames, and exposing a Traefik dashboard/debug
+# endpoint should be a deliberate call, not a side effect of this migration.
+# mqtt must derive before owntracks and zigbee2mqtt (unchanged from the old
+# role order — those compositions depend on mqtt already being up).
+# -------------------------------------------------------------------
+compositions:
+  - mqtt
+  - composition: reverseproxy
+    labels: []
+  - container-management
+  - homeassistant
+  - homeassistant-personal
+  - esphome
+  - matter
+  - owntracks
+  - zigbee2mqtt
+  - watchyourlan
+  - zfs-api
 
 # -------------------------------------------------------------------
 # ZFS POLICY

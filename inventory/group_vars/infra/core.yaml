@@ -56,6 +56,23 @@ composition_subdomains:
   container-management: []
   zfs-api:
     - "zfs-api.{host}"
+  mqtt:
+    - mqtt
+  homeassistant:
+    - homeassistant
+    - ha
+  homeassistant-personal:
+    - ha-personal
+  esphome:
+    - esphome
+  matter: []
+  owntracks:
+    - owntracks-recorder
+    - owntracks
+  zigbee2mqtt:
+    - zigbee2mqtt
+  watchyourlan:
+    - lan
 
 # Ansible
 ansible_path: "/opt/ansible"
