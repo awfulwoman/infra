@@ -25,6 +25,12 @@ ansible-playbook playbooks/groups/ubuntu/bootstrap.yaml
 ansible-playbook playbooks/hosts/server-64gb-storage/core.yaml
 ```
 
+Filter plugins (`plugins/filters/`) with pure-Python logic are unit tested with pytest (install via `brew install pytest`, matching the Ansible/pre-commit Homebrew convention — no venv):
+
+```bash
+pytest
+```
+
 ## Github
 
 - Your primary method of interacting with GitHub should be the GitHub CLI tool, `gh`.
