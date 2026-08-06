@@ -3,7 +3,7 @@ name: "{{ composition_name }}"
 services:
   homeassistant-personal:
     container_name: homeassistant-personal
-    image: ghcr.io/home-assistant/home-assistant:2026.7
+    image: ghcr.io/home-assistant/home-assistant:2026.8
     restart: unless-stopped
     env_file: .environment_vars
     labels:
