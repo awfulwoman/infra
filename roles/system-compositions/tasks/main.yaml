@@ -1,0 +1,6 @@
+- name: Deploy compositions
+  ansible.builtin.include_role:
+    name: "composition-{{ item.composition | default(item) }}"
+  loop: "{{ compositions }}"
+  loop_control:
+    label: "{{ item.composition | default(item) }}"

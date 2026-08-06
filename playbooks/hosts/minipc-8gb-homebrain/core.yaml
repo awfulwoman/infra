@@ -27,52 +27,28 @@
   - role: system-shoutrrr
     become: true
     tags: [system, system-shoutrrr]
-
-  # roles: always executes before tasks:, regardless of position in this file,
-  # so everything that ran after the composition roles in the old static list
-  # — including the final success ping — has to move here too, in the same
-  # order, or it would silently start reporting deploy success before
-  # compositions actually ran.
-  tasks:
-    # compositions: preserves the original order (mqtt first — it must run
-    # before owntracks and zigbee2mqtt, which depend on it already being up).
-    #
-    # tags: cannot reference inventory vars (host_vars/group_vars) — confirmed
-    # by testing: even a plain group_vars/all.yaml var is 'undefined' under
-    # --list-tags, since that pass runs before per-host variables are loaded.
-    # Deriving this list from `compositions` is therefore not viable; it's
-    # written out explicitly, matching what the old static role entries
-    # carried. If compositions changes, update this list to match.
-    - name: Deploy compositions
-      ansible.builtin.include_role:
-        name: "composition-{{ item.composition | default(item) }}"
-      loop: "{{ compositions }}"
-      tags:
-        - composition
-        - composition-mqtt
-        - composition-reverseproxy
-        - composition-container-management
-        - composition-homeassistant
-        - composition-homeassistant-personal
-        - composition-esphome
-        - composition-matter
-        - composition-owntracks
-        - composition-zigbee2mqtt
-        - composition-watchyourlan
-        - zfs
-        - composition-zfs-api
-
-    - name: system-promtail
-      ansible.builtin.include_role:
-        name: system-promtail
-      tags: [system, promtail, system-promtail]
-
-    - name: monitoring-healthchecksio (success)
-      ansible.builtin.include_role:
-        name: monitoring-healthchecksio
-      vars:
-        monitoring_healthchecksio_ping_type: success
-      tags: [monitoring, monitoring-healthchecksio]
+  # compositions: preserves the original order (mqtt first — it must run
+  # before owntracks and zigbee2mqtt, which depend on it already being up).
+  - role: system-compositions
+    tags:
+      - composition
+      - composition-mqtt
+      - composition-reverseproxy
+      - composition-container-management
+      - composition-homeassistant
+      - composition-homeassistant-personal
+      - composition-esphome
+      - composition-matter
+      - composition-owntracks
+      - composition-zigbee2mqtt
+      - composition-watchyourlan
+      - zfs
+      - composition-zfs-api
+  - role: system-promtail
+    tags: [system, promtail, system-promtail]
+  - role: monitoring-healthchecksio
+    monitoring_healthchecksio_ping_type: success
+    tags: [monitoring, monitoring-healthchecksio]
 
   handlers:
   - name: Reboot host

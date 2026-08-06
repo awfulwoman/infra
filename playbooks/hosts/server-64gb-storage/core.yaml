@@ -33,122 +33,88 @@
     tags: [system, system-nvm]
   - role: system-obsidian-headless
     tags: [system, system-obsidian-headless]
+  # composition-nominatim is folded in here (so it's genuinely data-driven,
+  # matching every other composition) rather than kept as a separate static
+  # entry like chives below — unlike chives it fits the generic
+  # (composition, labels) shape perfectly fine. It ran after system-promtail
+  # in the old static list; moved here instead, since there's no dependency
+  # between nominatim (geocoding) and email backup/smartmontools/promtail.
+  - role: system-compositions
+    tags:
+      - composition
+      - zfs
+      - loki
+      - composition-zfs-api
+      - composition-victoriametrics
+      - composition-loki
+      - composition-reverseproxy
+      - composition-container-management
+      - composition-github2karakeep
+      - composition-finances
+      - composition-gitea
+      - composition-gitea-runners
+      - composition-jellyfin
+      - composition-immich
+      - composition-llm-inference-calculator
+      - composition-audiobookshelf
+      - composition-downloads
+      - composition-syncthing
+      - composition-karakeep
+      - ollama
+      - composition-freshrss
+      - composition-tubesync
+      - composition-homepage
+      - composition-piper
+      - composition-gotosocial
+      - composition-libretranslate
+      - composition-n8n
+      - composition-memorybank
+      - composition-gateway
+      - composition-paperless-ngx
+      - composition-vikunja
+      - composition-uptime-kuma
+      - composition-mcp-kagisearch
+      - composition-mcp-openzim
+      - composition-searxng
+      - composition-mcp-searxng
+      - composition-kiwix
+      - composition-open-webui
+      - composition-nominatim
+  # composition-chives has no default composition_name (every other role's
+  # matches its own name; chives supplies a different one at each
+  # invocation) and no default subdomains, so it doesn't fit system-compositions
+  # at all — see the comment in host_vars — and stays a plain static role
+  # like it always was.
+  - role: composition-chives
+    vars:
+      composition_name: nabu
+      composition_chives_mcps:
+        - url: "http://mcp-searxng:3000/mcp" # on same host
+          auth_key: "{{ vault_mcp_searxng_auth_token }}"
+    tags: [composition, composition-chives, ollama]
+  - role: composition-chives
+    vars:
+      composition_name: jarvis # Just until I get custom wake words working
+      composition_chives_telegram_token: "{{ vault_chives_telegram_token }}"
+      composition_chives_telegram_chat_id: "{{ vault_chives_telegram_chat_id }}"
+      composition_chives_mcps:
+        - url: "http://gateway:4000/mcp" # on same host
+          auth_key: "{{ vault_gateway_mcp_token }}"
+        - url: "http://mcp-searxng:3000/mcp" # on same host
+          auth_key: "{{ vault_mcp_searxng_auth_token }}"
+    tags: [composition, composition-chives, ollama]
+  - role: system-emailbackup
+    tags: [system, system-emailbackup]
+  - role: system-smartmontools
+    tags: [system, system-smartmontools]
+  - role: system-promtail
+    tags: [system, system-promtail]
     # - role: system-sleepuntil
     #   become: true
     # - role: system-powertop
-
-  # roles: always executes before tasks:, regardless of position in this file,
-  # so everything that ran after the composition roles in the old static list
-  # — including the final success ping — has to move here too, in the same
-  # order, or it would silently start reporting deploy success before
-  # compositions actually ran. composition-nominatim was also separated from
-  # the rest of the composition block by system-emailbackup/smartmontools/
-  # promtail in the old list; it's folded into the main compositions loop
-  # here (so it's genuinely data-driven, matching every other composition),
-  # which moves it earlier relative to those three — no dependency between
-  # nominatim (geocoding) and email backup/smartmontools/log shipping.
-  tasks:
-    # tags: cannot reference inventory vars (host_vars/group_vars) — confirmed
-    # by testing: even a plain group_vars/all.yaml var is 'undefined' under
-    # --list-tags, since that pass runs before per-host variables are loaded.
-    # Deriving this list from `compositions` is therefore not viable; it's
-    # written out explicitly, matching what the old static role entries
-    # carried. If compositions changes, update this list to match.
-    - name: Deploy compositions
-      ansible.builtin.include_role:
-        name: "composition-{{ item.composition | default(item) }}"
-      loop: "{{ compositions }}"
-      tags:
-        - composition
-        - zfs
-        - loki
-        - composition-zfs-api
-        - composition-victoriametrics
-        - composition-loki
-        - composition-reverseproxy
-        - composition-container-management
-        - composition-github2karakeep
-        - composition-finances
-        - composition-gitea
-        - composition-gitea-runners
-        - composition-jellyfin
-        - composition-immich
-        - composition-llm-inference-calculator
-        - composition-audiobookshelf
-        - composition-downloads
-        - composition-syncthing
-        - composition-karakeep
-        - ollama
-        - composition-freshrss
-        - composition-tubesync
-        - composition-homepage
-        - composition-piper
-        - composition-gotosocial
-        - composition-libretranslate
-        - composition-n8n
-        - composition-memorybank
-        - composition-gateway
-        - composition-paperless-ngx
-        - composition-vikunja
-        - composition-uptime-kuma
-        - composition-mcp-kagisearch
-        - composition-mcp-openzim
-        - composition-searxng
-        - composition-mcp-searxng
-        - composition-kiwix
-        - composition-open-webui
-        - composition-nominatim
-
-    # composition-chives has no default composition_name (every other role's
-    # matches its own name; chives supplies a different one at each
-    # invocation) and no default subdomains, so it doesn't fit the generic
-    # compositions: loop above — see the comment in host_vars for why.
-    # Otherwise unchanged from the old static role entries.
-    - name: Deploy composition-chives (nabu)
-      ansible.builtin.include_role:
-        name: composition-chives
-      vars:
-        composition_name: nabu
-        composition_chives_mcps:
-          - url: "http://mcp-searxng:3000/mcp" # on same host
-            auth_key: "{{ vault_mcp_searxng_auth_token }}"
-      tags: [composition, composition-chives, ollama]
-
-    - name: Deploy composition-chives (jarvis)
-      ansible.builtin.include_role:
-        name: composition-chives
-      vars:
-        composition_name: jarvis # Just until I get custom wake words working
-        composition_chives_telegram_token: "{{ vault_chives_telegram_token }}"
-        composition_chives_telegram_chat_id: "{{ vault_chives_telegram_chat_id }}"
-        composition_chives_mcps:
-          - url: "http://gateway:4000/mcp" # on same host
-            auth_key: "{{ vault_gateway_mcp_token }}"
-          - url: "http://mcp-searxng:3000/mcp" # on same host
-            auth_key: "{{ vault_mcp_searxng_auth_token }}"
-      tags: [composition, composition-chives, ollama]
-
-    - name: system-emailbackup
-      ansible.builtin.include_role:
-        name: system-emailbackup
-      tags: [system, system-emailbackup]
-
-    - name: system-smartmontools
-      ansible.builtin.include_role:
-        name: system-smartmontools
-      tags: [system, system-smartmontools]
-
-    - name: system-promtail
-      ansible.builtin.include_role:
-        name: system-promtail
-      tags: [system, system-promtail]
-
-    - name: monitoring-healthchecksio (success)
-      ansible.builtin.include_role:
-        name: monitoring-healthchecksio
-      vars:
-        monitoring_healthchecksio_ping_type: success
-      tags: [monitoring, monitoring-healthchecksio]
+  - role: monitoring-healthchecksio
+    monitoring_healthchecksio_ping_type: success
+    tags: [monitoring, monitoring-healthchecksio]
 
   handlers:
     - name: Reboot host
