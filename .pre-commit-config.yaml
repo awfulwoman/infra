@@ -9,6 +9,14 @@ repos:
       - id: trailing-whitespace
       - id: detect-private-key
       - id: check-added-large-files
+  - repo: local
+    hooks:
+      - id: validate-dns-records
+        name: Validate derived DNS records (no duplicate labels)
+        entry: scripts/validate-dns-records.sh
+        language: system
+        pass_filenames: false
+        files: ^(inventory/|plugins/filters/dns_records\.py)
 #     - repo: https://github.com/jackdewinter/pymarkdown
 #       rev: v0.9.34
 #       hooks:

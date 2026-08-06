@@ -1,0 +1,35 @@
+- name: Export dns_records filter input for standalone validation
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    output_path: "{{ playbook_dir }}/../../scripts/dns-records-input.json"
+  tasks:
+    - name: Build dns_records filter input from hosts using data-driven compositions
+      ansible.builtin.set_fact:
+        dns_records_hosts: >-
+          {{
+            (dns_records_hosts | default({})) | combine({
+              item: {
+                'fqdn': hostvars[item].host_pfqdn,
+                'tailscale_ipv4': hostvars[item].host_tailscale_ipv4,
+                'compositions': hostvars[item].compositions,
+              }
+            })
+          }}
+      loop: "{{ groups['infra'] | default([]) }}"
+      loop_control:
+        label: "{{ item }}"
+      when: hostvars[item].compositions is defined
+
+    - name: Write filter input
+      ansible.builtin.copy:
+        content: >-
+          {{
+            {
+              'hosts': dns_records_hosts | default({}),
+              'compositions': hostvars[groups['infra'][0]].composition_subdomains | default({}),
+            } | to_nice_json
+          }}
+        dest: "{{ output_path }}"
+        mode: "0644"

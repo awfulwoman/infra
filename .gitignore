@@ -12,3 +12,4 @@ __pycache__
 .env
 .claude/scheduled_tasks.lock
 scripts/snapshot-domains-names.json
+scripts/dns-records-input.json
