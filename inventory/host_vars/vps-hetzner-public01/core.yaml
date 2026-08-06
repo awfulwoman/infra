@@ -73,7 +73,17 @@ system_zfs_policy_healthchecksio_enabled: true
 system_zfs_policy_mqtt_enabled: true
 
 # -------------------------------------------------------------------
-# CNAMES
+# COMPOSITIONS
+# Internal DNS for this host is derived from this list by the dns_records
+# filter (roles/infra-named) instead of a hand-maintained cnames: list.
+# reverseproxy's default labels (whoami/traefik) are suppressed here: they
+# were never actually registered as cnames on this host, and exposing a
+# Traefik dashboard/debug endpoint should be a deliberate call, not a side
+# effect of this migration.
 # -------------------------------------------------------------------
-cnames:
-  - zfs-api.vps-hetzner-public01.{{ domainname_infra }}
+compositions:
+  - composition: reverseproxy
+    labels: []
+  - container-management
+  - awfulwoman
+  - zfs-api

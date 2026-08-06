@@ -154,6 +154,9 @@ composition_subdomains:
     - chat
   nominatim:
     - nominatim
+  # Personal site served at the domain apex/www (Terraform-managed), not a
+  # subdomain — no internal cname needed.
+  awfulwoman: []
 
 # Ansible
 ansible_path: "/opt/ansible"
