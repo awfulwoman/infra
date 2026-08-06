@@ -23,18 +23,13 @@
     zfsbackup_pushover: false
     zfsbackup_run_after_wake: false
     tags: [backups, zfs, backups-zfs-server]
-  - role: system-promtail
-    tags: [system, promtail, system-promtail]
-  - role: monitoring-healthchecksio
-    monitoring_healthchecksio_ping_type: success
-    tags: [monitoring, monitoring-healthchecksio]
 
+  # roles: always executes before tasks:, regardless of position in this file,
+  # so everything that ran after the composition roles in the old static list
+  # — including the final success ping — has to move here too, in the same
+  # order, or it would silently start reporting deploy success before
+  # compositions actually ran.
   tasks:
-    # Runs after every role above (roles: always executes before tasks:,
-    # regardless of position in this file) — compositions ran before
-    # system-promtail previously; that role doesn't depend on compositions
-    # having already run.
-    #
     # tags: cannot reference inventory vars (host_vars/group_vars) — confirmed
     # by testing: even a plain group_vars/all.yaml var is 'undefined' under
     # --list-tags, since that pass runs before per-host variables are loaded.
@@ -46,6 +41,18 @@
         name: "composition-{{ item.composition | default(item) }}"
       loop: "{{ compositions }}"
       tags: [composition, composition-container-management, composition-reverseproxy, zfs, composition-zfs-api]
+
+    - name: system-promtail
+      ansible.builtin.include_role:
+        name: system-promtail
+      tags: [system, promtail, system-promtail]
+
+    - name: monitoring-healthchecksio (success)
+      ansible.builtin.include_role:
+        name: monitoring-healthchecksio
+      vars:
+        monitoring_healthchecksio_ping_type: success
+      tags: [monitoring, monitoring-healthchecksio]
 
   handlers:
   - name: Reboot host
