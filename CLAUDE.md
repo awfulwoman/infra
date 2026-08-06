@@ -109,3 +109,13 @@ Project documentation including architecture guides, runbooks, and reference mat
 - **Credentials**: Stored encrypted in repo using Ansible Vault
 - **Networking**: Everything accessed via Tailscale
 - **Docker Compose apps**: Templated with Jinja2 (`.yaml.j2` files), deployed via `composition-*` roles
+
+## Agent skills
+
+### Issue tracker
+
+Issues and PRDs live as GitHub issues, managed with the `gh` CLI. See `docs/agents/issue-tracker.md`.
+
+### Domain docs
+
+Single-context: one `CONTEXT.md` + `docs/adr/` at the repo root. See `docs/agents/domain.md`.
