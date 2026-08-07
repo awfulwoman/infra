@@ -13,10 +13,8 @@ composition_zfs_api_port: 8000
 composition_zfs_api_log_level: "info"
 
 # Domain configuration
-composition_zfs_api_subdomain: "zfs-api.{{ host_name }}"
-composition_zfs_api_subdomains:
-  - "{{ composition_zfs_api_subdomain }}"
-composition_zfs_api_domain: "{{ composition_zfs_api_subdomain }}.{{ domainname_infra }}"
+composition_dns_subdomains:
+  - "zfs-api.{host}"
 
 # Container settings
 composition_zfs_api_container_name: "zfs-api"

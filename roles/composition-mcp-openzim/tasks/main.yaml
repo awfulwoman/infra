@@ -67,7 +67,7 @@
   ansible.builtin.include_role:
     name: "network-register-subdomain"
   vars:
-    configure_dns_subdomains: "{{ composition_openzim_mcp_subdomains }}"
+    configure_dns_subdomains: "{{ composition_dns_subdomains }}"
 
 # ----------------------------
 # Start composition

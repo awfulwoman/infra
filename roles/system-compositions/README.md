@@ -1,8 +1,10 @@
 # System Compositions
 
-Deploys every composition declared in a host's `compositions:` list (see
-`inventory/group_vars/infra/core.yaml` for the `composition_subdomains`
-registry those entries derive DNS from).
+Deploys every composition declared in a host's `compositions:` list. Default
+DNS labels are discovered directly from each `composition-*` role's own
+`defaults/main.yaml` (the `composition_dns_subdomains` var) via the
+`composition_dns_subdomains` lookup plugin (`plugins/lookup/`) — not a
+central registry.
 
 ## Purpose
 

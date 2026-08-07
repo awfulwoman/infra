@@ -139,9 +139,9 @@
   notify:
     - Restart named
 
-# Hosts that declare `compositions:` (data-driven, see #265) get their internal
-# CNAMEs derived by the dns_records filter instead of a hand-maintained `cnames:`
-# list. Both styles coexist during the migration (#266 moves the rest over).
+# Every host's internal CNAMEs are derived by the dns_records filter from its
+# compositions: list. A host can also declare cnames_additional: for a name
+# with no owning composition (see inventory/host_vars/server-64gb-storage).
 - name: Build dns_records filter input from hosts using data-driven compositions
   ansible.builtin.set_fact:
     dns_records_hosts: >-
@@ -161,18 +161,19 @@
 
 - name: Derive DNS records for data-driven hosts
   ansible.builtin.set_fact:
-    dns_records_derived: "{{ (dns_records_hosts | default({})) | dns_records(composition_subdomains | default({})) }}"
+    dns_records_derived: "{{ (dns_records_hosts | default({})) | dns_records(lookup('composition_dns_subdomains')) }}"
 
 # A CNAME is a singleton RR type: two CNAMEs at the same owner name make named
 # reject the ENTIRE zone ("multiple RRs of singleton type"), taking down all
-# DNS. The forward zone aggregates `cnames` from every host in bind_ansible_group
-# plus every label the dns_records filter derives, so a name declared twice
-# (hand-written or derived, on any host) collides. Catch it here, before rendering.
+# DNS. The forward zone aggregates `cnames_additional` from every host in
+# bind_ansible_group plus every label the dns_records filter derives, so a
+# name declared twice (hand-written or derived, on any host) collides. Catch
+# it here, before rendering.
 - name: Collect all CNAMEs contributed to the forward zone
   ansible.builtin.set_fact:
     bind_all_cnames: >-
       {{
-        (bind_all_cnames | default([]) + (hostvars[item].cnames | default([])))
+        (bind_all_cnames | default([]) + (hostvars[item].cnames_additional | default([])))
       }}
   loop: "{{ groups[bind_ansible_group] | default([]) }}"
   loop_control:

@@ -176,14 +176,14 @@ zfs_nfs_exports:
     options: "rw=100.64.0.0/10:192.168.1.0/24:192.168.122.0/24,anonuid=1000,anongid=1000,no_root_squash,all_squash"
 
 # -------------------------------------------------------------------
-# CNAMES
+# CNAMES ADDITIONAL
 # wallabag and musicassistant have no composition-* role on this host today
 # (dangling — the services predate or outlived their role), so there's
-# nothing for the dns_records filter to derive them from. Left hand-written
-# rather than silently dropped, which would be a real regression, not a
-# no-op — both resolve correctly today via this list.
+# nothing for the dns_records filter to derive them from. A permanent,
+# narrow escape hatch for names with no owning composition — not the main
+# mechanism, which is the compositions: list below.
 # -------------------------------------------------------------------
-cnames:
+cnames_additional:
   - musicassistant.{{ domainname_infra }}
   - wallabag.{{ domainname_infra }}
 

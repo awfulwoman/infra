@@ -5,5 +5,5 @@ composition_name: open-webui
 # Override per-host if Ollama is running elsewhere.
 composition_open_webui_ollama_base_url: "{{ llm_default_ollama_base_url }}"
 
-composition_open_webui_subdomains:
+composition_dns_subdomains:
   - chat

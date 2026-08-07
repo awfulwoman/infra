@@ -1,7 +1,7 @@
 # Composition name (used by composition-common dependency)
 composition_name: esphome
 
-composition_esphome_subdomains:
+composition_dns_subdomains:
   - esphome
 
 # Not a secret - legacy internal search domain, also referenced as a DNAME

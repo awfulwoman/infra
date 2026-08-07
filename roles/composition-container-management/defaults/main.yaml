@@ -1,3 +1,5 @@
 ---
 # Composition name (used by composition-common dependency)
 composition_name: container-management
+
+composition_dns_subdomains: []

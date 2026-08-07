@@ -25,9 +25,10 @@ ansible-playbook playbooks/groups/ubuntu/bootstrap.yaml
 ansible-playbook playbooks/hosts/server-64gb-storage/core.yaml
 ```
 
-Filter plugins (`plugins/filters/`) with pure-Python logic are unit tested with pytest (install via `brew install pytest`, matching the Ansible/pre-commit Homebrew convention — no venv):
+Filter and lookup plugins (`plugins/filters/`, `plugins/lookup/`) with pure-Python logic are unit tested with pytest (install via `brew install pytest`, matching the Ansible/pre-commit Homebrew convention — no venv). Some tests need PyYAML, which isn't bundled with the pytest formula — install it into pytest's own venv, since it's isolated from the system/Ansible Python:
 
 ```bash
+$(dirname "$(readlink -f "$(which pytest)")")/python -m pip install pyyaml
 pytest
 ```
 

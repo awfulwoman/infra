@@ -1,7 +1,7 @@
 # Composition name (used by composition-common dependency)
 composition_name: paperless-ngx
 
-composition_paperless_ngx_subdomains:
+composition_dns_subdomains:
   - paperless
 
 paperless_ngx_db_password: "{{ vault_paperless_ngx_db_password }}"

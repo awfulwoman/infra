@@ -1,3 +1,4 @@
 composition_name: onepassword-connect
 
-composition_onepassword_connect_subdomain: connect
+composition_dns_subdomains:
+  - connect

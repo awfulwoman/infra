@@ -1,6 +1,9 @@
 # Composition name (used by composition-common dependency)
 composition_name: awfulwoman
 
+# Served at the domain apex/www (Terraform-managed), not a subdomain.
+composition_dns_subdomains: []
+
 awfulwoman_sites_base: /fastpool/sites
 awfulwoman_path: "{{ awfulwoman_sites_base }}/awfulwoman"
 awfulwoman_deploy_group: nginx

@@ -22,13 +22,24 @@
         label: "{{ item }}"
       when: hostvars[item].compositions is defined
 
+    # cnames_additional isn't part of the dns_records filter's own contract
+    # (it has no composition to derive from), but it still has to be checked
+    # for collisions against the derived set — the same duplicate-CNAME rule
+    # applies regardless of which mechanism produced a given label.
+    - name: Collect hand-written cnames_additional declared on each infra host
+      ansible.builtin.set_fact:
+        cnames_additional_all: "{{ (cnames_additional_all | default([])) + (hostvars[item].cnames_additional | default([])) }}"
+      loop: "{{ groups['infra'] | default([]) }}"
+
     - name: Write filter input
       ansible.builtin.copy:
         content: >-
           {{
             {
               'hosts': dns_records_hosts | default({}),
-              'compositions': hostvars[groups['infra'][0]].composition_subdomains | default({}),
+              'compositions': lookup('composition_dns_subdomains'),
+              'cnames_additional': cnames_additional_all | default([]),
+              'domainname_infra': hostvars[groups['infra'][0]].domainname_infra,
             } | to_nice_json
           }}
         dest: "{{ output_path }}"

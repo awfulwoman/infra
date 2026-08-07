@@ -34,9 +34,33 @@ def main():
         print(f"dns_records validation FAILED: {exc}", file=sys.stderr)
         sys.exit(1)
 
+    # cnames_additional (names with no owning composition) isn't part of the
+    # filter's own contract, but the same duplicate-CNAME rule still applies —
+    # BIND doesn't care which mechanism produced a colliding label.
+    domain_suffix = "." + data["domainname_infra"]
+    derived_qualified = {label + domain_suffix for label in result["cnames"]}
+    cnames_additional = data.get("cnames_additional", [])
+    duplicates = derived_qualified & set(cnames_additional)
+    if duplicates:
+        print(
+            f"dns_records validation FAILED: cnames_additional collides with a "
+            f"composition-derived label: {', '.join(sorted(duplicates))}",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    if len(cnames_additional) != len(set(cnames_additional)):
+        seen = set()
+        repeated = sorted({n for n in cnames_additional if n in seen or seen.add(n)})
+        print(
+            f"dns_records validation FAILED: cnames_additional declared twice: {', '.join(repeated)}",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
     print(
-        f"dns_records validation OK: {len(result['cnames'])} labels across "
-        f"{len(result['a_records'])} hosts, no duplicates."
+        f"dns_records validation OK: {len(result['cnames'])} composition-derived labels + "
+        f"{len(cnames_additional)} cnames_additional across {len(result['a_records'])} hosts, "
+        f"no duplicates."
     )
 
 

@@ -3,5 +3,5 @@ composition_name: mcp-kagisearch
 
 composition_mcp_kagisearch_version: "1.0.0"
 
-composition_mcp_kagisearch_subdomains:
+composition_dns_subdomains:
   - kagimcp

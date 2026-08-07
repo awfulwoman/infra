@@ -1,9 +1,9 @@
 # Composition name (used by composition-common dependency)
 composition_name: reverseproxy
 
-composition_reverseproxy_subdomains:
-  - "whoami.{{ ansible_facts['hostname'] }}"
-  - "traefik.{{ ansible_facts['hostname'] }}"
+composition_dns_subdomains:
+  - "whoami.{host}"
+  - "traefik.{host}"
 
 reverseproxy_use_letsencrypt: true
 reverseproxy_catchall: false

@@ -8,9 +8,6 @@ composition_uptime_kuma_monitor_tag: ansible-managed
 composition_uptime_kuma_host_tag: hosts
 composition_uptime_kuma_composition_tag: compositions
 
-# Subdomain Traefik exposes the REST sidecar on.
-composition_uptime_kuma_api_subdomain: uptime-kuma-api
-
-composition_uptime_kuma_subdomains:
+composition_dns_subdomains:
   - uptime-kuma
-  - "{{ composition_uptime_kuma_api_subdomain }}"
+  - uptime-kuma-api

@@ -1,5 +1,5 @@
 composition_name: nominatim
-composition_nominatim_subdomains:
+composition_dns_subdomains:
   - nominatim
 
 composition_nominatim_replication_url: "https://download.geofabrik.de/europe-updates/"

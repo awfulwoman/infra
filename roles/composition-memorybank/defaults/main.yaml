@@ -1,7 +1,7 @@
 # Composition name (used by composition-common dependency)
 composition_name: memorybank
 
-composition_memorybank_subdomains:
+composition_dns_subdomains:
   - memorybank
 
 memorybank_repo_url: "https://github.com/awfulwoman/memorybank.git"

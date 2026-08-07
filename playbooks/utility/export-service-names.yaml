@@ -5,14 +5,14 @@
   vars:
     output_path: "{{ playbook_dir }}/../../scripts/snapshot-domains-names.json"
   tasks:
-    - name: Collect hand-written cnames declared on each infra host
+    - name: Collect hand-written cnames_additional declared on each infra host
       ansible.builtin.set_fact:
-        service_names: "{{ (service_names | default([])) + (hostvars[item].cnames | default([])) }}"
+        service_names: "{{ (service_names | default([])) + (hostvars[item].cnames_additional | default([])) }}"
       loop: "{{ groups['infra'] }}"
 
-    # Hosts on the data-driven compositions: list (see roles/infra-named) no
-    # longer carry a cnames: entry, so their names aren't visible above —
-    # derive them the same way infra-named does, via the dns_records filter.
+    # Composition-derived names aren't visible above (cnames_additional is
+    # only for names with no owning composition) — derive them the same way
+    # infra-named does, via the dns_records filter.
     - name: Build dns_records filter input from hosts using data-driven compositions
       ansible.builtin.set_fact:
         dns_records_hosts: >-
@@ -35,7 +35,7 @@
         service_names: >-
           {{
             (service_names | default([]))
-            + ((dns_records_hosts | default({})) | dns_records(hostvars[groups['infra'][0]].composition_subdomains | default({})))
+            + ((dns_records_hosts | default({})) | dns_records(lookup('composition_dns_subdomains')))
               .cnames.keys() | map('regex_replace', '$', '.' + domainname_infra) | list
           }}
 

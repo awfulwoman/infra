@@ -1,6 +1,6 @@
 # Composition name (used by composition-common dependency)
 composition_name: homeassistant
 
-composition_homeassistant_subdomains:
+composition_dns_subdomains:
   - homeassistant
   - ha

@@ -1,7 +1,7 @@
 # Composition name (used by composition-common dependency)
 composition_name: downloads
 
-composition_downloads_subdomains:
+composition_dns_subdomains:
   - qbittorrent
   - prowlarr
   - sonarr

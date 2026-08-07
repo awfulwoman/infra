@@ -19,10 +19,8 @@ composition_loki_base_path: "{{ compositions_base_path }}/loki"
 composition_loki_storage_path: "/slowpool/shared/logs/loki"
 
 # Domain configuration
-composition_loki_subdomain: "loki"
-composition_loki_subdomains:
-  - "{{ composition_loki_subdomain }}"
-composition_loki_domain: "{{ composition_loki_subdomain }}.{{ domainname_infra }}"
+composition_dns_subdomains:
+  - "loki"
 
 # Traefik integration
 composition_loki_traefik_enabled: true

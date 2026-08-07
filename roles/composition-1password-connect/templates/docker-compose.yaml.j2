@@ -11,7 +11,7 @@ services:
       - "op-connect-data:/home/opuser/.op/data"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.op-connect.rule=Host(`{{ composition_onepassword_connect_subdomain }}.{{ domainname_infra }}`)"
+      - "traefik.http.routers.op-connect.rule=Host(`{{ composition_dns_subdomains[0] }}.{{ domainname_infra }}`)"
       - "traefik.http.routers.op-connect.tls=true"
       - "traefik.http.routers.op-connect.tls.certresolver=letsencrypt"
       - "traefik.http.services.op-connect.loadbalancer.server.port=8080"

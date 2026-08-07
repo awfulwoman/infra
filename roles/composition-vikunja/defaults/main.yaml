@@ -1,7 +1,7 @@
 # Composition name (used by composition-common dependency)
 composition_name: vikunja
 
-composition_vikunja_subdomains:
+composition_dns_subdomains:
   - vikunja
 
 vikunja_db_password: "{{ vault_vikunja_db_password }}"

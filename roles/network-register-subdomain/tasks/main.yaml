@@ -1,3 +1,12 @@
+# composition_dns_subdomains (the usual source of configure_dns_subdomains)
+# may contain the literal token {host} — a placeholder the dns_records filter
+# substitutes for the internal zone, resolved here the same way for the
+# public self-registration path, using the static host_name rather than a
+# live ansible_facts value.
+- name: Resolve {host} token in the requested subdomains
+  ansible.builtin.set_fact:
+    network_register_subdomain_resolved: "{{ configure_dns_subdomains | map('replace', '{host}', host_name) | list }}"
+
 - name: Register subdomain to a Tailscale address via Hetzner's DNS
   hetzner.hcloud.zone_rrset:
     api_token: "{{ vault_hetzner_api_key_rw }}"
@@ -8,7 +17,7 @@
       - value: "{{ ansible_facts['tailscale0']['ipv4']['address'] }}"
         comment: "Tailscale"
     state: present
-  loop: "{{ configure_dns_subdomains }}"
+  loop: "{{ network_register_subdomain_resolved }}"
   loop_control:
     loop_var: domain_item
   when: ansible_facts['tailscale0']['ipv4']['address'] is defined
@@ -16,7 +25,7 @@
 - name: Confirm DNS
   ansible.builtin.debug:
     msg: "Tailscale domain: {{ domain_item }}.{{ domainname_infra }}"
-  loop: "{{ configure_dns_subdomains }}"
+  loop: "{{ network_register_subdomain_resolved }}"
   loop_control:
     loop_var: domain_item
   when: ansible_facts['tailscale0']['ipv4']['address'] is defined

@@ -1,7 +1,7 @@
 # code: language=ansible
 composition_name: n8n
 
-composition_n8n_subdomains:
+composition_dns_subdomains:
   - n8n
 
 n8n_db_password: "{{ vault_n8n_db_password }}"

@@ -1,7 +1,7 @@
 # code: language=ansible
 composition_name: searxng
 
-composition_searxng_subdomains:
+composition_dns_subdomains:
   - searxng
   - search
 

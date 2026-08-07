@@ -24,7 +24,7 @@
   ansible.builtin.include_role:
     name: "network-register-subdomain"
   vars:
-    configure_dns_subdomains: "{{ composition_uptime_kuma_subdomains }}"
+    configure_dns_subdomains: "{{ composition_dns_subdomains }}"
 
 # ----------------------------
 # Start composition
@@ -70,9 +70,9 @@
   loop_control:
     loop_var: ping_host
 
-# Hosts on the data-driven compositions: list (see roles/infra-named) no
-# longer carry a cnames: entry, so their names aren't visible to the plain
-# hostvars scan below — derive them the same way infra-named does, via the
+# Hosts on the data-driven compositions: list (see roles/infra-named) don't
+# carry a cnames_additional entry unless they have a name with no owning
+# composition — derive the rest the same way infra-named does, via the
 # dns_records filter, or monitors for those services silently disappear.
 - name: Build dns_records filter input from hosts using data-driven compositions
   ansible.builtin.set_fact:
@@ -96,7 +96,7 @@
     composition_uptime_kuma_derived_cnames: >-
       {{
         ((composition_uptime_kuma_dns_records_hosts | default({}))
-          | dns_records(hostvars[groups['infra'][0]].composition_subdomains | default({}))
+          | dns_records(lookup('composition_dns_subdomains'))
         ).cnames.keys() | map('regex_replace', '$', '.' + domainname_infra) | list
       }}
 
@@ -112,8 +112,8 @@
     {{
       (groups['infra']
         | map('extract', hostvars)
-        | selectattr('cnames', 'defined')
-        | map(attribute='cnames')
+        | selectattr('cnames_additional', 'defined')
+        | map(attribute='cnames_additional')
         | flatten)
       + composition_uptime_kuma_derived_cnames
     }}

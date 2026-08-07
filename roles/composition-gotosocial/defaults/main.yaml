@@ -2,3 +2,7 @@
 composition_name: gotosocial
 
 gotosocial_domain: "gts.awfulwoman.com"
+
+# Has its own external domain via its own ACME cert (see gotosocial_domain
+# above) — out of scope for the internal wildcard/derived zone entirely.
+composition_dns_subdomains: []
