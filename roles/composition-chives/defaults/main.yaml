@@ -10,6 +10,10 @@ composition_chives_idle_checkin_hours: 0
 composition_chives_telegram_token: ""
 composition_chives_telegram_chat_id: ""
 
+# Profile markdown editor at /editor is optional — leave blank to disable
+composition_chives_editor_username: ""
+composition_chives_editor_password: ""
+
 # Gateway MCP server URL (Malcolm runs the HTTP gateway at port 4000)
 composition_chives_mcps: []
   # - url: "http://mcp-searxng:3000/mcp"
