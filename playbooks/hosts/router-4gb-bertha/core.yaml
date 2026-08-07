@@ -20,6 +20,7 @@
     - role: infra-named
       tags: [infra, infra-named]
     - role: infra-certbot
+      tags: [infra, infra-certbot]
     - role: monitoring-healthchecksio
       monitoring_healthchecksio_ping_type: success
       tags: [monitoring, monitoring-healthchecksio]

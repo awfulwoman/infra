@@ -113,6 +113,16 @@ bind_rpz_allowlist_extra: []
 # -------------------------------------------------------------------
 acme_path: "/fastpool/acme"
 
+# Production wildcard for the internal domain (#268). Role default is
+# staging with throwaway test subdomains — bertha is the one host that
+# mints the real thing. distribute: true copies the fullchain + key into
+# infra_certbot_distribution_dir, ready for #269 to serve to other hosts.
+infra_certbot_domains:
+  - domain: "{{ domainname_infra }}"
+    subdomain: "*"
+    distribute: true
+infra_certbot_dir: https://acme-v02.api.letsencrypt.org/directory
+
 # -------------------------------------------------------------------
 # ANSIBLE
 # -------------------------------------------------------------------

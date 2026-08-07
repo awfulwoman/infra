@@ -27,6 +27,7 @@ infra_certbot_csr_dir: "{{ acme_path }}/csr"
 infra_certbot_email: "letsencrypt@{{ domainname_personal }}"
 infra_certbot_version: 2
 infra_certbot_cert_dir: "{{ acme_path }}/certs"
+infra_certbot_distribution_dir: "{{ acme_path }}/distribution"
 # Staging
 infra_certbot_dir: https://acme-staging-v02.api.letsencrypt.org/directory
 infra_certbot_order_uri: https://acme-staging-v02.api.letsencrypt.org/acme/acct/221838554

@@ -77,3 +77,31 @@
     dns01_domain_sub_no_wildcard: "{{ domain_sub_no_wildcard }}"
     dns01_domain_full: "{{ domain_full }}"
     dns01_domain_full_no_wildcard: "{{ domain_full | split('.') | reject('match', '[*]') | join('.') }}"
+
+# ansible.builtin.copy always writes to a temp file in the destination
+# directory and renames it into place, so a reader of the distribution
+# directory never sees a partially-written fullchain or key - no separate
+# atomic-write logic needed here. This runs unconditionally (not just on
+# NEW/RENEW above) so the distribution directory self-heals if it's ever
+# wiped or out of sync with an already-issued certificate.
+- name: Publish latest fullchain to the distribution directory
+  become: true
+  ansible.builtin.copy:
+    remote_src: true
+    src: "{{ infra_certbot_cert_dir }}/{{ domain_full }}.fullchain.crt"
+    dest: "{{ infra_certbot_distribution_dir }}/{{ domain_full }}.fullchain.crt"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0644"
+  when: item.distribute | default(false)
+
+- name: Publish latest private key to the distribution directory
+  become: true
+  ansible.builtin.copy:
+    remote_src: true
+    src: "{{ infra_certbot_csr_private_key_dir }}/{{ infra_certbot_csr_private_key_filename }}"
+    dest: "{{ infra_certbot_distribution_dir }}/{{ domain_full }}.key"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0600"
+  when: item.distribute | default(false)
