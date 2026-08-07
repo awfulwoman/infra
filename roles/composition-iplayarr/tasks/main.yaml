@@ -49,12 +49,6 @@
 #   loop:
 #     - "{{ iplayarr_downloads }}/_incomplete"
 
-- name: Run Configure DNS role
-  ansible.builtin.include_role:
-    name: "network-register-subdomain"
-  vars:
-    configure_dns_subdomains: "{{ composition_iplayarr_subdomains }}"
-
 # ----------------------------
 # Start composition
 # ----------------------------

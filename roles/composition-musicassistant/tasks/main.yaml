@@ -39,12 +39,6 @@
 #     src: filename.txt
 #     dest: "{{ composition_config }}/filename.txt
 
-- name: Run Configure DNS role
-  ansible.builtin.include_role:
-    name: "network-register-subdomain"
-  vars:
-    configure_dns_subdomains: "{{ composition_musicassistant_subdomains }}"
-
 # ----------------------------
 # Start composition
 # ----------------------------

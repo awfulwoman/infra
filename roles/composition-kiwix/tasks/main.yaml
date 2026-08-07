@@ -24,12 +24,6 @@
 # Specific tasks
 # ----------------------------
 
-- name: Run Configure DNS role
-  ansible.builtin.include_role:
-    name: "network-register-subdomain"
-  vars:
-    configure_dns_subdomains: "{{ composition_dns_subdomains }}"
-
 # ----------------------------
 # Start composition
 # ----------------------------

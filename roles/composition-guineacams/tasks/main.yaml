@@ -11,12 +11,6 @@
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
 
-- name: Run Configure DNS role
-  ansible.builtin.include_role:
-    name: "network-register-subdomain"
-  vars:
-    configure_dns_subdomains: "{{ composition_guineacams_subdomains }}"
-
 # ----------------------------
 # Start composition
 # ----------------------------

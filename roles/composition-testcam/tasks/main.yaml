@@ -25,12 +25,6 @@
     groups: video
     append: true
 
-- name: Run Configure DNS role
-  ansible.builtin.include_role:
-    name: "network-register-subdomain"
-  vars:
-    configure_dns_subdomains: "{{ composition_testcam_subdomains }}"
-
 # ----------------------------
 # Start composition
 # ----------------------------

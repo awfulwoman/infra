@@ -1,2 +1,0 @@
-configure_dns_domain: "{{ domainname_infra }}"
-configure_dns_subdomains: []
