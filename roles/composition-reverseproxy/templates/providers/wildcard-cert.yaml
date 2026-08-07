@@ -1,0 +1,9 @@
+tls:
+  certificates:
+    - certFile: {{ reverseproxy_wildcard_cert_dir }}/fullchain.crt
+      keyFile: {{ reverseproxy_wildcard_cert_dir }}/privkey.key
+  stores:
+    default:
+      defaultCertificate:
+        certFile: {{ reverseproxy_wildcard_cert_dir }}/fullchain.crt
+        keyFile: {{ reverseproxy_wildcard_cert_dir }}/privkey.key

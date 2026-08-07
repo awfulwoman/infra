@@ -6,10 +6,16 @@ composition_dns_subdomains:
   - "traefik.{host}"
 
 reverseproxy_use_letsencrypt: true
+# Set alongside reverseproxy_use_letsencrypt: false to serve the internal
+# wildcard cert (client-cert-distribution, #269) as Traefik's default cert
+# instead of Traefik's own per-host ACME. Mounts reverseproxy_wildcard_cert_dir
+# into the container and requires "wildcard-cert" in traefik_providers.
+reverseproxy_wildcard_cert: false
+reverseproxy_wildcard_cert_dir: /etc/ssl/internal-wildcard
 reverseproxy_catchall: false
 reverseproxy_statuspage: false
 reverseproxy_whoami: false
-reverseproxy_traefik_domain: "traefik.{{ ansible_facts['hostname'] }}.{{ domainname_infra }}"
+reverseproxy_traefik_domain: "traefik.{{ host_name }}.{{ domainname_infra }}"
 
 # VM routes - Proxy to services running on VMs (internal NAT network)
 # reverseproxy_vm_routes:

@@ -20,5 +20,7 @@
     tags: [system, zfs, system-zfs-policy]
   - role: system-docker
     tags: [system, docker, system-docker]
+  - role: client-cert-distribution
+    tags: [infra, client-cert-distribution]
   - role: system-compositions
-    tags: [composition, composition-1password-connect, connect]
+    tags: [composition, composition-1password-connect, connect, composition-reverseproxy]

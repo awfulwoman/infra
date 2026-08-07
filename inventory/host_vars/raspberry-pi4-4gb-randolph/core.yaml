@@ -62,9 +62,23 @@ system_zfs_policy_healthchecksio_enabled: true
 system_zfs_policy_mqtt_enabled: true
 
 # -------------------------------------------------------------------
+# REVERSEPROXY (#270 - internal wildcard cert pilot)
+# Serves the client-cert-distribution wildcard instead of its own ACME -
+# randolph has no other consumer of Traefik besides 1password-connect, so
+# it's the lowest-stakes host to prove the mechanism on.
+# -------------------------------------------------------------------
+reverseproxy_use_letsencrypt: false
+reverseproxy_wildcard_cert: true
+traefik_providers:
+  - wildcard-cert
+
+# -------------------------------------------------------------------
 # COMPOSITIONS
 # Internal DNS for this host is derived from this list by the dns_records
 # filter (roles/infra-named) instead of a hand-maintained cnames: list.
 # -------------------------------------------------------------------
 compositions:
   - 1password-connect
+  - composition: reverseproxy
+    labels:
+      - "traefik.{host}"

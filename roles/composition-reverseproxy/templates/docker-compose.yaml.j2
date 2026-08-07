@@ -86,15 +86,15 @@ services:
       # Allow dashboard access via traefik.{{ansible_facts['hostname']}}.{{ domainname_infra }}
       - "traefik.http.routers.dashboard.rule=Host(`{{ reverseproxy_traefik_domain}}`)"
       - "traefik.http.routers.dashboard.service=dashboard@internal"
-{% if reverseproxy_use_letsencrypt %}
       - "traefik.http.routers.dashboard.tls=true"
+{% if reverseproxy_use_letsencrypt %}
       - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
 {% endif %}
       # Allow API access via traefik.{{ansible_facts['hostname']}}.{{ domainname_infra }}
       - "traefik.http.routers.api.rule=Host(`{{ reverseproxy_traefik_domain}}`) && PathPrefix(`/api`)"
       - "traefik.http.routers.api.service=api@internal"
-{% if reverseproxy_use_letsencrypt %}
       - "traefik.http.routers.api.tls=true"
+{% if reverseproxy_use_letsencrypt %}
       - "traefik.http.routers.api.tls.certresolver=letsencrypt"
 {% endif %}
     volumes:
@@ -102,6 +102,9 @@ services:
       - "{{ composition_config }}/traefik.yaml:/etc/traefik/traefik.yaml"
 {% if reverseproxy_use_letsencrypt %}
       - "{{ composition_config }}/letsencrypt:/letsencrypt"
+{% endif %}
+{% if reverseproxy_wildcard_cert %}
+      - "{{ reverseproxy_wildcard_cert_dir }}:{{ reverseproxy_wildcard_cert_dir }}:ro"
 {% endif %}
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "/etc/localtime:/etc/localtime:ro"
