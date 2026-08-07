@@ -1,0 +1,5 @@
+# code: language=ansible
+
+server_cert_distribution_port: 8420
+server_cert_distribution_bind_address: "{{ host_tailscale_ipv4 }}"
+server_cert_distribution_source_dir: "{{ infra_certbot_distribution_dir }}"

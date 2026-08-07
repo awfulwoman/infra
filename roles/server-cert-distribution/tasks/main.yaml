@@ -1,0 +1,17 @@
+- name: Template cert-distribution systemd unit
+  become: true
+  ansible.builtin.template:
+    src: cert-distribution.service.j2
+    dest: /etc/systemd/system/cert-distribution.service
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Reload systemd and restart cert-distribution
+
+- name: Ensure cert-distribution is enabled and started
+  become: true
+  ansible.builtin.systemd:
+    name: cert-distribution
+    enabled: true
+    state: started
+    daemon_reload: true

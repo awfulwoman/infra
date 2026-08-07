@@ -1,0 +1,8 @@
+# code: language=ansible
+
+client_cert_distribution_server: "{{ hostvars['router-4gb-bertha'].host_tailscale_ipv4 }}"
+client_cert_distribution_port: 8420
+client_cert_distribution_bundle_name: "*.{{ domainname_infra }}"
+client_cert_distribution_install_dir: /etc/ssl/internal-wildcard
+client_cert_distribution_healthcheck: true
+client_cert_distribution_healthcheck_name: "{{ inventory_hostname }} - Internal Wildcard Cert"

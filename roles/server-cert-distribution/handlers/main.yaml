@@ -1,0 +1,6 @@
+- name: Reload systemd and restart cert-distribution
+  become: true
+  ansible.builtin.systemd:
+    name: cert-distribution
+    daemon_reload: true
+    state: restarted

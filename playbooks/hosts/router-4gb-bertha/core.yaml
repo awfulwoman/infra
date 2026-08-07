@@ -21,6 +21,8 @@
       tags: [infra, infra-named]
     - role: infra-certbot
       tags: [infra, infra-certbot]
+    - role: server-cert-distribution
+      tags: [infra, server-cert-distribution]
     - role: monitoring-healthchecksio
       monitoring_healthchecksio_ping_type: success
       tags: [monitoring, monitoring-healthchecksio]
