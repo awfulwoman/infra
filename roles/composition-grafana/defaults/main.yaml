@@ -23,7 +23,7 @@ composition_grafana_domain: "{{ composition_grafana_subdomain }}.{{ domainname_i
 composition_grafana_traefik_enabled: true
 
 # VictoriaMetrics datasource configuration
-composition_grafana_victoriametrics_url: "https://zfs.metrics.{{ domainname_infra }}"
+composition_grafana_victoriametrics_url: "https://zfs-metrics.{{ domainname_infra }}"
 composition_grafana_victoriametrics_name: "VictoriaMetrics"
 
 # Loki datasource configuration

@@ -80,7 +80,13 @@ terraform_working_dir: "/fastpool/terraform"
 # -------------------------------------------------------------------
 # COMPOSITIONS
 # -------------------------------------------------------------------
+# #271 - internal wildcard cert rollout: was already ACME-off with no
+# wildcard set (leaving Traefik's own self-signed fallback in place until
+# now).
 reverseproxy_use_letsencrypt: false
+reverseproxy_wildcard_cert: true
+traefik_providers:
+  - wildcard-cert
 
 # -------------------------------------------------------------------
 # AUTOMATION INFRA

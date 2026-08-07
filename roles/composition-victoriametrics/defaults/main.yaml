@@ -23,13 +23,15 @@ composition_victoriametrics_scrape_interval: "60s"
 composition_victoriametrics_scrape_timeout: "30s"
 
 # Domain configuration
+# "zfs-metrics" not "zfs.metrics" - a *.ewwww.eu wildcard cert cannot cover
+# a multi-level name like "zfs.metrics.ewwww.eu". See #271.
 composition_dns_subdomains:
-  - "zfs.metrics"
+  - "zfs-metrics"
 
 # Traefik integration
 composition_victoriametrics_traefik_enabled: true
 
 # ZFS API endpoints to scrape
 # Automatically scrapes all hosts in the 'zfs' inventory group
-# Format: zfs-api.{hostname}.{domainname_infra}
+# Format: zfs-api-{hostname}.{domainname_infra}
 composition_victoriametrics_scrape_targets: "{{ groups['zfs'] | default([]) }}"

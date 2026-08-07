@@ -1,9 +1,13 @@
 # Composition name (used by composition-common dependency)
 composition_name: reverseproxy
 
+# Single label before {host} (hyphen, not dot) - a *.ewwww.eu wildcard cert
+# cannot cover a multi-level name like "whoami.<host>.ewwww.eu" per the
+# CA/Browser Forum baseline requirements (Let's Encrypt won't issue
+# *.*.ewwww.eu). See #271.
 composition_dns_subdomains:
-  - "whoami.{host}"
-  - "traefik.{host}"
+  - "whoami-{host}"
+  - "traefik-{host}"
 
 reverseproxy_use_letsencrypt: true
 # Set alongside reverseproxy_use_letsencrypt: false to serve the internal
@@ -15,7 +19,7 @@ reverseproxy_wildcard_cert_dir: /etc/ssl/internal-wildcard
 reverseproxy_catchall: false
 reverseproxy_statuspage: false
 reverseproxy_whoami: false
-reverseproxy_traefik_domain: "traefik.{{ host_name }}.{{ domainname_infra }}"
+reverseproxy_traefik_domain: "traefik-{{ host_name }}.{{ domainname_infra }}"
 
 # VM routes - Proxy to services running on VMs (internal NAT network)
 # reverseproxy_vm_routes:

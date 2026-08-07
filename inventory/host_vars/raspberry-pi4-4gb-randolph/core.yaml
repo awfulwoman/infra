@@ -81,4 +81,4 @@ compositions:
   - 1password-connect
   - composition: reverseproxy
     labels:
-      - "traefik.{host}"
+      - "traefik-{host}"

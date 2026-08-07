@@ -27,6 +27,8 @@
   - role: system-shoutrrr
     become: true
     tags: [system, system-shoutrrr]
+  - role: client-cert-distribution
+    tags: [infra, client-cert-distribution]
   # compositions: preserves the original order (mqtt first — it must run
   # before owntracks and zigbee2mqtt, which depend on it already being up).
   - role: system-compositions

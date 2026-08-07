@@ -23,6 +23,8 @@
     zfsbackup_pushover: false
     zfsbackup_run_after_wake: false
     tags: [backups, zfs, backups-zfs-server]
+  - role: client-cert-distribution
+    tags: [infra, client-cert-distribution]
   - role: system-compositions
     tags: [composition, composition-container-management, composition-reverseproxy, zfs, composition-zfs-api]
   - role: system-promtail

@@ -13,8 +13,10 @@ composition_zfs_api_port: 8000
 composition_zfs_api_log_level: "info"
 
 # Domain configuration
+# Single label before {host} (hyphen, not dot) - a *.ewwww.eu wildcard cert
+# cannot cover a multi-level name like "zfs-api.<host>.ewwww.eu". See #271.
 composition_dns_subdomains:
-  - "zfs-api.{host}"
+  - "zfs-api-{host}"
 
 # Container settings
 composition_zfs_api_container_name: "zfs-api"

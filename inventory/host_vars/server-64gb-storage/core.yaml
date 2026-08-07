@@ -144,6 +144,18 @@ system_zfs_policy_mqtt_enabled: true
 system_zfs_policy_healthchecksio_enabled: true
 
 # -------------------------------------------------------------------
+# REVERSEPROXY (#271 - internal wildcard cert rollout)
+# gotosocial/awfulwoman.com are terminated by public01's Traefik, which
+# reverse-proxies to this host's container ports directly - storage's own
+# Traefik has no genuinely public router, so no scoped ACME exception
+# is needed here (unlike public01, see #271).
+# -------------------------------------------------------------------
+reverseproxy_use_letsencrypt: false
+reverseproxy_wildcard_cert: true
+traefik_providers:
+  - wildcard-cert
+
+# -------------------------------------------------------------------
 # OBSIDIAN
 # -------------------------------------------------------------------
 system_obsidian_headless_vaults:
@@ -192,8 +204,10 @@ cnames_additional:
 # Internal DNS for this host is derived from this list by the dns_records
 # filter (roles/infra-named), for every composition except the two above.
 # Overrides below all reproduce exactly what's live today:
-#   - reverseproxy: only traefik.<pfqdn> was ever registered (a different,
-#     older format than the {host}-based default), never whoami.
+#   - reverseproxy: only traefik-{host} was ever registered, never whoami.
+#     (Originally traefik.<pfqdn>, an older multi-label format - updated to
+#     the single-label traefik-{host} default in #271, since a *.ewwww.eu
+#     wildcard cert can't cover a multi-level name.)
 #   - syncthing: the live cname predates the {host}-suffixed default.
 #   - uptime-kuma: only the UI was registered, never -api.
 #   - kiwix, mcp-openzim: their declared defaults were never registered here.
@@ -218,7 +232,7 @@ compositions:
   - loki
   - composition: reverseproxy
     labels:
-      - "traefik.{{ host_pfqdn }}"
+      - "traefik-{{ host_name }}"
   - container-management
   - github2karakeep
   - finances

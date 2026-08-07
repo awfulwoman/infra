@@ -58,6 +58,14 @@ backups_zfs_server_offsite_enabled: false
 compositions_dataset: slowpool/compositions
 
 # -------------------------------------------------------------------
+# REVERSEPROXY (#271 - internal wildcard cert rollout)
+# -------------------------------------------------------------------
+reverseproxy_use_letsencrypt: false
+reverseproxy_wildcard_cert: true
+traefik_providers:
+  - wildcard-cert
+
+# -------------------------------------------------------------------
 # COMPOSITIONS
 # Internal DNS for this host is derived from this list by the dns_records
 # filter (roles/infra-named) instead of a hand-maintained cnames: list.

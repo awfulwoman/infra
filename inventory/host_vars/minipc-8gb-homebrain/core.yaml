@@ -66,6 +66,15 @@ traefik_providers:
   - esphome
   - watchyourlan
   - gateway
+  - wildcard-cert
+
+# -------------------------------------------------------------------
+# REVERSEPROXY (#271 - internal wildcard cert rollout)
+# Internal-only host: no genuinely public router on this host, so no
+# scoped ACME exception is needed (unlike public01, see #271).
+# -------------------------------------------------------------------
+reverseproxy_use_letsencrypt: false
+reverseproxy_wildcard_cert: true
 
 # -------------------------------------------------------------------
 # COMPOSITIONS

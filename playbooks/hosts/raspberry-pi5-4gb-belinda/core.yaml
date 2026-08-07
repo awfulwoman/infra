@@ -16,6 +16,8 @@
     tags: [system, zfs, system-zfs-policy]
   - role: backups-zfs-server
     tags: [backups, zfs, backups-zfs-server]
+  - role: client-cert-distribution
+    tags: [infra, client-cert-distribution]
   - role: system-compositions
     tags: [composition, composition-container-management, composition-reverseproxy, zfs, composition-zfs-api]
   - role: client-nut
