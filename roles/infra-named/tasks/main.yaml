@@ -283,3 +283,7 @@
     enabled: true
   loop:
     - named
+
+- name: Publish the derived record set to the public zone
+  ansible.builtin.include_tasks: public-dns.yaml
+  when: bind_public_dns_enabled

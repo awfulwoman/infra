@@ -109,6 +109,12 @@ bind_rpz_zones:
 bind_rpz_allowlist_extra: []
 
 # -------------------------------------------------------------------
+# PUBLIC DNS (infra-named, #272) — bertha is the one host that publishes
+# the derived record set to the public Hetzner zone.
+# -------------------------------------------------------------------
+bind_public_dns_enabled: true
+
+# -------------------------------------------------------------------
 # ACME
 # -------------------------------------------------------------------
 acme_path: "/fastpool/acme"

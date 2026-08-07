@@ -108,3 +108,18 @@ bind_rpz_min_bytes: 100000
 # Blocked-query log. Separate from the general named log so "why is this site
 # broken?" is one grep away.
 bind_rpz_log_file: /var/log/named/rpz.log
+
+# -------------------------------------------------------------------
+# PUBLIC DNS (#272)
+# -------------------------------------------------------------------
+# Publishes the same derived record set (dns_records_derived) to the public
+# Hetzner zone: one pinned A per host, one CNAME per composition-derived
+# label. Off by default - this is a live write to public DNS, so it's an
+# explicit opt-in on the one host that should do it (bertha), not a default
+# every infra-named deployment inherits.
+bind_public_dns_enabled: false
+# Short relative to the internal zone's bind_default_ttl (1 week): public
+# records benefit from fast convergence if a pinned IP ever changes, and the
+# extra query volume is negligible at this scale.
+bind_public_dns_ttl: 300
+bind_public_dns_healthcheck: true
