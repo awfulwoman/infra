@@ -29,7 +29,25 @@ roles:
 
 `tags:` has to be written out explicitly, not derived from `compositions:` —
 Ansible resolves tags before per-host variables are loaded, so an inventory
-var (including `compositions` itself) is undefined at that point.
+var (including `compositions` itself) is undefined at that point. That means
+this list has to be kept in sync by hand: adding a composition to a host's
+`compositions:` without also adding its tag here makes `--tags
+composition-<name>` silently match nothing.
+
+### Redeploying one composition without the tags list
+
+`-e target_composition=<name>` (or a comma-separated list) filters the loop
+directly, reading straight from `compositions:` — nothing to keep in sync:
+
+```bash
+ansible-playbook playbooks/hosts/server-64gb-storage/core.yaml \
+  --tags composition -e target_composition=jellyfin
+```
+
+`tags:` is still how you'd run every composition on a host, or skip
+compositions entirely — a genuinely different, role-level question that
+tags remain the right tool for. `target_composition` only narrows which
+loop iterations run once the role has already started.
 
 `composition-chives` is not compatible with this role: it has no default
 `composition_name` (every other composition's matches its own name) and no

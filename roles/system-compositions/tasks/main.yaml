@@ -1,6 +1,14 @@
+# target_composition (-e target_composition=jellyfin, or a comma-separated
+# list) redeploys one or a few compositions without touching the rest -
+# unlike tags:, this reads compositions: directly, so nothing has to be kept
+# in sync by hand. tags: still exist for the "run everything"/"skip
+# everything" case, which is a genuinely different, role-level question.
 - name: Deploy compositions
   ansible.builtin.include_role:
     name: "composition-{{ item.composition | default(item) }}"
   loop: "{{ compositions }}"
   loop_control:
     label: "{{ item.composition | default(item) }}"
+  when: >-
+    not (target_composition | default(''))
+    or (item.composition | default(item)) in (target_composition | default('') | split(','))
