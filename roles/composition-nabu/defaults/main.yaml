@@ -1,0 +1,28 @@
+# Composition name (used by composition-common dependency)
+composition_name: nabu
+
+# Traefik routing is already templated (nabu.{{ domainname_infra }}), but
+# nothing in this repo has ever registered DNS for it - not a wildcard-cert
+# gap, no mechanism has ever pointed a name at this composition. Left as-is
+# (empty, not registered) rather than changed as a side effect of splitting
+# this role out; giving it real DNS is a separate, deliberate decision.
+composition_dns_subdomains: []
+
+composition_nabu_llm_base_url: "{{ llm_default_openai_uri }}"
+composition_nabu_llm_model: "{{ llm_default_model }}"
+composition_nabu_llm_api_key: "ollama"
+
+composition_nabu_event_reminder_minutes: 15
+composition_nabu_idle_checkin_hours: 0
+
+# Telegram is optional — leave blank to run without it
+composition_nabu_telegram_token: ""
+composition_nabu_telegram_chat_id: ""
+
+# Profile markdown editor at /editor is optional — leave blank to disable
+composition_nabu_editor_username: ""
+composition_nabu_editor_password: ""
+
+composition_nabu_mcps:
+  - url: "http://mcp-searxng:3000/mcp" # on same host
+    auth_key: "{{ vault_mcp_searxng_auth_token }}"

@@ -1,0 +1,31 @@
+# Composition name (used by composition-common dependency)
+composition_name: jarvis
+
+# Traefik routing is already templated (jarvis.{{ domainname_infra }}), but
+# nothing in this repo has ever registered DNS for it - not a wildcard-cert
+# gap, no mechanism has ever pointed a name at this composition. Left as-is
+# (empty, not registered) rather than changed as a side effect of splitting
+# this role out; giving it real DNS is a separate, deliberate decision.
+composition_dns_subdomains: []
+
+composition_jarvis_llm_base_url: "{{ llm_default_openai_uri }}"
+composition_jarvis_llm_model: "{{ llm_default_model }}"
+composition_jarvis_llm_api_key: "ollama"
+
+composition_jarvis_event_reminder_minutes: 15
+composition_jarvis_idle_checkin_hours: 0
+
+# Telegram is what makes this instance "jarvis" rather than a second nabu -
+# real, not optional, unlike composition_nabu_telegram_token.
+composition_jarvis_telegram_token: "{{ vault_chives_telegram_token }}"
+composition_jarvis_telegram_chat_id: "{{ vault_chives_telegram_chat_id }}"
+
+# Profile markdown editor at /editor is optional — leave blank to disable
+composition_jarvis_editor_username: ""
+composition_jarvis_editor_password: ""
+
+composition_jarvis_mcps:
+  - url: "http://gateway:4000/mcp" # on same host
+    auth_key: "{{ vault_gateway_mcp_token }}"
+  - url: "http://mcp-searxng:3000/mcp" # on same host
+    auth_key: "{{ vault_mcp_searxng_auth_token }}"

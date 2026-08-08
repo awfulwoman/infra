@@ -1,0 +1,11 @@
+{% if composition_nabu_mcps %}
+mcp_servers:
+{% for mcp in composition_nabu_mcps %}
+  - url: {{ mcp.url }}
+{% if mcp.auth_key is defined %}
+    auth_key: {{ mcp.auth_key }}
+{% endif %}
+{% endfor %}
+{% else %}
+mcp_servers: []
+{% endif %}

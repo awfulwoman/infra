@@ -1,0 +1,27 @@
+TZ=Europe/Berlin
+
+CHIVES_LLM__BASE_URL={{ composition_jarvis_llm_base_url }}
+CHIVES_LLM__MODEL={{ composition_jarvis_llm_model }}
+CHIVES_LLM__API_KEY={{ composition_jarvis_llm_api_key }}
+
+{% if composition_jarvis_telegram_token %}
+CHIVES_TELEGRAM__BOT_TOKEN={{ composition_jarvis_telegram_token }}
+CHIVES_TELEGRAM__ALLOWED_CHAT_IDS=[{{ composition_jarvis_telegram_chat_id }}]
+{% endif %}
+
+{% if composition_jarvis_editor_username %}
+CHIVES_EDITOR__USERNAME={{ composition_jarvis_editor_username }}
+CHIVES_EDITOR__PASSWORD={{ composition_jarvis_editor_password }}
+{% endif %}
+
+CHIVES_IMAP__HOST=imap.{{ vault_mailprovider_domain }}
+CHIVES_IMAP__PORT=993
+CHIVES_IMAP__USERNAME={{ vault_mailprovider_user }}
+CHIVES_IMAP__PASSWORD={{ vault_mailprovider_password }}
+
+CHIVES_EVENT_REMINDER_MINUTES={{ composition_jarvis_event_reminder_minutes }}
+CHIVES_IDLE_CHECKIN_HOURS={{ composition_jarvis_idle_checkin_hours }}
+
+CHIVES_MCP_CONFIG_PATH=/app/config.yaml
+CHIVES_STATE_PATH=/app/state
+CHIVES_PROFILE_PATH=/app/profile

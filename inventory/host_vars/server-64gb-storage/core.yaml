@@ -200,29 +200,6 @@ cnames_additional:
   - wallabag.{{ domainname_infra }}
 
 # -------------------------------------------------------------------
-# CHIVES INSTANCES
-# composition-chives is the only composition deployed more than once on the
-# same host, each with a distinct identity (composition_name below) rather
-# than the role-name default every other composition uses. Per-instance
-# config lives here, keyed by composition_name, and composition-chives'
-# own defaults look it up via composition_chives_instances[composition_name]
-# — see roles/composition-chives/defaults/main.yaml.
-# -------------------------------------------------------------------
-composition_chives_instances:
-  nabu:
-    mcps:
-      - url: "http://mcp-searxng:3000/mcp" # on same host
-        auth_key: "{{ vault_mcp_searxng_auth_token }}"
-  jarvis: # Just until I get custom wake words working
-    telegram_token: "{{ vault_chives_telegram_token }}"
-    telegram_chat_id: "{{ vault_chives_telegram_chat_id }}"
-    mcps:
-      - url: "http://gateway:4000/mcp" # on same host
-        auth_key: "{{ vault_gateway_mcp_token }}"
-      - url: "http://mcp-searxng:3000/mcp" # on same host
-        auth_key: "{{ vault_mcp_searxng_auth_token }}"
-
-# -------------------------------------------------------------------
 # COMPOSITIONS
 # Internal DNS for this host is derived from this list by the dns_records
 # filter (roles/infra-named), for every composition except the two above.
@@ -234,10 +211,10 @@ composition_chives_instances:
 #   - syncthing: the live cname predates the {host}-suffixed default.
 #   - uptime-kuma: only the UI was registered, never -api.
 #   - kiwix, mcp-openzim: their declared defaults were never registered here.
-#   - chives (nabu/jarvis): labels: [] because neither name resolves via any
-#     mechanism today (confirmed empirically before folding chives in here)
-#     despite both having their own Traefik routing already templated -
-#     nothing in this repo has ever registered DNS for them. Preserved
+#   - nabu, jarvis: composition_dns_subdomains: [] on their own roles -
+#     neither name resolves via any mechanism today despite both having
+#     their own Traefik routing already templated (confirmed empirically
+#     before splitting composition-chives into these two roles). Preserved
 #     exactly as-is; giving them real DNS is a separate, deliberate decision
 #     for later, not a side effect of this refactor.
 # jellyfin-vue has NO override: it's declared by the jellyfin composition but
@@ -284,11 +261,7 @@ compositions:
   - mcp-searxng
   - composition: kiwix
     labels: []
-  - composition: chives
-    composition_name: nabu
-    labels: []
-  - composition: chives
-    composition_name: jarvis
-    labels: []
+  - nabu
+  - jarvis
   - open-webui
   - nominatim

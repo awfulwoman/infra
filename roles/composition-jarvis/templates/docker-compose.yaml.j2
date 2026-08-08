@@ -1,6 +1,14 @@
 # code: language=ansible
 name: "{{ composition_name }}"
 services:
+  # Service key stays "chives" even though this role is composition-jarvis -
+  # Docker Compose matches an existing container to a service by this key,
+  # not just container_name:. Renaming it to "jarvis" here once caused a real
+  # outage on the sibling composition-nabu role (identical shape): Compose no
+  # longer recognised the already-running container as belonging to this
+  # service, tried to create a second one with the same container_name, and
+  # the resulting conflict took the running container down without bringing
+  # a replacement up. Never rename this.
   chives:
     container_name: "{{ composition_name }}"
     image: ghcr.io/awfulwoman/chives:latest

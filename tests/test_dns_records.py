@@ -98,26 +98,28 @@ def test_two_instances_of_one_composition_on_one_host():
 
 
 def test_labels_override_works_even_when_composition_has_no_declared_subdomains():
-    """composition-chives declares no composition_dns_subdomains at all (it
-    has no fixed identity - composition_name varies per instance), so it
-    never appears in the compositions dict. An explicit labels: override
-    must not need a fallback lookup into compositions[name] in that case -
-    Python evaluates a dict.get(key, default) call's default argument
-    eagerly regardless of whether key is present, so a naive
-    `entry.get("labels", compositions[name])` raises KeyError even when
-    labels is given and the fallback is never actually used.
+    """A composition with no composition_dns_subdomains declared at all
+    never appears in the compositions dict passed in here. An explicit
+    labels: override must not need a fallback lookup into
+    compositions[name] in that case - Python evaluates a dict.get(key,
+    default) call's default argument eagerly regardless of whether key is
+    present, so a naive `entry.get("labels", compositions[name])` raises
+    KeyError even when labels is given and the fallback is never actually
+    used. (Caught for real when composition-chives briefly went through a
+    phase of having no composition_dns_subdomains of its own; chives no
+    longer has this shape, but the underlying eager-evaluation bug this
+    guards against is unrelated to chives specifically.)
     """
     hosts = {
         "server-64gb-storage": {
             "fqdn": "server-64gb-storage.xberg.ber.ewwww.eu",
             "tailscale_ipv4": "100.80.1.116",
             "compositions": [
-                {"composition": "chives", "composition_name": "nabu", "labels": []},
-                {"composition": "chives", "composition_name": "jarvis", "labels": []},
+                {"composition": "undeclared-example", "labels": []},
             ],
         },
     }
-    compositions = {}  # chives has no composition_dns_subdomains declared
+    compositions = {}  # undeclared-example has no composition_dns_subdomains
 
     result = derive_dns_records(hosts, compositions)
 

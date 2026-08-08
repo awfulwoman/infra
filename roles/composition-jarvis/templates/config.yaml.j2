@@ -1,6 +1,6 @@
-{% if composition_chives_mcps %}
+{% if composition_jarvis_mcps %}
 mcp_servers:
-{% for mcp in composition_chives_mcps %}
+{% for mcp in composition_jarvis_mcps %}
   - url: {{ mcp.url }}
 {% if mcp.auth_key is defined %}
     auth_key: {{ mcp.auth_key }}

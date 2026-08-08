@@ -37,10 +37,9 @@
     tags: [infra, client-cert-distribution]
   # composition-nominatim is folded in here (so it's genuinely data-driven,
   # matching every other composition) rather than kept as a separate static
-  # entry like chives below — unlike chives it fits the generic
-  # (composition, labels) shape perfectly fine. It ran after system-promtail
-  # in the old static list; moved here instead, since there's no dependency
-  # between nominatim (geocoding) and email backup/smartmontools/promtail.
+  # entry. It ran after system-promtail in the old static list; moved here
+  # instead, since there's no dependency between nominatim (geocoding) and
+  # email backup/smartmontools/promtail.
   - role: system-compositions
     tags: [composition, zfs, loki, ollama]
   - role: system-emailbackup
