@@ -156,6 +156,34 @@ def _find_playbooks_for_role(role_name: str) -> list:
     return results
 
 
+def _find_compositions_for_role(role_name: str) -> list:
+    """Return [(playbook_rel_path, host)] for hosts whose compositions: list
+    (host_vars) includes this composition role. composition-* roles are
+    deployed dynamically by system-compositions reading that list, never as
+    a static `- role: composition-X` line, so _find_playbooks_for_role can't
+    see them - this covers that case separately."""
+    if not role_name.startswith("composition-"):
+        return []
+    composition_name = role_name.removeprefix("composition-")
+    results = []
+    host_vars_dir = INFRA_DIR / "inventory" / "host_vars"
+    if not host_vars_dir.exists():
+        return results
+    for host_dir in sorted(host_vars_dir.iterdir()):
+        core_yaml = host_dir / "core.yaml"
+        if not core_yaml.exists():
+            continue
+        content = core_yaml.read_text(errors="replace")
+        # Matches "- jellyfin" or "- composition: jellyfin" list entries -
+        # anchored to end-of-line so e.g. "gitea" doesn't match "gitea-runners".
+        pattern = rf"^\s*-\s*(composition:\s*)?{re.escape(composition_name)}\s*$"
+        if re.search(pattern, content, re.MULTILINE):
+            playbook = INFRA_DIR / "playbooks" / "hosts" / host_dir.name / "core.yaml"
+            if playbook.exists() and "system-compositions" in playbook.read_text(errors="replace"):
+                results.append((str(playbook.relative_to(INFRA_DIR)), host_dir.name))
+    return results
+
+
 def cmd_repo(args):
     try:
         slug = _parse_github_slug(args.url)
@@ -187,14 +215,24 @@ def cmd_repo(args):
     print(f"Roles referencing '{slug}':\n")
     for role in sorted(matched_roles):
         playbooks = _find_playbooks_for_role(role)
-        if playbooks:
-            for pb_path, tags in playbooks:
-                tag_str = ",".join(tags) if tags else role
-                print(f"  role:     {role}")
-                print(f"  playbook: {pb_path}")
-                print(f"  deploy:   aw-deploy run {pb_path} --tags {tag_str}")
-                print()
-        else:
+        compositions = _find_compositions_for_role(role)
+
+        for pb_path, tags in playbooks:
+            tag_str = ",".join(tags) if tags else role
+            print(f"  role:     {role}")
+            print(f"  playbook: {pb_path}")
+            print(f"  deploy:   aw-deploy run {pb_path} --tags {tag_str}")
+            print()
+
+        composition_name = role.removeprefix("composition-")
+        for pb_path, host in compositions:
+            print(f"  role:     {role}  (composition on {host})")
+            print(f"  playbook: {pb_path}")
+            print(f"  deploy:   aw-deploy run {pb_path} --tags composition "
+                  f"--extra-vars target_composition={composition_name}")
+            print()
+
+        if not playbooks and not compositions:
             print(f"  role: {role}  (no playbook includes this role)")
             print()
 
