@@ -32,20 +32,7 @@
   # compositions: preserves the original order (mqtt first — it must run
   # before owntracks and zigbee2mqtt, which depend on it already being up).
   - role: system-compositions
-    tags:
-      - composition
-      - composition-mqtt
-      - composition-reverseproxy
-      - composition-container-management
-      - composition-homeassistant
-      - composition-homeassistant-personal
-      - composition-esphome
-      - composition-matter
-      - composition-owntracks
-      - composition-zigbee2mqtt
-      - composition-watchyourlan
-      - zfs
-      - composition-zfs-api
+    tags: [composition, zfs]
   - role: system-promtail
     tags: [system, promtail, system-promtail]
   - role: monitoring-healthchecksio

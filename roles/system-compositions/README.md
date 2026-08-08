@@ -24,30 +24,34 @@ those labels turn into DNS records.
 ```yaml
 roles:
   - role: system-compositions
-    tags: [composition, composition-jellyfin, composition-gitea, ...]
+    tags: [composition]
 ```
 
-`tags:` has to be written out explicitly, not derived from `compositions:` —
-Ansible resolves tags before per-host variables are loaded, so an inventory
-var (including `compositions` itself) is undefined at that point. That means
-this list has to be kept in sync by hand: adding a composition to a host's
-`compositions:` without also adding its tag here makes `--tags
-composition-<name>` silently match nothing.
+`tags:` only needs the coarse, role-level tag(s) — "run every composition on
+this host" (`composition`) plus any host-specific grouping tag (e.g. `zfs`,
+`ollama`). It's written out explicitly rather than derived from
+`compositions:` because Ansible resolves tags before per-host variables are
+loaded, so an inventory var (including `compositions` itself) is undefined
+at that point.
 
-### Redeploying one composition without the tags list
+### Redeploying one composition
 
 `-e target_composition=<name>` (or a comma-separated list) filters the loop
-directly, reading straight from `compositions:` — nothing to keep in sync:
+directly, reading straight from `compositions:`:
 
 ```bash
 ansible-playbook playbooks/hosts/server-64gb-storage/core.yaml \
   --tags composition -e target_composition=jellyfin
 ```
 
-`tags:` is still how you'd run every composition on a host, or skip
-compositions entirely — a genuinely different, role-level question that
-tags remain the right tool for. `target_composition` only narrows which
-loop iterations run once the role has already started.
+An earlier version of this role's usage also carried a `composition-<name>`
+tag per entry (`composition-jellyfin`, `composition-gitea`, ...), one per
+host, kept in sync by hand — that's what `target_composition` replaces.
+It couldn't be done the other way around (each composition declaring its own
+tag, the way `composition_dns_subdomains` works) because role defaults
+aren't loaded early enough for tag templating when a role is included
+dynamically inside a loop, only when it's statically listed under `roles:`
+— confirmed empirically, not just documented here as an assumption.
 
 `composition-chives` is not compatible with this role: it has no default
 `composition_name` (every other composition's matches its own name) and no

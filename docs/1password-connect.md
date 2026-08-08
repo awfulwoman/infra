@@ -51,7 +51,7 @@ Paste the output into `inventory/group_vars/infra/vault_onepassword_connect.yaml
 
 ```bash
 ansible-playbook playbooks/hosts/raspberry-pi4-4gb-randolph/core.yaml \
-  --tags composition-1password-connect
+  --tags composition -e target_composition=1password-connect
 ```
 
 ### 4. Verify

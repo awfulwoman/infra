@@ -31,7 +31,7 @@
   - role: client-cert-distribution
     tags: [infra, client-cert-distribution]
   - role: system-compositions
-    tags: [composition, composition-reverseproxy, composition-container-management, zfs, composition-zfs-api]
+    tags: [composition, zfs]
   - role: backups-zfs-client
     tags: [backups, zfs, backups-zfs-client]
   - role: script-share-personal-site

@@ -17,7 +17,7 @@
   - role: client-nfs
     tags: [client, client-nfs]
   - role: system-compositions
-    tags: [composition, composition-reverseproxy, composition-container-management, composition-awfulwoman, zfs, composition-zfs-api]
+    tags: [composition, zfs]
   - role: system-promtail
     tags: [system, promtail, system-promtail]
   - role: monitoring-healthchecksio

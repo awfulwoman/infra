@@ -26,7 +26,7 @@
   - role: client-cert-distribution
     tags: [infra, client-cert-distribution]
   - role: system-compositions
-    tags: [composition, composition-container-management, composition-reverseproxy, zfs, composition-zfs-api]
+    tags: [composition, zfs]
   - role: system-promtail
     tags: [system, promtail, system-promtail]
   - role: monitoring-healthchecksio

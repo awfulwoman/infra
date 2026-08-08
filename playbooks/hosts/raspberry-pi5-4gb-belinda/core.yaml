@@ -19,7 +19,7 @@
   - role: client-cert-distribution
     tags: [infra, client-cert-distribution]
   - role: system-compositions
-    tags: [composition, composition-container-management, composition-reverseproxy, zfs, composition-zfs-api]
+    tags: [composition, zfs]
   - role: client-nut
     tags: [client, client-nut]
   - role: infothrill.nullmailer

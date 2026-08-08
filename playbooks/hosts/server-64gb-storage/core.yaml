@@ -42,46 +42,7 @@
   # in the old static list; moved here instead, since there's no dependency
   # between nominatim (geocoding) and email backup/smartmontools/promtail.
   - role: system-compositions
-    tags:
-      - composition
-      - zfs
-      - loki
-      - composition-zfs-api
-      - composition-victoriametrics
-      - composition-loki
-      - composition-reverseproxy
-      - composition-container-management
-      - composition-github2karakeep
-      - composition-finances
-      - composition-gitea
-      - composition-gitea-runners
-      - composition-jellyfin
-      - composition-immich
-      - composition-llm-inference-calculator
-      - composition-audiobookshelf
-      - composition-downloads
-      - composition-syncthing
-      - composition-karakeep
-      - ollama
-      - composition-freshrss
-      - composition-tubesync
-      - composition-homepage
-      - composition-piper
-      - composition-gotosocial
-      - composition-libretranslate
-      - composition-n8n
-      - composition-memorybank
-      - composition-gateway
-      - composition-paperless-ngx
-      - composition-vikunja
-      - composition-uptime-kuma
-      - composition-mcp-kagisearch
-      - composition-mcp-openzim
-      - composition-searxng
-      - composition-mcp-searxng
-      - composition-kiwix
-      - composition-open-webui
-      - composition-nominatim
+    tags: [composition, zfs, loki, ollama]
   # composition-chives has no default composition_name (every other role's
   # matches its own name; chives supplies a different one at each
   # invocation) and no default subdomains, so it doesn't fit system-compositions
