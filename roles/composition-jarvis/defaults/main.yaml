@@ -1,12 +1,8 @@
 # Composition name (used by composition-common dependency)
 composition_name: jarvis
 
-# Traefik routing is already templated (jarvis.{{ domainname_infra }}), but
-# nothing in this repo has ever registered DNS for it - not a wildcard-cert
-# gap, no mechanism has ever pointed a name at this composition. Left as-is
-# (empty, not registered) rather than changed as a side effect of splitting
-# this role out; giving it real DNS is a separate, deliberate decision.
-composition_dns_subdomains: []
+composition_dns_subdomains:
+  - jarvis
 
 composition_jarvis_llm_base_url: "{{ llm_default_openai_uri }}"
 composition_jarvis_llm_model: "{{ llm_default_model }}"
