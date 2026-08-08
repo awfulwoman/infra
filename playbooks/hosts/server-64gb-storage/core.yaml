@@ -43,29 +43,6 @@
   # between nominatim (geocoding) and email backup/smartmontools/promtail.
   - role: system-compositions
     tags: [composition, zfs, loki, ollama]
-  # composition-chives has no default composition_name (every other role's
-  # matches its own name; chives supplies a different one at each
-  # invocation) and no default subdomains, so it doesn't fit system-compositions
-  # at all — see the comment in host_vars — and stays a plain static role
-  # like it always was.
-  - role: composition-chives
-    vars:
-      composition_name: nabu
-      composition_chives_mcps:
-        - url: "http://mcp-searxng:3000/mcp" # on same host
-          auth_key: "{{ vault_mcp_searxng_auth_token }}"
-    tags: [composition, composition-chives, ollama]
-  - role: composition-chives
-    vars:
-      composition_name: jarvis # Just until I get custom wake words working
-      composition_chives_telegram_token: "{{ vault_chives_telegram_token }}"
-      composition_chives_telegram_chat_id: "{{ vault_chives_telegram_chat_id }}"
-      composition_chives_mcps:
-        - url: "http://gateway:4000/mcp" # on same host
-          auth_key: "{{ vault_gateway_mcp_token }}"
-        - url: "http://mcp-searxng:3000/mcp" # on same host
-          auth_key: "{{ vault_mcp_searxng_auth_token }}"
-    tags: [composition, composition-chives, ollama]
   - role: system-emailbackup
     tags: [system, system-emailbackup]
   - role: system-smartmontools

@@ -200,6 +200,29 @@ cnames_additional:
   - wallabag.{{ domainname_infra }}
 
 # -------------------------------------------------------------------
+# CHIVES INSTANCES
+# composition-chives is the only composition deployed more than once on the
+# same host, each with a distinct identity (composition_name below) rather
+# than the role-name default every other composition uses. Per-instance
+# config lives here, keyed by composition_name, and composition-chives'
+# own defaults look it up via composition_chives_instances[composition_name]
+# — see roles/composition-chives/defaults/main.yaml.
+# -------------------------------------------------------------------
+composition_chives_instances:
+  nabu:
+    mcps:
+      - url: "http://mcp-searxng:3000/mcp" # on same host
+        auth_key: "{{ vault_mcp_searxng_auth_token }}"
+  jarvis: # Just until I get custom wake words working
+    telegram_token: "{{ vault_chives_telegram_token }}"
+    telegram_chat_id: "{{ vault_chives_telegram_chat_id }}"
+    mcps:
+      - url: "http://gateway:4000/mcp" # on same host
+        auth_key: "{{ vault_gateway_mcp_token }}"
+      - url: "http://mcp-searxng:3000/mcp" # on same host
+        auth_key: "{{ vault_mcp_searxng_auth_token }}"
+
+# -------------------------------------------------------------------
 # COMPOSITIONS
 # Internal DNS for this host is derived from this list by the dns_records
 # filter (roles/infra-named), for every composition except the two above.
@@ -211,17 +234,12 @@ cnames_additional:
 #   - syncthing: the live cname predates the {host}-suffixed default.
 #   - uptime-kuma: only the UI was registered, never -api.
 #   - kiwix, mcp-openzim: their declared defaults were never registered here.
-# chives (nabu/jarvis) isn't in this list at all: it has no default
-# composition_name (every other role's composition_name matches its own
-# name; chives has neither, supplying a different one at each of its two
-# invocations) and no default subdomains — nabu/jarvis are exposed only via
-# their own self-registration task, unrelated to this list or the internal
-# zone. Folding it into this generic loop would mean giving every other
-# composition an explicit composition_name too (vars: can't conditionally
-# omit a key the way module parameters can via omit — confirmed by testing),
-# which would silently override composition-mcp-openzim's real
-# composition_name (openzim-mcp) to the wrong value. Kept as its own two
-# tasks in the playbook instead, unchanged from the old static role entries.
+#   - chives (nabu/jarvis): labels: [] because neither name resolves via any
+#     mechanism today (confirmed empirically before folding chives in here)
+#     despite both having their own Traefik routing already templated -
+#     nothing in this repo has ever registered DNS for them. Preserved
+#     exactly as-is; giving them real DNS is a separate, deliberate decision
+#     for later, not a side effect of this refactor.
 # jellyfin-vue has NO override: it's declared by the jellyfin composition but
 # was missing from the old hand-written list — the exact drift #262 exists
 # to fix, so it's allowed to appear now that derivation is authoritative.
@@ -266,6 +284,11 @@ compositions:
   - mcp-searxng
   - composition: kiwix
     labels: []
-  # chives (nabu/jarvis) is deliberately NOT in this list — see the playbook.
+  - composition: chives
+    composition_name: nabu
+    labels: []
+  - composition: chives
+    composition_name: jarvis
+    labels: []
   - open-webui
   - nominatim

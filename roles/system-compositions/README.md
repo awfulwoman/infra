@@ -19,6 +19,43 @@ default DNS labels) or a dict `{composition: <name>, labels: [...]}` to
 override them for that host. See `plugins/filters/dns_records.py` for how
 those labels turn into DNS records.
 
+### Deploying the same role more than once (`composition_name`)
+
+A dict entry can also carry `composition_name: <name>` to give that
+instance a distinct identity, different from the role's own default (which
+is otherwise always the role name). This is how `composition-chives` runs
+twice on the same host, once as `nabu` and once as `jarvis`:
+
+```yaml
+compositions:
+  - composition: chives
+    composition_name: nabu
+    labels: []
+  - composition: chives
+    composition_name: jarvis
+    labels: []
+```
+
+This only overrides identity, not arbitrary per-instance config — a role
+that needs that (like chives: MCP endpoints, Telegram credentials, one set
+per instance) reads it from its own `<role>_instances` dict in host_vars,
+keyed by `composition_name` (see `composition-chives`'s `defaults/main.yaml`
+and `composition_chives_instances` in storage's host_vars). That's a
+deliberate choice, not a limitation to work around: `include_role`'s `vars:`
+must be a literal YAML mapping, not a single templated expression that
+evaluates to one — Ansible rejects that outright ("Vars in a IncludeRole
+must be specified as a dictionary") — so there's no way to splat an
+arbitrary per-item dict through the loop itself. Confirmed empirically
+before settling on the host_vars-lookup approach instead.
+
+`composition_name` is deliberately *not* defaulted to the role name inside
+this role's own tasks: some roles' own `composition_name` legitimately
+doesn't match their role name (`composition-mcp-openzim`: `openzim-mcp`,
+`composition-1password-connect`: `onepassword-connect`), and a fallback
+here would silently override those to the wrong value. So `composition_name`
+is only ever set when an entry explicitly asks for it; every other entry's
+role default applies completely untouched, exactly as before this existed.
+
 ## Usage
 
 ```yaml
@@ -52,8 +89,3 @@ tag, the way `composition_dns_subdomains` works) because role defaults
 aren't loaded early enough for tag templating when a role is included
 dynamically inside a loop, only when it's statically listed under `roles:`
 — confirmed empirically, not just documented here as an assumption.
-
-`composition-chives` is not compatible with this role: it has no default
-`composition_name` (every other composition's matches its own name) and no
-default subdomains, so it's deployed as its own explicit `- role:
-composition-chives` entries instead, wherever it's used.

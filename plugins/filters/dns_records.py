@@ -23,7 +23,13 @@ def derive_dns_records(hosts, compositions):
         for entry in host["compositions"]:
             if isinstance(entry, dict):
                 composition_name = entry["composition"]
-                labels = entry.get("labels", compositions[composition_name])
+                # Not entry.get("labels", compositions[composition_name]):
+                # Python evaluates a .get() call's default argument eagerly
+                # regardless of whether the key is present, so that would
+                # raise KeyError for a role with no declared
+                # composition_dns_subdomains even when labels is given and
+                # the fallback is never actually used (composition-chives).
+                labels = entry["labels"] if "labels" in entry else compositions[composition_name]
             else:
                 composition_name = entry
                 labels = compositions[composition_name]

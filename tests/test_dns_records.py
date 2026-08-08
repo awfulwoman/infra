@@ -97,6 +97,33 @@ def test_two_instances_of_one_composition_on_one_host():
     }
 
 
+def test_labels_override_works_even_when_composition_has_no_declared_subdomains():
+    """composition-chives declares no composition_dns_subdomains at all (it
+    has no fixed identity - composition_name varies per instance), so it
+    never appears in the compositions dict. An explicit labels: override
+    must not need a fallback lookup into compositions[name] in that case -
+    Python evaluates a dict.get(key, default) call's default argument
+    eagerly regardless of whether key is present, so a naive
+    `entry.get("labels", compositions[name])` raises KeyError even when
+    labels is given and the fallback is never actually used.
+    """
+    hosts = {
+        "server-64gb-storage": {
+            "fqdn": "server-64gb-storage.xberg.ber.ewwww.eu",
+            "tailscale_ipv4": "100.80.1.116",
+            "compositions": [
+                {"composition": "chives", "composition_name": "nabu", "labels": []},
+                {"composition": "chives", "composition_name": "jarvis", "labels": []},
+            ],
+        },
+    }
+    compositions = {}  # chives has no composition_dns_subdomains declared
+
+    result = derive_dns_records(hosts, compositions)
+
+    assert result["cnames"] == {}
+
+
 def test_duplicate_label_across_hosts_raises_naming_composition_and_hosts():
     hosts = {
         "minipc-8gb-homebrain": {

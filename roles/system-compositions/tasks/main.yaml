@@ -3,12 +3,40 @@
 # unlike tags:, this reads compositions: directly, so nothing has to be kept
 # in sync by hand. tags: still exist for the "run everything"/"skip
 # everything" case, which is a genuinely different, role-level question.
-- name: Deploy compositions
+#
+# Split into two tasks rather than one with a composition_name default
+# fallback: some roles' own composition_name deliberately does NOT match
+# their role name (composition-mcp-openzim: openzim-mcp,
+# composition-1password-connect: onepassword-connect) - a fallback of
+# "item.composition_name | default(role name)" would silently override
+# those to the wrong value. omit() doesn't help either: it's only special
+# for module parameters, and silently becomes an empty string in a task
+# vars: block rather than actually omitting the key (confirmed by testing).
+# So: no vars: at all unless the entry explicitly opts in with
+# composition_name, which is what actually lets the same role be deployed
+# more than once on a host with a distinct identity each time (see
+# composition-chives: composition_name: nabu / jarvis, both
+# composition: chives).
+- name: Deploy compositions (default identity)
   ansible.builtin.include_role:
     name: "composition-{{ item.composition | default(item) }}"
   loop: "{{ compositions }}"
   loop_control:
     label: "{{ item.composition | default(item) }}"
   when: >-
-    not (target_composition | default(''))
-    or (item.composition | default(item)) in (target_composition | default('') | split(','))
+    (item.composition_name is not defined)
+    and (not (target_composition | default(''))
+         or (item.composition | default(item)) in (target_composition | default('') | split(',')))
+
+- name: Deploy compositions (explicit composition_name override)
+  ansible.builtin.include_role:
+    name: "composition-{{ item.composition | default(item) }}"
+  loop: "{{ compositions }}"
+  loop_control:
+    label: "{{ item.composition | default(item) }}"
+  vars:
+    composition_name: "{{ item.composition_name }}"
+  when: >-
+    (item.composition_name is defined)
+    and (not (target_composition | default(''))
+         or (item.composition | default(item)) in (target_composition | default('') | split(',')))
