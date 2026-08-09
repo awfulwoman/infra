@@ -259,6 +259,7 @@ compositions:
     labels: []
   - searxng
   - mcp-searxng
+  - mcp-weather
   - composition: kiwix
     labels: []
   - nabu

@@ -4,6 +4,12 @@ composition_name: jarvis
 composition_dns_subdomains:
   - jarvis
 
+# Ollama-compatible port for direct LAN/Tailscale clients (e.g. Home
+# Assistant's Ollama integration) that expect the standard Ollama port
+# rather than the Traefik-routed hostname. nabu already claims 11434 on
+# the shared host, so jarvis takes the next one up.
+composition_jarvis_openai_port: 11435
+
 composition_jarvis_llm_base_url: "{{ llm_default_openai_uri }}"
 composition_jarvis_llm_model: "{{ llm_default_model }}"
 composition_jarvis_llm_api_key: "ollama"
@@ -17,8 +23,8 @@ composition_jarvis_telegram_token: "{{ vault_chives_telegram_token }}"
 composition_jarvis_telegram_chat_id: "{{ vault_chives_telegram_chat_id }}"
 
 # Profile markdown editor at /editor is optional — leave blank to disable
-composition_jarvis_editor_username: ""
-composition_jarvis_editor_password: ""
+composition_jarvis_editor_username: "charlie"
+composition_jarvis_editor_password: "{{ vault_jarvis_editor_password }}"
 
 composition_jarvis_mcps:
   - url: "http://gateway:4000/mcp" # on same host

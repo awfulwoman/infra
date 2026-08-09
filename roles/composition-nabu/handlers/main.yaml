@@ -1,0 +1,14 @@
+# code: language=ansible
+
+# Chives only discovers MCP tools and reads config.yaml at startup - a
+# changed config.yaml needs an explicit restart to take effect, since
+# Compose won't recreate a container just because a bind-mounted file's
+# content changed underneath it.
+- name: Restart Chives
+  ansible.builtin.command:
+    cmd: docker restart nabu
+  register: _restart_chives
+  failed_when:
+    - _restart_chives.rc != 0
+    - "'No such container' not in _restart_chives.stderr"
+  changed_when: _restart_chives.rc == 0

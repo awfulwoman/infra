@@ -1,0 +1,28 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  mcp-weather:
+    container_name: mcp-weather
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file: .environment_vars
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mcp-weather.rule=Host(`weathermcp.{{ domainname_infra }}`)"
+      - "traefik.http.routers.mcp-weather.tls=true"
+      - "traefik.http.routers.mcp-weather.tls.certresolver=letsencrypt"
+      - "traefik.http.services.mcp-weather.loadbalancer.server.port={{ composition_mcp_weather_port }}"
+    networks:
+      - "{{ default_docker_network }}"
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/localhost/{{ composition_mcp_weather_port }}'"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+networks:
+  "{{ default_docker_network }}":
+    external: true

@@ -4,6 +4,11 @@ composition_name: nabu
 composition_dns_subdomains:
   - nabu
 
+# Ollama-compatible port for direct LAN/Tailscale clients (e.g. Home
+# Assistant's Ollama integration) that expect the standard Ollama port
+# rather than the Traefik-routed hostname.
+composition_nabu_openai_port: 11434
+
 composition_nabu_llm_base_url: "{{ llm_default_openai_uri }}"
 composition_nabu_llm_model: "{{ llm_default_model }}"
 composition_nabu_llm_api_key: "ollama"
@@ -22,3 +27,4 @@ composition_nabu_editor_password: ""
 composition_nabu_mcps:
   - url: "http://mcp-searxng:3000/mcp" # on same host
     auth_key: "{{ vault_mcp_searxng_auth_token }}"
+  - url: "http://mcp-weather:8000/mcp" # on same host

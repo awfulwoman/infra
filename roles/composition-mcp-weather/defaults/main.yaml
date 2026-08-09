@@ -1,0 +1,20 @@
+# code: language=ansible
+composition_name: mcp-weather
+
+composition_dns_subdomains:
+  - weathermcp
+
+# github.com/weather-mcp/weather-mcp - stdio-only, no HTTP transport of its
+# own, so it's bridged with mcp-proxy (sparfenyuk/mcp-proxy). Pin both
+# independently since they version separately.
+composition_mcp_weather_proxy_version: "0.12.0"
+# Pin explicitly - mcp-proxy 0.12.0's unbounded "mcp>=1.17.0" dependency
+# resolves to mcp 2.0.0 by default, which breaks it. See Dockerfile.j2.
+composition_mcp_weather_mcp_sdk_version: "1.29.0"
+composition_mcp_weather_package_version: "1.13.0"
+composition_mcp_weather_port: 8000
+
+# 'basic' preset: get_weather_summary, forecast, current_conditions, alerts,
+# search_location, check_service_status. See upstream README for other
+# presets (standard/full/all) and how to list individual tools.
+composition_mcp_weather_enabled_tools: basic

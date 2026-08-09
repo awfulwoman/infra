@@ -40,6 +40,23 @@
     group: "{{ ansible_user }}"
     mode: "0755"
 
+# Seeds the default profile from github.com/awfulwoman/chives/tree/main/profile.
+# force: false means an existing file (including one edited via /editor) is
+# never overwritten - this only fills in what's missing.
+- name: "Seed default profile files"
+  ansible.builtin.copy:
+    src: "profile/{{ item }}"
+    dest: "{{ composition_config }}/profile/{{ item }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0644"
+    force: false
+  loop:
+    - CHECKIN.md
+    - PERSONALITY.md
+    - PROTOCOLS.md
+    - USER.md
+
 - name: "Start Docker Compose project"
   community.docker.docker_compose_v2:
     project_src: "{{ composition_root }}"
