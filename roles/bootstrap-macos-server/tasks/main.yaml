@@ -77,3 +77,18 @@
     - Keynote.app
     - Numbers.app
     - Pages.app
+
+# Enrolment is NOT automated on macOS: artis3n.tailscale.machine dispatches on
+# ansible_facts['distribution'] (here "MacOSX"), has task files only for the
+# Linux families, and fails outright on anything else. Its install path is
+# apt/yum/pacman, which means nothing against an app bundle. Tailscale is
+# installed by hand as the standalone macOS app.
+#
+# Pinning the address is a different matter — it is an API call plus one local
+# `tailscale ip -4`, neither of which cares about the OS. Without it this host
+# keeps whatever address Tailscale handed it, while infra-named keeps publishing
+# the inventory value, and every name for this host resolves somewhere dead.
+# Needs `tailscale_bin` in host_vars, since the CLI is not on Ansible's PATH.
+- name: Tailscale - pin the inventory address
+  ansible.builtin.include_role:
+    name: network-tailscale-address

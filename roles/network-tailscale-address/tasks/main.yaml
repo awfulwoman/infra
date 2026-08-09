@@ -22,7 +22,7 @@
 
     - name: Read the address Tailscale currently has for this host
       ansible.builtin.command:
-        cmd: tailscale ip -4
+        cmd: "{{ tailscale_bin }} ip -4"
       register: tailscale_current_ipv4_raw
       changed_when: false
       failed_when: false
@@ -110,7 +110,7 @@
 
         - name: Wait for tailscaled to pick up the new address
           ansible.builtin.command:
-            cmd: tailscale ip -4
+            cmd: "{{ tailscale_bin }} ip -4"
           register: tailscale_address_verify
           changed_when: false
           until: host_tailscale_ipv4 in tailscale_address_verify.stdout_lines

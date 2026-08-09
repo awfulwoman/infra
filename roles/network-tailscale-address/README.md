@@ -32,15 +32,35 @@ records, and compositions can point at
 | `tailscale_api_base` | `https://api.tailscale.com/api/v2` | API root |
 | `tailscale_address_verify_retries` | `12` | Attempts to wait for the new address |
 | `tailscale_address_verify_delay` | `5` | Seconds between attempts |
+| `tailscale_bin` | `tailscale` | Path to the Tailscale CLI. macOS needs the absolute path — see below |
 
 ## Where it runs
 
 Included by the roles that enrol a host onto the tailnet, immediately after
-enrolment — `bootstrap-ubuntu-server` and `system-pikvm`. Tailscale on
-`apple-macmini-m4-16gb-malcolm` is installed by hand (a Homebrew cask, not an
-Ansible role), so its `host_tailscale_ipv4` is declarative only: `infra-named`
-publishes it, but nothing enforces it. Set that one in the Tailscale admin
-console to match, or the DNS record will point somewhere wrong.
+enrolment — `bootstrap-ubuntu-server` and `system-pikvm` — and by
+`bootstrap-macos-server`, which does not enrol but does hold the address.
+
+## macOS
+
+Enrolment is not automated on macOS. `artis3n.tailscale.machine` dispatches on
+`ansible_facts['distribution']` (`MacOSX` here), ships task files only for the
+Linux families, and fails on anything else. Its install path is apt/yum/pacman,
+which means nothing against an app bundle. Tailscale is installed by hand as the
+standalone macOS app.
+
+Pinning the address is separate, and works the same as on Linux: one API call
+plus one local `tailscale ip -4`, neither of which cares about the OS. It needs
+`tailscale_bin` set to an absolute path, because the standalone app's CLI lives
+at `/usr/local/bin/tailscale` (a wrapper around the binary inside the app
+bundle) and Ansible's non-interactive SSH session gets a PATH of
+`/usr/bin:/bin:/usr/sbin:/sbin`, which excludes it.
+
+> **CAUTION:** Get this wrong and nothing fails. The read task is
+> `failed_when: false`, so a missing CLI yields an empty
+> `tailscale_current_ipv4`, the guard skips the block, and the play reports
+> green while the address drifts. Meanwhile `infra-named` keeps publishing the
+> inventory value, so every name for the host resolves to an address nothing
+> holds. Confirm with `tailscale ip -4` on the host after a run.
 
 ## Prerequisites
 

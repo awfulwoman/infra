@@ -9,6 +9,17 @@ tailscale_api_base: https://api.tailscale.com/api/v2
 # host that must keep whatever address Tailscale handed it.
 tailscale_address_enforce: true
 
+# The Tailscale CLI, used only to read the host's current address. On Linux the
+# package puts it on PATH, so the bare name works.
+#
+# macOS needs the full path. Ansible's non-interactive SSH session gets a bare
+# PATH (/usr/bin:/bin:/usr/sbin:/sbin) that excludes /usr/local/bin, so the bare
+# name is "command not found" even when the CLI is installed and working from a
+# login shell. That failure is silent here (the read task is failed_when: false),
+# so the role skips the host and reports green while the address drifts. Set the
+# absolute path in host_vars for any macOS host.
+tailscale_bin: tailscale
+
 # After a reassignment, how long to wait for tailscaled to start answering with
 # the new address before failing.
 tailscale_address_verify_retries: 12
