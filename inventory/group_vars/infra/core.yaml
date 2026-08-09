@@ -31,12 +31,14 @@ default_docker_network: guineanet
 # DNS — authoritative A records for the infra zone (served by infra-named).
 # Moved here from the infra-named role default: this is deployment topology, not
 # generic role behaviour. Apex + www point at storage, which fronts services via
-# its reverse proxy. Referencing host_ipv4 keeps it correct if storage moves.
+# its reverse proxy. host: (not a pre-resolved ip:) keeps it correct if storage
+# moves, AND lets bind_zone_ip_field pick the right address per split-horizon
+# view (db.zone resolves host: entries via hostvars[record.host][bind_zone_ip_field]).
 bind_records_a:
   - name: "@" # zone apex ({{ domainname_infra }})
-    ip: "{{ hostvars['server-64gb-storage']['host_ipv4'] }}"
+    host: server-64gb-storage
   - name: "www"
-    ip: "{{ hostvars['server-64gb-storage']['host_ipv4'] }}"
+    host: server-64gb-storage
 
 # Ansible
 ansible_path: "/opt/ansible"

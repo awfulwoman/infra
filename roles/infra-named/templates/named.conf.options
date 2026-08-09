@@ -81,7 +81,7 @@ options {
   # them. Beware! - if the forwarders are down, the NS will not
   # answer non-authoritative queries at all!
   # forward only;
-{% if bind_rpz_enabled %}
+{% if bind_rpz_enabled and not bind_split_horizon_enabled %}
 
   # -----------------------------------------------------------
   # DNS filtering (Response Policy Zones)
@@ -102,7 +102,17 @@ options {
 {% endif %}
 
 };
-{% if bind_rpz_enabled %}
+{% if bind_split_horizon_enabled and bind_dnssec_keys is defined and bind_dnssec_keys | length > 0 %}
+
+# -----------------------------------------------------------
+# DNSSEC
+# -----------------------------------------------------------
+# Global, not nested in a zone block: with two "{{ bind_domain }}" zones (one
+# per view) there's no longer a single zone block to nest this in, and keys
+# aren't a per-view concept in BIND anyway.
+include "/etc/bind/keys.conf";
+{% endif %}
+{% if bind_rpz_enabled and not bind_split_horizon_enabled %}
 
 # -----------------------------------------------------------
 # Response Policy Zones
@@ -130,6 +140,8 @@ zone "{{ item.name }}" {
 };
 
 {% endfor %}
+{% endif %}
+{% if bind_rpz_enabled %}
 logging {
   channel rpz_log {
     file "{{ bind_rpz_log_file }}" versions 3 size 10m;
@@ -141,6 +153,7 @@ logging {
 };
 {% endif %}
 
+{% if not bind_split_horizon_enabled %}
 zone "{{ bind_domain }}" {
   type primary;
   file "/etc/bind/zones/db.{{ bind_domain }}.zone";
@@ -189,4 +202,192 @@ zone "{{ alias }}" {
   file "/etc/bind/zones/db.{{ alias }}.zone";
 };
 {% endfor %}
+{% endif %}
+{% else %}
+# -----------------------------------------------------------
+# Split-horizon views (#262)
+# -----------------------------------------------------------
+# Same names, different answers depending on where the query comes from: "lan"
+# serves each host's host_ipv4 (today's behaviour, unchanged), "tailscale"
+# serves host_tailscale_ipv4 - fixing service names being unreachable for
+# clients that are only on the tailnet (e.g. mobile data), which is what #262
+# was filed for.
+#
+# RPZ zones referenced by a view's own response-policy must be real primary
+# zones declared inside that view - `in-view` doesn't satisfy BIND's
+# same-view requirement for response-policy (confirmed via named-checkconf
+# against this host's real BIND before writing this). So the RPZ zone
+# declarations below are deliberately duplicated per view, not shared.
+# DNAME alias zones carry no host-specific data, so those ARE shared via
+# in-view (confirmed working the same way).
+
+view "lan" {
+  match-clients { localhost; LAN; };
+
+{% if bind_rpz_enabled %}
+  response-policy {
+    zone "rpz.allowlist" policy passthru;
+{% for item in bind_rpz_zones %}
+    zone "{{ item.name }}";
+{% endfor %}
+  } qname-wait-recurse no;
+
+  zone "rpz.allowlist" {
+    type primary;
+    file "{{ bind_rpz_dir }}/db.rpz.allowlist";
+    allow-query { none; };
+    allow-transfer { none; };
+  };
+
+{% for item in bind_rpz_zones %}
+  zone "{{ item.name }}" {
+    type primary;
+    file "{{ bind_rpz_dir }}/db.{{ item.name }}";
+    allow-query { none; };
+    allow-transfer { none; };
+  };
+
+{% endfor %}
+{% endif %}
+  zone "{{ bind_domain }}" {
+    type primary;
+    file "/etc/bind/zones/db.{{ bind_domain }}.lan.zone";
+
+    allow-transfer {
+      localhost;
+      {% if bind_acl_groups is defined %}
+        {% for item in bind_acl_groups %}
+          {{ item.name }};
+        {% endfor %}
+      {% endif %}
+    };
+  };
+
+  zone "{{ bind_iprange_reversed }}.in-addr.arpa" {
+    type primary;
+    file "/etc/bind/zones/db.{{ bind_domain }}.reverse.zone";
+  };
+
+{% if bind_dname_aliases is defined %}
+{% for alias in bind_dname_aliases %}
+  zone "{{ alias }}" {
+    type primary;
+    file "/etc/bind/zones/db.{{ alias }}.zone";
+  };
+{% endfor %}
+{% endif %}
+
+  # Stock zones normally pulled in by named.conf's
+  # named.conf.default-zones include - duplicated here (not in-view'd, same
+  # reasoning as RPZ above) because every view needs its own complete zone
+  # set, not just the site-specific ones.
+  zone "." {
+    type hint;
+    file "/usr/share/dns/root.hints";
+  };
+
+  zone "localhost" {
+    type primary;
+    file "/etc/bind/db.local";
+  };
+
+  zone "127.in-addr.arpa" {
+    type primary;
+    file "/etc/bind/db.127";
+  };
+
+  zone "0.in-addr.arpa" {
+    type primary;
+    file "/etc/bind/db.0";
+  };
+
+  zone "255.in-addr.arpa" {
+    type primary;
+    file "/etc/bind/db.255";
+  };
+};
+
+view "tailscale" {
+  # No reverse zone in this view - Tailscale addresses reverse under
+  # 100.in-addr.arpa, which this role has never served (MagicDNS handles
+  # that), so there's nothing to carry over. A PTR query via this view
+  # should come back REFUSED, not silently succeed.
+  match-clients { Tailscale; };
+
+{% if bind_rpz_enabled %}
+  response-policy {
+    zone "rpz.allowlist" policy passthru;
+{% for item in bind_rpz_zones %}
+    zone "{{ item.name }}";
+{% endfor %}
+  } qname-wait-recurse no;
+
+  zone "rpz.allowlist" {
+    type primary;
+    file "{{ bind_rpz_dir }}/db.rpz.allowlist";
+    allow-query { none; };
+    allow-transfer { none; };
+  };
+
+{% for item in bind_rpz_zones %}
+  zone "{{ item.name }}" {
+    type primary;
+    file "{{ bind_rpz_dir }}/db.{{ item.name }}";
+    allow-query { none; };
+    allow-transfer { none; };
+  };
+
+{% endfor %}
+{% endif %}
+  zone "{{ bind_domain }}" {
+    type primary;
+    file "/etc/bind/zones/db.{{ bind_domain }}.tailscale.zone";
+
+    allow-transfer {
+      localhost;
+      {% if bind_acl_groups is defined %}
+        {% for item in bind_acl_groups %}
+          {{ item.name }};
+        {% endfor %}
+      {% endif %}
+    };
+  };
+
+{% if bind_dname_aliases is defined %}
+{% for alias in bind_dname_aliases %}
+  zone "{{ alias }}" {
+    in-view "lan";
+  };
+{% endfor %}
+{% endif %}
+
+  # Same stock zones as the "lan" view above - can't in-view these across
+  # views either (root hints/localhost are unrelated to response-policy, but
+  # BIND's "all zones must be in views" rule is global once any view exists,
+  # so every view needs its own copy regardless).
+  zone "." {
+    type hint;
+    file "/usr/share/dns/root.hints";
+  };
+
+  zone "localhost" {
+    type primary;
+    file "/etc/bind/db.local";
+  };
+
+  zone "127.in-addr.arpa" {
+    type primary;
+    file "/etc/bind/db.127";
+  };
+
+  zone "0.in-addr.arpa" {
+    type primary;
+    file "/etc/bind/db.0";
+  };
+
+  zone "255.in-addr.arpa" {
+    type primary;
+    file "/etc/bind/db.255";
+  };
+};
 {% endif %}

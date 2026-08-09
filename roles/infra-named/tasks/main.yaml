@@ -139,6 +139,25 @@
   notify:
     - Restart named
 
+# named-checkconf %s above only validates named.conf.options in isolation -
+# it can't see cross-file errors that only exist once merged with sibling
+# includes (named.conf.local, named.conf.default-zones). Managing named.conf
+# itself, written after named.conf.options above, closes that gap: this
+# template omits the default-zones include when split-horizon is on (see
+# named.conf's own comment for why), and its own validate: sees the true
+# merged picture since named.conf.options has already landed on disk by now.
+- name: Ensure top-level named.conf includes the right files
+  become: true
+  ansible.builtin.template:
+    src: named.conf
+    dest: /etc/bind/named.conf
+    owner: root
+    group: bind
+    mode: "0644"
+    validate: named-checkconf %s
+  notify:
+    - Restart named
+
 # Every host's internal CNAMEs are derived by the dns_records filter from its
 # compositions: list. A host can also declare cnames_additional: for a name
 # with no owning composition (see inventory/host_vars/server-64gb-storage).
@@ -196,14 +215,34 @@
     success_msg: "No duplicate CNAMEs across group '{{ bind_ansible_group }}'."
     quiet: true
 
+# One iteration when split-horizon is off (today's exact dest/ip_field -
+# byte-identical output), two ("lan"/"tailscale") when it's on. See
+# bind_split_horizon_enabled in defaults/main.yaml.
+- name: Determine zone views to render
+  ansible.builtin.set_fact:
+    bind_zone_views: >-
+      {{
+        [{'name': 'default', 'ip_field': 'host_ipv4', 'dest': '/etc/bind/zones/db.' + bind_domain + '.zone'}]
+        if not bind_split_horizon_enabled else
+        [
+          {'name': 'lan', 'ip_field': 'host_ipv4', 'dest': '/etc/bind/zones/db.' + bind_domain + '.lan.zone'},
+          {'name': 'tailscale', 'ip_field': 'host_tailscale_ipv4', 'dest': '/etc/bind/zones/db.' + bind_domain + '.tailscale.zone'},
+        ]
+      }}
+
 - name: Check for zone changes
   become: true
   ansible.builtin.template:
     src: db.zone
-    dest: "/etc/bind/zones/db.{{ bind_domain }}.zone"
+    dest: "{{ item.dest }}"
     owner: root
     group: bind
     mode: "0644"
+  vars:
+    bind_zone_ip_field: "{{ item.ip_field }}"
+  loop: "{{ bind_zone_views }}"
+  loop_control:
+    label: "{{ item.name }}"
   register: zone_check
 
 - name: Check for reverse zone changes
@@ -220,12 +259,17 @@
   become: true
   ansible.builtin.template:
     src: db.zone
-    dest: "/etc/bind/zones/db.{{ bind_domain }}.zone"
+    dest: "{{ item.item.dest }}"
     owner: root
     group: bind
     mode: "0644"
     validate: named-checkzone {{ bind_domain }} %s
-  when: zone_check.changed
+  vars:
+    bind_zone_ip_field: "{{ item.item.ip_field }}"
+  loop: "{{ zone_check.results }}"
+  loop_control:
+    label: "{{ item.item.name }}"
+  when: item.changed
   notify:
     - Restart named
 
@@ -245,10 +289,13 @@
 - name: Replace serial in zone file if changed
   become: true
   ansible.builtin.lineinfile:
-    path: "/etc/bind/zones/db.{{ bind_domain }}.zone"
+    path: "{{ item.item.dest }}"
     regexp: "^  1234567890 ; Serial"
     line: "  {{ now(utc=true, fmt='%y%m%d%H%M') }} ; Serial"
-  when: zone_check.changed
+  loop: "{{ zone_check.results }}"
+  loop_control:
+    label: "{{ item.item.name }}"
+  when: item.changed
   notify:
     - Restart named
 
@@ -274,6 +321,22 @@
   loop: "{{ bind_dname_aliases | default([]) }}"
   notify:
     - Restart named
+
+# Every write above is validated in isolation (named-checkconf/checkzone on
+# that one file), but none of them can see errors that only exist once
+# everything is merged together the way named actually loads it - that gap
+# is exactly what took named down once already while building split-horizon
+# views (a stock zone left outside the new view blocks). This is the one
+# check that mirrors named's real startup: run against the true top-level
+# file, after every other config/zone write above has already landed. If
+# this fails, the play aborts here and the notified handler never fires -
+# named keeps running on its last-known-good config instead of restarting
+# into a broken one.
+- name: Validate the full merged named configuration
+  become: true
+  ansible.builtin.command:
+    cmd: named-checkconf
+  changed_when: false
 
 - name: Ensure services are started and enabled
   become: true

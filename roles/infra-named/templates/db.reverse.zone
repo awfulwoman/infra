@@ -29,8 +29,15 @@ $ORIGIN {{ bind_iprange_reversed }}.IN-ADDR.ARPA.
 ; A records - from config
 {% if bind_records_a is defined %}
   {% for record in bind_records_a %}
-    {% if record.ip is defined %}
-      {% set record_ip_split = record.ip.split('.')[0:4] %}
+    {% if record.host is defined %}
+      {% set record_ip = hostvars[record.host].host_ipv4 %}
+    {% elif record.ip is defined %}
+      {% set record_ip = record.ip %}
+    {% else %}
+      {% set record_ip = none %}
+    {% endif %}
+    {% if record_ip %}
+      {% set record_ip_split = record_ip.split('.')[0:4] %}
       {% if record.name == "@" %}
         {{- '%-40s' | format(record_ip_split[3] + '.' + record_ip_split[2])  }} IN      PTR      {{ bind_domain }}.
       {% else -%}

@@ -26,7 +26,9 @@ $ORIGIN    {{ bind_domain }}.
 {% endif %}
 {% if bind_records_a is defined %}
   {% for record in bind_records_a %}
-    {% if record.ip is defined %}
+    {% if record.host is defined %}
+      {{- '%-40s' | format(record.name) }}{% if record.ttl is defined %} {{ record.ttl }}{% endif %} IN      A         {{ hostvars[record.host][bind_zone_ip_field] }}
+    {% elif record.ip is defined %}
       {{- '%-40s' | format(record.name) }}{% if record.ttl is defined %} {{ record.ttl }}{% endif %} IN      A         {{ record.ip }}
     {% endif %}
   {% endfor %}
@@ -34,18 +36,18 @@ $ORIGIN    {{ bind_domain }}.
 
 ; A records - from Ansible inventory (managed hosts)
 {% for host in groups[bind_ansible_group] %}
-  {% if (hostvars[host].host_fqdn is defined) and (hostvars[host].host_ipv4 is defined) %}
-    {% if hostvars[host].host_ipv4 %}
-      {{- '%-40s' | format(hostvars[host].host_pfqdn) }} IN      A         {{ hostvars[host].host_ipv4 }}
+  {% if (hostvars[host].host_fqdn is defined) and (hostvars[host][bind_zone_ip_field] is defined) %}
+    {% if hostvars[host][bind_zone_ip_field] %}
+      {{- '%-40s' | format(hostvars[host].host_pfqdn) }} IN      A         {{ hostvars[host][bind_zone_ip_field] }}
     {% endif %}
   {% endif %}
 {% endfor %}
 
 ; A records - from Ansible inventory (unmanaged devices)
 {% for host in groups[bind_unmanaged_group] %}
-  {% if (hostvars[host].host_fqdn is defined) and (hostvars[host].host_ipv4 is defined) %}
-    {% if hostvars[host].host_ipv4 %}
-      {{- '%-40s' | format(hostvars[host].host_pfqdn) }} IN      A         {{ hostvars[host].host_ipv4 }}
+  {% if (hostvars[host].host_fqdn is defined) and (hostvars[host][bind_zone_ip_field] is defined) %}
+    {% if hostvars[host][bind_zone_ip_field] %}
+      {{- '%-40s' | format(hostvars[host].host_pfqdn) }} IN      A         {{ hostvars[host][bind_zone_ip_field] }}
     {% endif %}
   {% endif %}
 {% endfor %}

@@ -115,6 +115,14 @@ bind_rpz_allowlist_extra: []
 bind_public_dns_enabled: true
 
 # -------------------------------------------------------------------
+# SPLIT-HORIZON VIEWS (infra-named, #262) — LAN clients keep getting
+# host_ipv4, Tailscale-only clients (e.g. a phone on mobile data) now get
+# host_tailscale_ipv4 for the same names, instead of a LAN address they
+# can't route to. bertha is the sole DHCP-advertised LAN resolver, so this
+# is the one host where it's meaningful.
+bind_split_horizon_enabled: true
+
+# -------------------------------------------------------------------
 # ACME
 # -------------------------------------------------------------------
 acme_path: "/fastpool/acme"

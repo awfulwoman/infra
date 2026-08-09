@@ -13,6 +13,21 @@ bind_ansible_group: infra
 bind_unmanaged_group: unmanaged
 
 # -------------------------------------------------------------------
+# SPLIT-HORIZON VIEWS
+# -------------------------------------------------------------------
+# LAN-sourced queries get host_ipv4, Tailscale-sourced queries get
+# host_tailscale_ipv4, for the same names. Off by default - this
+# restructures named.conf.options; when false, output is byte-identical to
+# today (no views). See #262/#272 - the internal zone never had this even
+# though the public zone (#272) already always used the pinned Tailscale IP.
+bind_split_horizon_enabled: false
+
+# Used by db.zone's per-host A-record sections. Overridden per-view by the
+# task loop in tasks/main.yaml when bind_split_horizon_enabled is true;
+# stays host_ipv4 (today's only behaviour) otherwise.
+bind_zone_ip_field: host_ipv4
+
+# -------------------------------------------------------------------
 # TAILSCALE RECORDS
 # -------------------------------------------------------------------
 # Publish each managed host's Tailscale address (`host_tailscale_ipv4` in
