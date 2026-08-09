@@ -11,22 +11,6 @@ default_config:
 # frontend:
 #   themes: !include_dir_merge_named themes
 
-
-#############################################################################
-# HTTP
-#############################################################################
-http:
-  use_x_forwarded_for: true
-  trusted_proxies:
-    - 192.168.1.0/24
-    - 172.0.0.0/8
-    - 100.64.0.0/10
-    - 127.0.0.0/8
-    - ::1
-    - fe80::/64
-    - fe00::/64
-    - fd00::/64
-
 #############################################################################
 # REQUIRED BY AUTOMATION
 #############################################################################
@@ -51,11 +35,16 @@ panel_custom:
       ingress: core_configurator
 
 # https://www.home-assistant.io/integrations/wake_on_lan/
+# `host` is what HA pings to decide whether the switch reads on or off. It takes
+# the LAN address from inventory rather than a name: the bare inventory hostname
+# is not a resolvable name anywhere, and the FQDN would resolve through bertha's
+# `tailscale` view to a 100.80.x address, which is the wrong path for a machine
+# that is asleep. Waking is a LAN broadcast either way.
 switch:
   - platform: wake_on_lan
     name: Server Storage WOL
-    mac: 34:60:f9:bb:3d:16
-    host: server-64gb-storage
+    mac: "{{ hostvars['server-64gb-storage']['host_mac'] }}"
+    host: "{{ hostvars['server-64gb-storage']['host_ipv4'] }}"
     turn_off:
       service: mqtt.publish
       data:
@@ -65,8 +54,8 @@ switch:
         topic: servers/server-64gb-storage
   - platform: wake_on_lan
     name: Server Backups WOL
-    mac: 60:a4:4c:40:52:57
-    host: server-8gb-backups
+    mac: "{{ hostvars['server-8gb-backups']['host_mac'] }}"
+    host: "{{ hostvars['server-8gb-backups']['host_ipv4'] }}"
     turn_off:
       service: mqtt.publish
       data:

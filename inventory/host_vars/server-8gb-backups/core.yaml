@@ -20,6 +20,7 @@ host_ipv4: 192.168.1.118
 host_ipv4_subnet: 24
 host_tailscale_ipv4: 100.80.1.118
 host_primary_interface: "enp3s0"
+host_mac: "60:a4:4c:40:52:57"
 
 # -------------------------------------------------------------------
 # ANSIBLE
