@@ -16,8 +16,8 @@ Reminders, Calendar, and Contacts are backed by
 [`system-apple-contacts-server`](../system-apple-contacts-server), all three
 running natively on **Malcolm**, a different host — EventKit/Contacts need a
 macOS GUI session for their permission grant, so none of these can move into the
-container. Gateway reaches all three over Tailscale MagicDNS, not the shared
-Docker network. Calendar replaces the previous Google Calendar OAuth backend;
+container. Gateway reaches all three over the infra zone that bertha serves, not the
+shared Docker network. Calendar replaces the previous Google Calendar OAuth backend;
 Contacts replaces the previous Radicale/CardDAV backend.
 
 Obsidian notes/issues tools read/write a vault bind-mounted from the host — this role
@@ -31,14 +31,14 @@ point `composition_gateway_obsidian_vault_path` at its synced vault path.
 |----------|---------|-------------|
 | `composition_gateway_obsidian_vault_path` | *(none — required)* | Host path to a synced Obsidian vault, bind-mounted at `/vault` |
 | `composition_gateway_imap_host/username/password` | mailbox.org + vault creds | IMAP account for the Email tool |
-| `composition_gateway_calendar_server_base_url` | Malcolm's Tailscale MagicDNS name, port 4101 | apple-calendar-server backend for Calendar (see `system-apple-calendar-server`) |
+| `composition_gateway_calendar_server_base_url` | Malcolm's infra-zone FQDN, port 4101 | apple-calendar-server backend for Calendar (see `system-apple-calendar-server`) |
 | `composition_gateway_calendar_server_bearer_token` | `vault_gateway_calendar_server_token` | Shared secret with `system-apple-calendar-server` |
 | `composition_gateway_karakeep_base_url/api_key` | karakeep subdomain + vault key | Karakeep bookmarking service |
 | `composition_gateway_owntracks_*` | owntracks-recorder subdomain | Location tool |
 | `composition_gateway_reminders_api_tokens` | `vault_gateway_reminders_api_token_iphone` | Bearer tokens for `/v1/*` (device clients) |
-| `composition_gateway_reminders_server_base_url` | Malcolm's Tailscale MagicDNS name, port 4100 | apple-reminders-server backend for Reminders (see `system-apple-reminders-server`) |
+| `composition_gateway_reminders_server_base_url` | Malcolm's infra-zone FQDN, port 4100 | apple-reminders-server backend for Reminders (see `system-apple-reminders-server`) |
 | `composition_gateway_reminders_server_bearer_token` | `vault_gateway_reminders_server_token` | Shared secret with `system-apple-reminders-server` |
-| `composition_gateway_contacts_server_base_url` | Malcolm's Tailscale MagicDNS name, port 4102 | apple-contacts-server backend for Contacts (see `system-apple-contacts-server`) |
+| `composition_gateway_contacts_server_base_url` | Malcolm's infra-zone FQDN, port 4102 | apple-contacts-server backend for Contacts (see `system-apple-contacts-server`) |
 | `composition_gateway_contacts_server_bearer_token` | `vault_gateway_contacts_server_token` | Shared secret with `system-apple-contacts-server` |
 | `composition_gateway_server_auth_tokens` | `vault_gateway_mcp_token` | Bearer token(s) required on `/mcp` |
 

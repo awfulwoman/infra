@@ -13,12 +13,24 @@ composition_gateway_imap_password: "{{ vault_mailprovider_password }}"
 # system-obsidian-headless). Must be set per-host; there is no sane default.
 composition_gateway_obsidian_vault_path: ""
 
+# Malcolm's name in the infra zone that bertha serves, not a Tailscale MagicDNS
+# name. bertha answers it split-horizon, so the same name resolves to whichever
+# address the querying host can actually route to. This keeps the backends
+# working if MagicDNS is ever turned off tailnet-wide, and it removes the
+# dependency on the vaulted tailnet name.
+#
+# This requires Malcolm's Tailscale address to match `host_tailscale_ipv4` in its
+# host_vars, because every managed host resolves through bertha's `tailscale`
+# view (Tailscale claims the `~.` routing domain). `network-tailscale-address`
+# holds Malcolm to that address — see bootstrap-macos-server.
+composition_gateway_malcolm_host: "{{ hostvars['apple-macmini-m4-16gb-malcolm'].host_fqdn }}"
+
 # apple-calendar-server (real Apple Calendar via EventKit) — storage backend for
 # Calendar, running natively on Malcolm (a different host — EventKit needs a macOS
-# GUI session, so it can't run in this container). Reached over Tailscale MagicDNS,
+# GUI session, so it can't run in this container). Reached over the infra zone,
 # not the shared Docker network. Token is shared with system-apple-calendar-server,
 # which provisions this same service. Replaces the old Google Calendar OAuth backend.
-composition_gateway_calendar_server_base_url: "http://apple-macmini-m4-16gb-malcolm.{{ vault_tailscale_tailnet_name }}:4101"
+composition_gateway_calendar_server_base_url: "http://{{ composition_gateway_malcolm_host }}:4101"
 composition_gateway_calendar_server_bearer_token: "{{ vault_gateway_calendar_server_token }}"
 
 composition_gateway_karakeep_base_url: "https://karakeep.{{ domainname_infra }}"
@@ -36,17 +48,17 @@ composition_gateway_reminders_nominatim_url: "https://nominatim.{{ domainname_in
 # apple-contacts-server (real macOS Contacts via the Contacts framework) — storage
 # backend for Contacts, running natively on Malcolm (a different host — the
 # Contacts framework needs a macOS GUI session, so it can't run in this container).
-# Reached over Tailscale MagicDNS, not the shared Docker network. Token is shared
+# Reached over the infra zone, not the shared Docker network. Token is shared
 # with system-apple-contacts-server, which provisions this same service.
-composition_gateway_contacts_server_base_url: "http://apple-macmini-m4-16gb-malcolm.{{ vault_tailscale_tailnet_name }}:4102"
+composition_gateway_contacts_server_base_url: "http://{{ composition_gateway_malcolm_host }}:4102"
 composition_gateway_contacts_server_bearer_token: "{{ vault_gateway_contacts_server_token }}"
 
 # apple-reminders-server (real Apple Reminders via EventKit) — storage backend for
 # Reminders, running natively on Malcolm (a different host — EventKit needs a macOS
-# GUI session, so it can't run in this container). Reached over Tailscale MagicDNS,
+# GUI session, so it can't run in this container). Reached over the infra zone,
 # not the shared Docker network. Token is shared with system-apple-reminders-server,
 # which provisions this same service.
-composition_gateway_reminders_server_base_url: "http://apple-macmini-m4-16gb-malcolm.{{ vault_tailscale_tailnet_name }}:4100"
+composition_gateway_reminders_server_base_url: "http://{{ composition_gateway_malcolm_host }}:4100"
 composition_gateway_reminders_server_bearer_token: "{{ vault_gateway_reminders_server_token }}"
 
 # Same secret as the CLI token used on Malcolm — the server enforces it on /mcp.

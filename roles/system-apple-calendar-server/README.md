@@ -70,7 +70,7 @@ recurs after `uv sync` or Python upgrades.
 ## Reaching it from Gateway
 
 Gateway runs on `server-64gb-storage`, a different host, so this is reached over
-Tailscale MagicDNS at `apple-macmini-m4-16gb-malcolm.{{ vault_tailscale_tailnet_name }}`
+the infra zone that bertha serves, at `apple-macmini-m4-16gb-malcolm.xberg.ber.{{ domainname_infra }}`
 (port `4101`) — no public DNS, no Traefik. Wiring the Gateway side
 (`composition-gateway`) is a separate change.
 

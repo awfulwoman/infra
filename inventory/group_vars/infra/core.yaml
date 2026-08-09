@@ -13,7 +13,18 @@ security_sudoers_passwordless:
   - "{{ vault_server_username }}"
 
 llm_default_model: "gemma4:31b-cloud"
-llm_default_host: "{{ hostvars['apple-macmini-m4-16gb-malcolm']['host_ipv4'] }}"
+# Malcolm's name in the infra zone that bertha serves, not its raw LAN address.
+# Despite the `llm_` prefix this is "where Malcolm is": it also backs Malcolm's
+# own gateway instance on :4000 (see composition-reverseproxy's gateway provider).
+#
+# A name rather than an IP means the address can move without a config change,
+# and bertha's split-horizon views hand each caller an address it can route to.
+# Malcolm's services all bind 0.0.0.0, so they answer on whichever address wins.
+#
+# This depends on Malcolm's Tailscale address matching `host_tailscale_ipv4`:
+# managed hosts resolve through bertha's `tailscale` view, because Tailscale
+# claims the `~.` routing domain on every enrolled host.
+llm_default_host: "{{ hostvars['apple-macmini-m4-16gb-malcolm']['host_fqdn'] }}"
 llm_default_ollama_base_url: "http://{{ llm_default_host }}:11434"
 llm_default_openai_uri: "{{ llm_default_ollama_base_url }}/v1"
 

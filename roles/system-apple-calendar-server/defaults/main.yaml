@@ -6,9 +6,11 @@ system_apple_calendar_server_repo_update: true
 system_apple_calendar_server_repo_dir: "{{ system_repos_base_dir }}/awfulwoman/apple-calendar-server"
 system_apple_calendar_server_plist_label: com.awfulwoman.apple-calendar-server
 
-# 0.0.0.0 so composition-gateway (a different host, reached over Tailscale) can
-# connect — Malcolm's Tailscale interface has no stable, predictable IP to bind to
-# specifically. Every endpoint requires a bearer token regardless of interface.
+# 0.0.0.0 so composition-gateway (a different host) can connect. Binding one
+# address would pick a side: bertha answers Malcolm's name split-horizon, so the
+# caller reaches whichever of the LAN or Tailscale address it can route to, and
+# the service has to answer on both. Every endpoint requires a bearer token
+# regardless of interface.
 system_apple_calendar_server_host: 0.0.0.0
 system_apple_calendar_server_port: 4101
 system_apple_calendar_server_default_calendar: Calendar

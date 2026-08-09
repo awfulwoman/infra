@@ -70,8 +70,8 @@ recurs after `uv sync` or Python upgrades.
 ## Reaching it from Gateway
 
 Gateway runs on `server-64gb-storage`, a different host, so this isn't reachable over
-a shared Docker network. `composition-gateway` reaches it over
-Tailscale MagicDNS at `apple-macmini-m4-16gb-malcolm.{{ vault_tailscale_tailnet_name }}`
+a shared Docker network. `composition-gateway` reaches it over the
+infra zone that bertha serves, at `apple-macmini-m4-16gb-malcolm.xberg.ber.{{ domainname_infra }}`
 — no public DNS registration, no Traefik (Malcolm runs no composition roles at all).
 
 ## Checking status
