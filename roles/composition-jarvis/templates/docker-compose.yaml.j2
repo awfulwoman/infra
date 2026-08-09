@@ -14,6 +14,8 @@ services:
     image: ghcr.io/awfulwoman/chives:latest
     restart: unless-stopped
     env_file: .environment_vars
+    ports:
+      - "{{ composition_jarvis_openai_port }}:8080"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.{{ composition_name }}.rule=Host(`{{ composition_name }}.{{ domainname_infra }}`)"
