@@ -45,8 +45,8 @@
 # never overwritten - this only fills in what's missing.
 - name: "Seed default profile files"
   ansible.builtin.copy:
-    src: "profile/{{ item }}"
-    dest: "{{ composition_config }}/profile/{{ item }}"
+    src: "profile/{{ profile_file }}"
+    dest: "{{ composition_config }}/profile/{{ profile_file }}"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0644"
@@ -56,6 +56,8 @@
     - PERSONALITY.md
     - PROTOCOLS.md
     - USER.md
+  loop_control:
+    loop_var: profile_file
 
 - name: "Start Docker Compose project"
   community.docker.docker_compose_v2:
