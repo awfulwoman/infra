@@ -12,7 +12,7 @@ security_autoupdate_reboot_time: 03:00
 security_sudoers_passwordless:
   - "{{ vault_server_username }}"
 
-llm_default_model: "kimi-k3:cloud"
+llm_default_model: "gemma4:31b-cloud"
 llm_default_host: "{{ hostvars['apple-macmini-m4-16gb-malcolm']['host_ipv4'] }}"
 llm_default_ollama_base_url: "http://{{ llm_default_host }}:11434"
 llm_default_openai_uri: "{{ llm_default_ollama_base_url }}/v1"
