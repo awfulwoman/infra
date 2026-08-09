@@ -9,6 +9,10 @@ Bertha's configuration lives in
 `inventory/host_vars/router-4gb-bertha/core.yaml`.
 `playbooks/hosts/router-4gb-bertha/core.yaml` applies it.
 
+This document covers bertha itself. For the network around it — the
+tailnet, the address plan, and the three DNS resolution paths — read
+[networking.md](networking.md).
+
 ## NIC layout
 
 Bertha has two physical NICs, and their roles must be correct. If you swap
@@ -82,9 +86,11 @@ the device did not connect.
 ## DNS
 
 `infra-named` (BIND9) is authoritative for the internal domain. It does
-split-horizon resolution: the LAN gets internal answers, and the outside
-world gets the public view. Bertha advertises itself as the sole
-nameserver (`dns01 → 192.168.1.1`).
+split-horizon resolution with two views, selected on the source address of
+the query: a LAN client (`192.168.1.0/24`) gets the LAN address of a host,
+and a tailnet client (`100.64.0.0/10`) gets its Tailscale address. Bertha
+advertises itself as the sole nameserver (`dns01 → 192.168.1.1`). See
+[networking.md](networking.md) for the full resolution paths.
 
 BIND is deliberately kept off the WAN. `bind_listen_on` binds everywhere
 *except* the WAN subnet (`!192.168.178.0/24; any;`), and `bind_listen_on_v6`
