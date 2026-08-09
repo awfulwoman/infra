@@ -31,3 +31,4 @@ composition_jarvis_mcps:
     auth_key: "{{ vault_gateway_mcp_token }}"
   - url: "http://mcp-searxng:3000/mcp" # on same host
     auth_key: "{{ vault_mcp_searxng_auth_token }}"
+  - url: "http://mcp-weather:8000/mcp"
