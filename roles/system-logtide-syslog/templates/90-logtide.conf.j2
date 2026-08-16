@@ -1,0 +1,8 @@
+# Forward all logs to Logtide syslog listener (RFC 3164 / port 514)
+# Managed by Ansible — do not edit manually
+*.* action(
+    type="omfwd"
+    target="{{ logtide_syslog_host }}"
+    port="{{ logtide_syslog_port }}"
+    protocol="{{ logtide_syslog_protocol }}"
+)

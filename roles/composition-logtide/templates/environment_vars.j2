@@ -1,0 +1,33 @@
+NODE_ENV=production
+TRUST_PROXY=true
+FRONTEND_URL=https://{{ composition_dns_subdomains[0] }}.{{ domainname_infra }}
+PUBLIC_API_URL=https://{{ composition_dns_subdomains[0] }}.{{ domainname_infra }}
+
+POSTGRES_DB={{ composition_logtide_db_name }}
+POSTGRES_USER={{ composition_logtide_db_user }}
+POSTGRES_PASSWORD={{ composition_logtide_db_password }}
+DB_NAME={{ composition_logtide_db_name }}
+DB_USER={{ composition_logtide_db_user }}
+DB_PASSWORD={{ composition_logtide_db_password }}
+DATABASE_URL=postgresql://{{ composition_logtide_db_user }}:{{ composition_logtide_db_password }}@logtide-postgres:5432/{{ composition_logtide_db_name }}
+DATABASE_HOST=logtide-postgres
+
+REDIS_PASSWORD={{ composition_logtide_redis_password }}
+REDIS_URL=redis://:{{ composition_logtide_redis_password }}@logtide-redis:6379
+
+API_KEY_SECRET={{ vault_logtide_api_key_secret }}
+PORT={{ composition_logtide_backend_port }}
+HOST=0.0.0.0
+
+STORAGE_ENGINE=timescale
+
+SMTP_HOST={{ smtp_host | default('') }}
+SMTP_PORT={{ smtp_port | default(587) }}
+SMTP_USER={{ smtp_user | default('') }}
+SMTP_PASS={{ smtp_pass | default('') }}
+SMTP_FROM={{ smtp_from | default('noreply@' + domainname_infra) }}
+
+# Set after first login: Project > Settings > API Keys > create a write key
+FLUENT_BIT_API_KEY={{ vault_logtide_fluent_bit_api_key | default('') }}
+LOGTIDE_API_HOST=logtide-backend
+SYSLOG_TZ_OFFSET={{ composition_logtide_syslog_tz_offset }}

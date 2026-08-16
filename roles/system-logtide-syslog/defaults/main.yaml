@@ -1,0 +1,3 @@
+logtide_syslog_host: "logtide.{{ domainname_infra }}"
+logtide_syslog_port: 514
+logtide_syslog_protocol: udp

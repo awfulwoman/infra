@@ -1,0 +1,27 @@
+composition_name: logtide
+
+composition_dns_subdomains:
+  - logtide
+
+composition_logtide_backend_image: logtide/backend:latest
+composition_logtide_frontend_image: logtide/frontend:latest
+composition_logtide_fluent_bit_image: fluent/fluent-bit:4.2.2
+
+composition_logtide_db_name: logtide
+composition_logtide_db_user: logtide
+composition_logtide_db_password: "{{ vault_logtide_db_password }}"
+composition_logtide_redis_password: "{{ vault_logtide_redis_password }}"
+
+# Syslog port exposed on the host for remote log forwarding
+composition_logtide_syslog_port: 514
+
+# Timezone offset (hours from UTC) for RFC 3164 syslog timestamps, which carry no timezone.
+# Set to match the timezone of your syslog-sending hosts.
+# Examples: 0 for UTC, 1 for CET, 2 for CEST
+composition_logtide_syslog_tz_offset: 0
+
+# Logtide API ports (internal — exposed via Traefik, not host-bound)
+composition_logtide_backend_port: 8080
+composition_logtide_frontend_port: 8080
+
+composition_logtide_traefik_enabled: true

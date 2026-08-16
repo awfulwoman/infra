@@ -1,0 +1,18 @@
+# code: language=ansible
+
+- name: Ensure rsyslog is installed
+  become: true
+  ansible.builtin.apt:
+    name: rsyslog
+    state: present
+    update_cache: false
+
+- name: Deploy rsyslog forwarding config
+  become: true
+  ansible.builtin.template:
+    src: 90-logtide.conf.j2
+    dest: /etc/rsyslog.d/90-logtide.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart rsyslog

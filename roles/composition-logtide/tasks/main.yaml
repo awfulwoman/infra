@@ -1,0 +1,56 @@
+# code: language=ansible
+
+- name: Create compose file
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ composition_root }}/docker-compose.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"
+
+- name: Create .env file
+  ansible.builtin.template:
+    src: environment_vars.j2
+    dest: "{{ composition_root }}/.environment_vars"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0600"
+
+- name: Create Fluent Bit config directory
+  become: true
+  ansible.builtin.file:
+    path: "{{ composition_config }}/fluent-bit"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"
+
+- name: Deploy Fluent Bit configuration
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ composition_config }}/fluent-bit/{{ item.dest }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0664"
+  loop:
+    - { src: fluent-bit.conf.j2, dest: fluent-bit.conf }
+    - { src: fluent-bit-parsers.conf.j2, dest: parsers.conf }
+
+- name: Deploy Fluent Bit Lua scripts
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "{{ composition_config }}/fluent-bit/{{ item }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0664"
+  loop:
+    - extract_container_id.lua
+    - map_syslog_level.lua
+
+- name: Start Docker Compose project
+  community.docker.docker_compose_v2:
+    project_src: "{{ composition_root }}"
+    state: present
+    build: never
+    remove_orphans: true
+  notify: Restart Traefik

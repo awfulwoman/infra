@@ -225,6 +225,7 @@ compositions:
   - zfs-api
   - victoriametrics
   - loki
+  - logtide
   - composition: reverseproxy
     labels:
       - "traefik-{{ host_name }}"

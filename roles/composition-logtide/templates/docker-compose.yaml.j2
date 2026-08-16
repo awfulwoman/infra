@@ -1,0 +1,137 @@
+name: "{{ composition_name }}"
+services:
+  postgres:
+    image: timescale/timescaledb:latest-pg16
+    container_name: logtide-postgres
+    restart: unless-stopped
+    env_file: .environment_vars
+    volumes:
+      - "{{ composition_config }}/postgres:/var/lib/postgresql/data"
+    command:
+      - postgres
+      - -c
+      - max_connections=100
+      - -c
+      - shared_buffers=256MB
+      - -c
+      - work_mem=16MB
+      - -c
+      - wal_buffers=16MB
+      - -c
+      - checkpoint_completion_target=0.9
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U {{ composition_logtide_db_user }}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - "{{ default_docker_network }}"
+
+  redis:
+    image: redis:7-alpine
+    container_name: logtide-redis
+    restart: unless-stopped
+    command: redis-server --requirepass {{ composition_logtide_redis_password }}
+    env_file: .environment_vars
+    volumes:
+      - "{{ composition_config }}/redis:/data"
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a {{ composition_logtide_redis_password }} ping | grep -q PONG"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks:
+      - "{{ default_docker_network }}"
+
+  backend:
+    image: {{ composition_logtide_backend_image }}
+    container_name: logtide-backend
+    restart: unless-stopped
+    env_file: .environment_vars
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:{{ composition_logtide_backend_port }}/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+{% if composition_logtide_traefik_enabled %}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.logtide-api.rule=Host(`{{ composition_dns_subdomains[0] }}.{{ domainname_infra }}`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.logtide-api.service=logtide-api"
+      - "traefik.http.routers.logtide-api.tls=true"
+      - "traefik.http.routers.logtide-api.tls.certresolver=letsencrypt"
+      - "traefik.http.services.logtide-api.loadbalancer.server.port={{ composition_logtide_backend_port }}"
+{% endif %}
+    networks:
+      - "{{ default_docker_network }}"
+
+  worker:
+    image: {{ composition_logtide_backend_image }}
+    container_name: logtide-worker
+    restart: unless-stopped
+    command: ["worker"]
+    env_file: .environment_vars
+    healthcheck:
+      disable: true
+    depends_on:
+      backend:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - "{{ default_docker_network }}"
+
+  frontend:
+    image: {{ composition_logtide_frontend_image }}
+    container_name: logtide-frontend
+    restart: unless-stopped
+    env_file: .environment_vars
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://127.0.0.1:{{ composition_logtide_frontend_port }}/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+{% if composition_logtide_traefik_enabled %}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.logtide-ui.rule=Host(`{{ composition_dns_subdomains[0] }}.{{ domainname_infra }}`)"
+      - "traefik.http.routers.logtide-ui.service=logtide-ui"
+      - "traefik.http.routers.logtide-ui.tls=true"
+      - "traefik.http.routers.logtide-ui.tls.certresolver=letsencrypt"
+      - "traefik.http.services.logtide-ui.loadbalancer.server.port={{ composition_logtide_frontend_port }}"
+{% endif %}
+    depends_on:
+      - backend
+    networks:
+      - "{{ default_docker_network }}"
+
+  fluent-bit:
+    image: {{ composition_logtide_fluent_bit_image }}
+    container_name: logtide-fluent-bit
+    restart: unless-stopped
+    ports:
+      - "{{ composition_logtide_syslog_port }}:514/udp"
+      - "{{ composition_logtide_syslog_port }}:514/tcp"
+    volumes:
+      - "{{ composition_config }}/fluent-bit/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf:ro"
+      - "{{ composition_config }}/fluent-bit/parsers.conf:/fluent-bit/etc/parsers.conf:ro"
+      - "{{ composition_config }}/fluent-bit/extract_container_id.lua:/fluent-bit/etc/extract_container_id.lua:ro"
+      - "{{ composition_config }}/fluent-bit/map_syslog_level.lua:/fluent-bit/etc/map_syslog_level.lua:ro"
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    env_file: .environment_vars
+    depends_on:
+      - backend
+    networks:
+      - "{{ default_docker_network }}"
+
+networks:
+  "{{ default_docker_network }}":
+    external: true
