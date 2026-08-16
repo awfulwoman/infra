@@ -14,11 +14,6 @@ services:
       - "traefik.http.routers.karakeep.rule=Host(`karakeep.{{ domainname_infra }}`)"
       - "traefik.http.routers.karakeep.tls=true"
       - "traefik.http.routers.karakeep.tls.certresolver=letsencrypt"
-    environment:
-      MEILI_ADDR: http://meilisearch:7700
-      BROWSER_WEB_URL: http://chrome:9222
-      # OPENAI_API_KEY: ...
-      DATA_DIR: /data
     volumes:
       - "{{ composition_config }}/karakeep:/data"
     networks:
