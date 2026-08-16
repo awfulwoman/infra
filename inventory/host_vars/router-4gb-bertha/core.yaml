@@ -99,11 +99,11 @@ bind_dname_aliases:
 # bypassed by a client picking a different DNS server. Role default is `false`;
 # this is the one host where it makes sense.
 bind_rpz_enabled: true
-# HaGeZi Multi Normal: ~181k domains, the balanced tier. See the role README for
-# the other tiers and how to layer the malware/phishing list alongside.
+# HaGeZi Ultimate: maximum coverage, higher false-positive risk. See the role
+# README for lighter tiers and how to layer the malware/phishing list alongside.
 bind_rpz_zones:
-  - name: rpz.hagezi-multi
-    url: https://raw.githubusercontent.com/hagezi/dns-blocklists/main/rpz/multi.txt
+  - name: rpz.hagezi-ultimate
+    url: https://raw.githubusercontent.com/hagezi/dns-blocklists/main/rpz/ultimate.txt
 # Domains a blocklist gets wrong. The internal domain and the DNAME alias above
 # are protected automatically — only add genuine false positives here.
 bind_rpz_allowlist_extra: []
