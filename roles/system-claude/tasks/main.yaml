@@ -8,14 +8,30 @@
   when: ansible_facts['os_family'] == 'Debian'
 
 - name: Check if Claude CLI is already installed
-  ansible.builtin.stat:
-    path: "{{ ansible_facts.user_dir }}/.local/bin/claude"
+  ansible.builtin.command: which claude
   register: claude_installed
+  changed_when: false
+  failed_when: false
 
 - name: Install Claude CLI
-  when: not claude_installed.stat.exists
+  when: claude_installed.rc != 0
   block:
-    - name: Download and execute Claude CLI install script
+    - name: Check if Homebrew is installed
+      ansible.builtin.command: which brew
+      register: brew_installed
+      changed_when: false
+      failed_when: false
+
+    - name: Install Claude CLI via Homebrew
+      community.general.homebrew:
+        name: claude
+        state: present
+      when: brew_installed.rc == 0
+      register: brew_claude_install
+      failed_when: false
+
+    - name: Install Claude CLI via install script
+      when: brew_installed.rc != 0 or brew_claude_install.failed
       ansible.builtin.shell: |
         set -o pipefail
         curl -fsSL {{ system_claude_install_url }} | bash -s -- {{ system_claude_channel }}
