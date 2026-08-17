@@ -46,6 +46,7 @@ services:
   backend:
     image: {{ composition_logtide_backend_image }}
     container_name: logtide-backend
+    hostname: logtide-backend
     restart: unless-stopped
     env_file: .environment_vars
     depends_on:
@@ -74,6 +75,7 @@ services:
   worker:
     image: {{ composition_logtide_backend_image }}
     container_name: logtide-worker
+    hostname: logtide-worker
     restart: unless-stopped
     command: ["worker"]
     env_file: .environment_vars
@@ -90,6 +92,7 @@ services:
   frontend:
     image: {{ composition_logtide_frontend_image }}
     container_name: logtide-frontend
+    hostname: logtide-frontend
     restart: unless-stopped
     env_file: .environment_vars
     healthcheck:
@@ -115,6 +118,7 @@ services:
   fluent-bit:
     image: {{ composition_logtide_fluent_bit_image }}
     container_name: logtide-fluent-bit
+    hostname: logtide-fluent-bit
     restart: unless-stopped
     ports:
       - "{{ composition_logtide_syslog_port }}:514/udp"
