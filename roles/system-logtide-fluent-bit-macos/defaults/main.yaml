@@ -1,0 +1,33 @@
+system_logtide_fluent_bit_macos_api_host: "logtide.{{ domainname_infra }}"
+system_logtide_fluent_bit_macos_api_port: 443
+system_logtide_fluent_bit_macos_api_key: "{{ vault_logtide_fluent_bit_api_key }}"
+
+system_logtide_fluent_bit_macos_config_dir: "{{ awfulwoman_opt_dir }}/fluent-bit-logtide"
+system_logtide_fluent_bit_macos_log_dir: "{{ ansible_facts['user_dir'] }}/Library/Logs/fluent-bit-logtide"
+
+# Built-in log sources. Add entries to system_logtide_fluent_bit_macos_extra_inputs
+# to extend without touching this list.
+#
+# Each entry:
+#   name:    unique tag prefix (no spaces)
+#   enabled: true/false
+#   path:    absolute path to tail (glob supported)
+#   service: service label shown in Logtide
+#   parser:  parser name (syslog_macos | ollama | json | none)
+system_logtide_fluent_bit_macos_inputs:
+  - name: system_log
+    enabled: true
+    path: /var/log/system.log
+    service: "macos-system-{{ host_name }}"
+    parser: syslog_macos
+  - name: ollama
+    enabled: true
+    # Ollama writes here when StandardOutPath is set in its launchd plist.
+    # If your Ollama plist doesn't redirect stdout, set enabled: false and
+    # check the unified log via: log show --process ollama --last 1h
+    path: "{{ ansible_facts['user_dir'] }}/.ollama/logs/server.log"
+    service: "ollama-{{ host_name }}"
+    parser: ollama
+
+# Drop additional entries here for extra log sources
+system_logtide_fluent_bit_macos_extra_inputs: []

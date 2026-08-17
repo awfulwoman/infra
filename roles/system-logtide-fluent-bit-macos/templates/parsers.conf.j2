@@ -1,0 +1,17 @@
+# macOS system.log — traditional BSD syslog format
+# Example: Aug 16 21:00:00 hostname process[pid]: message
+[PARSER]
+    Name        syslog_macos
+    Format      regex
+    Regex       /^(?<time>[A-Za-z]+ +\d+ \d+:\d+:\d+) (?<host>[^ ]+) (?<service>[^\[:]+)(?:\[(?<pid>\d+)\])?: (?<message>.*)$/
+    Time_Key    time
+    Time_Format %b %d %H:%M:%S
+    Time_Keep   On
+
+# Ollama server log — logfmt (time=... level=... source=... msg=...)
+[PARSER]
+    Name        ollama
+    Format      logfmt
+    Time_Key    time
+    Time_Format %Y-%m-%dT%H:%M:%S.%LZ
+    Time_Keep   On

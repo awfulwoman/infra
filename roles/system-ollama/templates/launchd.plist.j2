@@ -13,6 +13,10 @@
     <true/>
     <key>KeepAlive</key>
     <true/>
+    <key>StandardOutPath</key>
+    <string>{{ ansible_facts['user_dir'] }}/.ollama/logs/server.log</string>
+    <key>StandardErrorPath</key>
+    <string>{{ ansible_facts['user_dir'] }}/.ollama/logs/server.log</string>
 {% if system_ollama_env %}
     <key>EnvironmentVariables</key>
     <dict>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.awfulwoman.fluent-bit-logtide</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/opt/homebrew/bin/fluent-bit</string>
+        <string>-c</string>
+        <string>{{ system_logtide_fluent_bit_macos_config_dir }}/fluent-bit.conf</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>StandardOutPath</key>
+    <string>{{ system_logtide_fluent_bit_macos_log_dir }}/fluent-bit.log</string>
+    <key>StandardErrorPath</key>
+    <string>{{ system_logtide_fluent_bit_macos_log_dir }}/fluent-bit.log</string>
+</dict>
+</plist>

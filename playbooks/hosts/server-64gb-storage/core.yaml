@@ -48,6 +48,8 @@
     tags: [system, system-smartmontools]
   - role: system-promtail
     tags: [system, system-promtail]
+  - role: system-logtide-syslog
+    tags: [system, system-logtide-syslog]
     # - role: system-sleepuntil
     #   become: true
     # - role: system-powertop

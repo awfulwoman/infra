@@ -1,0 +1,78 @@
+# code: language=ansible
+
+- name: Assert macOS
+  ansible.builtin.assert:
+    that: ansible_facts['os_family'] == 'Darwin'
+    fail_msg: "system-logtide-fluent-bit-macos is macOS-only"
+
+- name: Install fluent-bit via Homebrew
+  community.general.homebrew:
+    name: fluent-bit
+    state: present
+  register: fluent_bit_brew
+
+- name: Ensure config directory exists
+  become: true
+  ansible.builtin.file:
+    path: "{{ system_logtide_fluent_bit_macos_config_dir }}"
+    state: directory
+    owner: "{{ ansible_facts['user_id'] }}"
+    group: staff
+    mode: "0755"
+
+- name: Ensure log directory exists
+  ansible.builtin.file:
+    path: "{{ system_logtide_fluent_bit_macos_log_dir }}"
+    state: directory
+    mode: "0755"
+
+- name: Deploy Fluent Bit configuration
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ system_logtide_fluent_bit_macos_config_dir }}/{{ item.dest }}"
+    mode: "0644"
+  loop:
+    - { src: fluent-bit.conf.j2, dest: fluent-bit.conf }
+    - { src: parsers.conf.j2, dest: parsers.conf }
+  register: fluent_bit_config
+  no_log: true
+
+- name: Ensure LaunchAgents directory exists
+  ansible.builtin.file:
+    path: "{{ ansible_facts['user_dir'] }}/Library/LaunchAgents"
+    state: directory
+    mode: "0755"
+
+- name: Deploy launchd plist
+  ansible.builtin.template:
+    src: com.awfulwoman.fluent-bit-logtide.plist.j2
+    dest: "{{ ansible_facts['user_dir'] }}/Library/LaunchAgents/com.awfulwoman.fluent-bit-logtide.plist"
+    mode: "0644"
+  register: fluent_bit_plist
+
+- name: Unload service before reload
+  ansible.builtin.command: >
+    launchctl unload {{ ansible_facts['user_dir'] }}/Library/LaunchAgents/com.awfulwoman.fluent-bit-logtide.plist
+  when: fluent_bit_plist.changed or fluent_bit_config.changed or 'fluent-bit' in fluent_bit_brew.changed_pkgs | default([])
+  changed_when: false
+  failed_when: false
+
+- name: Load service
+  ansible.builtin.command: >
+    launchctl load {{ ansible_facts['user_dir'] }}/Library/LaunchAgents/com.awfulwoman.fluent-bit-logtide.plist
+  when: fluent_bit_plist.changed or fluent_bit_config.changed or 'fluent-bit' in fluent_bit_brew.changed_pkgs | default([])
+  register: launchctl_load
+  changed_when: launchctl_load.rc == 0
+  failed_when: false
+
+- name: Ensure service is running
+  ansible.builtin.command: launchctl list com.awfulwoman.fluent-bit-logtide
+  changed_when: false
+  failed_when: false
+  register: launchctl_status
+
+- name: Start service if not running
+  ansible.builtin.shell: >
+    launchctl kickstart -k gui/$(id -u)/com.awfulwoman.fluent-bit-logtide
+  when: launchctl_status.rc != 0
+  changed_when: true

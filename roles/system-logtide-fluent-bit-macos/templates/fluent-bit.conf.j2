@@ -1,0 +1,50 @@
+{% set all_inputs = system_logtide_fluent_bit_macos_inputs + system_logtide_fluent_bit_macos_extra_inputs %}
+[SERVICE]
+    Flush        5
+    Daemon       Off
+    Log_Level    warn
+    Parsers_File {{ system_logtide_fluent_bit_macos_config_dir }}/parsers.conf
+
+{% for input in all_inputs %}
+{% if input.enabled %}
+# --- {{ input.name }} ---
+[INPUT]
+    Name             tail
+    Tag              {{ input.name }}
+    Path             {{ input.path }}
+{% if input.parser != 'none' %}
+    Parser           {{ input.parser }}
+{% endif %}
+    Refresh_Interval 5
+    Mem_Buf_Limit    5MB
+    Skip_Long_Lines  On
+    DB               {{ system_logtide_fluent_bit_macos_config_dir }}/{{ input.name }}.db
+
+{% endif %}
+{% endfor %}
+
+{% for input in all_inputs %}
+{% if input.enabled %}
+[FILTER]
+    Name    modify
+    Match   {{ input.name }}
+    Add     service {{ input.service }}
+    Add     hostname {{ host_name }}
+
+{% endif %}
+{% endfor %}
+
+[OUTPUT]
+    Name             http
+    Match            *
+    Host             {{ system_logtide_fluent_bit_macos_api_host }}
+    Port             {{ system_logtide_fluent_bit_macos_api_port }}
+    URI              /api/v1/ingest/single
+    Format           json_lines
+    Header           X-API-Key {{ system_logtide_fluent_bit_macos_api_key }}
+    Header           Content-Type application/json
+    Json_date_key    time
+    Json_date_format iso8601
+    Retry_Limit      3
+    tls              On
+    tls.verify       On
