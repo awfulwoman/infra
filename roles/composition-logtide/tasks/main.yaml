@@ -27,37 +27,25 @@
 
 - name: Deploy Fluent Bit configuration
   ansible.builtin.template:
-    src: "{{ fluent_bit_conf_item.src }}"
-    dest: "{{ composition_config }}/fluent-bit/{{ fluent_bit_conf_item.dest }}"
+    src: "{{ item.src }}"
+    dest: "{{ composition_config }}/fluent-bit/{{ item.dest }}"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0664"
   loop:
     - { src: fluent-bit.conf.j2, dest: fluent-bit.conf }
     - { src: fluent-bit-parsers.conf.j2, dest: parsers.conf }
-  loop_control:
-    loop_var: fluent_bit_conf_item
 
 - name: Deploy Fluent Bit Lua scripts
   ansible.builtin.copy:
-    src: "{{ fluent_bit_lua_item }}"
-    dest: "{{ composition_config }}/fluent-bit/{{ fluent_bit_lua_item }}"
+    src: "{{ item }}"
+    dest: "{{ composition_config }}/fluent-bit/{{ item }}"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0664"
   loop:
     - extract_container_id.lua
     - map_syslog_level.lua
-  loop_control:
-    loop_var: fluent_bit_lua_item
-
-- name: Deploy monitors definition
-  ansible.builtin.template:
-    src: monitors.yaml.j2
-    dest: "{{ composition_root }}/monitors.yaml"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    mode: "0644"
 
 - name: Start Docker Compose project
   community.docker.docker_compose_v2:
