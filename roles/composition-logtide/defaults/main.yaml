@@ -18,7 +18,7 @@ composition_logtide_syslog_port: 514
 # Timezone offset (hours from UTC) for RFC 3164 syslog timestamps, which carry no timezone.
 # Set to match the timezone of your syslog-sending hosts.
 # Examples: 0 for UTC, 1 for CET, 2 for CEST
-composition_logtide_syslog_tz_offset: 0
+composition_logtide_syslog_tz_offset: 2
 
 # Logtide API ports (internal — exposed via Traefik, not host-bound)
 composition_logtide_backend_port: 8080
