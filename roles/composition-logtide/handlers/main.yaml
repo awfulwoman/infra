@@ -1,0 +1,5 @@
+- name: Restart fluent-bit
+  community.docker.docker_container:
+    name: logtide-fluent-bit
+    state: started
+    restart: true
