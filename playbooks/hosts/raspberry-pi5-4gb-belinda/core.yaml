@@ -21,6 +21,7 @@
   - role: system-compositions
     tags: [composition, zfs]
   - role: client-nut
+    state: absent
     tags: [client, client-nut]
   - role: infothrill.nullmailer
     become: true

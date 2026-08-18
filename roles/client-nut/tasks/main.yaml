@@ -4,6 +4,7 @@
     name:
       - nut
       - nut-client
+  when: state == 'present'
 
 - name: "Create conf files"
   become: true
@@ -16,3 +17,37 @@
   loop:
     - nut.conf
     - upsmon.conf
+  when: state == 'present'
+
+- name: Stop and disable NUT services
+  become: true
+  ansible.builtin.service:
+    name: "{{ item }}"
+    state: stopped
+    enabled: false
+  loop:
+    - nut-client
+    - nut-monitor
+  ignore_errors: true
+  when: state == 'absent'
+
+- name: Remove NUT packages
+  become: true
+  ansible.builtin.apt:
+    name:
+      - nut
+      - nut-client
+    state: absent
+    autoremove: true
+    purge: true
+  when: state == 'absent'
+
+- name: Remove NUT config files
+  become: true
+  ansible.builtin.file:
+    path: "/etc/nut/{{ item }}"
+    state: absent
+  loop:
+    - nut.conf
+    - upsmon.conf
+  when: state == 'absent'

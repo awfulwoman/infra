@@ -15,6 +15,7 @@
   - role: infothrill.nullmailer
     become: true
   - role: server-nut
+    state: absent
     tags: [server, server-nut]
   - role: system-mqtt2cmd
     tags: [system, system-mqtt2cmd]

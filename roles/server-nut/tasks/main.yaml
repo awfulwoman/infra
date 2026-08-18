@@ -5,6 +5,7 @@
       - nut
       - nut-client
       - nut-server
+  when: state == 'present'
 
 - name: "Create conf files"
   become: true
@@ -22,6 +23,7 @@
     - upsd.users
     - upsmon.conf
     - upssched.conf
+  when: state == 'present'
 
 - name: "Create ufw file"
   become: true
@@ -32,3 +34,44 @@
     group: root
     mode: "0664"
   notify: Restart ufw
+  when: state == 'present'
+
+- name: Stop and disable NUT services
+  become: true
+  ansible.builtin.service:
+    name: "{{ item }}"
+    state: stopped
+    enabled: false
+  loop:
+    - nut-server
+    - nut-client
+    - nut-monitor
+  ignore_errors: true
+  when: state == 'absent'
+
+- name: Remove NUT packages
+  become: true
+  ansible.builtin.apt:
+    name:
+      - nut
+      - nut-client
+      - nut-server
+    state: absent
+    autoremove: true
+    purge: true
+  when: state == 'absent'
+
+- name: Remove NUT config directory
+  become: true
+  ansible.builtin.file:
+    path: /etc/nut
+    state: absent
+  when: state == 'absent'
+
+- name: Remove UFW profile
+  become: true
+  ansible.builtin.file:
+    path: /etc/ufw/applications.d/nut.ufw.profile
+    state: absent
+  notify: Restart ufw
+  when: state == 'absent'

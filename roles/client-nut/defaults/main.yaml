@@ -1,1 +1,3 @@
+state: present
+
 nut_user_password: "{{ vault_nut_user_password }}"
