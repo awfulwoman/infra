@@ -49,6 +49,7 @@
     tags: [system, system-smartmontools]
   - role: system-promtail
     tags: [system, system-promtail]
+    vars: {state: absent}
   - role: system-logtide-syslog
     tags: [system, system-logtide-syslog]
     # - role: system-sleepuntil

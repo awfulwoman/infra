@@ -12,3 +12,4 @@
   roles:
   - role: system-promtail
     tags: [system, system-promtail]
+    vars: {state: absent}

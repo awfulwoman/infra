@@ -30,6 +30,7 @@
     tags: [composition, zfs, composition-zfs-api]
   - role: system-promtail
     tags: [system, promtail, system-promtail]
+    vars: {state: absent}
   - role: monitoring-healthchecksio
     monitoring_healthchecksio_ping_type: success
     tags: [monitoring, monitoring-healthchecksio]
