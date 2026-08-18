@@ -45,6 +45,11 @@
     call                extract_container_id
 
 [FILTER]
+    Name                grep
+    Match               docker.*
+    Exclude             container_name ^logtide-
+
+[FILTER]
     Name                modify
     Match               docker.*
     Add                 level info
