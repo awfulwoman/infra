@@ -1,6 +1,37 @@
 # code: language=ansible
 
 # ----------------------------
+# Remove Promtail (state: absent)
+# ----------------------------
+
+- name: Stop and disable Promtail service
+  become: true
+  ansible.builtin.systemd:
+    name: promtail
+    state: stopped
+    enabled: false
+  ignore_errors: true
+  when: state == 'absent'
+
+- name: Remove Promtail files
+  become: true
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - "{{ promtail_binary_path }}"
+    - "{{ promtail_config_path }}"
+    - "{{ promtail_positions_path }}"
+    - "{{ promtail_service_path }}"
+  when: state == 'absent'
+
+- name: Reload systemd after removal
+  become: true
+  ansible.builtin.systemd:
+    daemon_reload: true
+  when: state == 'absent'
+
+# ----------------------------
 # Download and install Promtail
 # ----------------------------
 
@@ -12,6 +43,7 @@
     owner: root
     group: root
     mode: "0755"
+  when: state == 'present'
 
 - name: Create Promtail positions directory
   become: true
@@ -21,18 +53,20 @@
     owner: root
     group: root
     mode: "0755"
+  when: state == 'present'
 
 - name: Check if Promtail binary exists
   ansible.builtin.stat:
     path: "{{ promtail_binary_path }}"
   register: promtail_binary_stat
+  when: state == 'present'
 
 - name: Get installed Promtail version
   ansible.builtin.command: "{{ promtail_binary_path }} --version"
   register: promtail_installed_version
   changed_when: false
   failed_when: false
-  when: promtail_binary_stat.stat.exists
+  when: state == 'present' and promtail_binary_stat.stat.exists
 
 - name: Set Promtail installation needed fact
   ansible.builtin.set_fact:
@@ -41,9 +75,10 @@
         not promtail_binary_stat.stat.exists or
         promtail_version not in promtail_installed_version.stdout | default('')
       }}
+  when: state == 'present'
 
 - name: Install Promtail binary
-  when: promtail_needs_install
+  when: state == 'present' and promtail_needs_install
   block:
     - name: Install unzip (if not present)
       become: true
@@ -98,6 +133,7 @@
     group: root
     mode: "0644"
   notify: Restart promtail
+  when: state == 'present'
 
 - name: Create Promtail systemd service
   become: true
@@ -108,6 +144,7 @@
     group: root
     mode: "0644"
   notify: Restart promtail
+  when: state == 'present'
 
 # ----------------------------
 # Start Promtail service
@@ -120,3 +157,4 @@
     state: started
     enabled: true
     daemon_reload: true
+  when: state == 'present'
