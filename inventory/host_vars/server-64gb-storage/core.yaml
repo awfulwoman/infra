@@ -224,7 +224,8 @@ cnames_additional:
 compositions:
   - zfs-api
   - victoriametrics
-  - loki
+  - composition: loki
+    state: absent
   - logtide
   - composition: reverseproxy
     labels:

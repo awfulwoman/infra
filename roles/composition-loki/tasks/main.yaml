@@ -1,6 +1,25 @@
 # code: language=ansible
 
 # ----------------------------
+# Remove composition (state: absent)
+# ----------------------------
+
+- name: Stop and remove Docker Compose project
+  community.docker.docker_compose_v2:
+    project_src: "{{ composition_root }}"
+    state: absent
+    remove_orphans: true
+  ignore_errors: true
+  when: state == 'absent'
+
+- name: Remove Loki config directory
+  become: true
+  ansible.builtin.file:
+    path: "{{ composition_config }}/config"
+    state: absent
+  when: state == 'absent'
+
+# ----------------------------
 # Core tasks
 # ----------------------------
 
@@ -11,6 +30,7 @@
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0774"
+  when: state == 'present'
 
 - name: "Create .env file"
   ansible.builtin.template:
@@ -19,6 +39,7 @@
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0774"
+  when: state == 'present'
 
 # ----------------------------
 # Specific tasks
@@ -32,6 +53,7 @@
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0774"
+  when: state == 'present'
 
 - name: "Create Loki configuration"
   become: true
@@ -41,6 +63,7 @@
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0774"
+  when: state == 'present'
 
 - name: Ensure Loki storage directory has correct ownership
   become: true
@@ -51,6 +74,7 @@
     group: "10001"
     mode: "0755"
     recurse: true
+  when: state == 'present'
 
 # ----------------------------
 # Start composition
@@ -63,3 +87,4 @@
     build: always
     remove_orphans: true
   notify: Restart Traefik
+  when: state == 'present'
