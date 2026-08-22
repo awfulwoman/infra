@@ -13,6 +13,10 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.beta.rule=Host(`{{ domainname_personal }}`) || Host(`{{ vault_domainname_wc }}`) || Host(`{{ vault_domainname_se }}`)"
       - "traefik.http.routers.beta.tls=true"
+      # Deliberately NOT guarded by reverseproxy_wildcard_cert, unlike every
+      # other composition (#276). These are genuinely public domains, so the
+      # internal *.ewwww.eu wildcard can never cover them - this router needs
+      # real per-name ACME certs even on a host serving the wildcard by default.
       - "traefik.http.routers.beta.tls.certresolver=letsencrypt"
       - "traefik.http.services.beta.loadbalancer.server.port=80"
     volumes:

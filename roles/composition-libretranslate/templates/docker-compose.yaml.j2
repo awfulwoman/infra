@@ -14,7 +14,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.libretranslate.rule=Host(`translate.{{ domainname_infra }}`)"
       - "traefik.http.routers.libretranslate.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.libretranslate.tls.certresolver=letsencrypt"
+{% endif %}
       - "traefik.http.services.libretranslate.loadbalancer.server.port=5000"
     volumes:
       - "{{ composition_config }}/models:/home/libretranslate/.local:rw"

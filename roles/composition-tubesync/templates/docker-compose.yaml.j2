@@ -16,7 +16,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.tubesync.rule=Host(`tubesync.{{ domainname_infra }}`)"
       - "traefik.http.routers.tubesync.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.tubesync.tls.certresolver=letsencrypt"
+{% endif %}
     networks:
       - "{{ default_docker_network }}"
 

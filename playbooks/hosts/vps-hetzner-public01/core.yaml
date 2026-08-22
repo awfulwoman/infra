@@ -16,6 +16,10 @@
     tags: [system, zfs, system-zfs-policy]
   - role: client-nfs
     tags: [client, client-nfs]
+  # Before system-compositions: the wildcard bundle has to be on disk before
+  # Traefik starts and mounts it.
+  - role: client-cert-distribution
+    tags: [infra, client-cert-distribution]
   - role: system-compositions
     tags: [composition, zfs]
   - role: system-promtail

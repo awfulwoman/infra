@@ -12,7 +12,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.freshrss.rule=Host(`freshrss.{{ domainname_infra }}`)"
       - "traefik.http.routers.freshrss.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.freshrss.tls.certresolver=letsencrypt"
+{% endif %}
     volumes:
       - "{{ composition_config }}:/config"
       - /etc/localtime:/etc/localtime:ro

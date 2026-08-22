@@ -76,9 +76,23 @@ zfs:
 # -------------------------------------------------------------------
 # SITES
 # -------------------------------------------------------------------
+# REVERSEPROXY (#276 - dual mode: wildcard default + scoped ACME)
+#
+# The one host in the estate that needs both mechanisms at once. The
+# letsencrypt resolver stays alive here, but only for the genuinely public
+# names that the internal *.ewwww.eu wildcard can never cover:
+#   - gts.awfulwoman.com          (gotosocial file provider, below)
+#   - awfulwoman.com + the two old redirect domains
+#                                 (composition-awfulwoman's "beta" router)
+# Every internal name on this host now takes the wildcard as Traefik's default
+# certificate instead. No internal router references the resolver: the
+# certresolver labels are guarded on reverseproxy_wildcard_cert estate-wide.
+reverseproxy_use_letsencrypt: true
+reverseproxy_wildcard_cert: true
 
 traefik_providers:
   - gotosocial
+  - wildcard-cert
 
 # -------------------------------------------------------------------
 # ZFS POLICY

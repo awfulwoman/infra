@@ -28,7 +28,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.immich.rule=Host(`immich.{{ domainname_infra }}`)"
       - "traefik.http.routers.immich.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.immich.tls.certresolver=letsencrypt"
+{% endif %}
       - "traefik.http.services.immich.loadbalancer.server.port=2283"
     healthcheck:
       disable: false

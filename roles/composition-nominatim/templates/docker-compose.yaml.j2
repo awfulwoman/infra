@@ -14,7 +14,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.nominatim.rule=Host(`nominatim.{{ domainname_infra }}`)"
       - "traefik.http.routers.nominatim.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.nominatim.tls.certresolver=letsencrypt"
+{% endif %}
       - "traefik.http.services.nominatim.loadbalancer.server.port=8080"
     volumes:
       - "/fastpool/shared/nominatim:/var/lib/postgresql/16/main"

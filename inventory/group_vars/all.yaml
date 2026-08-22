@@ -54,5 +54,18 @@ vault_domain_test: !vault |
 domainname_infra: "{{ vault_domainname_ew }}"
 domainname_personal: "{{ vault_domainname_aw }}"
 
+# Host-level TLS posture. Read by every composition that emits a Traefik
+# certresolver label, not just composition-reverseproxy - role defaults are
+# role-scoped, so these have to live at inventory level to be in scope for all
+# of them. Override per host; see #276.
+#   use_letsencrypt - the letsencrypt ACME resolver exists in traefik.yaml.
+#   wildcard_cert   - the internal *.ewwww.eu wildcard is mounted and set as
+#                     Traefik's default certificate, so internal routers no
+#                     longer need ACME at all.
+# Both true at once is the public01 case: ACME kept alive for genuinely public
+# names the internal wildcard can never cover, wildcard used for everything else.
+reverseproxy_use_letsencrypt: true
+reverseproxy_wildcard_cert: false
+
 # vault_vagrant_public_key:
 # vault_vagrant_private_key:

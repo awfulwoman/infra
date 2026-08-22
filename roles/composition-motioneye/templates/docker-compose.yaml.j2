@@ -16,7 +16,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.motioneye.rule=Host(`motioneye.{{ ansible_facts['hostname'] }}.{{ domainname_infra }}`)"
       - "traefik.http.routers.motioneye.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.motioneye.tls.certresolver=letsencrypt"
+{% endif %}
       - "traefik.http.services.motioneye.loadbalancer.server.port=8765"
     volumes:
       -  "{{ composition_config }}/shared:/shared"

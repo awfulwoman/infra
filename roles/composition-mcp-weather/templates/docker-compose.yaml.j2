@@ -12,7 +12,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.mcp-weather.rule=Host(`weathermcp.{{ domainname_infra }}`)"
       - "traefik.http.routers.mcp-weather.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.mcp-weather.tls.certresolver=letsencrypt"
+{% endif %}
       - "traefik.http.services.mcp-weather.loadbalancer.server.port={{ composition_mcp_weather_port }}"
     networks:
       - "{{ default_docker_network }}"

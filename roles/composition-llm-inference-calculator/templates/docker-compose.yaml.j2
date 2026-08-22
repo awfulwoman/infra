@@ -10,7 +10,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.llmcalc.rule=Host(`llmcalc.{{ domainname_infra }}`)"
       - "traefik.http.routers.llmcalc.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.llmcalc.tls.certresolver=letsencrypt"
+{% endif %}
       - "traefik.http.services.llmcalc.loadbalancer.server.port=80"
     volumes:
       - /etc/localtime:/etc/localtime:ro

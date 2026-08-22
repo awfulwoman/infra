@@ -17,7 +17,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.kiwix.rule=Host(`kiwix.{{ domainname_infra }}`)"
       - "traefik.http.routers.kiwix.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.kiwix.tls.certresolver=letsencrypt"
+{% endif %}
       - "traefik.http.services.kiwix.loadbalancer.server.port=8080"
     volumes:
       - "{{ composition_kiwix_zim_path }}:/data:ro"

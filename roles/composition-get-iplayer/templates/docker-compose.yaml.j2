@@ -10,7 +10,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.iplayer.rule=Host(`iplayer.{{ domainname_infra }}`)"
       - "traefik.http.routers.iplayer.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.iplayer.tls.certresolver=letsencrypt"
+{% endif %}
       - "traefik.http.services.iplayer.loadbalancer.server.port=1935"
     volumes:
       - "{{ composition_config }}:/config"

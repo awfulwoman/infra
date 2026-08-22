@@ -9,8 +9,16 @@ http:
     homeassistant:
       service: homeassistant
       rule: "Host(`homeassistant.{{ domainname_infra }}`)"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       tls:
         certresolver: letsencrypt
+{% else %}
+      # Empty mapping, not an omitted key: the router still terminates TLS,
+      # it just takes the default cert (the internal wildcard) instead of
+      # asking ACME. Guarded because this is an internal name; the public
+      # providers (gotosocial, personalsite) stay unguarded. See #276.
+      tls: {}
+{% endif %}
       entrypoints:
         - web
         - websecure

@@ -12,7 +12,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.homepage.rule=Host(`home.{{ domainname_infra }}`) || Host(`{{ domainname_infra }}`) || Host(`www.{{ domainname_infra }}`)"
       - "traefik.http.routers.homepage.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.homepage.tls.certresolver=letsencrypt"
+{% endif %}
       # - "homepage.group=GROUP"
       # - "homepage.name=SUBDOMAIN"
       # - "homepage.href=https://SUBDOMAIN.{{ domainname_infra }}"

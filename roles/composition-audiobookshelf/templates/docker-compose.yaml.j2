@@ -12,7 +12,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.audiobookshelf.rule=Host(`audiobookshelf.{{ domainname_infra }}`)"
       - "traefik.http.routers.audiobookshelf.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.audiobookshelf.tls.certresolver=letsencrypt"
+{% endif %}
       - "traefik.http.services.audiobookshelf.loadbalancer.server.port=80"
     volumes:
       - "{{ shared_media_path }}/audiobooks:/audiobooks"

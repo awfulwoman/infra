@@ -15,7 +15,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.{{ composition_loki_container_name }}.rule=Host(`{{ composition_dns_subdomains[0] }}.{{ domainname_infra }}`)"
       - "traefik.http.routers.{{ composition_loki_container_name }}.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.{{ composition_loki_container_name }}.tls.certresolver=letsencrypt"
+{% endif %}
       - "traefik.http.services.{{ composition_loki_container_name }}.loadbalancer.server.port=3100"
 {% endif %}
     networks:

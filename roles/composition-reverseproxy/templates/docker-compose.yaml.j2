@@ -57,7 +57,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.whoami.rule=Host(`whoami-{{ host_name }}.{{ domainname_infra }}`)"
       - "traefik.http.routers.whoami.tls=true"
-{% if reverseproxy_use_letsencrypt %}
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.whoami.tls.certresolver=letsencrypt"
 {% endif %}
     volumes:
@@ -89,14 +89,14 @@ services:
       - "traefik.http.routers.dashboard.rule=Host(`{{ reverseproxy_traefik_domain}}`)"
       - "traefik.http.routers.dashboard.service=dashboard@internal"
       - "traefik.http.routers.dashboard.tls=true"
-{% if reverseproxy_use_letsencrypt %}
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
 {% endif %}
       # Allow API access via traefik.{{ansible_facts['hostname']}}.{{ domainname_infra }}
       - "traefik.http.routers.api.rule=Host(`{{ reverseproxy_traefik_domain}}`) && PathPrefix(`/api`)"
       - "traefik.http.routers.api.service=api@internal"
       - "traefik.http.routers.api.tls=true"
-{% if reverseproxy_use_letsencrypt %}
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.api.tls.certresolver=letsencrypt"
 {% endif %}
     volumes:

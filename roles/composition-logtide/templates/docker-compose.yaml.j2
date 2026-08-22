@@ -66,7 +66,9 @@ services:
       - "traefik.http.routers.logtide-api.rule=Host(`{{ composition_dns_subdomains[0] }}.{{ domainname_infra }}`) && PathPrefix(`/api`)"
       - "traefik.http.routers.logtide-api.service=logtide-api"
       - "traefik.http.routers.logtide-api.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.logtide-api.tls.certresolver=letsencrypt"
+{% endif %}
       - "traefik.http.services.logtide-api.loadbalancer.server.port={{ composition_logtide_backend_port }}"
 {% endif %}
     networks:
@@ -107,7 +109,9 @@ services:
       - "traefik.http.routers.logtide-ui.rule=Host(`{{ composition_dns_subdomains[0] }}.{{ domainname_infra }}`)"
       - "traefik.http.routers.logtide-ui.service=logtide-ui"
       - "traefik.http.routers.logtide-ui.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.logtide-ui.tls.certresolver=letsencrypt"
+{% endif %}
       - "traefik.http.services.logtide-ui.loadbalancer.server.port={{ composition_logtide_frontend_port }}"
 {% endif %}
     depends_on:

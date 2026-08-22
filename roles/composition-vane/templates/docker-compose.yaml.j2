@@ -12,7 +12,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.vane.rule=Host(`vane.{{ domain_name }}`)"
       - "traefik.http.routers.vane.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.vane.tls.certresolver=letsencrypt"
+{% endif %}
       - "traefik.http.services.vane.loadbalancer.server.port=3000"
     volumes:
       - "{{ composition_config }}/data:/home/vane/data"

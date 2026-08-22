@@ -11,7 +11,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.whoami.rule=Host(`whoami.{{ ansible_facts['hostname'] }}.{{ domainname_infra }}`)"
       - "traefik.http.routers.whoami.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.whoami.tls.certresolver=letsencrypt"
+{% endif %}
     volumes:
       - /etc/localtime:/etc/localtime:ro
     networks:

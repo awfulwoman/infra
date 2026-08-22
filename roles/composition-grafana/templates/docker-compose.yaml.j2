@@ -16,7 +16,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.{{ composition_grafana_container_name }}.rule=Host(`{{ composition_grafana_subdomain }}.{{ domainname_infra }}`)"
       - "traefik.http.routers.{{ composition_grafana_container_name }}.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.{{ composition_grafana_container_name }}.tls.certresolver=letsencrypt"
+{% endif %}
       - "traefik.http.services.{{ composition_grafana_container_name }}.loadbalancer.server.port=3000"
 {% endif %}
     networks:

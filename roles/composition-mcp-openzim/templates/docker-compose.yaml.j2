@@ -17,7 +17,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.openzim-mcp.rule=Host(`zim.{{ domainname_infra }}`)"
       - "traefik.http.routers.openzim-mcp.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.openzim-mcp.tls.certresolver=letsencrypt"
+{% endif %}
       - "traefik.http.services.openzim-mcp.loadbalancer.server.port=8000"
     volumes:
       - "{{ composition_openzim_mcp_zim_path }}:/data:ro"

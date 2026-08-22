@@ -23,7 +23,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.gitea.rule=Host(`gitea.{{ domainname_infra }}`)"
       - "traefik.http.routers.gitea.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.gitea.tls.certresolver=letsencrypt"
+{% endif %}
       - "traefik.http.services.gitea.loadbalancer.server.port=3000"
     volumes:
       - "{{ composition_config }}/gitea:/data"

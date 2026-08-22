@@ -25,7 +25,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.memorybank.rule=Host(`memorybank.{{ domainname_infra }}`)"
       - "traefik.http.routers.memorybank.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.memorybank.tls.certresolver=letsencrypt"
+{% endif %}
       - "traefik.http.services.memorybank.loadbalancer.server.port=80"
     networks:
       - "{{ default_docker_network }}"

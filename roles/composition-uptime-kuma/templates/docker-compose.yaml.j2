@@ -12,7 +12,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.uptime-kuma.rule=Host(`uptime-kuma.{{ domainname_infra }}`)"
       - "traefik.http.routers.uptime-kuma.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.uptime-kuma.tls.certresolver=letsencrypt"
+{% endif %}
       - "traefik.http.services.uptime-kuma.loadbalancer.server.port=3001"
     volumes:
       - "{{ composition_config }}:/app/data"
@@ -40,7 +42,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.uptime-kuma-api.rule=Host(`{{ composition_dns_subdomains[1] }}.{{ domainname_infra }}`)"
       - "traefik.http.routers.uptime-kuma-api.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.uptime-kuma-api.tls.certresolver=letsencrypt"
+{% endif %}
       - "traefik.http.services.uptime-kuma-api.loadbalancer.server.port=5001"
     networks:
       - "{{ default_docker_network }}"

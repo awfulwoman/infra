@@ -9,12 +9,14 @@ composition_dns_subdomains:
   - "whoami-{host}"
   - "traefik-{host}"
 
-reverseproxy_use_letsencrypt: true
-# Set alongside reverseproxy_use_letsencrypt: false to serve the internal
-# wildcard cert (client-cert-distribution, #269) as Traefik's default cert
-# instead of Traefik's own per-host ACME. Mounts reverseproxy_wildcard_cert_dir
-# into the container and requires "wildcard-cert" in traefik_providers.
-reverseproxy_wildcard_cert: false
+# reverseproxy_use_letsencrypt and reverseproxy_wildcard_cert are deliberately
+# NOT defaulted here - they live in inventory/group_vars/all.yaml, because every
+# composition role that emits a certresolver label needs them in scope and role
+# defaults are role-scoped. See #276.
+#
+# reverseproxy_wildcard_cert: true mounts this directory into the container and
+# requires "wildcard-cert" in traefik_providers to actually install the bundle
+# (client-cert-distribution, #269) as Traefik's default certificate.
 reverseproxy_wildcard_cert_dir: /etc/ssl/internal-wildcard
 reverseproxy_catchall: false
 reverseproxy_statuspage: false
