@@ -31,3 +31,19 @@ security_ssh_allowed_groups: []
 
 security_fail2ban_enabled: true
 security_fail2ban_custom_configuration_template: "jail.local.j2"
+
+# Jail tuning. Without these the jail inherits Debian's jail.conf defaults
+# (10 minute ban, 5 retries), which barely slows a botnet rotating through
+# hundreds of source addresses.
+security_fail2ban_bantime: "1h"
+security_fail2ban_findtime: "10m"
+security_fail2ban_maxretry: 5
+# Ban repeat offenders for progressively longer, up to bantime_maxtime.
+security_fail2ban_bantime_increment: true
+security_fail2ban_bantime_maxtime: "1w"
+# Never ban ourselves: loopback, plus the Tailscale CGNAT range that every
+# host in this estate is reachable on.
+security_fail2ban_ignoreip:
+  - 127.0.0.1/8
+  - ::1
+  - 100.64.0.0/10

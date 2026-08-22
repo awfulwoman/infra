@@ -1,3 +1,13 @@
+[DEFAULT]
+ignoreip = {{ security_fail2ban_ignoreip | join(' ') }}
+bantime  = {{ security_fail2ban_bantime }}
+findtime = {{ security_fail2ban_findtime }}
+maxretry = {{ security_fail2ban_maxretry }}
+{% if security_fail2ban_bantime_increment %}
+bantime.increment = true
+bantime.maxtime = {{ security_fail2ban_bantime_maxtime }}
+{% endif %}
+
 [sshd]
 enabled = true
 port    = {{ security_ssh_port }}

@@ -167,7 +167,9 @@
   ansible.builtin.include_role:
     name: system-security
   vars:
-    security_fail2ban_enabled: false
+    # Via a role default rather than a literal: vars: on include_role outranks
+    # host_vars, so hardcoding false here made the setting unreachable per host.
+    security_fail2ban_enabled: "{{ bootstrap_ubuntu_fail2ban_enabled }}"
 
 - name: MOTD
   ansible.builtin.include_role:

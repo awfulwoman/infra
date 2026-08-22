@@ -1,4 +1,9 @@
 bootstrap_ubuntu_timezone: "Europe/Berlin"
+
+# Passed through to system-security. Off by default: hosts reachable only over
+# Tailscale see no brute-force traffic, so the jail is pure overhead there.
+# Turn it on per host for anything with SSH exposed to the internet.
+bootstrap_ubuntu_fail2ban_enabled: false
 bootstrap_ubuntu_apt_packages_extra: []
 bootstrap_ubuntu_apt_packages:
   - curl

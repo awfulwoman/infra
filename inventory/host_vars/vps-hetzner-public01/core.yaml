@@ -36,6 +36,20 @@ bootstrap_ubuntu_timezone: "Europe/Berlin"
 
 
 # -------------------------------------------------------------------
+# SECURITY
+# -------------------------------------------------------------------
+# The only host in the estate with SSH exposed to the internet, and it is
+# under constant distributed brute-force: ~157 sshd log lines/min from ~185
+# distinct source IPs, enough concurrent pre-auth connections to trip sshd's
+# MaxStartups throttle. Key-only auth means none of it succeeds, but the
+# dropped-connection roulette and the log volume both cost us.
+bootstrap_ubuntu_fail2ban_enabled: true
+security_fail2ban_maxretry: 3
+security_fail2ban_bantime: 1d
+security_fail2ban_bantime_maxtime: 4w
+
+
+# -------------------------------------------------------------------
 # ZFS
 # -------------------------------------------------------------------
 
