@@ -21,6 +21,8 @@
   - role: system-promtail
     tags: [system, promtail, system-promtail]
     vars: {state: absent}
+  - role: system-logtide-syslog
+    tags: [system, system-logtide-syslog]
   - role: monitoring-healthchecksio
     monitoring_healthchecksio_ping_type: success
     tags: [monitoring, monitoring-healthchecksio]
