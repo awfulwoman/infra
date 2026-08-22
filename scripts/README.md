@@ -23,6 +23,10 @@ These two scripts prepare a machine for Ansible control, especially for ansible-
 * [Snapshot domain resolution + TLS state](snapshot-domains.sh) — captures, per registered service name and from both a LAN and remote (public01) vantage, the CNAME chain, resolved IP, HTTPS status, and served cert subject/issuer/expiry. See [docs/snapshots/README.md](../docs/snapshots/README.md).
 * [Validate derived DNS records](validate-dns-records.sh) — fails fast, naming the composition and both hosts, if two hosts would claim the same DNS label. Runs entirely on localhost (no SSH); wired into pre-commit on any `inventory/` or `plugins/filters/dns_records.py` change.
 
+## Logs
+
+* [Query Logtide](logtide.py) — reads log records from the Logtide API, resolving the API key and infra domain from Vault at run time. `--level` and `--service` filter server-side; `--grep`, `--since` and `--host` filter locally, because the API accepts but ignores its own `search` and time-range parameters. Also has `stats` and `services` subcommands.
+
 ## Docker
 
 * [Check image healthcheck tools](check-image-healthcheck-tools.sh) — reports the OS and the available healthcheck tools for a Docker image.
