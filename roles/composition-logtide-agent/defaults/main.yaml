@@ -22,12 +22,16 @@ composition_logtide_agent_api_key: "{{ vault_logtide_fluent_bit_api_key }}"
 
 composition_logtide_agent_docker_log_path: /var/lib/docker/containers
 
-# Containers whose logs are not ingested. logtide-backend logs every ingest
-# request it serves, so tailing it would feed its own output straight back in;
-# the agent tails its own stdout for the same reason. The rest of the logtide
-# stack (postgres, redis, worker, frontend, fluent-bit) is safe to collect and
-# is exactly what you want visible when logtide itself misbehaves.
-composition_logtide_agent_exclude_pattern: "^logtide-(backend|agent)"
+# Containers whose logs are not ingested, because each one feeds its own
+# output back in:
+#   backend - logs every ingest request it serves
+#   worker  - logs a line per batch it processes, including batches made up
+#             of its own previous lines, so it never idles (measured at
+#             46-90 lines/min with nothing else happening)
+#   agent   - tails its own stdout
+# The rest of the stack (postgres, redis, frontend, fluent-bit) is collected
+# normally, and is what you want visible when logtide itself misbehaves.
+composition_logtide_agent_exclude_pattern: "^logtide-(backend|worker|agent)"
 
 # Position database - fluent-bit's record of how far it has read into each
 # file. Deliberately outside composition_config: it is rewritten every flush
