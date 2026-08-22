@@ -281,7 +281,10 @@ services:
       - LIBRO_FM_PASSWORD={{ vault_librofm_password }}
       # extra optional: setting these enables them, dont add them if you dont want them.
       - LOG_LEVEL=INFO
-      - SYNC_INTERVAL=d
+      # Hourly, not daily: fetchLibrary() writes libro_library.json asynchronously
+      # but processLibrary() re-reads it from disk immediately, so each sync acts on
+      # the previous sync's snapshot and new purchases land one interval late.
+      - SYNC_INTERVAL=h
       - FORMAT=M4B_CONVERT_FALLBACK
       - AUDIO_QUALITY=128k
       - PATH_PATTERN=BOOK_TITLE
