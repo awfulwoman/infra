@@ -72,6 +72,53 @@
     group: "{{ ansible_user }}"
     mode: '0600'
 
+# Dual-mode hosts only (#276). Where the wildcard is the default cert but the
+# ACME resolver is still alive for genuinely public names, certificates issued
+# for internal names before the flip have to be evicted from the store:
+# Traefik's renewal loop walks the whole store regardless of what any router
+# references, and an exact-name match beats the wildcard during SNI selection.
+# Nothing re-creates them - the internal certresolver labels are guarded.
+- name: "Prune internal-domain certs from the ACME store"
+  when:
+    - reverseproxy_use_letsencrypt
+    - reverseproxy_wildcard_cert
+  block:
+    - name: "Check the ACME store for internal-domain certs"
+      become: true
+      ansible.builtin.script:
+        cmd: >-
+          files/prune-acme-internal-certs.py
+          {{ composition_config }}/letsencrypt/acme.json
+          {{ domainname_infra }}
+      register: _acme_prune_check
+      changed_when: false
+
+    - name: "Stop Traefik before rewriting the ACME store"
+      # Traefik holds the store in memory and flushes it back on any
+      # certificate change, so it would undo an edit made underneath it.
+      become: true
+      ansible.builtin.command:
+        cmd: docker stop traefik
+      register: _acme_prune_stop
+      changed_when: _acme_prune_stop.rc == 0
+      failed_when:
+        - _acme_prune_stop.rc != 0
+        - "'No such container' not in _acme_prune_stop.stderr"
+      when: "'REMOVED=0' not in _acme_prune_check.stdout"
+
+    - name: "Remove internal-domain certs from the ACME store"
+      become: true
+      ansible.builtin.script:
+        cmd: >-
+          files/prune-acme-internal-certs.py
+          {{ composition_config }}/letsencrypt/acme.json
+          {{ domainname_infra }}
+          --apply
+      register: _acme_prune_apply
+      changed_when: "'REMOVED=0' not in _acme_prune_apply.stdout"
+      when: "'REMOVED=0' not in _acme_prune_check.stdout"
+      notify: Restart Traefik
+
 # Custom http responses
 
 - name: Create directories
