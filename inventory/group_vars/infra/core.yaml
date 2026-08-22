@@ -54,6 +54,10 @@ bind_records_a:
 # Ansible
 ansible_path: "/opt/ansible"
 ansible_log_path: "{{ ansible_path }}/logs"
+# ANSIBLE_LOG_PATH must name a file, not a directory — Ansible aborts logging
+# with a DEFAULT_LOG_PATH warning otherwise. ansible_log_path stays the
+# directory (created by the ansible-core role); this is the file inside it.
+ansible_log_file: "{{ ansible_log_path }}/ansible.log"
 ansible_vault_password_file: "{{ ansible_path }}/.vaultpassword"
 ansible_roles_path: "{{ ansible_path }}/galaxy/roles"
 ansible_collections_path: "{{ ansible_path }}/galaxy/collections"
@@ -83,7 +87,7 @@ nullmailer_allmailfrom: "{{ vault_mailprovider_user }}"
 environment_config:
   ANSIBLE_FORCE_COLOR: true
   ANSIBLE_PATH: "{{ ansible_path }}"
-  ANSIBLE_LOG_PATH: "{{ ansible_log_path }}"
+  ANSIBLE_LOG_PATH: "{{ ansible_log_file }}"
   ANSIBLE_VAULT_PASSWORD_FILE: "{{ ansible_vault_password_file }}"
   ANSIBLE_ROLES_PATH: "{{ ansible_roles_path }}:./roles"
   ANSIBLE_COLLECTIONS_PATH: "{{ ansible_collections_path }}"
