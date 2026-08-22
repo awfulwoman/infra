@@ -46,10 +46,14 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.pixelfed.rule=Host(`{{ pixelfed_app_domain }}`)"
       - "traefik.http.routers.pixelfed.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.pixelfed.tls.certresolver=letsencrypt"
+{% endif %}
       - "traefik.http.routers.pixelfed-admin.rule=Host(`{{ pixelfed_admin_domain }}`)"
       - "traefik.http.routers.pixelfed-admin.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.pixelfed-admin.tls.certresolver=letsencrypt"
+{% endif %}
       - "traefik.http.routers.pixelfed-admin.service=pixelfed"
       - "traefik.http.services.pixelfed.loadbalancer.server.port=8080"
     volumes:

@@ -10,7 +10,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.open-webui.rule=Host(`chat.{{ domainname_infra }}`)"
       - "traefik.http.routers.open-webui.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.open-webui.tls.certresolver=letsencrypt"
+{% endif %}
       - "traefik.http.services.open-webui.loadbalancer.server.port=8080"
     volumes:
       - "{{ composition_config }}/data:/app/backend/data"

@@ -12,7 +12,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.owntracks-recorder.rule=Host(`owntracks-recorder.{{ domainname_infra }}`)"
       - "traefik.http.routers.owntracks-recorder.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.owntracks-recorder.tls.certresolver=letsencrypt"
+{% endif %}
     volumes:
       - "{{ composition_config }}/config:/config"
       - "{{ composition_config }}/store:/store"
@@ -41,7 +43,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.owntracks-frontend.rule=Host(`owntracks.{{ domainname_infra }}`)"
       - "traefik.http.routers.owntracks-frontend.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.owntracks-frontend.tls.certresolver=letsencrypt"
+{% endif %}
     volumes:
       - "{{ composition_config }}/config:/config"
       - "{{ composition_config }}/store:/store"

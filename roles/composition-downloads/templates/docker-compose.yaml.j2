@@ -16,7 +16,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.{{ domainname_infra }}`)"
       - "traefik.http.routers.prowlarr.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.prowlarr.tls.certresolver=letsencrypt"
+{% endif %}
     volumes:
       - "{{ composition_config }}/prowlarr:/config"
       - /etc/localtime:/etc/localtime:ro
@@ -43,7 +45,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.bazarr.rule=Host(`bazarr.{{ domainname_infra }}`)"
       - "traefik.http.routers.bazarr.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.bazarr.tls.certresolver=letsencrypt"
+{% endif %}
     volumes:
       - "{{ composition_config }}/bazarr:/config"
       - "{{ shared_media_path }}:/data"
@@ -72,7 +76,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.radarr.rule=Host(`radarr.{{ domainname_infra }}`)"
       - "traefik.http.routers.radarr.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.radarr.tls.certresolver=letsencrypt"
+{% endif %}
     volumes:
       - "{{ composition_config }}/radarr:/config"
       - "{{ shared_media_path }}:/data"
@@ -107,7 +113,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.lidarr.rule=Host(`lidarr.{{ domainname_infra }}`)"
       - "traefik.http.routers.lidarr.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.lidarr.tls.certresolver=letsencrypt"
+{% endif %}
     volumes:
       - "{{ composition_config }}/lidarr:/config"
       - "{{ shared_media_path }}:/data"
@@ -141,7 +149,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.sonarr.rule=Host(`sonarr.{{ domainname_infra }}`)"
       - "traefik.http.routers.sonarr.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.sonarr.tls.certresolver=letsencrypt"
+{% endif %}
     volumes:
       - "{{ composition_config }}/sonarr:/config"
       - "{{ shared_media_path }}:/data"
@@ -243,19 +253,25 @@ services:
       - "traefik.http.routers.gluetun.service=gluetun"
       - "traefik.http.services.gluetun.loadbalancer.server.port=8000"
       - "traefik.http.routers.gluetun.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.gluetun.tls.certresolver=letsencrypt"
+{% endif %}
       # Qbittorrent
       - "traefik.http.routers.qbittorrent.rule=Host(`qbittorrent.{{ domainname_infra }}`)"
       - "traefik.http.routers.qbittorrent.service=qbittorrent"
       - "traefik.http.services.qbittorrent.loadbalancer.server.port=8080"
       - "traefik.http.routers.qbittorrent.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.qbittorrent.tls.certresolver=letsencrypt"
+{% endif %}
       # Transmission
       - "traefik.http.routers.transmission.rule=Host(`transmission.{{ domainname_infra }}`)"
       - "traefik.http.routers.transmission.service=transmission"
       - "traefik.http.services.transmission.loadbalancer.server.port=9091"
       - "traefik.http.routers.transmission.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.transmission.tls.certresolver=letsencrypt"
+{% endif %}
     volumes:
       - "{{ composition_config }}/gluetun:/gluetun"
       - "{{ composition_config }}/gluetun/config.toml:/gluetun/auth/config.toml"
@@ -292,7 +308,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.librofm.rule=Host(`librofm.{{ domainname_infra }}`)"
       - "traefik.http.routers.librofm.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.librofm.tls.certresolver=letsencrypt"
+{% endif %}
     volumes:
       - "{{ shared_media_path }}/audiobooks:/media"
       - "{{ composition_config }}/librofm:/data"
@@ -313,7 +331,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.jellyseerr.rule=Host(`jellyseerr.{{ domainname_infra }}`)"
       - "traefik.http.routers.jellyseerr.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.jellyseerr.tls.certresolver=letsencrypt"
+{% endif %}
     ports:
       - "5055:5055"
     volumes:

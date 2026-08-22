@@ -10,7 +10,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.iplayarr.rule=Host(`iplayarr.{{ domainname_infra }}`)"
       - "traefik.http.routers.iplayarr.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.iplayarr.tls.certresolver=letsencrypt"
+{% endif %}
       - "traefik.http.services.iplayarr.loadbalancer.server.port=4404"
     volumes:
       - "{{ iplayarr_downloads }}/shows:/data/shows"

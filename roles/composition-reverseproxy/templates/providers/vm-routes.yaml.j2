@@ -10,9 +10,14 @@ http:
       service: {{ route.name }}-service
       entryPoints:
         - websecure
-{% if reverseproxy_use_letsencrypt %}
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       tls:
         certResolver: letsencrypt
+{% else %}
+      # Empty mapping, not an omitted key: this router only listens on
+      # websecure, so it still has to terminate TLS - it just takes the
+      # default cert (the internal wildcard) instead of asking ACME. See #276.
+      tls: {}
 {% endif %}
 {% if route.middlewares is defined %}
       middlewares:

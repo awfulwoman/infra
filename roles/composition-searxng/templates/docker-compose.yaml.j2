@@ -10,7 +10,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.searxng.rule=Host(`searxng.{{ domainname_infra }}`) || Host(`search.{{ domainname_infra }}`)"
       - "traefik.http.routers.searxng.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.searxng.tls.certresolver=letsencrypt"
+{% endif %}
       - "traefik.http.services.searxng.loadbalancer.server.port=8080"
     volumes:
       - "{{ composition_config }}/searxng:/etc/searxng:rw"

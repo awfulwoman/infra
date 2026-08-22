@@ -11,7 +11,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.mcp-kagisearch.rule=Host(`kagimcp.{{ domainname_infra }}`)"
       - "traefik.http.routers.mcp-kagisearch.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.mcp-kagisearch.tls.certresolver=letsencrypt"
+{% endif %}
       - "traefik.http.services.mcp-kagisearch.loadbalancer.server.port=8000"
     networks:
       - "{{ default_docker_network }}"

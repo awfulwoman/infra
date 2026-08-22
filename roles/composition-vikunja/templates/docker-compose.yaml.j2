@@ -16,7 +16,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.vikunja.rule=Host(`vikunja.{{ domainname_infra }}`)"
       - "traefik.http.routers.vikunja.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.vikunja.tls.certresolver=letsencrypt"
+{% endif %}
       - "traefik.http.services.vikunja.loadbalancer.server.port=3456"
     networks:
       - "{{ default_docker_network }}"

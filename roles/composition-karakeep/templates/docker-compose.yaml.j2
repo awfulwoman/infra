@@ -13,7 +13,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.karakeep.rule=Host(`karakeep.{{ domainname_infra }}`)"
       - "traefik.http.routers.karakeep.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.karakeep.tls.certresolver=letsencrypt"
+{% endif %}
     volumes:
       - "{{ composition_config }}/karakeep:/data"
     networks:

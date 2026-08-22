@@ -10,7 +10,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.mcp-searxng.rule=Host(`searchmcp.{{ domainname_infra }}`)"
       - "traefik.http.routers.mcp-searxng.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.mcp-searxng.tls.certresolver=letsencrypt"
+{% endif %}
       - "traefik.http.services.mcp-searxng.loadbalancer.server.port=3000"
     networks:
       - "{{ default_docker_network }}"

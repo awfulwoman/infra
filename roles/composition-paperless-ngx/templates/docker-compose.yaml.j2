@@ -86,7 +86,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.paperless.rule=Host(`paperless.{{ domainname_infra }}`)"
       - "traefik.http.routers.paperless.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.paperless.tls.certresolver=letsencrypt"
+{% endif %}
       - "traefik.http.services.paperless.loadbalancer.server.port=8000"
     healthcheck:
       test: ["CMD", "curl", "-fs", "-S", "--max-time", "2", "http://localhost:8000"]

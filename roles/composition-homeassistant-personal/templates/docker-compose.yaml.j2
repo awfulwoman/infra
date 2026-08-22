@@ -10,7 +10,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.homeassistant-personal.rule=Host(`ha-personal.{{ domainname_infra }}`)"
       - "traefik.http.routers.homeassistant-personal.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.homeassistant-personal.tls.certresolver=letsencrypt"
+{% endif %}
       - "traefik.http.services.homeassistant-personal.loadbalancer.server.port=8123"
     volumes:
       - "{{ composition_config }}/homeassistant:/config"

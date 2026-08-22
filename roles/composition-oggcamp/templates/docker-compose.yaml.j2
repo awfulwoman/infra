@@ -9,7 +9,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.oggcamp.rule=Host(`{{ composition_oggcamp_domain }}`)"
       - "traefik.http.routers.oggcamp.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.oggcamp.tls.certresolver=letsencrypt"
+{% endif %}
       - "traefik.http.services.oggcamp.loadbalancer.server.port=80"
     volumes:
       - "{{ composition_config }}/repo/public:/usr/share/nginx/html:ro"

@@ -13,7 +13,9 @@ services:
       - "traefik.http.services.zigbee2mqtt.loadbalancer.server.port=9091"
       - "traefik.http.routers.zigbee2mqtt.rule=Host(`zigbee2mqtt.{{ domainname_infra }}`)"
       - "traefik.http.routers.zigbee2mqtt.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.zigbee2mqtt.tls.certresolver=letsencrypt"
+{% endif %}
     group_add:
       - dialout
     devices:

@@ -15,7 +15,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.syncthing.rule=Host(`syncthing-{{ host_name }}.{{ domainname_infra }}`)"
       - "traefik.http.routers.syncthing.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.syncthing.tls.certresolver=letsencrypt"
+{% endif %}
       - "traefik.http.services.syncthing.loadbalancer.server.port=8384"
     restart: unless-stopped
     networks:
