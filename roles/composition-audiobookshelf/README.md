@@ -20,4 +20,4 @@
 
 - **Traefik**: Exposed at `audiobookshelf.{{ domainname_infra }}` with Let's Encrypt TLS.
 - **network-register-subdomain**: Registers the `audiobookshelf` subdomain automatically.
-- **composition-downloads**: The `librofm-downloader` and `libation` containers in that role populate the same `audiobooks` directory this role reads from.
+- **composition-downloads**: The `librofm-downloader` container in that role populates the same `audiobooks` directory this role reads from.

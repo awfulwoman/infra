@@ -10,6 +10,5 @@ composition_dns_subdomains:
   - lidarr
   - bazarr
   - librofm
-  - libation
   - transmission
   - jellyseerr

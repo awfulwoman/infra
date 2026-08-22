@@ -38,7 +38,6 @@
     - radarr
     - sonarr
     - librofm
-    - libation
     - jellyseerr
 
 - name: Create torrent directories

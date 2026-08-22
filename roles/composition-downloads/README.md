@@ -16,7 +16,6 @@ The full *arr media automation stack, with all torrent traffic routed through a 
 | **Bazarr** | Subtitle manager for Radarr/Sonarr | `6767` |
 | **Jellyseerr** | Media request portal | `5055` |
 | **librofm-downloader** | Syncs purchases from Libro.fm as M4B audiobooks | `13377` |
-| **Libation** | Syncs Audible purchases | — |
 
 ## VPN
 
@@ -52,5 +51,5 @@ A `custom-cont-init.d` script (`templates/qbittorrent-remove-locks.sh`) is deplo
 ## Integrations
 
 - **Traefik**: All services exposed at their respective subdomains on `{{ domainname_infra }}` with Let's Encrypt TLS.
-- **Audiobookshelf** (`composition-audiobookshelf`): Reads from `{{ shared_media_path }}/audiobooks`, which librofm-downloader and Libation write to.
+- **Audiobookshelf** (`composition-audiobookshelf`): Reads from `{{ shared_media_path }}/audiobooks`, which librofm-downloader writes to.
 - **Jellyfin**: Shares the same `{{ shared_media_path }}` for movies, TV, and music.

@@ -302,26 +302,6 @@ services:
       retries: 3
       start_period: 30s
 
-  libation:
-    container_name: libation
-    image: rmcrackan/libation:latest
-    restart: unless-stopped
-    env_file: .environment_vars
-    user: 1000:1000
-    environment:
-      - SLEEP_TIME=360m
-    volumes:
-      - "{{ shared_media_path }}/audiobooks:/data"
-      - "{{ composition_config }}/libation:/config"
-    networks:
-      - "{{ default_docker_network }}"
-    healthcheck:
-      test: ["CMD-SHELL", "pgrep -f LibationCli || exit 1"]
-      interval: 5m
-      timeout: 5s
-      retries: 1
-      start_period: 30s
-
   jellyseerr:
     image: fallenbagel/jellyseerr:latest
     container_name: jellyseerr
