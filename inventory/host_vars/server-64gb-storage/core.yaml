@@ -227,6 +227,7 @@ compositions:
   - composition: loki
     state: absent
   - logtide
+  - logtide-agent
   - composition: reverseproxy
     labels:
       - "traefik-{{ host_name }}"

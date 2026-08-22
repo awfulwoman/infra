@@ -1,0 +1,22 @@
+name: "{{ composition_name }}"
+services:
+  agent:
+    image: {{ composition_logtide_agent_image }}
+    container_name: {{ composition_logtide_agent_container_name }}
+    hostname: {{ composition_logtide_agent_container_name }}
+    restart: unless-stopped
+    env_file: .environment_vars
+    volumes:
+      - "{{ composition_config }}/fluent-bit/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf:ro"
+      - "{{ composition_config }}/fluent-bit/parsers.conf:/fluent-bit/etc/parsers.conf:ro"
+      - "{{ composition_config }}/fluent-bit/extract_container_id.lua:/fluent-bit/etc/extract_container_id.lua:ro"
+      # Read-only, and no docker.sock: container names are read from each
+      # container's config.v2.json, which sits next to its log file.
+      - "{{ composition_logtide_agent_docker_log_path }}:{{ composition_logtide_agent_docker_log_path }}:ro"
+      - "{{ composition_logtide_agent_state_dir }}:/var/lib/logtide-agent"
+    networks:
+      - "{{ default_docker_network }}"
+
+networks:
+  "{{ default_docker_network }}":
+    external: true

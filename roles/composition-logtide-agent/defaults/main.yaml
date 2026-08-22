@@ -1,0 +1,40 @@
+# code: language=ansible
+
+state: present
+
+composition_name: logtide-agent
+
+# No web UI, so no CNAME. Declared as an empty list rather than omitted:
+# discover_composition_subdomains only records roles that have the key, and
+# dns_records looks it up unconditionally, so omitting it raises KeyError the
+# moment this composition appears in a host's compositions: list.
+composition_dns_subdomains: []
+
+composition_logtide_agent_image: fluent/fluent-bit:4.2.2
+composition_logtide_agent_container_name: logtide-agent
+
+# Ingest endpoint. HTTPS via Traefik rather than the backend's container port,
+# which isn't host-bound. One address that works from every host, storage
+# included - it just loops back through its own proxy.
+composition_logtide_agent_api_host: "logtide.{{ domainname_infra }}"
+composition_logtide_agent_api_port: 443
+composition_logtide_agent_api_key: "{{ vault_logtide_fluent_bit_api_key }}"
+
+composition_logtide_agent_docker_log_path: /var/lib/docker/containers
+
+# Containers whose logs are not ingested. logtide-backend logs every ingest
+# request it serves, so tailing it would feed its own output straight back in;
+# the agent tails its own stdout for the same reason. The rest of the logtide
+# stack (postgres, redis, worker, frontend, fluent-bit) is safe to collect and
+# is exactly what you want visible when logtide itself misbehaves.
+composition_logtide_agent_exclude_pattern: "^logtide-(backend|agent)"
+
+# Position database - fluent-bit's record of how far it has read into each
+# file. Deliberately outside composition_config: it is rewritten every flush
+# and is worthless to snapshot, and the compositions dataset is policy:
+# critical with snapshots_discover_children. Mirrors promtail's
+# /var/lib/promtail placement.
+composition_logtide_agent_state_dir: /var/lib/logtide-agent
+
+composition_logtide_agent_flush_interval: 5
+composition_logtide_agent_log_level: warn

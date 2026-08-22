@@ -1,18 +1,10 @@
+# Syslog ingress for the whole fleet. Container logs are NOT collected here -
+# each host ships its own via composition-logtide-agent, storage included.
 [SERVICE]
     Flush        5
     Daemon       Off
-    Log_Level    info
+    Log_Level    warn
     Parsers_File /fluent-bit/etc/parsers.conf
-
-[INPUT]
-    Name              tail
-    Path              /var/lib/docker/containers/*/*.log
-    Parser            docker
-    Tag               docker.*
-    Refresh_Interval  5
-    Mem_Buf_Limit     5MB
-    Skip_Long_Lines   On
-    Path_Key          filepath
 
 [INPUT]
     Name        syslog
@@ -31,57 +23,10 @@
     Tag         syslog.tcp
 
 [FILTER]
-    Name                parser
-    Match               docker.*
-    Key_Name            log
-    Parser              docker_json
-    Reserve_Data        On
-    Preserve_Key        On
-
-[FILTER]
-    Name                lua
-    Match               docker.*
-    script              /fluent-bit/etc/extract_container_id.lua
-    call                extract_container_id
-
-[FILTER]
-    Name                grep
-    Match               docker.*
-    Exclude             container_name ^logtide-
-
-[FILTER]
-    Name                modify
-    Match               docker.*
-    Add                 level info
-    Rename              log message
-    Copy                container_name service
-
-[FILTER]
-    Name                record_modifier
-    Match               docker.*
-    Remove_key          stream
-    Remove_key          filepath
-    Remove_key          container_name
-
-[FILTER]
     Name                lua
     Match               syslog.*
     script              /fluent-bit/etc/map_syslog_level.lua
     call                map_syslog_level
-
-[OUTPUT]
-    Name                http
-    Match               docker.*
-    Host                ${LOGTIDE_API_HOST}
-    Port                {{ composition_logtide_backend_port }}
-    URI                 /api/v1/ingest/single
-    Format              json_lines
-    Header              X-API-Key ${FLUENT_BIT_API_KEY}
-    Header              Content-Type application/json
-    Json_date_key       time
-    Json_date_format    iso8601
-    Retry_Limit         3
-    tls                 Off
 
 [OUTPUT]
     Name                http

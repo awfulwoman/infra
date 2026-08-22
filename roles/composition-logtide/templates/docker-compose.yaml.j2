@@ -126,10 +126,7 @@ services:
     volumes:
       - "{{ composition_config }}/fluent-bit/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf:ro"
       - "{{ composition_config }}/fluent-bit/parsers.conf:/fluent-bit/etc/parsers.conf:ro"
-      - "{{ composition_config }}/fluent-bit/extract_container_id.lua:/fluent-bit/etc/extract_container_id.lua:ro"
       - "{{ composition_config }}/fluent-bit/map_syslog_level.lua:/fluent-bit/etc/map_syslog_level.lua:ro"
-      - /var/lib/docker/containers:/var/lib/docker/containers:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro
     env_file: .environment_vars
     depends_on:
       - backend

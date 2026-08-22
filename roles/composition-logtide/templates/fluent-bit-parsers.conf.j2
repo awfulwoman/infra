@@ -1,18 +1,4 @@
 [PARSER]
-    Name        docker_json
-    Format      json
-    Time_Key    time
-    Time_Format %Y-%m-%dT%H:%M:%S.%L%z
-    Time_Keep   On
-
-[PARSER]
-    Name        docker
-    Format      json
-    Time_Key    time
-    Time_Format %Y-%m-%dT%H:%M:%S.%L%z
-    Time_Keep   On
-
-[PARSER]
     Name        syslog-rfc3164
     Format      regex
     Regex       /^<(?<pri>[0-9]+)>(?<time>[^ ]* {1,2}[^ ]* [^ ]*) (?<host>[^ ]*) (?<ident>[a-zA-Z0-9_\/\.\-]*)(?:\[(?<pid>[0-9]+)\])?(?:[^\:]*\:)? *(?<message>.*)$/

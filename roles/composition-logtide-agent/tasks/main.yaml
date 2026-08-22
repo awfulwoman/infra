@@ -1,0 +1,103 @@
+# code: language=ansible
+
+# ----------------------------
+# Remove composition (state: absent)
+# ----------------------------
+
+- name: Stop and remove Docker Compose project
+  community.docker.docker_compose_v2:
+    project_src: "{{ composition_root }}"
+    state: absent
+    remove_orphans: true
+  ignore_errors: true
+  when: state == 'absent'
+
+- name: Remove Fluent Bit config directory
+  become: true
+  ansible.builtin.file:
+    path: "{{ composition_config }}/fluent-bit"
+    state: absent
+  when: state == 'absent'
+
+# The position database is left in place on removal: if the agent comes back
+# it resumes where it stopped instead of silently skipping the gap.
+
+# ----------------------------
+# Core tasks
+# ----------------------------
+
+- name: Create compose file
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ composition_root }}/docker-compose.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"
+  when: state == 'present'
+
+- name: Create .env file
+  ansible.builtin.template:
+    src: environment_vars.j2
+    dest: "{{ composition_root }}/.environment_vars"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0600"
+  when: state == 'present'
+
+# ----------------------------
+# Specific tasks
+# ----------------------------
+
+- name: Create Fluent Bit config directory
+  become: true
+  ansible.builtin.file:
+    path: "{{ composition_config }}/fluent-bit"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0774"
+  when: state == 'present'
+
+# Root-owned: the container runs as root (it has to, to read
+# /var/lib/docker/containers, which is 0710 root) and this is its only
+# writable mount.
+- name: Create position database directory
+  become: true
+  ansible.builtin.file:
+    path: "{{ composition_logtide_agent_state_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+  when: state == 'present'
+
+- name: Deploy Fluent Bit configuration
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ composition_config }}/fluent-bit/{{ item.dest }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0664"
+  loop:
+    - { src: fluent-bit.conf.j2, dest: fluent-bit.conf }
+    - { src: fluent-bit-parsers.conf.j2, dest: parsers.conf }
+  notify: Restart logtide agent
+  when: state == 'present'
+
+- name: Deploy Fluent Bit Lua scripts
+  ansible.builtin.copy:
+    src: extract_container_id.lua
+    dest: "{{ composition_config }}/fluent-bit/extract_container_id.lua"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0664"
+  notify: Restart logtide agent
+  when: state == 'present'
+
+- name: Start Docker Compose project
+  community.docker.docker_compose_v2:
+    project_src: "{{ composition_root }}"
+    state: present
+    build: never
+    remove_orphans: true
+  when: state == 'present'

@@ -100,6 +100,7 @@ compositions:
   - zigbee2mqtt
   - watchyourlan
   - zfs-api
+  - logtide-agent
 
 # -------------------------------------------------------------------
 # ZFS POLICY

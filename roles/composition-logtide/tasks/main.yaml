@@ -37,16 +37,21 @@
     - { src: fluent-bit-parsers.conf.j2, dest: parsers.conf }
   notify: Restart fluent-bit
 
+# Container tailing moved to composition-logtide-agent, which owns this
+# script now. Removing the copy left behind by earlier runs.
+- name: Remove Fluent Bit container-tailing Lua script
+  ansible.builtin.file:
+    path: "{{ composition_config }}/fluent-bit/extract_container_id.lua"
+    state: absent
+  notify: Restart fluent-bit
+
 - name: Deploy Fluent Bit Lua scripts
   ansible.builtin.copy:
-    src: "{{ item }}"
-    dest: "{{ composition_config }}/fluent-bit/{{ item }}"
+    src: map_syslog_level.lua
+    dest: "{{ composition_config }}/fluent-bit/map_syslog_level.lua"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0664"
-  loop:
-    - extract_container_id.lua
-    - map_syslog_level.lua
   notify: Restart fluent-bit
 
 - name: Start Docker Compose project

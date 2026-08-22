@@ -87,3 +87,4 @@ compositions:
   - container-management
   - awfulwoman
   - zfs-api
+  - logtide-agent

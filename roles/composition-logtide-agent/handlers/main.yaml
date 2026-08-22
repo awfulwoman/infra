@@ -1,0 +1,7 @@
+# code: language=ansible
+
+- name: Restart logtide agent
+  community.docker.docker_container:
+    name: "{{ composition_logtide_agent_container_name }}"
+    state: started
+    restart: true
