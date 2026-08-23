@@ -25,6 +25,32 @@
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
 
+# Fetched at runtime, never stored in the repo: these credentials reach live
+# bank data. Delegated so the Connect token stays on the controller.
+- name: "Fetch Enable Banking credentials from 1Password"
+  ansible.builtin.uri:
+    url: >-
+      {{ onepassword_connect_host }}/v1/vaults/{{ onepassword_connect_vault_id
+      }}/items/{{ firefly_enablebanking_item_id }}
+    headers:
+      Authorization: "Bearer {{ onepassword_connect_token }}"
+  delegate_to: localhost
+  register: firefly_enablebanking_item
+  no_log: true
+
+# The key is passed through as the ordinary multi-line PEM it is stored as.
+# Compose quotes the value in the env file and preserves the newlines, so the
+# importer receives real PEM and parses it directly.
+- name: "Extract Enable Banking fields"
+  ansible.builtin.set_fact:
+    firefly_enablebanking_app_id: "{{ firefly_enablebanking_fields | selectattr('label', 'eq', 'App ID') | map(attribute='value') | first }}"
+    firefly_enablebanking_private_key: "{{ firefly_enablebanking_fields | selectattr('label', 'eq', 'Private Key') | map(attribute='value') | first | trim }}"
+  vars:
+    # Not every field carries a label (notes, for one), and selectattr raises on
+    # the missing attribute rather than skipping it.
+    firefly_enablebanking_fields: "{{ firefly_enablebanking_item.json.fields | selectattr('label', 'defined') }}"
+  no_log: true
+
 - name: "Create firefly importer .env file"
   ansible.builtin.template:
     src: environment_vars_importer.j2

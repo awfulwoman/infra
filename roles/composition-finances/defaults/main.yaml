@@ -9,6 +9,13 @@ vault_firefly_cron_token: null
 vault_firefly_db_password: null
 vault_firefly_app_key: null
 
+# Enable Banking credentials are read from 1Password at playbook runtime rather
+# than stored in the repo — they reach live financial data. See README.
+#
+# Note that 1Password reassigns an item's UUID when it moves between vaults, so
+# this changes if the item is ever relocated.
+firefly_enablebanking_item_id: fisnhyavlrcztjznla55kuzdu4
+
 # Firefly builds password-reset links from APP_URL, so it must match the
 # Traefik router host or the emailed link points at localhost.
 firefly_app_url: "https://firefly.{{ domainname_infra }}"

@@ -36,6 +36,21 @@ config_system_language: 'en_GB.UTF-8'
 repo_url: https://github.com/awfulwoman/infra
 repo_name: infra
 
+# 1Password Connect — coordinates for the server on randolph.
+#
+# Secrets too sensitive to live in the repo (even vault-encrypted) are fetched
+# from here at playbook runtime instead. The scoped, rotatable read token is
+# the only 1Password credential held in Ansible Vault, and it grants access to
+# the Infra vault alone.
+#
+# Reads go through the Connect REST API rather than the
+# `community.general.onepassword` lookup, because that lookup shells out to the
+# `op` CLI even in Connect mode and `op` is not installed on the controller.
+# Same approach as scripts/op-infra-write.py.
+onepassword_connect_host: "https://connect.{{ domainname_infra }}"
+onepassword_connect_vault_id: tsnrmqmuafgj2b5ajwykn7jwpi
+onepassword_connect_token: "{{ vault_onepassword_connect_infra_token_read }}"
+
 # Docker
 default_docker_network: guineanet
 

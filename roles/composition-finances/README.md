@@ -21,9 +21,55 @@ Deploys [Firefly III](https://www.firefly-iii.org/), a self-hosted personal fina
 | `firefly_app_url` | Public URL; password-reset links are built from it |
 | `firefly_mail_*` | SMTP relay (mailbox.org, port 465), shared with nullmailer |
 | `firefly_log_level` | `notice` normally; `debug` to recover a reset link if SMTP breaks |
+| `firefly_enablebanking_item_id` | 1Password item holding the Enable Banking credentials |
 
 The three vault variables must be set (they default to `null`); store them in
 Ansible Vault.
+
+## Enable Banking
+
+The data importer talks to [Enable Banking](https://enablebanking.com/) using an
+application ID and a private key, following the
+[upstream tutorial](https://docs.firefly-iii.org/tutorials/data-importer/eb/).
+
+These credentials reach live bank data, so — unlike the rest of this role's
+secrets — they are **not** kept in the repo, not even Ansible Vault. They live
+only in 1Password (item `fisnhyavlrcztjznla55kuzdu4`, fields `App ID` and
+`Private Key`) and are fetched through 1Password Connect each time the role
+runs, then written straight into `.environment_vars_importer` on the host. The
+fetch is delegated to the controller so the Connect token never reaches the
+target.
+
+The private key is stored in 1Password as an **ordinary multi-line PEM** — the
+`.pem` file's contents pasted in verbatim, real line breaks and all. The role
+passes it through untouched.
+
+The upstream tutorial instead shows the key collapsed onto one line with literal
+`\n` escapes. That is what you need when the value lands in Laravel's own `.env`
+and phpdotenv expands the escapes, but it is the wrong form here: this
+composition delivers the value through Docker Compose `env_file`, which does no
+escape expansion, so openssl would receive two literal characters where a line
+break belongs. Compose does preserve real newlines in a quoted `env_file` value
+(verified on the Compose v5.5.0 running on storage), so the plain PEM needs no
+conversion at all.
+
+The item must live in the `Infra` vault, since that is the only vault the
+Connect read token can see. Note that 1Password reassigns an item's UUID when
+it moves between vaults, so `firefly_enablebanking_item_id` must be updated if
+the item is ever relocated. Confirm it is visible and correctly shaped with:
+
+```bash
+ansible-playbook playbooks/utility/check-enablebanking-credentials.yaml
+```
+
+Neither `ENABLE_BANKING_IMPORT_IP_HEADER` nor `ENABLE_BANKING_IMPORT_IP` is set
+here, and neither needs to be. They control the PSD2 `PSU-IP-Address` header,
+which carries the end user's real IP for strong customer authentication. The
+importer only reads the IP when the header flag is `true`, and it defaults to
+`false`, so the header is simply never sent. Set both only if a bank
+specifically demands it — and note that the `autodetect` value calls out to
+icanhazip.com, and that a private address such as the `127.0.0.1` default fails
+the importer's own public-IP validation and is dropped.
 
 ## Recovering a lost password
 
