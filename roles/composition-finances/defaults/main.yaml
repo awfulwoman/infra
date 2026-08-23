@@ -8,3 +8,17 @@ composition_dns_subdomains:
 vault_firefly_cron_token: null
 vault_firefly_db_password: null
 vault_firefly_app_key: null
+
+# Firefly builds password-reset links from APP_URL, so it must match the
+# Traefik router host or the emailed link points at localhost.
+firefly_app_url: "https://firefly.{{ domainname_infra }}"
+
+# No SMTP relay is wired into this composition, so mail is written to the
+# container log instead of being sent. Password resets are recoverable by
+# reading the link out of `docker logs firefly_iii_core` - but only when
+# firefly_log_level is `debug`, since Firefly logs mail at debug level.
+# Leave it at `notice` in normal operation.
+firefly_mail_mailer: log
+firefly_mail_from: "firefly@{{ domainname_personal }}"
+firefly_site_owner: "firefly@{{ domainname_personal }}"
+firefly_log_level: notice
