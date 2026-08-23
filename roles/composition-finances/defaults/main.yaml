@@ -13,12 +13,26 @@ vault_firefly_app_key: null
 # Traefik router host or the emailed link points at localhost.
 firefly_app_url: "https://firefly.{{ domainname_infra }}"
 
-# No SMTP relay is wired into this composition, so mail is written to the
-# container log instead of being sent. Password resets are recoverable by
-# reading the link out of `docker logs firefly_iii_core` - but only when
-# firefly_log_level is `debug`, since Firefly logs mail at debug level.
-# Leave it at `notice` in normal operation.
-firefly_mail_mailer: log
-firefly_mail_from: "firefly@{{ domainname_personal }}"
-firefly_site_owner: "firefly@{{ domainname_personal }}"
+# Firefly needs working mail: a password reset is the only recovery path for
+# a locked-out account, since the 16-character password minimum cannot be
+# lowered and there is no artisan command to set a password. Reuses the same
+# mailbox.org relay as nullmailer.
+firefly_mail_mailer: smtp
+firefly_mail_host: "smtp.{{ vault_mailprovider_domain }}"
+firefly_mail_port: 465
+firefly_mail_username: "{{ vault_mailprovider_user }}"
+firefly_mail_password: "{{ vault_mailprovider_password }}"
+
+# Port 465 is implicit TLS. Laravel only infers the smtps scheme when
+# encryption is exactly `tls` and the port is 465, so pin the scheme
+# outright rather than depending on that inference.
+firefly_mail_scheme: smtps
+firefly_mail_encryption: tls
+
+# mailbox.org only accepts a From address belonging to the account.
+firefly_mail_from: "{{ vault_mailprovider_user }}"
+firefly_site_owner: "{{ vault_mailprovider_user }}"
+
+# Raise to `debug` only to recover a reset link from the container log when
+# SMTP itself is broken; see README.
 firefly_log_level: notice
