@@ -43,7 +43,7 @@ VANITY_URL=
 #
 # This variable can be set from a file if you append it with _FILE
 #
-FIREFLY_III_ACCESS_TOKEN=
+FIREFLY_III_ACCESS_TOKEN={{ vault_firefly_access_token }}
 
 #
 # You can also use a public client ID. This is available in Firefly III 5.4.0-alpha.3 and higher.
@@ -157,7 +157,7 @@ CAN_POST_FILES=false
 #
 # This variable can be set from a file if you append it with _FILE
 #
-IMPORT_DIR_ALLOWLIST=
+IMPORT_DIR_ALLOWLIST=/import
 
 #
 # If you import from a directory, you can save a fallback configuration file in the directory.
@@ -167,7 +167,7 @@ IMPORT_DIR_ALLOWLIST=
 # This fallback configuration will only be used if this variable is set to true.
 # https://docs.firefly-iii.org/how-to/data-importer/advanced/post/#importing-a-local-directory
 #
-FALLBACK_IN_DIR=false
+FALLBACK_IN_DIR=true
 
 #
 # When you're running Firefly III under a (self-signed) certificate,

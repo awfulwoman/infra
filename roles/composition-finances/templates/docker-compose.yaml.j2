@@ -78,6 +78,8 @@ services:
 {% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.firefly-importer.tls.certresolver=letsencrypt"
 {% endif %}
+    volumes:
+      - /slowpool/charlie/financial/csv:/import:ro
     networks:
       - "{{ default_docker_network }}"
     depends_on:
