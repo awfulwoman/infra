@@ -13,9 +13,9 @@
 - name: Set macOS hostnames
   become: true
   ansible.builtin.command:
-    cmd: "scutil --set {{ item.item }} {{ host_name }}"
+    cmd: "scutil --set {{ item.item }} {{ host_name_short }}"
   loop: "{{ _current_hostnames.results }}"
-  when: item.stdout != host_name
+  when: item.stdout != host_name_short
   changed_when: true
 
 - name: Env vars

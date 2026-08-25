@@ -111,7 +111,7 @@
 - name: Ensure hostname is correct
   become: true
   ansible.builtin.hostname:
-    name: "{{ host_name }}"
+    name: "{{ host_name_short }}"
 
 - name: Ensure 127.0.1.1 is correct
   become: true
