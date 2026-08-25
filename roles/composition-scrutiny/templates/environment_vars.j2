@@ -1,0 +1,5 @@
+TZ="Europe/Berlin"
+
+# Collector schedule. The omnibus entrypoint also runs one collection when
+# the container starts, so the dashboard populates without waiting for this.
+COLLECTOR_CRON_SCHEDULE="{{ composition_scrutiny_cron_schedule }}"

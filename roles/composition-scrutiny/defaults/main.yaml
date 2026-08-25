@@ -1,0 +1,34 @@
+---
+# Composition name (used by composition-common dependency)
+composition_name: scrutiny
+
+# Single label before {host} (hyphen, not dot) - a *.ewwww.eu wildcard cert
+# cannot cover a multi-level name like "scrutiny.<host>.ewwww.eu". See #271.
+# Scrutiny reports on one machine's physical drives, so the name is
+# host-scoped: several hosts can run it without colliding.
+composition_dns_subdomains:
+  - "scrutiny-{host}"
+
+composition_scrutiny_image: ghcr.io/analogj/scrutiny:master-omnibus
+composition_scrutiny_port: 8080
+
+# Collector schedule (cron). Upstream default is daily at midnight; the
+# omnibus entrypoint also runs one collection at container start.
+composition_scrutiny_cron_schedule: "0 0 * * *"
+
+# Which block devices to hand to the container. Every whole disk the kernel
+# knows about is monitored - matching on whole-disk names only excludes
+# partitions, loop devices, ZFS zvols (zd*) and device-mapper nodes, none of
+# which have SMART data.
+composition_scrutiny_device_pattern: '^(sd[a-z]+|hd[a-z]+|vd[a-z]+|nvme[0-9]+n[0-9]+)$'
+
+# smartctl scans NVMe via the controller character device (/dev/nvme0), not
+# the namespace block device (/dev/nvme0n1), so both are passed through.
+composition_scrutiny_devices: >-
+  {{ (
+       (ansible_facts['devices'].keys()
+         | select('match', composition_scrutiny_device_pattern) | list)
+       + (ansible_facts['devices'].keys()
+         | select('match', '^nvme[0-9]+n[0-9]+$')
+         | map('regex_replace', 'n[0-9]+$', '') | list)
+     ) | unique | map('regex_replace', '^', '/dev/') | sort }}

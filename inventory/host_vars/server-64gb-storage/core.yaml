@@ -225,6 +225,7 @@ cnames_additional:
 # -------------------------------------------------------------------
 compositions:
   - zfs-api
+  - scrutiny
   - victoriametrics
   - composition: loki
     state: absent

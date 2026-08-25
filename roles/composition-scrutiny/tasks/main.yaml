@@ -1,0 +1,63 @@
+# code: language=ansible
+
+- name: Assert that block devices were discovered
+  ansible.builtin.assert:
+    that:
+      - composition_scrutiny_devices | length > 0
+    fail_msg: "No SMART-capable block devices matched composition_scrutiny_device_pattern"
+    quiet: true
+
+- name: Show devices handed to Scrutiny
+  ansible.builtin.debug:
+    var: composition_scrutiny_devices
+
+# ----------------------------
+# Core tasks
+# ----------------------------
+
+- name: "Create compose file"
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ composition_root }}/docker-compose.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0644"
+
+- name: "Create .env file"
+  ansible.builtin.template:
+    src: environment_vars.j2
+    dest: "{{ composition_root }}/.environment_vars"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0644"
+
+# ----------------------------
+# Specific tasks
+# ----------------------------
+
+- name: Create directories
+  become: true
+  ansible.builtin.file:
+    path: "{{ composition_config }}/{{ dir_item }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0755"
+  loop_control:
+    loop_var: dir_item
+  loop:
+    - scrutiny
+    - influxdb
+
+# ----------------------------
+# Start composition
+# ----------------------------
+
+- name: Start Docker Compose project
+  community.docker.docker_compose_v2:
+    project_src: "{{ composition_root }}"
+    state: present
+    build: never
+    pull: always
+    remove_orphans: true
+  notify: Restart Traefik

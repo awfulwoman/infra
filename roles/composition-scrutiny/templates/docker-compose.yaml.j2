@@ -1,0 +1,44 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  scrutiny:
+    container_name: scrutiny
+    image: {{ composition_scrutiny_image }}
+    restart: unless-stopped
+    env_file: .environment_vars
+    # SYS_RAWIO lets smartctl issue ATA pass-through commands; SYS_ADMIN is
+    # additionally required for NVMe drives.
+    cap_add:
+      - SYS_RAWIO
+      - SYS_ADMIN
+    devices:
+{% for device_item in composition_scrutiny_devices %}
+      - "{{ device_item }}:{{ device_item }}"
+{% endfor %}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.scrutiny.rule=Host(`scrutiny-{{ host_name }}.{{ domainname_infra }}`)"
+      - "traefik.http.routers.scrutiny.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
+      - "traefik.http.routers.scrutiny.tls.certresolver=letsencrypt"
+{% endif %}
+      - "traefik.http.services.scrutiny.loadbalancer.server.port={{ composition_scrutiny_port }}"
+    volumes:
+      # Read-only udev access lets Scrutiny name drives by model/serial
+      # rather than by the kernel's sdX letters, which move between boots.
+      - /run/udev:/run/udev:ro
+      - "{{ composition_config }}/scrutiny:/opt/scrutiny/config"
+      - "{{ composition_config }}/influxdb:/opt/scrutiny/influxdb"
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/localhost/{{ composition_scrutiny_port }}'"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+networks:
+  "{{ default_docker_network }}":
+    external: true
