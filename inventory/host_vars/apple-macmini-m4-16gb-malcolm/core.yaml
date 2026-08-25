@@ -88,6 +88,7 @@ system_obsidian_headless_vaults:
 
 # -------------------------------------------------------------------
 # REPOS
+# Default repos that should be available to work on
 # -------------------------------------------------------------------
 system_repos:
   - repo: awfulwoman/infra
@@ -140,5 +141,4 @@ system_homebrew_formulae:
   - ffmpeg
   - macmon
   - wget
-  - gemini-cli
-  - tmux
+  - herdr
