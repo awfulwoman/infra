@@ -9,26 +9,25 @@ composition_name: scrutiny
 composition_dns_subdomains:
   - "scrutiny-{host}"
 
-composition_scrutiny_image: ghcr.io/analogj/scrutiny:master-omnibus
 composition_scrutiny_port: 8080
 
 # Collector schedule (cron). Upstream default is daily at midnight; the
 # omnibus entrypoint also runs one collection at container start.
 composition_scrutiny_cron_schedule: "0 0 * * *"
 
-# Which block devices to hand to the container. Every whole disk the kernel
-# knows about is monitored - matching on whole-disk names only excludes
-# partitions, loop devices, ZFS zvols (zd*) and device-mapper nodes, none of
-# which have SMART data.
-composition_scrutiny_device_pattern: '^(sd[a-z]+|hd[a-z]+|vd[a-z]+|nvme[0-9]+n[0-9]+)$'
+# Which block devices to hand to the container. Matching on whole-disk names
+# excludes partitions, loop devices, ZFS zvols (zd*) and device-mapper nodes,
+# none of which have SMART data. NVMe is deliberately absent from the pattern
+# - see the rotational filter below.
+composition_scrutiny_device_pattern: '^(sd[a-z]+|hd[a-z]+|vd[a-z]+)$'
 
-# smartctl scans NVMe via the controller character device (/dev/nvme0), not
-# the namespace block device (/dev/nvme0n1), so both are passed through.
+# Spinning disks only. rotational comes from /sys/block/<dev>/queue/rotational
+# and Ansible reports it as the string '1' (HDD) or '0' (SSD, NVMe, zvol), so
+# SSDs drop out here and NVMe never matches the pattern in the first place.
+# Override composition_scrutiny_devices outright to monitor something else.
 composition_scrutiny_devices: >-
-  {{ (
-       (ansible_facts['devices'].keys()
-         | select('match', composition_scrutiny_device_pattern) | list)
-       + (ansible_facts['devices'].keys()
-         | select('match', '^nvme[0-9]+n[0-9]+$')
-         | map('regex_replace', 'n[0-9]+$', '') | list)
-     ) | unique | map('regex_replace', '^', '/dev/') | sort }}
+  {{ ansible_facts['devices'] | dict2items
+     | selectattr('key', 'match', composition_scrutiny_device_pattern)
+     | selectattr('value.rotational', 'defined')
+     | selectattr('value.rotational', 'eq', '1')
+     | map(attribute='key') | map('regex_replace', '^', '/dev/') | sort }}

@@ -17,28 +17,48 @@ drives — several hosts can run the role without a label collision.
 
 ## Drive discovery
 
+**Spinning disks only.** SSDs and NVMe drives are deliberately excluded.
+
 `composition_scrutiny_devices` is derived from `ansible_facts['devices']` at
-run time, so every whole disk the kernel sees is monitored and the list stays
-correct when drives are added or removed. Partitions, loop devices, ZFS zvols
-(`zd*`) and device-mapper nodes are excluded — none of them carry SMART data.
+run time, so the list stays correct when drives are added or removed. Two
+filters apply:
 
-NVMe drives get two entries: the namespace block device (`/dev/nvme0n1`) and
-the controller character device (`/dev/nvme0`), because `smartctl --scan`
-queries the latter.
+1. `composition_scrutiny_device_pattern` matches whole-disk names, dropping
+   partitions, loop devices, ZFS zvols (`zd*`) and device-mapper nodes —
+   none of which carry SMART data. NVMe names are not in the pattern.
+2. `rotational` (from `/sys/block/<dev>/queue/rotational`) must be `1`, which
+   drops SATA SSDs.
 
-Override the pattern, or the list itself, in host_vars:
+Override the list outright in host_vars to monitor something else:
 
 ```yaml
-composition_scrutiny_device_pattern: '^(sd[a-z]+)$'   # SATA/SAS only
-# or pin it explicitly
 composition_scrutiny_devices:
   - /dev/sda
-  - /dev/sdb
+  - /dev/nvme0      # also needs SYS_ADMIN adding back, see below
+```
+
+### Removing a drive from the dashboard
+
+Scrutiny keeps a device once it has seen it, so dropping a drive from
+`composition_scrutiny_devices` stops new collection but leaves the old entry
+and its history on the dashboard. Deleting it is destructive and therefore
+deliberately not automated — do it by hand:
+
+```bash
+# list what Scrutiny currently knows about
+curl -s https://scrutiny-<host>.<domain>/api/summary \
+  | jq -r '.data.summary | to_entries[] | "\(.key) \(.value.device.device_name)"'
+
+# delete one by WWN
+curl -s -X DELETE https://scrutiny-<host>.<domain>/api/device/<wwn>
 ```
 
 ## Privileges
 
-`SYS_RAWIO` is needed for ATA pass-through commands, `SYS_ADMIN` for NVMe.
+`SYS_RAWIO` is needed for ATA pass-through commands. NVMe additionally needs
+`SYS_ADMIN`, which is not granted because no NVMe device is passed through —
+add it back if you override the device list to include one.
+
 `/run/udev` is mounted read-only so drives are labelled by model and serial
 instead of by kernel `sdX` letters, which move between boots.
 

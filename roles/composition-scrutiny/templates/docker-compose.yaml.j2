@@ -3,14 +3,14 @@ name: "{{ composition_name }}"
 services:
   scrutiny:
     container_name: scrutiny
-    image: {{ composition_scrutiny_image }}
+    image: ghcr.io/analogj/scrutiny:master-omnibus
     restart: unless-stopped
     env_file: .environment_vars
-    # SYS_RAWIO lets smartctl issue ATA pass-through commands; SYS_ADMIN is
-    # additionally required for NVMe drives.
+    # SYS_RAWIO lets smartctl issue ATA pass-through commands. NVMe would
+    # additionally need SYS_ADMIN, but only rotational disks are passed
+    # through - see composition_scrutiny_devices.
     cap_add:
       - SYS_RAWIO
-      - SYS_ADMIN
     devices:
 {% for device_item in composition_scrutiny_devices %}
       - "{{ device_item }}:{{ device_item }}"
