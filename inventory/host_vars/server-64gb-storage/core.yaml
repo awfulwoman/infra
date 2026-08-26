@@ -71,7 +71,7 @@ zfs:
       - type: mirror
         disks:
           - /dev/disk/by-id/scsi-SATA_ST16000NT001-3LV_ZR61CRHS
-          - /dev/disk/by-id/scsi-SATA_WDC_WD40EFZX-68A_WD-WX12DA08KR45
+          - /dev/disk/by-id/scsi-SATA_WDC_WD160EDGZ-11_3ZG3X08J
       - type: mirror
         disks:
           - /dev/disk/by-id/scsi-SATA_WDC_WD40EFZX-68A_WD-WX12DA0R1V78
