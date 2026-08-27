@@ -50,6 +50,7 @@ raspberry_pi_config_overrides:
   - "dtoverlay=cooling_fan"
   - "dtparam=pciex1"
   - "dtparam=pciex1_gen=3" # https://docs.radxa.com/en/accessories/storage/penta-sata-hat/penta-for-rpi5
+  - "dtoverlay=pcie-32bit-dma-pi5" # JMB585 AHCI probe fails (errno=-12) since a kernel regression forces 32bit DMA: https://github.com/raspberrypi/linux/issues/7375
 
 
 # -------------------------------------------------------------------
