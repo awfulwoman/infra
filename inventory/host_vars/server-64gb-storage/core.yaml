@@ -212,7 +212,7 @@ cnames_additional:
 #     wildcard cert can't cover a multi-level name.)
 #   - syncthing: the live cname predates the {host}-suffixed default.
 #   - uptime-kuma: only the UI was registered, never -api.
-#   - kiwix, mcp-openzim: their declared defaults were never registered here.
+#   - mcp-openzim: its declared default was never registered here.
 #   - nabu, jarvis: composition_dns_subdomains: [] on their own roles -
 #     neither name resolves via any mechanism today despite both having
 #     their own Traefik routing already templated (confirmed empirically
@@ -266,8 +266,7 @@ compositions:
   - searxng
   - mcp-searxng
   - mcp-weather
-  - composition: kiwix
-    labels: []
+  - kiwix
   - nabu
   - jarvis
   - open-webui
