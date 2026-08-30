@@ -1,0 +1,35 @@
+---
+# Path to the colima binary (Homebrew prefix differs by CPU).
+system_colima_bin: >-
+  {{
+    ('/opt/homebrew/bin' if ansible_facts['architecture'] == 'arm64'
+    else '/usr/local/bin') ~ '/colima'
+  }}
+
+# VM resources for the default Colima profile.
+system_colima_cpu: 4
+system_colima_memory: 8 # GiB
+system_colima_disk: 60 # GiB
+
+# VM backend. "vz" is Apple's native Virtualization.framework (macOS 13+),
+# lighter and faster than "qemu" on Apple Silicon.
+system_colima_vm_type: vz
+
+# Run x86_64 images on Apple Silicon via Rosetta 2. Only applies to vmType vz.
+system_colima_rosetta: true
+
+# Host mount protocol. "virtiofs" is the fastest and needs vz + macOS 13+.
+system_colima_mount_type: virtiofs
+
+# Expose the host CPU model to the guest.
+system_colima_cpu_type: host
+
+# Container runtime inside the VM.
+system_colima_runtime: docker
+
+# launchd label for the per-user LaunchAgent.
+system_colima_launchd_label: com.awfulwoman.colima
+
+# Write DOCKER_HOST into ~/.zshenv so the docker CLI and Ansible's
+# community.docker modules reach the Colima socket without an active context.
+system_colima_set_docker_host: true

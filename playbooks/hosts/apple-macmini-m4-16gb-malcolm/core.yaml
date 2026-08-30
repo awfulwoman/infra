@@ -25,6 +25,8 @@
     tags: [system, system-apple-contacts-server]
   - role: system-ollama
     tags: [system, system-ollama]
+  - role: system-colima
+    tags: [system, system-colima]
   - role: system-logtide-fluent-bit-macos
     tags: [system, system-logtide-fluent-bit-macos]
   - role: system-tts-chatterbox

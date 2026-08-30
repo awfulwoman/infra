@@ -132,6 +132,3 @@ system_homebrew_formulae:
   - macmon
   - wget
   - herdr
-  - docker
-  - docker-compose
-  - colima

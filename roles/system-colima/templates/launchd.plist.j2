@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>{{ system_colima_launchd_label }}</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>{{ system_colima_bin }}</string>
+        <string>start</string>
+        <string>--foreground</string>
+        <string>--cpu</string>
+        <string>{{ system_colima_cpu }}</string>
+        <string>--memory</string>
+        <string>{{ system_colima_memory }}</string>
+        <string>--disk</string>
+        <string>{{ system_colima_disk }}</string>
+        <string>--runtime</string>
+        <string>{{ system_colima_runtime }}</string>
+        <string>--vm-type</string>
+        <string>{{ system_colima_vm_type }}</string>
+        <string>--mount-type</string>
+        <string>{{ system_colima_mount_type }}</string>
+{% if system_colima_cpu_type %}
+        <string>--cpu-type</string>
+        <string>{{ system_colima_cpu_type }}</string>
+{% endif %}
+{% if system_colima_rosetta and system_colima_vm_type == 'vz' %}
+        <string>--vz-rosetta</string>
+{% endif %}
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <dict>
+        <key>SuccessfulExit</key>
+        <false/>
+    </dict>
+    <key>ThrottleInterval</key>
+    <integer>30</integer>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>{{ system_homebrew_bin | dirname }}:/usr/bin:/bin:/usr/sbin:/sbin</string>
+        <key>HOME</key>
+        <string>{{ ansible_facts.user_dir }}</string>
+    </dict>
+    <key>WorkingDirectory</key>
+    <string>{{ ansible_facts.user_dir }}</string>
+    <key>StandardOutPath</key>
+    <string>{{ ansible_facts.user_dir }}/.colima/launchd.log</string>
+    <key>StandardErrorPath</key>
+    <string>{{ ansible_facts.user_dir }}/.colima/launchd.log</string>
+</dict>
+</plist>

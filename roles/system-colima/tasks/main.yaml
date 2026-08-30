@@ -1,0 +1,87 @@
+---
+- name: Configure Colima
+  when: ansible_facts['os_family'] == 'Darwin'
+  block:
+    - name: Ensure Colima and the Docker client are installed via Homebrew
+      community.general.homebrew:
+        name:
+          - colima
+          - docker
+          - docker-compose
+        state: present
+        update_homebrew: true
+      register: _colima_brew
+
+    - name: Ensure the Colima state directory exists
+      ansible.builtin.file:
+        path: "{{ ansible_facts.user_dir }}/.colima"
+        state: directory
+        mode: "0755"
+
+    - name: Ensure the LaunchAgents directory exists
+      ansible.builtin.file:
+        path: "{{ ansible_facts.user_dir }}/Library/LaunchAgents"
+        state: directory
+        mode: "0755"
+
+    - name: Unload any Homebrew-managed Colima service
+      ansible.builtin.command: >-
+        launchctl unload
+        {{ ansible_facts.user_dir }}/Library/LaunchAgents/homebrew.mxcl.colima.plist
+      failed_when: false
+      changed_when: false
+
+    - name: Remove the Homebrew-managed Colima plist
+      ansible.builtin.file:
+        path: "{{ ansible_facts.user_dir }}/Library/LaunchAgents/homebrew.mxcl.colima.plist"
+        state: absent
+
+    - name: Deploy the Colima LaunchAgent
+      ansible.builtin.template:
+        src: launchd.plist.j2
+        dest: "{{ ansible_facts.user_dir }}/Library/LaunchAgents/{{ system_colima_launchd_label }}.plist"
+        mode: "0644"
+      register: _colima_plist
+
+    - name: Reload the Colima LaunchAgent on plist change or package upgrade # noqa: no-handler
+      when: >-
+        _colima_plist.changed
+        or 'colima' in (_colima_brew.changed_pkgs | default([]))
+      block:
+        - name: Unload the Colima LaunchAgent
+          ansible.builtin.command: >-
+            launchctl unload
+            {{ ansible_facts.user_dir }}/Library/LaunchAgents/{{ system_colima_launchd_label }}.plist
+          failed_when: false
+          changed_when: false
+
+        - name: Load the Colima LaunchAgent
+          ansible.builtin.command: >-
+            launchctl load
+            {{ ansible_facts.user_dir }}/Library/LaunchAgents/{{ system_colima_launchd_label }}.plist
+          register: _colima_launchctl_load
+          changed_when: _colima_launchctl_load.rc == 0
+          failed_when: false
+
+    - name: Point Docker clients at the Colima socket
+      ansible.builtin.blockinfile:
+        path: "{{ ansible_facts.user_dir }}/.zshenv"
+        marker: "# {mark} ANSIBLE MANAGED BLOCK: colima docker host"
+        block: |
+          export DOCKER_HOST="unix://{{ ansible_facts.user_dir }}/.colima/default/docker.sock"
+        create: true
+        mode: "0644"
+      when: system_colima_set_docker_host | bool
+
+    - name: Wait for the Colima Docker socket
+      ansible.builtin.wait_for:
+        path: "{{ ansible_facts.user_dir }}/.colima/default/docker.sock"
+        timeout: 180
+
+    - name: Confirm Colima is running
+      ansible.builtin.command: "{{ system_colima_bin }} status"
+      register: _colima_status
+      changed_when: false
+      failed_when: _colima_status.rc != 0
+      environment:
+        PATH: "{{ system_homebrew_bin | dirname }}:{{ ansible_facts['env']['PATH'] }}"
