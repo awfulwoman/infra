@@ -73,15 +73,28 @@
 
 - name: Set environment variables
   ansible.builtin.lineinfile:
-    path: "{{ ansible_facts.user_dir }}/{{ system_claude_profile_file }}"
-    line: "export {{ item }}"
+    path: "{{ ansible_facts.user_dir }}/{{ system_claude_env_file }}"
+    # Anchored on the variable name so changing a value rewrites its line
+    # instead of appending a second, conflicting export.
+    regexp: "^export {{ item.key }}="
+    line: "export {{ item.key }}={{ item.value }}"
     create: true
     mode: '0644'
-  loop:
-    - "ANTHROPIC_MODEL=claude-sonnet-5"
-    - "CLAUDE_CODE_ENABLE_PROMPT_SUGGESTION=false"
-    - "CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY=1"
-    - "CLAUDE_CONFIG_DIR={{ system_claude_settings_path }}"
+  loop: "{{ system_claude_environment | dict2items }}"
+  loop_control:
+    label: "{{ item.key }}"
+
+# .zshenv is sourced before .zshrc, so a stale export left in the interactive
+# profile would override the value just written and reintroduce the bug.
+- name: Remove Claude environment variables from the interactive profile
+  ansible.builtin.lineinfile:
+    path: "{{ ansible_facts.user_dir }}/{{ system_claude_profile_file }}"
+    regexp: "^export {{ item.key }}="
+    state: absent
+  loop: "{{ system_claude_environment | dict2items }}"
+  loop_control:
+    label: "{{ item.key }}"
+  when: system_claude_env_file != system_claude_profile_file
 
 # Allows scrolling in tmux
 - name: Enable tmux mouse mode
