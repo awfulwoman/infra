@@ -7,8 +7,10 @@ description: Use when deploying Ansible playbooks to hosts or groups, selecting
 - `core.yaml` (if present) is the default playbook for a host or group
 - Read the `name` key of a playbook to determine relevancy to the task at hand
 - Each host or group can have multiple task-specific playbooks
-- Deploy all roles of a certain type using a tag based on the relevant prefix (e.g. `compositions` for composition-* roles)
-- Each role has its name as a unique tag, allowing fine-grained deployment
+- Deploy all roles of a certain type using a tag based on the relevant prefix (e.g. `composition` for composition-* roles)
+- Roles listed statically in a playbook carry their own name as a tag, allowing fine-grained deployment
+- **Exception: most composition-* roles have no tag of their own** — see "Deploying a single composition" below
+- `aw-deploy repo <github-url>` prints the exact deploy command for whichever roles reference that repo, composition form included. Use it rather than guessing a tag.
 
 ## Execution
 
@@ -20,13 +22,38 @@ command -v aw-deploy >/dev/null 2>&1
 
 **If available**, use `aw-deploy run`:
 ```bash
-aw-deploy run <playbook> [--tags <tags>] [--limit <host>] [--check]
+aw-deploy run <playbook> [--tags <tags>] [--limit <host>] [--extra-vars KEY=VALUE] [--check]
 ```
+
+`aw-deploy run` accepts only those flags. It has no `-e` short form — `-e foo=bar` fails with `unrecognized arguments`. Use `--extra-vars foo=bar`, repeated once per variable.
 
 **If not available**, fall back to `ansible-playbook` directly:
 ```bash
 ansible-playbook <playbook> [--tags <tags>] [--limit <host>] [--check]
 ```
+
+## Deploying a single composition
+
+Most hosts deploy compositions data-driven: `system-compositions` loops over the host's
+`compositions:` list and `include_role`s each `composition-*` in turn. Those included roles
+inherit only the `composition` tag from the playbook entry — **there is no `composition-<name>`
+tag**. Target one composition with `target_composition` instead:
+
+```bash
+aw-deploy run playbooks/hosts/<host>/core.yaml --tags composition \
+  --extra-vars target_composition=<name>
+```
+
+`target_composition` also accepts a comma-separated list. It reads `compositions:` directly,
+so nothing has to be kept in sync by hand.
+
+A few composition roles *are* listed statically in a playbook (e.g. `composition-reverseproxy`
+and `composition-zfs-api` on albion and the zfs_backup groups) and do carry their own tag.
+Check the playbook before assuming which form applies.
+
+**`--tags composition-<name>` is not an error — it silently matches nothing.** The run exits 0
+with a recap of `ok=1 changed=0` and `Gathering Facts` as the only task. Always read the recap
+task count, not just the exit code.
 
 ## Running deploys
 
@@ -43,6 +70,16 @@ tail -f /path/to/output | grep --line-buffered -E "changed:|failed:|PLAY RECAP|f
 ```
 
 **Stop the Monitor** as soon as a terminal signal (`PLAY RECAP`, `fatal`, `ERROR`) is seen — the Monitor has no built-in stop condition and will tail indefinitely if not cancelled.
+
+**Expect no live progress from a short run.** The background output file has been observed
+sitting at 0 bytes for the whole of a multi-minute deploy, then filling in at once on exit —
+so the Monitor fires every event together with the recap at the end. aw-deploy's own run log
+at `~/.local/state/aw-deploy/runs/<timestamp>-<slug>.log` is worse: it is written without
+flushing, so it stays empty until the run finishes and is no use for tailing either.
+
+A silent tail is therefore **not** evidence of a stalled deploy, and an empty run log is not
+evidence of a failed one. Treat the completion notification as the signal, and SSH the host
+if you actually need to see what is happening mid-run.
 
 Use SSH to proactively check the host if progress stalls — don't wait for a timeout:
 ```bash
