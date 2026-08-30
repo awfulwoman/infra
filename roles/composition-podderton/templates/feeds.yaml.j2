@@ -1,0 +1,21 @@
+# Podderton configuration.
+# Docs: https://github.com/awfulwoman/podderton
+#
+# Ansible seeds this file once, then leaves it alone (force: false). Edit it
+# in place on the host at {{ composition_config }}/feeds.yaml and the running
+# containers pick up changes on their next heartbeat.
+
+# Base path inside the containers. Podderton writes episodes to
+# `subscriptions/` and generated RSS to `feeds/` under this directory.
+path: /podcasts
+
+subscribe:
+  interval: "30m"
+  feeds: []
+  # - name: Three Bean Salad
+  #   id: threebeansalad
+  #   url: https://example.com/feed.xml
+
+generate:
+  interval: "5m"
+  type: separate

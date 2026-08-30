@@ -1,0 +1,47 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  subscriber:
+    container_name: podderton-subscriber
+    image: "ghcr.io/awfulwoman/podderton:{{ composition_podderton_version }}"
+    restart: unless-stopped
+    command: ["python", "run_subscriber.py", "/config/feeds.yaml"]
+    env_file: .environment_vars
+    volumes:
+      - "{{ composition_config }}:/config:ro"
+      - "{{ composition_podderton_media_path }}:/podcasts"
+    networks:
+      - "{{ default_docker_network }}"
+
+  generator:
+    container_name: podderton-generator
+    image: "ghcr.io/awfulwoman/podderton:{{ composition_podderton_version }}"
+    restart: unless-stopped
+    command: ["python", "run_generator.py", "/config/feeds.yaml"]
+    env_file: .environment_vars
+    volumes:
+      - "{{ composition_config }}:/config:ro"
+      - "{{ composition_podderton_media_path }}:/podcasts"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.podderton.rule=Host(`podderton.{{ domainname_infra }}`)"
+      - "traefik.http.routers.podderton.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
+      - "traefik.http.routers.podderton.tls.certresolver=letsencrypt"
+{% endif %}
+      - "traefik.http.services.podderton.loadbalancer.server.port=9988"
+    networks:
+      - "{{ default_docker_network }}"
+    healthcheck:
+      # python:slim has no bash/wget/curl and dash lacks /dev/tcp, so probe the
+      # listening port with Python. A plain TCP connect (not an HTTP GET) keeps
+      # the check green even when the index page 500s on an empty feed list.
+      test: ["CMD", "python", "-c", "import socket; socket.create_connection(('localhost', 9988), 5).close()"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+networks:
+  "{{ default_docker_network }}":
+    external: true

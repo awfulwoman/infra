@@ -1,0 +1,11 @@
+# Composition name (used by composition-common dependency)
+composition_name: podderton
+
+composition_podderton_version: "latest"
+
+# Where downloaded episodes and generated feeds live. Podderton creates
+# `subscriptions/` and `feeds/` subdirectories under this path.
+composition_podderton_media_path: "{{ shared_media_path }}/podcasts"
+
+composition_dns_subdomains:
+  - podderton
