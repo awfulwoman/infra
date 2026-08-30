@@ -63,3 +63,10 @@ composition_gateway_reminders_server_bearer_token: "{{ vault_gateway_reminders_s
 
 # Same secret as the CLI token used on Malcolm — the server enforces it on /mcp.
 composition_gateway_server_auth_tokens: "{{ vault_gateway_mcp_token }}"
+
+# GitHub token for the Issues tool. Fetched from 1Password Connect at playbook
+# runtime rather than vaulted in the repo — it is a live GitHub PAT, and the
+# same approach as composition-finances keeps it out of git entirely.
+# Reference: op://Infra/Github/gateway_issues_token
+composition_gateway_github_item_id: 5edooob5a7kzxkuv5ttu5vdexu
+composition_gateway_github_token_field: gateway_issues_token

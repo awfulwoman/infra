@@ -17,6 +17,31 @@
     group: "{{ ansible_user }}"
     mode: "0644"
 
+# Fetched at runtime, never stored in the repo: this is a live GitHub PAT.
+# Delegated so the Connect token stays on the controller.
+- name: "Fetch GitHub token from 1Password"
+  ansible.builtin.uri:
+    url: >-
+      {{ onepassword_connect_host }}/v1/vaults/{{ onepassword_connect_vault_id
+      }}/items/{{ composition_gateway_github_item_id }}
+    headers:
+      Authorization: "Bearer {{ onepassword_connect_token }}"
+  delegate_to: localhost
+  register: composition_gateway_github_item
+  no_log: true
+
+- name: "Extract GitHub token"
+  ansible.builtin.set_fact:
+    composition_gateway_github_token: >-
+      {{ composition_gateway_github_fields
+         | selectattr('label', 'eq', composition_gateway_github_token_field)
+         | map(attribute='value') | first }}
+  vars:
+    # Not every field carries a label (notes, for one), and selectattr raises on
+    # the missing attribute rather than skipping it.
+    composition_gateway_github_fields: "{{ composition_gateway_github_item.json.fields | selectattr('label', 'defined') }}"
+  no_log: true
+
 - name: "Create .env file"
   ansible.builtin.template:
     src: environment_vars.j2
