@@ -33,6 +33,7 @@ point `composition_gateway_obsidian_vault_path` at its synced vault path.
 | `composition_gateway_imap_host/username/password` | mailbox.org + vault creds | IMAP account for the Email tool |
 | `composition_gateway_calendar_server_base_url` | Malcolm's infra-zone FQDN, port 4101 | apple-calendar-server backend for Calendar (see `system-apple-calendar-server`) |
 | `composition_gateway_calendar_server_bearer_token` | `vault_gateway_calendar_server_token` | Shared secret with `system-apple-calendar-server` |
+| `composition_gateway_github_repo` | `awfulwoman/meta` | Repo backing the issues tools (`GATEWAY_GITHUB__REPO`) |
 | `composition_gateway_github_item_id` | `5edooob5a7kzxkuv5ttu5vdexu` | 1Password item holding the GitHub PAT (`op://Infra/Github`) |
 | `composition_gateway_github_token_field` | `gateway_issues_token` | Field on that item read into `GATEWAY_GITHUB__TOKEN` |
 | `composition_gateway_karakeep_base_url/api_key` | karakeep subdomain + vault key | Karakeep bookmarking service |

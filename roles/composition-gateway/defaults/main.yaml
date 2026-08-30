@@ -70,3 +70,8 @@ composition_gateway_server_auth_tokens: "{{ vault_gateway_mcp_token }}"
 # Reference: op://Infra/Github/gateway_issues_token
 composition_gateway_github_item_id: 5edooob5a7kzxkuv5ttu5vdexu
 composition_gateway_github_token_field: gateway_issues_token
+
+# Repo the issues tools read and write. The app defaults to this same value, but
+# pin it here so the target is visible in the role rather than buried in the
+# image — changing repo is then a variable change, not an image change.
+composition_gateway_github_repo: awfulwoman/meta
