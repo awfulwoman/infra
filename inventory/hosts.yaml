@@ -17,6 +17,7 @@ all:
         router-4gb-bertha:
         server-8gb-backups:
         minipc-8gb-homebrain:
+        minipc-8gb-camina:
         apple-macmini-m4-16gb-malcolm:
         raspberry-pi4-2gb-pikvm:
         vps-hetzner-public01:
@@ -38,6 +39,7 @@ all:
         router-4gb-bertha:
         server-8gb-backups:
         minipc-8gb-homebrain:
+        minipc-8gb-camina:
         vps-hetzner-public01:
         server-64gb-storage:
         minipc-8gb-test-router:
@@ -84,6 +86,7 @@ all:
       hosts:
         server-64gb-storage:
         minipc-8gb-homebrain:
+        minipc-8gb-camina:
         server-8gb-backups:
         # raspberry-pi4-4gb-albion: # Has died
         vps-hetzner-public01:

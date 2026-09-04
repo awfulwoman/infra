@@ -1,0 +1,67 @@
+# -------------------------------------------------------------------
+# IDENTITY
+# -------------------------------------------------------------------
+host_type: baremetal
+host_name: minipc-8gb-camina
+host_name_medium: minipc-camina
+host_name_short: camina
+host_region: ber
+host_site: xberg
+host_pfqdn: "{{ host_name }}.{{ host_site }}.{{ host_region }}"
+host_fqdn: "{{ host_pfqdn }}.{{ domainname_infra }}"
+host_description: "Control node — Ansible controller and loopback-only 1Password Connect host"
+
+# -------------------------------------------------------------------
+# NETWORK
+# Hint: Use `network_netplan_config:` for more fine-grained control
+# Docs: roles/network-netplan/README.md
+# -------------------------------------------------------------------
+host_ipv4: 192.168.1.120
+host_primary_interface: "enp1s0"
+host_ipv4_subnet: 24
+host_tailscale_ipv4: 100.80.1.120
+host_mac: "TODO"  # NIC MAC — fill once the box is on the bench
+
+# -------------------------------------------------------------------
+# ANSIBLE
+# -------------------------------------------------------------------
+ansible_host: "{{ host_ipv4 }}"
+ansible_user: "{{ vault_server_username }}"
+ansible_become_password: "{{ vault_password }}"
+
+# -------------------------------------------------------------------
+# UBUNTUPRO
+# -------------------------------------------------------------------
+ubuntupro_attach: true
+
+# -------------------------------------------------------------------
+# ZFS
+# `fastpool` stripe on the internal SATA SSD. Naming the pool `fastpool`
+# keeps the `compositions_dataset` default resolving unchanged.
+# -------------------------------------------------------------------
+zfs:
+  fastpool:
+    vdevs:
+      - type: stripe
+        disks: /dev/disk/by-id/TODO  # internal SATA SSD — `ls -l /dev/disk/by-id/` on the box
+    datasets:
+      compositions:
+        state: present
+        policy: critical
+        snapshots_discover_children: true
+
+# -------------------------------------------------------------------
+# COMPOSITIONS
+# Loopback-only: Connect binds to 127.0.0.1:8080, so no Traefik provider,
+# no reverseproxy, and no DNS record (see the migration plan, Task 2 Step 4).
+# `labels: []` suppresses the role default `composition_dns_subdomains: [connect]`
+# so no CNAME is derived here — randolph still owns `connect` until its cutover.
+# -------------------------------------------------------------------
+compositions:
+  - composition: 1password-connect
+    labels: []
+
+# -------------------------------------------------------------------
+# ZFS POLICY
+# -------------------------------------------------------------------
+system_zfs_policy_healthchecksio_enabled: true
