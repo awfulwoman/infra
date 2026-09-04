@@ -33,6 +33,45 @@
     path: "/etc/apt/apt.conf.d/90-ansible-unattended-upgrades"
     state: absent
 
+# A wrong ansible_become_password here costs the last remote path to root
+# (the guard below refuses the change unless the password actually matches
+# the account, since become would otherwise silently stop working).
+- name: Make sure that mkpasswd is available for the become password check
+  become: true
+  ansible.builtin.apt:
+    name: whois
+    state: present
+  when: security_sudoers_passworded | length > 0
+
+- name: Compare the become password against the account password
+  become: true
+  ansible.builtin.shell:
+    cmd: |
+      set -eu
+      hash=$(awk -F: -v u="{{ item }}" '$1==u{print $2}' /etc/shadow)
+      case "$hash" in
+        '$6$rounds='*) echo UNSUPPORTED_ROUNDS; exit 1 ;;
+        '$6$'*) ;;
+        *) echo UNSUPPORTED_HASH; exit 1 ;;
+      esac
+      salt=$(printf '%s' "$hash" | cut -d'$' -f3)
+      [ "$(mkpasswd -m sha-512 -S "$salt" -s)" = "$hash" ] && echo MATCH || echo MISMATCH
+    stdin: "{{ ansible_become_password }}"
+  loop: "{{ security_sudoers_passworded }}"
+  register: become_password_check
+  changed_when: false
+  no_log: true
+  when: security_sudoers_passworded | length > 0
+
+- name: Refuse passworded sudo when the become password does not match
+  ansible.builtin.assert:
+    that: "become_password_check.results | map(attribute='stdout') | select('equalto', 'MATCH') | list | length == security_sudoers_passworded | length"
+    fail_msg: >-
+      ansible_become_password does not match the account password on this host.
+      Passworded sudo removes the last remote path to root. Correct
+      vault_password before you run this role again.
+  when: security_sudoers_passworded | length > 0
+
 - name: Add configured user accounts to passwordless sudoers
   become: true
   ansible.builtin.lineinfile:
