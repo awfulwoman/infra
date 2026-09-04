@@ -1,13 +1,16 @@
 # Client Cert Distribution
 
-Pulls the internal wildcard cert bundle from `server-cert-distribution` (on
-bertha), validates it, and installs it atomically. Does not wire the cert into
-any composition or Traefik config itself - that's for the host that consumes
-`client_cert_distribution_install_dir` to do (see #270/#271).
+Pulls the internal wildcard cert bundle from bertha's distribution directory
+over a delegated SSH read, validates it, and installs it atomically. Does not
+wire the cert into any composition or Traefik config itself - that's for the
+host that consumes `client_cert_distribution_install_dir` to do (see
+#270/#271).
 
 ## What it does
 
-1. Downloads the candidate fullchain + private key to `.new` files in
+1. Reads the candidate fullchain + private key from
+   `client_cert_distribution_source_dir` on `client_cert_distribution_source_host`
+   via a delegated `ansible.builtin.slurp`, and writes them to `.new` files in
    `client_cert_distribution_install_dir`.
 2. Validates the candidate: not expired, and the key is a real pair for the
    certificate (compares `public_key_fingerprints.sha256` from
@@ -23,9 +26,9 @@ any composition or Traefik config itself - that's for the host that consumes
 
 | Variable | Default | Description |
 |---|---|---|
-| `client_cert_distribution_server` | bertha's `host_tailscale_ipv4` | Where to pull the bundle from. |
-| `client_cert_distribution_port` | `8420` | Must match `server_cert_distribution_port`. |
-| `client_cert_distribution_bundle_name` | `*.{{ domainname_infra }}` | Filename stem the server publishes the bundle under. |
+| `client_cert_distribution_source_host` | `router-4gb-bertha` | Inventory host the bundle is read from, via delegated `slurp`. |
+| `client_cert_distribution_source_dir` | `/fastpool/acme/distribution` | Directory on the source host holding the bundle. |
+| `client_cert_distribution_bundle_name` | `*.{{ domainname_infra }}` | Filename stem the source host publishes the bundle under. |
 | `client_cert_distribution_install_dir` | `/etc/ssl/internal-wildcard` | Where the validated `fullchain.crt` / `privkey.key` land. |
 | `client_cert_distribution_healthcheck` | `true` | Set `false` to skip the Healthchecks.io ping. |
 | `client_cert_distribution_healthcheck_name` | `{{ inventory_hostname }} - Internal Wildcard Cert` | Name of the check in Healthchecks.io. |
@@ -38,7 +41,6 @@ any composition or Traefik config itself - that's for the host that consumes
   path alarms with weeks of lead time while the currently-installed cert is
   still perfectly valid - it does not wait until the cert is actually close
   to expiring.
-- No signature or transport-layer authentication beyond what Tailscale itself
-  provides (the server only binds to its Tailscale address) - see
-  `server-cert-distribution`'s README for the layered access control this
-  relies on.
+- The bundle moves over SSH (a delegated `slurp` from the controller), not
+  over an unauthenticated network service. Access control is therefore the
+  same SSH access the controller already needs to manage the source host.

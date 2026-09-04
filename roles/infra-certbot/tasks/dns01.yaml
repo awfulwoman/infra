@@ -21,8 +21,11 @@
     var: domain_challenge
   when: infra_certbot_debug
 
+# A recently-issued cert leaves a still-valid ACME authorization (LE caches
+# these ~30 days). A new order against it comes back changed, with no
+# challenge_data for this identifier, since no challenge needs answering.
 - name: Respond to DNS-01 challenge
-  when: domain_challenge.authorizations[dns01_domain_full].challenges[0].status == "pending"
+  when: domain_challenge is changed and dns01_domain_full in domain_challenge.challenge_data
   community.dns.hetzner_dns_record:
     state: present
     hetzner_api_token: "{{ vault_hetzner_api_key_rw }}"
@@ -43,8 +46,11 @@
     seconds: 30
   when: txt_response is defined and txt_response.changed
 
+# Must run whenever the order changed, not only when a challenge was
+# answered above - this call is what finalizes the order and downloads the
+# cert, even when the authorization was already valid.
 - name: Collect certificate order
-  when: domain_challenge.authorizations[dns01_domain_full].challenges[0].status == "pending"
+  when: domain_challenge is changed
   community.crypto.acme_certificate:
     validate_certs: true
     account_email: "{{ infra_certbot_email }}"
@@ -77,7 +83,7 @@
     prefix: "{{ domain_challenge.challenge_data[dns01_domain_full]['dns-01'].resource }}{{ '.' + dns01_domain_sub_no_wildcard if dns01_domain_sub_no_wildcard }}"
     value: "{{ domain_challenge.challenge_data[dns01_domain_full]['dns-01'].resource_value }}"
   register: txt_remove_response
-  when: txt_response is defined
+  when: txt_response is defined and txt_response.changed
 
 - name: Debug txt_remove_response
   ansible.builtin.debug:

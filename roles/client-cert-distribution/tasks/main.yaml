@@ -9,25 +9,32 @@
     group: root
     mode: "0700"
 
-- name: Download candidate fullchain
+- name: Read the candidate bundle from the certificate host
+  ansible.builtin.slurp:
+    src: "{{ client_cert_distribution_source_dir }}/{{ client_cert_distribution_bundle_name }}.{{ item }}"
+  delegate_to: "{{ client_cert_distribution_source_host }}"
+  loop: [fullchain.crt, key]
+  register: candidate_bundle
+  no_log: true
+
+- name: Write candidate fullchain
   become: true
-  ansible.builtin.get_url:
-    url: "http://{{ client_cert_distribution_server }}:{{ client_cert_distribution_port }}/{{ client_cert_distribution_bundle_name }}.fullchain.crt"
+  ansible.builtin.copy:
+    content: "{{ candidate_bundle.results[0].content | b64decode }}"
     dest: "{{ client_cert_distribution_install_dir }}/.fullchain.crt.new"
     owner: root
     group: root
     mode: "0644"
-    force: true
 
-- name: Download candidate private key
+- name: Write candidate private key
   become: true
-  ansible.builtin.get_url:
-    url: "http://{{ client_cert_distribution_server }}:{{ client_cert_distribution_port }}/{{ client_cert_distribution_bundle_name }}.key"
+  ansible.builtin.copy:
+    content: "{{ candidate_bundle.results[1].content | b64decode }}"
     dest: "{{ client_cert_distribution_install_dir }}/.key.new"
     owner: root
     group: root
     mode: "0600"
-    force: true
+  no_log: true
 
 - name: Read candidate certificate details
   become: true

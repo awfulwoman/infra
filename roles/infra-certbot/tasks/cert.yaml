@@ -11,7 +11,7 @@
 
 - name: Check for existing CSR private key
   ansible.builtin.stat:
-    path: "{{ infra_certbot_csr_private_key_filename }}/{{ infra_certbot_csr_private_key_filename }}"
+    path: "{{ infra_certbot_csr_private_key_dir }}/{{ infra_certbot_csr_private_key_filename }}"
   register: csr_key
 
 - name: Generate CSR private key if not present
