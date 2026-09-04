@@ -37,6 +37,7 @@
     components: main restricted universe multiverse
     signed_by: /usr/share/keyrings/ubuntu-archive-keyring.gpg
     state: present
+  register: ubuntu_repo
 
 - name: Ensure ubuntu-security apt repository is configured
   become: true
@@ -51,6 +52,7 @@
     components: main restricted universe multiverse
     signed_by: /usr/share/keyrings/ubuntu-archive-keyring.gpg
     state: present
+  register: ubuntu_security_repo
 
 - name: Ensure core apt packages are installed
   become: true
@@ -58,7 +60,11 @@
     name: "{{ bootstrap_ubuntu_apt_packages + bootstrap_ubuntu_apt_packages_extra }}"
     state: present
     update_cache: true
-    cache_valid_time: 3600  # Don't update if cache is less than 1 hour old
+    # Don't update if cache is less than 1 hour old — unless the repo tasks
+    # above just rewrote the sources file, in which case the existing cache
+    # is indexed against the OLD mirror (e.g. a geoip mirror from the OS
+    # installer) and must be refreshed before any package lookup is valid.
+    cache_valid_time: "{{ 0 if (ubuntu_repo.changed or ubuntu_security_repo.changed) else 3600 }}"
 
 # - name: Automation key updater (GitHub SSH keys)
 #   ansible.builtin.include_role:
