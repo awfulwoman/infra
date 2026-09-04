@@ -1,0 +1,68 @@
+# IPv6 firewall, mirroring the IPv4 hardening above. All ACCEPT rules are
+# added BEFORE the default-DROP policies, so the LAN management path and
+# neighbor discovery are never cut mid-apply. ICMPv6 must stay open — IPv6
+# uses it for neighbor discovery, and a DROP policy without it breaks the
+# link to every LAN device.
+- name: Allow IPv6 INPUT on loopback
+  become: true
+  ansible.builtin.iptables:
+    ip_version: ipv6
+    chain: INPUT
+    in_interface: lo
+    jump: ACCEPT
+  notify: Save iptables rules
+
+- name: Allow IPv6 INPUT established/related
+  become: true
+  ansible.builtin.iptables:
+    ip_version: ipv6
+    chain: INPUT
+    ctstate: ESTABLISHED,RELATED
+    jump: ACCEPT
+  notify: Save iptables rules
+
+- name: Allow IPv6 ICMP (neighbor discovery)
+  become: true
+  ansible.builtin.iptables:
+    ip_version: ipv6
+    chain: INPUT
+    protocol: icmpv6
+    jump: ACCEPT
+  notify: Save iptables rules
+
+- name: Allow IPv6 INPUT from Tailscale (out-of-band management backstop)
+  become: true
+  ansible.builtin.iptables:
+    ip_version: ipv6
+    chain: INPUT
+    in_interface: tailscale0
+    jump: ACCEPT
+  notify: Save iptables rules
+
+- name: Allow IPv6 INPUT SSH from LAN
+  become: true
+  ansible.builtin.iptables:
+    ip_version: ipv6
+    chain: INPUT
+    in_interface: "{{ lan_iface }}"
+    protocol: tcp
+    destination_port: "22"
+    jump: ACCEPT
+  notify: Save iptables rules
+
+# Policies LAST: by now every needed ACCEPT is in place.
+- name: Set IPv6 INPUT policy to DROP
+  become: true
+  ansible.builtin.iptables:
+    ip_version: ipv6
+    chain: INPUT
+    policy: DROP
+  notify: Save iptables rules
+
+- name: Set IPv6 FORWARD policy to DROP
+  become: true
+  ansible.builtin.iptables:
+    ip_version: ipv6
+    chain: FORWARD
+    policy: DROP
+  notify: Save iptables rules

@@ -56,6 +56,11 @@ lan_iface: enp1s0 # LAN - home side
 # from the LAN and Tailscale only. WAN cannot reach the router or initiate forwards.
 network_routing_firewall: true
 
+# Same hardening for IPv6. sshd listens on [::]:22, so without this it's
+# reachable over link-local IPv6 from the LAN even though the IPv4 chains
+# are locked down (#288).
+network_routing_firewall_v6: true
+
 # -------------------------------------------------------------------
 # DHCP SERVER (infra-dhcpd) — bertha is the LAN's DHCP server
 # -------------------------------------------------------------------

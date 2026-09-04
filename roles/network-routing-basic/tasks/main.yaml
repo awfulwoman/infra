@@ -17,6 +17,17 @@
     state: present
     reload: true
 
+# bertha does not route IPv6 - this makes that intent explicit rather than
+# relying on the kernel default (already 0 today, but no role stated it).
+- name: Hold IPv6 forwarding off
+  become: true
+  ansible.posix.sysctl:
+    name: net.ipv6.conf.all.forwarding
+    value: '0'
+    sysctl_set: true
+    state: present
+    reload: true
+
 - name: Install iptables-persistent
   become: true
   ansible.builtin.apt:
@@ -133,3 +144,8 @@
     policy: DROP
   notify: Save iptables rules
   when: network_routing_firewall
+
+- name: Filter IPv6
+  ansible.builtin.include_tasks:
+    file: firewall-v6.yaml
+  when: network_routing_firewall_v6

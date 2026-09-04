@@ -15,3 +15,7 @@ network_routing_firewall: false
 # TCP/UDP ports the router accepts on INPUT from the LAN when hardening is on.
 network_routing_input_tcp_ports: ["22", "53"] # SSH, DNS/tcp
 network_routing_input_udp_ports: ["53", "67"] # DNS/udp, DHCP server
+
+# IPv6 firewall. Separate from network_routing_firewall so the v4 ruleset can
+# be trusted in production before the v6 one is turned on.
+network_routing_firewall_v6: false
