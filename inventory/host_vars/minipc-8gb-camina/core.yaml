@@ -20,7 +20,7 @@ host_ipv4: 192.168.1.120
 host_primary_interface: "enp1s0"
 host_ipv4_subnet: 24
 host_tailscale_ipv4: 100.80.1.120
-host_mac: "TODO"  # NIC MAC — fill once the box is on the bench
+host_mac: "6c:2b:59:65:a8:53"
 
 # -------------------------------------------------------------------
 # ANSIBLE
@@ -35,20 +35,20 @@ ansible_become_password: "{{ vault_password }}"
 ubuntupro_attach: true
 
 # -------------------------------------------------------------------
-# ZFS
-# `fastpool` stripe on the internal SATA SSD. Naming the pool `fastpool`
-# keeps the `compositions_dataset` default resolving unchanged.
+# REPOS
+# Cloned so automation-infra and ansible-core have a local checkout to
+# run playbooks and install Galaxy dependencies from.
 # -------------------------------------------------------------------
-zfs:
-  fastpool:
-    vdevs:
-      - type: stripe
-        disks: /dev/disk/by-id/TODO  # internal SATA SSD — `ls -l /dev/disk/by-id/` on the box
-    datasets:
-      compositions:
-        state: present
-        policy: critical
-        snapshots_discover_children: true
+system_repos:
+  - repo: awfulwoman/infra
+
+# -------------------------------------------------------------------
+# ZFS
+# No dedicated ZFS pool: camina's only disk is the 64GB OS drive
+# (single-disk box, no separate internal SSD). composition-common
+# detects the missing `zfs` binary and falls back to plain directories
+# under /fastpool/compositions on the root filesystem, same as malcolm.
+# -------------------------------------------------------------------
 
 # -------------------------------------------------------------------
 # COMPOSITIONS
@@ -60,8 +60,3 @@ zfs:
 compositions:
   - composition: 1password-connect
     labels: []
-
-# -------------------------------------------------------------------
-# ZFS POLICY
-# -------------------------------------------------------------------
-system_zfs_policy_healthchecksio_enabled: true

@@ -76,7 +76,7 @@ ansible_log_file: "{{ ansible_log_path }}/ansible.log"
 ansible_vault_password_file: "{{ ansible_path }}/.vaultpassword"
 ansible_roles_path: "{{ ansible_path }}/galaxy/roles"
 ansible_collections_path: "{{ ansible_path }}/galaxy/collections"
-ansible_infra_dir: "/fastpool/repos/infra"
+ansible_infra_dir: "/fastpool/repos/awfulwoman/infra"
 
 # Python
 default_bin_path: /usr/local/bin

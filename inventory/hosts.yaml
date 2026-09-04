@@ -86,7 +86,6 @@ all:
       hosts:
         server-64gb-storage:
         minipc-8gb-homebrain:
-        minipc-8gb-camina:
         server-8gb-backups:
         # raspberry-pi4-4gb-albion: # Has died
         vps-hetzner-public01:
