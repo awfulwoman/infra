@@ -9,6 +9,17 @@
       {label, secret} entry — the service refuses to start with no tokens.
     quiet: true
 
+# composition-common creates the composition dataset root; this is the Maildir
+# subdirectory under it. Owned by ansible_user so the container (which runs as
+# that uid) and its mbsync subprocess can create per-account directories.
+- name: "Ensure the Maildir directory exists"
+  ansible.builtin.file:
+    path: "{{ composition_mail_archive_server_maildir_path }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0750"
+
 - name: "Assert account names are safe to use as directories/mbsync channels"
   ansible.builtin.assert:
     that: item.name is regex("^[a-z0-9][a-z0-9_-]*$")

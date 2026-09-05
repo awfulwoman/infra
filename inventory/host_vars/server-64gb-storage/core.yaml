@@ -158,6 +158,14 @@ system_zfs_policy_healthchecksio_enabled: true
 # credentials on this host, so a mismatch here would silently desync one
 # consumer from the other.
 #
+# The two run fully independently: system-emailbackup owns
+# /slowpool/charlie/email, the composition owns its Maildir inside its own
+# composition dataset (/fastpool/compositions/mail-archive-server/mail). They
+# must never share a Maildir or mbsync state — concurrent mbsync runs on one
+# state directory corrupt it — so the composition re-syncs from IMAP into an
+# empty directory rather than adopting the existing archive. No data migration
+# is involved.
+#
 # Still a single account by design — a second is deliberately deferred until
 # this one is proven end to end (see the mail-archive-server repo's own specs).
 #
@@ -175,12 +183,6 @@ emailbackup_accounts: "{{ charlie_email_accounts }}"
 emailbackup_sync_schedule: hourly
 emailbackup_healthchecksio_enabled: true
 
-# Not yet in `compositions:` below — held back deliberately until: the
-# mail-archive-server image exists at ghcr.io (repo isn't pushed to GitHub
-# yet), the account-directory migration has been run on this host's real
-# Maildir (roles/system-emailbackup/files/migrate-to-multi-account.sh), and
-# vault_gateway_mail_archive_server_token has been added to the vault. Adding
-# it to `compositions:` before then would fail on image pull.
 composition_mail_archive_server_imap_accounts: "{{ charlie_email_accounts }}"
 
 # -------------------------------------------------------------------
@@ -294,6 +296,7 @@ compositions:
   - libretranslate
   - n8n
   - memorybank
+  - mail-archive-server
   - gateway
   - paperless-ngx
   - vikunja

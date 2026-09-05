@@ -1,16 +1,23 @@
 # Composition name (used by composition-common dependency)
 composition_name: mail-archive-server
 
-# No composition_dns_subdomains: this is deliberately never exposed through
-# Traefik or a published port. It shares the compositions' Docker bridge network
-# with composition-gateway on the same host, and is reached at
+# Deliberately never exposed through Traefik or a published port. It shares the
+# compositions' Docker bridge network with composition-gateway on the same host,
+# and is reached at
 # http://mail-archive-server:{{ composition_mail_archive_server_port }} from
-# there — never given a route to the outside.
+# there — never given a route to the outside. The empty list is still required:
+# the dns_records filter looks this key up unconditionally and raises KeyError
+# if the role omits it (see roles/composition-logtide-agent/defaults/main.yaml).
+composition_dns_subdomains: []
 
-# The Maildir mbsync syncs into and this service indexes. Same dataset
-# system-emailbackup used — this composition takes over that data in place,
-# it does not create a new archive.
-composition_mail_archive_server_maildir_path: /slowpool/charlie/email
+# The Maildir mbsync syncs into and this service indexes. Owned by the
+# composition itself, inside its own dataset ({{ composition_root }}) — the
+# service owns its Maildir and mbsync state end to end, nothing else writes
+# there. Fully separate from system-emailbackup's /slowpool/charlie/email: the
+# two run independently and must never share a Maildir or mbsync state
+# (concurrent mbsync runs on one state directory corrupt it). Empty on first
+# deploy — the service re-syncs it from IMAP.
+composition_mail_archive_server_maildir_path: "{{ composition_root }}/mail"
 composition_mail_archive_server_port: 4103
 
 # List of {name, host, username, password, port?, patterns?} — see
