@@ -105,7 +105,7 @@ console after the swap.
    survives the change. A LAN rule that names the old NIC cannot cut the
    run.
 
-7. Make sure that the router works:
+7. Check that the router works:
 
    ```bash
    ssh bertha 'ip -br addr; ip route'   # LAN static, WAN lease, default route
@@ -132,10 +132,10 @@ Roles run in this order (each builds on the previous):
 
 ## NAT and forwarding
 
-`network-routing-basic` enables `net.ipv4.ip_forward` and MASQUERADEs
-outbound traffic on the WAN (`enp2s0`), so the `192.168.1.0/24` LAN reaches
-the internet through a single upstream address. FORWARD rules permit
-LAN→WAN and established/related return traffic.
+`network-routing-basic` enables `net.ipv4.ip_forward`. It also MASQUERADEs
+outbound traffic on the WAN (`enp2s0`). As a result, the `192.168.1.0/24`
+LAN reaches the internet through a single upstream address. FORWARD rules
+permit LAN→WAN and established/related return traffic.
 
 `iptables-persistent` makes iptables rules reboot-safe: every
 rule-modifying task notifies a single `Save iptables rules` handler, which
@@ -143,8 +143,9 @@ runs `netfilter-persistent save`.
 
 ## Firewall
 
-The `network_routing_firewall: true` setting turns hardening on. When it is
-enabled, INPUT and FORWARD default to **DROP**, with an allow-list for:
+The `network_routing_firewall: true` setting enables hardening. When
+hardening is active, INPUT and FORWARD default to **DROP**, with an
+allow-list for:
 
 - loopback and established/related traffic,
 - Tailscale (`tailscale0`) — the out-of-band management backstop,
@@ -176,13 +177,13 @@ the device did not connect.
 ## DNS
 
 `infra-named` (BIND9) is authoritative for the internal domain. It does
-split-horizon resolution with two views, selected on the source address of
-the query: a LAN client (`192.168.1.0/24`) gets the LAN address of a host,
-and a tailnet client (`100.64.0.0/10`) gets its Tailscale address. Bertha
+split-horizon resolution with two views, selected by the source address of
+the query. A LAN client (`192.168.1.0/24`) gets the LAN address of a host.
+A tailnet client (`100.64.0.0/10`) gets the host's Tailscale address. Bertha
 advertises itself as the sole nameserver (`dns01 → 192.168.1.1`). See
 [networking.md](networking.md) for the full resolution paths.
 
-BIND is deliberately kept off the WAN. `bind_listen_on` binds everywhere
+The configuration deliberately keeps BIND off the WAN. `bind_listen_on` binds everywhere
 *except* the WAN subnet (`!192.168.178.0/24; any;`), and `bind_listen_on_v6`
 is `none;`. The firewall already blocks WAN:53. This removes the listener
 too, as defence in depth.
@@ -255,7 +256,7 @@ Why this matters:
   advertisements. This interface accepted them by default. `accept-ra:
   false` refuses them now.
 
-A full dual-stack build was scoped, and deliberately deferred. It needs
+I scoped a full dual-stack build, then deliberately deferred it. It needs
 three things: DHCPv6-PD on the WAN through `dhcpcd`, RA/SLAAC to the LAN
 through `radvd`, and an `ip6tables` mirror of the v4 firewall. IPv6 has no
 NAT, so every LAN device becomes directly internet-addressable without a
@@ -284,7 +285,7 @@ run, so it cannot resurface.
 
 Corollary: any `netplan apply` on a router re-evaluates all files. It has
 the same blast radius as a routing change. **Treat even a one-line IPv6
-edit as a routing change, and stage it behind a rollback safety net.**
+edit as a routing change. Stage it behind a rollback safety net.**
 
 **Interface names are load-bearing in three places.** netplan, the
 persisted iptables rules, and the dhcpd defaults each hold the NIC names.

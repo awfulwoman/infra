@@ -1,16 +1,16 @@
 # MotionEye
 
-[MotionEye](https://github.com/motioneye-project/motioneye) is a web-based frontend for the `motion` daemon, providing a UI to manage IP cameras and USB cameras with motion detection, recording, and live streaming.
+[MotionEye](https://github.com/motioneye-project/motioneye) is a web-based frontend for the `motion` daemon. It gives you a UI to manage IP cameras and USB cameras, with motion detection, recording, and live streaming.
 
-The container runs as `privileged: true` to support USB camera access. An optional USB device path and ZFS pool drive ID can be configured per-host. If `composition_motioneye_zfsdriveid` is set, the role will create a ZFS pool named `fastpool` for storage.
+The container runs as `privileged: true` to allow USB camera access. You can configure an optional USB device path and ZFS pool drive ID per host. If `composition_motioneye_zfsdriveid` is set, the role creates a ZFS pool named `fastpool` for storage.
 
-The subdomain is host-scoped: `motioneye.<hostname>.<domain>` — this allows multiple MotionEye instances on different hosts.
+The subdomain is host-scoped: `motioneye.<hostname>.<domain>`. You can run multiple MotionEye instances on different hosts with this setup.
 
 ## Key variables
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `composition_motioneye_usbdevice` | `false` | USB device path to pass through (e.g. `/dev/video0`) |
+| `composition_motioneye_usbdevice` | `false` | USB device path to pass through (for example `/dev/video0`) |
 | `composition_motioneye_zfsdriveid` | `false` | ZFS drive ID to create a `fastpool` storage pool |
 
 ## Ports

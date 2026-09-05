@@ -1,12 +1,20 @@
 # System MOTD
 
-Customises the login message of the day on Ubuntu servers. Disables Canonical's advertising and help-text MOTD scripts, and installs a custom script that prints ZFS pool status on login.
+This role customizes the login message of the day (MOTD) on Ubuntu servers.
+It disables Canonical's advertising and help-text MOTD scripts, and installs
+a custom script that prints ZFS pool status at login.
 
 ## Design Notes
 
-Ubuntu ships several MOTD scripts under `/etc/update-motd.d/` that display news, help text, and ESM contract status — useful on workstations, noisy on servers. This role strips the execute bit from those scripts (preserving timestamps) rather than deleting them, which is cleaner for idempotency and makes it easy to re-enable manually if needed.
+Ubuntu ships several MOTD scripts under `/etc/update-motd.d/` that display
+news, help text, and ESM contract status. These are useful on workstations,
+but noisy on servers. This role strips the execute bit from those scripts,
+and preserves their timestamps, rather than deleting them. This keeps the
+role idempotent, and makes it easy to re-enable a script by hand later.
 
-The `99-zfspool` script is only useful on hosts with ZFS pools. It checks for the `zpool` binary before running, so it's safe to deploy even on non-ZFS hosts where it will silently no-op.
+The `99-zfspool` script is useful only on hosts with ZFS pools. It checks for
+the `zpool` binary before it runs, so the role can deploy it safely even on
+non-ZFS hosts, where it does nothing.
 
 ## Affected MOTD Scripts
 

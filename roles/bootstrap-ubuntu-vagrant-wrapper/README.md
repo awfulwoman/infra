@@ -1,15 +1,15 @@
 # Bootstrap Ubuntu Vagrant Wrapper
 
-A variant of `bootstrap-ubuntu-server` tailored for Vagrant-managed Ubuntu VMs used as local development and testing environments. It runs the same core bootstrap steps but with a lighter package set (no restic, smartmontools, direnv, mosh, or Ubuntu Pro) and adds Vagrant-specific conveniences.
+This role is a variant of `bootstrap-ubuntu-server` for Vagrant-managed Ubuntu VMs used as local development and testing environments. It runs the same core bootstrap steps, but with a lighter package set (no restic, smartmontools, direnv, mosh, or Ubuntu Pro), and adds Vagrant-specific conveniences.
 
 ## Differences from bootstrap-ubuntu-server
 
-- **No Tailscale** — Vagrant VMs are local-only and don't need to join the Tailscale network.
-- **No automation-key-updater** — Not needed for ephemeral VMs.
-- **SSH agent auto-start** — Adds a `keychain`-based SSH agent block to `.bashrc` so that keys loaded on first login persist across shells. Controlled by `bootstrap_ubuntu_ssh_agent_enable`.
-- **SSH config generation** — Writes `~/.ssh/config` entries for all hosts in the `infra` inventory group with `StrictHostKeyChecking no` and `UserKnownHostsFile /dev/null`, making it easy to SSH between VMs without host key prompts. Controlled by `bootstrap_ubuntu_ssh_config_enable`.
-- **Workspace auto-cd** — Optionally adds a `cd` line to `.bashrc` so the shell drops into a working directory on login (`bootstrap_ubuntu_workspace_path`).
-- **Debug output** — Prints hostname, FQDN, Ansible connection address, and default IP at the start of the run to aid troubleshooting in Vagrant environments where these can differ.
+- **No Tailscale** — Vagrant VMs are local-only and do not need to join the Tailscale network.
+- **No automation-key-updater** — Ephemeral VMs do not need this.
+- **SSH agent auto-start** — Adds a `keychain`-based SSH agent block to `.bashrc`, so that keys loaded on first login persist across shells. `bootstrap_ubuntu_ssh_agent_enable` controls this.
+- **SSH config generation** — Writes `~/.ssh/config` entries for all hosts in the `infra` inventory group, with `StrictHostKeyChecking no` and `UserKnownHostsFile /dev/null`. This lets you SSH between VMs without host key prompts. `bootstrap_ubuntu_ssh_config_enable` controls this.
+- **Workspace auto-cd** — Can add a `cd` line to `.bashrc`, so the shell moves into a working directory on login (`bootstrap_ubuntu_workspace_path`).
+- **Debug output** — Prints the hostname, FQDN, Ansible connection address, and default IP at the start of the run. This helps with troubleshooting in Vagrant environments, where these values can differ.
 
 ## Variables
 

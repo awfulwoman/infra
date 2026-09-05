@@ -1,28 +1,27 @@
 # Gateway
 
-Deploys the [`gateway`](https://github.com/awfulwoman/gateway) MCP server + reminders
+This role deploys the [`gateway`](https://github.com/awfulwoman/gateway) MCP server and reminders
 API as a Docker container, built and published to `ghcr.io/awfulwoman/gateway`.
 
-Serves two surfaces on one port (4000), fronted by a single Traefik router:
+It serves two surfaces on one port (4000), fronted by a single Traefik router:
 
-- `/mcp` — streamable-HTTP MCP for Claude Code / `chives` / the `gw` CLI, bearer-auth
-  via `composition_gateway_server_auth_tokens`.
-- `/v1/*` — the native reminders JSON-HTTP API for phone/iPad clients, auth via
+- `/mcp` — streamable-HTTP MCP for Claude Code, `chives`, and the `gw` CLI, with bearer auth
+  through `composition_gateway_server_auth_tokens`.
+- `/v1/*` — the native reminders JSON-HTTP API for phone and iPad clients, with auth through
   `composition_gateway_reminders_api_tokens`.
 
-Reminders, Calendar, and Contacts are backed by
 [`system-apple-reminders-server`](../system-apple-reminders-server),
 [`system-apple-calendar-server`](../system-apple-calendar-server), and
-[`system-apple-contacts-server`](../system-apple-contacts-server), all three
-running natively on **Malcolm**, a different host — EventKit/Contacts need a
-macOS GUI session for their permission grant, so none of these can move into the
-container. Gateway reaches all three over the infra zone that bertha serves, not the
-shared Docker network. Calendar replaces the previous Google Calendar OAuth backend;
-Contacts replaces the previous Radicale/CardDAV backend.
+[`system-apple-contacts-server`](../system-apple-contacts-server) back Reminders,
+Calendar, and Contacts. All three run natively on **Malcolm**, a different host,
+because EventKit and Contacts need a macOS GUI session for their permission grant. None
+of the three can move into the container. Gateway reaches all three over the infra zone
+that bertha serves, not the shared Docker network. Calendar replaces the previous
+Google Calendar OAuth backend. Contacts replaces the previous Radicale/CardDAV backend.
 
-Obsidian notes/issues tools read/write a vault bind-mounted from the host — this role
-does **not** sync that vault itself. Run
-[`system-obsidian-headless`](../system-obsidian-headless) on the same host first and
+The Obsidian notes and issues tools read and write a vault bind-mounted from the host.
+This role does **not** sync that vault. Run
+[`system-obsidian-headless`](../system-obsidian-headless) on the same host first, then
 point `composition_gateway_obsidian_vault_path` at its synced vault path.
 
 ## Key variables
@@ -48,10 +47,10 @@ point `composition_gateway_obsidian_vault_path` at its synced vault path.
 ## Secrets
 
 Most credentials come from Ansible Vault. The GitHub PAT for the Issues tool is the
-exception: it is fetched from 1Password Connect at playbook runtime
-(`op://Infra/Github/gateway_issues_token`) and never stored in the repo, the same
-approach as [`composition-finances`](../composition-finances). Rotating it in
-1Password and re-running the role is all that is needed.
+exception: the role fetches it from 1Password Connect at playbook run time
+(`op://Infra/Github/gateway_issues_token`) and never stores it in the repo, the same
+approach as [`composition-finances`](../composition-finances). To rotate it, change it
+in 1Password and run the role again.
 
 ## Volumes
 
@@ -59,8 +58,8 @@ approach as [`composition-finances`](../composition-finances). Rotating it in
 |------|---------|
 | `composition_gateway_obsidian_vault_path` (host) → `/vault` | Obsidian vault, read/write |
 
-Reminders, Calendar, and Contacts have no local volume here — they live in the real
-Reminders/Calendar/Contacts apps on Malcolm, fronted by their own sidecar services.
+Reminders, Calendar, and Contacts have no local volume here. They live in the real
+Reminders, Calendar, and Contacts apps on Malcolm, fronted by their own sidecar services.
 
 ## DNS
 

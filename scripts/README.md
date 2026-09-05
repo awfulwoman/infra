@@ -21,11 +21,11 @@ These two scripts prepare a machine for Ansible control, especially for ansible-
 * [Flush DNS cache on Mac](flush-dns-macos.sh) — flushes the macOS DNS cache, and cycles Tailscale to clear its cache too.
 * [Flush DNS cache on Ubuntu](flush-dns-ubuntu.sh) — restarts systemd-resolved to flush the DNS cache. Run with sudo.
 * [Snapshot domain resolution + TLS state](snapshot-domains.sh) — captures, per registered service name and from both a LAN and remote (public01) vantage, the CNAME chain, resolved IP, HTTPS status, and served cert subject/issuer/expiry. See [docs/snapshots/README.md](../docs/snapshots/README.md).
-* [Validate derived DNS records](validate-dns-records.sh) — fails fast, naming the composition and both hosts, if two hosts would claim the same DNS label. Runs entirely on localhost (no SSH); wired into pre-commit on any `inventory/` or `plugins/filters/dns_records.py` change.
+* [Validate derived DNS records](validate-dns-records.sh) — fails fast if two hosts claim the same DNS label, and names the composition and both hosts. It runs entirely on localhost, with no SSH. Pre-commit runs it on any change to `inventory/` or `plugins/filters/dns_records.py`.
 
 ## Logs
 
-* [Query Logtide](logtide.py) — reads log records from the Logtide API, resolving the API key and infra domain from Vault at run time. `--level` and `--service` filter server-side; `--grep`, `--since` and `--host` filter locally, because the API accepts but ignores its own `search` and time-range parameters. Also has `stats` and `services` subcommands.
+* [Query Logtide](logtide.py) — reads log records from the Logtide API. It resolves the API key and infra domain from Vault at run time. `--level` and `--service` filter on the server. `--grep`, `--since`, and `--host` filter locally, because the API accepts its own `search` and time-range parameters, but ignores them. This script also has `stats` and `services` subcommands.
 
 ## Docker
 

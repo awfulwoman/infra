@@ -7,7 +7,7 @@ Centralized time-series database for long-term storage and querying of ZFS metri
 This composition provides a VictoriaMetrics single-node deployment that scrapes
 ZFS metrics from all `zfs-api` instances across the infrastructure. It stores
 metrics long-term in a compressed format and provides both a web UI (vmui) and
-API for querying.
+an API to query them.
 
 **Key Features:**
 
@@ -33,5 +33,5 @@ API for querying.
 zfs-api endpoints → VictoriaMetrics scraper → Storage → vmui/API → Users
 ```
 
-VictoriaMetrics runs with integrated Prometheus-compatible scraper that polls
+VictoriaMetrics runs with an integrated Prometheus-compatible scraper that polls
 all configured zfs-api instances every 60 seconds.

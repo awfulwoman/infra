@@ -1,11 +1,11 @@
 # WiFi
 
-The home network's wireless access points are **not** managed by this
-repository. They're plain OpenWrt boxes, configured by hand, tracked in
-`inventory/hosts-unmanaged.yaml` (`unmanaged-ap-livingroom`,
-`unmanaged-ap-pantry`) with only `host_ipv4` set — no `host_mac`, no Ansible
-role, no config management. Diagnosing anything wireless means SSHing into
-the AP itself.
+This repository does **not** manage the home network's wireless access
+points. They are plain OpenWrt boxes, configured by hand. They are tracked
+in `inventory/hosts-unmanaged.yaml` (`unmanaged-ap-livingroom`,
+`unmanaged-ap-pantry`), with only `host_ipv4` set. They have no `host_mac`,
+no Ansible role, and no config management. To diagnose a wireless problem,
+connect by SSH to the AP itself.
 
 ## Living room coverage is split across two physical APs, by band
 
@@ -21,26 +21,29 @@ committed to this doc).
 ## Why the band split matters
 
 ESP32-based devices — the Home Assistant Voice PE and "Home Assistant Voice"
-satellites in particular — are **2.4 GHz-only**; they have no 5 GHz radio at
-all. Losing the 2.4 GHz-only AP is invisible from every other angle: the SSID
-is still up, phones and laptops (dual-band) reconnect to 5 GHz without
-noticing, `bertha` and the rest of the LAN look completely healthy. Only the
-2.4 GHz-only devices go dark.
+satellites in particular — are **2.4 GHz-only**. They have no 5 GHz radio at
+all. When the 2.4 GHz-only AP fails, nothing else shows a problem: the SSID
+stays up, dual-band phones and laptops reconnect to 5 GHz without any sign
+of trouble, and `bertha` and the rest of the LAN look completely healthy.
+Only the 2.4 GHz-only devices go dark.
 
-**Incident, 2026-07-25**: `unmanaged-ap-pantry` (`192.168.1.141`) lost power. All four voice
-assistants (`Voice PE Living Room`, `Voice PE Bedroom`,
+**Incident, 2026-07-25:** `unmanaged-ap-pantry` (`192.168.1.141`) lost power.
+All four voice assistants (`Voice PE Living Room`, `Voice PE Bedroom`,
 `Home Assistant Voice 096e3a`/Kitchen, and a fourth unit) went `unavailable`
-in Home Assistant simultaneously and stayed that way. The failure mode was
-easy to misdiagnose: `bertha`'s DHCP log showed **zero** DHCP activity from
-any of the four devices' MAC addresses the entire time — not a bad lease,
-not a config issue, just complete silence at layer 2 — because they weren't
-associating with anything, and nothing on the router/DHCP/DNS side could
-surface that. Confirmed by SSHing directly into `.140` and finding `radio1`'s
-AP interface disabled; power-cycling `.141` brought all four devices back
-within a minute; and rewired straight to their expected static leases (see
-[router.md § DHCP](router.md#dhcp)).
+in Home Assistant at the same time, and stayed unavailable.
 
-**Takeaway**: if a 2.4 GHz-only IoT device is unreachable but the WiFi
-network otherwise looks fine, check that the specific AP unit serving 2.4 GHz
-in that area is actually powered and broadcasting — don't assume "WiFi is up"
-covers both bands.
+The failure was hard to diagnose. `bertha`'s DHCP log showed zero DHCP
+activity from any of the four devices' MAC addresses during the whole
+incident. This was not a bad lease or a config error. It was complete
+silence at layer 2, because the devices were not associating with anything.
+Nothing on the router, DHCP, or DNS side could show this.
+
+I confirmed the cause by SSHing directly into `.140`, and found that
+`radio1`'s AP interface was disabled. Power-cycling `.141` brought all four
+devices back within a minute. I then rewired the devices straight to their
+expected static leases (see [router.md § DHCP](router.md#dhcp)).
+
+**Takeaway:** If a 2.4 GHz-only IoT device is unreachable, but the WiFi
+network otherwise looks fine, check that the AP serving 2.4 GHz in that area
+has power and is broadcasting. Do not assume that "WiFi is up" covers both
+bands.

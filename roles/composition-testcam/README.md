@@ -1,6 +1,6 @@
 # Guinea Cameras
 
-Deploys four [uStreamer](https://github.com/pikvm/ustreamer) instances to stream live video from four USB webcams pointed at the guinea pig enclosure. Each camera is mapped from a host `/dev/videoN` device into the container and exposed on its own port. The user is added to the `video` group to allow device access.
+Deploys four [uStreamer](https://github.com/pikvm/ustreamer) instances to stream live video from four USB webcams pointed at the guinea pig enclosure. Each camera is mapped from a host `/dev/videoN` device into the container and exposed on its own port. The role adds the user to the `video` group to allow device access.
 
 ## Streams
 
@@ -13,6 +13,6 @@ Deploys four [uStreamer](https://github.com/pikvm/ustreamer) instances to stream
 
 ## Integrations
 
-- **Traefik**: Containers expose labels for Traefik discovery; routing rules are expected to be configured via host_vars or a provider file
+- **Traefik**: Containers expose labels for Traefik discovery. Configure routing rules with host_vars or a provider file
 - **DNS**: Registers `guineacams` subdomain via `network-register-subdomain`
 - **Permissions**: Ansible adds `ansible_user` to the `video` and `docker` groups on the target host

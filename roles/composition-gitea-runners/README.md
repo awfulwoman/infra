@@ -1,8 +1,8 @@
 # Gitea Act Runners
 
-Deploys [Gitea Act Runner](https://gitea.com/gitea/act_runner) instances that execute Gitea Actions CI/CD jobs. Runners connect to the Gitea instance at `gitea.{{ domainname_infra }}` and run jobs inside Docker containers. Designed to be deployed on hosts separate from the Gitea server to distribute load.
+Deploys [Gitea Act Runner](https://gitea.com/gitea/act_runner) instances that execute Gitea Actions CI/CD jobs. Runners connect to the Gitea instance at `gitea.{{ domainname_infra }}` and run jobs inside Docker containers. You can deploy runners on hosts separate from the Gitea server to distribute the load.
 
-Currently one runner (`runner01`) is active; a second (`runner02`) is defined but commented out.
+One runner (`runner01`) is active now. A second (`runner02`) is defined but commented out.
 
 ## Key Variables
 
@@ -30,5 +30,5 @@ Currently one runner (`runner01`) is active; a second (`runner02`) is defined bu
 ## Notes
 
 - Runs privileged to support Docker-in-Docker if needed.
-- Job containers are placed on `{{ default_docker_network }}`.
-- Runner name is set to `{{ ansible_facts['hostname'] }}-runner01` for easy identification in the Gitea UI.
+- Job containers run on `{{ default_docker_network }}`.
+- The runner name is `{{ ansible_facts['hostname'] }}-runner01`, for easy identification in the Gitea UI.

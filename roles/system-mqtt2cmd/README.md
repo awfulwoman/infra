@@ -1,10 +1,14 @@
 # System MQTT2CMD
 
-Installs a lightweight MQTT-driven command executor. A bash script subscribes to a host-specific MQTT topic and executes system commands in response to received payloads. Runs as a persistent systemd service.
+This role installs a lightweight MQTT-driven command executor. A bash script
+subscribes to a host-specific MQTT topic, and runs system commands in
+response to the payloads it receives. The script runs as a persistent
+systemd service.
 
 ## Supported Commands
 
-Messages published to `<basetopic>/<hostname>` trigger the following actions:
+Messages published to `<basetopic>/<hostname>` trigger the following
+actions:
 
 | Payload | Action |
 |---|---|
@@ -21,14 +25,21 @@ Messages published to `<basetopic>/<hostname>` trigger the following actions:
 | Variable | Default | Description |
 |---|---|---|
 | `mqtt2cmd_broker` | `mqtt.<domainname_infra>` | MQTT broker hostname |
-| `mqtt2cmd_basetopic` | `servers` | Topic prefix; full topic is `<basetopic>/<hostname>` |
+| `mqtt2cmd_basetopic` | `servers` | Topic prefix. Full topic is `<basetopic>/<hostname>` |
 | `mqtt2cmd_executable` | `mqtt2cmd` | Script filename |
 | `mqtt2cmd_executable_path` | `/usr/local/sbin` | Deployment path for the script |
 
 ## Design Notes
 
-The script runs `mosquitto_sub` in an infinite outer loop so it automatically reconnects after broker disconnections or network drops (with a 10-second delay between reconnect attempts).
+The script runs `mosquitto_sub` in an infinite outer loop, so it reconnects
+automatically after a broker disconnection or network drop, with a
+10-second delay between attempts.
 
-Shutdown, suspend, reboot, and ansible-pull commands require privilege escalation. Rather than a broad sudoers grant, the role creates targeted passwordless sudo rules for only the specific binaries needed (`/usr/sbin/shutdown`, `/usr/bin/systemctl hibernate`, `/usr/sbin/reboot`). The ansible-pull command uses `runuser` which doesn't require sudo.
+Shutdown, suspend, reboot, and ansible-pull commands need privilege
+escalation. Rather than a broad sudoers grant, the role creates targeted
+passwordless sudo rules for only the specific binaries it needs
+(`/usr/sbin/shutdown`, `/usr/bin/systemctl hibernate`, `/usr/sbin/reboot`).
+The ansible-pull command uses `runuser`, which needs no sudo.
 
-The service uses `TERM=dumb` to prevent terminal control issues in a non-interactive systemd context.
+The service sets `TERM=dumb` to avoid terminal control issues in a
+non-interactive systemd context.

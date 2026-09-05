@@ -1,5 +1,9 @@
 # system-homebrew
 
-Installs [Homebrew](https://brew.sh/) on macOS (Apple Silicon and Intel) and Linux, then installs a list of formulae. Handles architecture-specific binary paths automatically. On Linux, installs build prerequisites via apt and configures `shellenv` in `~/.bashrc`.
+This role installs [Homebrew](https://brew.sh/) on macOS (Apple Silicon and
+Intel) and Linux, then installs a list of formulae. It handles
+architecture-specific binary paths automatically. On Linux, it installs
+build prerequisites through apt and configures `shellenv` in `~/.bashrc`.
 
-During installation a temporary passwordless sudo rule is added and unconditionally removed afterwards.
+During installation, the role adds a temporary passwordless sudo rule. It
+always removes the rule afterward.

@@ -1,14 +1,14 @@
 # Ubuntu cloud-init
 
-Writes a cloud-init seed to a FAT32 USB drive labeled `cidata`, for provisioning a fresh Ubuntu Server (x86/arm64) on first boot.
+Writes a cloud-init seed to a FAT32 USB drive labeled `cidata`, to provision a fresh Ubuntu Server (x86/arm64) on first boot.
 
 ## How it works
 
-Ubuntu Server's cloud-init `nocloud` datasource automatically reads `user-data` and `meta-data` from any mounted volume labeled `cidata`. Plug the USB in alongside the machine on first boot — cloud-init picks it up, configures the system, then ignores the USB on all subsequent boots (keyed on `instance-id` in `meta-data`).
+Ubuntu Server's cloud-init `nocloud` datasource automatically reads `user-data` and `meta-data` from any mounted volume labeled `cidata`. When you plug the USB in alongside the machine on first boot, cloud-init picks it up and configures the system. It then ignores the USB on later boots. This behavior is keyed on the `instance-id` value in `meta-data`.
 
 ## Preparing the USB drive
 
-Format a USB drive as FAT32 and label it `cidata`. On macOS:
+Format a USB drive as FAT32. Label it `cidata`. On macOS:
 
 ```bash
 diskutil eraseDisk FAT32 cidata /dev/diskN
@@ -54,4 +54,4 @@ ansible-playbook playbooks/utility/ubuntu-cloud-init.yaml \
   -e ubuntu_cloud_init_interface=enp3s0
 ```
 
-The interface name varies by hardware — common values are `eth0`, `enp3s0`, `ens18`. Check with `ip link` on the target before provisioning, or look up the NIC's predictable name from its PCI slot.
+The interface name varies by hardware. Common values are `eth0`, `enp3s0`, and `ens18`. Before you provision the target, check the interface name with `ip link`, or look up the NIC's predictable name from its PCI slot.

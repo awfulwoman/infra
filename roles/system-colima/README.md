@@ -1,16 +1,16 @@
 # system-colima
 
 Installs and configures [Colima](https://github.com/abiosoft/colima) as a
-background container runtime on macOS, giving the host a Docker daemon without
-Docker Desktop.
+background container runtime on macOS. This gives the host a Docker daemon
+without Docker Desktop.
 
 ## What it does
 
 - Installs `colima`, `docker` and `docker-compose` via Homebrew.
 - Removes any `brew services` (`homebrew.mxcl.colima`) LaunchAgent.
 - Deploys a per-user `launchd` LaunchAgent (`com.awfulwoman.colima`) that runs
-  `colima start --foreground` with the configured VM resources, so the VM comes
-  up at login and is restarted if it exits uncleanly.
+  `colima start --foreground` with the configured VM resources. The VM comes
+  up at login and restarts automatically if it exits uncleanly.
 - Writes `DOCKER_HOST` into `~/.zshenv` so the `docker` CLI and Ansible's
   `community.docker` modules reach the Colima socket without an active context.
 - Waits for `~/.colima/default/docker.sock` and confirms `colima status`.
@@ -36,11 +36,11 @@ See `defaults/main.yaml`:
 
 - The LaunchAgent runs at **login**, not boot. The host must auto-login for the
   VM to come up after a reboot.
-- VM config is driven entirely by the `colima start` flags in the plist, not by
-  `~/.colima/default/colima.yaml`; change a variable and re-run to apply it (the
-  plist change reloads the agent).
-- Ansible over SSH gets a bare `PATH`, so the plist sets `PATH` and `HOME`
-  explicitly for `colima`/`limactl`.
+- The `colima start` flags in the plist drive VM config entirely, not
+  `~/.colima/default/colima.yaml`. Change a variable and re-run the role to
+  apply it. The plist change reloads the agent.
+- Ansible over SSH gets a bare `PATH`. The plist sets `PATH` and `HOME`
+  explicitly for `colima` and `limactl`.
 
 ## Platforms
 

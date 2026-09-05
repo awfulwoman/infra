@@ -1,18 +1,18 @@
 # System Compositions
 
-Deploys every composition declared in a host's `compositions:` list. Default
-DNS labels are discovered directly from each `composition-*` role's own
-`defaults/main.yaml` (the `composition_dns_subdomains` var) via the
-`composition_dns_subdomains` lookup plugin (`plugins/lookup/`) — not a
+This role deploys every composition declared in a host's `compositions:`
+list. The `composition_dns_subdomains` lookup plugin (`plugins/lookup/`)
+reads default DNS labels directly from each `composition-*` role's own
+`defaults/main.yaml` (the `composition_dns_subdomains` var). There is no
 central registry.
 
 ## Purpose
 
-`roles:` entries can't loop, so a data-driven list of compositions can't be
-expressed as a static `- role: composition-X` line per service. This role is
-the loop, wrapped as an ordinary role so it can sit at its normal position in
-a host's `roles:` list — same as any other role, no `tasks:` block or
-reordering needed at the playbook level.
+`roles:` entries cannot loop, so a data-driven list of compositions cannot
+appear as a static `- role: composition-X` line per service. This role is the
+loop. It is wrapped as an ordinary role, so it sits at its normal position in
+a host's `roles:` list, the same as any other role. The playbook needs no
+`tasks:` block and no reordering.
 
 Each entry in `compositions:` is either a bare composition name (use its
 default DNS labels) or a dict `{composition: <name>, labels: [...]}` to
@@ -27,12 +27,12 @@ roles:
     tags: [composition]
 ```
 
-`tags:` only needs the coarse, role-level tag(s) — "run every composition on
-this host" (`composition`) plus any host-specific grouping tag (e.g. `zfs`,
-`ollama`). It's written out explicitly rather than derived from
-`compositions:` because Ansible resolves tags before per-host variables are
-loaded, so an inventory var (including `compositions` itself) is undefined
-at that point.
+`tags:` needs only the coarse, role-level tags: `composition` (run every
+composition on this host) plus any host-specific grouping tag, for example
+`zfs` or `ollama`. The playbook writes these tags explicitly rather than
+deriving them from `compositions:`. Ansible resolves tags before it loads
+per-host variables, so an inventory variable, including `compositions`
+itself, is undefined at that point.
 
 ### Redeploying one composition
 
@@ -44,11 +44,12 @@ ansible-playbook playbooks/hosts/server-64gb-storage/core.yaml \
   --tags composition -e target_composition=jellyfin
 ```
 
-An earlier version of this role's usage also carried a `composition-<name>`
-tag per entry (`composition-jellyfin`, `composition-gitea`, ...), one per
-host, kept in sync by hand — that's what `target_composition` replaces.
-It couldn't be done the other way around (each composition declaring its own
-tag, the way `composition_dns_subdomains` works) because role defaults
-aren't loaded early enough for tag templating when a role is included
-dynamically inside a loop, only when it's statically listed under `roles:`
-— confirmed empirically, not just documented here as an assumption.
+An earlier version of this usage also carried a `composition-<name>` tag per
+entry, for example `composition-jellyfin` or `composition-gitea`. Someone had
+to keep one tag per host in sync by hand. `target_composition` replaces this.
+
+The role cannot work the other way around, where each composition declares
+its own tag the way `composition_dns_subdomains` does. Role defaults do not
+load early enough for tag templating when a role is included dynamically
+inside a loop. They load early enough only when a role is listed statically
+under `roles:`. Testing confirmed this. It is not an assumption.

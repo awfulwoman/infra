@@ -1,28 +1,28 @@
 # Ansible Pull
 
-Configures a host to self-provision via `ansible-pull`, pulling the infrastructure repo and running its own playbook on a schedule. This is how hosts stay up to date without needing a remote controller to push changes to them.
+This role configures a host to self-provision through `ansible-pull`. The host pulls the infrastructure repo and runs its own playbook on a schedule. This is how hosts stay up to date without a remote controller that pushes changes to them.
 
 ## What it does
 
 1. Writes the Ansible vault password to `{{ ansiblepull_workdir }}/.vaultpassword`.
 2. Creates the working directory structure: `{{ ansiblepull_workdir }}/`, `galaxy/roles/`, `galaxy/collections/`, and the repo clone path.
-3. Clones the infra repo and, on first run (gated by a lockfile), installs all Galaxy roles and collections — with a long timeout because `ansible-galaxy` is slow.
-4. Sets up cron jobs to run `ansible-galaxy` role and collection installs daily at 05:15 and 05:30.
+3. Clones the infra repo. On the first run, a lockfile controls a one-time install of all Galaxy roles and collections, with a long timeout because `ansible-galaxy` is slow.
+4. Sets up cron jobs to run `ansible-galaxy` role and collection installs daily, at 05:15 and 05:30.
 5. Deploys pull scripts from templates and sets up a cron job to run `ansible-pull-full.sh` on the configured schedule.
-6. Optionally installs a systemd service (`ansible-pull-after-wake.service`) that re-runs the pull script after the host wakes from sleep or hibernate.
+6. Can install a systemd service, `ansible-pull-after-wake.service`, that runs the pull script again after the host wakes from sleep or hibernation.
 
 ## Pull Scripts
 
 Two scripts are deployed to `{{ ansiblepull_workdir }}/scripts/`:
 
-- **`ansible-pull-full.sh`** — Pulls the latest git state and runs `playbooks/{{ host_type }}/{{ host_name }}/{{ ansiblepull_playbook }}.yaml`. Used by the regular cron and wake-from-sleep service.
-- **`ansible-pull-compositions.sh`** — Runs only the `compositions.yaml` playbook without a git pull. Useful for quickly redeploying Docker Compose services.
+- **`ansible-pull-full.sh`** — Pulls the latest git state and runs `playbooks/{{ host_type }}/{{ host_name }}/{{ ansiblepull_playbook }}.yaml`. The regular cron and the wake-from-sleep service use this script.
+- **`ansible-pull-compositions.sh`** — Runs only the `compositions.yaml` playbook, without a git pull. Use this to redeploy Docker Compose services quickly.
 
-Both scripts use `flock`-based locking to prevent concurrent runs.
+Both scripts use `flock`-based locking to stop concurrent runs.
 
 ## First-Run Caveat
 
-The vault password and SSH credentials needed to clone a private repo must be present before `ansible-pull` can work autonomously. For a freshly imaged host this means the first run must be pushed from a remote controller — after that, the host is self-sufficient.
+The vault password and the SSH credentials to clone a private repo must be present before `ansible-pull` can work on its own. For a freshly imaged host, this means a remote controller must push the first run. After that, the host is self-sufficient.
 
 ## Variables
 
@@ -42,4 +42,4 @@ The vault password and SSH credentials needed to clone a private repo must be pr
 
 ## Dependencies
 
-Depends on `ansible-core` to ensure Ansible itself is installed before this role runs.
+This role depends on `ansible-core`, which installs Ansible itself before this role runs.

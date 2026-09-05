@@ -2,7 +2,7 @@
 
 Hardens Ubuntu server security by configuring unattended-upgrades, SSH, sudo access, and fail2ban in a single role.
 
-This role is applied to all Ubuntu bare-metal hosts as part of the bootstrap process. It is intentionally opinionated — password authentication and root login are disabled by default, and automatic reboots are scheduled at 03:00 for security updates.
+The bootstrap process applies this role to all Ubuntu bare-metal hosts. The role is intentionally opinionated. By default, it disables password authentication and root login. It also schedules automatic reboots at 03:00 for security updates.
 
 ## Key Variables
 
@@ -24,7 +24,7 @@ This role is applied to all Ubuntu bare-metal hosts as part of the bootstrap pro
 
 ## Design Notes
 
-- The `50unattended-upgrades` template is Ubuntu Pro-aware: if the host is attached to Ubuntu Pro (detected at runtime via `pro status`), ESM origins are automatically added to the allowed origins list. This requires `system-ubuntupro` to run before this role if ESM updates are desired.
-- A legacy file `/etc/apt/apt.conf.d/90-ansible-unattended-upgrades` is explicitly removed to clean up after an older role naming convention.
-- SSH config changes are validated with `sshd -T` before being applied, and trigger a handler to restart the SSH daemon.
-- Sudo entries are validated with `visudo -cf` before writing.
+- The `50unattended-upgrades` template is Ubuntu Pro-aware. If the host is attached to Ubuntu Pro (detected at runtime via `pro status`), the role adds ESM origins to the allowed origins list automatically. If you want ESM updates, run `system-ubuntupro` before this role.
+- The role removes a legacy file, `/etc/apt/apt.conf.d/90-ansible-unattended-upgrades`, to clean up after an older role-naming convention.
+- The role validates SSH configuration changes with `sshd -T` before it applies them. A handler then restarts the SSH daemon.
+- The role validates sudo entries with `visudo -cf` before it writes them.

@@ -1,19 +1,19 @@
 # Composition Common
 
-Common infrastructure setup for Docker Compose compositions.
+This role provides common infrastructure setup for Docker Compose compositions.
 
 ## Purpose
 
-This role provides shared setup tasks that all `composition-*` roles depend on. It ensures:
+This role provides shared setup tasks that every `composition-*` role depends on. It does four things:
 
-- The shared Docker bridge network exists
-- ZFS datasets are created for composition data
-- Directory ownership is correct
-- Composition paths are calculated
+- Makes sure that the shared Docker bridge network exists.
+- Creates ZFS datasets for composition data.
+- Sets correct directory ownership.
+- Calculates composition paths.
 
 ## Usage
 
-This role is **not** used directly in playbooks. Instead, it's declared as a dependency in each `composition-*` role's `meta/main.yaml`:
+Playbooks do not use this role directly. Instead, each `composition-*` role declares it as a dependency in its `meta/main.yaml`:
 
 ```yaml
 dependencies:
@@ -54,4 +54,4 @@ dependencies:
 
 ## Design Philosophy
 
-This role follows Ansible's dependency pattern, allowing each composition to be self-contained while sharing common infrastructure setup. It's idempotent and safe to run multiple times as different compositions call it.
+This role follows Ansible's dependency pattern. Each composition stays self-contained, while sharing common infrastructure setup. The role is idempotent, so it is safe to run multiple times as different compositions call it.

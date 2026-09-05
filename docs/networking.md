@@ -84,9 +84,9 @@ It is not a route into the home LAN.
 | MagicDNS | `apple-macmini-m4-16gb-malcolm.<tailnet>.ts.net` | Tailscale | Always the Tailscale address |
 | Service label | `jellyfin.<domain>` | bertha or Hetzner | CNAME onto the host's plain name |
 
-The plain name is the one that changes with the vantage of the client. Use
-a `ts.` name in a configuration file when the tailnet path is the one you
-want, whatever the client. Compositions do this today, so that a service on
+The plain name is the one that changes with the vantage of the client. When
+the tailnet path is the one you want, whatever the client, use a `ts.` name
+in a configuration file. Compositions do this today, so that a service on
 one host reaches a service on another without a hardcoded `100.x` address.
 
 ## Name resolution: three paths
@@ -105,15 +105,14 @@ IoT devices, the TV, guests. `infra-dhcpd` hands out bertha as the **only**
 resolver. Such a client therefore cannot fall through to a public resolver
 and bypass the internal zone or the ad blocking.
 
-Path 2 covers a phone on mobile data — and also **every managed host**,
-including the ones sitting on the LAN. This surprises people, so it is
-worth stating plainly:
+Path 2 covers a phone on mobile data, and also **every managed host**,
+including the ones sitting on the LAN. This surprises people.
 
 > A managed host does not use path 1. Tailscale claims the `~.` routing
-> domain on each enrolled host, so all of its DNS goes to `100.100.100.100`
-> and on to the tailnet's global nameserver, which is bertha. The query
-> arrives at bertha from the host's `100.x` address and matches the
-> `Tailscale` ACL.
+> domain on each enrolled host. As a result, all of its DNS goes to
+> `100.100.100.100`, then on to the tailnet's global nameserver, which is
+> bertha. The query arrives at bertha from the host's `100.x` address and
+> matches the `Tailscale` ACL.
 
 Confirm it on any managed host:
 
@@ -136,8 +135,8 @@ GET /api/v2/tailnet/-/dns/nameservers   →   {"dns": ["100.80.1.1"]}
 ```
 
 Path 3 is the fallback for a client that does not use bertha as its
-resolver. The public zone is deliberately populated with **Tailscale**
-addresses, not LAN addresses. See `plugins/filters/dns_records.py`, where
+resolver. The public zone deliberately uses **Tailscale** addresses, not
+LAN addresses. See `plugins/filters/dns_records.py`, where
 each host's public A record targets `tailscale_ipv4`. A public answer is
 therefore useless to an attacker and correct for the user, because only a
 tailnet member can route to `100.80.x.x`.
@@ -164,8 +163,8 @@ The ACL groups come from `bind_acl_groups` in `roles/infra-named/defaults/main.y
 The `Tailscale` ACL covers the whole CGNAT range `100.64.0.0/10`, not only
 the `100.80.0.0/16` block in use here.
 
-Each view gets its own zone file, rendered from the same template with a
-different address field:
+Ansible renders a separate zone file for each view, from the same template,
+using a different address field:
 
 | View | Zone file | `bind_zone_ip_field` |
 |------|-----------|----------------------|
@@ -176,8 +175,8 @@ Three consequences follow:
 
 - **Ad blocking applies to both views.** BIND requires that an RPZ zone
   named in a view's `response-policy` is a real zone inside that same
-  view. `in-view` does not satisfy this. The RPZ zone declarations are
-  therefore duplicated per view on purpose.
+  view. `in-view` does not satisfy this. The configuration therefore
+  duplicates the RPZ zone declarations per view, on purpose.
 - **DNAME aliases are shared.** Alias zones carry no host-specific
   address, so the `tailscale` view pulls them with `in-view "lan"`.
 - **The `tailscale` view serves no reverse zone.** A PTR query through
@@ -206,10 +205,10 @@ The tailnet is a separate path from the LAN and the WAN. A wrong LAN rule,
 a wrong NIC name, or a broken netplan file therefore cannot remove all
 management access.
 
-CAUTION: The backstop works only while `tailscaled` runs. A reboot into a
-broken network configuration, or a change that stops the Tailscale service,
-removes it. Stage routing changes and netplan changes behind a rollback
-safety net. Read the design traps in [router.md](router.md) first.
+CAUTION: If `tailscaled` stops, or a reboot loads a broken network
+configuration, this backstop stops working and you can lose management
+access. Stage routing and netplan changes behind a rollback safety net.
+Read the design traps in [router.md](router.md) first.
 
 ## How a host joins the tailnet
 

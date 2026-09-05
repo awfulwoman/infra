@@ -1,11 +1,11 @@
 # Client NFS
 
-Mounts remote NFS shares on a host. Supports both Ubuntu/Debian (via `nfs-common` and `/etc/fstab`) and macOS. Mount failures are non-fatal — the role logs a debug message and continues, which prevents a temporarily unreachable NFS server from blocking the rest of a playbook run.
+This role mounts remote NFS shares on a host. It supports Ubuntu/Debian, through `nfs-common` and `/etc/fstab`, and macOS. A mount failure does not stop the role. The role logs a debug message and continues, so a temporarily unreachable NFS server does not block the rest of a playbook run.
 
-## Platform Behaviour
+## Platform Behavior
 
-- **Ubuntu/Debian:** Installs `nfs-common`, then mounts each share with `ansible.posix.mount` using systemd-aware options (`_netdev`, `x-systemd.after=network-online.target`) so mounts are deferred until the network is available.
-- **macOS:** Mounts shares using macOS-compatible NFS options (`resvport,rw`). No package installation needed.
+- **Ubuntu/Debian:** Installs `nfs-common`, then mounts each share with `ansible.posix.mount`, using systemd-aware options (`_netdev`, `x-systemd.after=network-online.target`). This delays mounts until the network is available.
+- **macOS:** Mounts shares with macOS-compatible NFS options (`resvport,rw`). This needs no package installation.
 
 ## Variables
 
@@ -24,8 +24,8 @@ nfs_mounts:
 
 | Variable | Default | Description |
 |---|---|---|
-| `nfs_mounts` | *(undefined)* | List of NFS mounts; role is a no-op if not defined |
+| `nfs_mounts` | *(undefined)* | List of NFS mounts. The role does nothing if this is not defined. |
 | `nfsclient_mount_options` | `defaults,_netdev,x-systemd.after=network-online.target` | Default mount options for Linux |
 | `nfsclient_mount_options_macos` | `resvport,rw` | Default mount options for macOS |
 
-Per-mount `nfsclient_mount_options` overrides the role default for that entry only.
+A per-mount `nfsclient_mount_options` value overrides the role default, for that entry only.

@@ -2,7 +2,7 @@
 
 [Podderton](https://github.com/awfulwoman/podderton) grabs podcasts, stores the
 episodes locally, and generates custom RSS feeds. There is no web interface for
-settings — everything is driven by a single YAML file.
+settings. A single YAML file controls everything.
 
 ## Services
 
@@ -21,14 +21,14 @@ settings — everything is driven by a single YAML file.
 
 | Path | Purpose |
 |------|---------|
-| `{{ composition_config }}` | Mounted read-only at `/config`; holds `feeds.yaml` |
-| `{{ composition_podderton_media_path }}` | Mounted at `/podcasts`; Podderton creates `subscriptions/` and `feeds/` underneath |
+| `{{ composition_config }}` | Mounted read-only at `/config`. Holds `feeds.yaml` |
+| `{{ composition_podderton_media_path }}` | Mounted at `/podcasts`. Podderton creates `subscriptions/` and `feeds/` underneath |
 
 ## Configuration
 
 The role seeds `{{ composition_config }}/feeds.yaml` on first deploy only
-(`force: false`). Edit that file on the host to add feeds — the containers
-re-read it on their next heartbeat, no restart needed.
+(`force: false`). Edit that file on the host to add feeds. The containers
+re-read it on their next heartbeat, so a restart is not necessary.
 
 Minimal example:
 
@@ -41,7 +41,7 @@ subscribe:
       url: https://podcast.global.com/show/5234547/episodes/feed
 ```
 
-The default feed is then served at `https://podderton.{{ domainname_infra }}/feeds.xml`.
+The role then serves the default feed at `https://podderton.{{ domainname_infra }}/feeds.xml`.
 See the upstream README for custom feeds, filename formats, and schedule options.
 
 ## Integrations
@@ -50,9 +50,9 @@ See the upstream README for custom feeds, filename formats, and schedule options
 
 ## Notes
 
-The image is `python:3.12-slim` based — no `bash`, `wget`, or `curl` — so the
-generator healthcheck is a Python TCP connect to port `9988`. It deliberately
-does not do an HTTP GET: upstream `server.py` raises `UnboundLocalError` while
-rendering the index page when no feeds are configured, so `/` returns 500 until
-`feeds.yaml` has at least one feed. The subscriber has no listening port and
-therefore no healthcheck.
+The image is based on `python:3.12-slim`, which has no `bash`, `wget`, or
+`curl`. So the generator healthcheck uses a Python TCP connect to port `9988`.
+It deliberately does not do an HTTP GET. When it renders the index page with
+no feeds, upstream `server.py` raises `UnboundLocalError`. As a result, `/`
+returns 500 until `feeds.yaml` has at least one feed. The subscriber has no
+listening port and therefore no healthcheck.

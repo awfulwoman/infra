@@ -13,4 +13,4 @@ Configures global git settings for the Ansible user. Sets identity, pull behavio
 
 ## Design Notes
 
-All settings are applied at global scope (`~/.gitconfig` for the Ansible user). The email address is derived from a vaulted personal domain variable rather than being hardcoded, so it remains correct if the domain ever changes.
+The role applies all settings at global scope (`~/.gitconfig` for the Ansible user). The email address comes from a vaulted personal domain variable rather than a hardcoded value, so it stays correct if the domain changes.

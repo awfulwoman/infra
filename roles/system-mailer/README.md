@@ -1,3 +1,5 @@
 # System Mailer
 
-Stub role — no tasks implemented yet. Intended as a higher-level mail configuration role, likely to be built on top of [system-msmtp](../system-msmtp).
+This is a stub role. It has no tasks yet. It will likely become a
+higher-level mail configuration role, built on top of
+[system-msmtp](../system-msmtp).

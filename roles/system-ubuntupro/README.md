@@ -1,8 +1,8 @@
 # System Ubuntu Pro
 
-Attaches or detaches an Ubuntu host from an Ubuntu Pro subscription using the `pro` CLI.
+Attaches or detaches an Ubuntu host from an Ubuntu Pro subscription with the `pro` CLI.
 
-Ubuntu Pro provides access to extended security maintenance (ESM), kernel livepatch, and other security features beyond the standard Ubuntu support lifecycle. This role is idempotent: it checks the current attachment status before acting and only runs `pro attach` or `pro detach` when a state change is actually needed.
+Ubuntu Pro provides access to extended security maintenance (ESM), kernel livepatch, and other security features beyond the standard Ubuntu support lifecycle. This role is idempotent. It checks the current attachment status before it acts. It runs `pro attach` or `pro detach` only when the state must change.
 
 ## Key Variables
 
@@ -14,8 +14,8 @@ Ubuntu Pro provides access to extended security maintenance (ESM), kernel livepa
 
 ## Design Notes
 
-- `ubuntupro_attach: false` is the safe default to avoid accidentally attaching hosts that should not be enrolled.
-- The token is expected in `vault_ubuntupro_token` (Ansible Vault encrypted). The role takes no action if this variable is undefined.
-- Attachment status is read via `pro status --format json` at the start of every run so the role is fully idempotent.
-- The `system-security` role reads the attachment status set by this role to conditionally include ESM origins in the unattended-upgrades configuration — run this role before `system-security` if ESM updates are required.
-- Requires Linux (enforced via `ansible-assert-platform` dependency in `meta/main.yaml`).
+- `ubuntupro_attach: false` is the safe default. It avoids the accidental attachment of hosts that you do not want to enroll.
+- The role expects the token in `vault_ubuntupro_token` (encrypted in Ansible Vault). If this variable is undefined, the role takes no action.
+- The role reads the attachment status with `pro status --format json` at the start of every run. This keeps the role fully idempotent.
+- The `system-security` role reads the attachment status that this role sets, to decide whether to include ESM origins in the unattended-upgrades configuration. If you want ESM updates, run this role before `system-security`.
+- This role requires Linux (enforced by the `ansible-assert-platform` dependency in `meta/main.yaml`).

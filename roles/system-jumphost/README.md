@@ -12,7 +12,7 @@ Configures a host as an Ansible jumphost/control plane.
 - Configures SSH client config (`~/.ssh/config`) with entries for all hosts
   in the `infra` inventory group
 - Sets username to `awful` for all infrastructure hosts
-- Disables strict host key checking for convenience (infra hosts accessed via Tailscale)
+- Disables strict host key checking for convenience, since Tailscale reaches the infra hosts
 
 ## Usage
 

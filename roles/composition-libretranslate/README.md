@@ -1,8 +1,8 @@
 # LibreTranslate
 
-[LibreTranslate](https://libretranslate.com) is a free and open-source machine translation API, providing a self-hosted alternative to Google Translate or DeepL. It supports multiple languages and exposes a REST API and web UI.
+[LibreTranslate](https://libretranslate.com) is a free and open-source machine translation API. It gives a self-hosted alternative to Google Translate or DeepL. It supports multiple languages and exposes a REST API and web UI.
 
-The role clones the LibreTranslate source from GitHub and builds the Docker image locally from `{{ composition_config }}/src`. Translation language models are stored in `{{ composition_config }}/models` (mapped to `/home/libretranslate/.local`). A `post_start` hook fixes ownership of the model and API key directories after container start.
+The role clones the LibreTranslate source from GitHub and builds the Docker image locally from `{{ composition_config }}/src`. The role stores translation language models in `{{ composition_config }}/models` (mapped to `/home/libretranslate/.local`). A `post_start` hook fixes ownership of the model and API key directories after container start.
 
 ## Ports
 

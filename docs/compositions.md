@@ -1,8 +1,8 @@
 # Composition Roles
 
-Composition roles are Ansible roles that deploy Docker Compose applications. Each role follows the naming convention `composition-<name>` and encapsulates everything needed to run a containerised service: the Docker Compose file (templated with Jinja2), environment variables, and any supporting configuration.
+Composition roles are Ansible roles that deploy Docker Compose applications. Each role follows the naming convention `composition-<name>`. Each role holds everything needed to run a containerised service: the Docker Compose file (templated with Jinja2), environment variables, and any supporting configuration.
 
-This approach treats applications as declarative infrastructure. Rather than manually creating compose files on servers, Ansible renders them from templates using host-specific variables, ensuring consistency and reproducibility across the environment.
+This approach treats applications as declarative infrastructure. Ansible renders compose files from templates using host-specific variables, instead of an administrator creating them on servers by hand. This keeps the environment consistent and reproducible.
 
 ## Available Compositions
 
@@ -22,7 +22,7 @@ The home automation stack centres on Home Assistant, with supporting services fo
 
 ### Media & Entertainment
 
-A self-hosted media ecosystem covering photo management, video streaming, and automated content acquisition.
+A self-hosted media ecosystem for photo management, video streaming, and automated content acquisition.
 
 | Role                      | Description                                               |
 | ------------------------- | --------------------------------------------------------- |

@@ -289,7 +289,7 @@ rate(zfs_pool_allocated_bytes[7d]) * 86400
 All endpoints perform read-only operations. The API cannot modify ZFS pools, datasets, or snapshots.
 
 **Network Access:**
-The API is exposed via Traefik reverse proxy and is only accessible within your Tailscale network.
+Traefik reverse proxy exposes the API. It is accessible only within your Tailscale network.
 
 **Container Privileges:**
 The container requires privileged mode to access `/dev/zfs`. This is necessary for ZFS commands but limited to read operations.

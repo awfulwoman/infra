@@ -1,14 +1,14 @@
 # Raspberry Pi Hardware
 
-Configures Raspberry Pi-specific hardware interfaces and boot settings. Supports both Raspbian (`/boot/config.txt`) and Ubuntu on Pi (`/boot/firmware/usercfg.txt`) by making the boot config path configurable.
+This role configures Raspberry Pi hardware interfaces and boot settings. It works with both Raspbian (`/boot/config.txt`) and Ubuntu on Pi (`/boot/firmware/usercfg.txt`), because the boot config path is a variable.
 
 The role manages:
 
-- **WiFi / Bluetooth**: Enabled or disabled via `dtoverlay` entries in the boot config.
-- **Undervoltage warnings**: Suppresses pemmican brownout warnings when powering via a HAT or non-standard supply.
-- **I2C / SPI**: Toggled via `raspi-config nonint` so state is read before applying changes (idempotent).
-- **OLED stats display**: Installs Python dependencies (`python3-luma.oled`, `python3-rpi.gpio`, `python3-pil`, `i2c-tools`) and a stats script when both `raspberry_pi_i2c` and `raspberry_pi_oled` are true.
-- **Boot config overrides**: Arbitrary lines can be appended to the boot config via `raspberry_pi_config_overrides`.
+- **WiFi / Bluetooth**: The role enables or disables these through `dtoverlay` entries in the boot config.
+- **Undervoltage warnings**: The role hides pemmican brownout warnings when you power the Pi from a HAT or a non-standard supply.
+- **I2C / SPI**: The role toggles these through `raspi-config nonint`. It reads the current state before it applies changes, so the task is idempotent.
+- **OLED stats display**: When both `raspberry_pi_i2c` and `raspberry_pi_oled` are true, the role installs Python dependencies (`python3-luma.oled`, `python3-rpi.gpio`, `python3-pil`, `i2c-tools`) and a stats script.
+- **Boot config overrides**: You can append extra lines to the boot config through `raspberry_pi_config_overrides`.
 
 ## Variables
 
@@ -25,6 +25,6 @@ The role manages:
 
 ## Notes
 
-- `raspi-config nonint` uses `0` for enabled and `1` for disabled — the inverse of boolean intuition. The role accounts for this.
-- WiFi/Bluetooth disable is implemented by adding a `dtoverlay=disable-*` line; enabling removes that line. This avoids leaving conflicting entries.
-- The OLED stats script (`oled-stats.py`) is an Adafruit SSD1306 example that displays IP, CPU load, memory, and disk usage on a 128×32 I2C display.
+- `raspi-config nonint` uses `0` for enabled and `1` for disabled. This is the opposite of what you expect from a boolean. The role handles this difference for you.
+- To disable WiFi or Bluetooth, the role adds a `dtoverlay=disable-*` line. To enable it, the role removes that line. This stops conflicting entries from building up.
+- The OLED stats script (`oled-stats.py`) is an Adafruit SSD1306 example. It shows IP address, CPU load, memory, and disk usage on a 128×32 I2C display.

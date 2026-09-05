@@ -1,17 +1,17 @@
 # automation-key-updater
 
-Fetches SSH public keys from a GitHub user account and keeps them updated via cron.
+This role fetches SSH public keys from a GitHub user account and keeps them updated through cron.
 
 ## Purpose
 
-Provides disaster recovery for SSH access by automatically synchronizing SSH keys from GitHub. If you lose local SSH keys, you can still access machines as long as you can push new keys to your GitHub account.
+This role gives disaster recovery for SSH access. It syncs SSH keys from GitHub on a schedule. If you lose local SSH keys, you can still access machines, as long as you can push new keys to your GitHub account.
 
 ## Features
 
-- Fetches public keys from `https://github.com/<username>.keys`
-- Runs immediately on deployment
-- Schedules daily updates via cron (default: 3:15 AM)
-- Uses markers to safely manage GitHub keys without affecting other authorized_keys entries
+- Fetches public keys from `https://github.com/<username>.keys`.
+- Runs immediately on deployment.
+- Schedules daily updates through cron, at 3:15 AM by default.
+- Uses markers to manage GitHub keys safely, without changes to other authorized_keys entries.
 
 ## Configuration
 
@@ -29,10 +29,10 @@ automation_key_updater_cron_minute: "15"
 
 ## Implementation
 
-- Installs script to `/usr/local/bin/update-automation-keys`
-- Creates cron job running as root
-- Keys are marked with `# BEGIN/END GITHUB KEYS` comments
-- Previous GitHub keys are replaced on each run
+- Installs the script to `/usr/local/bin/update-automation-keys`.
+- Creates a cron job that runs as root.
+- Marks keys with `# BEGIN/END GITHUB KEYS` comments.
+- Replaces the previous GitHub keys on each run.
 
 ## Related
 

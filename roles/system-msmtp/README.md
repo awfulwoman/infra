@@ -1,10 +1,15 @@
 # System MSMTP
 
-Configures [msmtp](https://marlam.de/msmtp/) as a lightweight mail transfer agent for outbound email. Installs `msmtp` and `msmtp-mta` (which provides a sendmail-compatible interface), then deploys a system-wide configuration for SMTP relay.
+This role configures [msmtp](https://marlam.de/msmtp/) as a lightweight mail
+transfer agent for outbound email. It installs `msmtp` and `msmtp-mta`,
+which provides a sendmail-compatible interface, then deploys a system-wide
+configuration for the SMTP relay.
 
 ## Configuration
 
-The configuration at `/etc/msmtprc` is deployed from a Jinja2 template and sets up a single account (`mbox`) using STARTTLS on port 587. Credentials are sourced from Ansible Vault variables:
+The role deploys the configuration at `/etc/msmtprc` from a Jinja2 template.
+It sets up a single account (`mbox`) that uses STARTTLS on port 587.
+Credentials come from Ansible Vault variables:
 
 | Vault Variable | Purpose |
 |---|---|
@@ -14,6 +19,10 @@ The configuration at `/etc/msmtprc` is deployed from a Jinja2 template and sets 
 
 ## Design Notes
 
-`msmtp-mta` installs a sendmail-compatible wrapper, meaning any tool that calls `/usr/sbin/sendmail` (e.g. cron, system mailers) will route mail through msmtp without additional configuration. TLS is enforced and the system CA bundle is used for certificate verification.
+`msmtp-mta` installs a sendmail-compatible wrapper. Any tool that calls
+`/usr/sbin/sendmail`, for example cron or other system mailers, routes mail
+through msmtp with no extra configuration. The role enforces TLS, and uses
+the system CA bundle for certificate verification.
 
-The config file is owned by the Ansible user rather than root, which allows user-level mail delivery without elevated privileges.
+The Ansible user, not root, owns the config file. This allows user-level
+mail delivery without elevated privileges.

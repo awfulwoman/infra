@@ -4,18 +4,18 @@ Policy-driven ZFS snapshot management using systemd timers.
 
 ## Overview
 
-This role configures automated ZFS snapshots based on dataset policy levels, integrating with the existing `zfs` host variable structure.
+This role configures automated ZFS snapshots, based on dataset policy levels. It integrates with the existing `zfs` host variable structure.
 
 ## Requirements
 
-- The `zfs` variable must be defined in host_vars
-- The `system-zfs` role should be applied first to create pools and datasets
+- You must define the `zfs` variable in host_vars
+- Apply the `system-zfs` role first, to create pools and datasets
 
 ## How It Works
 
 ### Policy System
 
-Datasets are assigned an `policy` level which determines their snapshot schedule:
+Each dataset gets a `policy` level, which determines its snapshot schedule:
 
 | Policy     | Hourly | Daily | Monthly | Yearly | Description            |
 | ---------- | ------ | ----- | ------- | ------ | ---------------------- |
@@ -43,7 +43,7 @@ zfs:
 
 #### Policy Inheritance (`children_inherit_policy`)
 
-Parent datasets can pass their policy to declared children, reducing configuration duplication:
+Parent datasets can pass their policy to declared children. This reduces duplication in configuration:
 
 ```yaml
 zfs:
@@ -59,11 +59,11 @@ zfs:
             policy: none  # Override with explicit value
 ```
 
-**Use case:** Docker Compose parent datasets where most containers share the same backup policy, with occasional exceptions.
+**Use case:** Use this for Docker Compose parent datasets, where most containers share the same backup policy but a few need exceptions.
 
 #### Runtime Child Discovery (`snapshots_discover_children`)
 
-Automatically discover and snapshot child datasets created outside of Ansible (e.g., Docker volumes):
+This automatically discovers and snapshots child datasets created outside Ansible (for example, Docker volumes):
 
 ```yaml
 zfs:
@@ -74,7 +74,7 @@ zfs:
         snapshots_discover_children: true  # Snapshots all Docker-created children
 ```
 
-When `snapshots_discover_children: true`, the snapshot scripts query ZFS at runtime to find all child datasets and apply the parent's policy policy to them. This is essential for Docker environments where volume datasets are created dynamically.
+When `snapshots_discover_children: true`, the snapshot scripts query ZFS at runtime to find all child datasets and apply the parent's policy to them. This is essential for Docker environments where volume datasets are created dynamically.
 
 **Observing discoveries:**
 ```bash
@@ -125,20 +125,20 @@ autosnap_YYYY-MM-DD_HH:MM:SS_yearly
 
 ### Scripts
 
-Located in `/opt/zfs-policy/`:
+Find the scripts in `/opt/zfs-policy/`:
 
 - `zfs-snapshot` - Creates snapshots for datasets based on policy
-- `zfs-prune` - Removes old snapshots exceeding retention limits
+- `zfs-prune` - Removes old snapshots that exceed the retention limit
 
 ### Systemd Units
 
-Services and timers are installed to `/etc/systemd/system/`.
+The role installs services and timers to `/etc/systemd/system/`.
 
 ## Manual Usage
 
 Both scripts support manual execution with debug and dry-run modes.
 
-**Note:** Root privileges are required for actual snapshot operations. Use `sudo` or `--dry-run`:
+**Note:** Actual snapshot operations need root privileges. You can use `sudo`, or use `--dry-run` to avoid needing them:
 
 ```bash
 # Preview what snapshots would be created (no sudo needed)
@@ -159,7 +159,7 @@ journalctl -u zfs-snapshot-hourly --since "1 hour ago"
 
 ## Role Variables
 
-All variables are defined in `defaults/main.yaml`:
+Find all variables in `defaults/main.yaml`:
 
 | Variable | Default | Description |
 |----------|---------|-------------|
@@ -177,4 +177,4 @@ All variables are defined in `defaults/main.yaml`:
 
 This role handles local snapshots only. The `backups-zfs-client` and `backups-zfs-server` roles handle replication of snapshots to the backup infrastructure.
 
-The snapshot naming convention is compatible with the backup scripts, which rely on snapshots being present for incremental sends.
+The snapshot naming convention works with the backup scripts. These scripts need the snapshots to exist for incremental sends.

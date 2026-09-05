@@ -6,6 +6,6 @@ Privacy-focused AI answering engine that combines internet knowledge with local 
 
 ## Configuration
 
-Ollama and model selection are configured through the web UI on first launch.
+You configure Ollama and model selection through the web UI on first launch.
 
-The default Ollama API URL is `{{ llm_default_ollama_base_url }}` (Malcolm) and can be overridden via the `vane_ollama_api_url` variable.
+The default Ollama API URL is `{{ llm_default_ollama_base_url }}` (Malcolm). You can override it with the `vane_ollama_api_url` variable.

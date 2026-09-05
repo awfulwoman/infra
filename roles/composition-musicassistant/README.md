@@ -1,8 +1,8 @@
 # Music Assistant
 
-[Music Assistant](https://music-assistant.io) is a self-hosted music library manager and streaming server that integrates with a wide range of music sources (Spotify, YouTube Music, local files, etc.) and players (Sonos, Chromecast, AirPlay, etc.). It provides a modern web UI and integrates with Home Assistant.
+[Music Assistant](https://music-assistant.io) is a self-hosted music library manager and streaming server. It works with many music sources (for example Spotify, YouTube Music, and local files) and players (for example Sonos, Chromecast, and AirPlay). It provides a modern web UI and integrates with Home Assistant.
 
-The container runs with `network_mode: host` — this is required for Music Assistant to correctly discover and communicate with players on the local network. It is also given `SYS_ADMIN` and `DAC_READ_SEARCH` capabilities with `apparmor:unconfined` to support mounting SMB shares within the container for library access.
+The container runs with `network_mode: host`. Music Assistant needs this setting to discover and talk to players on the local network. The container also has `SYS_ADMIN` and `DAC_READ_SEARCH` capabilities with `apparmor:unconfined`, so it can mount SMB shares for library access.
 
 The music library is mounted from `/slowpool/shared/media/music`.
 

@@ -1,10 +1,19 @@
 # System Docker
 
-Installs and configures Docker CE from the official Docker repository on Debian or Ubuntu hosts. Handles the full installation lifecycle: adds the appropriate apt repository for the detected distro and architecture, installs Docker CE with the Compose plugin, adds the Ansible user to the `docker` group, and deploys daemon and service configuration.
+This role installs and configures Docker CE from the official Docker
+repository, on Debian or Ubuntu hosts. It adds the correct apt repository for
+the detected distro and architecture. It installs Docker CE with the Compose
+plugin. It adds the Ansible user to the `docker` group. It also deploys the
+daemon and service configuration.
 
 ## Configuration
 
-The daemon is configured to listen on both the Unix socket (`/var/run/docker.sock`) and TCP port 2375 (`daemon.json`). A systemd override (`docker.service.d/override.conf`) ensures Docker reads from the config file rather than relying on inline flags — this is necessary because Docker's own service unit sets `ExecStart` flags that conflict with the daemon config file.
+The role configures the daemon to listen on both the Unix socket
+(`/var/run/docker.sock`) and TCP port 2375, through `daemon.json`. A systemd
+override (`docker.service.d/override.conf`) makes sure that Docker reads from
+the config file instead of the inline flags. This override is necessary
+because Docker's own service unit sets `ExecStart` flags that conflict with
+the daemon config file.
 
 ## Key Variables
 
@@ -14,6 +23,10 @@ The daemon is configured to listen on both the Unix socket (`/var/run/docker.soc
 
 ## Design Notes
 
-TCP socket exposure is intentional for remote Docker API access over Tailscale. The `docker_port_open` flag is a host-level opt-in — most hosts don't need the port open in UFW, but hosts that do (e.g. those accessed by Portainer or remote tooling) can enable it.
+TCP socket exposure is intentional. It allows remote Docker API access over
+Tailscale. The `docker_port_open` flag is a host-level opt-in. Most hosts do
+not need the port open in UFW. Hosts that Portainer or other remote tools
+access can enable it.
 
-Architecture detection handles both `x86_64` → `amd64` and `aarch64` → `arm64` mappings for the apt repo.
+Architecture detection maps `x86_64` to `amd64` and `aarch64` to `arm64` for
+the apt repo.

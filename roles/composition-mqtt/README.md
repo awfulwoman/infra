@@ -1,6 +1,6 @@
 # MQTT (Mosquitto)
 
-Deploys [Eclipse Mosquitto](https://mosquitto.org), a lightweight MQTT message broker. MQTT is used as the messaging backbone for home automation — Home Assistant, OwnTracks, ESPHome devices, and `linux2mqtt` agents all publish and subscribe through this broker.
+Deploys [Eclipse Mosquitto](https://mosquitto.org), a lightweight MQTT message broker. Home Assistant, OwnTracks, ESPHome devices, and `linux2mqtt` agents publish and subscribe through this broker as the messaging backbone for home automation.
 
 The broker is configured with both a standard TCP listener on port `1883` and a WebSocket listener on port `9001`. Anonymous access is enabled. Persistence is on, with data stored at `/mosquitto/data/` and logs at `/mosquitto/log/`.
 
@@ -21,7 +21,7 @@ The broker is configured with both a standard TCP listener on port `1883` and a 
 
 ## Integrations
 
-- **Home Assistant**: Subscribes for device telemetry and publishes commands (e.g., server suspend via `servers/<hostname>` topic)
+- **Home Assistant**: Subscribes for device telemetry and publishes commands (for example, server suspend via `servers/<hostname>` topic)
 - **OwnTracks**: Publishes location data on `owntracks/#` topic
 - **linux2mqtt**: Publishes host system metrics
 - **ESPHome**: Device telemetry

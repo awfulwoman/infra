@@ -2,7 +2,7 @@
 
 [Jellyfin](https://jellyfin.org) is a free and open-source media server for streaming films, TV shows, music, and photos. It provides a web interface, mobile apps, and smart TV clients, and handles transcoding, metadata fetching, and user management.
 
-Media is served from the shared media path (`{{ shared_media_path }}`), which should be set per-host (typically an NFS or ZFS share).
+The role serves media from the shared media path (`{{ shared_media_path }}`). Set this path per host — typically an NFS or ZFS share.
 
 ## Ports
 

@@ -1,5 +1,5 @@
 # Ansible Playbooks
 
-Ansible is amazing and I won't hear a bad word said against it.
+Ansible is excellent, and I will not hear a word against it.
 
-Every tried reinstalling software on multiple Raspberry Pis at once? No? Then desist your whining.
+Have you ever tried to reinstall software on multiple Raspberry Pis at the same time? If not, stop complaining.

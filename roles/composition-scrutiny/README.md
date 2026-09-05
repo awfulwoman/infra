@@ -23,9 +23,9 @@ drives — several hosts can run the role without a label collision.
 run time, so the list stays correct when drives are added or removed. Two
 filters apply:
 
-1. `composition_scrutiny_device_pattern` matches whole-disk names, dropping
-   partitions, loop devices, ZFS zvols (`zd*`) and device-mapper nodes —
-   none of which carry SMART data. NVMe names are not in the pattern.
+1. `composition_scrutiny_device_pattern` matches whole-disk names. It drops
+   partitions, loop devices, ZFS zvols (`zd*`), and device-mapper nodes, none
+   of which carry SMART data. NVMe names are not in the pattern.
 2. `rotational` (from `/sys/block/<dev>/queue/rotational`) must be `1`, which
    drops SATA SSDs.
 
@@ -39,10 +39,10 @@ composition_scrutiny_devices:
 
 ### Removing a drive from the dashboard
 
-Scrutiny keeps a device once it has seen it, so dropping a drive from
-`composition_scrutiny_devices` stops new collection but leaves the old entry
-and its history on the dashboard. Deleting it is destructive and therefore
-deliberately not automated — do it by hand:
+Once Scrutiny detects a device, it keeps a record of that device. If you drop
+a drive from `composition_scrutiny_devices`, this stops new collection but
+leaves the old entry and its history on the dashboard. Deletion is
+destructive, so the role does not automate it. Delete entries by hand:
 
 ```bash
 # list what Scrutiny currently knows about
@@ -55,9 +55,10 @@ curl -s -X DELETE https://scrutiny-<host>.<domain>/api/device/<wwn>
 
 ## Privileges
 
-`SYS_RAWIO` is needed for ATA pass-through commands. NVMe additionally needs
-`SYS_ADMIN`, which is not granted because no NVMe device is passed through —
-add it back if you override the device list to include one.
+The role needs `SYS_RAWIO` for ATA pass-through commands. NVMe additionally
+needs `SYS_ADMIN`. The role does not grant this by default because it does
+not pass through an NVMe device. If you override the device list to include
+one, add `SYS_ADMIN` back.
 
 `/run/udev` is mounted read-only so drives are labelled by model and serial
 instead of by kernel `sdX` letters, which move between boots.
@@ -81,5 +82,5 @@ ssh <host> 'docker exec scrutiny /opt/scrutiny/bin/scrutiny-collector-metrics ru
 ## Relationship to `system-smartmontools`
 
 The two are complementary and do not conflict. `system-smartmontools` runs
-`smartd` on the host and emails on failure; Scrutiny keeps the metric history
+`smartd` on the host and emails on failure. Scrutiny keeps the metric history
 and renders the dashboard. Both read SMART data, neither writes to the drives.

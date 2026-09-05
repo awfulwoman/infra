@@ -1,6 +1,6 @@
 # WPA Supplicant
 
-Writes a minimal `wpa_supplicant.conf` to `/etc/wpa_supplicant/wpa_supplicant.conf` with the home network SSID and PSK. Used on hosts where WiFi is managed directly by `wpa_supplicant` rather than NetworkManager or netplan.
+This role writes a minimal `wpa_supplicant.conf` to `/etc/wpa_supplicant/wpa_supplicant.conf`, with the home network SSID and PSK. Use it on hosts where `wpa_supplicant` manages WiFi directly, rather than NetworkManager or netplan.
 
 Credentials are pulled from Ansible Vault variables:
 
@@ -9,6 +9,6 @@ Credentials are pulled from Ansible Vault variables:
 
 ## Notes
 
-- This role is intentionally minimal — single network, no priority, no extras.
-- The task does not use `become`, so the Ansible user needs write access to `/etc/wpa_supplicant/`. Most deployments will need `become: true` added, or the file permissions adjusted beforehand.
-- After deployment, `wpa_supplicant` or the network manager service may need to be restarted for the new config to take effect.
+- This role is deliberately minimal: one network, no priority, no extras.
+- The task does not use `become`, so the Ansible user needs write access to `/etc/wpa_supplicant/`. Most deployments need `become: true` added, or the file permissions adjusted first.
+- If the new configuration does not take effect after deployment, restart `wpa_supplicant` or the network manager service.

@@ -1,13 +1,13 @@
 # automation-infra
 
-Automates regular execution of infrastructure playbooks via systemd
-timer.
+This role automates regular runs of infrastructure playbooks through a
+systemd timer.
 
 ## Purpose
 
-This role configures a systemd service and timer to regularly run any
-specified Ansible playbook. Ensures infrastructure configurations are
-continuously enforced without manual intervention.
+This role configures a systemd service and timer to run a
+specified Ansible playbook on a schedule. It keeps infrastructure
+configurations enforced without manual work.
 
 ## Requirements
 
@@ -18,16 +18,16 @@ continuously enforced without manual intervention.
 
 ## How It Works
 
-The role:
+The role does five things:
 
-1. Checks that Ansible is installed (fails if not present)
-2. Verifies playbook and inventory paths exist
-3. Creates a systemd service that runs the specified playbook
-4. Creates a systemd timer to schedule regular executions
-5. Enables and starts the timer
+1. Checks that Ansible is installed. It fails if Ansible is not present.
+2. Checks that the playbook and inventory paths exist.
+3. Creates a systemd service that runs the specified playbook.
+4. Creates a systemd timer to schedule regular runs.
+5. Enables and starts the timer.
 
-The host running this automation must have appropriate SSH access to
-all target hosts referenced in the playbook.
+The host that runs this automation must have SSH access to
+all target hosts named in the playbook.
 
 ## Configuration
 
@@ -52,11 +52,11 @@ automation_infra_schedule: "hourly"
 
 ## Notes
 
-- Service runs as root (required for system configuration)
-- Uses systemd timer with randomized delay (up to 10 minutes) to
-  prevent thundering herd
-- Playbook execution has 1-hour timeout
-- Logs are sent to systemd journal
+- The service runs as root. System configuration needs this.
+- The systemd timer uses a random delay of up to 10 minutes, to
+  stop a thundering herd.
+- Each playbook run has a 1-hour timeout.
+- Logs go to the systemd journal.
 
 ## Checking Status
 

@@ -1,5 +1,5 @@
-# Confgure smartmon tooling
+# Configure smartmontools
 
-Sets up drive health monitoring via [smartmontools](https://www.smartmontools.org).
+Installs and configures drive health monitoring with [smartmontools](https://www.smartmontools.org).
 
 ![A hard disk drive being washed under an unwanted stream of water.](cover.gif)

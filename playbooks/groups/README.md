@@ -1,1 +1,1 @@
-# PLaybooks for groups of hosts
+# Playbooks for groups of hosts

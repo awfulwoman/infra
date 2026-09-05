@@ -1,8 +1,8 @@
 # Ladder
 
-[Ladder](https://github.com/everywall/ladder) is a web proxy that bypasses paywalls by stripping tracking, injecting JavaScript, and spoofing headers for known publisher domains. It is essentially a self-hosted alternative to Outline/12ft.io.
+[Ladder](https://github.com/everywall/ladder) is a web proxy that bypasses paywalls by stripping tracking, injecting JavaScript, and spoofing headers for known publisher domains. It is a self-hosted alternative to Outline/12ft.io.
 
-The `ruleset.yaml` template defines per-domain rules including header spoofing (user-agent, referer, cookies) and JavaScript injections to remove paywall overlays. The current ruleset covers: NYT, Washington Post, FT, The Star, Wired, New Yorker, De Morgen, and a number of other publishers.
+The `ruleset.yaml` template defines per-domain rules including header spoofing (user-agent, referer, cookies) and JavaScript injections to remove paywall overlays. The current ruleset covers: NYT, Washington Post, FT, The Star, Wired, New Yorker, De Morgen, and other publishers.
 
 ## Ports
 

@@ -1,6 +1,6 @@
 # Audiobookshelf
 
-[Audiobookshelf](https://www.audiobookshelf.org/) is a self-hosted audiobook and podcast server. It streams audiobooks directly from local storage, tracks playback progress per-user, and supports mobile clients. This role deploys a single Audiobookshelf container backed by a shared media path for audiobook files.
+[Audiobookshelf](https://www.audiobookshelf.org/) is a self-hosted audiobook and podcast server. It streams audiobooks from local storage, tracks playback progress per user, and supports mobile clients. This role deploys one Audiobookshelf container, backed by a shared media path for audiobook files.
 
 ## Ports
 

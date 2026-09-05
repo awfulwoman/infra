@@ -1,6 +1,10 @@
 # System Pipx
 
-Installs [pipx](https://pipx.pypa.io/) and manages Python CLI applications in isolated virtual environments. If pipx is not already present, bootstraps it via a temporary venv rather than relying on the system package manager (which may provide an outdated version). Then installs all packages listed in `system_pipx_packages`.
+This role installs [pipx](https://pipx.pypa.io/) and manages Python CLI
+applications in isolated virtual environments. If the host has no pipx, the
+role bootstraps it through a temporary venv, rather than the system package
+manager, which can provide an outdated version. Then it installs all
+packages listed in `system_pipx_packages`.
 
 ## Key Variables
 
@@ -8,10 +12,17 @@ Installs [pipx](https://pipx.pypa.io/) and manages Python CLI applications in is
 |---|---|---|
 | `system_pipx_packages` | `[]` | List of pipx package names to install |
 
-Packages are specified as plain names (e.g. `ansible-lint`, `httpie`) and installed with `--include-deps` to ensure CLI entry points from dependencies are also available.
+List packages as plain names, for example `ansible-lint` or `httpie`. The
+role installs them with `--include-deps`, to make sure that CLI entry points
+from dependencies are also available.
 
 ## Design Notes
 
-The bootstrap process creates a temporary venv at `/tmp/bootstrap`, uses it to install pipx, then uses that pipx to install pipx into the user's own environment (`~/.local/bin/pipx`). The temporary venv is deleted afterwards. This avoids the chicken-and-egg problem of needing pipx to install pipx cleanly without depending on distro packages.
+The bootstrap process creates a temporary venv at `/tmp/bootstrap`, and uses
+it to install pipx. It then uses that pipx to install pipx into the user's
+own environment (`~/.local/bin/pipx`). The role deletes the temporary venv
+afterward. This avoids the circular problem of needing pipx to install pipx,
+without depending on distro packages.
 
-The presence check targets `~/.local/bin/pipx` directly, so the bootstrap block is skipped entirely on subsequent runs.
+The presence check targets `~/.local/bin/pipx` directly, so later runs skip
+the bootstrap block entirely.

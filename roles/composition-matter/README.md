@@ -4,7 +4,7 @@
 
 The container runs with `network_mode: host` and `apparmor:unconfined` to allow Bluetooth access via D-Bus (required for Matter commissioning). It uses Bluetooth adapter `0` by default.
 
-Traefik labels are present but commented out — this service is intended for internal HA use only, not direct browser access.
+The role defines Traefik labels but comments them out. This service is for internal HA use only, not direct browser access.
 
 ## Volumes
 

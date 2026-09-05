@@ -1,6 +1,6 @@
 # Karakeep
 
-[Karakeep](https://karakeep.app) (formerly Hoarder) is a self-hosted bookmarking and read-it-later app with AI-assisted tagging. It saves links, snapshots webpage content, and uses a headless Chrome browser for full-page rendering. Search is powered by Meilisearch.
+[Karakeep](https://karakeep.app) (formerly Hoarder) is a self-hosted bookmarking and read-it-later app with AI-assisted tagging. It saves links, snapshots webpage content, and uses a headless Chrome browser for full-page rendering. Meilisearch powers search.
 
 This composition runs three services: the main Karakeep application, a headless Chromium browser (`alpine-chrome`) for page snapshots, and Meilisearch for full-text search indexing.
 
@@ -16,7 +16,7 @@ Key environment variables (set in `.environment_vars`):
 - `BROWSER_WEB_URL` — set to `http://chrome:9222` (internal headless browser)
 - `DATA_DIR` — `/data`
 
-AI tagging via OpenAI is supported but not enabled by default (`OPENAI_API_KEY` is commented out).
+The composition supports AI tagging through OpenAI, but does not enable it by default (`OPENAI_API_KEY` is commented out).
 
 ## Volumes
 

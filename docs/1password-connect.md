@@ -1,8 +1,8 @@
 # 1Password Connect
 
-1Password Connect is a self-hosted server that syncs a 1Password vault locally and exposes secrets via a REST API. It replaces the need to embed secrets directly in Ansible Vault for day-to-day use — secrets live in 1Password and are fetched at playbook runtime using short-lived, rotatable tokens.
+1Password Connect is a self-hosted server. It syncs a 1Password vault locally and exposes secrets through a REST API. Ansible Vault no longer needs to store these secrets for day-to-day use. Secrets stay in 1Password. Ansible fetches them at playbook runtime with short-lived, rotatable tokens.
 
-The Connect server is deployed to `raspberry-pi4-4gb-randolph` and exposed at `https://connect.{{ domainname_infra }}` via Traefik.
+The Connect server runs on `raspberry-pi4-4gb-randolph`. Traefik exposes it at `https://connect.{{ domainname_infra }}`.
 
 ## Architecture
 
@@ -32,7 +32,7 @@ op connect server create "Home Infra" --vaults Infra
 op connect token create "ansible" --server "Home Infra" --vault Infra
 ```
 
-Save the token output — it is shown only once. Store it as a vault-encrypted variable (see [Using Secrets in Ansible](#using-secrets-in-ansible)).
+Save the token output. The token appears only once. Store it as a vault-encrypted variable (see [Using Secrets in Ansible](#using-secrets-in-ansible)).
 
 ### 2. Store credentials in Ansible Vault
 
@@ -45,7 +45,7 @@ ansible-vault encrypt_string "$(base64 < 1password-credentials.json)" \
 
 Paste the output into `inventory/group_vars/infra/vault_onepassword_connect.yaml`.
 
-> **Important:** Do not use `ansible.builtin.template` to deploy this file. The `end-of-file-fixer` pre-commit hook appends a trailing newline, which breaks the hash. The role uses `ansible.builtin.copy` with `content: "{{ vault_onepassword_connect_credentials | b64decode }}"` to write the exact original bytes.
+> **Important:** Do not use `ansible.builtin.template` to deploy this file. The `end-of-file-fixer` pre-commit hook adds a trailing newline. This breaks the hash. The role uses `ansible.builtin.copy` with `content: "{{ vault_onepassword_connect_credentials | b64decode }}"` to write the exact original bytes.
 
 ### 3. Deploy
 
@@ -61,7 +61,7 @@ curl https://connect.{{ domainname_infra }}/health
 curl -H "Authorization: Bearer <token>" https://connect.{{ domainname_infra }}/v1/vaults
 ```
 
-The first authenticated request initialises the sync. Subsequent requests return vault data once the initial sync completes.
+The first authenticated request starts the sync. Once the initial sync completes, later requests return vault data.
 
 ## Using Secrets in Ansible
 
@@ -81,8 +81,8 @@ The `community.general.onepassword` lookup plugin retrieves secrets at playbook 
         api_key: "{{ lookup('community.general.onepassword', 'Github', field='credential', vault='Infra') }}"
 ```
 
-Store `vault_onepassword_connect_token` as a vault-encrypted variable. Tokens are scoped per-vault in 1Password Connect and can be rotated independently without touching the credentials file.
+Store `vault_onepassword_connect_token` as a vault-encrypted variable. 1Password Connect scopes tokens per vault. You can rotate a token without touching the credentials file.
 
 ## Bootstrap Paradox
 
-The credentials file that the Connect server needs to run cannot itself be stored in Connect (the server isn't running yet). It is therefore stored in Ansible Vault and deployed by the role at provisioning time. This is intentional — once the server is running, all other secrets can migrate to Connect.
+The credentials file that the Connect server needs to run cannot itself be stored in Connect, because the server is not running yet. Ansible Vault stores it instead, and the role deploys it at provisioning time. This is intentional. Once the server runs, other secrets can migrate to Connect.

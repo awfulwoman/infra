@@ -1,5 +1,11 @@
 # system-emailbackup
 
-Backs up email from an IMAP mailbox to local ZFS storage using [isync](https://isync.sourceforge.io/) (`mbsync`). Installs `isync` via apt, writes an `mbsyncrc` config from a Jinja2 template, and creates a systemd service/timer pair to sync on the configured schedule.
+This role backs up email from an IMAP mailbox to local ZFS storage, with
+[isync](https://isync.sourceforge.io/) (`mbsync`). It installs `isync`
+through apt and writes an `mbsyncrc` config from a Jinja2 template. It also
+creates a systemd service and timer pair to sync mail on the configured
+schedule.
 
-Requires the storage path (`emailbackup_storage_path`, default `/slowpool/charlie/email`) to be pre-provisioned by `system-zfs`; the role fails fast if it does not exist.
+`system-zfs` must pre-provision the storage path
+(`emailbackup_storage_path`, default `/slowpool/charlie/email`). The role
+fails fast if the path does not exist.

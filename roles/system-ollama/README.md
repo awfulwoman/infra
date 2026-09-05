@@ -13,8 +13,8 @@ Installs and configures [Ollama](https://ollama.com/) as a background service, a
 
 See `defaults/main.yaml`:
 
-- `system_ollama_models`: list of model names to pull (e.g. `["llama3", "qwen2.5"]`). Empty by default.
-- `system_ollama_env`: dict of environment variables passed to the Ollama service (e.g. `OLLAMA_HOST`, `OLLAMA_KEEP_ALIVE`, `OLLAMA_MODELS`).
+- `system_ollama_models`: list of model names to pull, for example `["llama3", "qwen2.5"]`. Empty by default.
+- `system_ollama_env`: dict of environment variables passed to the Ollama service, for example `OLLAMA_HOST`, `OLLAMA_KEEP_ALIVE`, `OLLAMA_MODELS`.
 - `system_ollama_bin`: path to the `ollama` binary. Defaults to the platform-appropriate Homebrew/`/usr/local/bin` path.
 
 ## Platforms

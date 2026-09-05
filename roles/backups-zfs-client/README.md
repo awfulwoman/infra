@@ -1,5 +1,5 @@
 # ZFS Backup - Client
 
-This role is used on hosts that require ZFS backups. It initiates regular snapshots of the ZFS filesystem. It then ensures that a ZFS user is installed that allows access via the backup server (via SSH) that will then command the client to send existing ZFS dataset snapshots to the backup server.
+Use this role on hosts that need ZFS backups. It starts regular snapshots of the ZFS filesystem. It then installs a ZFS user, so that the backup server can connect over SSH and tell the client to send its ZFS dataset snapshots.
 
-Note that this is a pull strategy rather than a push strategy. This ensures that the client server itself never has access to the backup server, lessening the risk of island hopping attacks.
+This is a pull strategy, not a push strategy. The client itself never has access to the backup server. This lowers the risk of island-hopping attacks.

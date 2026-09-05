@@ -1,6 +1,6 @@
 # Grafana
 
-[Grafana OSS](https://grafana.com/oss/grafana/) visualization platform. Provisioned with VictoriaMetrics (Prometheus-compatible) and Loki datasources, pre-built dashboards for ZFS and infrastructure monitoring, and alerting via email.
+[Grafana OSS](https://grafana.com/oss/grafana/) is a visualization platform. It comes with VictoriaMetrics (Prometheus-compatible) and Loki datasources, pre-built dashboards for ZFS and infrastructure monitoring, and email alerting.
 
 ## Ports
 
@@ -41,7 +41,7 @@ Static dashboards in `files/dashboards/`:
 - `loki-security-audit.json` — security-relevant log events.
 - `nginx-web-traffic.json` — nginx access log metrics.
 
-Per-host ZFS dashboards are generated dynamically at deploy time by `templates/generate_host_dashboards.py.j2` using the Ansible `zfs` inventory group.
+`templates/generate_host_dashboards.py.j2` generates per-host ZFS dashboards dynamically at deploy time, using the Ansible `zfs` inventory group.
 
 ## Alerting
 

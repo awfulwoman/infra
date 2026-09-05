@@ -1,16 +1,16 @@
 # Ansible Core
 
-Installs Ansible and its dependencies on a host, then ensures the required directory structure exists for local playbook execution. Handles both macOS (via Homebrew) and Ubuntu/Debian (via the official Ansible PPA).
+This role installs Ansible and its dependencies on a host. It then makes sure that the directory structure for local playbook runs exists. It supports macOS, through Homebrew, and Ubuntu/Debian, through the official Ansible PPA.
 
-## Platform Behaviour
+## Platform Behavior
 
-- **macOS:** Installs `ansible` and `ansible-lint` via Homebrew.
-- **Ubuntu/Debian:** Adds the `ppa:ansible/ansible` repository, then installs `ansible` and `ansible-lint` via apt.
+- **macOS:** Installs `ansible` and `ansible-lint` through Homebrew.
+- **Ubuntu/Debian:** Adds the `ppa:ansible/ansible` repository. Then it installs `ansible` and `ansible-lint` through apt.
 
-After installation, the role:
+After installation, the role does two things:
 
-1. Runs `ansible-galaxy install -r meta/requirements.yaml` to ensure Galaxy dependencies are present (when `ansible_infra_dir` is defined).
-2. Creates the directories referenced by `ansible_path`, `ansible_log_path`, and `ansible_roles_path` so subsequent Ansible runs have a consistent working environment.
+1. It runs `ansible-galaxy install -r meta/requirements.yaml` to install Galaxy dependencies, when `ansible_infra_dir` is defined.
+2. It creates the directories referenced by `ansible_path`, `ansible_log_path`, and `ansible_roles_path`. This gives later Ansible runs a consistent working environment.
 
 ## Variables
 

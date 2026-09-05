@@ -1,8 +1,8 @@
 # User Site Deployment
 
-Creates a dedicated system user for deploying static website content to the host over SSH.
+Creates a dedicated system user to deploy static website content to the host over SSH.
 
-The user is created with a fixed UID (1100) and no home directory, and is authorised with a specific public key from Ansible Vault. This allows a CI/CD pipeline or local build tool to `rsync` or `scp` files to the server without granting access to a full privileged account.
+The role creates the user with a fixed UID (1100) and no home directory. It authorizes the user with a specific public key from Ansible Vault. This lets a CI/CD pipeline or local build tool send files to the server with `rsync` or `scp`. It does not need a full privileged account to do this.
 
 ## Required Vault Variables
 
@@ -13,7 +13,7 @@ The user is created with a fixed UID (1100) and no home directory, and is author
 
 ## Design Notes
 
-- The role is a no-op if either vault variable is undefined, making it safe to include in playbooks where not all hosts need a deployment user.
+- If either vault variable is undefined, the role does nothing. This makes it safe to include in playbooks where not all hosts need a deployment user.
 - The user gets bash as its shell to support `rsync`-over-SSH workflows.
-- A commented-out `key_options` line in the tasks hints at a future improvement: restricting the key to only allow `rsync` commands via `restrict,command="rsync"`.
+- A commented-out `key_options` line in the tasks hints at a future improvement. It can restrict the key to allow only `rsync` commands, with `restrict,command="rsync"`.
 - UID 1100 is hardcoded to keep the account's identity stable across rebuilds.

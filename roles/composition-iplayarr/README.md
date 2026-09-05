@@ -1,6 +1,6 @@
 # iPlayarr
 
-[iPlayarr](https://github.com/nikorag/iplayarr) is a BBC iPlayer integration for the *arr stack, enabling downloads of BBC iPlayer content. It acts as a bridge between Sonarr/Radarr and the `get_iplayer` tool, exposing an API that arr applications can query like a Usenet or torrent indexer.
+[iPlayarr](https://github.com/nikorag/iplayarr) is a BBC iPlayer integration for the *arr stack. It enables downloads of BBC iPlayer content, and it bridges Sonarr/Radarr with the `get_iplayer` tool. It exposes an API that arr applications can query like a Usenet or torrent indexer.
 
 ## Ports
 

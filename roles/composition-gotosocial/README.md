@@ -1,6 +1,6 @@
 # GoToSocial
 
-[GoToSocial](https://gotosocial.org/) is a lightweight, ActivityPub-compatible Fediverse server. It federates with Mastodon and other ActivityPub implementations, allowing interaction with the broader Fediverse from a self-hosted single-user (or small-group) instance.
+[GoToSocial](https://gotosocial.org/) is a lightweight, ActivityPub-compatible Fediverse server. It federates with Mastodon and other ActivityPub implementations. You can use it to interact with the wider Fediverse from a single-user or small-group instance.
 
 ## Key Variables
 
@@ -34,8 +34,8 @@
 
 ## Integrations
 
-- **Traefik**: TLS termination; the container just listens on port 8080 internally. The `traefik.enable=true` label is set but routing rules are managed via Traefik config elsewhere (no explicit router rule in the compose file — configure via Traefik dynamic config or labels as needed).
+- **Traefik**: TLS termination. The container listens on port 8080 internally. The compose file sets the `traefik.enable=true` label but defines no router rule here. Configure routing through Traefik's dynamic config or labels.
 
 ## Notes
 
-The `host` value in `config.yaml` **must not be changed** after the instance has first run — doing so will break all federated URIs.
+CAUTION: Do not change the `host` value in `config.yaml` after the first run of the instance. This will break all federated URIs.

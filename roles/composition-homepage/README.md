@@ -1,8 +1,8 @@
 # Homepage
 
-[Homepage](https://gethomepage.dev) is a self-hosted dashboard providing a customisable start page with service widgets, bookmarks, and Docker container status. It is the primary entry point to the home infrastructure, accessible at `home.<domain>`.
+[Homepage](https://gethomepage.dev) is a self-hosted dashboard. It gives a customizable start page with service widgets, bookmarks, and Docker container status. It is the primary entry point to the home infrastructure, at `home.<domain>`.
 
-The role templates all Homepage configuration files (`services.yaml`, `bookmarks.yaml`, `settings.yaml`, `widgets.yaml`, `docker.yaml`, `kubernetes.yaml`, `custom.css`, `custom.js`) directly into the container's config directory. Background images are downloaded from Unsplash at deploy time.
+The role templates all Homepage configuration files (`services.yaml`, `bookmarks.yaml`, `settings.yaml`, `widgets.yaml`, `docker.yaml`, `kubernetes.yaml`, `custom.css`, `custom.js`) directly into the container's config directory. The role downloads background images from Unsplash at deploy time.
 
 Homepage has access to the Docker socket to display live container status widgets for other services.
 

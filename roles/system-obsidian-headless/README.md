@@ -1,16 +1,22 @@
 # system-obsidian-headless
 
-Installs and runs [obsidian-headless](https://github.com/obsidianmd/obsidian-headless) as a background sync service, keeping configured vaults continuously synced via Obsidian Sync.
+This role installs and runs [obsidian-headless](https://github.com/obsidianmd/obsidian-headless)
+as a background sync service. It keeps configured vaults synced
+continuously, through Obsidian Sync.
 
 ## Prerequisites
 
-- `system-nvm` must be applied to the target host first — obsidian-headless is installed via the nvm-managed `npm`.
+- Apply `system-nvm` to the target host first. obsidian-headless installs
+  through the nvm-managed `npm`.
 - An active [Obsidian Sync](https://obsidian.md/sync) subscription.
-- **Manual one-time step**: log in on the target host before running this role:
+- **Manual one-time step**: Before you run this role, log in on the target
+  host:
   ```
   ob login
   ```
-  Credentials are stored in the system keychain (Keychain on macOS, libsecret on Linux). The role does not handle login — MFA and interactive prompts make it unautomatable.
+  The system keychain stores credentials: Keychain on macOS, libsecret on
+  Linux. The role does not handle login. MFA and interactive prompts make
+  login impossible to automate.
 
 ## What it does
 

@@ -1,6 +1,6 @@
 # FreshRSS
 
-[FreshRSS](https://freshrss.org/) is a self-hosted RSS and Atom feed aggregator. It supports multi-user access, fever/Google Reader compatible APIs (for mobile clients like Reeder or NetNewsWire), and feed filtering/tagging.
+[FreshRSS](https://freshrss.org/) is a self-hosted RSS and Atom feed aggregator. It supports multi-user access, Fever and Google Reader compatible APIs, for mobile clients such as Reeder or NetNewsWire, and feed filtering and tagging.
 
 ## Ports
 
@@ -20,4 +20,4 @@
 
 ## Notes
 
-Uses the LinuxServer.io image (`lscr.io/linuxserver/freshrss`). The entire config directory is persisted, which includes the SQLite database, user accounts, feed subscriptions, and any installed extensions.
+This role uses the LinuxServer.io image (`lscr.io/linuxserver/freshrss`). The role persists the entire config directory, which holds the SQLite database, user accounts, feed subscriptions, and any installed extensions.

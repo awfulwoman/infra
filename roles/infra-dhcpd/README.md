@@ -1,8 +1,8 @@
 # Infrastructure DHCP Server
 
-Installs and configures ISC DHCP server (`isc-dhcp-server`) on an Ubuntu host, providing dynamic address assignment for a subnet with static leases for known unmanaged devices.
+This role installs and configures the ISC DHCP server (`isc-dhcp-server`) on an Ubuntu host. It provides dynamic address assignment for a subnet, with static leases for known unmanaged devices.
 
-The role is designed for a home network where most infrastructure hosts have static IPs managed by Ansible, but IoT devices, printers, and other unmanaged equipment need DHCP. Static leases for unmanaged devices are derived directly from the Ansible inventory — any host in the `unmanaged` group with `host_mac` and `host_ipv4` variables defined will receive a fixed DHCP lease.
+The role is for a home network where most infrastructure hosts have static IPs, managed by Ansible, but IoT devices, printers, and other unmanaged equipment need DHCP. The role derives static leases for unmanaged devices directly from the Ansible inventory. Any host in the `unmanaged` group with `host_mac` and `host_ipv4` variables set receives a fixed DHCP lease.
 
 ## Key Variables
 
@@ -31,6 +31,6 @@ Any host in the `dhcpd_unmanaged_group` inventory group with the following `host
 
 ## Design Notes
 
-- `dhcpd_enabled: false` is intentional — accidentally starting a rogue DHCP server on a network causes serious disruption. The service must be explicitly enabled per-host.
-- The template uses `lstrip_blocks` to keep Jinja2 loop whitespace clean in the generated config file.
-- Configuration changes and interface changes both notify the `Restart dhcpd` handler.
+- `dhcpd_enabled: false` is deliberate. A rogue DHCP server that starts by accident causes serious disruption on a network. You must enable the service explicitly, per host.
+- The template uses `lstrip_blocks` to keep Jinja2 loop whitespace clean in the generated configuration file.
+- Both configuration changes and interface changes notify the `Restart dhcpd` handler.

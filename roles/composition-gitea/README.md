@@ -1,6 +1,6 @@
 # Gitea
 
-[Gitea](https://gitea.io/) is a self-hosted Git service. This deployment runs Gitea with Actions (CI/CD) and repository indexing enabled. CI jobs are executed by separate runners deployed via `composition-gitea-runners`.
+[Gitea](https://gitea.io/) is a self-hosted Git service. This deployment runs Gitea with Actions (CI/CD) and repository indexing enabled. Separate runners, deployed through `composition-gitea-runners`, execute CI jobs.
 
 ## Ports
 
@@ -24,7 +24,7 @@
 ## Integrations
 
 - **Traefik**: Exposed at `gitea.{{ domainname_infra }}` with Let's Encrypt TLS.
-- **composition-gitea-runners**: Act runners register against this instance using the shared `vault_gitea_runner_registration` token. Runners are deployed separately, potentially on different hosts.
+- **composition-gitea-runners**: Act runners register against this instance using the shared `vault_gitea_runner_registration` token. Runners deploy separately and can run on different hosts.
 
 ## Notes
 

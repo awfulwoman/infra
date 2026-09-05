@@ -1,6 +1,6 @@
 # Reverse Proxy
 
-Deploys [Traefik v3](https://traefik.io/) as the central HTTP/HTTPS reverse proxy for all Docker Compose services. Traefik auto-discovers containers via Docker socket labels, terminates TLS using Let's Encrypt DNS challenge (Hetzner DNS provider), and redirects all HTTP traffic to HTTPS. The dashboard is exposed at `traefik.<hostname>.<domain>`.
+Deploys [Traefik v3](https://traefik.io/) as the central HTTP/HTTPS reverse proxy for all Docker Compose services. Traefik auto-discovers containers through Docker socket labels, terminates TLS with a Let's Encrypt DNS challenge (Hetzner DNS provider), and redirects all HTTP traffic to HTTPS. Traefik exposes the dashboard at `traefik.<hostname>.<domain>`.
 
 ## Optional components
 
@@ -22,12 +22,12 @@ Deploys [Traefik v3](https://traefik.io/) as the central HTTP/HTTPS reverse prox
 
 ## Providers
 
-Static provider files in `templates/providers/` can be deployed to `<composition_config>/providers/` via `traefik_providers`. Pre-built providers exist for: `esphome`, `gotosocial`, `homeassistant`, `immich`, `musicassistant`, `personalsite`, `watchyourlan`.
+You can deploy static provider files in `templates/providers/` to `<composition_config>/providers/` through `traefik_providers`. Pre-built providers exist for: `esphome`, `gotosocial`, `homeassistant`, `immich`, `musicassistant`, `personalsite`, `watchyourlan`.
 
-Dynamic VM route proxying is supported via `reverseproxy_vm_routes` — each entry specifies a `name`, `host`, `backend`, and optional `middlewares` list.
+`reverseproxy_vm_routes` supports dynamic VM route proxying. Each entry specifies a `name`, `host`, `backend`, and optional `middlewares` list.
 
 ## Integrations
 
 - **DNS**: Registers `whoami.<hostname>` and `traefik.<hostname>` subdomains via `network-register-subdomain`
-- **Let's Encrypt**: DNS challenge via Hetzner nameservers; cert email from `domainname_personal`
+- **Let's Encrypt**: DNS challenge via Hetzner nameservers. Cert email from `domainname_personal`
 - **Docker**: All other compositions route through this proxy via `traefik.enable=true` labels on the shared `default_docker_network`

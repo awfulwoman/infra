@@ -11,27 +11,30 @@ Configures network interfaces using netplan.
 
 ### Why `host_ipv4` is not inside `network_netplan_config`
 
-`host_ipv4` is a host-identity variable, not a networking configuration variable.
-It is used by other roles (e.g. `infra-named` for DNS A/PTR records) that iterate
-`hostvars` across all hosts. Burying it inside a role-specific dict would break
-those consumers and make inventory harder to read.
+`host_ipv4` is a host-identity variable, not a networking configuration
+variable. Other roles use it too, for example `infra-named` for DNS A and
+PTR records, and these roles iterate `hostvars` across all hosts. If this
+variable were buried inside a role-specific dict, it would break those
+consumers and make the inventory harder to read.
 
-The role auto-derives the primary interface config from `host_ipv4`,
-`host_primary_interface`, and `host_ipv4_subnet` at runtime via `set_fact`.
+The role derives the primary interface configuration automatically from
+`host_ipv4`, `host_primary_interface`, and `host_ipv4_subnet`, at runtime,
+through `set_fact`.
 
 ### How the config is built
 
-A `set_fact` task constructs a netplan-native dict from the flat host vars,
-then deep-merges `network_netplan_config` (from host_vars) over the top via
-`combine(recursive=true)`. The template just dumps the result — no logic.
+A `set_fact` task builds a netplan-native dict from the flat host variables.
+It then deep-merges `network_netplan_config` (from host_vars) over the top,
+through `combine(recursive=true)`. The template only writes out the result;
+it contains no logic.
 
 This approach is necessary because Ansible YAML files cannot use variable
-expressions as dict keys, so the interface-name-keyed structure netplan requires
-must be assembled at task execution time.
+expressions as dict keys. As a result, the role must assemble the
+interface-name-keyed structure that netplan requires at task execution time.
 
 ## Additional IP addresses
 
-Set `host_ipv4_extra` in `host_vars` to assign additional static CIDRs to the primary interface alongside DHCP or the primary static IP. Works in both modes.
+Set `host_ipv4_extra` in `host_vars` to assign extra static CIDRs to the primary interface, alongside DHCP or the primary static IP. This works in both modes.
 
 ```yaml
 # Hetzner Cloud: DHCP primary + routed additional IP
@@ -65,7 +68,7 @@ network_netplan_config:
         addresses: [1.1.1.1]
 ```
 
-Note: because `combine(recursive=true)` replaces lists and dicts at the key
-level, defining `ethernets` in `network_netplan_config` fully replaces the
-auto-generated single-interface entry. Multi-NIC hosts own their complete
-interface definition.
+Note: `combine(recursive=true)` replaces lists and dicts at the key level.
+Because of this, defining `ethernets` in `network_netplan_config` fully
+replaces the auto-generated single-interface entry. Multi-NIC hosts own
+their complete interface definition.

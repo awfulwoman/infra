@@ -1,6 +1,6 @@
 # OwnTracks
 
-[OwnTracks](https://owntracks.org) is a self-hosted location tracking system. Mobile apps (iOS/Android) publish GPS location updates over MQTT, and this composition provides the recorder (which stores and serves the data) and a web frontend for viewing location history on a map.
+[OwnTracks](https://owntracks.org) is a self-hosted location tracking system. Mobile apps for iOS and Android publish GPS location updates over MQTT. This composition provides the recorder, which stores and serves the data, and a web frontend to view location history on a map.
 
 The recorder connects to the MQTT broker at `mqtt.<domain>` and subscribes to the `owntracks/#` topic. Location history is stored persistently in `{{ composition_config }}/store`.
 

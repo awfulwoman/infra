@@ -31,6 +31,7 @@ aw-deploy logs --tail 3
 
 ## MCP registration
 
-The binary alone is not enough — Claude Code also needs the server registered in
-`~/.claude.json`. This is handled by the chezmoi `modify_dot_claude.json` script in the
-dotfiles repo, which detects the binary and merges the entry automatically on `chezmoi apply`.
+The binary alone is not enough. Claude Code also needs the server registered
+in `~/.claude.json`. The chezmoi `modify_dot_claude.json` script in the
+dotfiles repo handles this: it detects the binary and merges the entry
+automatically on `chezmoi apply`.

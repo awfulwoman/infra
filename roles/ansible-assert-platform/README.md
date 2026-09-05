@@ -1,6 +1,6 @@
 # Ansible Assert Platform
 
-Utility role that asserts the current Ansible target platform is in a caller-supplied allowlist. Include this at the top of any role that only supports specific operating systems, passing `ansible_assert_platform_supported` as a list of expected `ansible_facts['system']` values (e.g. `Linux`, `Darwin`). Fails fast with a descriptive error rather than silently doing nothing or erroring mid-run.
+This role checks that the current Ansible platform is on an allowed list. Add it at the top of any role that supports only specific operating systems. Pass `ansible_assert_platform_supported` as a list of expected `ansible_facts['system']` values, for example `Linux` or `Darwin`. The role fails fast with a clear error, instead of doing nothing or failing partway through the run.
 
 ## Usage
 
@@ -21,4 +21,4 @@ Utility role that asserts the current Ansible target platform is in a caller-sup
 
 ## Design Notes
 
-`allow_duplicates: true` is set in `meta/main.yaml` so multiple roles can include this role in the same play without Ansible deduplicating the assertions. Each calling role may pass a different `ansible_assert_platform_supported` list.
+`allow_duplicates: true` is set in `meta/main.yaml`. This lets multiple roles include this role in the same play, without Ansible removing the duplicate assertions. Each calling role can pass a different `ansible_assert_platform_supported` list.

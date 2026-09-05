@@ -26,4 +26,4 @@ Deploys [Syncthing](https://syncthing.net/), a continuous peer-to-peer file sync
 
 - **Traefik**: Web UI exposed via HTTPS at `syncthing.<hostname>.<domain>` with Let's Encrypt TLS
 - **DNS**: Registers `syncthing.<hostname>` subdomain via `network-register-subdomain`
-- **ZFS**: Data lives on the slow-pool ZFS dataset; backup coverage depends on host ZFS policy
+- **ZFS**: Data lives on the slow-pool ZFS dataset. Backup coverage depends on host ZFS policy

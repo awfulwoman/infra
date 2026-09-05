@@ -1,8 +1,8 @@
 # MCP YouTube Transcript
 
-Deploys [mcp-youtube-transcript](https://github.com/jkawamoto/mcp-youtube-transcript), a Model Context Protocol (MCP) server that fetches transcripts from YouTube videos. This allows MCP-compatible LLM clients (e.g., Claude Desktop, Open WebUI) to retrieve video transcripts as context.
+Deploys [mcp-youtube-transcript](https://github.com/jkawamoto/mcp-youtube-transcript), a Model Context Protocol (MCP) server that fetches transcripts from YouTube videos. MCP-compatible LLM clients (for example, Claude Desktop, Open WebUI) can use it to retrieve video transcripts as context.
 
-The source is cloned from GitHub and the image is built locally. The container runs with `stdin_open: true` and `tty: true` because MCP servers communicate over stdio by default. No HTTP port is exposed — clients connect via the Docker network using the stdio transport.
+The role clones the source from GitHub and builds the image locally. The container runs with `stdin_open: true` and `tty: true`, because MCP servers communicate over stdio by default. The composition exposes no HTTP port. Clients connect over the Docker network, with the stdio transport.
 
 ## Volumes
 
@@ -12,5 +12,5 @@ The source is cloned from GitHub and the image is built locally. The container r
 
 ## Notes
 
-- No DNS subdomain is registered; this service is not intended for browser access.
-- For SSE/network transport, additional configuration would be needed.
+- No DNS subdomain is registered. This service is not for browser access.
+- For SSE or network transport, you need additional configuration.

@@ -2,8 +2,8 @@
 
 Clones and manages git repositories on target hosts via SSH.
 
-**Prerequisites:** SSH keys must be configured on the target host for
-repository access.
+**Prerequisites:** Before you use this role, configure SSH keys on the
+target host for repository access.
 
 ## Usage
 

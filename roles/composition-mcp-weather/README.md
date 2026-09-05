@@ -8,8 +8,8 @@ wildfires, historical data back to 1940) backed entirely by free public APIs
 Upstream only speaks MCP over stdio, so this composition wraps it with
 [mcp-proxy](https://github.com/sparfenyuk/mcp-proxy), which spawns
 `npx -y @dangahagan/weather-mcp` and re-exposes it as Streamable HTTP on
-`/mcp`. No auth is configured — the container isn't given any secrets to
-guard, and access is scoped to the Tailscale network via Traefik.
+`/mcp`. No auth is configured. The role gives the container no secrets to
+guard, and Traefik scopes access to the Tailscale network.
 
 ## Adding to Claude Code
 

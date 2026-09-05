@@ -1,6 +1,6 @@
 # system-tts-chatterbox
 
-Installs a [Chatterbox](https://github.com/resemble-ai/chatterbox) text-to-speech server exposed over the [Wyoming protocol](https://github.com/OHF-Voice/wyoming), with multi-voice cloning support. Intended for use as a Home Assistant/voice assistant TTS backend.
+Installs a [Chatterbox](https://github.com/resemble-ai/chatterbox) text-to-speech server that runs over the [Wyoming protocol](https://github.com/OHF-Voice/wyoming), with support for multiple cloned voices. Use it as a Home Assistant or voice-assistant TTS backend.
 
 ## What it does
 
@@ -8,11 +8,11 @@ Installs a [Chatterbox](https://github.com/resemble-ai/chatterbox) text-to-speec
 - Installs `chatterbox-tts`, `wyoming`, and `numpy` into that venv.
 - Deploys `server.py`, a Wyoming TTS server that wraps Chatterbox and supports per-request voice selection.
 - Syncs reference voice clips from `files/voices/` to the target host (deletes any removed locally).
-- Deploys and loads a per-user `launchd` LaunchAgent (`com.awfulwoman.chatterbox`) that runs the server with `RunAtLoad`/`KeepAlive`, restarting it whenever the server script, voices, or plist change.
+- Deploys and loads a per-user `launchd` LaunchAgent (`com.awfulwoman.chatterbox`). The LaunchAgent runs the server with `RunAtLoad`/`KeepAlive`. It restarts the server whenever the server script, voices, or plist file change.
 
 ## Voices
 
-Reference clips live in `files/voices/` (`.wav`, `.m4a`, `.mp3`, `.flac`, `.ogg` all accepted — non-WAV files are converted via `ffmpeg` at synth time). The file stem is the voice name a client selects. Currently shipped:
+Reference clips live in `files/voices/`. The server accepts `.wav`, `.m4a`, `.mp3`, `.flac`, and `.ogg` files, and converts non-WAV files with `ffmpeg` at synthesis time. The file stem is the voice name that a client selects. The role currently ships these voices:
 
 - jeff-goldblum
 - ken-jeong
@@ -29,7 +29,7 @@ See `defaults/main.yaml`:
 
 - `system_chatterbox_base_dir`: install directory. Defaults to `{{ awfulwoman_opt_dir }}/chatterbox`.
 - `system_chatterbox_host` / `system_chatterbox_port`: bind address for the Wyoming server. Defaults to `0.0.0.0:10200`.
-- `system_chatterbox_default_voice`: file stem in `voices/` to use when a request doesn't specify one. Empty = first alphabetically.
+- `system_chatterbox_default_voice`: file stem in `voices/` to use when a request does not specify one. Empty = first alphabetically.
 - `system_chatterbox_exaggeration`: emotion exaggeration, `0.25`–`2.0` (lower = more neutral). Default `0.5`.
 - `system_chatterbox_cfg_weight`: pacing control, `0.0`–`1.0` (lower = slower/more expressive). Default `0.5`.
 - `system_chatterbox_stream_sentences`: split text into sentences and stream each independently. Default `true`.

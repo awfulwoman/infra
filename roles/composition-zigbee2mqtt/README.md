@@ -1,6 +1,6 @@
 # Zigbee2MQTT
 
-Deploys [Zigbee2MQTT](https://www.zigbee2mqtt.io/), a bridge that connects a Zigbee USB coordinator to an MQTT broker, enabling direct device interaction without relying on Home Assistant's built-in Zigbee stack. Runs privileged with access to the USB dongle and udev, and exposes a web frontend for device management and monitoring.
+Deploys [Zigbee2MQTT](https://www.zigbee2mqtt.io/), a bridge that connects a Zigbee USB coordinator to an MQTT broker. This gives direct device interaction without the need for Home Assistant's built-in Zigbee stack. The container runs privileged with access to the USB dongle and udev, and exposes a web frontend for device management and monitoring.
 
 ## Key variables
 

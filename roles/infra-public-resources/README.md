@@ -1,8 +1,8 @@
 # Public Resources
 
-Contains the configuration for the various public resources used in this infra. All the records are public info, which is why they're not encrypted. However some of the domain names themselves are things I'd like to leave behind me, which is why they're encrypted.
+This role holds the configuration for the public resources used in this infrastructure. The records are public information, so they are not encrypted. Some domain names are personal, so those stay encrypted instead.
 
-A couple of the infra domains are reused internally via split-horizon DNS. You can see more of that in [infra-named](../infra-named).
+The role reuses a few infra domains internally, through split-horizon DNS. See [infra-named](../infra-named) for more detail.
 
 ## Importing DO records
 
@@ -20,4 +20,4 @@ terraform import digitalocean_record.www example.com,<id from DO api>
 
 ## State
 
-State is stored on the machine running this role. As I'm the only user, and Terraform plans are only executed on this machine via Ansible I think it's pretty safe.
+The role stores state on the machine that runs it. Only one person uses this machine, and only Ansible runs Terraform plans on it, so this is a reasonably safe setup.

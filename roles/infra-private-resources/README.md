@@ -128,7 +128,7 @@ Note: SSH config automatically uses correct service account credentials.
 ## Dependencies
 
 - `virtual-qemu-host`: Must run on hypervisor first
-- `system-sshkey`: Should run on control plane to generate base SSH keys
+- `system-sshkey`: Run this on the control plane first, to generate base SSH keys
 
 ## Files Managed
 

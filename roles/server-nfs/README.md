@@ -1,10 +1,10 @@
 # Server NFS
 
-Configures a host as an NFS server by installing `nfs-kernel-server` and exporting ZFS datasets via the `sharenfs` ZFS property. Using ZFS-native NFS sharing rather than `/etc/exports` means NFS export configuration is co-located with the dataset definition and survives dataset renames or moves without needing a separate exports file to stay in sync.
+This role configures a host as an NFS server. It installs `nfs-kernel-server` and exports ZFS datasets, through the `sharenfs` ZFS property. This ZFS-native NFS sharing, rather than `/etc/exports`, keeps the NFS export configuration together with the dataset definition. It also survives dataset renames or moves, with no separate exports file to keep in sync.
 
 ## What it does
 
-Installs `nfs-common` and `nfs-kernel-server`, then iterates `zfs_nfs_exports` and sets the `sharenfs` property on each listed dataset. ZFS handles registering the export with the NFS daemon automatically.
+The role installs `nfs-common` and `nfs-kernel-server`. It then goes through `zfs_nfs_exports` and sets the `sharenfs` property on each listed dataset. ZFS registers the export with the NFS daemon automatically.
 
 ## Variables
 
@@ -20,4 +20,4 @@ zfs_nfs_exports:
 
 | Variable | Description |
 |---|---|
-| `zfs_nfs_exports` | List of `{ dataset, options }` dicts. Role is a no-op if not defined. |
+| `zfs_nfs_exports` | List of `{ dataset, options }` dicts. If undefined, the role does nothing. |

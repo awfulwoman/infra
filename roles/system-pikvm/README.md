@@ -1,5 +1,8 @@
 # PiKVM setup
 
-This role sets up a PiKVM device with Tailscale and a custom HDMI switch, and then updates all packages.
+This role sets up a PiKVM device with Tailscale and a custom HDMI switch,
+then updates all packages.
 
-It's rough, it's shonky. But it works, and keeps the info safe from the decay of both my brain and SD cards.
+The setup is rough and not polished, but it works. It keeps this
+information safe, instead of relying on memory or SD cards, which can both
+fail.
