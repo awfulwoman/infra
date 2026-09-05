@@ -28,6 +28,96 @@ The `wan_iface` and `lan_iface` host_vars must always match the netplan
 `ethernets:` keys above. `network-routing-basic` runs an assert task that
 checks both are set and distinct before it changes any rules.
 
+If you replace a NIC, read [Swap a NIC](#swap-a-nic) first. These names
+come from the PCI bus position, and a new card can change them.
+
+## Swap a NIC
+
+The kernel gives each NIC a name from its PCI bus position (`enp1s0`,
+`enp2s0`). A new card changes that position, so the name of the replaced
+NIC can change.
+
+Three places hold these names, and all three must agree:
+
+- netplan — `network_netplan_config` and `host_primary_interface`
+- the firewall — `wan_iface` and `lan_iface`, written to
+  `/etc/iptables/rules.v4`
+- the DHCP server — `dhcpd_interface`, written to
+  `/etc/default/isc-dhcp-server` as `INTERFACESv4`
+
+The firewall is the dangerous one. INPUT policy is DROP, and the LAN
+allow-list names the LAN NIC (`-i enp1s0`). NAT names the WAN NIC
+(`-o enp2s0`). If netplan renames a NIC and the firewall keeps the old
+name, the LAN loses SSH, DNS, DHCP, and NAT.
+
+CAUTION: Do not rename the NICs with netplan `set-name`. udev applies a
+rename only when the device appears, so `netplan apply` cannot do it on a
+live host. The interfaces lose their addresses at once. A reboot does not
+correct this, because the firewall and the DHCP server keep the old names.
+This occurred on bertha on 2026-09-05. Recovery needed the console.
+
+This procedure keeps the kernel names. It reads the new name at the
+console after the swap.
+
+### Steps
+
+1. Before you shut the host down, record the MAC address of each NIC:
+
+   ```bash
+   ssh bertha 'ip -br link'
+   ```
+
+   On 2026-09-05 the values were `1c:61:b4:6d:6f:cd` (`enp1s0`, LAN) and
+   `4c:52:62:03:58:51` (`enp2s0`, WAN).
+
+2. Shut the host down. Then swap the card.
+
+3. Attach the serial console. Then start the host.
+
+   NOTE: The Ethernet path and Tailscale can both be down at this point.
+   The console is the only path you can depend on.
+
+4. At the console, run `ip -br link`. Match each MAC address to its new
+   kernel name. The onboard NIC keeps its MAC address. The other MAC
+   addresses belong to the new card.
+
+5. Update these variables in
+   `inventory/host_vars/router-4gb-bertha/core.yaml`:
+
+   - `network_netplan_config` — the `ethernets:` keys
+   - `host_primary_interface` — the WAN name
+   - `wan_iface` and `lan_iface`
+   - `dhcpd_interface` — the LAN name
+   - `host_mac` — only if the LAN NIC changed
+
+6. Run the full playbook. Do not use a tag:
+
+   ```bash
+   ansible-playbook playbooks/hosts/router-4gb-bertha/core.yaml \
+     -e ansible_host=100.80.1.1
+   ```
+
+   A tag applies one role only. netplan, the firewall, and the DHCP
+   server must change together.
+
+   The `-e ansible_host` option sends the run over Tailscale. The
+   `-i tailscale0` firewall rule does not name a physical NIC, so it
+   survives the change. A LAN rule that names the old NIC cannot cut the
+   run.
+
+7. Make sure that the router works:
+
+   ```bash
+   ssh bertha 'ip -br addr; ip route'   # LAN static, WAN lease, default route
+   ansible router-4gb-bertha -m command -a 'iptables -S INPUT' --become
+   ping -c2 192.168.1.1                 # from a LAN client
+   ```
+
+   The INPUT rules must name the new LAN NIC.
+
+8. Leave the spare ports of the card out of netplan. A port with no
+   netplan stanza stays unconfigured, and it takes no address.
+
 ## The role stack
 
 Roles run in this order (each builds on the previous):
@@ -195,6 +285,17 @@ run, so it cannot resurface.
 Corollary: any `netplan apply` on a router re-evaluates all files. It has
 the same blast radius as a routing change. **Treat even a one-line IPv6
 edit as a routing change, and stage it behind a rollback safety net.**
+
+**Interface names are load-bearing in three places.** netplan, the
+persisted iptables rules, and the dhcpd defaults each hold the NIC names.
+A change in one alone locks out the LAN, because INPUT policy is DROP and
+the allow-list names the LAN NIC. A netplan `set-name` rename also cannot
+take effect on a live host: udev renames a device only when the device
+appears. See [Swap a NIC](#swap-a-nic).
+
+Corollary: a rollback safety net must survive a reboot. `systemd-run
+--on-active=<time>` makes a *transient* unit, and a reboot deletes it —
+so it disappears at the moment that recovery needs it.
 
 **Duplicate-CNAME zone failure.** `infra-named` aggregates `cnames` from
 every host in the `infra` group into one forward zone. A CNAME is a
