@@ -1,6 +1,6 @@
 [Unit]
-Description=Email Backup Sync Timer
-Requires=emailbackup.service
+Description=Email Backup Sync Timer (%i)
+Requires=emailbackup@%i.service
 
 [Timer]
 {% if emailbackup_sync_schedule == "hourly" %}

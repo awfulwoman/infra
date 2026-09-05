@@ -1,24 +1,30 @@
-# mbsync configuration for email backup
+# mbsync configuration for email backup — one Account/Store/Channel block per
+# configured account. Each account gets its OWN SyncState directory: mbsync's
+# state files are named by mailbox ("INBOX", "Archive!2019", ...) with no channel
+# prefix, so two accounts sharing one directory would collide and corrupt each
+# other's sync state.
+{% for acct in emailbackup_accounts %}
 
-IMAPAccount main
-Host {{ emailbackup_imap_host }}
-User {{ emailbackup_imap_user }}
-Pass {{ emailbackup_imap_password }}
+IMAPAccount {{ acct.name }}
+Host {{ acct.imap_host }}
+User {{ acct.imap_user }}
+Pass {{ acct.imap_password }}
 SSLType IMAPS
 CertificateFile /etc/ssl/certs/ca-certificates.crt
 
-IMAPStore main-remote
-Account main
+IMAPStore {{ acct.name }}-remote
+Account {{ acct.name }}
 
-MaildirStore main-local
-Path {{ emailbackup_storage_path }}/
-Inbox {{ emailbackup_storage_path }}/INBOX
+MaildirStore {{ acct.name }}-local
+Path {{ emailbackup_storage_path }}/{{ acct.name }}/
+Inbox {{ emailbackup_storage_path }}/{{ acct.name }}/INBOX
 SubFolders Verbatim
 
-Channel main
-Far :main-remote:
-Near :main-local:
-Patterns *
+Channel {{ acct.name }}
+Far :{{ acct.name }}-remote:
+Near :{{ acct.name }}-local:
+Patterns {{ acct.patterns | default('*') }}
 Create Near
 Expunge None
-SyncState {{ emailbackup_storage_path }}/.mbsync/
+SyncState {{ emailbackup_storage_path }}/.mbsync/{{ acct.name }}/
+{% endfor %}

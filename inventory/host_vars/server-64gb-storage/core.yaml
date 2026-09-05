@@ -146,6 +146,30 @@ system_zfs_policy_mqtt_enabled: true
 system_zfs_policy_healthchecksio_enabled: true
 
 # -------------------------------------------------------------------
+# EMAIL BACKUP / MAIL ARCHIVE
+#
+# One shared account list — feeds both the mbsync backup below and (once wired,
+# tracked separately in the gateway repo) composition-gateway's IMAP config —
+# so an account can never exist in one place without the other. Still a single
+# account by design: see docs/superpowers/specs/2026-09-04-mail-archive-server-
+# handoff.md §11 in the gateway repo for why a second account is deliberately
+# deferred until this one is proven end to end.
+#
+# emailbackup_healthchecksio_enabled catches the exact failure mode found in the
+# 2026-09-04 audit: the backup unit failed every recorded run for weeks with no
+# alert anywhere. See roles/system-emailbackup/README.md.
+# -------------------------------------------------------------------
+charlie_email_accounts:
+  - name: personal
+    imap_host: "imap.{{ vault_mailprovider_domain }}"
+    imap_user: "{{ vault_mailprovider_user }}"
+    imap_password: "{{ vault_mailprovider_password }}"
+
+emailbackup_accounts: "{{ charlie_email_accounts }}"
+emailbackup_sync_schedule: hourly
+emailbackup_healthchecksio_enabled: true
+
+# -------------------------------------------------------------------
 # REVERSEPROXY (#271 - internal wildcard cert rollout)
 # gotosocial/awfulwoman.com are terminated by public01's Traefik, which
 # reverse-proxies to this host's container ports directly - storage's own

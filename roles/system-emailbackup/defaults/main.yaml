@@ -1,6 +1,31 @@
-# Email sync configuration
-emailbackup_sync_schedule: "daily"  # How often to sync (hourly/daily/weekly)
-emailbackup_imap_host: "imap.{{ vault_mailprovider_domain }}"
-emailbackup_imap_user: "{{ vault_mailprovider_user }}"
-emailbackup_imap_password: "{{ vault_mailprovider_password }}"
+# Accounts to back up. Each becomes its own mbsync channel, its own systemd
+# instance (emailbackup@<name>.service/.timer), its own Maildir subdirectory
+# under emailbackup_storage_path, and — when healthchecksio is enabled — its own
+# dead-man's-switch check, so one account's failure cannot go unnoticed because a
+# different account's run pinged successfully.
+#
+# `name` becomes a directory name, a systemd instance name, and (once
+# mail-archive-server is deployed) the account name reported by its API — keep it
+# matching ^[a-z0-9][a-z0-9_-]*$. `patterns` is optional per-account mbsync
+# Patterns (default "*"); set it to exclude provider-specific folders, e.g. a
+# Gmail account excluding "[Gmail]/All Mail" to avoid double-counting.
+emailbackup_accounts:
+  - name: personal
+    imap_host: "imap.{{ vault_mailprovider_domain }}"
+    imap_user: "{{ vault_mailprovider_user }}"
+    imap_password: "{{ vault_mailprovider_password }}"
+
+# How often each account's timer fires (hourly/daily/weekly). mbsync is
+# incremental, so hourly is cheap and keeps the archive close to real-time.
+emailbackup_sync_schedule: hourly
+
 emailbackup_storage_path: "/slowpool/charlie/email"
+
+# Healthchecks.io dead-man's-switch, one check per account (see README). This is
+# what would have caught the backup silently failing for weeks — see the design
+# doc referenced in the README for the incident that motivated it.
+emailbackup_healthchecksio_enabled: false
+emailbackup_healthchecksio_api_key: "{{ vault_healthchecks_rw_apikey }}"
+emailbackup_healthchecksio_tz: Europe/Berlin
+
+emailbackup_script_dir: /usr/local/lib/emailbackup
