@@ -1,0 +1,24 @@
+# Managed by Ansible - do not edit manually (roles/composition-mail-archive-server)
+
+MAIL_ARCHIVE_MAILDIR_PATH=/data/mail
+MAIL_ARCHIVE_DB_PATH=/data/state/index.db
+MAIL_ARCHIVE_MBSYNCRC_PATH=/data/state/mbsyncrc
+MAIL_ARCHIVE_HOST=0.0.0.0
+MAIL_ARCHIVE_PORT={{ composition_mail_archive_server_port }}
+MAIL_ARCHIVE_SYNC_INTERVAL_SECONDS={{ composition_mail_archive_server_sync_interval_seconds }}
+MAIL_ARCHIVE_EXCLUDE_FOLDERS={{ composition_mail_archive_server_exclude_folders }}
+{% for acct in composition_mail_archive_server_imap_accounts %}
+
+MAIL_ARCHIVE_IMAP_ACCOUNTS__{{ acct.name }}__HOST={{ acct.host }}
+MAIL_ARCHIVE_IMAP_ACCOUNTS__{{ acct.name }}__PORT={{ acct.port | default(993) }}
+MAIL_ARCHIVE_IMAP_ACCOUNTS__{{ acct.name }}__USERNAME={{ acct.username }}
+MAIL_ARCHIVE_IMAP_ACCOUNTS__{{ acct.name }}__PASSWORD={{ acct.password }}
+{% if acct.patterns is defined %}
+MAIL_ARCHIVE_IMAP_ACCOUNTS__{{ acct.name }}__PATTERNS={{ acct.patterns }}
+{% endif %}
+{% endfor %}
+{% for token in composition_mail_archive_server_tokens %}
+
+MAIL_ARCHIVE_TOKENS__{{ token.label }}__SECRET={{ token.secret }}
+MAIL_ARCHIVE_TOKENS__{{ token.label }}__ACCOUNTS={{ token.accounts | default('*') }}
+{% endfor %}

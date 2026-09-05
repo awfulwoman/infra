@@ -1,5 +1,13 @@
 # system-emailbackup
 
+**Superseded, pending retirement.** `composition-mail-archive-server` now
+orchestrates mbsync itself (as a subprocess inside its container) rather than
+depending on this role — see that role's README and the `mail-archive-server`
+repo's own README ("Syncing"). This role stays in place, still deployed, until
+that composition is built, deployed, and proven against the real archive; only
+then does this role get removed and its systemd units torn down. Do not build
+new functionality on top of this role in the meantime.
+
 Backs up one or more IMAP mailboxes to local ZFS storage using
 [isync](https://isync.sourceforge.io/) (`mbsync`). Each account configured in
 `emailbackup_accounts` gets its own mbsync channel, its own
@@ -90,7 +98,7 @@ loud — rather than routing around it by ignoring mbsync's exit code.
 
 | Variable | Default | Description |
 |---|---|---|
-| `emailbackup_accounts` | one account, from `vault_mailprovider_*` | List of `{name, imap_host, imap_user, imap_password, patterns?}`. `name` becomes a directory, a systemd instance name, and (via mail-archive-server) an API account name — keep it matching `^[a-z0-9][a-z0-9_-]*$` |
+| `emailbackup_accounts` | one account, from `vault_mailprovider_*` | List of `{name, host, username, password, patterns?}`. `name` becomes a directory, a systemd instance name, and (via mail-archive-server) an API account name — keep it matching `^[a-z0-9][a-z0-9_-]*$` |
 | `emailbackup_sync_schedule` | `hourly` | `hourly`/`daily`/`weekly`, applied to every account's timer |
 | `emailbackup_storage_path` | `/slowpool/charlie/email` | Maildir root; one subdirectory per account |
 | `emailbackup_healthchecksio_enabled` | `false` | Per-account dead-man's-switch checks |

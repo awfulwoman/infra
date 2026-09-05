@@ -6,9 +6,10 @@
 {% for acct in emailbackup_accounts %}
 
 IMAPAccount {{ acct.name }}
-Host {{ acct.imap_host }}
-User {{ acct.imap_user }}
-Pass {{ acct.imap_password }}
+Host {{ acct.host }}
+Port {{ acct.port | default(993) }}
+User {{ acct.username }}
+Pass {{ acct.password }}
 SSLType IMAPS
 CertificateFile /etc/ssl/certs/ca-certificates.crt
 

@@ -9,11 +9,18 @@
 # matching ^[a-z0-9][a-z0-9_-]*$. `patterns` is optional per-account mbsync
 # Patterns (default "*"); set it to exclude provider-specific folders, e.g. a
 # Gmail account excluding "[Gmail]/All Mail" to avoid double-counting.
+#
+# Field names (host/username/password, not imap_host/imap_user/imap_password)
+# match composition-mail-archive-server's shape on purpose — both roles are
+# meant to read the SAME list (see charlie_email_accounts in
+# inventory/host_vars/server-64gb-storage/core.yaml), and this role is retired
+# once that composition is proven (see its own README and
+# roles/system-emailbackup/README.md).
 emailbackup_accounts:
   - name: personal
-    imap_host: "imap.{{ vault_mailprovider_domain }}"
-    imap_user: "{{ vault_mailprovider_user }}"
-    imap_password: "{{ vault_mailprovider_password }}"
+    host: "imap.{{ vault_mailprovider_domain }}"
+    username: "{{ vault_mailprovider_user }}"
+    password: "{{ vault_mailprovider_password }}"
 
 # How often each account's timer fires (hourly/daily/weekly). mbsync is
 # incremental, so hourly is cheap and keeps the archive close to real-time.

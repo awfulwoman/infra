@@ -1,0 +1,32 @@
+# Composition name (used by composition-common dependency)
+composition_name: mail-archive-server
+
+# No composition_dns_subdomains: this is deliberately never exposed through
+# Traefik or a published port. It shares the compositions' Docker bridge network
+# with composition-gateway on the same host, and is reached at
+# http://mail-archive-server:{{ composition_mail_archive_server_port }} from
+# there — never given a route to the outside.
+
+# The Maildir mbsync syncs into and this service indexes. Same dataset
+# system-emailbackup used — this composition takes over that data in place,
+# it does not create a new archive.
+composition_mail_archive_server_maildir_path: /slowpool/charlie/email
+composition_mail_archive_server_port: 4103
+
+# List of {name, host, username, password, port?, patterns?} — see
+# roles/system-emailbackup/README.md and mail-archive-server's own README for
+# what `name` and `patterns` mean. Empty by default: with no accounts configured
+# the service only serves search over whatever the Maildir already contains,
+# performing no sync of its own.
+composition_mail_archive_server_imap_accounts: []
+composition_mail_archive_server_sync_interval_seconds: 3600
+composition_mail_archive_server_exclude_folders: "Trash,Junk"
+
+# List of {label, secret, accounts?} — accounts is "*" (default) or a
+# comma-separated allowlist. This token is the actual security boundary (the
+# service serves every account by default); see mail-archive-server's own
+# README "Token scoping".
+composition_mail_archive_server_tokens:
+  - label: gateway
+    secret: "{{ vault_gateway_mail_archive_server_token }}"
+    accounts: "*"

@@ -1,0 +1,45 @@
+# code: language=ansible
+
+- name: "Assert at least one access token is configured"
+  ansible.builtin.assert:
+    that:
+      - composition_mail_archive_server_tokens | length > 0
+    fail_msg: >-
+      composition_mail_archive_server_tokens must include at least one
+      {label, secret} entry — the service refuses to start with no tokens.
+    quiet: true
+
+- name: "Assert account names are safe to use as directories/mbsync channels"
+  ansible.builtin.assert:
+    that: item.name is regex("^[a-z0-9][a-z0-9_-]*$")
+    fail_msg: >-
+      composition_mail_archive_server_imap_accounts name '{{ item.name }}' must
+      match ^[a-z0-9][a-z0-9_-]*$ — it becomes a Maildir subdirectory, an mbsync
+      channel name, and the account name reported by the service's API.
+    quiet: true
+  loop: "{{ composition_mail_archive_server_imap_accounts }}"
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: "Create compose file"
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ composition_root }}/docker-compose.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0644"
+
+- name: "Create .env file"
+  ansible.builtin.template:
+    src: environment_vars.j2
+    dest: "{{ composition_root }}/.environment_vars"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0600"
+
+- name: Start Docker Compose project
+  community.docker.docker_compose_v2:
+    project_src: "{{ composition_root }}"
+    state: present
+    pull: always
+    remove_orphans: true

@@ -148,26 +148,40 @@ system_zfs_policy_healthchecksio_enabled: true
 # -------------------------------------------------------------------
 # EMAIL BACKUP / MAIL ARCHIVE
 #
-# One shared account list — feeds both the mbsync backup below and (once wired,
-# tracked separately in the gateway repo) composition-gateway's IMAP config —
-# so an account can never exist in one place without the other. Still a single
-# account by design: see docs/superpowers/specs/2026-09-04-mail-archive-server-
-# handoff.md §11 in the gateway repo for why a second account is deliberately
-# deferred until this one is proven end to end.
+# One shared account list, read by both system-emailbackup (below) and
+# composition-mail-archive-server — see that role's README for why sync moved
+# into the container rather than staying a separate systemd-driven role, and
+# system-emailbackup's own README for the retirement plan (this role stays
+# deployed until the composition is built, deployed, and proven; only then does
+# it come out). Field names (host/username/password) match what BOTH
+# consumers expect on purpose — this is the single source of truth for IMAP
+# credentials on this host, so a mismatch here would silently desync one
+# consumer from the other.
 #
-# emailbackup_healthchecksio_enabled catches the exact failure mode found in the
+# Still a single account by design — a second is deliberately deferred until
+# this one is proven end to end (see the mail-archive-server repo's own specs).
+#
+# emailbackup_healthchecksio_enabled catches the exact failure mode found in a
 # 2026-09-04 audit: the backup unit failed every recorded run for weeks with no
 # alert anywhere. See roles/system-emailbackup/README.md.
 # -------------------------------------------------------------------
 charlie_email_accounts:
   - name: personal
-    imap_host: "imap.{{ vault_mailprovider_domain }}"
-    imap_user: "{{ vault_mailprovider_user }}"
-    imap_password: "{{ vault_mailprovider_password }}"
+    host: "imap.{{ vault_mailprovider_domain }}"
+    username: "{{ vault_mailprovider_user }}"
+    password: "{{ vault_mailprovider_password }}"
 
 emailbackup_accounts: "{{ charlie_email_accounts }}"
 emailbackup_sync_schedule: hourly
 emailbackup_healthchecksio_enabled: true
+
+# Not yet in `compositions:` below — held back deliberately until: the
+# mail-archive-server image exists at ghcr.io (repo isn't pushed to GitHub
+# yet), the account-directory migration has been run on this host's real
+# Maildir (roles/system-emailbackup/files/migrate-to-multi-account.sh), and
+# vault_gateway_mail_archive_server_token has been added to the vault. Adding
+# it to `compositions:` before then would fail on image pull.
+composition_mail_archive_server_imap_accounts: "{{ charlie_email_accounts }}"
 
 # -------------------------------------------------------------------
 # REVERSEPROXY (#271 - internal wildcard cert rollout)

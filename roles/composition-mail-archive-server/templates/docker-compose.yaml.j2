@@ -1,0 +1,24 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  mail-archive-server:
+    container_name: "{{ composition_name }}"
+    image: ghcr.io/awfulwoman/mail-archive-server:latest
+    restart: unless-stopped
+    env_file: .environment_vars
+    volumes:
+      - "{{ composition_mail_archive_server_maildir_path }}:/data/mail"
+      - "{{ composition_config }}:/data/state"
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/localhost/{{ composition_mail_archive_server_port }}'"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+networks:
+  "{{ default_docker_network }}":
+    external: true
