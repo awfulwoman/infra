@@ -32,6 +32,16 @@
     group: "{{ ansible_user }}"
     mode: "0644"
 
+- name: "Ensure Connect data directory exists"
+  become: true
+  ansible.builtin.file:
+    path: "{{ composition_config }}/data"
+    state: directory
+    owner: "999"
+    group: "999"
+    mode: "0700"
+  when: onepassword_connect_data_bind_mount
+
 # ----------------------------
 # Start composition
 # ----------------------------

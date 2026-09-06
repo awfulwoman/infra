@@ -2,3 +2,12 @@ composition_name: onepassword-connect
 
 composition_dns_subdomains:
   - connect
+
+# Where the Connect sync database (1password.sqlite) is stored.
+#   false: Docker-managed named volume `op-connect-data`, which lives under
+#          the Docker data-root (the OS disk).
+#   true:  bind mount at {{ composition_config }}/data, so the database sits
+#          on the composition dataset (the ZFS pool) with the rest of the
+#          composition. Enable per host only after migrating its existing
+#          volume — see README.
+onepassword_connect_data_bind_mount: false

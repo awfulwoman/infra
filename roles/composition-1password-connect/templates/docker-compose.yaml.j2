@@ -8,7 +8,11 @@ services:
     restart: unless-stopped
     volumes:
       - "{{ composition_config }}/1password-credentials.json:/home/opuser/.op/1password-credentials.json:ro"
+{% if onepassword_connect_data_bind_mount %}
+      - "{{ composition_config }}/data:/home/opuser/.op/data"
+{% else %}
       - "op-connect-data:/home/opuser/.op/data"
+{% endif %}
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.op-connect.rule=Host(`{{ composition_dns_subdomains[0] }}.{{ domainname_infra }}`)"
@@ -31,11 +35,17 @@ services:
       - "{{ default_docker_network }}"
     volumes:
       - "{{ composition_config }}/1password-credentials.json:/home/opuser/.op/1password-credentials.json:ro"
+{% if onepassword_connect_data_bind_mount %}
+      - "{{ composition_config }}/data:/home/opuser/.op/data"
+{% else %}
       - "op-connect-data:/home/opuser/.op/data"
+{% endif %}
 
+{% if not onepassword_connect_data_bind_mount %}
 volumes:
   op-connect-data:
 
+{% endif %}
 networks:
   "{{ default_docker_network }}":
     external: true

@@ -45,10 +45,11 @@ system_repos:
 # -------------------------------------------------------------------
 # ZFS
 # fastpool: one 238GB USB SSD (JMicron enclosure) as a single-disk
-# stripe vdev — no redundancy. It carries the compositions dataset so
-# 1Password Connect data sits on ZFS with a snapshot policy, off the
-# 64GB OS drive. The by-id path uses the enclosure's generic serial;
-# do not attach a second generic JMicron enclosure to this host.
+# stripe vdev — no redundancy. It carries the compositions dataset, so
+# the 1Password Connect config and (via onepassword_connect_data_bind_mount
+# below) its sync database sit on ZFS, off the 64GB OS drive. The by-id
+# path uses the enclosure's generic serial; do not attach a second
+# generic JMicron enclosure to this host.
 # -------------------------------------------------------------------
 zfs_pools_create: true
 zfs:
@@ -64,11 +65,17 @@ zfs:
 
 # -------------------------------------------------------------------
 # COMPOSITIONS
-# Loopback-only: Connect binds to 127.0.0.1:8080, so no Traefik provider,
-# no reverseproxy, and no DNS record (see the migration plan, Task 2 Step 4).
-# `labels: []` suppresses the role default `composition_dns_subdomains: [connect]`
-# so no CNAME is derived here — randolph still owns `connect` until its cutover.
+# Connect publishes no host port and camina runs no Traefik, so the API is
+# reachable only from the shared Docker network. The compose file still
+# carries Traefik router labels, but they are inert here. `labels: []`
+# suppresses the role default `composition_dns_subdomains: [connect]`, so no
+# CNAME is derived — randolph still owns `connect` until its cutover.
+#
+# onepassword_connect_data_bind_mount: keep the sync database on fastpool
+# (bind mount at {{ composition_config }}/data) instead of a Docker named
+# volume on the OS drive.
 # -------------------------------------------------------------------
+onepassword_connect_data_bind_mount: true
 compositions:
   - composition: 1password-connect
     labels: []
