@@ -44,11 +44,23 @@ system_repos:
 
 # -------------------------------------------------------------------
 # ZFS
-# No dedicated ZFS pool: camina's only disk is the 64GB OS drive
-# (single-disk box, no separate internal SSD). composition-common
-# detects the missing `zfs` binary and falls back to plain directories
-# under /fastpool/compositions on the root filesystem, same as malcolm.
+# fastpool: one 238GB USB SSD (JMicron enclosure) as a single-disk
+# stripe vdev — no redundancy. It carries the compositions dataset so
+# 1Password Connect data sits on ZFS with a snapshot policy, off the
+# 64GB OS drive. The by-id path uses the enclosure's generic serial;
+# do not attach a second generic JMicron enclosure to this host.
 # -------------------------------------------------------------------
+zfs_pools_create: true
+zfs:
+  fastpool:
+    vdevs:
+      - type: stripe
+        disks: /dev/disk/by-id/usb-JMicron_Generic_0123456789ABCDEF-0:0
+    datasets:
+      compositions:
+        policy: critical
+        children_inherit_policy: true
+        snapshots_discover_children: true
 
 # -------------------------------------------------------------------
 # COMPOSITIONS
