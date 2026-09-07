@@ -96,6 +96,29 @@
   with_items: "{{ security_sudoers_passworded }}"
   when: security_sudoers_passworded | length > 0
 
+# Stock Ubuntu mails root on every failed / non-interactive sudo. Under
+# passworded sudo that turns Ansible become probes and stray `sudo -n` calls
+# into a stream of mail, which nullmailer relays off-site. Negate it per host
+# with a drop-in: @includedir is the last line of /etc/sudoers, so this wins
+# over the `Defaults mail_badpass` set higher up in the same file.
+- name: Stop sudo mailing root on failed authentication
+  become: true
+  ansible.builtin.copy:
+    dest: /etc/sudoers.d/no-mail-badpass
+    content: "Defaults !mail_badpass\n"
+    owner: root
+    group: root
+    mode: "0440"
+    validate: 'visudo -cf %s'
+  when: not security_sudo_mail_badpass
+
+- name: Restore default sudo mail-on-bad-password behaviour
+  become: true
+  ansible.builtin.file:
+    path: /etc/sudoers.d/no-mail-badpass
+    state: absent
+  when: security_sudo_mail_badpass
+
 - name: Gather service facts
   ansible.builtin.service_facts:
 

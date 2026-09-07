@@ -15,6 +15,15 @@ security_sudoers_passwordless:
   - "{{ vault_server_username }}"
 security_sudoers_passworded: []
 
+# Ubuntu's stock /etc/sudoers sets `Defaults mail_badpass`, which mails root on
+# every failed or non-interactive sudo (e.g. `sudo -n` with no cached creds).
+# That only helps where someone reads root's local mail - here nullmailer
+# relays it off-site, and under passworded sudo it is mostly Ansible become
+# probes and stray `sudo -n`. Off fleet-wide: `system-security` drops in
+# `Defaults !mail_badpass`. Failed sudo is still in the journal and auth.log.
+# Set true per host to keep the stock mail-on-bad-password.
+security_sudo_mail_badpass: false
+
 # SSH hardening
 security_ssh_port: 22
 security_ssh_password_authentication: false
