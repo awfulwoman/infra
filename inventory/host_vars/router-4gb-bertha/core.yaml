@@ -16,8 +16,12 @@ host_description: "Primary home dual-NIC Linux router"
 # Hint: Use `network_netplan_config:` for more fine-grained control
 # Docs: roles/network-netplan/README.md
 # -------------------------------------------------------------------
-host_ipv4: 192.168.1.1 # bertha's LAN address (on enp1s0)
-host_mac: "1c:61:b4:6d:6f:cd" # enp1s0 (LAN) NIC
+host_ipv4: 192.168.1.1 # bertha's LAN address (on enp1s0f0)
+# 2026-09-07 NIC swap: replaced with an HP-badged Intel NC360T dual-port
+# card. The onboard WAN NIC (enp2s0) kept its identity; the LAN port is now
+# enp1s0f0 (the card's second port, enp1s0f1, is left out of netplan/unused
+# per the "Swap a NIC" runbook in docs/router.md).
+host_mac: "00:1f:29:5b:55:a6" # enp1s0f0 (LAN) NIC
 host_ipv4_subnet: 24
 host_tailscale_ipv4: 100.80.1.1
 # The WAN (enp2s0) is the netplan "primary" and runs DHCP off the Fritz!Box.
@@ -39,7 +43,7 @@ network_netplan_config:
       # which is harmless (not routable off-link).
       dhcp6: false
       accept-ra: false
-    enp1s0: # LAN - home side, bertha is the gateway here (NO default route)
+    enp1s0f0: # LAN - home side, bertha is the gateway here (NO default route)
       addresses: [192.168.1.1/24]
       # A router must never learn routing from its own LAN clients. A live
       # check found another LAN device (f4:34:f0:2e:f4:c3) sending RAs that
@@ -50,7 +54,7 @@ network_netplan_config:
 
 # NIC roles for network-routing-basic (must match netplan above)
 wan_iface: enp2s0 # WAN - to Fritz!Box / internet
-lan_iface: enp1s0 # LAN - home side
+lan_iface: enp1s0f0 # LAN - home side
 
 # Harden the router: default-DROP INPUT + FORWARD, allow-list management/services
 # from the LAN and Tailscale only. WAN cannot reach the router or initiate forwards.
@@ -79,7 +83,7 @@ security_sudoers_passworded:
 dhcpd_enabled: true
 # Bind to the LAN NIC. The role default is `enp3s0` — which doesn't exist on
 # this host, so the server was serving nobody (clients had stale/foreign IPs).
-dhcpd_interface: enp1s0
+dhcpd_interface: enp1s0f0
 # Hand out ONLY the router as resolver. The role default appends 8.8.8.8 as a
 # secondary, which would let clients bypass bertha's authoritative/split-horizon
 # DNS whenever they fall through to it.
