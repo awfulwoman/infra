@@ -3,7 +3,7 @@ name: "{{ composition_name }}"
 services:
   db:
     container_name: pixelfed-db
-    image: mysql:9
+    image: mysql:26
     restart: unless-stopped
     env_file: .environment_vars
     volumes:
