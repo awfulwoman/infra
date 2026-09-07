@@ -16,36 +16,21 @@ $ORIGIN {{ bind_iprange_reversed }}.IN-ADDR.ARPA.
 {% endfor %}
 {% endif %}
 
-; PTR records - from config
-{% if bind_records_nameservers is defined -%}
-  {%- for record in bind_records_nameservers %}
-    {% if record.ip is defined %}
-      {%- set record_ip_split = record.ip.split('.')[0:4] %}
-      {{- '%-40s' | format(record_ip_split[3] + '.' + record_ip_split[2])  }} IN      PTR      {{ record.name }}.{{ bind_domain }}.
-    {% endif %}
-  {% endfor %}
-{% endif %}
-
-; A records - from config
-{% if bind_records_a is defined %}
-  {% for record in bind_records_a %}
-    {% if record.host is defined %}
-      {% set record_ip = hostvars[record.host].host_ipv4 %}
-    {% elif record.ip is defined %}
-      {% set record_ip = record.ip %}
-    {% else %}
-      {% set record_ip = none %}
-    {% endif %}
-    {% if record_ip %}
-      {% set record_ip_split = record_ip.split('.')[0:4] %}
-      {% if record.name == "@" %}
-        {{- '%-40s' | format(record_ip_split[3] + '.' + record_ip_split[2])  }} IN      PTR      {{ bind_domain }}.
-      {% else -%}
-        {{- '%-40s' | format(record_ip_split[3] + '.' + record_ip_split[2])  }} IN      PTR      {{ record.name }}.{{ bind_domain }}.
-      {% endif %}
-    {% endif %}
-  {% endfor %}
-{% endif %}
+; ---------------------------------------------------------------------------
+; PTR records
+;
+; ONE PTR per address, naming the canonical host that owns it. Alias names
+; (nameserver labels, apex/www A records, cnames_additional, and the
+; composition cnames from dns_records_derived) are deliberately NOT emitted
+; here, even though they all resolve forward to a host's IP.
+;
+; They used to be. The result was 52 PTRs on server-64gb-storage's address,
+; and BIND rotates a multi-record RRset per query (default cyclic
+; rrset-order), so any reverse lookup returned an arbitrary service name -
+; `prowlarr.ewwww.eu.` one second, `www.ewwww.eu.` the next. Anything doing
+; reverse lookups (WatchYourLAN, logs, sshd) got a coin flip instead of the
+; host. Forward CNAMEs are unaffected; they stay in db.zone.
+; ---------------------------------------------------------------------------
 
 ; PTR records - from Ansible inventory (managed hosts)
 {% for host in groups[bind_ansible_group] %}
@@ -64,29 +49,5 @@ $ORIGIN {{ bind_iprange_reversed }}.IN-ADDR.ARPA.
       {% set record_ip_split = hostvars[host].host_ipv4.split('.')[0:4] -%}
       {{- '%-40s' | format(record_ip_split[3] + '.' + record_ip_split[2])  }} IN      PTR      {{ hostvars[host].host_pfqdn }}.{{ bind_domain}}.
     {% endif %}
-  {% endif %}
-{% endfor %}
-
-; cnames - hand-written cnames_additional (names with no owning composition)
-{% for host in groups[bind_ansible_group] %}
-  {% if hostvars[host].cnames_additional is defined %}
-    {% if hostvars[host].host_ipv4 is not none %}
-      {% set record_ip_split = hostvars[host].host_ipv4.split('.')[0:4] -%}
-      {% for cname in hostvars[host].cnames_additional %}
-        {{- '%-40s' | format(record_ip_split[3] + '.' + record_ip_split[2])  }} IN      PTR      {{ cname }}.
-      {% endfor %}
-    {% endif %}
-  {% endif %}
-{% endfor %}
-
-; cnames - derived from dns_records filter (compositions:)
-{% for host in groups[bind_ansible_group] %}
-  {% if hostvars[host].compositions is defined and hostvars[host].host_ipv4 is not none %}
-    {% set record_ip_split = hostvars[host].host_ipv4.split('.')[0:4] -%}
-    {% for label, target in (dns_records_derived.cnames.items() | sort) %}
-      {% if target == hostvars[host].host_pfqdn %}
-        {{- '%-40s' | format(record_ip_split[3] + '.' + record_ip_split[2])  }} IN      PTR      {{ label }}.{{ bind_domain }}.
-      {% endif %}
-    {% endfor %}
   {% endif %}
 {% endfor %}

@@ -22,6 +22,23 @@ named-checkzone DOMAINNAME /etc/bind/zones/db.DOMAINNAME.zone
 named-checkzone 168.192.in-addr.arpa /etc/bind/zones/db.DOMAINNAME.reverse.zone
 ```
 
+## Reverse zone
+
+The reverse zone holds exactly one PTR per address: the canonical
+`host_pfqdn` of the host that owns it, taken from the inventory (both the
+managed group and the unmanaged group). Alias names get no PTR — not the
+nameserver labels, not the apex/`www` records in `bind_records_a`, not
+`cnames_additional`, and not the composition CNAMEs derived from
+`compositions:`. All of those still resolve forward in `db.zone`.
+
+This matters because a PTR names the host, not the services on it. When the
+aliases were emitted too, `192.168.1.116` carried 52 PTR records. BIND rotates
+a multi-record RRset on every query (default cyclic `rrset-order`), so a
+reverse lookup returned whichever alias came up first — `prowlarr.ewwww.eu.`
+on one query, `www.ewwww.eu.` on the next. Consumers of reverse DNS
+(WatchYourLAN's device names, log lines, `sshd`) showed a random service
+instead of the machine.
+
 ## Tailscale addresses
 
 Every host declares its Tailscale address as `host_tailscale_ipv4` in its
