@@ -9,6 +9,7 @@ all:
         host_fqdn: "{{ host_pfqdn }}.{{ domainname_infra }}"
       hosts:
 
+        # Misc
         unmanaged-kvm-tesmart-8port:
           host_name: kvm-tesmart-8port
           host_ipv4: 192.168.1.10
@@ -39,7 +40,7 @@ all:
           host_mac: "54:60:09:d8:e0:92"
         unmanaged-av-hifi:
           host_name: av-hifi
-          host_description:
+          host_description: TEAC hifi unit
           host_ipv4: false
           host_mac: "00:02:2e:70:1c:9b"
 
@@ -56,7 +57,7 @@ all:
           host_mac: false
         unmanaged-custom-weather-station:
           host_name: custom-weather-station
-          host_description: EPhome weather station
+          host_description: ESPhome weather station
           host_ipv4: false
           host_mac: "c8:f0:9e:2f:a1:f0"
 
@@ -146,13 +147,6 @@ all:
           host_description: Derek the cleaning robot
           host_ipv4: false
           host_mac: "24:18:c6:14:86:ba"
-
-        # Routers
-        unmanaged-router-opnsense:
-          host_name: router-opnsense
-          host_description: OPNsense router
-          host_ipv4: false
-          host_mac: false
 
         # Satellites
         unmanaged-satellite-apple-homepod-mini-bedroom:
