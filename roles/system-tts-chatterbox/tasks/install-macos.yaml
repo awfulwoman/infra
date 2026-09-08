@@ -34,10 +34,17 @@
     checksum: true
   register: chatterbox_voices
 
+- name: Check the venv interpreter resolves
+  ansible.builtin.command:
+    cmd: "{{ system_chatterbox_base_dir }}/venv/bin/python --version"
+  register: chatterbox_venv_python
+  changed_when: false
+  failed_when: false
+
 - name: Ensure Python venv exists
   ansible.builtin.command:
-    cmd: /opt/homebrew/bin/uv venv "{{ system_chatterbox_base_dir }}/venv" --python 3.11
-    creates: "{{ system_chatterbox_base_dir }}/venv/bin/python"
+    cmd: /opt/homebrew/bin/uv venv --clear "{{ system_chatterbox_base_dir }}/venv" --python 3.11
+  when: chatterbox_venv_python.rc != 0
 
 - name: Install Python dependencies
   ansible.builtin.command:
