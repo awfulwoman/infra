@@ -208,3 +208,85 @@ all:
           host_description: Charlie's Apple Watch
           host_ipv4: false
           host_mac: "2a:84:ea:6c:8f:62"
+
+        # ===================================================================
+        # UNIDENTIFIED - captured 2026-09-09, commented out pending
+        # investigation.
+        #
+        # Source: WatchYourLAN on homebrain (14 devices with a blank name)
+        # cross-referenced against bertha's /var/lib/dhcp/dhcpd.leases for
+        # the DHCP client-hostname each device announced.
+        #
+        # They show blank in WatchYourLAN because it names devices by
+        # reverse DNS and these hold pool addresses, which have no PTR.
+        # A blank name means "no PTR", NOT "unknown device" - most of the
+        # list below turns out to be gear already recorded above.
+        #
+        # MACs marked RANDOM are locally administered (Apple/Android
+        # privacy addressing). They rotate, roughly fortnightly on iOS, so
+        # do not pin a DHCP reservation to one - it will stop matching.
+        # -------------------------------------------------------------------
+
+        # --- Group A: already in the inventory above, matched by MAC.
+        # Do NOT add a second entry. They are blank in WatchYourLAN only
+        # because host_ipv4 is false, so no PTR is generated. Giving the
+        # EXISTING entry an address fixes the display.
+        #
+        #   192.168.1.101  34:fd:6a:38:cc:64  ->  av-appletv
+        #   192.168.1.109  24:18:c6:14:86:ba  ->  robot-derek
+        #   192.168.1.114  c8:f0:9e:2f:a1:f0  ->  custom-weather-station
+        #                                         (announces itself as
+        #                                          "device-sensor-atmosphere-ext")
+
+        # --- Group B: almost certainly an entry above that has
+        # host_mac: false. Confirm, then fill in host_mac on the EXISTING
+        # entry rather than uncommenting anything here.
+        #
+        #   192.168.1.100  f4:34:f0:2e:f4:c3  "LivingRmHomePod"
+        #                  -> satellite-apple-homepod-mini-livingroom
+        #   192.168.1.107  54:09:10:d6:14:32  "device-iphone-12"
+        #                  -> phone-iphone12
+        #   192.168.1.134  04:7b:cb:2b:2b:18  "GM03H3GT"
+        #                  -> laptop-lenovo-work-GM03H3GT (exact hostname match)
+        #   192.168.1.102  50:57:8a:5a:71:40  "[Wifey]s-iPad"
+        #                  -> one of the tablet-ipad-* entries; which one is
+        #                     not clear from the hostname alone. NOTE the
+        #                     device still broadcasts the real name over
+        #                     DHCP and mDNS - rename it on the iPad itself
+        #                     if that matters.
+        #   192.168.1.112  e6:0f:1e:5c:7f:a2  "Watch"  [RANDOM]
+        #                  -> probably watch-apple-series6, whose recorded
+        #                     MAC (2a:84:ea:6c:8f:62) is also random and has
+        #                     since rotated. Not worth pinning either way.
+
+        # --- Group C: genuinely not in the inventory. These are the ones
+        # worth chasing.
+
+        # Espressif device on an on-device static address, below the pool,
+        # never leased, and announcing no DHCP hostname. Not in
+        # composition-esphome. Sits inside the proposed .70-.99 IoT block,
+        # so identify it before that address gets reassigned by hand.
+        # unmanaged-TODO-esp-98:
+        #   host_name: TODO
+        #   host_description: "Unidentified Espressif device"
+        #   host_ipv4: 192.168.1.98
+        #   host_mac: "34:94:54:74:3f:08"
+
+        # Belkin SoundForm Connect (AirPlay 2 audio adapter). Announces
+        # "SOUNDFORM"; AMPAK is its wireless module vendor.
+        # unmanaged-TODO-av-soundform:
+        #   host_name: TODO
+        #   host_description: "Belkin SoundForm Connect"
+        #   host_ipv4: false
+        #   host_mac: "d4:12:43:e8:8f:f2"
+
+        # --- Group D: randomised MACs, no stable identity to record.
+        # Listed for completeness. Each is probably a device already above;
+        # the MAC will have rotated by the time you read this, so identify
+        # them by watching which one drops off the network, not by MAC.
+        #
+        #   192.168.1.104  46:45:60:4b:36:25  "Mac"     [RANDOM]
+        #   192.168.1.105  ee:ba:5a:1c:15:dd  "Mac"     [RANDOM]
+        #   192.168.1.106  22:03:b7:4c:66:a1  "iPhone"  [RANDOM]
+        #   192.168.1.115  0a:30:6d:c8:71:2b  (no DHCP hostname) [RANDOM]
+        # ===================================================================
