@@ -1,0 +1,70 @@
+# Composition name (used by composition-common dependency)
+composition_name: hermes-agent
+
+composition_dns_subdomains:
+  - hermes
+
+# Upstream publishes a multi-arch image (amd64/arm64) to Docker Hub. The
+# docker-compose.yml in the repo builds from a source checkout instead;
+# no host here keeps a checkout, so pull the published image.
+composition_hermes_agent_image: "nousresearch/hermes-agent:latest"
+
+# -------------------------------------------------------------------
+# MODEL
+# Malcolm's Ollama, over its OpenAI-compatible /v1 endpoint. Hermes calls
+# an arbitrary OpenAI-compatible endpoint the "custom" provider.
+# Docs: https://hermes.nousresearch.com/integrations/providers
+# -------------------------------------------------------------------
+composition_hermes_agent_model: "{{ llm_default_model }}"
+composition_hermes_agent_base_url: "{{ llm_default_openai_uri }}"
+# Ollama ignores the key, but the OpenAI client sends one. Not a secret.
+composition_hermes_agent_api_key: "ollama"
+
+# Hermes rejects a context window below 64000 at startup: the system prompt,
+# tool schemas and conversation state do not fit in less. Ollama applies its
+# own OLLAMA_CONTEXT_LENGTH on the server side and silently truncates to it,
+# so Malcolm's value must be at least this too. See README.
+composition_hermes_agent_context_length: 64000
+
+# Schema version config.yaml is written against, as declared by the image's
+# hermes_cli.config.DEFAULT_CONFIG. Verified against
+# nousresearch/hermes-agent:latest on 2026-09-10. Re-check when bumping the
+# image - the migration warning names an older number than the real one.
+composition_hermes_agent_config_version: 42
+
+# Backend for the agent's shell tool. "local" runs commands inside this
+# container. "docker" would need the host Docker socket mounted, which hands
+# the agent the host - do not set it here.
+composition_hermes_agent_terminal_backend: local
+
+# -------------------------------------------------------------------
+# DASHBOARD
+# Traefik fronts it, so it binds 0.0.0.0 inside the container: reachable
+# from the shared Docker network only, no host port published.
+#
+# Hermes' own auth gate engages on any non-loopback bind and fails closed
+# without an auth provider (HERMES_DASHBOARD_INSECURE no longer bypasses
+# it). The bundled "basic" provider needs a username and password, so both
+# are mandatory - tasks/main.yaml asserts they are set.
+# -------------------------------------------------------------------
+composition_hermes_agent_dashboard: true
+composition_hermes_agent_dashboard_port: 9119
+composition_hermes_agent_dashboard_username: "{{ vault_hermes_agent_dashboard_username | default(vault_server_username) }}"
+composition_hermes_agent_dashboard_password: "{{ vault_hermes_agent_dashboard_password | default('') }}"
+# Signs dashboard session cookies. Without it every container restart
+# invalidates open sessions.
+composition_hermes_agent_dashboard_secret: "{{ vault_hermes_agent_dashboard_secret | default('') }}"
+
+# -------------------------------------------------------------------
+# API SERVER
+# The OpenAI-compatible endpoint Hermes can expose on 8642. Off by default:
+# with it on, anything on the shared Docker network can drive the agent.
+# Enabling it requires a key - the assert in tasks/main.yaml enforces that.
+# -------------------------------------------------------------------
+composition_hermes_agent_api_server: false
+composition_hermes_agent_api_server_port: 8642
+composition_hermes_agent_api_server_key: "{{ vault_hermes_agent_api_server_key | default('') }}"
+
+# Ansible owns config.yaml. Set false to template it once and then leave a
+# hand-edited or `hermes setup`-written file alone on later runs.
+composition_hermes_agent_manage_config: true

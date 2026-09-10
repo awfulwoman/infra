@@ -1,0 +1,7 @@
+# config.yaml is a bind-mounted file, so a change to it does not make Compose
+# recreate the container. Hermes only reads it at startup, so restart by hand.
+- name: Restart Hermes
+  community.docker.docker_container:
+    name: hermes
+    state: started
+    restart: true

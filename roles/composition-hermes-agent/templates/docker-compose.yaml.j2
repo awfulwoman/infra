@@ -1,0 +1,46 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  hermes:
+    container_name: hermes
+    image: "{{ composition_hermes_agent_image }}"
+    restart: unless-stopped
+    env_file: .environment_vars
+    # Without this the image's default entrypoint starts the interactive TUI,
+    # which exits immediately on a non-tty stdin and leaves the container
+    # restart-looping. The dashboard is not started here - it is a separate s6
+    # slot that /init brings up when HERMES_DASHBOARD is set.
+    command: ["gateway", "run"]
+    volumes:
+      # Upstream mounts ~/.hermes here. Instead the agent's whole state -
+      # config.yaml, .env, memories, skills, cron, sessions, logs - lives on
+      # the compositions dataset instead, so ZFS snapshots cover it.
+      - "{{ composition_config }}/data:/opt/data"
+      - /etc/localtime:/etc/localtime:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.hermes-agent.rule=Host(`{{ composition_dns_subdomains[0] }}.{{ domainname_infra }}`)"
+      - "traefik.http.routers.hermes-agent.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
+      - "traefik.http.routers.hermes-agent.tls.certresolver=letsencrypt"
+{% endif %}
+      - "traefik.http.services.hermes-agent.loadbalancer.server.port={{ composition_hermes_agent_dashboard_port }}"
+    networks:
+      - "{{ default_docker_network }}"
+{% if composition_hermes_agent_dashboard %}
+    # Debian trixie image: bash is present, so probe the socket rather than
+    # fetching a URL. Every dashboard path answers 401 until you log in, so an
+    # HTTP check would have to treat an auth failure as healthy.
+    # start_period is generous: s6 runs the cont-init.d scripts (chown of
+    # /opt/data, profile reconcile) before the dashboard slot comes up.
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/localhost/{{ composition_hermes_agent_dashboard_port }}'"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
+{% endif %}
+
+networks:
+  "{{ default_docker_network }}":
+    external: true

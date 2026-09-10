@@ -1,0 +1,138 @@
+# code: language=ansible
+
+# ----------------------------
+# Remove composition (state: absent)
+# ----------------------------
+
+- name: Stop and remove Docker Compose project
+  community.docker.docker_compose_v2:
+    project_src: "{{ composition_root }}"
+    state: absent
+    remove_orphans: true
+  ignore_errors: true
+  when: state | default('present') == 'absent'
+
+# The agent's whole state lives here: config.yaml, memories, skills, cron,
+# sessions, logs. Removing the composition removes it. The ZFS dataset itself
+# is left behind - destroying it is not something a play should do silently.
+- name: Remove the Hermes data directory
+  become: true
+  ansible.builtin.file:
+    path: "{{ composition_config }}/data"
+    state: absent
+  when: state | default('present') == 'absent'
+
+- name: Remove compose and environment files
+  become: true
+  ansible.builtin.file:
+    path: "{{ composition_root }}/{{ absent_file }}"
+    state: absent
+  loop_control:
+    loop_var: absent_file
+  loop:
+    - docker-compose.yaml
+    - .environment_vars
+  when: state | default('present') == 'absent'
+
+# ----------------------------
+# Preflight
+# ----------------------------
+
+- name: Assert dashboard credentials are set
+  ansible.builtin.assert:
+    that:
+      - composition_hermes_agent_dashboard_username | length > 0
+      - composition_hermes_agent_dashboard_password | length > 0
+      - composition_hermes_agent_dashboard_secret | length > 0
+    fail_msg: >-
+      The Hermes dashboard binds beyond loopback so Traefik can reach it, and
+      Hermes fails closed unless an auth provider is configured. Set
+      vault_hermes_agent_dashboard_username, _password and _secret in the
+      vault, or set composition_hermes_agent_dashboard to false.
+    quiet: true
+  when: state | default('present') == 'present' and composition_hermes_agent_dashboard
+
+- name: Assert API server key is set when the API server is enabled
+  ansible.builtin.assert:
+    that:
+      - composition_hermes_agent_api_server_key | length > 0
+    fail_msg: >-
+      composition_hermes_agent_api_server is true but no key is set. Without
+      API_SERVER_KEY anything on {{ default_docker_network }} could drive the
+      agent. Set vault_hermes_agent_api_server_key.
+    quiet: true
+  when: state | default('present') == 'present' and composition_hermes_agent_api_server
+
+# The image remaps its internal `hermes` user to HERMES_UID/HERMES_GID, so the
+# data directory has to be owned by whoever Ansible connects as.
+- name: Look up the deploy user
+  ansible.builtin.getent:
+    database: passwd
+    key: "{{ ansible_user }}"
+  when: state | default('present') == 'present'
+
+- name: Set the container uid and gid
+  ansible.builtin.set_fact:
+    composition_hermes_agent_uid: "{{ ansible_facts.getent_passwd[ansible_user][1] }}"
+    composition_hermes_agent_gid: "{{ ansible_facts.getent_passwd[ansible_user][2] }}"
+  when: state | default('present') == 'present'
+
+# ----------------------------
+# Core tasks
+# ----------------------------
+
+- name: Create compose file
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ composition_root }}/docker-compose.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0644"
+  when: state | default('present') == 'present'
+
+- name: Create .env file
+  ansible.builtin.template:
+    src: environment_vars.j2
+    dest: "{{ composition_root }}/.environment_vars"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0600"
+  # Holds the dashboard password and cookie secret, which --diff would
+  # otherwise print in full.
+  no_log: true
+  when: state | default('present') == 'present'
+
+# ----------------------------
+# Specific tasks
+# ----------------------------
+
+- name: Ensure the Hermes data directory exists
+  ansible.builtin.file:
+    path: "{{ composition_config }}/data"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0750"
+  when: state | default('present') == 'present'
+
+- name: Deploy Hermes config.yaml
+  ansible.builtin.template:
+    src: config.yaml.j2
+    dest: "{{ composition_config }}/data/config.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0644"
+  when: state | default('present') == 'present' and composition_hermes_agent_manage_config
+  notify: Restart Hermes
+
+# ----------------------------
+# Start composition
+# ----------------------------
+
+- name: Start Docker Compose project
+  community.docker.docker_compose_v2:
+    project_src: "{{ composition_root }}"
+    state: present
+    remove_orphans: true
+  when: state | default('present') == 'present'
+  notify: Restart Traefik

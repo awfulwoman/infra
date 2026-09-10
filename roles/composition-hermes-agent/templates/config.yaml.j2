@@ -1,0 +1,29 @@
+# code: language=ansible
+# Managed by Ansible (roles/composition-hermes-agent). Edits made here or by
+# `hermes setup` inside the container are overwritten on the next play. Change
+# the role variables instead, or set composition_hermes_agent_manage_config to
+# false to hand the file back to Hermes.
+#
+# config.yaml is the source of truth for model, provider and endpoint. Secrets
+# stay out of it: they arrive as environment variables from .environment_vars,
+# which takes precedence over /opt/data/.env.
+
+# Schema version this file is written against. Without it Hermes treats the
+# config as predating version 12 and refuses to migrate it. Read the value the
+# image actually expects, rather than the one the warning text names:
+#
+#   docker exec hermes /opt/hermes/.venv/bin/python -c \
+#     'from hermes_cli.config import DEFAULT_CONFIG; print(DEFAULT_CONFIG["_config_version"])'
+#
+# Re-check it after bumping composition_hermes_agent_image.
+_config_version: {{ composition_hermes_agent_config_version }}
+
+model:
+  default: "{{ composition_hermes_agent_model }}"
+  provider: custom
+  base_url: "{{ composition_hermes_agent_base_url }}"
+  api_key: "{{ composition_hermes_agent_api_key }}"
+  context_length: {{ composition_hermes_agent_context_length }}
+
+terminal:
+  backend: "{{ composition_hermes_agent_terminal_backend }}"

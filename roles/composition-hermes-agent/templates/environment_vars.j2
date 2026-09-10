@@ -1,0 +1,27 @@
+TZ=Europe/Berlin
+
+# The image remaps its internal `hermes` user to these before dropping
+# privileges, so files it writes under /opt/data stay writable on the host.
+HERMES_UID={{ composition_hermes_agent_uid }}
+HERMES_GID={{ composition_hermes_agent_gid }}
+
+{% if composition_hermes_agent_dashboard %}
+# Dashboard. Binds 0.0.0.0 inside the container - no host port is published,
+# so only the shared Docker network reaches it, and Traefik fronts that.
+HERMES_DASHBOARD=1
+HERMES_DASHBOARD_HOST=0.0.0.0
+HERMES_DASHBOARD_PORT={{ composition_hermes_agent_dashboard_port }}
+HERMES_DASHBOARD_BASIC_AUTH_USERNAME={{ composition_hermes_agent_dashboard_username }}
+HERMES_DASHBOARD_BASIC_AUTH_PASSWORD={{ composition_hermes_agent_dashboard_password }}
+HERMES_DASHBOARD_BASIC_AUTH_SECRET={{ composition_hermes_agent_dashboard_secret }}
+{% else %}
+HERMES_DASHBOARD=0
+{% endif %}
+
+{% if composition_hermes_agent_api_server %}
+# OpenAI-compatible API server. The key is mandatory: Hermes only listens
+# beyond loopback when one is set.
+API_SERVER_HOST=0.0.0.0
+API_SERVER_PORT={{ composition_hermes_agent_api_server_port }}
+API_SERVER_KEY={{ composition_hermes_agent_api_server_key }}
+{% endif %}
