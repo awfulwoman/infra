@@ -25,3 +25,8 @@ API_SERVER_HOST=0.0.0.0
 API_SERVER_PORT={{ composition_hermes_agent_api_server_port }}
 API_SERVER_KEY={{ composition_hermes_agent_api_server_key }}
 {% endif %}
+
+{% if composition_hermes_agent_gateway_mcp_token | length > 0 %}
+# Bearer token for gateway's /mcp - config.yaml references it as ${GATEWAY_MCP_TOKEN}
+GATEWAY_MCP_TOKEN={{ composition_hermes_agent_gateway_mcp_token }}
+{% endif %}

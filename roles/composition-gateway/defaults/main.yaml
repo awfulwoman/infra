@@ -71,6 +71,7 @@ composition_gateway_server_auth_clients:
   jarvis: "{{ vault_gateway_mcp_token }}"
   laptop: "{{ vault_gateway_mcp_token_laptop | default('') }}"
   gw-cli: "{{ vault_gateway_mcp_token_gw_cli | default('') }}"
+  hermes: "{{ vault_gateway_mcp_token_hermes | default('') }}"
 
 # Where gateway writes its per-request /mcp usage log inside the container. The
 # role bind-mounts {{ composition_root }}/logs here, so it lands on the host at

@@ -27,3 +27,14 @@ model:
 
 terminal:
   backend: "{{ composition_hermes_agent_terminal_backend }}"
+{% if composition_hermes_agent_gateway_mcp_token | length > 0 %}
+
+# gateway MCP server. The bearer token is not written here - ${GATEWAY_MCP_TOKEN}
+# comes from .environment_vars (see roles/composition-hermes-agent/defaults).
+mcp_servers:
+  gateway:
+    url: "{{ composition_hermes_agent_gateway_mcp_url }}"
+    headers:
+      Authorization: "Bearer ${GATEWAY_MCP_TOKEN}"
+    enabled: true
+{% endif %}

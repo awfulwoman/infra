@@ -47,7 +47,7 @@ point `composition_gateway_obsidian_vault_path` at its synced vault path.
 | `composition_gateway_reminders_server_bearer_token` | `vault_gateway_reminders_server_token` | Shared secret with `system-apple-reminders-server` |
 | `composition_gateway_contacts_server_base_url` | Malcolm's infra-zone FQDN, port 4102 | apple-contacts-server backend for Contacts (see `system-apple-contacts-server`) |
 | `composition_gateway_contacts_server_bearer_token` | `vault_gateway_contacts_server_token` | Shared secret with `system-apple-contacts-server` |
-| `composition_gateway_server_auth_clients` | `{jarvis: vault_gateway_mcp_token, laptop: …, gw-cli: …}` | Labelled bearer tokens for `/mcp`; the label is the caller name in the usage log. Empty-valued entries are dropped. |
+| `composition_gateway_server_auth_clients` | `{jarvis: vault_gateway_mcp_token, laptop: …, gw-cli: …, hermes: …}` | Labelled bearer tokens for `/mcp`; the label is the caller name in the usage log. Empty-valued entries are dropped. |
 | `composition_gateway_usage_log_container_path` | `/var/log/gateway/usage.jsonl` | In-container path for the JSONL usage log; bind-mounted from `{{ composition_root }}/logs` |
 
 ## Secrets
@@ -60,18 +60,20 @@ in 1Password and run the role again.
 
 `composition_gateway_server_auth_clients` needs one vault secret per `/mcp` caller.
 `jarvis` reuses the existing `vault_gateway_mcp_token` (so
-[`composition-jarvis`](../composition-jarvis) is unchanged); add
-`vault_gateway_mcp_token_laptop` and `vault_gateway_mcp_token_gw_cli` to
-`inventory/group_vars/infra/vault_gateway.yaml`:
+[`composition-jarvis`](../composition-jarvis) is unchanged); the others get their
+own secrets in `inventory/group_vars/infra/vault_gateway.yaml`:
 
 ```bash
 ansible-vault encrypt_string "$(openssl rand -hex 32)" --name 'vault_gateway_mcp_token_laptop'
 ansible-vault encrypt_string "$(openssl rand -hex 32)" --name 'vault_gateway_mcp_token_gw_cli'
+ansible-vault encrypt_string "$(openssl rand -hex 32)" --name 'vault_gateway_mcp_token_hermes'
 ```
 
 Each new secret must also be set on the client: `Authorization: Bearer <laptop secret>`
-in the laptop's `mcpServers.gateway` config, and `GATEWAY_TOKEN=<gw-cli secret>` where the
-`gw` CLI runs.
+in the laptop's `mcpServers.gateway` config, `GATEWAY_TOKEN=<gw-cli secret>` where the
+`gw` CLI runs, and `vault_gateway_mcp_token_hermes` is consumed by
+[`composition-hermes-agent`](../composition-hermes-agent) (rendered into its
+`.environment_vars` as `GATEWAY_MCP_TOKEN`).
 
 ## Volumes
 

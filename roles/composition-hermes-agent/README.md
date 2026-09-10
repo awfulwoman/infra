@@ -58,6 +58,27 @@ port 9119, and Traefik fronts that at `hermes.<domain>`.
 container. The `docker` backend would need `/var/run/docker.sock` mounted,
 which gives the agent the host — do not set it here.
 
+## MCP servers
+
+When `vault_gateway_mcp_token_hermes` is set, the role writes an `mcp_servers`
+block into `config.yaml` for the personal [`gateway`](../composition-gateway) MCP
+server (calendar, mail, notes, contacts, reminders, bookmarks, location, issues),
+reached over Traefik at `https://gateway.<domain>/mcp`.
+
+`gateway` gates `/mcp` on a labelled bearer token — `hermes` is this client's
+label in gateway's per-request usage log. The token itself is **not** in
+`config.yaml`: it is templated into `.environment_vars` as `GATEWAY_MCP_TOKEN`,
+and `config.yaml` carries only the literal `Authorization: "Bearer
+${GATEWAY_MCP_TOKEN}"`, which Hermes interpolates from the process environment.
+`config.yaml` stays a diffable, secret-free file that way, matching how the
+dashboard and API-server secrets are handled.
+
+`vault_gateway_mcp_token_hermes` lives in
+`inventory/group_vars/infra/vault_gateway.yaml` alongside gateway's other client
+tokens, so both this role and `composition-gateway` read the same secret. Adding
+it requires re-running `composition-gateway` too, so its
+`GATEWAY_SERVER__AUTH_TOKENS` gains the `hermes:` entry.
+
 ## Key variables
 
 | Variable | Default | Description |
@@ -70,6 +91,8 @@ which gives the agent the host — do not set it here.
 | `composition_hermes_agent_dashboard` | `true` | Run the dashboard slot |
 | `composition_hermes_agent_api_server` | `false` | Expose the OpenAI-compatible API on 8642 |
 | `composition_hermes_agent_manage_config` | `true` | Let Ansible own `config.yaml` |
+| `composition_hermes_agent_gateway_mcp_url` | `https://gateway.{{ domainname_infra }}/mcp` | gateway `/mcp` endpoint Hermes connects to |
+| `composition_hermes_agent_gateway_mcp_token` | `vault_gateway_mcp_token_hermes` (or empty) | Bearer token; empty ⇒ no `mcp_servers` block |
 
 ## Vault variables
 
@@ -79,6 +102,7 @@ which gives the agent the host — do not set it here.
 | `vault_hermes_agent_dashboard_password` | when dashboard is on | Dashboard password |
 | `vault_hermes_agent_dashboard_secret` | when dashboard is on | Signs session cookies; without it sessions die on restart |
 | `vault_hermes_agent_api_server_key` | when API server is on | Bearer key for the API endpoint |
+| `vault_gateway_mcp_token_hermes` | to wire the gateway MCP server | Bearer token for gateway `/mcp`; in `group_vars/infra/vault_gateway.yaml`, shared with `composition-gateway` |
 
 Generate the secret with `openssl rand -hex 32`.
 

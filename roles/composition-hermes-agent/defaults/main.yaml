@@ -38,6 +38,21 @@ composition_hermes_agent_config_version: 42
 composition_hermes_agent_terminal_backend: local
 
 # -------------------------------------------------------------------
+# MCP - gateway
+# The personal gateway MCP server (calendar, mail, notes, contacts,
+# reminders, bookmarks, location, issues), running on server-64gb-storage
+# and reached over Traefik. gateway gates /mcp on a labelled bearer token;
+# "hermes" is this client's label in gateway's per-request usage log.
+#
+# The token stays out of config.yaml: it is templated into .environment_vars
+# as GATEWAY_MCP_TOKEN and config.yaml references it as ${GATEWAY_MCP_TOKEN},
+# which Hermes interpolates from the process environment. The mcp_servers
+# block is only rendered when the token is set.
+# -------------------------------------------------------------------
+composition_hermes_agent_gateway_mcp_url: "https://gateway.{{ domainname_infra }}/mcp"
+composition_hermes_agent_gateway_mcp_token: "{{ vault_gateway_mcp_token_hermes | default('') }}"
+
+# -------------------------------------------------------------------
 # DASHBOARD
 # Traefik fronts it, so it binds 0.0.0.0 inside the container: reachable
 # from the shared Docker network only, no host port published.
