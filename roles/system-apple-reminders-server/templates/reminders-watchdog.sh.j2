@@ -6,13 +6,21 @@
 # fails it kickstarts the main LaunchAgent, because the failure mode we care
 # about (meta.db unlinked out from under the running process) wedges the service
 # without ever exiting, so KeepAlive alone never recovers it.
+#
+# A restart is NOT always harmless: if the process is instead blocked on a
+# Reminders TCC prompt, each fresh spawn re-triggers that prompt on Malcolm's
+# screen. So restarts are rate-limited to one per _cooldown seconds; a failure
+# still inside the cooldown only alerts.
 set -u
 
 REPO_DIR="{{ system_apple_reminders_server_repo_dir }}"
+STATE_DIR="{{ system_apple_reminders_server_state_dir }}"
 PORT="{{ system_apple_reminders_server_port }}"
 MAIN_LABEL="{{ system_apple_reminders_server_plist_label }}"
 HC_URL="{{ reminders_watchdog_hc_url | default('') }}"
+COOLDOWN={{ system_apple_reminders_server_watchdog_restart_cooldown | int }}
 LOG="${REPO_DIR}/logs/watchdog.log"
+STAMP="${STATE_DIR}/last-restart.stamp"
 
 log() { printf '%s %s\n' "$(date -u '+%Y-%m-%dT%H:%M:%SZ')" "$*" >>"${LOG}"; }
 
@@ -28,7 +36,16 @@ if [ "${code}" -ge 200 ] && [ "${code}" -lt 300 ]; then
   exit 0
 fi
 
-log "probe failed (HTTP ${code}); kickstarting ${MAIN_LABEL}"
 [ -n "${HC_URL}" ] && curl -fsS -m 10 -o /dev/null "${HC_URL}/fail" || true
+
+now="$(date +%s)"
+last="$(stat -f %m "${STAMP}" 2>/dev/null || echo 0)"
+if [ $((now - last)) -lt "${COOLDOWN}" ]; then
+  log "probe failed (HTTP ${code}); within ${COOLDOWN}s restart cooldown, not restarting"
+  exit 1
+fi
+
+log "probe failed (HTTP ${code}); kickstarting ${MAIN_LABEL}"
+touch "${STAMP}"
 launchctl kickstart -k "gui/$(id -u)/${MAIN_LABEL}" >>"${LOG}" 2>&1
 exit 1

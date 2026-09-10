@@ -41,6 +41,11 @@ system_apple_reminders_server_backup_keep: 7
 # check so a *missing* ping (watchdog itself dead, host down) also alerts.
 system_apple_reminders_server_watchdog_enabled: true
 system_apple_reminders_server_watchdog_interval: 300
+# Minimum seconds between kickstarts. A probe failure inside this window only
+# alerts. Stops a persistently-failing service (e.g. blocked on a Reminders TCC
+# prompt, which each restart re-triggers on Malcolm's screen) from being
+# restarted every interval.
+system_apple_reminders_server_watchdog_restart_cooldown: 1800
 system_apple_reminders_server_watchdog_plist_label: com.awfulwoman.apple-reminders-server-watchdog
 
 # Create/att a Healthchecks.io check for the watchdog to ping. Needs

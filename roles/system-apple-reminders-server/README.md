@@ -60,6 +60,28 @@ Until that happens, the service starts, but every EventKit call blocks or
 fails. Thanks to the stable signature, this approval happens only once. It
 does not recur after `uv sync` or Python upgrades.
 
+### If the prompt comes back after a restart
+
+Seen on Malcolm 2026-09-11: a long-running instance (started before a re-sign)
+held its grant in-process for weeks; the first restart after that re-signing
+hit `tccd: Failed to match existing code requirement ... kTCCServiceReminders`
+and a fresh prompt, even though `TCC.db` still had `auth_value=2` for the
+interpreter path and `codesign --verify` passed. The stored code requirement
+had drifted from the current signature. Recovery is the same one click:
+
+```bash
+# on Malcolm's screen: click Allow on the Reminders dialog, then
+ssh malcolm 'launchctl kickstart -k gui/$(id -u)/com.awfulwoman.apple-reminders-server'
+# if no dialog is visible (dismissed/timed out), force a fresh one:
+ssh malcolm 'tccutil reset Reminders com.awfulwoman.apple-reminders-server' && \
+ssh malcolm 'launchctl kickstart -k gui/$(id -u)/com.awfulwoman.apple-reminders-server'
+```
+
+The watchdog's restart cooldown (default 1800s) keeps a service stuck in this
+state from re-prompting every interval, but it will still re-prompt once per
+cooldown until someone clicks Allow. Boot the watchdog out while you wait:
+`launchctl bootout gui/$(id -u)/com.awfulwoman.apple-reminders-server-watchdog`.
+
 ## Sidecar `meta.db` is authoritative state, not a cache
 
 `meta.db` holds the caller-`id` -> EventKit-`calendarItemIdentifier` map, the
@@ -99,8 +121,11 @@ authenticated `GET /reminders`:
 
 - 2xx -> ping the Healthchecks.io check (so a *missing* ping — watchdog dead,
   host down — also alerts).
-- anything else -> ping `.../fail` and
-  `launchctl kickstart -k` the main agent.
+- anything else -> ping `.../fail`, and `launchctl kickstart -k` the main
+  agent **at most once per `..._watchdog_restart_cooldown` seconds** (1800).
+  The cooldown matters because if the service is down because it is blocked on
+  a Reminders TCC prompt (see below), every restart re-triggers that prompt on
+  Malcolm's screen. A failure inside the cooldown only alerts.
 
 The Healthchecks.io check is created by the role (needs
 `vault_healthchecks_rw_apikey`, the same key `monitoring-healthchecksio` uses);
@@ -123,6 +148,7 @@ to skip the check wiring entirely.
 | `system_apple_reminders_server_backup_keep` | `7` | How many timestamped `meta.db` backups to retain |
 | `system_apple_reminders_server_watchdog_enabled` | `true` | Deploy the liveness watchdog LaunchAgent |
 | `system_apple_reminders_server_watchdog_interval` | `300` | Watchdog probe interval, seconds |
+| `system_apple_reminders_server_watchdog_restart_cooldown` | `1800` | Minimum seconds between watchdog-triggered restarts |
 | `system_apple_reminders_server_healthchecksio_enabled` | `true` | Create/attach a Healthchecks.io check for the watchdog to ping |
 | `system_apple_reminders_server_healthchecksio_name` | `<host> - apple-reminders-server` | Healthchecks.io check name |
 | `system_apple_reminders_server_keychain_password` | `""` | Login-keychain password, from vault. Needed only to provision the signing cert headlessly on the first run (see Permission stability) |
