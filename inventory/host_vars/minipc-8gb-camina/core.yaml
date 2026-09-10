@@ -64,12 +64,28 @@ zfs:
         snapshots_discover_children: true
 
 # -------------------------------------------------------------------
+# REVERSEPROXY
+# Serves the client-cert-distribution wildcard rather than running its own
+# ACME: camina is not reachable from the internet, so an HTTP-01 challenge
+# here cannot complete. Same arrangement as randolph (#270).
+#
+# Nothing behind it routes yet — it was added for a composition since removed,
+# and kept for whatever lands here next. Only `traefik-{host}` is registered.
+# Camina publishes no other host ports, so 80 and 443 are free.
+# -------------------------------------------------------------------
+reverseproxy_use_letsencrypt: false
+reverseproxy_wildcard_cert: true
+traefik_providers:
+  - wildcard-cert
+
+# -------------------------------------------------------------------
 # COMPOSITIONS
-# Connect publishes no host port and camina runs no Traefik, so the API is
-# reachable only from the shared Docker network. The compose file still
-# carries Traefik router labels, but they are inert here. `labels: []`
-# suppresses the role default `composition_dns_subdomains: [connect]`, so no
-# CNAME is derived — randolph still owns `connect` until its cutover.
+# Connect publishes no host port, so the API is reachable only from the
+# shared Docker network. Its compose file carries Traefik router labels and
+# camina now runs a Traefik, so that router exists — but nothing routes to
+# it, because `labels: []` suppresses the role default
+# `composition_dns_subdomains: [connect]`, so no CNAME is derived. Randolph
+# still owns `connect` until its cutover.
 #
 # onepassword_connect_data_bind_mount: keep the sync database on fastpool
 # (bind mount at {{ composition_config }}/data) instead of a Docker named
@@ -79,3 +95,6 @@ onepassword_connect_data_bind_mount: true
 compositions:
   - composition: 1password-connect
     labels: []
+  - composition: reverseproxy
+    labels:
+      - "traefik-{host}"
