@@ -115,7 +115,9 @@
     state: directory
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: "0750"
+    # Hermes' bootstrap chmods /opt/data to 0700 on every start; match it so
+    # the play stays idempotent.
+    mode: "0700"
   when: state | default('present') == 'present'
 
 # The built-in "default" profile's config. Always templated - the image keeps
@@ -128,7 +130,8 @@
     dest: "{{ composition_config }}/data/config.yaml"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: "0644"
+    # Hermes normalises this file to 0640 on start; match it for idempotency.
+    mode: "0640"
   vars:
     _hermes_mcp_servers: {}
     _hermes_api_port: "{{ composition_hermes_agent_api_server_port }}"
@@ -180,7 +183,7 @@
         dest: "{{ composition_config }}/data/profiles/{{ composition_hermes_agent_profile }}/config.yaml"
         owner: "{{ ansible_user }}"
         group: "{{ ansible_user }}"
-        mode: "0644"
+        mode: "0640"
       vars:
         _hermes_mcp_servers: "{{ composition_hermes_agent_mcp_servers }}"
         _hermes_api_port: "{{ composition_hermes_agent_profile_api_server_port }}"
