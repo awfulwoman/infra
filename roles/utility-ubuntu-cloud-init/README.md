@@ -54,4 +54,53 @@ ansible-playbook playbooks/utility/ubuntu-cloud-init.yaml \
   -e ubuntu_cloud_init_interface=enp3s0
 ```
 
-The interface name varies by hardware. Common values are `eth0`, `enp3s0`, and `ens18`. Before you provision the target, check the interface name with `ip link`, or look up the NIC's predictable name from its PCI slot.
+## Interface names
+
+The name in `ubuntu_cloud_init_interface` must match the target exactly. The seed writes a netplan block keyed on that name — if the name is wrong, the machine boots with no network and you have to attach a screen and keyboard.
+
+### Raspberry Pi
+
+Ubuntu's `preinstalled-server-arm64+raspi` images keep the old-style kernel names:
+
+| Name | Hardware |
+|------|----------|
+| `eth0` | Built-in ethernet port (Pi 3, 4, 5, CM4 carrier boards) |
+| `wlan0` | Built-in Wi-Fi |
+| `enx001122334455` | USB ethernet adapter — `enx` plus the adapter's MAC address |
+| `eth1` | USB ethernet adapter, on images where predictable names are disabled |
+
+`eth0` is the right answer for almost every Pi.
+
+### MiniPC and x86 servers
+
+These use systemd predictable interface names, so the name comes from the NIC's PCI address or firmware index.
+
+The miniPCs here are Dell Wyse 5070 thin clients — `homebrain` and `camina` are both 5070s. Their onboard Realtek RTL8111/8168 NIC sits on PCI bus 1, so it always comes up as:
+
+```
+enp1s0
+```
+
+Use `enp1s0` for any Wyse 5070. Apply the `hardware-wyse-5070` role after provisioning — it swaps the generic `r8169` kernel driver for the vendor `r8168` DKMS driver, which fixes intermittent link drops on this NIC. The interface name does not change.
+
+Other x86 hardware:
+
+| Name | Hardware |
+|------|----------|
+| `enp2s0`, `enp3s0`, `enp4s0` | Onboard NIC on a different PCI bus/slot. Multi-port boxes number them in port order |
+| `enp1s0f0`, `enp1s0f1` | Multi-port NIC on an add-in card — `f0`/`f1` are the ports on one function |
+| `eno1`, `eno2` | Onboard NIC where the firmware supplies an index — common on Intel NUC and business-class desktops |
+| `enp0s31f6` | Intel I219 onboard NIC — frequent on ThinkCentre and older NUC |
+| `ens18`, `ens3` | Virtual NIC in a Proxmox, KVM or QEMU guest |
+| `enx001122334455` | USB or USB4/Thunderbolt ethernet adapter |
+| `eth0` | Cloud images and some minimal installs, where predictable names are turned off |
+
+### Finding the name
+
+Boot the target with DHCP first (leave `ubuntu_cloud_init_ip` empty), then read the name off the machine:
+
+```bash
+ip -brief link
+```
+
+Rewrite the USB with the static settings once you know it. Both `ip link` and the boot console print the name.
