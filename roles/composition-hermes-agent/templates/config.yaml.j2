@@ -50,6 +50,17 @@ dashboard:
   font: {{ composition_hermes_agent_dashboard_font }}
 {% endif %}
 {% endif %}
+{% if _hermes_disabled_tools | default([]) | length > 0 %}
+
+# Tools this profile may not use. agent.disabled_toolsets is a global
+# suppression list applied last, at individual-tool granularity - so plain
+# tool names (browser_exec, ...) work here, not just toolset names.
+agent:
+  disabled_toolsets:
+{% for _tool in _hermes_disabled_tools %}
+    - {{ _tool }}
+{% endfor %}
+{% endif %}
 {% if _hermes_mcp_servers | default({}) | length > 0 %}
 
 # MCP servers for this profile. Bearer tokens are not written here - the

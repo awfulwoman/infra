@@ -189,6 +189,7 @@
         mode: "0640"
       vars:
         _hermes_mcp_servers: "{{ item.value.mcp_servers | default({}) }}"
+        _hermes_disabled_tools: "{{ item.value.disabled_tools | default([]) }}"
         _hermes_api_port: "{{ item.value.api_server_port | default((composition_hermes_agent_api_server_port | int) + ansible_loop.index) }}"
       loop: "{{ composition_hermes_agent_profiles | dict2items }}"
       loop_control:

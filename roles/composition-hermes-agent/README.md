@@ -84,6 +84,8 @@ composition_hermes_agent_profiles:
   nabu:
     description: "Nabu helps run the home"
     mcp_servers: {}
+    disabled_tools:            # -> agent.disabled_toolsets (tool-granular)
+      - browser_exec
   jarvis:
     description: "Jarvis has exclusive use of the gateway MCP"
     mcp_servers:
@@ -93,6 +95,11 @@ composition_hermes_agent_profiles:
           Authorization: "Bearer ${GATEWAY_MCP_TOKEN}"
 composition_hermes_agent_active_profile: jarvis
 ```
+
+A profile's `disabled_tools` list is written to `agent.disabled_toolsets` in its
+`config.yaml` — Hermes applies that list last, at individual-tool granularity, so
+plain tool names (`browser_exec`, `browser_vault_unlock`, …) work, not just
+toolset names (`browser`, `web`).
 
 `minipc-8gb-agatha` runs `nabu` ("Nabu helps run the home", no MCP) and `jarvis`
 (gateway MCP only), with `jarvis` active.

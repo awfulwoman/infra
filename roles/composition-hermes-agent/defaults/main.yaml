@@ -55,6 +55,8 @@ composition_hermes_agent_terminal_backend: local
 #     nabu:
 #       description: "Nabu helps run the home"
 #       mcp_servers: {}
+#       disabled_tools:            # optional; names go to agent.disabled_toolsets
+#         - browser_exec           # (tool-granular, so individual tools work)
 #     jarvis:
 #       description: "Jarvis has exclusive use of the gateway MCP"
 #       mcp_servers:

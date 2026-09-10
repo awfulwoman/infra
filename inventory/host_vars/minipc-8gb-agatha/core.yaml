@@ -87,6 +87,12 @@ composition_hermes_agent_profiles:
   nabu:
     description: "Nabu helps run the home"
     mcp_servers: {}
+    disabled_tools:
+      - browser_exec
+      - browser_vault_list
+      - browser_vault_fill
+      - browser_vault_save_login
+      - browser_vault_unlock
   jarvis:
     description: "Jarvis has exclusive use of the gateway MCP server"
     mcp_servers:
