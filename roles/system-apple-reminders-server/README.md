@@ -60,6 +60,55 @@ Until that happens, the service starts, but every EventKit call blocks or
 fails. Thanks to the stable signature, this approval happens only once. It
 does not recur after `uv sync` or Python upgrades.
 
+## Sidecar `meta.db` is authoritative state, not a cache
+
+`meta.db` holds the caller-`id` -> EventKit-`calendarItemIdentifier` map, the
+app-authoritative LWW timestamps, and deletion tombstones. None of it can be
+rebuilt from EventKit. The service opens the file once at startup through a
+plain `sqlite3.connect()` and never revalidates the handle, so if the file is
+removed while the service runs it does **not** crash: every write fails with
+`sqlite3.OperationalError: attempt to write a readonly database` (SQLite can't
+create its journal against a path with no directory entry) and
+`GET /reminders` returns 500. `KeepAlive` never fires because the process
+never exits.
+
+The role limits the damage:
+
+- **Deploy-time backup.** Before it touches anything, the role copies `meta.db`
+  to `meta.db.bak-<timestamp>` in the same directory and keeps the newest
+  `system_apple_reminders_server_backup_keep` (7).
+- **Marker file.** `~/.local/state/apple-reminders-server/DO-NOT-DELETE.txt`
+  explains the above in place.
+- **Watchdog** (below) turns "silently wedged until noticed" into "restarted
+  within one interval, and alerted".
+
+If you ever do need to remove or replace `meta.db`, restart the service in the
+same breath:
+
+```bash
+launchctl kickstart -k gui/$(id -u)/com.awfulwoman.apple-reminders-server
+```
+
+## Watchdog
+
+`system_apple_reminders_server_watchdog_enabled` (default true) deploys a second
+LaunchAgent, `com.awfulwoman.apple-reminders-server-watchdog`, that runs
+`~/.local/state/apple-reminders-server/reminders-watchdog.sh` every
+`system_apple_reminders_server_watchdog_interval` seconds (300). It makes one
+authenticated `GET /reminders`:
+
+- 2xx -> ping the Healthchecks.io check (so a *missing* ping — watchdog dead,
+  host down — also alerts).
+- anything else -> ping `.../fail` and
+  `launchctl kickstart -k` the main agent.
+
+The Healthchecks.io check is created by the role (needs
+`vault_healthchecks_rw_apikey`, the same key `monitoring-healthchecksio` uses);
+name is `system_apple_reminders_server_healthchecksio_name`. If the API is
+unreachable at deploy time the watchdog still restarts the service, it just
+can't alert — set `system_apple_reminders_server_healthchecksio_enabled: false`
+to skip the check wiring entirely.
+
 ## Variables
 
 | Variable | Default | Description |
@@ -68,7 +117,14 @@ does not recur after `uv sync` or Python upgrades.
 | `system_apple_reminders_server_port` | `4100` | Local port the service listens on |
 | `system_apple_reminders_server_bearer_tokens` | `vault_gateway_reminders_server_token` | Shared secret. Also set as `composition_gateway_reminders_server_bearer_token` |
 | `system_apple_reminders_server_default_list` | `Reminders` | List (EKCalendar) used when a reminder names none |
-| `system_apple_reminders_server_db_path` | `~/.local/state/apple-reminders-server/meta.db` | Sidecar SQLite database: id mapping, LWW timestamps, tombstones (see the service's own README) |
+| `system_apple_reminders_server_state_dir` | `~/.local/state/apple-reminders-server` | Role-managed runtime state: `meta.db`, signing cert, watchdog script, marker |
+| `system_apple_reminders_server_db_path` | `<state_dir>/meta.db` | Sidecar SQLite database: id mapping, LWW timestamps, tombstones (see above) |
+| `system_apple_reminders_server_backup_enabled` | `true` | Copy `meta.db` to `meta.db.bak-<ts>` before each deploy |
+| `system_apple_reminders_server_backup_keep` | `7` | How many timestamped `meta.db` backups to retain |
+| `system_apple_reminders_server_watchdog_enabled` | `true` | Deploy the liveness watchdog LaunchAgent |
+| `system_apple_reminders_server_watchdog_interval` | `300` | Watchdog probe interval, seconds |
+| `system_apple_reminders_server_healthchecksio_enabled` | `true` | Create/attach a Healthchecks.io check for the watchdog to ping |
+| `system_apple_reminders_server_healthchecksio_name` | `<host> - apple-reminders-server` | Healthchecks.io check name |
 | `system_apple_reminders_server_keychain_password` | `""` | Login-keychain password, from vault. Needed only to provision the signing cert headlessly on the first run (see Permission stability) |
 
 ## Reaching it from Gateway
@@ -85,5 +141,14 @@ roles at all.
 ```bash
 ssh malcolm
 launchctl print gui/$(id -u)/com.awfulwoman.apple-reminders-server
+launchctl print gui/$(id -u)/com.awfulwoman.apple-reminders-server-watchdog
 tail -f ~/Code/awfulwoman/apple-reminders-server/logs/apple-reminders-server.log
+tail -f ~/Code/awfulwoman/apple-reminders-server/logs/watchdog.log
+
+# force a restart (e.g. after replacing meta.db)
+launchctl kickstart -k gui/$(id -u)/com.awfulwoman.apple-reminders-server
 ```
+
+A `running` state with `GET /reminders` returning 500 and
+`attempt to write a readonly database` in the `.err` log means `meta.db` was
+removed out from under the process — see the sidecar section above.

@@ -1,0 +1,34 @@
+#!/bin/bash
+# Managed by Ansible - do not edit manually.
+#
+# Liveness watchdog for apple-reminders-server. launchd runs this on a fixed
+# interval (see the *-watchdog plist). It probes an authenticated read; if that
+# fails it kickstarts the main LaunchAgent, because the failure mode we care
+# about (meta.db unlinked out from under the running process) wedges the service
+# without ever exiting, so KeepAlive alone never recovers it.
+set -u
+
+REPO_DIR="{{ system_apple_reminders_server_repo_dir }}"
+PORT="{{ system_apple_reminders_server_port }}"
+MAIN_LABEL="{{ system_apple_reminders_server_plist_label }}"
+HC_URL="{{ reminders_watchdog_hc_url | default('') }}"
+LOG="${REPO_DIR}/logs/watchdog.log"
+
+log() { printf '%s %s\n' "$(date -u '+%Y-%m-%dT%H:%M:%SZ')" "$*" >>"${LOG}"; }
+
+# First comma-separated bearer token from the Ansible-managed .env.
+TOKEN="$(sed -n 's/^REMINDERS_SERVER_BEARER_TOKENS=//p' "${REPO_DIR}/.env" | head -n1 | cut -d, -f1)"
+
+code="$(curl -sS -o /dev/null -w '%{http_code}' -m 10 \
+  -H "Authorization: Bearer ${TOKEN}" \
+  "http://127.0.0.1:${PORT}/reminders" 2>>"${LOG}" || echo 000)"
+
+if [ "${code}" -ge 200 ] && [ "${code}" -lt 300 ]; then
+  [ -n "${HC_URL}" ] && curl -fsS -m 10 -o /dev/null "${HC_URL}" || true
+  exit 0
+fi
+
+log "probe failed (HTTP ${code}); kickstarting ${MAIN_LABEL}"
+[ -n "${HC_URL}" ] && curl -fsS -m 10 -o /dev/null "${HC_URL}/fail" || true
+launchctl kickstart -k "gui/$(id -u)/${MAIN_LABEL}" >>"${LOG}" 2>&1
+exit 1

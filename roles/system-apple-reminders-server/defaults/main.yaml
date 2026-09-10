@@ -14,10 +14,41 @@ system_apple_reminders_server_plist_label: com.awfulwoman.apple-reminders-server
 system_apple_reminders_server_host: 0.0.0.0
 system_apple_reminders_server_port: 4100
 system_apple_reminders_server_default_list: Reminders
-system_apple_reminders_server_db_path: "{{ ansible_facts.user_dir }}/.local/state/apple-reminders-server/meta.db"
+system_apple_reminders_server_state_dir: "{{ ansible_facts.user_dir }}/.local/state/apple-reminders-server"
+system_apple_reminders_server_db_path: "{{ system_apple_reminders_server_state_dir }}/meta.db"
 
 # Shared with composition-gateway, which authenticates to this same service.
 system_apple_reminders_server_bearer_tokens: "{{ vault_gateway_reminders_server_token }}"
+
+# --- Sidecar meta.db protection -------------------------------------------------
+# meta.db (at system_apple_reminders_server_db_path) is authoritative sidecar
+# state: the caller-id -> EventKit-identifier map, LWW timestamps and tombstones.
+# The service opens it once at startup and never revalidates the handle, so if
+# the file is removed while the service runs, every write fails with
+# "attempt to write a readonly database" and the process never exits (KeepAlive
+# reacts to exit only). These settings limit the blast radius.
+
+# Before every deploy, copy meta.db to meta.db.bak-<timestamp> in the same
+# directory, keeping the newest N. Cheap insurance against a bad deploy or a
+# hand-deletion; the file itself is only ~tens of KB.
+system_apple_reminders_server_backup_enabled: true
+system_apple_reminders_server_backup_keep: 7
+
+# Periodic watchdog LaunchAgent: probes GET /reminders with the bearer token
+# every _interval seconds. On a non-2xx it kickstarts the main agent (-k, so a
+# wedged-but-alive process is killed and relaunched) and, when Healthchecks.io
+# wiring is enabled, pings the check's /fail endpoint. On success it pings the
+# check so a *missing* ping (watchdog itself dead, host down) also alerts.
+system_apple_reminders_server_watchdog_enabled: true
+system_apple_reminders_server_watchdog_interval: 300
+system_apple_reminders_server_watchdog_plist_label: com.awfulwoman.apple-reminders-server-watchdog
+
+# Create/att a Healthchecks.io check for the watchdog to ping. Needs
+# vault_healthchecks_rw_apikey (same key monitoring-healthchecksio uses). If the
+# check can't be created the watchdog still restarts the service; it just can't
+# alert.
+system_apple_reminders_server_healthchecksio_enabled: true
+system_apple_reminders_server_healthchecksio_name: "{{ inventory_hostname }} - apple-reminders-server"
 
 # Login-keychain password, needed ONLY the first time the signing cert is
 # provisioned (to run `security set-key-partition-list` non-interactively so
