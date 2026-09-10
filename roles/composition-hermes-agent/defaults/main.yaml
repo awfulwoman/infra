@@ -38,44 +38,46 @@ composition_hermes_agent_config_version: 42
 composition_hermes_agent_terminal_backend: local
 
 # -------------------------------------------------------------------
-# PROFILE
-# The Hermes profile this deploy targets. "default" (built-in) keeps the
-# single-profile model - config at data/config.yaml. Any other name: the
-# role runs `hermes profile create <name> --clone`, makes it the sticky
-# (active) profile, and templates data/profiles/<name>/config.yaml. The
-# built-in "default" profile is always templated too - the image keeps
-# supervising its gateway regardless.
-# -------------------------------------------------------------------
-composition_hermes_agent_profile: default
-composition_hermes_agent_profile_description: ""
-
-# -------------------------------------------------------------------
-# MCP SERVERS
-# Servers offered to the target profile. Keyed by server name; each value
-# is written verbatim under mcp_servers: in that profile's config.yaml.
-# Keep secrets out of config.yaml: put them in a header as ${ENVVAR} and
-# supply the value via composition_hermes_agent_mcp_env, which is rendered
-# into .environment_vars (process-wide, so every profile's gateway can
-# read it). Empty _mcp_env values are skipped.
+# PROFILES
+# Named Hermes profiles this deploy manages, on top of the built-in
+# "default" (which is always templated - the image supervises its gateway
+# regardless). Keyed by profile name; for each the role runs
+# `hermes profile create <name> --clone` once and templates
+# data/profiles/<name>/config.yaml. MCP servers are scoped per profile.
 #
-# Example:
-#   composition_hermes_agent_mcp_servers:
-#     gateway:
-#       url: "https://gateway.{{ domainname_infra }}/mcp"
-#       headers:
-#         Authorization: "Bearer ${GATEWAY_MCP_TOKEN}"
-#   composition_hermes_agent_mcp_env:
-#     GATEWAY_MCP_TOKEN: "{{ vault_gateway_mcp_token_hermes }}"
+# Order matters: each profile's OpenAI-API server takes
+# composition_hermes_agent_api_server_port + its 1-based position (default
+# -> 8642, first named -> 8643, ...), unless it sets api_server_port. The
+# image auto-generates an API_SERVER_KEY per profile and `--clone` copies
+# one in, so without distinct ports the gateways clash on startup.
+#
+#   composition_hermes_agent_profiles:
+#     nabu:
+#       description: "Nabu helps run the home"
+#       mcp_servers: {}
+#     jarvis:
+#       description: "Jarvis has exclusive use of the gateway MCP"
+#       mcp_servers:
+#         gateway:
+#           url: "https://gateway.{{ domainname_infra }}/mcp"
+#           headers:
+#             Authorization: "Bearer ${GATEWAY_MCP_TOKEN}"
+#       # api_server_port: 8650   # optional override
 # -------------------------------------------------------------------
-composition_hermes_agent_mcp_servers: {}
-composition_hermes_agent_mcp_env: {}
+composition_hermes_agent_profiles: {}
 
-# OpenAI-API server port for the *named* profile. The image auto-generates
-# an API_SERVER_KEY per profile, and `--clone` copies the default profile's,
-# so every profile's gateway would otherwise fight for
-# composition_hermes_agent_api_server_port (8642). The named profile takes
-# this port instead. Ignored when the target profile is "default".
-composition_hermes_agent_profile_api_server_port: 8643
+# Which managed profile the dashboard and a bare `hermes` CLI default to.
+# "" or "default" leaves the built-in default profile active.
+composition_hermes_agent_active_profile: ""
+
+# -------------------------------------------------------------------
+# MCP CREDENTIALS
+# ENVVAR: value pairs rendered into .environment_vars (process-wide, so
+# every profile's gateway can read them). Reference them from a profile's
+# mcp_servers headers as ${ENVVAR}. config.yaml stays secret-free; empty
+# values are skipped.
+# -------------------------------------------------------------------
+composition_hermes_agent_mcp_env: {}
 
 # `hermes setup` writes these into a profile's config.yaml; declare them
 # here so the role's template does not drop them on the next play. Empty =

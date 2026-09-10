@@ -34,8 +34,9 @@ model:
 terminal:
   backend: "{{ composition_hermes_agent_terminal_backend }}"
 
-# Each profile's gateway runs its own OpenAI-API server; give them distinct
-# ports so they don't clash on startup (see composition_hermes_agent_profile_api_server_port).
+# Each profile's gateway runs its own OpenAI-API server; distinct ports keep
+# them from clashing on startup (composition_hermes_agent_api_server_port + the
+# profile's position, or a per-profile api_server_port override).
 platforms:
   api_server:
     port: {{ _hermes_api_port }}

@@ -151,14 +151,14 @@
   notify: Restart Traefik
 
 # ----------------------------
-# Named profile (composition_hermes_agent_profile != "default")
+# Named profiles (composition_hermes_agent_profiles)
 # ----------------------------
 
-- name: Configure the named Hermes profile
+- name: Configure named Hermes profiles
   when:
     - state | default('present') == 'present'
     - composition_hermes_agent_manage_config
-    - composition_hermes_agent_profile != 'default'
+    - composition_hermes_agent_profiles | length > 0
   block:
     - name: Wait for Hermes to accept commands
       ansible.builtin.command:
@@ -169,24 +169,31 @@
       delay: 5
       changed_when: false
 
-    - name: Create the Hermes profile
+    - name: Create Hermes profiles
       ansible.builtin.command:
         cmd: >-
-          docker exec hermes hermes profile create {{ composition_hermes_agent_profile | quote }} --clone
-          {{ ('--description ' ~ (composition_hermes_agent_profile_description | quote))
-             if composition_hermes_agent_profile_description else '' }}
-        creates: "{{ composition_config }}/data/profiles/{{ composition_hermes_agent_profile }}"
+          docker exec hermes hermes profile create {{ item.key | quote }} --clone
+          {{ ('--description ' ~ (item.value.description | quote))
+             if item.value.description | default('') else '' }}
+        creates: "{{ composition_config }}/data/profiles/{{ item.key }}"
+      loop: "{{ composition_hermes_agent_profiles | dict2items }}"
+      loop_control:
+        label: "{{ item.key }}"
 
-    - name: Deploy Hermes config.yaml (named profile)
+    - name: Deploy Hermes profile configs
       ansible.builtin.template:
         src: config.yaml.j2
-        dest: "{{ composition_config }}/data/profiles/{{ composition_hermes_agent_profile }}/config.yaml"
+        dest: "{{ composition_config }}/data/profiles/{{ item.key }}/config.yaml"
         owner: "{{ ansible_user }}"
         group: "{{ ansible_user }}"
         mode: "0640"
       vars:
-        _hermes_mcp_servers: "{{ composition_hermes_agent_mcp_servers }}"
-        _hermes_api_port: "{{ composition_hermes_agent_profile_api_server_port }}"
+        _hermes_mcp_servers: "{{ item.value.mcp_servers | default({}) }}"
+        _hermes_api_port: "{{ item.value.api_server_port | default((composition_hermes_agent_api_server_port | int) + ansible_loop.index) }}"
+      loop: "{{ composition_hermes_agent_profiles | dict2items }}"
+      loop_control:
+        label: "{{ item.key }}"
+        extended: true
       notify: Restart Hermes
 
     - name: Read the current active profile
@@ -195,10 +202,13 @@
       register: _hermes_active
       changed_when: false
       failed_when: false
+      when: composition_hermes_agent_active_profile | default('') not in ['', 'default']
 
-    - name: Make the named profile the active one
+    - name: Set the active Hermes profile
       ansible.builtin.command:
-        cmd: docker exec hermes hermes profile use {{ composition_hermes_agent_profile | quote }}
-      when: (_hermes_active.stdout | default('') | trim) != composition_hermes_agent_profile
+        cmd: docker exec hermes hermes profile use {{ composition_hermes_agent_active_profile | quote }}
+      when:
+        - composition_hermes_agent_active_profile | default('') not in ['', 'default']
+        - (_hermes_active.stdout | default('') | trim) != composition_hermes_agent_active_profile
       changed_when: true
       notify: Restart Hermes

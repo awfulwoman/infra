@@ -61,48 +61,65 @@ which gives the agent the host — do not set it here.
 ## Profiles
 
 Hermes runs an agent per *profile*. The built-in `default` profile is always
-present (`data/config.yaml`); its gateway is supervised by the image regardless.
-Set `composition_hermes_agent_profile` to a name and the role also:
+present (`data/config.yaml`) and its gateway is supervised by the image
+regardless. `composition_hermes_agent_profiles` is a map of extra named profiles;
+for each one the role:
 
 1. runs `hermes profile create <name> --clone` in the container (once),
-2. templates `data/profiles/<name>/config.yaml`,
-3. runs `hermes profile use <name>` so the CLI, dashboard and `hermes mcp list`
-   all default to it.
+2. templates `data/profiles/<name>/config.yaml` — including that profile's own
+   `mcp_servers`,
+3. and, for whichever profile `composition_hermes_agent_active_profile` names,
+   runs `hermes profile use <name>` so the CLI, dashboard and `hermes mcp list`
+   default to it.
 
 Each profile's gateway runs its own OpenAI-API server. The image auto-generates
-an `API_SERVER_KEY` per profile (and `--clone` copies `default`'s), so they would
-all fight for one port — the named profile takes
-`composition_hermes_agent_profile_api_server_port` (8643) instead of 8642.
+an `API_SERVER_KEY` per profile (and `--clone` copies one in), so without
+distinct ports the gateways clash on startup. Ports are
+`composition_hermes_agent_api_server_port` (8642, the `default` profile) plus the
+1-based position of each named profile in the map — so list order matters. A
+profile can pin its port with an `api_server_port` key.
 
-`minipc-8gb-agatha` runs a `nabu` profile ("Nabu helps run the home").
+```yaml
+composition_hermes_agent_profiles:
+  nabu:
+    description: "Nabu helps run the home"
+    mcp_servers: {}
+  jarvis:
+    description: "Jarvis has exclusive use of the gateway MCP"
+    mcp_servers:
+      gateway:
+        url: "https://gateway.{{ domainname_infra }}/mcp"
+        headers:
+          Authorization: "Bearer ${GATEWAY_MCP_TOKEN}"
+composition_hermes_agent_active_profile: jarvis
+```
+
+`minipc-8gb-agatha` runs `nabu` ("Nabu helps run the home", no MCP) and `jarvis`
+(gateway MCP only), with `jarvis` active.
 
 ## MCP servers
 
-`composition_hermes_agent_mcp_servers` is a dict, keyed by server name, written
-verbatim under `mcp_servers:` in the **target profile's** `config.yaml`. Keep
-bearer tokens out of `config.yaml`: put a `${ENVVAR}` placeholder in the header
-and supply the value through `composition_hermes_agent_mcp_env`, which is rendered
-into `.environment_vars` (process-wide, so every profile's gateway can read it).
-`config.yaml` stays a diffable, secret-free file; `.environment_vars` is `0600`
-and `no_log`.
+Each profile's `mcp_servers` dict is written verbatim under `mcp_servers:` in
+that profile's `config.yaml`. Keep bearer tokens out of `config.yaml`: put a
+`${ENVVAR}` placeholder in the header and supply the value through
+`composition_hermes_agent_mcp_env`, rendered into `.environment_vars` — which is
+process-wide, so every profile's gateway can read it, but only profiles whose
+config names a server actually connect. `config.yaml` stays a diffable,
+secret-free file; `.environment_vars` is `0600` and `no_log`.
 
 ```yaml
-composition_hermes_agent_mcp_servers:
-  gateway:
-    url: "https://gateway.{{ domainname_infra }}/mcp"
-    headers:
-      Authorization: "Bearer ${GATEWAY_MCP_TOKEN}"
 composition_hermes_agent_mcp_env:
   GATEWAY_MCP_TOKEN: "{{ vault_gateway_mcp_token_hermes }}"
 ```
 
 The [`gateway`](../composition-gateway) server gates `/mcp` on a labelled bearer
-token — `hermes` is this client's label in gateway's usage log.
+token — this profile logs as caller `hermes` in gateway's usage log.
 `vault_gateway_mcp_token_hermes` lives in
 `inventory/group_vars/infra/vault_gateway.yaml` alongside gateway's other client
 tokens, so both this role and `composition-gateway` read the same secret; adding
 it needs a `composition-gateway` re-run too (its `GATEWAY_SERVER__AUTH_TOKENS`
-gains the `hermes:` entry).
+gains the `hermes:` entry). The unrelated `jarvis` label there belongs to the
+[`composition-jarvis`](../composition-jarvis) chives bot, **not** this profile.
 
 ## Key variables
 
@@ -116,11 +133,10 @@ gains the `hermes:` entry).
 | `composition_hermes_agent_dashboard` | `true` | Run the dashboard slot |
 | `composition_hermes_agent_api_server` | `false` | Expose the OpenAI-compatible API on 8642 |
 | `composition_hermes_agent_manage_config` | `true` | Let Ansible own `config.yaml` |
-| `composition_hermes_agent_profile` | `default` | Target Hermes profile; a name ⇒ role creates it and makes it active |
-| `composition_hermes_agent_profile_description` | `""` | `hermes profile create --description` |
-| `composition_hermes_agent_profile_api_server_port` | `8643` | OpenAI-API port for the named profile (`default` keeps 8642) |
-| `composition_hermes_agent_mcp_servers` | `{}` | Dict of MCP servers for the target profile's `config.yaml` |
-| `composition_hermes_agent_mcp_env` | `{}` | `ENVVAR: value` pairs → `.environment_vars` (for `${ENVVAR}` in `mcp_servers`) |
+| `composition_hermes_agent_profiles` | `{}` | Map of named profiles; each has `description`, `mcp_servers`, optional `api_server_port` |
+| `composition_hermes_agent_active_profile` | `""` | Which managed profile the dashboard/CLI default to (`""`/`default` = built-in) |
+| `composition_hermes_agent_api_server_port` | `8642` | Base OpenAI-API port; named profiles get base + list position |
+| `composition_hermes_agent_mcp_env` | `{}` | `ENVVAR: value` pairs → `.environment_vars` (for `${ENVVAR}` in any profile's `mcp_servers`) |
 | `composition_hermes_agent_dashboard_theme` / `_font` | `""` | Passed through to the profile `config.yaml` `dashboard:` block |
 
 ## Vault variables
