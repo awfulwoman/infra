@@ -58,26 +58,51 @@ port 9119, and Traefik fronts that at `hermes.<domain>`.
 container. The `docker` backend would need `/var/run/docker.sock` mounted,
 which gives the agent the host — do not set it here.
 
+## Profiles
+
+Hermes runs an agent per *profile*. The built-in `default` profile is always
+present (`data/config.yaml`); its gateway is supervised by the image regardless.
+Set `composition_hermes_agent_profile` to a name and the role also:
+
+1. runs `hermes profile create <name> --clone` in the container (once),
+2. templates `data/profiles/<name>/config.yaml`,
+3. runs `hermes profile use <name>` so the CLI, dashboard and `hermes mcp list`
+   all default to it.
+
+Each profile's gateway runs its own OpenAI-API server. The image auto-generates
+an `API_SERVER_KEY` per profile (and `--clone` copies `default`'s), so they would
+all fight for one port — the named profile takes
+`composition_hermes_agent_profile_api_server_port` (8643) instead of 8642.
+
+`minipc-8gb-agatha` runs a `nabu` profile ("Nabu helps run the home").
+
 ## MCP servers
 
-When `vault_gateway_mcp_token_hermes` is set, the role writes an `mcp_servers`
-block into `config.yaml` for the personal [`gateway`](../composition-gateway) MCP
-server (calendar, mail, notes, contacts, reminders, bookmarks, location, issues),
-reached over Traefik at `https://gateway.<domain>/mcp`.
+`composition_hermes_agent_mcp_servers` is a dict, keyed by server name, written
+verbatim under `mcp_servers:` in the **target profile's** `config.yaml`. Keep
+bearer tokens out of `config.yaml`: put a `${ENVVAR}` placeholder in the header
+and supply the value through `composition_hermes_agent_mcp_env`, which is rendered
+into `.environment_vars` (process-wide, so every profile's gateway can read it).
+`config.yaml` stays a diffable, secret-free file; `.environment_vars` is `0600`
+and `no_log`.
 
-`gateway` gates `/mcp` on a labelled bearer token — `hermes` is this client's
-label in gateway's per-request usage log. The token itself is **not** in
-`config.yaml`: it is templated into `.environment_vars` as `GATEWAY_MCP_TOKEN`,
-and `config.yaml` carries only the literal `Authorization: "Bearer
-${GATEWAY_MCP_TOKEN}"`, which Hermes interpolates from the process environment.
-`config.yaml` stays a diffable, secret-free file that way, matching how the
-dashboard and API-server secrets are handled.
+```yaml
+composition_hermes_agent_mcp_servers:
+  gateway:
+    url: "https://gateway.{{ domainname_infra }}/mcp"
+    headers:
+      Authorization: "Bearer ${GATEWAY_MCP_TOKEN}"
+composition_hermes_agent_mcp_env:
+  GATEWAY_MCP_TOKEN: "{{ vault_gateway_mcp_token_hermes }}"
+```
 
+The [`gateway`](../composition-gateway) server gates `/mcp` on a labelled bearer
+token — `hermes` is this client's label in gateway's usage log.
 `vault_gateway_mcp_token_hermes` lives in
 `inventory/group_vars/infra/vault_gateway.yaml` alongside gateway's other client
-tokens, so both this role and `composition-gateway` read the same secret. Adding
-it requires re-running `composition-gateway` too, so its
-`GATEWAY_SERVER__AUTH_TOKENS` gains the `hermes:` entry.
+tokens, so both this role and `composition-gateway` read the same secret; adding
+it needs a `composition-gateway` re-run too (its `GATEWAY_SERVER__AUTH_TOKENS`
+gains the `hermes:` entry).
 
 ## Key variables
 
@@ -91,8 +116,12 @@ it requires re-running `composition-gateway` too, so its
 | `composition_hermes_agent_dashboard` | `true` | Run the dashboard slot |
 | `composition_hermes_agent_api_server` | `false` | Expose the OpenAI-compatible API on 8642 |
 | `composition_hermes_agent_manage_config` | `true` | Let Ansible own `config.yaml` |
-| `composition_hermes_agent_gateway_mcp_url` | `https://gateway.{{ domainname_infra }}/mcp` | gateway `/mcp` endpoint Hermes connects to |
-| `composition_hermes_agent_gateway_mcp_token` | `vault_gateway_mcp_token_hermes` (or empty) | Bearer token; empty ⇒ no `mcp_servers` block |
+| `composition_hermes_agent_profile` | `default` | Target Hermes profile; a name ⇒ role creates it and makes it active |
+| `composition_hermes_agent_profile_description` | `""` | `hermes profile create --description` |
+| `composition_hermes_agent_profile_api_server_port` | `8643` | OpenAI-API port for the named profile (`default` keeps 8642) |
+| `composition_hermes_agent_mcp_servers` | `{}` | Dict of MCP servers for the target profile's `config.yaml` |
+| `composition_hermes_agent_mcp_env` | `{}` | `ENVVAR: value` pairs → `.environment_vars` (for `${ENVVAR}` in `mcp_servers`) |
+| `composition_hermes_agent_dashboard_theme` / `_font` | `""` | Passed through to the profile `config.yaml` `dashboard:` block |
 
 ## Vault variables
 

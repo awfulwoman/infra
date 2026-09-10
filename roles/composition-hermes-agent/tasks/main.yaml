@@ -9,7 +9,10 @@
     project_src: "{{ composition_root }}"
     state: absent
     remove_orphans: true
-  ignore_errors: true
+  register: _hermes_compose_down
+  failed_when:
+    - _hermes_compose_down is failed
+    - "'no such file or directory' not in (_hermes_compose_down.msg | default('') | lower)"
   when: state | default('present') == 'absent'
 
 # The agent's whole state lives here: config.yaml, memories, skills, cron,
@@ -115,13 +118,20 @@
     mode: "0750"
   when: state | default('present') == 'present'
 
-- name: Deploy Hermes config.yaml
+# The built-in "default" profile's config. Always templated - the image keeps
+# supervising its gateway even when a named profile is the active one. No MCP
+# servers here (those belong to the target profile); keeps api_server on the
+# base port.
+- name: Deploy Hermes config.yaml (default profile)
   ansible.builtin.template:
     src: config.yaml.j2
     dest: "{{ composition_config }}/data/config.yaml"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0644"
+  vars:
+    _hermes_mcp_servers: {}
+    _hermes_api_port: "{{ composition_hermes_agent_api_server_port }}"
   when: state | default('present') == 'present' and composition_hermes_agent_manage_config
   notify: Restart Hermes
 
@@ -136,3 +146,56 @@
     remove_orphans: true
   when: state | default('present') == 'present'
   notify: Restart Traefik
+
+# ----------------------------
+# Named profile (composition_hermes_agent_profile != "default")
+# ----------------------------
+
+- name: Configure the named Hermes profile
+  when:
+    - state | default('present') == 'present'
+    - composition_hermes_agent_manage_config
+    - composition_hermes_agent_profile != 'default'
+  block:
+    - name: Wait for Hermes to accept commands
+      ansible.builtin.command:
+        cmd: docker exec hermes hermes profile list
+      register: _hermes_ready
+      until: _hermes_ready.rc == 0
+      retries: 30
+      delay: 5
+      changed_when: false
+
+    - name: Create the Hermes profile
+      ansible.builtin.command:
+        cmd: >-
+          docker exec hermes hermes profile create {{ composition_hermes_agent_profile | quote }} --clone
+          {{ ('--description ' ~ (composition_hermes_agent_profile_description | quote))
+             if composition_hermes_agent_profile_description else '' }}
+        creates: "{{ composition_config }}/data/profiles/{{ composition_hermes_agent_profile }}"
+
+    - name: Deploy Hermes config.yaml (named profile)
+      ansible.builtin.template:
+        src: config.yaml.j2
+        dest: "{{ composition_config }}/data/profiles/{{ composition_hermes_agent_profile }}/config.yaml"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: "0644"
+      vars:
+        _hermes_mcp_servers: "{{ composition_hermes_agent_mcp_servers }}"
+        _hermes_api_port: "{{ composition_hermes_agent_profile_api_server_port }}"
+      notify: Restart Hermes
+
+    - name: Read the current active profile
+      ansible.builtin.command:
+        cmd: docker exec hermes cat /opt/data/active_profile
+      register: _hermes_active
+      changed_when: false
+      failed_when: false
+
+    - name: Make the named profile the active one
+      ansible.builtin.command:
+        cmd: docker exec hermes hermes profile use {{ composition_hermes_agent_profile | quote }}
+      when: (_hermes_active.stdout | default('') | trim) != composition_hermes_agent_profile
+      changed_when: true
+      notify: Restart Hermes

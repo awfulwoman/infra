@@ -26,7 +26,9 @@ API_SERVER_PORT={{ composition_hermes_agent_api_server_port }}
 API_SERVER_KEY={{ composition_hermes_agent_api_server_key }}
 {% endif %}
 
-{% if composition_hermes_agent_gateway_mcp_token | length > 0 %}
-# Bearer token for gateway's /mcp - config.yaml references it as ${GATEWAY_MCP_TOKEN}
-GATEWAY_MCP_TOKEN={{ composition_hermes_agent_gateway_mcp_token }}
+{% if composition_hermes_agent_mcp_env | dict2items | selectattr('value') | list | length > 0 %}
+# MCP server credentials - config.yaml references these as ${ENVVAR}
+{% for _k, _v in composition_hermes_agent_mcp_env.items() if _v %}
+{{ _k }}={{ _v }}
+{% endfor %}
 {% endif %}

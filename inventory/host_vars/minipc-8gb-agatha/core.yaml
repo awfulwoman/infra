@@ -71,3 +71,27 @@ compositions:
   - composition: reverseproxy
     labels:
       - "traefik-{host}"
+
+# -------------------------------------------------------------------
+# HERMES AGENT
+# Run a dedicated "nabu" profile (not the built-in "default"). The role
+# creates it, makes it the active/sticky profile, and templates its
+# config.yaml - including the mcp_servers block below. "default" stays
+# supervised on api_server port 8642; "nabu" takes 8643.
+# -------------------------------------------------------------------
+composition_hermes_agent_profile: nabu
+composition_hermes_agent_profile_description: "Nabu helps run the home"
+composition_hermes_agent_dashboard_theme: midnight
+composition_hermes_agent_dashboard_font: system-sans
+
+composition_hermes_agent_mcp_servers:
+  gateway:
+    url: "https://gateway.{{ domainname_infra }}/mcp"
+    enabled: true
+    headers:
+      Authorization: "Bearer ${GATEWAY_MCP_TOKEN}"
+
+composition_hermes_agent_mcp_env:
+  # gateway labels this client "hermes" in its /mcp usage log; the secret
+  # is shared with composition-gateway (group_vars/infra/vault_gateway.yaml).
+  GATEWAY_MCP_TOKEN: "{{ vault_gateway_mcp_token_hermes }}"

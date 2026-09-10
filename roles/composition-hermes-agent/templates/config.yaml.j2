@@ -4,9 +4,15 @@
 # the role variables instead, or set composition_hermes_agent_manage_config to
 # false to hand the file back to Hermes.
 #
+# This is rendered once per managed profile: data/config.yaml for the built-in
+# "default" profile, and data/profiles/<name>/config.yaml for a named one
+# (composition_hermes_agent_profile). Profile configs are standalone, not merged
+# over the base file.
+#
 # config.yaml is the source of truth for model, provider and endpoint. Secrets
 # stay out of it: they arrive as environment variables from .environment_vars,
-# which takes precedence over /opt/data/.env.
+# which takes precedence over /opt/data/.env. mcp_servers headers reference
+# ${ENVVAR} placeholders that Hermes interpolates from the process environment.
 
 # Schema version this file is written against. Without it Hermes treats the
 # config as predating version 12 and refuses to migrate it. Read the value the
@@ -27,14 +33,26 @@ model:
 
 terminal:
   backend: "{{ composition_hermes_agent_terminal_backend }}"
-{% if composition_hermes_agent_gateway_mcp_token | length > 0 %}
 
-# gateway MCP server. The bearer token is not written here - ${GATEWAY_MCP_TOKEN}
-# comes from .environment_vars (see roles/composition-hermes-agent/defaults).
-mcp_servers:
-  gateway:
-    url: "{{ composition_hermes_agent_gateway_mcp_url }}"
-    headers:
-      Authorization: "Bearer ${GATEWAY_MCP_TOKEN}"
-    enabled: true
+# Each profile's gateway runs its own OpenAI-API server; give them distinct
+# ports so they don't clash on startup (see composition_hermes_agent_profile_api_server_port).
+platforms:
+  api_server:
+    port: {{ _hermes_api_port }}
+{% if composition_hermes_agent_dashboard_theme or composition_hermes_agent_dashboard_font %}
+
+dashboard:
+{% if composition_hermes_agent_dashboard_theme %}
+  theme: {{ composition_hermes_agent_dashboard_theme }}
 {% endif %}
+{% if composition_hermes_agent_dashboard_font %}
+  font: {{ composition_hermes_agent_dashboard_font }}
+{% endif %}
+{% endif %}
+{% if _hermes_mcp_servers | default({}) | length > 0 %}
+
+# MCP servers for this profile. Bearer tokens are not written here - the
+# ${ENVVAR} placeholders resolve from .environment_vars (see
+# composition_hermes_agent_mcp_env).
+{{ {'mcp_servers': _hermes_mcp_servers} | to_nice_yaml(indent=2) }}
+{%- endif %}

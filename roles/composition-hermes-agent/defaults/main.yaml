@@ -38,19 +38,50 @@ composition_hermes_agent_config_version: 42
 composition_hermes_agent_terminal_backend: local
 
 # -------------------------------------------------------------------
-# MCP - gateway
-# The personal gateway MCP server (calendar, mail, notes, contacts,
-# reminders, bookmarks, location, issues), running on server-64gb-storage
-# and reached over Traefik. gateway gates /mcp on a labelled bearer token;
-# "hermes" is this client's label in gateway's per-request usage log.
-#
-# The token stays out of config.yaml: it is templated into .environment_vars
-# as GATEWAY_MCP_TOKEN and config.yaml references it as ${GATEWAY_MCP_TOKEN},
-# which Hermes interpolates from the process environment. The mcp_servers
-# block is only rendered when the token is set.
+# PROFILE
+# The Hermes profile this deploy targets. "default" (built-in) keeps the
+# single-profile model - config at data/config.yaml. Any other name: the
+# role runs `hermes profile create <name> --clone`, makes it the sticky
+# (active) profile, and templates data/profiles/<name>/config.yaml. The
+# built-in "default" profile is always templated too - the image keeps
+# supervising its gateway regardless.
 # -------------------------------------------------------------------
-composition_hermes_agent_gateway_mcp_url: "https://gateway.{{ domainname_infra }}/mcp"
-composition_hermes_agent_gateway_mcp_token: "{{ vault_gateway_mcp_token_hermes | default('') }}"
+composition_hermes_agent_profile: default
+composition_hermes_agent_profile_description: ""
+
+# -------------------------------------------------------------------
+# MCP SERVERS
+# Servers offered to the target profile. Keyed by server name; each value
+# is written verbatim under mcp_servers: in that profile's config.yaml.
+# Keep secrets out of config.yaml: put them in a header as ${ENVVAR} and
+# supply the value via composition_hermes_agent_mcp_env, which is rendered
+# into .environment_vars (process-wide, so every profile's gateway can
+# read it). Empty _mcp_env values are skipped.
+#
+# Example:
+#   composition_hermes_agent_mcp_servers:
+#     gateway:
+#       url: "https://gateway.{{ domainname_infra }}/mcp"
+#       headers:
+#         Authorization: "Bearer ${GATEWAY_MCP_TOKEN}"
+#   composition_hermes_agent_mcp_env:
+#     GATEWAY_MCP_TOKEN: "{{ vault_gateway_mcp_token_hermes }}"
+# -------------------------------------------------------------------
+composition_hermes_agent_mcp_servers: {}
+composition_hermes_agent_mcp_env: {}
+
+# OpenAI-API server port for the *named* profile. The image auto-generates
+# an API_SERVER_KEY per profile, and `--clone` copies the default profile's,
+# so every profile's gateway would otherwise fight for
+# composition_hermes_agent_api_server_port (8642). The named profile takes
+# this port instead. Ignored when the target profile is "default".
+composition_hermes_agent_profile_api_server_port: 8643
+
+# `hermes setup` writes these into a profile's config.yaml; declare them
+# here so the role's template does not drop them on the next play. Empty =
+# omit the key (Hermes uses its own default).
+composition_hermes_agent_dashboard_theme: ""
+composition_hermes_agent_dashboard_font: ""
 
 # -------------------------------------------------------------------
 # DASHBOARD
