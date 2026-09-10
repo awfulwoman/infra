@@ -110,6 +110,12 @@
 # self-signed cert + fixed identifier makes TCC match on the Designated
 # Requirement instead, so the grant survives rebuilds. See the service repo's
 # scripts/{setup_signing_cert,sign_runtime}.sh and README.
+#
+# This identity is SHARED: apple-calendar-server and apple-contacts-server pin
+# the same .python-version, so uv hard-links all three to one CPython file, and
+# they must all sign it with this one identity or each deploy breaks the others'
+# grant. This role owns provisioning + trusting it (it deploys first in the host
+# playbook); the calendar/contacts roles only re-sign.
 - name: "Provision stable code-signing identity"
   ansible.builtin.command:
     cmd: ./scripts/setup_signing_cert.sh

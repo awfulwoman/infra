@@ -18,11 +18,10 @@ system_apple_contacts_server_db_path: "{{ ansible_facts.user_dir }}/.local/state
 # Shared with composition-gateway, which authenticates to this same service.
 system_apple_contacts_server_bearer_tokens: "{{ vault_gateway_contacts_server_token }}"
 
-# Login-keychain password, needed ONLY the first time the signing cert is
-# provisioned (to run `security set-key-partition-list` non-interactively so
-# codesign can later use the key headlessly). After the cert exists this is
-# unused. Set in Malcolm's host_vars from vault, e.g.
-#   system_apple_contacts_server_keychain_password: "{{ vault_malcolm_login_keychain_password }}"
-# Left empty: cert provisioning is skipped and must be run by hand once
-# (scripts/setup_signing_cert.sh on Malcolm) — signing on later deploys still works.
+# Login-keychain password. Needed on every deploy so sign_runtime.sh can unlock
+# the login keychain over SSH and reach the SHARED signing key headlessly (the
+# shared identity is provisioned + trusted by the system-apple-reminders-server
+# role). Set in Malcolm's host_vars from vault. Left empty: the re-sign step
+# still runs but codesign fails headlessly against a locked keychain — run
+# scripts/sign_runtime.sh by hand in a GUI session once.
 system_apple_contacts_server_keychain_password: ""

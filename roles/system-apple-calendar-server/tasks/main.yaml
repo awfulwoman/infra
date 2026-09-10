@@ -44,65 +44,42 @@
   changed_when: false
   when: not ansible_check_mode
 
-# TCC grants Calendar access to a *code identity*. An ad-hoc-signed interpreter
-# is identified only by its cdhash, which changes on every `uv sync`/Python bump,
-# so the grant silently reverts to denied. Signing the interpreter with a stable
-# self-signed cert + fixed identifier makes TCC match on the Designated
-# Requirement instead, so the grant survives rebuilds. See the service repo's
-# scripts/{setup_signing_cert,sign_runtime}.sh and README.
-- name: "Provision stable code-signing identity"
+# TCC keys the Calendar grant to a *code identity* (identifier + signing cert),
+# not the interpreter's cdhash, so it survives `uv sync` / Python bumps. That
+# identity is SHARED with apple-reminders-server and apple-contacts-server: all
+# three pin the same .python-version, so uv hard-links them to one CPython file,
+# and `codesign --force` replaces the whole signature - if each signed with its
+# own identifier the last deploy would break the other two grants. The
+# system-apple-reminders-server role (deploys first) owns provisioning + trusting
+# the shared cert; here we only re-sign. See the service repos' README and
+# scripts/{setup_signing_cert,sign_runtime}.sh.
+- name: "Check the shared code-signing identity is trusted"
   ansible.builtin.command:
-    cmd: ./scripts/setup_signing_cert.sh
-    chdir: "{{ system_apple_calendar_server_repo_dir }}"
-  environment:
-    KEYCHAIN_PASSWORD: "{{ system_apple_calendar_server_keychain_password }}"
-  register: signing_cert
-  changed_when: "'Created self-signed' in signing_cert.stdout"
-  # Only headless-provision when we have the keychain password to run
-  # set-key-partition-list; otherwise run setup_signing_cert.sh by hand on Malcolm
-  # once (the sign step below then succeeds). Avoids creating a cert whose key
-  # codesign can't reach non-interactively.
-  when:
-    - not ansible_check_mode
-    - system_apple_calendar_server_keychain_password | length > 0
-
-- name: "Stat the signing cert on disk"
-  ansible.builtin.stat:
-    path: "{{ ansible_facts.user_dir }}/.local/state/apple-calendar-server/signing-cert.pem"
-  register: calendar_signing_cert
-
-- name: "Check if signing cert is already trusted (System keychain)"
-  ansible.builtin.command:
-    cmd: security find-certificate -c awfulwoman-apple-calendar-server-signing /Library/Keychains/System.keychain
-  register: calendar_cert_trusted
+    cmd: security find-certificate -c awfulwoman-apple-reminders-server-signing /Library/Keychains/System.keychain
+  register: calendar_shared_cert
   changed_when: false
   failed_when: false
 
-# A self-signed codesigning cert isn't trusted by default, so codesign refuses to
-# use it ("no identity found"). macOS blocks setting trust settings over SSH even
-# as root, so trust_signing_cert.sh briefly relaxes the trust-settings auth right,
-# adds the trusted cert (admin domain), and restores the right. become = root;
-# the private key stays in the user's login keychain, only the public cert is
-# trusted, scoped to codeSign.
-- name: "Trust signing cert for code signing (headless, admin domain)"
-  become: true
-  ansible.builtin.command:
-    cmd: ./scripts/trust_signing_cert.sh {{ ansible_facts.user_dir }}/.local/state/apple-calendar-server/signing-cert.pem
-    chdir: "{{ system_apple_calendar_server_repo_dir }}"
-  changed_when: true
+- name: "Fail if the shared code-signing identity is missing"
+  ansible.builtin.fail:
+    msg: >-
+      Shared signing cert 'awfulwoman-apple-reminders-server-signing' is not
+      trusted in the System keychain. Deploy system-apple-reminders-server first -
+      it provisions and trusts the identity all three apple-*-server roles share.
   when:
     - not ansible_check_mode
-    - calendar_signing_cert.stat.exists
-    - calendar_cert_trusted.rc != 0
+    - calendar_shared_cert.rc != 0
 
-- name: "Re-sign interpreter with the stable identity"
+- name: "Re-sign interpreter with the shared stable identity"
   ansible.builtin.command:
     cmd: ./scripts/sign_runtime.sh
     chdir: "{{ system_apple_calendar_server_repo_dir }}"
   environment:
     KEYCHAIN_PASSWORD: "{{ system_apple_calendar_server_keychain_password }}"
   changed_when: false
-  when: not ansible_check_mode
+  when:
+    - not ansible_check_mode
+    - calendar_shared_cert.rc == 0
 
 - name: "Write .env file"
   ansible.builtin.template:
