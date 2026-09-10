@@ -1,0 +1,73 @@
+# -------------------------------------------------------------------
+# IDENTITY
+# Dell Wyse 5070 thin client — Intel Celeron J4105 (4 core), 8GB RAM,
+# 64GB SATA flash (OS) + 15GB eMMC (unused). Ubuntu 24.04.
+# -------------------------------------------------------------------
+host_type: baremetal
+host_name: minipc-8gb-agatha
+host_name_medium: minipc-agatha
+host_name_short: agatha
+host_region: ber
+host_site: xberg
+host_pfqdn: "{{ host_name }}.{{ host_site }}.{{ host_region }}"
+host_fqdn: "{{ host_pfqdn }}.{{ domainname_infra }}"
+host_description: "Hermes Agent host"
+
+# -------------------------------------------------------------------
+# NETWORK
+# Hint: Use `network_netplan_config:` for more fine-grained control
+# Docs: roles/network-netplan/README.md
+# -------------------------------------------------------------------
+host_ipv4: 192.168.1.176
+host_primary_interface: "enp1s0"
+host_ipv4_subnet: 24
+host_tailscale_ipv4: 100.80.1.176
+host_mac: "a4:bb:6d:26:57:e9"
+
+# -------------------------------------------------------------------
+# ANSIBLE
+# -------------------------------------------------------------------
+ansible_host: "{{ host_ipv4 }}"
+ansible_user: "{{ vault_server_username }}"
+ansible_become_password: "{{ vault_password }}"
+
+# -------------------------------------------------------------------
+# UBUNTUPRO
+# -------------------------------------------------------------------
+ubuntupro_attach: false
+
+# -------------------------------------------------------------------
+# STORAGE
+# No spare disk for a ZFS pool — the 64GB SATA flash holds the OS and the
+# eMMC is too small and write-limited to trust with a zpool. compositions
+# therefore run on a plain directory: composition-common skips its ZFS
+# dataset tasks when `zfs` is absent and just uses this path. Hermes' state
+# lives at /opt/awfulwoman/compositions/hermes-agent/config/data — back it
+# up out of band, snapshots do not cover it here. Give this host a disk and
+# a `zfs:` block later to move onto ZFS.
+# -------------------------------------------------------------------
+compositions_dataset: opt/awfulwoman/compositions
+
+# -------------------------------------------------------------------
+# REVERSEPROXY
+# Internal-only host: serves the client-cert-distribution wildcard rather
+# than running its own ACME. Same arrangement as camina (#271) and
+# randolph (#270).
+# -------------------------------------------------------------------
+reverseproxy_use_letsencrypt: false
+reverseproxy_wildcard_cert: true
+traefik_providers:
+  - wildcard-cert
+
+# -------------------------------------------------------------------
+# COMPOSITIONS
+# Internal DNS for this host is derived from this list by the dns_records
+# filter (roles/infra-named): hermes-agent registers `hermes`, reverseproxy
+# registers `traefik-{host}`. Run infra-named on bertha after the first
+# deploy to publish them.
+# -------------------------------------------------------------------
+compositions:
+  - hermes-agent
+  - composition: reverseproxy
+    labels:
+      - "traefik-{host}"

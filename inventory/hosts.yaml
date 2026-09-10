@@ -18,6 +18,7 @@ all:
         server-8gb-backups:
         minipc-8gb-homebrain:
         minipc-8gb-camina:
+        minipc-8gb-agatha:
         apple-macmini-m4-16gb-malcolm:
         raspberry-pi4-2gb-pikvm:
         vps-hetzner-public01:
@@ -40,6 +41,7 @@ all:
         server-8gb-backups:
         minipc-8gb-homebrain:
         minipc-8gb-camina:
+        minipc-8gb-agatha:
         vps-hetzner-public01:
         server-64gb-storage:
         minipc-8gb-test-router:
