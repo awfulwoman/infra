@@ -61,8 +61,22 @@ composition_gateway_contacts_server_bearer_token: "{{ vault_gateway_contacts_ser
 composition_gateway_reminders_server_base_url: "http://{{ composition_gateway_malcolm_host }}:4100"
 composition_gateway_reminders_server_bearer_token: "{{ vault_gateway_reminders_server_token }}"
 
-# Same secret as the CLI token used on Malcolm — the server enforces it on /mcp.
-composition_gateway_server_auth_tokens: "{{ vault_gateway_mcp_token }}"
+# Bearer tokens the server enforces on /mcp, one per calling client. Rendered into
+# GATEWAY_SERVER__AUTH_TOKENS as `label:secret` pairs — the label names the caller
+# in gateway's per-request usage log. jarvis keeps the original shared secret
+# (vault_gateway_mcp_token), so composition-jarvis needs no change; laptop and
+# gw-cli get their own vaulted secrets. Entries with an empty/undefined value are
+# skipped by the template, so a not-yet-vaulted client just drops out.
+composition_gateway_server_auth_clients:
+  jarvis: "{{ vault_gateway_mcp_token }}"
+  laptop: "{{ vault_gateway_mcp_token_laptop | default('') }}"
+  gw-cli: "{{ vault_gateway_mcp_token_gw_cli | default('') }}"
+
+# Where gateway writes its per-request /mcp usage log inside the container. The
+# role bind-mounts {{ composition_root }}/logs here, so it lands on the host at
+# {{ composition_root }}/logs/usage.jsonl (rotating JSONL). It is also always
+# echoed to stdout (docker logs), prefixed `usage `.
+composition_gateway_usage_log_container_path: /var/log/gateway/usage.jsonl
 
 # GitHub token for the Issues tool. Fetched from 1Password Connect at playbook
 # runtime rather than vaulted in the repo — it is a live GitHub PAT, and the

@@ -17,6 +17,14 @@
     group: "{{ ansible_user }}"
     mode: "0644"
 
+- name: "Create usage-log directory"
+  ansible.builtin.file:
+    path: "{{ composition_root }}/logs"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0755"
+
 # Fetched at runtime, never stored in the repo: this is a live GitHub PAT.
 # Delegated so the Connect token stays on the controller.
 - name: "Fetch GitHub token from 1Password"
