@@ -87,12 +87,11 @@ composition_hermes_agent_profiles:
   nabu:
     description: "Nabu helps run the home"
     mcp_servers: {}
-    disabled_tools:
-      - browser_exec
-      - browser_vault_list
-      - browser_vault_fill
-      - browser_vault_save_login
-      - browser_vault_unlock
+    # Hermes only disables whole toolsets, not individual tools. "browser"
+    # covers the ones we want gone (browser_exec, browser_vault_*) along
+    # with the rest of the browser_* tools.
+    disabled_toolsets:
+      - browser
   jarvis:
     description: "Jarvis has exclusive use of the gateway MCP server"
     mcp_servers:
