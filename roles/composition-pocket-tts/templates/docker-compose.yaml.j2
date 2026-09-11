@@ -1,0 +1,29 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  pocket-tts:
+    container_name: pocket-tts
+    build:
+      context: https://github.com/MisterEcks/pocket-tts-streaming.git#main:pocket-tts-streaming
+    ports:
+      - "{{ composition_pocket_tts_port }}:{{ composition_pocket_tts_port }}"
+    restart: unless-stopped
+    env_file: .environment_vars
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.pocket-tts.rule=Host(`pocket-tts.{{ domainname_infra }}`)"
+    volumes:
+      - "{{ composition_config }}/data:/share/pocket_tts_streaming"
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+    healthcheck:
+      test: ["CMD-SHELL", "timeout 1 bash -c '</dev/tcp/127.0.0.1/{{ composition_pocket_tts_port }}' || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+networks:
+  "{{ default_docker_network }}":
+    external: true
