@@ -1,0 +1,79 @@
+# code: language=ansible
+# Managed by Ansible (roles/composition-hermes-nabu). Edits made here or by
+# `hermes setup` inside the container are overwritten on the next play. Change
+# the role variables instead, or set composition_hermes_nabu_manage_config to
+# false to hand the file back to Hermes.
+#
+# config.yaml is the source of truth for model, provider and endpoint. Secrets
+# stay out of it: they arrive as environment variables from .environment_vars,
+# which takes precedence over /opt/data/.env. mcp_servers headers reference
+# ${ENVVAR} placeholders that Hermes interpolates from the process environment.
+
+# Schema version this file is written against. Without it Hermes treats the
+# config as predating version 12 and refuses to migrate it. Read the value the
+# image actually expects, rather than the one the warning text names:
+#
+#   docker exec hermes-nabu /opt/hermes/.venv/bin/python -c \
+#     'from hermes_cli.config import DEFAULT_CONFIG; print(DEFAULT_CONFIG["_config_version"])'
+#
+# Re-check it after bumping composition_hermes_nabu_image.
+_config_version: {{ composition_hermes_nabu_config_version }}
+
+model:
+  default: "{{ composition_hermes_nabu_model }}"
+  provider: custom
+  base_url: "{{ composition_hermes_nabu_base_url }}"
+  api_key: "{{ composition_hermes_nabu_api_key }}"
+  context_length: {{ composition_hermes_nabu_context_length }}
+
+terminal:
+  backend: "{{ composition_hermes_nabu_terminal_backend }}"
+
+platforms:
+  api_server:
+    port: {{ composition_hermes_nabu_api_server_port }}
+{% if composition_hermes_nabu_dashboard_theme or composition_hermes_nabu_dashboard_font %}
+
+dashboard:
+{% if composition_hermes_nabu_dashboard_theme %}
+  theme: {{ composition_hermes_nabu_dashboard_theme }}
+{% endif %}
+{% if composition_hermes_nabu_dashboard_font %}
+  font: {{ composition_hermes_nabu_dashboard_font }}
+{% endif %}
+{% endif %}
+{% if composition_hermes_nabu_disabled_toolsets | length > 0 %}
+
+# Toolsets this bot may not use. agent.disabled_toolsets is a global
+# suppression list applied last - toolset granularity only (Hermes silently
+# ignores individual tool names here), so e.g. "browser" removes every
+# browser_* tool.
+agent:
+  disabled_toolsets:
+{% for _ts in composition_hermes_nabu_disabled_toolsets %}
+    - {{ _ts }}
+{% endfor %}
+{% endif %}
+{% if composition_hermes_nabu_mcp_servers | length > 0 %}
+
+# MCP servers for this bot. Bearer tokens are not written here - the
+# ${ENVVAR} placeholders resolve from .environment_vars (see
+# composition_hermes_nabu_mcp_env).
+{{ {'mcp_servers': composition_hermes_nabu_mcp_servers} | to_nice_yaml(indent=2) }}
+{%- endif %}
+{% if composition_hermes_nabu_matrix %}
+
+# Matrix platform. Connection secrets (homeserver, access token, user id,
+# device id) live in .environment_vars as MATRIX_* instead, and allowed_users
+# has no config.yaml equivalent at all - it's MATRIX_ALLOWED_USERS-only.
+# Room lists here are comma-separated strings, per
+# hermes_cli/config_defaults.py, not YAML lists.
+matrix:
+  require_mention: {{ composition_hermes_nabu_matrix_require_mention | lower }}
+{% if composition_hermes_nabu_matrix_allowed_rooms | length > 0 %}
+  allowed_rooms: "{{ composition_hermes_nabu_matrix_allowed_rooms | join(',') }}"
+{% endif %}
+{% if composition_hermes_nabu_matrix_free_response_rooms | length > 0 %}
+  free_response_rooms: "{{ composition_hermes_nabu_matrix_free_response_rooms | join(',') }}"
+{% endif %}
+{% endif %}

@@ -1,0 +1,52 @@
+TZ=Europe/Berlin
+
+# The image remaps its internal `hermes` user to these before dropping
+# privileges, so files it writes under /opt/data stay writable on the host.
+HERMES_UID={{ composition_hermes_jarvis_uid }}
+HERMES_GID={{ composition_hermes_jarvis_gid }}
+
+{% if composition_hermes_jarvis_dashboard %}
+# Dashboard. Binds 0.0.0.0 inside the container - no host port is published,
+# so only the shared Docker network reaches it, and Traefik fronts that.
+HERMES_DASHBOARD=1
+HERMES_DASHBOARD_HOST=0.0.0.0
+HERMES_DASHBOARD_PORT={{ composition_hermes_jarvis_dashboard_port }}
+HERMES_DASHBOARD_BASIC_AUTH_USERNAME={{ composition_hermes_jarvis_dashboard_username }}
+HERMES_DASHBOARD_BASIC_AUTH_PASSWORD={{ composition_hermes_jarvis_dashboard_password }}
+HERMES_DASHBOARD_BASIC_AUTH_SECRET={{ composition_hermes_jarvis_dashboard_secret }}
+{% else %}
+HERMES_DASHBOARD=0
+{% endif %}
+
+{% if composition_hermes_jarvis_api_server %}
+# OpenAI-compatible API server. The key is mandatory: Hermes only listens
+# beyond loopback when one is set.
+API_SERVER_HOST=0.0.0.0
+API_SERVER_PORT={{ composition_hermes_jarvis_api_server_port }}
+API_SERVER_KEY={{ composition_hermes_jarvis_api_server_key }}
+{% endif %}
+
+{% if composition_hermes_jarvis_mcp_env | dict2items | selectattr('value') | list | length > 0 %}
+# MCP server credentials - config.yaml references these as ${ENVVAR}
+{% for _k, _v in composition_hermes_jarvis_mcp_env.items() if _v %}
+{{ _k }}={{ _v }}
+{% endfor %}
+{% endif %}
+
+{% if composition_hermes_jarvis_matrix %}
+# Matrix platform. All three of HOMESERVER/ACCESS_TOKEN/USER_ID are mandatory
+# - Hermes won't start the platform without them
+# (hermes_cli/web_server_messaging.py required_env). The access token grants
+# full account access, so it stays here rather than in config.yaml.
+MATRIX_HOMESERVER={{ composition_hermes_jarvis_matrix_homeserver }}
+MATRIX_ACCESS_TOKEN={{ composition_hermes_jarvis_matrix_access_token }}
+MATRIX_USER_ID={{ composition_hermes_jarvis_matrix_user_id }}
+{% if composition_hermes_jarvis_matrix_allowed_users | length > 0 %}
+MATRIX_ALLOWED_USERS={{ composition_hermes_jarvis_matrix_allowed_users | join(',') }}
+{% endif %}
+{% if composition_hermes_jarvis_matrix_device_id %}
+# Pins a stable device ID for E2EE - without it, keys rotate every restart
+# and historic decrypt breaks.
+MATRIX_DEVICE_ID={{ composition_hermes_jarvis_matrix_device_id }}
+{% endif %}
+{% endif %}

@@ -38,15 +38,43 @@ ubuntupro_attach: false
 
 # -------------------------------------------------------------------
 # STORAGE
-# No spare disk for a ZFS pool — the 64GB SATA flash holds the OS and the
-# eMMC is too small and write-limited to trust with a zpool. compositions
-# therefore run on a plain directory: composition-common skips its ZFS
-# dataset tasks when `zfs` is absent and just uses this path. Hermes' state
-# lives at /opt/awfulwoman/compositions/hermes-agent/config/data — back it
-# up out of band, snapshots do not cover it here. Give this host a disk and
-# a `zfs:` block later to move onto ZFS.
+# The internal 64GB SATA flash holds the OS only. `fastpool` below is a USB
+# SanDisk stick added for compositions - a single-disk stripe, so it has no
+# redundancy; a USB flash drive is also weaker on endurance/random I/O than
+# real internal storage. Acceptable here since agatha has no other option
+# and this is still strictly better than the plain-directory setup it
+# replaces (no snapshots at all).
+#
+# Migrated from opt/awfulwoman/compositions on 2026-09-11: containers
+# stopped, per-composition datasets pre-created by hand (zfs create, so
+# `zfs create` didn't try to mount over a non-empty directory), data moved
+# across with `rsync -aHAX`, md5sums verified to match file-for-file before
+# the old directory was left behind. It's still sitting at
+# /opt/awfulwoman/compositions as a backup - safe to remove once this has
+# proven stable.
 # -------------------------------------------------------------------
-compositions_dataset: opt/awfulwoman/compositions
+compositions_dataset: fastpool/compositions
+
+# -------------------------------------------------------------------
+# ZFS
+# Pool doesn't exist yet on first run - zfs_pools_create lets system-zfs
+# create it (matches minipc-8gb-camina's precedent for a host with no
+# existing pool). Safe to leave true permanently: once fastpool exists,
+# pool creation is a no-op on every later run.
+# -------------------------------------------------------------------
+zfs_pools_create: true
+
+zfs:
+  fastpool:
+    vdevs:
+      - type: stripe
+        disks: /dev/disk/by-id/usb-USB_SanDisk_3.2Gen1_0501a15490cd8570a3ee0b097c73ec5d86b16253330bc66bea1cd0f129af314bb88b000000000000000000004ef5ad6800090c10915581071f2f575d-0:0
+    datasets:
+      compositions:
+        policy: critical
+        children_inherit_policy: true
+        snapshots_discover_children: true
+
 
 # -------------------------------------------------------------------
 # REVERSEPROXY
@@ -62,61 +90,77 @@ traefik_providers:
 # -------------------------------------------------------------------
 # COMPOSITIONS
 # Internal DNS for this host is derived from this list by the dns_records
-# filter (roles/infra-named): hermes-agent registers `hermes`, reverseproxy
-# registers `traefik-{host}`. Run infra-named on bertha after the first
-# deploy to publish them.
+# filter (roles/infra-named): hermes-nabu/hermes-jarvis register their own
+# subdomains, reverseproxy registers `traefik-{host}`. Run infra-named on
+# bertha after a deploy that changes this list.
+#
+# hermes-agent (single container, multiple Hermes "profiles") is retired -
+# see composition-hermes-nabu/README.md#why-one-container-per-bot for why:
+# profiles in one container share a process environment, so nabu and jarvis
+# ended up authenticating to Matrix as the same account regardless of
+# per-profile config (upstream nousresearch/hermes-agent#66930, #77464).
+# Each bot is now its own container instead.
 # -------------------------------------------------------------------
 compositions:
-  - hermes-agent
+  - hermes-nabu
+  - hermes-jarvis
   - composition: reverseproxy
     labels:
       - "traefik-{host}"
 
 # -------------------------------------------------------------------
-# HERMES AGENT
-# Two named profiles on top of the built-in "default". MCP servers are
-# scoped per profile: only "jarvis" gets the gateway MCP; "nabu" has none.
-# api_server ports: default 8642, nabu 8643, jarvis 8644 (list order).
-# "jarvis" is the active/sticky profile (dashboard + bare CLI default).
+# HERMES NABU
+# "Nabu helps run the home" - no MCP servers, browser toolset disabled.
+# Own Matrix account: @nabu:matrix.ewwww.eu, registered against
+# composition-matrix (server-64gb-storage) 2026-09-11. device_id pins the
+# one minted at registration so E2EE keys survive restarts.
 # -------------------------------------------------------------------
-composition_hermes_agent_active_profile: jarvis
-composition_hermes_agent_dashboard_theme: midnight
-composition_hermes_agent_dashboard_font: system-sans
+composition_hermes_nabu_dashboard_theme: midnight
+composition_hermes_nabu_dashboard_font: system-sans
 
-composition_hermes_agent_profiles:
-  nabu:
-    description: "Nabu helps run the home"
-    mcp_servers: {}
-    # Hermes only disables whole toolsets, not individual tools. "browser"
-    # covers the ones we want gone (browser_exec, browser_vault_*) along
-    # with the rest of the browser_* tools.
-    disabled_toolsets:
-      - browser
-  jarvis:
-    description: "Jarvis has exclusive use of the gateway MCP server"
-    mcp_servers:
-      gateway:
-        url: "https://gateway.{{ domainname_infra }}/mcp"
-        enabled: true
-        headers:
-          Authorization: "Bearer ${GATEWAY_MCP_TOKEN}"
+composition_hermes_nabu_mcp_servers: {}
+# Hermes only disables whole toolsets, not individual tools. "browser"
+# covers the ones we want gone (browser_exec, browser_vault_*) along with
+# the rest of the browser_* tools.
+composition_hermes_nabu_disabled_toolsets:
+  - browser
 
-composition_hermes_agent_mcp_env:
+composition_hermes_nabu_matrix: true
+composition_hermes_nabu_matrix_homeserver: "https://matrix.{{ domainname_infra }}"
+composition_hermes_nabu_matrix_user_id: "@nabu:matrix.{{ domainname_infra }}"
+composition_hermes_nabu_matrix_access_token: "{{ vault_hermes_nabu_matrix_access_token }}"
+composition_hermes_nabu_matrix_device_id: "9Qy6AoJuoL"
+composition_hermes_nabu_matrix_allowed_users:
+  - "@awfulwoman:matrix.{{ domainname_infra }}"
+
+# -------------------------------------------------------------------
+# HERMES JARVIS
+# "Jarvis is Charlie's general assistant" - exclusive use of the gateway MCP
+# server. Own Matrix account: @jarvis:matrix.ewwww.eu, registered against
+# composition-matrix (server-64gb-storage) 2026-09-11. device_id pins the
+# one minted at registration so E2EE keys survive restarts.
+# -------------------------------------------------------------------
+composition_hermes_jarvis_dashboard_theme: midnight
+composition_hermes_jarvis_dashboard_font: system-sans
+
+composition_hermes_jarvis_mcp_servers:
+  gateway:
+    url: "https://gateway.{{ domainname_infra }}/mcp"
+    enabled: true
+    headers:
+      Authorization: "Bearer ${GATEWAY_MCP_TOKEN}"
+
+composition_hermes_jarvis_mcp_env:
   # gateway labels this client "hermes" in its /mcp usage log; the secret
   # is shared with composition-gateway (group_vars/infra/vault_gateway.yaml).
   # (The "jarvis" label in composition_gateway_server_auth_clients belongs
-  # to the separate composition-jarvis chives bot, not this profile.)
+  # to the separate composition-jarvis chives bot, not this container.)
   GATEWAY_MCP_TOKEN: "{{ vault_gateway_mcp_token_hermes }}"
 
-# Matrix - not profile-scoped, so this is live regardless of which profile
-# (nabu/jarvis) is active. @hermes:matrix.ewwww.eu was registered against
-# composition-matrix (server-64gb-storage); allowed_users is just the owner
-# for now - no allowed_rooms yet since DMs don't need one and no shared
-# room has been created. device_id pins the one minted at registration
-# (POST /_matrix/client/v3/login) so E2EE keys survive container restarts.
-composition_hermes_agent_matrix: true
-composition_hermes_agent_matrix_homeserver: "https://matrix.{{ domainname_infra }}"
-composition_hermes_agent_matrix_user_id: "@hermes:matrix.{{ domainname_infra }}"
-composition_hermes_agent_matrix_device_id: "zPwgKBLqyw"
-composition_hermes_agent_matrix_allowed_users:
+composition_hermes_jarvis_matrix: true
+composition_hermes_jarvis_matrix_homeserver: "https://matrix.{{ domainname_infra }}"
+composition_hermes_jarvis_matrix_user_id: "@jarvis:matrix.{{ domainname_infra }}"
+composition_hermes_jarvis_matrix_access_token: "{{ vault_hermes_jarvis_matrix_access_token }}"
+composition_hermes_jarvis_matrix_device_id: "A6ZT7fkulU"
+composition_hermes_jarvis_matrix_allowed_users:
   - "@awfulwoman:matrix.{{ domainname_infra }}"

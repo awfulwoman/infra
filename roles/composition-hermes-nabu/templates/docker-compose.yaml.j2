@@ -2,8 +2,8 @@
 name: "{{ composition_name }}"
 services:
   hermes:
-    container_name: hermes
-    image: "{{ composition_hermes_agent_image }}"
+    container_name: "{{ composition_name }}"
+    image: "{{ composition_hermes_nabu_image }}"
     restart: unless-stopped
     env_file: .environment_vars
     # Without this the image's default entrypoint starts the interactive TUI,
@@ -19,22 +19,22 @@ services:
       - /etc/localtime:/etc/localtime:ro
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.hermes-agent.rule=Host(`{{ composition_dns_subdomains[0] }}.{{ domainname_infra }}`)"
-      - "traefik.http.routers.hermes-agent.tls=true"
+      - "traefik.http.routers.{{ composition_name }}.rule=Host(`{{ composition_dns_subdomains[0] }}.{{ domainname_infra }}`)"
+      - "traefik.http.routers.{{ composition_name }}.tls=true"
 {% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
-      - "traefik.http.routers.hermes-agent.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.{{ composition_name }}.tls.certresolver=letsencrypt"
 {% endif %}
-      - "traefik.http.services.hermes-agent.loadbalancer.server.port={{ composition_hermes_agent_dashboard_port }}"
+      - "traefik.http.services.{{ composition_name }}.loadbalancer.server.port={{ composition_hermes_nabu_dashboard_port }}"
     networks:
       - "{{ default_docker_network }}"
-{% if composition_hermes_agent_dashboard %}
+{% if composition_hermes_nabu_dashboard %}
     # Debian trixie image: bash is present, so probe the socket rather than
     # fetching a URL. Every dashboard path answers 401 until you log in, so an
     # HTTP check would have to treat an auth failure as healthy.
     # start_period is generous: s6 runs the cont-init.d scripts (chown of
     # /opt/data, profile reconcile) before the dashboard slot comes up.
     healthcheck:
-      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/localhost/{{ composition_hermes_agent_dashboard_port }}'"]
+      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/localhost/{{ composition_hermes_nabu_dashboard_port }}'"]
       interval: 30s
       timeout: 10s
       retries: 3

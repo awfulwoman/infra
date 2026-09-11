@@ -1,4 +1,4 @@
 dependencies:
   - role: composition-common
     vars:
-      composition_name: hermes-agent
+      composition_name: hermes-nabu

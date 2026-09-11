@@ -2,6 +2,6 @@
 # recreate the container. Hermes only reads it at startup, so restart by hand.
 - name: Restart Hermes
   community.docker.docker_container:
-    name: hermes
+    name: "{{ composition_name }}"
     state: started
     restart: true
