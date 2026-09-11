@@ -94,7 +94,6 @@ compositions:
   - container-management
   - homeassistant
   - homeassistant-personal
-  - pocket-tts
   - esphome
   - matter
   - owntracks

@@ -1,9 +1,0 @@
-# Composition name (used by composition-common dependency)
-composition_name: pocket-tts
-
-composition_dns_subdomains: []
-
-composition_pocket_tts_port: 10222
-composition_pocket_tts_voice: alba
-composition_pocket_tts_log_level: info
-composition_pocket_tts_hf_token: ""

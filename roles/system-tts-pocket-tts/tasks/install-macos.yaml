@@ -1,0 +1,91 @@
+---
+- name: Ensure uv is installed via Homebrew
+  community.general.homebrew:
+    name: uv
+    state: present
+
+- name: Ensure pocket-tts base directory exists
+  become: true
+  ansible.builtin.file:
+    path: "{{ system_pocket_tts_base_dir }}"
+    state: directory
+    mode: "0755"
+    owner: "{{ ansible_user }}"
+    group: staff
+
+- name: Ensure logs directory exists
+  ansible.builtin.file:
+    path: "{{ system_pocket_tts_base_dir }}/logs"
+    state: directory
+    mode: "0755"
+
+- name: Ensure data directory exists
+  ansible.builtin.file:
+    path: "{{ system_pocket_tts_base_dir }}/data"
+    state: directory
+    mode: "0755"
+
+- name: Deploy Wyoming server script
+  ansible.builtin.copy:
+    src: wyoming_server.py
+    dest: "{{ system_pocket_tts_base_dir }}/wyoming_server.py"
+    mode: "0755"
+  register: pocket_tts_server
+
+- name: Check the venv interpreter resolves
+  ansible.builtin.command:
+    cmd: "{{ system_pocket_tts_base_dir }}/venv/bin/python --version"
+  register: pocket_tts_venv_python
+  changed_when: false
+  failed_when: false
+
+- name: Ensure Python venv exists
+  ansible.builtin.command:
+    cmd: /opt/homebrew/bin/uv venv --clear "{{ system_pocket_tts_base_dir }}/venv" --python 3.12
+  when: pocket_tts_venv_python.rc != 0
+
+- name: Install Python dependencies
+  ansible.builtin.command:
+    cmd: >
+      /opt/homebrew/bin/uv pip install
+      --python "{{ system_pocket_tts_base_dir }}/venv/bin/python"
+      pocket-tts
+      wyoming
+      watchdog
+      zeroconf
+      stream2sentence
+      safetensors
+      numpy
+  changed_when: false
+
+- name: Ensure LaunchAgents directory exists
+  ansible.builtin.file:
+    path: "{{ ansible_facts.user_dir }}/Library/LaunchAgents"
+    state: directory
+    mode: "0755"
+
+- name: Deploy launchd plist
+  ansible.builtin.template:
+    src: launchd.plist.j2
+    dest: "{{ ansible_facts.user_dir }}/Library/LaunchAgents/com.awfulwoman.pocket-tts.plist"
+    mode: "0644"
+  register: pocket_tts_plist
+
+- name: Unload service before reload on change # noqa: no-handler
+  ansible.builtin.command: "launchctl unload {{ ansible_facts.user_dir }}/Library/LaunchAgents/com.awfulwoman.pocket-tts.plist"
+  when: pocket_tts_plist.changed or pocket_tts_server.changed
+  changed_when: false
+  failed_when: false
+
+- name: Load service # noqa: no-handler
+  ansible.builtin.command: "launchctl load {{ ansible_facts.user_dir }}/Library/LaunchAgents/com.awfulwoman.pocket-tts.plist"
+  when: pocket_tts_plist.changed or pocket_tts_server.changed
+  register: pocket_tts_load
+  changed_when: pocket_tts_load.rc == 0
+  failed_when: false
+
+- name: Ensure service is running
+  ansible.builtin.command: launchctl list com.awfulwoman.pocket-tts
+  register: pocket_tts_status
+  changed_when: false
+  failed_when: pocket_tts_status.rc != 0

@@ -1,0 +1,6 @@
+---
+system_pocket_tts_base_dir: "{{ awfulwoman_opt_dir }}/pocket-tts"
+system_pocket_tts_port: 10222
+system_pocket_tts_voice: alba  # one of: alba, azelma, cosette, eponine, fantine, javert, jean, marius
+system_pocket_tts_log_level: info
+system_pocket_tts_hf_token: "{{ vault_huggingface_token }}"

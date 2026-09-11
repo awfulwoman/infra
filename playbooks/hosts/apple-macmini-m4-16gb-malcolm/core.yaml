@@ -31,6 +31,8 @@
     tags: [system, system-logtide-fluent-bit-macos]
   - role: system-tts-chatterbox
     tags: [system, system-tts-chatterbox]
+  - role: system-tts-pocket-tts
+    tags: [system, system-tts-pocket-tts]
   - role: system-claude
     tags: [system, system-claude]
   - role: ansible-core

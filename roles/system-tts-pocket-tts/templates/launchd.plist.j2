@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.awfulwoman.pocket-tts</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>{{ system_pocket_tts_base_dir }}/venv/bin/python</string>
+        <string>{{ system_pocket_tts_base_dir }}/wyoming_server.py</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>StandardOutPath</key>
+    <string>{{ system_pocket_tts_base_dir }}/logs/pocket-tts.log</string>
+    <key>StandardErrorPath</key>
+    <string>{{ system_pocket_tts_base_dir }}/logs/pocket-tts.err</string>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+        <key>HOME</key>
+        <string>{{ ansible_facts.user_dir }}</string>
+        <key>DATA_DIR</key>
+        <string>{{ system_pocket_tts_base_dir }}/data</string>
+        <key>WYOMING_PORT</key>
+        <string>{{ system_pocket_tts_port }}</string>
+        <key>DEFAULT_VOICE</key>
+        <string>{{ system_pocket_tts_voice }}</string>
+        <key>LOG_LEVEL</key>
+        <string>{{ system_pocket_tts_log_level }}</string>
+        <key>HF_TOKEN</key>
+        <string>{{ system_pocket_tts_hf_token }}</string>
+    </dict>
+</dict>
+</plist>

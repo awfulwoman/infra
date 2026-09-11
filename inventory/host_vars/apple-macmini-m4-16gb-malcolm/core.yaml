@@ -132,3 +132,4 @@ system_homebrew_formulae:
   - macmon
   - wget
   - herdr
+  - pocket-tts
