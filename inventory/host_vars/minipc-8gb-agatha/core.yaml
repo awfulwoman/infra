@@ -107,3 +107,16 @@ composition_hermes_agent_mcp_env:
   # (The "jarvis" label in composition_gateway_server_auth_clients belongs
   # to the separate composition-jarvis chives bot, not this profile.)
   GATEWAY_MCP_TOKEN: "{{ vault_gateway_mcp_token_hermes }}"
+
+# Matrix - not profile-scoped, so this is live regardless of which profile
+# (nabu/jarvis) is active. @hermes:matrix.ewwww.eu was registered against
+# composition-matrix (server-64gb-storage); allowed_users is just the owner
+# for now - no allowed_rooms yet since DMs don't need one and no shared
+# room has been created. device_id pins the one minted at registration
+# (POST /_matrix/client/v3/login) so E2EE keys survive container restarts.
+composition_hermes_agent_matrix: true
+composition_hermes_agent_matrix_homeserver: "https://matrix.{{ domainname_infra }}"
+composition_hermes_agent_matrix_user_id: "@hermes:matrix.{{ domainname_infra }}"
+composition_hermes_agent_matrix_device_id: "zPwgKBLqyw"
+composition_hermes_agent_matrix_allowed_users:
+  - "@awfulwoman:matrix.{{ domainname_infra }}"

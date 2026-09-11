@@ -120,3 +120,38 @@ composition_hermes_agent_api_server_key: "{{ vault_hermes_agent_api_server_key |
 # Ansible owns config.yaml. Set false to template it once and then leave a
 # hand-edited or `hermes setup`-written file alone on later runs.
 composition_hermes_agent_manage_config: true
+
+# -------------------------------------------------------------------
+# MATRIX
+# Connects the gateway to a Matrix homeserver as a chat platform (Hermes
+# also supports Telegram, Discord, Slack and others - not wired up here).
+# Off by default.
+#
+# Unlike mcp_servers/disabled_toolsets, this is NOT per-profile: there is
+# only one Matrix account for the whole deployment, and only one profile's
+# gateway is ever live at a time (whichever `composition_hermes_agent_active_profile`
+# names), so the same matrix: block is templated into every profile's
+# config.yaml identically - whichever one gets activated already has it.
+#
+# Docs: https://hermes-agent.nousresearch.com/docs/user-guide/messaging/matrix
+# (that page's config.yaml example is wrong in places - allowed_users/
+# auto_thread/dm_mention_threads/max_message_length aren't real matrix:
+# keys. Ground truth is hermes_cli/config_defaults.py and
+# hermes_cli/web_server_messaging.py inside the image itself.)
+# -------------------------------------------------------------------
+composition_hermes_agent_matrix: false
+composition_hermes_agent_matrix_homeserver: ""
+composition_hermes_agent_matrix_user_id: ""
+# Full account access - see README.
+composition_hermes_agent_matrix_access_token: "{{ vault_hermes_agent_matrix_access_token | default('') }}"
+composition_hermes_agent_matrix_allowed_users: []
+# Pins a stable device ID for E2EE. Without one, Hermes gets a fresh device
+# (and therefore fresh keys) on every restart, and history stops decrypting.
+# Use the device_id the account's initial /_matrix/client/v3/login returned.
+composition_hermes_agent_matrix_device_id: ""
+composition_hermes_agent_matrix_require_mention: true
+# Comma-separated room IDs, not YAML lists - matches Hermes' own config
+# schema (hermes_cli/config_defaults.py). Ansible vars stay lists for
+# ergonomics; the template joins them.
+composition_hermes_agent_matrix_allowed_rooms: []
+composition_hermes_agent_matrix_free_response_rooms: []

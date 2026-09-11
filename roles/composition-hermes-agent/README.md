@@ -128,6 +128,59 @@ it needs a `composition-gateway` re-run too (its `GATEWAY_SERVER__AUTH_TOKENS`
 gains the `hermes:` entry). The unrelated `jarvis` label there belongs to the
 [`composition-jarvis`](../composition-jarvis) chives bot, **not** this profile.
 
+## Matrix
+
+`composition_hermes_agent_matrix: true` connects the gateway to a Matrix
+homeserver as a chat platform - Hermes calls this out as one of 20+ platforms
+it supports (Telegram, Discord, Slack, etc. among them; none of those are
+wired up here). It's not profile-scoped: there's one Matrix account for the
+whole deployment, and since only one profile's gateway is ever live at a
+time, the same `matrix:` block is templated identically into every profile's
+`config.yaml` - whichever profile ends up active already has it, without
+`composition_hermes_agent_profiles` needing its own matrix config per entry.
+
+**The published docs page for this is wrong in places** - its `config.yaml`
+example lists `allowed_users`, `auto_thread`, `dm_mention_threads` and
+`max_message_length` as `matrix:` keys; none of them exist there. Ground
+truth came from reading `hermes_cli/config_defaults.py` and
+`hermes_cli/web_server_messaging.py` inside the running container
+(`docker exec hermes grep ... /opt/hermes/hermes_cli/config_defaults.py`) -
+worth re-checking there again if this ever needs revisiting, rather than
+trusting the docs site.
+
+The real split: `MATRIX_HOMESERVER`, `MATRIX_ACCESS_TOKEN` and
+`MATRIX_USER_ID` are process-wide env vars, and **all three are mandatory**
+- Hermes's own `required_env` for the platform lists exactly those three, so
+leaving any one unset means the platform silently never starts (no error,
+just nothing in the logs mentioning Matrix at all - ask how we found out).
+The access token grants full account access, so it gets the same treatment
+as the dashboard secret. `MATRIX_ALLOWED_USERS` is env-only too - there is no
+`config.yaml` equivalent, despite what the docs page shows. Only
+`require_mention`, `allowed_rooms` and `free_response_rooms` are real
+`config.yaml` `matrix:` keys, and the latter two are comma-separated
+strings, not YAML lists (Ansible vars stay lists; the template joins them).
+
+`MATRIX_DEVICE_ID` is worth pinning too, once you know it: without one,
+Hermes gets a new device (and fresh E2EE keys) on every restart and stops
+being able to decrypt history. The device ID from the account's first
+`/_matrix/client/v3/login` call is the one to use.
+
+**Getting an access token.** Register the bot's own Matrix account (against
+[`composition-matrix`](../composition-matrix) if that's the homeserver in
+use, with its registration token), then log in once to mint a token:
+
+```bash
+curl -s -X POST https://<homeserver>/_matrix/client/v3/login \
+  -d '{"type":"m.login.password","identifier":{"type":"m.id.user","user":"hermes"},"password":"<account password>"}'
+```
+
+The response's `access_token` is `vault_hermes_agent_matrix_access_token`.
+
+`allowed_users` (env *and* config.yaml both carry it - Hermes' own docs show
+it in both places) and `allowed_rooms` should both be set for anything not
+meant to be a fully open bot; DMs work without `allowed_rooms` since
+`require_mention` doesn't apply to them.
+
 ## Key variables
 
 | Variable | Default | Description |
@@ -140,6 +193,13 @@ gains the `hermes:` entry). The unrelated `jarvis` label there belongs to the
 | `composition_hermes_agent_dashboard` | `true` | Run the dashboard slot |
 | `composition_hermes_agent_api_server` | `false` | Expose the OpenAI-compatible API on 8642 |
 | `composition_hermes_agent_manage_config` | `true` | Let Ansible own `config.yaml` |
+| `composition_hermes_agent_matrix` | `false` | Connect the gateway to a Matrix homeserver (all profiles - see README) |
+| `composition_hermes_agent_matrix_homeserver` | `""` | e.g. `https://matrix.ewwww.eu`; mandatory when on |
+| `composition_hermes_agent_matrix_user_id` | `""` | e.g. `@hermes:matrix.ewwww.eu`; mandatory when on |
+| `composition_hermes_agent_matrix_allowed_users` | `[]` | Matrix IDs allowed to talk to the bot; env-only, no `config.yaml` equivalent |
+| `composition_hermes_agent_matrix_device_id` | `""` | Pins E2EE device identity - see README |
+| `composition_hermes_agent_matrix_require_mention` | `true` | Require `@mention` outside DMs |
+| `composition_hermes_agent_matrix_allowed_rooms` / `_free_response_rooms` | `[]` | Room IDs; joined into comma-separated `config.yaml` strings |
 | `composition_hermes_agent_profiles` | `{}` | Map of named profiles; each has `description`, `mcp_servers`, optional `api_server_port` |
 | `composition_hermes_agent_active_profile` | `""` | Which managed profile the dashboard/CLI default to (`""`/`default` = built-in) |
 | `composition_hermes_agent_api_server_port` | `8642` | Base OpenAI-API port; named profiles get base + list position |
@@ -155,6 +215,7 @@ gains the `hermes:` entry). The unrelated `jarvis` label there belongs to the
 | `vault_hermes_agent_dashboard_secret` | when dashboard is on | Signs session cookies; without it sessions die on restart |
 | `vault_hermes_agent_api_server_key` | when API server is on | Bearer key for the API endpoint |
 | `vault_gateway_mcp_token_hermes` | to wire the gateway MCP server | Bearer token for gateway `/mcp`; in `group_vars/infra/vault_gateway.yaml`, shared with `composition-gateway` |
+| `vault_hermes_agent_matrix_access_token` | when Matrix is on | Full account access - see Matrix section above |
 
 Generate the secret with `openssl rand -hex 32`.
 
@@ -179,12 +240,16 @@ Registers subdomain: `hermes`
 
 ## Deploying to a host
 
-No host runs this yet — it was built and proven on camina, then removed
-because camina is the Ansible control node and a shell-capable agent does not
-belong beside the vault key and the SSH keys to every host.
+Runs on `minipc-8gb-agatha` today — built and proven on camina first, then
+moved because camina is the Ansible control node and a shell-capable agent
+does not belong beside the vault key and the SSH keys to every host. Agatha
+has no spare disk for ZFS, so its `host_vars` set
+`compositions_dataset: opt/awfulwoman/compositions` directly rather than
+relying on `composition-common`'s ZFS path — state under `config/data` isn't
+covered by snapshots there and needs backing up out of band.
 
-To adopt it somewhere, add to that host's `compositions:` and give it the two
-vault secrets in `inventory/host_vars/<host>/vault_hermes_agent.yaml`:
+To adopt it on another host, add to that host's `compositions:` and give it
+the two vault secrets in `inventory/host_vars/<host>/vault_hermes_agent.yaml`:
 
 ```bash
 ansible-vault encrypt_string "$(openssl rand -hex 32)" --name 'vault_hermes_agent_dashboard_password'

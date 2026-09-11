@@ -66,6 +66,21 @@
     quiet: true
   when: state | default('present') == 'present' and composition_hermes_agent_api_server
 
+- name: Assert Matrix connection details are set when the platform is enabled
+  ansible.builtin.assert:
+    that:
+      - composition_hermes_agent_matrix_homeserver | length > 0
+      - composition_hermes_agent_matrix_access_token | length > 0
+      - composition_hermes_agent_matrix_user_id | length > 0
+    fail_msg: >-
+      composition_hermes_agent_matrix is true but homeserver, access token
+      and/or user id is unset. Hermes requires all three
+      (hermes_cli/web_server_messaging.py required_env) - set
+      composition_hermes_agent_matrix_homeserver and _user_id, and
+      vault_hermes_agent_matrix_access_token in the vault.
+    quiet: true
+  when: state | default('present') == 'present' and composition_hermes_agent_matrix
+
 # The image remaps its internal `hermes` user to HERMES_UID/HERMES_GID, so the
 # data directory has to be owned by whoever Ansible connects as.
 - name: Look up the deploy user
