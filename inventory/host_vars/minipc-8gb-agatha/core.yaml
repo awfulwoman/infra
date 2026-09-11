@@ -149,6 +149,12 @@ composition_hermes_jarvis_mcp_servers:
     enabled: true
     headers:
       Authorization: "Bearer ${GATEWAY_MCP_TOKEN}"
+  weather:
+    # Runs on server-64gb-storage, not this host - bare "mcp-weather"
+    # service name wouldn't resolve across hosts, so go via its public
+    # Traefik endpoint (Tailscale-scoped, no auth per its own README).
+    url: "https://weathermcp.{{ domainname_infra }}/mcp"
+    enabled: true
 
 composition_hermes_jarvis_mcp_env:
   # gateway labels this client "hermes" in its /mcp usage log; the secret
