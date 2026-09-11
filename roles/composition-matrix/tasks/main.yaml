@@ -1,0 +1,103 @@
+# code: language=ansible
+
+# ----------------------------
+# Remove composition (state: absent)
+# ----------------------------
+
+- name: Stop and remove Docker Compose project
+  community.docker.docker_compose_v2:
+    project_src: "{{ composition_root }}"
+    state: absent
+    remove_orphans: true
+  register: _matrix_compose_down
+  failed_when:
+    - _matrix_compose_down is failed
+    - "'no such file or directory' not in (_matrix_compose_down.msg | default('') | lower)"
+  when: state | default('present') == 'absent'
+
+- name: Remove compose and environment files
+  become: true
+  ansible.builtin.file:
+    path: "{{ composition_root }}/{{ absent_file }}"
+    state: absent
+  loop_control:
+    loop_var: absent_file
+  loop:
+    - docker-compose.yaml
+    - .environment_vars
+  when: state | default('present') == 'absent'
+
+# The homeserver database (accounts, rooms, messages) lives here. Removing
+# the composition removes it - the ZFS dataset itself is left behind, same
+# as every other composition-* role.
+- name: Remove the Matrix data directory
+  become: true
+  ansible.builtin.file:
+    path: "{{ composition_config }}/data"
+    state: absent
+  when: state | default('present') == 'absent'
+
+# ----------------------------
+# Preflight
+# ----------------------------
+
+- name: Assert a registration token is set when registration is open
+  ansible.builtin.assert:
+    that:
+      - composition_matrix_registration_token | length > 0
+    fail_msg: >-
+      composition_matrix_allow_registration is true but no token is set.
+      Without one, continuwuity mints a random token and only prints it to
+      the container's first-boot logs. Set vault_matrix_registration_token,
+      or set composition_matrix_allow_registration to false.
+    quiet: true
+  when: state | default('present') == 'present' and composition_matrix_allow_registration
+
+# ----------------------------
+# Core tasks
+# ----------------------------
+
+- name: Create compose file
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ composition_root }}/docker-compose.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0644"
+  when: state | default('present') == 'present'
+
+- name: Create .env file
+  ansible.builtin.template:
+    src: environment_vars.j2
+    dest: "{{ composition_root }}/.environment_vars"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0600"
+  # Holds the registration token, which --diff would otherwise print in full.
+  no_log: true
+  when: state | default('present') == 'present'
+
+# ----------------------------
+# Specific tasks
+# ----------------------------
+
+- name: Ensure the Matrix data directory exists
+  ansible.builtin.file:
+    path: "{{ composition_config }}/data"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0770"
+  when: state | default('present') == 'present'
+
+# ----------------------------
+# Start composition
+# ----------------------------
+
+- name: Start Docker Compose project
+  community.docker.docker_compose_v2:
+    project_src: "{{ composition_root }}"
+    state: present
+    remove_orphans: true
+  when: state | default('present') == 'present'
+  notify: Restart Traefik

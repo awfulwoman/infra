@@ -1,0 +1,42 @@
+# Composition name (used by composition-common dependency)
+composition_name: matrix
+
+composition_dns_subdomains:
+  - matrix
+
+# continuwuity (a maintained fork of Conduit/conduwuit) publishes its
+# canonical image on a self-hosted Forgejo registry, mirrored to several
+# others - ghcr.io is used here since it's the one renovate and the rest of
+# this repo already assume.
+composition_matrix_image: "ghcr.io/continuwuity/continuwuity:latest"
+
+# -------------------------------------------------------------------
+# SERVER IDENTITY
+# server_name is embedded in every user ID (@user:server_name) and room ID
+# minted here, and can't be changed later without wiping the database. It's
+# pinned to the Traefik subdomain rather than something federation-friendly,
+# since this instance never federates (see below).
+# -------------------------------------------------------------------
+composition_matrix_server_name: "{{ composition_dns_subdomains[0] }}.{{ domainname_infra }}"
+composition_matrix_port: 8008
+composition_matrix_log: info
+
+# This instance exists only so the Hermes agent (../composition-hermes-agent)
+# and its owner have somewhere to talk - not to federate with the wider
+# Matrix network. continuwuity's own docs warn allow_federation shouldn't be
+# disabled *after* a server has already federated; going the other way later
+# (turning it on once private history exists) is just as much a one-way
+# door, so treat this as permanent.
+composition_matrix_allow_federation: false
+
+# -------------------------------------------------------------------
+# REGISTRATION
+# Gated by a static token rather than left open. Traefik only exposes this
+# over Tailscale, but the token still has to exist somewhere to hand to
+# whichever accounts get created (the owner, then the Hermes agent) - if
+# allow_registration is true and no token is set, continuwuity mints a
+# random one and only ever prints it to the container's first-boot logs,
+# so this is mandatory rather than left blank. See tasks/main.yaml assert.
+# -------------------------------------------------------------------
+composition_matrix_allow_registration: true
+composition_matrix_registration_token: "{{ vault_matrix_registration_token | default('') }}"

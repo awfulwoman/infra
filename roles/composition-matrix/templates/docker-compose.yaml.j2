@@ -1,0 +1,32 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  matrix:
+    container_name: matrix
+    image: "{{ composition_matrix_image }}"
+    restart: unless-stopped
+    env_file: .environment_vars
+    # No command override needed - the image's own CMD is already
+    # ["/sbin/conduwuit"]; upstream's compose example sets it again, but
+    # there's nothing to override.
+    volumes:
+      - "{{ composition_config }}/data:/var/lib/continuwuity"
+      - /etc/localtime:/etc/localtime:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.matrix.rule=Host(`{{ composition_dns_subdomains[0] }}.{{ domainname_infra }}`)"
+      - "traefik.http.routers.matrix.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
+      - "traefik.http.routers.matrix.tls.certresolver=letsencrypt"
+{% endif %}
+      - "traefik.http.services.matrix.loadbalancer.server.port={{ composition_matrix_port }}"
+    networks:
+      - "{{ default_docker_network }}"
+    # No healthcheck: the image has no shell (confirmed with
+    # scripts/check-image-healthcheck-tools.sh - `sh` isn't even on PATH),
+    # which rules out every CMD-SHELL pattern docker-healthcheck.md covers,
+    # and the binary offers no other self-check subcommand.
+
+networks:
+  "{{ default_docker_network }}":
+    external: true

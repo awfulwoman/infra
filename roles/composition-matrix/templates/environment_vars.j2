@@ -1,0 +1,14 @@
+TZ=Europe/Berlin
+
+# continuwuity reads its whole config from CONTINUWUITY_* env vars (each one
+# a direct uppercase of the TOML key under [global]) - no config file needed.
+CONTINUWUITY_SERVER_NAME={{ composition_matrix_server_name }}
+CONTINUWUITY_DATABASE_PATH=/var/lib/continuwuity
+CONTINUWUITY_ADDRESS=0.0.0.0
+CONTINUWUITY_PORT={{ composition_matrix_port }}
+CONTINUWUITY_LOG={{ composition_matrix_log }}
+CONTINUWUITY_ALLOW_FEDERATION={{ composition_matrix_allow_federation | lower }}
+CONTINUWUITY_ALLOW_REGISTRATION={{ composition_matrix_allow_registration | lower }}
+{% if composition_matrix_registration_token %}
+CONTINUWUITY_REGISTRATION_TOKEN={{ composition_matrix_registration_token }}
+{% endif %}
