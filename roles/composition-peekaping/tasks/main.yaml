@@ -1,0 +1,337 @@
+# code: language=ansible
+
+# ----------------------------
+# Core tasks
+# ----------------------------
+
+- name: "Create compose file"
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ composition_root }}/docker-compose.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0644"
+
+- name: "Create .env file"
+  ansible.builtin.template:
+    src: environment_vars.j2
+    dest: "{{ composition_root }}/.environment_vars"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0644"
+
+# ----------------------------
+# Specific tasks
+# ----------------------------
+
+- name: Create data directories
+  ansible.builtin.file:
+    path: "{{ composition_config }}/{{ dir_item }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0755"
+  loop_control:
+    loop_var: dir_item
+  loop:
+    - data
+    - logs
+
+# ----------------------------
+# Start composition
+# ----------------------------
+
+- name: Start Docker Compose project
+  community.docker.docker_compose_v2:
+    project_src: "{{ composition_root }}"
+    state: present
+    build: never
+    pull: always
+    remove_orphans: true
+  notify: Restart Traefik
+
+# ----------------------------
+# Bootstrap admin account and API key
+#
+# Peekaping only ever accepts one POST /auth/register — it errors once an
+# admin exists — so this whole block is safe to re-run. Registration is a
+# no-op past the first successful run, and the API key (only ever returned
+# at creation time) is generated once and persisted on the host so later
+# runs can reuse it instead of trying to create a new one each time.
+# ----------------------------
+
+- name: "Wait for peekaping /api/v1/health"
+  ansible.builtin.uri:
+    url: "http://localhost:8383/api/v1/health"
+    method: GET
+    status_code: 200
+  delegate_to: "{{ inventory_hostname }}"
+  register: composition_peekaping_health
+  retries: 30
+  delay: 5
+  until: composition_peekaping_health.status == 200
+
+- name: "Check for a persisted API key"
+  ansible.builtin.stat:
+    path: "{{ composition_config }}/api_key"
+  register: composition_peekaping_api_key_file
+
+- name: "Bootstrap admin account and API key"
+  when: not composition_peekaping_api_key_file.stat.exists
+  block:
+    - name: "Register admin account"
+      ansible.builtin.uri:
+        url: "http://localhost:8383/api/v1/auth/register"
+        method: POST
+        body_format: json
+        body:
+          email: "{{ composition_peekaping_admin_email }}"
+          password: "{{ composition_peekaping_admin_password }}"
+        # 400 also covers a real validation failure (e.g. a password that
+        # fails Peekaping's complexity rule) — don't lump that in with the
+        # harmless "admin already exists" case below, or it fails silently
+        # and login then fails with a confusing "invalid credentials".
+        status_code: [201, 400]
+      delegate_to: "{{ inventory_hostname }}"
+      register: composition_peekaping_register
+      failed_when: >-
+        composition_peekaping_register.status == 400
+        and composition_peekaping_register.json.message != 'admin already exists'
+
+    - name: "Log in as admin"
+      ansible.builtin.uri:
+        url: "http://localhost:8383/api/v1/auth/login"
+        method: POST
+        body_format: json
+        body:
+          email: "{{ composition_peekaping_admin_email }}"
+          password: "{{ composition_peekaping_admin_password }}"
+        status_code: 200
+      delegate_to: "{{ inventory_hostname }}"
+      register: composition_peekaping_login
+
+    - name: "Create an API key for Ansible's use"
+      ansible.builtin.uri:
+        url: "http://localhost:8383/api/v1/api-keys"
+        method: POST
+        headers:
+          Authorization: "Bearer {{ composition_peekaping_login.json.data.accessToken }}"
+        body_format: json
+        body:
+          name: ansible-managed
+        status_code: 201
+      delegate_to: "{{ inventory_hostname }}"
+      register: composition_peekaping_api_key_created
+      no_log: true
+
+    - name: "Persist the API key on the host"
+      ansible.builtin.copy:
+        content: "{{ composition_peekaping_api_key_created.json.data.token }}"
+        dest: "{{ composition_config }}/api_key"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: "0600"
+      no_log: true
+
+- name: "Read the persisted API key"
+  ansible.builtin.slurp:
+    path: "{{ composition_config }}/api_key"
+  register: composition_peekaping_api_key_slurp
+  no_log: true
+
+- name: "Set API key fact"
+  ansible.builtin.set_fact:
+    composition_peekaping_api_key: "{{ composition_peekaping_api_key_slurp.content | b64decode }}"
+  no_log: true
+
+# ----------------------------
+# Ensure the ansible-managed tag exists
+# ----------------------------
+
+- name: "Ensure the ansible-managed tag exists"
+  ansible.builtin.uri:
+    url: "http://localhost:8383/api/v1/tags"
+    method: POST
+    headers:
+      X-API-Key: "{{ composition_peekaping_api_key }}"
+    body_format: json
+    body:
+      name: "{{ composition_peekaping_tag_name }}"
+      color: "{{ composition_peekaping_tag_color }}"
+    # 409 means it already exists from a previous run — fine.
+    status_code: [201, 409]
+  delegate_to: "{{ inventory_hostname }}"
+
+- name: "Look up the ansible-managed tag id"
+  ansible.builtin.uri:
+    url: "http://localhost:8383/api/v1/tags?q={{ composition_peekaping_tag_name }}&page=0&limit=50"
+    method: GET
+    headers:
+      X-API-Key: "{{ composition_peekaping_api_key }}"
+    status_code: 200
+  delegate_to: "{{ inventory_hostname }}"
+  register: composition_peekaping_tag_lookup
+
+- name: "Set ansible-managed tag id fact"
+  ansible.builtin.set_fact:
+    composition_peekaping_tag_id: >-
+      {{
+        composition_peekaping_tag_lookup.json.data | default([])
+        | selectattr('name', 'equalto', composition_peekaping_tag_name)
+        | map(attribute='id') | list | first
+      }}
+
+# ----------------------------
+# Build the desired monitor list from inventory
+#
+# Ping monitors — one for every host in the infra group.
+# HTTP monitors — one for every cname across the infra group (the same
+# cnames: / compositions: data that drives DNS registration via
+# infra-named), plus each host's cnames_additional. See
+# composition-uptime-kuma for the prior art this is adapted from.
+# ----------------------------
+
+- name: "Reset desired monitors list"
+  ansible.builtin.set_fact:
+    composition_peekaping_desired_monitors: []
+
+- name: "Append ping monitors for each infra host"
+  ansible.builtin.set_fact:
+    composition_peekaping_desired_monitors: >-
+      {{ composition_peekaping_desired_monitors + [{
+           'name': hostvars[ping_host]['host_name_short'],
+           'type': 'ping',
+           'config': ({
+             'host': hostvars[ping_host]['host_ipv4'],
+             'packet_size': 56,
+           } | to_json),
+         }] }}
+  loop: "{{ groups['infra'] }}"
+  loop_control:
+    loop_var: ping_host
+
+# Hosts on the data-driven compositions: list (see roles/infra-named) don't
+# carry a cnames_additional entry unless they have a name with no owning
+# composition — derive the rest the same way infra-named does, via the
+# dns_records filter, or monitors for those services silently disappear.
+- name: Build dns_records filter input from hosts using data-driven compositions
+  ansible.builtin.set_fact:
+    composition_peekaping_dns_records_hosts: >-
+      {{
+        (composition_peekaping_dns_records_hosts | default({})) | combine({
+          dns_host: {
+            'fqdn': hostvars[dns_host].host_pfqdn,
+            'tailscale_ipv4': hostvars[dns_host].host_tailscale_ipv4,
+            'compositions': hostvars[dns_host].compositions,
+          }
+        })
+      }}
+  loop: "{{ groups['infra'] }}"
+  loop_control:
+    loop_var: dns_host
+  when: hostvars[dns_host].compositions is defined
+
+- name: Derive cnames for hosts using data-driven compositions
+  ansible.builtin.set_fact:
+    composition_peekaping_derived_cnames: >-
+      {{
+        ((composition_peekaping_dns_records_hosts | default({}))
+          | dns_records(lookup('composition_dns_subdomains'))
+        ).cnames.keys() | map('regex_replace', '$', '.' + domainname_infra) | list
+      }}
+
+- name: "Append HTTP monitors for each cname"
+  ansible.builtin.set_fact:
+    composition_peekaping_desired_monitors: >-
+      {{ composition_peekaping_desired_monitors + [{
+           'name': cname_item,
+           'type': 'http',
+           'config': ({
+             'url': 'https://' ~ cname_item,
+             'method': 'GET',
+             'encoding': 'text',
+             'accepted_statuscodes': ['2XX', '3XX'],
+             'max_redirects': 10,
+             'authMethod': 'none',
+           } | to_json),
+         }] }}
+  loop: >-
+    {{
+      (groups['infra']
+        | map('extract', hostvars)
+        | selectattr('cnames_additional', 'defined')
+        | map(attribute='cnames_additional')
+        | flatten)
+      + composition_peekaping_derived_cnames
+    }}
+  loop_control:
+    loop_var: cname_item
+
+# ----------------------------
+# Reconcile: create missing, delete stale ansible-managed monitors
+# User-created monitors are never touched — only ones tagged
+# ansible-managed (via the tag_ids filter below) are ever deleted.
+# ----------------------------
+
+- name: "Fetch existing ansible-managed monitors"
+  ansible.builtin.uri:
+    url: "http://localhost:8383/api/v1/monitors?tag_ids={{ composition_peekaping_tag_id }}&page=0&limit=500"
+    method: GET
+    headers:
+      X-API-Key: "{{ composition_peekaping_api_key }}"
+    status_code: 200
+  delegate_to: "{{ inventory_hostname }}"
+  register: composition_peekaping_existing_monitors
+
+- name: "Determine monitor names to create and delete"
+  ansible.builtin.set_fact:
+    composition_peekaping_desired_names: "{{ composition_peekaping_desired_monitors | map(attribute='name') | list }}"
+    composition_peekaping_existing_names: "{{ composition_peekaping_existing_monitors.json.data | default([]) | map(attribute='name') | list }}"
+
+- name: "Create missing monitors"
+  ansible.builtin.uri:
+    url: "http://localhost:8383/api/v1/monitors"
+    method: POST
+    headers:
+      X-API-Key: "{{ composition_peekaping_api_key }}"
+    body_format: json
+    body:
+      type: "{{ new_monitor.type }}"
+      name: "{{ new_monitor.name }}"
+      interval: "{{ composition_peekaping_monitor_interval }}"
+      max_retries: "{{ composition_peekaping_monitor_max_retries }}"
+      retry_interval: "{{ composition_peekaping_monitor_retry_interval }}"
+      timeout: "{{ composition_peekaping_monitor_timeout }}"
+      resend_interval: "{{ composition_peekaping_monitor_resend_interval }}"
+      active: true
+      notification_ids: []
+      tag_ids:
+        - "{{ composition_peekaping_tag_id }}"
+      config: "{{ new_monitor.config }}"
+    status_code: 201
+  delegate_to: "{{ inventory_hostname }}"
+  loop: "{{ composition_peekaping_desired_monitors | rejectattr('name', 'in', composition_peekaping_existing_names) | list }}"
+  loop_control:
+    loop_var: new_monitor
+    label: "{{ new_monitor.name }}"
+
+- name: "Delete stale ansible-managed monitors"
+  ansible.builtin.uri:
+    url: "http://localhost:8383/api/v1/monitors/{{ stale_monitor.id }}"
+    method: DELETE
+    headers:
+      X-API-Key: "{{ composition_peekaping_api_key }}"
+    status_code: 200
+  delegate_to: "{{ inventory_hostname }}"
+  loop: "{{ composition_peekaping_existing_monitors.json.data | default([]) | rejectattr('name', 'in', composition_peekaping_desired_names) | list }}"
+  loop_control:
+    loop_var: stale_monitor
+    label: "{{ stale_monitor.name }}"
+
+- name: "Show monitor sync summary"
+  ansible.builtin.debug:
+    msg: >-
+      Peekaping sync — desired: {{ composition_peekaping_desired_names | length }},
+      already present: {{ composition_peekaping_desired_names | intersect(composition_peekaping_existing_names) | length }},
+      created: {{ composition_peekaping_desired_names | difference(composition_peekaping_existing_names) | length }},
+      deleted: {{ composition_peekaping_existing_names | difference(composition_peekaping_desired_names) | length }}

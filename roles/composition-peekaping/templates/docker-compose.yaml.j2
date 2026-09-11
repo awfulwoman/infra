@@ -1,0 +1,34 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  peekaping:
+    container_name: peekaping
+    image: 0xfurai/peekaping-bundle-sqlite:latest
+    restart: unless-stopped
+    env_file: .environment_vars
+    ports:
+      - "127.0.0.1:8383:8383"
+    volumes:
+      - "{{ composition_config }}/data:/app/data"
+      - "{{ composition_config }}/logs:/var/log/supervisor"
+      - /etc/localtime:/etc/localtime:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.peekaping.rule=Host(`peekaping.{{ domainname_infra }}`)"
+      - "traefik.http.routers.peekaping.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
+      - "traefik.http.routers.peekaping.tls.certresolver=letsencrypt"
+{% endif %}
+      - "traefik.http.services.peekaping.loadbalancer.server.port=8383"
+    networks:
+      - "{{ default_docker_network }}"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8383/api/v1/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+networks:
+  "{{ default_docker_network }}":
+    external: true

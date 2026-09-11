@@ -1,0 +1,25 @@
+# code: language=ansible
+composition_name: peekaping
+
+composition_dns_subdomains:
+  - peekaping
+
+# A Peekaping instance only ever accepts one /auth/register call. This
+# account is created once on first deploy; subsequent runs skip straight to
+# reusing the API key persisted on the host (see tasks/main.yaml).
+composition_peekaping_admin_email: "{{ vault_composition_peekaping_admin_email }}"
+composition_peekaping_admin_password: "{{ vault_composition_peekaping_admin_password }}"
+
+# Every monitor this role creates is tagged with this, so the sync can tell
+# ansible-managed monitors apart from anything created by hand in the UI —
+# only the former are ever touched or deleted during reconciliation.
+composition_peekaping_tag_name: ansible-managed
+composition_peekaping_tag_color: "#ef4444"
+
+# Monitor cadence defaults, in seconds. Peekaping rejects a config where
+# timeout * 0.8 >= interval, so keep timeout comfortably below interval.
+composition_peekaping_monitor_interval: 60
+composition_peekaping_monitor_timeout: 16
+composition_peekaping_monitor_max_retries: 3
+composition_peekaping_monitor_retry_interval: 60
+composition_peekaping_monitor_resend_interval: 10

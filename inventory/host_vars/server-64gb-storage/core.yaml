@@ -303,6 +303,7 @@ compositions:
   - vikunja
   - composition: uptime-kuma
     labels: [uptime-kuma]
+  - peekaping
   - mcp-kagisearch
   - composition: mcp-openzim
     labels: []
