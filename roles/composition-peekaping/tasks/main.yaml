@@ -189,6 +189,9 @@
 # cnames: / compositions: data that drives DNS registration via
 # infra-named), plus each host's cnames_additional. See
 # composition-uptime-kuma for the prior art this is adapted from.
+# TCP monitors — one for every entry in a host's tcp_monitors_additional,
+# for non-HTTP, non-composition services (e.g. pocket-tts's raw Wyoming
+# protocol) that cnames_additional has no way to express.
 # ----------------------------
 
 - name: "Reset desired monitors list"
@@ -209,6 +212,29 @@
   loop: "{{ groups['infra'] }}"
   loop_control:
     loop_var: ping_host
+
+- name: "Append TCP monitors from each host's tcp_monitors_additional"
+  ansible.builtin.set_fact:
+    composition_peekaping_desired_monitors: >-
+      {{ composition_peekaping_desired_monitors + [{
+           'name': tcp_item.name,
+           'type': 'tcp',
+           'config': ({
+             'host': tcp_item.host,
+             'port': tcp_item.port,
+           } | to_json),
+         }] }}
+  loop: >-
+    {{
+      groups['infra']
+        | map('extract', hostvars)
+        | selectattr('tcp_monitors_additional', 'defined')
+        | map(attribute='tcp_monitors_additional')
+        | flatten
+    }}
+  loop_control:
+    loop_var: tcp_item
+    label: "{{ tcp_item.name }}"
 
 # Hosts on the data-driven compositions: list (see roles/infra-named) don't
 # carry a cnames_additional entry unless they have a name with no owning

@@ -56,6 +56,20 @@ hardware_apple_wifi_interface: en1
 # -------------------------------------------------------------------
 
 # -------------------------------------------------------------------
+# MONITORING
+# pocket-tts is a LAN-only Wyoming/TCP service with no cname (it isn't
+# HTTP, and isn't a composition), so it's invisible to
+# composition-peekaping's cname-derived monitor sync. List it explicitly
+# here — the same escape hatch cnames_additional provides elsewhere for
+# HTTP services with no owning composition.
+# Port must match system_pocket_tts_port in roles/system-tts-pocket-tts.
+# -------------------------------------------------------------------
+tcp_monitors_additional:
+  - name: pocket-tts
+    host: "{{ host_ipv4 }}"
+    port: 10222
+
+# -------------------------------------------------------------------
 # OLLAMA
 # -------------------------------------------------------------------
 system_ollama_env:

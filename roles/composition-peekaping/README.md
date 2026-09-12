@@ -37,6 +37,12 @@ drives it directly — no sidecar needed. On every deploy, `tasks/main.yaml`:
    - One **http** monitor per cname across the `infra` group — the same
      `cnames:` / `compositions:` data that drives DNS registration via
      `infra-named` — plus each host's `cnames_additional`.
+   - One **tcp** monitor per entry in any host's `tcp_monitors_additional`
+     — for non-HTTP, non-composition services (e.g. `system-tts-pocket-tts`'s
+     raw Wyoming protocol port) that have no cname to derive from. Each
+     entry is `{name, host, port}`; see
+     `inventory/host_vars/apple-macmini-m4-16gb-malcolm/core.yaml` for an
+     example.
 4. Reconciles: creates monitors missing from Peekaping, deletes any tagged
    `ansible-managed` that are no longer desired. Monitors without the tag
    (created by hand in the UI) are never touched.
