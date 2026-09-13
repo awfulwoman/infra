@@ -40,6 +40,9 @@ ubuntupro_attach: true
 zfs:
   fastpool:
     pool_properties: {}
+    # SATA SSDs, so Ubuntu's monthly TRIM cron skips this pool unless opted in.
+    root_dataset_properties:
+      "org.debian:periodic-trim": enable
     vdevs:
       - type: mirror
         disks:

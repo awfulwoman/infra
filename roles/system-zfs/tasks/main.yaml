@@ -106,3 +106,16 @@
     state: present
     extra_zfs_properties: "{{ item.properties | default({}) }}"
   loop: "{{ zfs | zfs_datasets_with_config }}"
+
+# The pool's root dataset isn't walked by zfs_datasets_with_config. Needed for
+# user properties Ubuntu reads from it, e.g. org.debian:periodic-trim, without
+# which the zfsutils-linux monthly cron only trims NVMe-only pools.
+- name: Ensure pool root dataset properties are set
+  become: true
+  community.general.zfs:
+    name: "{{ item.key }}"
+    state: present
+    extra_zfs_properties: "{{ item.value.root_dataset_properties }}"
+  loop: "{{ zfs | dict2items | selectattr('value.root_dataset_properties', 'defined') | list }}"
+  loop_control:
+    label: "{{ item.key }}"
