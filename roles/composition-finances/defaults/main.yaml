@@ -15,7 +15,7 @@ vault_firefly_access_token: null
 #
 # Note that 1Password reassigns an item's UUID when it moves between vaults, so
 # this changes if the item is ever relocated.
-firefly_enablebanking_item_id: fisnhyavlrcztjznla55kuzdu4
+firefly_enablebanking_item_id: kjl62yu42ywjtdrq3tfms6ytdi
 
 # Firefly builds password-reset links from APP_URL, so it must match the
 # Traefik router host or the emailed link points at localhost.

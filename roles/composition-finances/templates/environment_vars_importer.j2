@@ -1,5 +1,15 @@
 TZ="Europe/Berlin"
 
+# Default 256M isn't enough for the account-mapping page: it renders a
+# dropdown of every existing Firefly account/payee (~2000 here) for every
+# transaction being imported. A full-history Enable Banking import (~5900
+# transactions, no date range set) multiplies that out to tens of millions
+# of rendered options, and the allocation size roughly tracks whatever the
+# limit is (182M -> 434M -> 1.6G as this was raised), so this is scoped
+# generously rather than tuned to a minimum. See "PHP Fatal error: Allowed
+# memory size ... exhausted" in the importer log.
+PHP_MEMORY_LIMIT=24576M
+
 # https://raw.githubusercontent.com/firefly-iii/data-importer/main/.env.example
 
 # Firefly Data Importer (FIDI) configuration file
