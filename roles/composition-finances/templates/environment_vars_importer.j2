@@ -10,6 +10,12 @@ TZ="Europe/Berlin"
 # memory size ... exhausted" in the importer log.
 PHP_MEMORY_LIMIT=24576M
 
+# The import job runs inside the browser's web request, so PHP's default 300s
+# limit applies to it. On Linux that limit counts CPU time, not wall time: a
+# ~5900-transaction import used it up after ~2700 transactions (about 2 hours
+# of wall time) and died mid-run. 2 hours of CPU leaves room for a full import.
+PHP_MAX_EXECUTION_TIME=7200
+
 # https://raw.githubusercontent.com/firefly-iii/data-importer/main/.env.example
 
 # Firefly Data Importer (FIDI) configuration file
