@@ -16,10 +16,10 @@ host_description: "Control node — Ansible controller and loopback-only 1Passwo
 # Hint: Use `network_netplan_config:` for more fine-grained control
 # Docs: roles/network-netplan/README.md
 # -------------------------------------------------------------------
-host_ipv4: 192.168.1.120
+host_ipv4: 192.168.1.23
 host_primary_interface: "enp1s0"
 host_ipv4_subnet: 24
-host_tailscale_ipv4: 100.80.1.120
+host_tailscale_ipv4: 100.80.1.23
 host_mac: "6c:2b:59:65:a8:53"
 
 # -------------------------------------------------------------------
@@ -41,22 +41,25 @@ ubuntupro_attach: true
 # -------------------------------------------------------------------
 system_repos:
   - repo: awfulwoman/infra
+    deploy_key: true
 
 # -------------------------------------------------------------------
 # ZFS
-# fastpool: one 238GB USB SSD (JMicron enclosure) as a single-disk
-# stripe vdev — no redundancy. It carries the compositions dataset, so
-# the 1Password Connect config and (via onepassword_connect_data_bind_mount
-# below) its sync database sit on ZFS, off the 64GB OS drive. The by-id
-# path uses the enclosure's generic serial; do not attach a second
-# generic JMicron enclosure to this host.
+# fastpool: the third partition of the internal 256GB SATA SSD as a
+# single-disk stripe vdev — no redundancy. Same layout as homebrain:
+# part1 /boot/efi, part2 /, part3 fastpool. The Wyse 5070 implements a
+# single SATA port, so the OS and the pool necessarily share one device.
+#
+# It carries the compositions dataset, so the 1Password Connect config
+# and (via onepassword_connect_data_bind_mount below) its sync database
+# sit on ZFS.
 # -------------------------------------------------------------------
 zfs_pools_create: true
 zfs:
   fastpool:
     vdevs:
       - type: stripe
-        disks: /dev/disk/by-id/usb-JMicron_Generic_0123456789ABCDEF-0:0
+        disks: /dev/disk/by-id/scsi-SATA_Intenso_SSD_Sata_AA000000000000005228-part3
     datasets:
       compositions:
         policy: critical
