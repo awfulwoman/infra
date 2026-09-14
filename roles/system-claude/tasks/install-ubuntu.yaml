@@ -11,17 +11,22 @@
       - libonig-dev
     state: present
 
+# apt_key is deprecated and fails outright on Ubuntu 24.04. The URL already
+# serves a dearmored keyring, so fetching it to the signed-by path is all that
+# is needed — no gpg --dearmor step.
 - name: Add GitHub CLI repository key
   become: true
-  ansible.builtin.apt_key:
+  ansible.builtin.get_url:
     url: https://cli.github.com/packages/githubcli-archive-keyring.gpg
-    keyring: /usr/share/keyrings/githubcli-archive-keyring.gpg
-    state: present
+    dest: /usr/share/keyrings/githubcli-archive-keyring.gpg
+    owner: root
+    group: root
+    mode: "0644"
 
 - name: Add GitHub CLI repository
   become: true
   vars:
-    _gh_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' else 'amd64' }}"
+    _gh_arch: "{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'amd64' }}"
   ansible.builtin.apt_repository:
     repo: "deb [arch={{ _gh_arch }} signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main"
     filename: github-cli
