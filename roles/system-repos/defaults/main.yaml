@@ -4,7 +4,26 @@
 #   - repo: Repository in 'owner/name' format (e.g., 'awfulwoman/infra')
 #   - name: Directory name (optional, defaults to repo name)
 #   - version: Branch/tag/commit (optional, defaults to HEAD)
+#   - deploy_key: true to clone with a per-repo key (optional, default false)
 system_repos: []
+
+# Per-repo deploy keys.
+#
+# By default a repo is cloned over the host's shared identity from
+# system-sshkey (~/.ssh/id_ed25519). That key is general purpose — the host
+# also uses it for backup targets and host-to-host SSH — and GitHub requires
+# every deploy key to be unique across the whole of GitHub. Registering the
+# shared key against one repo therefore burns it: it can never be a deploy key
+# on a second repo, nor an account-level key.
+#
+# Setting `deploy_key: true` on a repo item avoids that. The role generates
+# ~/.ssh/id_ed25519_<name>, writes a matching `Host <git_host>-<name>` alias
+# pinned to that key, and clones through the alias. The shared identity stays
+# free, and each additional repo gets its own revocable key.
+#
+# The public key still has to be registered on the repo by hand:
+#   gh repo deploy-key add <pubkey> --repo <owner/name> --title <host> [--allow-write]
+system_repos_deploy_key_type: ed25519
 
 # Base directory for all repos
 system_repos_base_dir: /fastpool/repos

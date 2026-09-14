@@ -16,6 +16,33 @@
     owner: "{{ ansible_user }}"
     group: "{{ 'staff' if ansible_facts['os_family'] == 'Darwin' else ansible_user }}"
 
+- name: Generate a per-repo deploy key
+  community.crypto.openssh_keypair:
+    type: "{{ system_repos_deploy_key_type }}"
+    path: "{{ ansible_facts.user_dir }}/.ssh/id_{{ system_repos_deploy_key_type }}_{{ item.name | default(item.repo.split('/')[-1]) }}"
+    comment: "{{ ansible_user }}@{{ ansible_facts['hostname'] }}-{{ item.name | default(item.repo.split('/')[-1]) }}"
+  loop: "{{ system_repos }}"
+  loop_control:
+    label: "{{ item.repo }}"
+  when: item.deploy_key | default(false)
+
+- name: Pin the per-repo key to a git host alias
+  ansible.builtin.blockinfile:
+    path: "{{ ansible_facts.user_dir }}/.ssh/config"
+    create: true
+    mode: "0600"
+    marker: "# {mark} ANSIBLE MANAGED: {{ item.repo }}"
+    block: |
+      Host {{ system_repos_git_host }}-{{ item.name | default(item.repo.split('/')[-1]) }}
+        HostName {{ system_repos_git_host }}
+        User git
+        IdentityFile {{ ansible_facts.user_dir }}/.ssh/id_{{ system_repos_deploy_key_type }}_{{ item.name | default(item.repo.split('/')[-1]) }}
+        IdentitiesOnly yes
+  loop: "{{ system_repos }}"
+  loop_control:
+    label: "{{ item.repo }}"
+  when: item.deploy_key | default(false)
+
 - name: Check if git host is in known_hosts
   ansible.builtin.command:
     cmd: "ssh-keygen -F {{ system_repos_git_host }}"
@@ -42,7 +69,7 @@
 
 - name: Clone/update repositories
   ansible.builtin.git:
-    repo: "git@{{ system_repos_git_host }}:{{ item.repo }}.git"
+    repo: "git@{{ system_repos_git_host }}{{ ('-' ~ (item.name | default(item.repo.split('/')[-1]))) if item.deploy_key | default(false) else '' }}:{{ item.repo }}.git"
     dest: "{{ system_repos_base_dir }}/{{ item.repo.split('/')[0] }}/{{ item.name | default(item.repo.split('/')[-1]) }}"
     version: "{{ item.version | default('HEAD') }}"
     update: "{{ system_repos_update }}"
