@@ -66,6 +66,10 @@ system_zfs_policy_mqtt_enabled: true
 # Serves the client-cert-distribution wildcard instead of its own ACME -
 # randolph has no other consumer of Traefik besides 1password-connect, so
 # it's the lowest-stakes host to prove the mechanism on.
+#
+# 1password-connect has since moved to camina, so this Traefik now has no
+# consumer at all and the pilot has nothing left to prove here. Kept running
+# for now; decide whether #270 has served its purpose before removing it.
 # -------------------------------------------------------------------
 reverseproxy_use_letsencrypt: false
 reverseproxy_wildcard_cert: true
@@ -78,7 +82,6 @@ traefik_providers:
 # filter (roles/infra-named) instead of a hand-maintained cnames: list.
 # -------------------------------------------------------------------
 compositions:
-  - 1password-connect
   - composition: reverseproxy
     labels:
       - "traefik-{host}"

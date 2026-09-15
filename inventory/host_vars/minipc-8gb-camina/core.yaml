@@ -83,12 +83,24 @@ traefik_providers:
 
 # -------------------------------------------------------------------
 # COMPOSITIONS
-# Connect publishes no host port, so the API is reachable only from the
-# shared Docker network. Its compose file carries Traefik router labels and
-# camina now runs a Traefik, so that router exists — but nothing routes to
-# it, because `labels: []` suppresses the role default
-# `composition_dns_subdomains: [connect]`, so no CNAME is derived. Randolph
-# still owns `connect` until its cutover.
+# Connect publishes no host port, so the API is reachable only through this
+# host's Traefik, which routes `connect.{{ domainname_infra }}` to it. Camina
+# now owns that CNAME, derived from the role default
+# `composition_dns_subdomains: [connect]`. It was previously served from
+# randolph; the dns_records filter rejects two hosts claiming one label, so
+# randolph had to give it up in the same change.
+#
+# Which path a read takes depends on how the caller reaches bertha. Its
+# split-horizon views (bind_split_horizon_enabled, router-4gb-bertha
+# core.yaml:143) answer LAN clients with host_ipv4 and tailnet clients with
+# host_tailscale_ipv4, for the same name — so connect.{{ domainname_infra }}
+# resolves to 192.168.1.23 or 100.80.1.23 accordingly, and both reach this
+# host's Traefik.
+#
+# That matters because the consuming tasks use `delegate_to: localhost`: the
+# request comes from whichever machine is running Ansible, not from the host
+# being configured. Both paths work, so a controller on either side resolves
+# secrets.
 #
 # onepassword_connect_data_bind_mount: keep the sync database on fastpool
 # (bind mount at {{ composition_config }}/data) instead of a Docker named
@@ -96,8 +108,7 @@ traefik_providers:
 # -------------------------------------------------------------------
 onepassword_connect_data_bind_mount: true
 compositions:
-  - composition: 1password-connect
-    labels: []
+  - 1password-connect
   - composition: reverseproxy
     labels:
       - "traefik-{host}"
