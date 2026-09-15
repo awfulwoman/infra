@@ -9,8 +9,12 @@
 
 Static addresses on `192.168.1.0/24` have drifted into the DHCP pool. The pool is
 `192.168.1.100–199` (`roles/infra-dhcpd/defaults/main.yaml`, not overridden anywhere),
-and **9 inventory-assigned addresses sit inside it**: `.111 .116 .117 .118 .120 .130
-.140 .141 .171`.
+and **10 inventory-assigned addresses sit inside it**: `.111 .116 .117 .118 .120 .130
+.140 .141 .171 .176`.
+
+`.176` is `minipc-8gb-agatha`, missed by the first draft. It is a managed static
+(`network-netplan` is in its playbook) carrying `host_tailscale_ipv4: 100.80.1.176`, so
+it has exactly the same exposure as the rest.
 
 This is not theoretical. On bertha's lease file:
 
@@ -109,6 +113,7 @@ Address stability matters here because WatchYourLAN and the Uptime Kuma ping mon
 | minipc-8gb-camina | `.120` | `.23` | `100.80.1.23` |
 | raspberry-pi5-4gb-belinda | `.117` | `.24` | `100.80.1.24` |
 | apple-macmini-m4-16gb-malcolm | `.99` | `.25` | `100.80.1.25` |
+| minipc-8gb-agatha | `.176` | `.26` | `100.80.1.26` |
 | minipc-8gb-test-router | `.221` | `.29` | `100.80.1.29` |
 
 **Network gear `.50–.69`**: ap-livingroom `.140`→`.50`, ap-pantry `.141`→`.51`
@@ -116,7 +121,7 @@ Address stability matters here because WatchYourLAN and the Uptime Kuma ping mon
 **IoT & satellites `.70–.99`**: ha-voice bedroom `.248`→`.70`, kitchen `.210`→`.71`,
 livingroom `.220`→`.72`, charlie `.171`→`.73`
 
-**14 devices move**; 8 need `host_vars` edits (the 7 servers **plus pikvm**, which has no
+**15 devices move**; 9 need `host_vars` edits (the 8 servers **plus pikvm**, which has no
 network role but still carries `host_ipv4`/`host_tailscale_ipv4` at
 `inventory/host_vars/raspberry-pi4-2gb-pikvm/core.yaml:19,22`).
 
@@ -252,23 +257,28 @@ offline, so simply edit inventory.
 
 **Step 3 — clear the current pool range**, in this order:
 
-1. **camina** (`.120` → `.23`) — clears the live conflict. **Reach it at
-   `100.80.1.120`, not `192.168.1.120`**: the phone currently answers ARP for that
-   address. Note `roles/network-tailscale-address/tasks/main.yaml:77-78` warns that
-   reassigning drops every connection to the host *including an Ansible connection over
-   the tailnet* — so camina's LAN renumber and its tailnet renumber must be two runs.
-2. **belinda** (`.117` → `.24`), **backups** (`.118` → `.21`)
-3. **APs** (`.140/.141` → `.50/.51`) — these are **OpenWrt and on-device static**
+1. ~~**camina** (`.120` → `.23`)~~ — **done 2026-09-14.** Cleared the live conflict.
+   Landed the easy way in the end: camina was rebuilt onto a new SSD and came up on a
+   DHCP lease, so the renumber was applied to an empty host with nothing to preserve.
+   Both the LAN and tailnet addresses moved in a single `core.yaml` run; netplan was
+   written but not applied (the play failed before its reboot handler), and a reboot
+   picked it up. `bertha`'s `infra-dhcpd` still needs a rerun so the `fixed-address`
+   reservation follows.
+2. **agatha** (`.176` → `.26`) — missed by the first draft. A managed static, so it is a
+   `host_vars` edit plus a `network-netplan` run like the others. Its tailnet address
+   (`100.80.1.176` → `100.80.1.26`) must be a separate run, per the warning below.
+3. **belinda** (`.117` → `.24`), **backups** (`.118` → `.21`)
+4. **APs** (`.140/.141` → `.50/.51`) — these are **OpenWrt and on-device static**
    (`docs/wifi.md:14`), so this is `uci set network.lan.ipaddr` on each unit, done
    *before* the inventory edit, and it drops your management session. Do them
    separately: `docs/wifi.md:15` notes the pantry unit is the only 2.4 GHz radio
    reaching the living-room ESP32s.
-4. **sat-charlie** (`.171` → `.73`)
-5. **storage** (`.116` → `.20`), then **homebrain** (`.130` → `.22`) — highest blast
+5. **sat-charlie** (`.171` → `.73`)
+6. **storage** (`.116` → `.20`), then **homebrain** (`.130` → `.22`) — highest blast
    radius, and homebrain's move is what breaks `client-nut` on three hosts if change 4
    was skipped
-6. **malcolm** (`.99` → `.25`)
-7. **pikvm last** (`.111` → `.11`) — it is the out-of-band recovery path for everything
+7. **malcolm** (`.99` → `.25`)
+8. **pikvm last** (`.111` → `.11`) — it is the out-of-band recovery path for everything
    above. **Keep it on-device static**; the first draft proposed converting it to a DHCP
    reservation, which would make the recovery device depend on the service being
    changed. PiKVM uses systemd-networkd (not netplan) on a read-only root — remount `rw`
