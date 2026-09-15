@@ -7,6 +7,15 @@
   ansible.builtin.include_tasks: install-ubuntu.yaml
   when: ansible_facts['os_family'] == 'Debian'
 
+- name: Ensure Claude settings path exists
+  become: true
+  ansible.builtin.file:
+    path: "{{ system_claude_settings_path }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ system_claude_settings_group }}"
+    mode: "0755"
+
 - name: Check if Claude CLI is already installed
   ansible.builtin.command: which claude
   register: claude_installed
@@ -40,6 +49,11 @@
         executable: /bin/bash
       environment:
         HOME: "{{ ansible_facts.user_dir }}"
+        # The installer runs over a non-interactive shell, so it cannot pick
+        # this up from the profile. Without it the installer writes its
+        # settings and state to ~/.claude and the configured directory is
+        # left empty.
+        CLAUDE_CONFIG_DIR: "{{ system_claude_settings_path }}"
       # noqa command-instead-of-module: Using shell to pipe curl to bash for installation script
 
 - name: Ensure .local/bin is in PATH
@@ -62,30 +76,23 @@
         mode: '0644'
       when: path_check.found == 0
 
-- name: Ensure Claude settings path exists
-  become: true
-  ansible.builtin.file:
-    path: "{{ system_claude_settings_path }}"
-    state: directory
-    owner: "{{ ansible_user }}"
-    group: "{{ system_claude_settings_group }}"
-    mode: "0755"
-
 - name: Set environment variables
+  become: true
   ansible.builtin.lineinfile:
-    path: "{{ ansible_facts.user_dir }}/{{ system_claude_env_file }}"
+    path: "{{ system_claude_env_file }}"
     # Anchored on the variable name so changing a value rewrites its line
-    # instead of appending a second, conflicting export.
-    regexp: "^export {{ item.key }}="
-    line: "export {{ item.key }}={{ item.value }}"
+    # instead of appending a second, conflicting entry.
+    regexp: "^{{ system_claude_env_export }}{{ item.key }}="
+    line: "{{ system_claude_env_export }}{{ item.key }}={{ item.value }}"
     create: true
     mode: '0644'
   loop: "{{ system_claude_environment | dict2items }}"
   loop_control:
     label: "{{ item.key }}"
 
-# .zshenv is sourced before .zshrc, so a stale export left in the interactive
-# profile would override the value just written and reintroduce the bug.
+# The env file is read before the interactive profile on both platforms, so a
+# stale export left in the profile would override the value just written and
+# reintroduce the bug.
 - name: Remove Claude environment variables from the interactive profile
   ansible.builtin.lineinfile:
     path: "{{ ansible_facts.user_dir }}/{{ system_claude_profile_file }}"
@@ -94,7 +101,6 @@
   loop: "{{ system_claude_environment | dict2items }}"
   loop_control:
     label: "{{ item.key }}"
-  when: system_claude_env_file != system_claude_profile_file
 
 # Allows scrolling in tmux
 - name: Enable tmux mouse mode

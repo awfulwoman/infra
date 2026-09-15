@@ -11,7 +11,7 @@ system_claude_ensure_path: true
 # Shell profile file to update (set per OS in tasks/main.yaml)
 system_claude_profile_file: "{{ '.zshrc' if ansible_facts['os_family'] == 'Darwin' else '.bashrc' }}"
 
-# File that receives the Claude environment variables.
+# Absolute path of the file that receives the Claude environment variables.
 #
 # macOS uses .zshenv, NOT .zshrc. zsh sources .zshrc only for interactive
 # shells, so anything started outside an interactive terminal — a GUI launch, a
@@ -19,7 +19,19 @@ system_claude_profile_file: "{{ '.zshrc' if ansible_facts['os_family'] == 'Darwi
 # Claude Code silently falls back to ~/.claude. .zshenv is sourced by every zsh
 # invocation, which is what CLAUDE_CONFIG_DIR needs to be honoured however
 # Claude Code is started.
-system_claude_env_file: "{{ '.zshenv' if ansible_facts['os_family'] == 'Darwin' else system_claude_profile_file }}"
+#
+# Ubuntu has the same hole and no equivalent file. Non-interactive bash does
+# not read ~/.bashrc at all, and Ubuntu's stock .bashrc returns early for
+# non-interactive shells even when it is sourced via ~/.profile — so exports
+# placed there reach an interactive terminal and nothing else. /etc/environment
+# is read by PAM for every login session, interactive or not, which is the
+# closest match. It is system-wide rather than per-user; acceptable on these
+# single-user hosts.
+system_claude_env_file: "{{ (ansible_facts.user_dir ~ '/.zshenv') if ansible_facts['os_family'] == 'Darwin' else '/etc/environment' }}"
+
+# /etc/environment is parsed by PAM, not sourced by a shell, so its lines carry
+# no `export`. .zshenv is a shell script and needs it.
+system_claude_env_export: "{{ 'export ' if ansible_facts['os_family'] == 'Darwin' else '' }}"
 
 # Environment variables exported for Claude Code. Keyed by name so a changed
 # value replaces its old line rather than appending a second export.
