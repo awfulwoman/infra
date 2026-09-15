@@ -7,10 +7,14 @@ This role installs Ansible and its dependencies on a host. It then makes sure th
 - **macOS:** Installs `ansible` and `ansible-lint` through Homebrew.
 - **Ubuntu/Debian:** Adds the `ppa:ansible/ansible` repository. Then it installs `ansible` and `ansible-lint` through apt.
 
-After installation, the role does two things:
+After installation, the role does two things, in this order:
 
-1. It runs `ansible-galaxy install -r meta/requirements.yaml` to install Galaxy dependencies, when `ansible_infra_dir` is defined.
-2. It creates the directories referenced by `ansible_path`, `ansible_log_path`, and `ansible_roles_path`. This gives later Ansible runs a consistent working environment.
+1. It creates the directories referenced by `ansible_path`, `ansible_log_path`, `ansible_collections_path`, and the absolute entries of `ansible_roles_path`. This gives later Ansible runs a consistent working environment.
+2. It runs `ansible-galaxy install -r meta/requirements.yaml` to install Galaxy dependencies, when `ansible_infra_dir` is defined.
+
+The order matters. `ansible-galaxy` writes straight into the roles and collections paths, so on a fresh host it fails unless those directories already exist and the connecting user can write to them. The directories are created with `become`, because `ansible_path` is usually under `/opt`, and are then owned by `ansible_user`, which is the account that runs `ansible-galaxy`.
+
+The role does not create the file named by `ansible_vault_password_file`. Placing it remains a manual, out-of-band step.
 
 ## Variables
 

@@ -7,6 +7,27 @@
   ansible.builtin.include_tasks: install-ubuntu.yaml
   when: ansible_facts['os_family'] == 'Debian'
 
+# Must precede the Galaxy install. ansible-galaxy writes straight into
+# ansible_roles_path and ansible_collections_path, so on a fresh host those
+# directories have to exist and be writable by the connecting user first.
+# become is needed because ansible_path is typically under /opt, which is
+# root-owned; owner/group then hand the tree to the unprivileged user that
+# actually runs ansible-galaxy.
+- name: Ensure Ansible CLI paths exist
+  when: ansible_path is defined
+  become: true
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ 'staff' if ansible_facts['os_family'] == 'Darwin' else ansible_user }}"
+    mode: "0755"
+  loop: >-
+    {{
+      [ansible_path, ansible_log_path, ansible_collections_path] +
+      (ansible_roles_path.split(':') | select('match', '^/') | list)
+    }}
+
 - name: Install Ansible Galaxy dependencies
   when: ansible_infra_dir is defined
   ansible.builtin.command:
@@ -14,15 +35,3 @@
   environment:
     PATH: "/opt/homebrew/bin:/usr/local/bin:{{ ansible_facts['env']['PATH'] }}"
   changed_when: false
-
-- name: Ensure Ansible CLI paths exist
-  when: ansible_path is defined
-  ansible.builtin.file:
-    path: "{{ item }}"
-    state: directory
-    mode: "0755"
-  loop: >-
-    {{
-      [ansible_path, ansible_log_path, ansible_collections_path] +
-      (ansible_roles_path.split(':') | select('match', '^/') | list)
-    }}
