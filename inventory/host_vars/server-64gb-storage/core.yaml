@@ -181,22 +181,33 @@ charlie_email_accounts:
     host: "imap.{{ vault_mailprovider_domain }}"
     username: "{{ vault_mailprovider_user }}"
     password: "{{ vault_mailprovider_password }}"
+  # Placeholders — empty until each provider's credentials are in the vault.
+  # Do not deploy with these present and blank; both consumers render them
+  # unconditionally.
+  #
+  # patterns excludes Gmail's [Gmail]/All Mail, which mirrors every message in
+  # every other folder — without it each message is archived twice. Confirm the
+  # exact folder name per account once credentials exist: older UK accounts
+  # present it as [Google Mail]/All Mail, and the pattern is a literal match.
   - name: gmail_seuk
-    imap_host: ""
-    imap_user: ""
-    imap_password: ""
+    host: ""
+    username: ""
+    password: ""
+    patterns: '* !"[Gmail]/All Mail"'
   - name: gmail_taw
-    imap_host: ""
-    imap_user: ""
-    imap_password: ""
+    host: ""
+    username: ""
+    password: ""
+    patterns: '* !"[Gmail]/All Mail"'
   - name: gmail_se
-    imap_host: ""
-    imap_user: ""
-    imap_password: ""
+    host: ""
+    username: ""
+    password: ""
+    patterns: '* !"[Gmail]/All Mail"'
   - name: shared
-    imap_host: ""
-    imap_user: ""
-    imap_password: ""
+    host: ""
+    username: ""
+    password: ""
 
 emailbackup_accounts: "{{ charlie_email_accounts }}"
 emailbackup_sync_schedule: hourly

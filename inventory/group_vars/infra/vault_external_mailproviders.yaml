@@ -1,4 +1,4 @@
-# mb_personal
+# personal
 vault_mailprovider_domain: !vault |
           $ANSIBLE_VAULT;1.2;AES256;beanpod
           31373830616338663063313639633336306563666532626262663634353565616439626634613134
@@ -31,7 +31,7 @@ vault_mailprovider_password: !vault |
 
 # gmail_se
 
-# mb_shared
+# shared
 
 # What the hell are these three for?
 vault_smtp_user: !vault |
