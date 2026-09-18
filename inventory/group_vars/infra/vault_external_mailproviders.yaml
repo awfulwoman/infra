@@ -1,5 +1,4 @@
-# TODO: These seem to be duplicated. Investigate why.
-
+# mb_personal
 vault_mailprovider_domain: !vault |
           $ANSIBLE_VAULT;1.2;AES256;beanpod
           31373830616338663063313639633336306563666532626262663634353565616439626634613134
@@ -25,6 +24,16 @@ vault_mailprovider_password: !vault |
           35393263333835326532623132326661346665376166313235643330356161316134373435393330
           6261643361393930376533336264663834396138623562663931
 
+
+# gmail_seuk
+
+# gmail_taw
+
+# gmail_se
+
+# mb_shared
+
+# What the hell are these three for?
 vault_smtp_user: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           31343462636639623663353534626466333832663563643834323534653037363964333831323238

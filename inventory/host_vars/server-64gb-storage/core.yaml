@@ -181,6 +181,22 @@ charlie_email_accounts:
     host: "imap.{{ vault_mailprovider_domain }}"
     username: "{{ vault_mailprovider_user }}"
     password: "{{ vault_mailprovider_password }}"
+  - name: gmail_seuk
+    imap_host: ""
+    imap_user: ""
+    imap_password: ""
+  - name: gmail_taw
+    imap_host: ""
+    imap_user: ""
+    imap_password: ""
+  - name: gmail_se
+    imap_host: ""
+    imap_user: ""
+    imap_password: ""
+  - name: shared
+    imap_host: ""
+    imap_user: ""
+    imap_password: ""
 
 emailbackup_accounts: "{{ charlie_email_accounts }}"
 emailbackup_sync_schedule: hourly
