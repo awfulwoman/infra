@@ -13,18 +13,20 @@ composition_dns_subdomains: []
 # The Maildir mbsync syncs into and this service indexes. Owned by the
 # composition itself, inside its own dataset ({{ composition_root }}) — the
 # service owns its Maildir and mbsync state end to end, nothing else writes
-# there. Fully separate from system-emailbackup's /slowpool/charlie/email: the
-# two run independently and must never share a Maildir or mbsync state
-# (concurrent mbsync runs on one state directory corrupt it). Empty on first
-# deploy — the service re-syncs it from IMAP.
+# there. Separate from /slowpool/charlie/email, the Maildir left behind by the
+# retired system-emailbackup role: never point this at it, since concurrent
+# mbsync runs on one state directory corrupt it. Empty on first deploy — the
+# service re-syncs it from IMAP.
 composition_mail_archive_server_maildir_path: "{{ composition_root }}/mail"
 composition_mail_archive_server_port: 4103
 
-# List of {name, host, username, password, port?, patterns?} — see
-# roles/system-emailbackup/README.md and mail-archive-server's own README for
-# what `name` and `patterns` mean. Empty by default: with no accounts configured
-# the service only serves search over whatever the Maildir already contains,
-# performing no sync of its own.
+# List of {name, host, username, password, port?, patterns?}. `name` must match
+# ^[a-z0-9][a-z0-9_-]*$ and becomes the account's Maildir directory and its name
+# in the API, so renaming one re-downloads the whole account. `patterns` is an
+# mbsync Patterns value choosing which folders to sync (default `*`); Gmail
+# accounts want `* !"[Gmail]/All Mail"` so each message isn't archived twice.
+# Empty by default: with no accounts configured the service only serves search
+# over whatever the Maildir already contains, performing no sync of its own.
 composition_mail_archive_server_imap_accounts: []
 composition_mail_archive_server_sync_interval_seconds: 3600
 composition_mail_archive_server_exclude_folders: "Trash,Junk"

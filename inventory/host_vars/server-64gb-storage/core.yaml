@@ -149,42 +149,21 @@ system_zfs_policy_mqtt_enabled: true
 system_zfs_policy_healthchecksio_enabled: true
 
 # -------------------------------------------------------------------
-# EMAIL BACKUP / MAIL ARCHIVE
+# MAIL ARCHIVE
 #
-# One shared account list, read by both system-emailbackup (below) and
-# composition-mail-archive-server — see that role's README for why sync moved
-# into the container rather than staying a separate systemd-driven role, and
-# system-emailbackup's own README for the retirement plan (this role stays
-# deployed until the composition is built, deployed, and proven; only then does
-# it come out). Field names (host/username/password) match what BOTH
-# consumers expect on purpose — this is the single source of truth for IMAP
-# credentials on this host, so a mismatch here would silently desync one
-# consumer from the other.
+# IMAP accounts synced and indexed by composition-mail-archive-server
+# (system-emailbackup was retired 2026-09-18, awfulwoman/meta#9; its old
+# Maildir stays at /slowpool/charlie/email as a historical copy).
 #
-# The two run fully independently: system-emailbackup owns
-# /slowpool/charlie/email, the composition owns its Maildir inside its own
-# composition dataset (/fastpool/compositions/mail-archive-server/mail). They
-# must never share a Maildir or mbsync state — concurrent mbsync runs on one
-# state directory corrupt it — so the composition re-syncs from IMAP into an
-# empty directory rather than adopting the existing archive. No data migration
-# is involved.
-#
-# Still a single account by design — a second is deliberately deferred until
-# this one is proven end to end (see the mail-archive-server repo's own specs).
-#
-# emailbackup_healthchecksio_enabled catches the exact failure mode found in a
-# 2026-09-04 audit: the backup unit failed every recorded run for weeks with no
-# alert anywhere. See roles/system-emailbackup/README.md.
+# `name` is the account's Maildir directory and its name in the archive API:
+# never rename `personal` — that re-downloads ~29k messages and orphans the
+# old copy.
 # -------------------------------------------------------------------
 charlie_email_accounts:
   - name: personal
     host: "imap.{{ vault_mailprovider_domain }}"
     username: "{{ vault_mailprovider_user }}"
     password: "{{ vault_mailprovider_password }}"
-  # Placeholders — empty until each provider's credentials are in the vault.
-  # Do not deploy with these present and blank; both consumers render them
-  # unconditionally.
-  #
   # patterns excludes Gmail's [Gmail]/All Mail, which mirrors every message in
   # every other folder — without it each message is archived twice. Confirm the
   # exact folder name per account once credentials exist: older UK accounts
@@ -208,10 +187,6 @@ charlie_email_accounts:
     host: "imap.{{ vault_mailprovider_domain }}"
     username: "{{ vault_mail_shared_username }}"
     password: "{{ vault_mail_shared_password }}"
-
-emailbackup_accounts: "{{ charlie_email_accounts }}"
-emailbackup_sync_schedule: hourly
-emailbackup_healthchecksio_enabled: true
 
 composition_mail_archive_server_imap_accounts: "{{ charlie_email_accounts }}"
 

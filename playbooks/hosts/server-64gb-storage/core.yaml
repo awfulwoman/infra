@@ -43,8 +43,6 @@
   # email backup/smartmontools/promtail.
   - role: system-compositions
     tags: [composition, zfs, loki, ollama]
-  - role: system-emailbackup
-    tags: [system, system-emailbackup]
   - role: system-smartmontools
     tags: [system, system-smartmontools]
   - role: system-promtail

@@ -1,0 +1,59 @@
+---
+# One-off teardown of system-emailbackup on server-storage, now that
+# composition-mail-archive-server has replaced it (awfulwoman/meta#9).
+#
+# Removes the old non-templated emailbackup.service/.timer and ~/.mbsyncrc,
+# which holds the IMAP password in plaintext. Leaves the Maildir at
+# /slowpool/charlie/email alone: it is a snapshotted historical copy, and
+# deleting it is a separate decision. Idempotent; safe to rerun.
+- name: Retire system-emailbackup
+  hosts: server-64gb-storage
+  gather_facts: false
+  tasks:
+  - name: Check for emailbackup unit files
+    ansible.builtin.stat:
+      path: "/etc/systemd/system/emailbackup.{{ item }}"
+    loop: [timer, service]
+    register: _emailbackup_units
+
+  - name: Stop and disable emailbackup units
+    become: true
+    ansible.builtin.systemd_service:
+      name: "emailbackup.{{ item.item }}"
+      state: stopped
+      enabled: false
+    loop: "{{ _emailbackup_units.results }}"
+    loop_control:
+      label: "{{ item.item }}"
+    when: item.stat.exists
+
+  - name: Remove emailbackup unit files
+    become: true
+    ansible.builtin.file:
+      path: "/etc/systemd/system/emailbackup.{{ item.item }}"
+      state: absent
+    loop: "{{ _emailbackup_units.results }}"
+    loop_control:
+      label: "{{ item.item }}"
+    when: item.stat.exists
+    register: _emailbackup_removed
+
+  - name: Reload systemd after removing the units
+    become: true
+    ansible.builtin.systemd_service:
+      daemon_reload: true
+    when: _emailbackup_removed is changed
+
+  # A removed unit that last exited with an error lingers as "not-found failed"
+  # in `systemctl --failed` until its state is reset.
+  - name: Clear the failed state of the removed service
+    become: true
+    ansible.builtin.command: systemctl reset-failed emailbackup.service
+    when: _emailbackup_removed is changed
+    failed_when: false
+    changed_when: false
+
+  - name: Remove the old mbsync config (holds the IMAP password)
+    ansible.builtin.file:
+      path: "/home/{{ ansible_user }}/.mbsyncrc"
+      state: absent
