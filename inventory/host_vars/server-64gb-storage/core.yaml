@@ -164,6 +164,11 @@ charlie_email_accounts:
     host: "imap.{{ vault_mailprovider_domain }}"
     username: "{{ vault_mailprovider_user }}"
     password: "{{ vault_mailprovider_password }}"
+  # Gmail App Passwords are shown and often stored as "xxxx xxxx xxxx xxxx";
+  # Google accepts them without the spaces, and mbsync's config parser rejects
+  # an unquoted value containing spaces (it fails the whole file, taking every
+  # account down, not just this one) — hence replace(' ', '').
+  #
   # patterns excludes Gmail's [Gmail]/All Mail, which mirrors every message in
   # every other folder — without it each message is archived twice. Confirm the
   # exact folder name per account once credentials exist: older UK accounts
@@ -171,17 +176,17 @@ charlie_email_accounts:
   - name: gmail_seuk
     host: imap.gmail.com
     username: "{{ vault_gmail_seuk_username }}"
-    password: "{{ vault_gmail_seuk_app_password }}"
+    password: "{{ vault_gmail_seuk_app_password | replace(' ', '') }}"
     patterns: '* !"[Gmail]/All Mail"'
   - name: gmail_taw
     host: imap.gmail.com
     username: "{{ vault_gmail_taw_username }}"
-    password: "{{ vault_gmail_taw_app_password }}"
+    password: "{{ vault_gmail_taw_app_password | replace(' ', '') }}"
     patterns: '* !"[Gmail]/All Mail"'
   - name: gmail_se
     host: imap.gmail.com
     username: "{{ vault_gmail_se_username }}"
-    password: "{{ vault_gmail_se_app_password }}"
+    password: "{{ vault_gmail_se_app_password | replace(' ', '') }}"
     patterns: '* !"[Gmail]/All Mail"'
   - name: shared
     host: "imap.{{ vault_mailprovider_domain }}"
