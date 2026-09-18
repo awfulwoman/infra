@@ -190,24 +190,24 @@ charlie_email_accounts:
   # exact folder name per account once credentials exist: older UK accounts
   # present it as [Google Mail]/All Mail, and the pattern is a literal match.
   - name: gmail_seuk
-    host: ""
-    username: ""
-    password: ""
+    host: imap.gmail.com
+    username: "{{ vault_gmail_seuk_username }}"
+    password: "{{ vault_gmail_seuk_app_password }}"
     patterns: '* !"[Gmail]/All Mail"'
   - name: gmail_taw
-    host: ""
-    username: ""
-    password: ""
+    host: imap.gmail.com
+    username: "{{ vault_gmail_taw_username }}"
+    password: "{{ vault_gmail_taw_app_password }}"
     patterns: '* !"[Gmail]/All Mail"'
   - name: gmail_se
-    host: ""
-    username: ""
-    password: ""
+    host: imap.gmail.com
+    username: "{{ vault_gmail_se_username }}"
+    password: "{{ vault_gmail_se_app_password }}"
     patterns: '* !"[Gmail]/All Mail"'
   - name: shared
-    host: ""
-    username: ""
-    password: ""
+    host: "imap.{{ vault_mailprovider_domain }}"
+    username: "{{ vault_mail_shared_username }}"
+    password: "{{ vault_mail_shared_password }}"
 
 emailbackup_accounts: "{{ charlie_email_accounts }}"
 emailbackup_sync_schedule: hourly
