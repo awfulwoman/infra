@@ -7,8 +7,6 @@ Deploys [Traefik v3](https://traefik.io/) as the central HTTP/HTTPS reverse prox
 | Variable | Default | Description |
 |---|---|---|
 | `reverseproxy_use_letsencrypt` | `true` | Enable Let's Encrypt TLS via Hetzner DNS challenge |
-| `reverseproxy_catchall` | `false` | Deploy an nginx catch-all for unmatched routes (returns custom page) |
-| `reverseproxy_statuspage` | `false` | Deploy an nginx container serving custom HTTP error pages |
 | `reverseproxy_whoami` | `false` | Deploy `traefik/whoami` debug service at `whoami.<hostname>.<domain>` |
 | `reverseproxy_traefik_domain` | `traefik.<hostname>.<domain>` | Hostname for the Traefik dashboard |
 | `reverseproxy_vm_routes` | unset | List of static proxy routes to services on QEMU VMs (internal NAT) |

@@ -119,27 +119,10 @@
       when: "'REMOVED=0' not in _acme_prune_check.stdout"
       notify: Restart Traefik
 
-# Custom http responses
-
-- name: Create directories
+- name: Remove old catch-all and status-pages content
   ansible.builtin.file:
-    path: "{{ composition_config }}/{{ create_items }}"
-    state: directory
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-  loop_control:
-    loop_var: create_items
-  loop:
-    - nginx
-    - www-catch-all
-    - www-status-pages
-
-- name: Copy content of directory 'files'
-  ansible.builtin.copy:
-    src: "files/{{ dir_item }}/"
-    dest: "{{ composition_config }}/{{ dir_item }}/"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    path: "{{ composition_config }}/{{ dir_item }}"
+    state: absent
   loop_control:
     loop_var: dir_item
   loop:

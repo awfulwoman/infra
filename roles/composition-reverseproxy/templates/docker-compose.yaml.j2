@@ -1,50 +1,6 @@
 # code: language=jinja-dockerfile
 name: "{{ composition_name }}"
 services:
-{% if reverseproxy_catchall %}
-  catch-all:
-    image: nginx:1.31-alpine
-    volumes:
-      - "{{ composition_config }}/nginx/catch-all.conf:/etc/nginx/nginx.conf:ro"
-      - "{{ composition_config }}/www-catch-all:/usr/share/nginx/html:ro"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.services.catch-all-service.loadbalancer.server.port=80"
-      # Use as "fallback" for any unknown URL (with lowest possible priority).
-      - "traefik.http.routers.catch-all-router.rule=HostRegexp(`{host:.+}`)"
-      - "traefik.http.routers.catch-all-router.priority=1"
-      - "traefik.http.routers.catch-all-router.entryPoints=web"
-    healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
-{% endif %}
-
-{% if reverseproxy_statuspage %}
-  status-pages:
-    image: nginx:1.31-alpine
-    volumes:
-      - "{{ composition_config }}/nginx/status-pages.conf:/etc/nginx/nginx.conf:ro"
-      - "{{ composition_config }}/www-status-pages:/usr/share/nginx/html:ro"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.services.status-pages-service.loadbalancer.server.port=80"
-      - "traefik.http.routers.status-pages-router.rule=Host(`error.localhost`)"
-      - "traefik.http.routers.status-pages-router.entryPoints=web"
-      # Configure the error middleware for specific status codes.
-      - "traefik.http.middlewares.status-pages-middleware.errors.status=400,401,403-405,407-413,416,418,429,500,502-505"
-      - "traefik.http.middlewares.status-pages-middleware.errors.service=status-pages-service"
-      - "traefik.http.middlewares.status-pages-middleware.errors.query=/{status}.html"
-    healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
-{% endif %}
-
 {% if reverseproxy_whoami %}
   whoami:
     container_name: whoami

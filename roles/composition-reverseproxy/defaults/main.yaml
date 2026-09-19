@@ -18,8 +18,6 @@ composition_dns_subdomains:
 # requires "wildcard-cert" in traefik_providers to actually install the bundle
 # (client-cert-distribution, #269) as Traefik's default certificate.
 reverseproxy_wildcard_cert_dir: /etc/ssl/internal-wildcard
-reverseproxy_catchall: false
-reverseproxy_statuspage: false
 reverseproxy_whoami: false
 reverseproxy_traefik_domain: "traefik-{{ host_name }}.{{ domainname_infra }}"
 
