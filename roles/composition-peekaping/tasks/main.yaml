@@ -188,7 +188,8 @@
 # HTTP monitors — one for every cname across the infra group (the same
 # cnames: / compositions: data that drives DNS registration via
 # infra-named), plus each host's cnames_additional. See
-# composition-uptime-kuma for the prior art this is adapted from.
+# docs/superpowers/plans/2026-06-12-uptime-kuma-monitor-sync.md for the
+# prior art this is adapted from.
 # TCP monitors — one for every entry in a host's tcp_monitors_additional,
 # for non-HTTP, non-composition services (e.g. pocket-tts's raw Wyoming
 # protocol) that cnames_additional has no way to express.

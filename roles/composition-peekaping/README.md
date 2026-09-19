@@ -4,8 +4,8 @@
 monitoring tool — an Uptime Kuma alternative with an API-first design (a Go
 backend, React frontend, and SQLite database, all bundled into one image).
 
-This runs alongside [`composition-uptime-kuma`](../composition-uptime-kuma/README.md)
-on the same host for now, not as a replacement.
+It replaced `composition-uptime-kuma`, which was removed once this role's
+monitor sync was proven.
 
 ## Ports
 
