@@ -51,6 +51,15 @@
     group: "0"
     mode: "0400"
 
+- name: "Ensure the working checkout directory exists"
+  become: true
+  ansible.builtin.file:
+    path: "{{ composition_semaphore_local_repo_path }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0755"
+
 # ----------------------------
 # Start composition
 # ----------------------------

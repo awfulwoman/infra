@@ -106,6 +106,13 @@
           git_url: https://github.com/awfulwoman/infra.git
           git_branch: main
           key_name: "None"
+        # A path with no scheme is used in place, with no clone, so a
+        # template can run what is in the working copy right now —
+        # uncommitted included.
+        - name: infra (local)
+          git_url: "{{ composition_semaphore_local_repo_path }}"
+          git_branch: main
+          key_name: "None"
       views: {}
       inventories:
         # The whole directory, as ansible.cfg loads it: hosts-unmanaged.yaml
@@ -114,6 +121,15 @@
           name: infra
           type: file
           repository_name: infra
+          inventory_file: inventory/
+          ssh_key_name: "{{ composition_semaphore_fleet_key_name }}"
+        # An inventory is bound to one repository, so a run from the
+        # working copy needs this one too: with the GitHub inventory, it
+        # would clone from GitHub and use that inventory instead.
+        infra_local:
+          name: infra (local)
+          type: file
+          repository_name: infra (local)
           inventory_file: inventory/
           ssh_key_name: "{{ composition_semaphore_fleet_key_name }}"
       environments:

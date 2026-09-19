@@ -38,6 +38,14 @@ composition_semaphore_max_parallel_tasks: 1
 composition_semaphore_fleet_key_name: "fleet-ssh ({{ host_name_short }})"
 composition_semaphore_fleet_key_path: "{{ ansible_facts.user_dir }}/.ssh/id_ed25519"
 
+# The working checkout on this host — where this repo is edited on the
+# control node (Claude Code, an editor, a shell) — mounted read-only and
+# registered as a second repository. Lets a template run uncommitted work,
+# and works when GitHub is unreachable. Nothing here updates it: it is a
+# working copy, pulled and pushed by hand. Templates use the GitHub
+# repository, so scheduled runs always deploy what is on main.
+composition_semaphore_local_repo_path: "{{ ansible_facts.user_dir }}/Code/awfulwoman/infra"
+
 # A "<host>: core" template is generated for every
 # playbooks/hosts/*/core.yaml. These are added on top. Each item is merged
 # over the shared template settings in tasks/project.yaml.

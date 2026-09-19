@@ -74,8 +74,8 @@ edited in the UI is reset on the next run.
 |------|--------|
 | Project | `composition_semaphore_project_name`, `composition_semaphore_max_parallel_tasks` (1: Semaphore has no per-host lock, so one run at a time across the project) |
 | Access key | `composition_semaphore_fleet_key_name`, read from `composition_semaphore_fleet_key_path` on the host. Set on creation only (`override_secret: false`) |
-| Repository | `https://github.com/awfulwoman/infra.git`, `main`, Semaphore's built-in `None` key (the repo is public) |
-| Inventory | `inventory/` from the repository: the whole directory, as `ansible.cfg` loads it. `hosts-unmanaged.yaml` defines groups bertha's dhcpd and named templates need |
+| Repositories | `infra`: `https://github.com/awfulwoman/infra.git`, `main`, Semaphore's built-in `None` key (the repo is public). `infra (local)`: see break-glass below |
+| Inventories | `infra` and `infra (local)`, one per repository: `inventory/`, the whole directory, as `ansible.cfg` loads it. `hosts-unmanaged.yaml` defines groups bertha's dhcpd and named templates need |
 | Templates | `<host>: core` for every `playbooks/hosts/*/core.yaml`, found on the controller at run time, plus `composition_semaphore_templates_extra`. All merged over `composition_semaphore_template_defaults` |
 | Schedules | `composition_semaphore_schedules`, set in camina's host_vars |
 
@@ -86,6 +86,30 @@ Templates allow per-run argument overrides, e.g.
 Left out of `composition_semaphore_templates_extra` on purpose, with reasons
 in `defaults/main.yaml`: `groups/kubernetes`, `groups/personal`,
 `groups/infra/reboot-all`, and every utility playbook but the heartbeat.
+
+### The working checkout
+
+`composition_semaphore_local_repo_path`
+(`~/Code/awfulwoman/infra` on camina) is the checkout this repo is edited in
+on the control node — Claude Code, an editor, a shell. It is mounted
+read-only into the container and registered as the repository
+`infra (local)`, with a matching inventory.
+
+A repository URL with no scheme is used in place, with no clone, so a run
+against it uses the working tree exactly as it stands, uncommitted changes
+included, and needs no network. That covers trying a change before pushing
+it, and running anything while GitHub is unreachable.
+
+Nothing in Ansible updates that checkout: it is a working copy, pulled and
+pushed by hand (`origin` is `git@github.com:…`, so camina's key pushes).
+
+Every template uses the GitHub repository, so a scheduled run always
+deploys what is on `main`. To run the working copy instead, switch a
+template's repository **and** its inventory to the `(local)` pair: an
+inventory is bound to one repository, so leaving the GitHub inventory makes
+the run fetch from GitHub and use that inventory. The next deploy of this
+role resets both, which is the intent — the switch is deliberately
+temporary.
 
 ### Nightly schedules
 

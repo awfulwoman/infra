@@ -12,6 +12,7 @@ services:
       # The repo's ansible.cfg hardcodes these paths.
       - "{{ ansible_path }}/galaxy:{{ ansible_path }}/galaxy:ro"
       - "{{ composition_config }}/vaultpassword:{{ ansible_vault_password_file }}:ro"
+      - "{{ composition_semaphore_local_repo_path }}:{{ composition_semaphore_local_repo_path }}:ro"
       - /etc/localtime:/etc/localtime:ro
     labels:
       - "traefik.enable=true"
