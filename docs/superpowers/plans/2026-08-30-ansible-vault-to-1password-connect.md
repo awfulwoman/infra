@@ -126,8 +126,7 @@ These are live defects found while surveying the vault surface. Fixing them firs
 - [ ] **Step 8: Enumerate the wholly-encrypted `sitedeployment` file**
   `inventory/group_vars/sitedeployment/vault.yaml` is encrypted as a whole file, so its variable names are hidden. Only `vault_sitedeployer_user` and `vault_sitedeployer_publickey` are referenced anywhere in the repo. Decrypt it to confirm nothing else is inside before planning its item.
 
-- [ ] **Step 9: Confirm the `automation_infra_playbooks` deletion was deliberate**
-  Commit `f9469055` ("Add colima") deleted the list from malcolm's host_vars alongside an unrelated Homebrew change. The role default is `[]`, so `automation-infra` currently runs **nothing**. If unintentional, restore it — on the new control node, not malcolm.
+- [x] **Step 9: Confirm the `automation_infra_playbooks` deletion was deliberate** — moot. `automation-infra` is deleted (`7658f07c`); scheduled playbook runs are Semaphore templates on camina.
 
 ---
 
@@ -155,47 +154,33 @@ Every role needed is already proven on homebrain or malcolm. `system-claude` is 
 
 ### Steps
 
-- [ ] **Step 1: Add the host to the inventory**
+- [x] **Step 1: Add the host to the inventory** — camina, in `infra`, `ubuntu_servers` and `zfs`.
   `inventory/hosts.yaml` — add `minipc-8gb-<name>` to the `infra`, `ubuntu_servers` and `zfs` groups.
 
-- [ ] **Step 2: Write host_vars**
+- [x] **Step 2: Write host_vars** — `inventory/host_vars/minipc-8gb-camina/`. `fastpool` is a stripe on the internal SATA SSD, after a rebuild onto a new disk; the host sits at `.23` per the LAN address plan.
   `inventory/host_vars/minipc-8gb-<name>/core.yaml` — identity block, static IP via `network_netplan_config`, a `zfs:` declaration for a `fastpool` stripe on the internal SATA SSD with a `compositions` dataset (copy homebrain's shape, `core.yaml:41-55`), and `compositions: [1password-connect]`. Using `fastpool` keeps the `compositions_dataset` default working unchanged.
   `inventory/host_vars/minipc-8gb-<name>/vault_credentials.yaml` — `vault_password`. Model on `minipc-8gb-test-router/`, the existing spare of this type.
 
-- [ ] **Step 3: Write the host playbook**
+- [x] **Step 3: Write the host playbook** — `playbooks/hosts/minipc-8gb-camina/core.yaml`. `system-repos` and `automation-infra` have since been deleted from the repo: scheduled playbook runs live in Semaphore (`composition-semaphore`), and `ansible-core` no longer needs a checkout on the host.
   `playbooks/hosts/minipc-8gb-<name>/core.yaml` — model on homebrain's, minus the home-automation roles, plus `ansible-core`, `system-repos`, `system-claude`, `automation-infra`.
 
-- [ ] **Step 4: Bind Connect to loopback**
+- [ ] **Step 4: Bind Connect to loopback** — **deferred.** Connect moved to camina but kept its Traefik route and DNS name (`6ac888d2`): the consuming tasks use `delegate_to: localhost`, so the request comes from whichever machine runs the playbook, which today is usually malcolm. Loopback is a one-line change once Ansible actually runs from camina.
   `roles/composition-1password-connect/templates/docker-compose.yaml.j2` — replace the Traefik labels with `ports: ["127.0.0.1:8080:8080"]`. Drop `notify: Restart Traefik` from `tasks/main.yaml`.
   `roles/composition-1password-connect/defaults/main.yaml` — remove `composition_dns_subdomains: [connect]`; a loopback-only service wants no DNS record. This also drops `connect.{{ domainname_infra }}` from the `dns_records` filter output.
 
-- [ ] **Step 5: Cut over from randolph**
+- [x] **Step 5: Cut over from randolph** — randolph's Connect torn down first, then camina's deployed (`6ac888d2`). Randolph's Traefik is left running with no consumer, which ends the #270 pilot in practice; its removal is still an open decision.
   Two Connect servers cannot share one credentials file. Bring randolph's down **first**, then deploy the new one and let it sync before migrating any secret.
   `inventory/host_vars/raspberry-pi4-4gb-randolph/core.yaml` — remove `1password-connect` from `compositions:`, and `reverseproxy` too once confirmed unused. Its host_vars records that 1password-connect is Traefik's only consumer there, so this ends the `#270` internal-wildcard-cert pilot. Confirm that pilot has served its purpose first.
 
-- [ ] **Step 6: Move automation off malcolm**
+- [x] **Step 6: Move automation off malcolm** — role removed from malcolm's playbook and the launchd daemon uninstalled (`20da7879`), then `automation-infra` deleted entirely (`7658f07c`).
   `playbooks/hosts/apple-macmini-m4-16gb-malcolm/core.yaml` — remove `automation-infra`. malcolm keeps ollama and the Apple services.
 
-- [ ] **Step 7: Establish the break-glass fallback**
+- [x] **Step 7: Establish the break-glass fallback** — already true and in daily use: malcolm has the checkout (`~/Code/awfulwoman/infra`), the vault password (`~/ansible/.vaultpassword`) and the collections, and every deploy in this migration ran from it. Nothing keeps it current automatically, since malcolm has no scheduled run.
   A controller cannot provision itself from scratch. Keep a working repo checkout, the vault password file, and installed collections on malcolm, so the new box can be rebuilt on the day it is the thing that is broken.
 
-- [ ] **Step 8: Verify**
-  ```bash
-  # on the new box
-  curl -fsS http://127.0.0.1:8080/health
-  curl -fsS -H "Authorization: Bearer $OP_CONNECT_TOKEN" http://127.0.0.1:8080/v1/vaults
+- [x] **Step 8: Verify** — camina deploys the fleet: real runs of `core` from camina against itself, storage, homebrain, agatha, public01 and bertha all pass, plus the reverseproxy composition on every Traefik host. Connect answers on camina and survived a reboot (5+ days uptime since).
 
-  # Connect must NOT be reachable from anywhere else
-  curl -m 5 http://<new-box-ip>:8080/health    # must fail — loopback bind only
-
-  # must survive an unattended reboot
-  sudo reboot && sleep 60
-  ssh <new-box> 'curl -fsS http://127.0.0.1:8080/health'
-
-  # must be able to deploy the rest of the fleet
-  ssh <new-box> 'cd ~/Code/awfulwoman/infra && \
-    ansible-playbook playbooks/hosts/minipc-8gb-homebrain/core.yaml --check'
-  ```
+  The loopback checks are deferred with step 4. The `--check` run in the original plan is not usable: many read-only `command` tasks are skipped in check mode, so the facts parsed from them are missing and the play fails (`035b7d2e` fixes one such case, in `bootstrap-ubuntu-server`).
 
 **Keep the box dedicated.** homebrain is the cautionary tale — 13 containers, 4.5GB of 7.6GB used, disk at 90%. Controller plus Connect, and nothing else.
 
@@ -447,6 +432,6 @@ Asserting on `| length` proves the secret resolved without printing it. Re-runni
 
 ## Open items
 
-- **A name for the new host.** Convention is `<type>-<ram>-<name>` with a personal name (bertha, malcolm, randolph, norman, belinda, deedee, homebrain), so `minipc-8gb-<name>`. Also needed: a static IP, a matching `host_tailscale_ipv4`, and the `/dev/disk/by-id/` path of its internal SSD for the `zfs:` declaration.
+- ~~**A name for the new host**~~ — `minipc-8gb-camina`, at `192.168.1.23` / `100.80.1.23`.
 - ~~**Private vault token scope**~~ — dropped. One vault (see design decisions), so there is no second token to scope.
 - **Whether the `#270` wildcard-cert pilot on randolph has served its purpose** — decommissioning its reverseproxy ends it.
