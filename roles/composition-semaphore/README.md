@@ -66,9 +66,32 @@ role. The `infra` project has:
 | Item | Value |
 |------|-------|
 | Repository | `https://github.com/awfulwoman/infra.git`, `main`, no key (public) |
-| Inventory | File `inventory/hosts.yaml` from the repository |
+| Inventory | `inventory/` from the repository: the whole directory, as `ansible.cfg` loads it. `hosts-unmanaged.yaml` defines groups bertha's dhcpd and named templates need |
 | Access key | `fleet-ssh (camina)`: camina's `~/.ssh/id_ed25519`, authorized fleet-wide via the GitHub key updater |
 | Templates | `<host>: core` for each `playbooks/hosts/*/core.yaml`. Arguments can be overridden per run, e.g. `["--tags", "composition", "-e", "target_composition=reverseproxy"]` |
+
+### Nightly schedules
+
+Europe/Berlin, staggered so runs do not overlap much:
+
+| Time | Template |
+|------|----------|
+| 01:30 | `minipc-8gb-camina: galaxy refresh` (`--tags ansible-core`) |
+| 02:00 | `minipc-8gb-camina: core` |
+| 02:20 | `server-64gb-storage: core` |
+| 02:40 | `minipc-8gb-homebrain: core` |
+| 03:00 | `minipc-8gb-agatha: core` |
+| 03:20 | `vps-hetzner-public01: core` |
+| 03:40 | `router-4gb-bertha: core` |
+| 04:30 | `semaphore heartbeat` (`playbooks/utility/semaphore-heartbeat.yaml`) |
+
+The heartbeat pings the healthchecks.io check "Semaphore scheduled runs
+(camina)". If the scheduler stops, the pings stop and healthchecks.io
+alerts. Peekaping watches `semaphore.<domain>` itself.
+
+A scheduled run deploys whatever is on `main`. Before pushing a change that
+should be applied by hand first (a host renumber from the LAN address plan,
+say), pause that host's schedule in the UI.
 
 `--check` is not reliable: many read-only `command` tasks are skipped in
 check mode, and the facts parsed from them are then missing.
