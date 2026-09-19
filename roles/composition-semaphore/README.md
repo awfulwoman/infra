@@ -85,8 +85,7 @@ Templates allow per-run argument overrides, e.g.
 
 Left out of `composition_semaphore_templates_extra` on purpose, with reasons
 in `defaults/main.yaml`: `groups/kubernetes`, `groups/personal`,
-`groups/infra/reboot-all`, and utility playbooks that write files into the
-checkout.
+`groups/infra/reboot-all`, and every utility playbook but the heartbeat.
 
 ### Nightly schedules
 

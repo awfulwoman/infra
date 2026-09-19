@@ -69,11 +69,10 @@ composition_semaphore_templates_extra:
   - {name: "group: zfs_backup_clients/core", playbook: playbooks/groups/zfs_backup_clients/core.yaml}
   - {name: "group: zfs_backup_offsite/core", playbook: playbooks/groups/zfs_backup_offsite/core.yaml}
   - {name: "group: zfs_backup_servers/core", playbook: playbooks/groups/zfs_backup_servers/core.yaml}
-  # Utility playbooks that write files into the checkout (export-*,
-  # rekey-ansible-vault, *-cloud-init, list-ssh-aliases) are absent: their
-  # output would land in Semaphore's throwaway clone.
-  - {name: "utility: deploy-promtail", playbook: playbooks/utility/deploy-promtail.yaml}
-  - {name: "utility: check-enablebanking-credentials", playbook: playbooks/utility/check-enablebanking-credentials.yaml}
+  # No utility templates beyond the heartbeat: those that write files into
+  # the checkout (export-*, rekey-ansible-vault, *-cloud-init,
+  # list-ssh-aliases) would land their output in Semaphore's throwaway
+  # clone, and the rest are one-offs, tests or checks better run by hand.
 
 # Schedules, as {template: <template name>, cron: <cron expression>}.
 # Europe/Berlin, the container's TZ.
