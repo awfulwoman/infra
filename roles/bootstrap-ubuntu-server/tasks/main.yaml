@@ -98,6 +98,7 @@
   ansible.builtin.command: localectl status
   register: locale_status
   changed_when: false
+  check_mode: false
 
 - name: Parse 'LANG' from current locale and language configuration
   become: true
