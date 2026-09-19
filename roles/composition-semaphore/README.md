@@ -68,7 +68,12 @@ role. The `infra` project has:
 | Repository | `https://github.com/awfulwoman/infra.git`, `main`, no key (public) |
 | Inventory | `inventory/` from the repository: the whole directory, as `ansible.cfg` loads it. `hosts-unmanaged.yaml` defines groups bertha's dhcpd and named templates need |
 | Access key | `fleet-ssh (camina)`: camina's `~/.ssh/id_ed25519`, authorized fleet-wide via the GitHub key updater |
-| Templates | `<host>: core` for each `playbooks/hosts/*/core.yaml`. Arguments can be overridden per run, e.g. `["--tags", "composition", "-e", "target_composition=reverseproxy"]` |
+| Templates | `<host>: core` for each `playbooks/hosts/*/core.yaml`; `group: <dir>/<name>` for `playbooks/groups/*` except `kubernetes` and `personal`; `utility: deploy-promtail` and `utility: check-enablebanking-credentials`. Arguments can be overridden per run, e.g. `["--tags", "composition", "-e", "target_composition=reverseproxy"]` or `["--limit", "server-64gb-storage"]` |
+
+Left out on purpose: utility playbooks that write files into the checkout
+(`export-*`, `rekey-ansible-vault`, `*-cloud-init`, `list-ssh-aliases`),
+whose output would land in Semaphore's throwaway clone, plus one-offs and
+tests.
 
 ### Nightly schedules
 
