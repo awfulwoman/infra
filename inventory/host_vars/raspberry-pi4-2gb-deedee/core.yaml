@@ -89,11 +89,6 @@ traefik_providers:
   - wildcard-cert
 
 # -------------------------------------------------------------------
-# AUTOMATION INFRA
-# -------------------------------------------------------------------
-automation_infra_ansible_playbook_bin: /fastpool/repos/infra/.venv/bin/ansible-playbook
-
-# -------------------------------------------------------------------
 # CLAUDE
 # -------------------------------------------------------------------
 system_claude_settings_path: "/fastpool/claude/settings"

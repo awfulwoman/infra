@@ -1,72 +1,72 @@
 # automation-infra
 
-This role automates regular runs of infrastructure playbooks through a
-systemd timer.
-
-## Purpose
-
-This role configures a systemd service and timer to run a
-specified Ansible playbook on a schedule. It keeps infrastructure
-configurations enforced without manual work.
+This role runs a list of infrastructure playbooks on a schedule. It uses a
+systemd timer on Linux and a launchd daemon on macOS.
 
 ## Requirements
 
-- Ansible installed on the target host
-- Ansible vault password file configured
-- SSH keys configured for accessing remote hosts in the inventory
-- Repository cloned to the configured path
+- Ansible installed on the target host (the `ansible-core` role). On Linux
+  this is the system install from the Ansible PPA; on macOS, Homebrew.
+- The Ansible vault password file
+- An SSH deploy key that can clone `automation_infra_repo_url`
+- SSH access from the host to every target of the listed playbooks
+- The repository checked out at `ansible_infra_dir` (`system-repos`)
 
 ## How It Works
 
-The role does five things:
+The role deploys a run script to `automation_infra_script_path`. Each run:
 
-1. Checks that Ansible is installed. It fails if Ansible is not present.
-2. Checks that the playbook and inventory paths exist.
-3. Creates a systemd service that runs the specified playbook.
-4. Creates a systemd timer to schedule regular runs.
-5. Enables and starts the timer.
+1. Clones `automation_infra_repo_url` into a temporary directory.
+2. Installs the Galaxy dependencies from the clone's
+   `meta/requirements.yaml`.
+3. Runs each playbook in `automation_infra_playbooks` from the clone.
+4. Deletes the clone.
 
-The host that runs this automation must have SSH access to
-all target hosts named in the playbook.
+The run fails if the Galaxy install or any playbook fails. A failed playbook
+does not stop the playbooks after it.
+
+The role checks that each listed playbook and the inventory exist in
+`ansible_infra_dir` before it installs the schedule.
 
 ## Configuration
 
 Variables (see `defaults/main.yaml`):
 
-- `automation_infra_schedule`: How often to run (hourly/daily/weekly,
-  default: daily)
-- `automation_infra_playbook`: Path to the playbook to run
-- `automation_infra_inventory`: Path to the inventory file
-- `automation_infra_vault_password_file`: Path to vault password file
-- `automation_infra_service_name`: systemd service/timer name
-  (default: automation-infra)
+- `automation_infra_playbooks`: Playbooks to run, relative to `playbooks/`
+  (default: `[]`, which runs only the Galaxy install)
+- `automation_infra_schedule`: `hourly`, `daily` or `weekly` (default:
+  `daily`)
+- `automation_infra_repo_url`: Repository to clone for each run
+- `automation_infra_vault_password_file`: Path to the vault password file
+- `automation_infra_service_name`: systemd unit name (default:
+  `automation-infra`)
+- `automation_infra_plist_label`: launchd label (default:
+  `local.automation-infra`)
 
 ## Example Usage
 
-Override variables in host_vars or group_vars to customize:
-
 ```yaml
-automation_infra_playbook: "{{ ansible_infra_dir }}/playbooks/custom.yaml"
-automation_infra_schedule: "hourly"
+automation_infra_playbooks:
+  - hosts/router-4gb-bertha/core.yaml
+automation_infra_schedule: "daily"
 ```
 
 ## Notes
 
-- The service runs as root. System configuration needs this.
-- The systemd timer uses a random delay of up to 10 minutes, to
-  stop a thundering herd.
-- Each playbook run has a 1-hour timeout.
-- Logs go to the systemd journal.
+- The service runs as `ansible_user`, not root. Tasks that need root use
+  `become` with the vault password.
+- On Linux, the timer adds a random delay of up to 10 minutes and runs a
+  missed schedule at the next boot. Each run has a 1-hour timeout.
+- On macOS, runs start at 00:00 with no random delay.
 
 ## Checking Status
 
 ```bash
-# Check timer status
-systemctl status automation-infra.timer
-
-# Check service status
-systemctl status automation-infra.service
-
-# View recent logs
+# Linux
+systemctl list-timers automation-infra.timer
 journalctl -u automation-infra.service -n 50
+
+# macOS
+sudo launchctl print system/local.automation-infra
+tail -n 50 /usr/local/var/log/automation-infra.log
 ```
