@@ -73,7 +73,8 @@ role. The `infra` project has:
 Left out on purpose: utility playbooks that write files into the checkout
 (`export-*`, `rekey-ansible-vault`, `*-cloud-init`, `list-ssh-aliases`),
 whose output would land in Semaphore's throwaway clone, plus one-offs and
-tests.
+tests. `groups/infra/reboot-all` is left out so a fleet-wide reboot is never one
+click away.
 
 ### Nightly schedules
 
