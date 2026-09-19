@@ -28,10 +28,21 @@
       (ansible_roles_path.split(':') | select('match', '^/') | list)
     }}
 
+# Copied from the controller running this play, so the host needs no checkout
+# of this repo.
+- name: Copy Galaxy requirements
+  when: ansible_path is defined
+  ansible.builtin.copy:
+    src: "{{ role_path }}/../../meta/requirements.yaml"
+    dest: "{{ ansible_path }}/requirements.yaml"
+    mode: "0644"
+
 - name: Install Ansible Galaxy dependencies
-  when: ansible_infra_dir is defined
+  when: ansible_path is defined
   ansible.builtin.command:
-    cmd: ansible-galaxy install -r {{ ansible_infra_dir }}/meta/requirements.yaml
+    cmd: ansible-galaxy install -r {{ ansible_path }}/requirements.yaml
   environment:
     PATH: "/opt/homebrew/bin:/usr/local/bin:{{ ansible_facts['env']['PATH'] }}"
+    ANSIBLE_ROLES_PATH: "{{ ansible_roles_path }}"
+    ANSIBLE_COLLECTIONS_PATH: "{{ ansible_collections_path }}"
   changed_when: false

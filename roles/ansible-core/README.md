@@ -10,7 +10,7 @@ This role installs Ansible and its dependencies on a host. It then makes sure th
 After installation, the role does two things, in this order:
 
 1. It creates the directories referenced by `ansible_path`, `ansible_log_path`, `ansible_collections_path`, and the absolute entries of `ansible_roles_path`. This gives later Ansible runs a consistent working environment.
-2. It runs `ansible-galaxy install -r meta/requirements.yaml` to install Galaxy dependencies, when `ansible_infra_dir` is defined.
+2. It copies this repo's `meta/requirements.yaml` from the controller to `ansible_path`, then runs `ansible-galaxy install` against it into `ansible_roles_path` and `ansible_collections_path`. The host needs no checkout of this repo.
 
 The order matters. `ansible-galaxy` writes straight into the roles and collections paths, so on a fresh host it fails unless those directories already exist and the connecting user can write to them. The directories are created with `become`, because `ansible_path` is usually under `/opt`, and are then owned by `ansible_user`, which is the account that runs `ansible-galaxy`.
 
@@ -22,7 +22,6 @@ These variables are expected in `host_vars` or `group_vars` as part of the Ansib
 
 | Variable | Description |
 |---|---|
-| `ansible_infra_dir` | Path to the cloned infra repo on the host; used to locate `meta/requirements.yaml` |
 | `ansible_path` | Base working directory for Ansible (e.g. `/opt/ansible`) |
 | `ansible_log_path` | Path where Ansible logs are written |
 | `ansible_collections_path` | Path for installed Galaxy collections |

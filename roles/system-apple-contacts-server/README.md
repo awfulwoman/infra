@@ -16,8 +16,7 @@ backend, in place of the earlier Radicale/CardDAV backend.
   have it.
 
 The role clones and updates the `awfulwoman/apple-contacts-server` repo
-itself, over SSH, into `system_apple_contacts_server_repo_dir`. It no longer
-depends on `system-repos` running first. Set
+itself, over SSH, into `system_apple_contacts_server_repo_dir`. Set
 `system_apple_contacts_server_repo_update: false` to pin the checkout instead
 of pulling on every deploy.
 
@@ -64,7 +63,7 @@ once. It does not recur after `uv sync` or Python upgrades.
 
 | Variable | Default | Description |
 |---|---|---|
-| `system_apple_contacts_server_repo_dir` | `system_repos_base_dir/awfulwoman/apple-contacts-server` | Repo checkout to run from |
+| `system_apple_contacts_server_repo_dir` | `~/Code/awfulwoman/apple-contacts-server` | Repo checkout to run from |
 | `system_apple_contacts_server_port` | `4102` | Local port the service listens on |
 | `system_apple_contacts_server_bearer_tokens` | `vault_gateway_contacts_server_token` | Shared secret. Also set as `composition_gateway_contacts_server_bearer_token` |
 | `system_apple_contacts_server_db_path` | `~/.local/state/apple-contacts-server/meta.db` | Sidecar SQLite database: id mapping only, no LWW or tombstones (see the service's own README) |

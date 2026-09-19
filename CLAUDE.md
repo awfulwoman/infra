@@ -53,7 +53,7 @@ The primary configuration management tool. Structure:
   - `client-*`: Client half of client-server pairs (nfs, nut)
   - `virtual-*`: Virtualisation roles (qemu-host, qemu-guest, hetzner)
   - `hardware-*`: Hardware-specific configs (raspberry-pi, zigbee-conbee, rtl-433)
-  - `automation-*`: Scheduled automation (e.g., `automation-infra` runs a list of playbooks on a systemd timer on Linux or launchd on macOS)
+  - `automation-*`: Scheduled automation on a host (e.g., `automation-key-updater` refreshes authorized SSH keys from GitHub). Scheduled playbook runs live in Semaphore on camina (`composition-semaphore`)
   - `monitoring-*`: Monitoring integrations (healthchecksio, linux2mqtt)
   - `network-*`: Network configuration
     - `network-netplan`: Netplan-based network configuration for primary interface (supports static IP and DHCP)

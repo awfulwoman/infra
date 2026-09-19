@@ -9,10 +9,6 @@
     tags: [system, zfs, system-zfs]
   - role: infothrill.nullmailer
     become: true
-  - role: system-repos
-    tags: [system, system-repos]
-  - role: automation-infra
-    tags: [automation, automation-infra]
   - role: system-claude
     tags: [system, system-claude]
   - role: ansible-core

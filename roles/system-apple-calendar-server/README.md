@@ -19,8 +19,8 @@ writes to named calendars.
   have it.
 
 The role clones and updates the `awfulwoman/apple-calendar-server` repo itself,
-over SSH, into `system_apple_calendar_server_repo_dir`. It does not depend on
-`system-repos`. Set `system_apple_calendar_server_repo_update: false` to pin
+over SSH, into `system_apple_calendar_server_repo_dir`. Set
+`system_apple_calendar_server_repo_update: false` to pin
 the checkout instead of pulling on every deploy.
 
 ## Permission stability (code signing)
@@ -66,7 +66,7 @@ recur after `uv sync` or Python upgrades.
 
 | Variable | Default | Description |
 |---|---|---|
-| `system_apple_calendar_server_repo_dir` | `system_repos_base_dir/awfulwoman/apple-calendar-server` | Repo checkout to run from (cloned by this role) |
+| `system_apple_calendar_server_repo_dir` | `~/Code/awfulwoman/apple-calendar-server` | Repo checkout to run from (cloned by this role) |
 | `system_apple_calendar_server_port` | `4101` | Local port the service listens on |
 | `system_apple_calendar_server_bearer_tokens` | `vault_gateway_calendar_server_token` | Shared secret. Add this vault key before you run the role |
 | `system_apple_calendar_server_default_calendar` | `Calendar` | Calendar (EKCalendar) used when an event names none |

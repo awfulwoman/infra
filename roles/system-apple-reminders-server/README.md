@@ -16,8 +16,7 @@ backend, in place of the earlier Radicale/CalDAV backend.
   have it.
 
 The role clones and updates the `awfulwoman/apple-reminders-server` repo
-itself, over SSH, into `system_apple_reminders_server_repo_dir`. It no longer
-depends on `system-repos` running first. Set
+itself, over SSH, into `system_apple_reminders_server_repo_dir`. Set
 `system_apple_reminders_server_repo_update: false` to pin the checkout instead
 of pulling on every deploy.
 
@@ -138,7 +137,7 @@ to skip the check wiring entirely.
 
 | Variable | Default | Description |
 |---|---|---|
-| `system_apple_reminders_server_repo_dir` | `system_repos_base_dir/awfulwoman/apple-reminders-server` | Repo checkout to run from |
+| `system_apple_reminders_server_repo_dir` | `~/Code/awfulwoman/apple-reminders-server` | Repo checkout to run from |
 | `system_apple_reminders_server_port` | `4100` | Local port the service listens on |
 | `system_apple_reminders_server_bearer_tokens` | `vault_gateway_reminders_server_token` | Shared secret. Also set as `composition_gateway_reminders_server_bearer_token` |
 | `system_apple_reminders_server_default_list` | `Reminders` | List (EKCalendar) used when a reminder names none |

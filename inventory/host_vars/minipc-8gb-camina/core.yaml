@@ -35,15 +35,6 @@ ansible_become_password: "{{ vault_password }}"
 ubuntupro_attach: true
 
 # -------------------------------------------------------------------
-# REPOS
-# Cloned so automation-infra and ansible-core have a local checkout to
-# run playbooks and install Galaxy dependencies from.
-# -------------------------------------------------------------------
-system_repos:
-  - repo: awfulwoman/infra
-    deploy_key: true
-
-# -------------------------------------------------------------------
 # ZFS
 # fastpool: the third partition of the internal 256GB SATA SSD as a
 # single-disk stripe vdev — no redundancy. Same layout as homebrain:

@@ -51,8 +51,8 @@ The repo's `ansible.cfg` hardcodes two controller paths, so the role
 provides both inside the container:
 
 - **Galaxy content**: the host's `{{ ansible_path }}/galaxy` is mounted
-  read-only at the same path. `ansible-core` and the nightly
-  `automation-infra` run keep it current. Semaphore's own Galaxy install only
+  read-only at the same path. The `minipc-8gb-camina: galaxy refresh`
+  template runs `ansible-core` nightly to keep it current. Semaphore's own Galaxy install only
   reads `roles/requirements.yml` and `collections/requirements.yml`, which
   this repo does not have.
 - **Vault password**: the host's `ansible_vault_password_file` is copied to

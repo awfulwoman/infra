@@ -14,8 +14,6 @@
     become: true
   - role: system-sshkey
     tags: [system, system-sshkey]
-  - role: system-repos
-    tags: [system, system-repos]
   - role: system-zfs
     tags: [system, zfs, system-zfs]
   - role: infra-public-resources

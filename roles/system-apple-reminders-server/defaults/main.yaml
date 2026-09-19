@@ -3,7 +3,7 @@ system_apple_reminders_server_repo: awfulwoman/apple-reminders-server
 system_apple_reminders_server_git_host: github.com
 system_apple_reminders_server_repo_version: HEAD
 system_apple_reminders_server_repo_update: true
-system_apple_reminders_server_repo_dir: "{{ system_repos_base_dir }}/awfulwoman/apple-reminders-server"
+system_apple_reminders_server_repo_dir: "{{ ansible_facts.user_dir }}/Code/awfulwoman/apple-reminders-server"
 system_apple_reminders_server_plist_label: com.awfulwoman.apple-reminders-server
 
 # 0.0.0.0 so composition-gateway (a different host) can connect. Binding one

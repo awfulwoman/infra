@@ -13,8 +13,6 @@
     tags: [network, network-macos-static]
   - role: automation-key-updater
     tags: [automation, automation-key-updater]
-  - role: system-repos
-    tags: [system, system-repos]
   - role: system-apple-reminders-server
     tags: [system, system-apple-reminders-server]
   - role: system-apple-calendar-server
