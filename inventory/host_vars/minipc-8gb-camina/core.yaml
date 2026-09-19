@@ -56,6 +56,10 @@ zfs:
         policy: critical
         children_inherit_policy: true
         snapshots_discover_children: true
+      # Working checkouts on the control node, including the one Semaphore
+      # mounts as its "infra (local)" repository.
+      repos:
+        policy: critical
 
 # -------------------------------------------------------------------
 # REVERSEPROXY
@@ -97,6 +101,7 @@ traefik_providers:
 # volume on the OS drive.
 # -------------------------------------------------------------------
 onepassword_connect_data_bind_mount: true
+composition_semaphore_local_repo_path: /fastpool/repos/awfulwoman/infra
 
 # Semaphore nightly runs, Europe/Berlin. Galaxy first so the core runs use
 # current collections; heartbeat last so its ping proves the night ran.

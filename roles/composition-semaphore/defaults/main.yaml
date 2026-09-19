@@ -59,6 +59,7 @@ composition_semaphore_fleet_key_path: "{{ ansible_facts.user_dir }}/.ssh/id_ed25
 # and works when GitHub is unreachable. Nothing here updates it: it is a
 # working copy, pulled and pushed by hand. Templates use the GitHub
 # repository, so scheduled runs always deploy what is on main.
+# Override per host; on camina this is a dataset of its own (fastpool/repos).
 composition_semaphore_local_repo_path: "{{ ansible_facts.user_dir }}/Code/awfulwoman/infra"
 
 # A "<host>: core" template is generated for every

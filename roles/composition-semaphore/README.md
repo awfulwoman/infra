@@ -90,8 +90,8 @@ in `defaults/main.yaml`: `groups/kubernetes`, `groups/personal`,
 ### The working checkout
 
 `composition_semaphore_local_repo_path`
-(`~/Code/awfulwoman/infra` on camina) is the checkout this repo is edited in
-on the control node — Claude Code, an editor, a shell. It is mounted
+(`/fastpool/repos/awfulwoman/infra` on camina, on the `repos` dataset) is
+the checkout this repo is edited in on the control node — Claude Code, an editor, a shell. It is mounted
 read-only into the container and registered as the repository
 `infra (local)`, with a matching inventory.
 
