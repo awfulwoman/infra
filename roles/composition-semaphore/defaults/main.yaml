@@ -20,3 +20,70 @@ composition_semaphore_admin_password: "{{ vault_composition_semaphore_admin_pass
 # Encrypts the access keys (SSH keys, vault passwords) Semaphore stores in
 # its database. Changing it makes every stored key unreadable.
 composition_semaphore_access_key_encryption: "{{ vault_composition_semaphore_access_key_encryption }}"
+
+# -------------------------------------------------------------------
+# Project configuration, applied through the Semaphore API by
+# ebdruplab.semaphoreui.project_deploy (tasks/project.yaml). Items are
+# matched by name: missing ones are created, existing ones updated. Items
+# not declared here (added in the UI) are left alone.
+# -------------------------------------------------------------------
+composition_semaphore_project_name: infra
+# One run at a time across the whole project: Semaphore has no per-host
+# lock, so different templates could otherwise touch one host at once.
+composition_semaphore_max_parallel_tasks: 1
+
+# Private key Semaphore uses to SSH to the fleet, read from this host.
+# Only set when the key is first created; rotate it in the UI or by
+# deleting the key.
+composition_semaphore_fleet_key_name: "fleet-ssh ({{ host_name_short }})"
+composition_semaphore_fleet_key_path: "{{ ansible_facts.user_dir }}/.ssh/id_ed25519"
+
+# A "<host>: core" template is generated for every
+# playbooks/hosts/*/core.yaml. These are added on top. Each item is merged
+# over the shared template settings in tasks/project.yaml.
+composition_semaphore_templates_extra:
+  - name: "minipc-8gb-camina: galaxy refresh"
+    description: >-
+      Install Galaxy deps into /opt/ansible/galaxy on camina, which Semaphore
+      mounts read-only.
+    playbook: playbooks/hosts/minipc-8gb-camina/core.yaml
+    arguments: ["--tags", "ansible-core"]
+    allow_override_args_in_task: false
+  - name: semaphore heartbeat
+    description: Pings the healthchecks.io check that alerts if scheduled runs stop.
+    playbook: playbooks/utility/semaphore-heartbeat.yaml
+    allow_override_args_in_task: false
+  # groups/kubernetes (experimental), groups/personal (workstations) and
+  # groups/infra/reboot-all (a fleet-wide reboot should never be one click
+  # away) are deliberately absent.
+  - {name: "group: infra/bootstrap", playbook: playbooks/groups/infra/bootstrap.yaml}
+  - {name: "group: infra/galaxy-update-all", playbook: playbooks/groups/infra/galaxy-update-all.yaml}
+  - {name: "group: macos/bootstrap", playbook: playbooks/groups/macos/bootstrap.yaml}
+  - {name: "group: macos/brew-upgrade-all", playbook: playbooks/groups/macos/brew-upgrade-all.yaml}
+  - {name: "group: raspberrypi/hardware", playbook: playbooks/groups/raspberrypi/hardware.yaml}
+  - {name: "group: ubuntu/apt-upgrade-all", playbook: playbooks/groups/ubuntu/apt-upgrade-all.yaml}
+  - {name: "group: ubuntu/bootstrap", playbook: playbooks/groups/ubuntu/bootstrap.yaml}
+  - {name: "group: ubuntu/create-server-user", playbook: playbooks/groups/ubuntu/create-server-user.yaml}
+  - {name: "group: ubuntu/networking", playbook: playbooks/groups/ubuntu/networking.yaml}
+  - {name: "group: zfs/core", playbook: playbooks/groups/zfs/core.yaml}
+  - {name: "group: zfs_backup_clients/core", playbook: playbooks/groups/zfs_backup_clients/core.yaml}
+  - {name: "group: zfs_backup_offsite/core", playbook: playbooks/groups/zfs_backup_offsite/core.yaml}
+  - {name: "group: zfs_backup_servers/core", playbook: playbooks/groups/zfs_backup_servers/core.yaml}
+  # Utility playbooks that write files into the checkout (export-*,
+  # rekey-ansible-vault, *-cloud-init, list-ssh-aliases) are absent: their
+  # output would land in Semaphore's throwaway clone.
+  - {name: "utility: deploy-promtail", playbook: playbooks/utility/deploy-promtail.yaml}
+  - {name: "utility: check-enablebanking-credentials", playbook: playbooks/utility/check-enablebanking-credentials.yaml}
+
+# Schedules, as {template: <template name>, cron: <cron expression>}.
+# Europe/Berlin, the container's TZ.
+composition_semaphore_schedules: []
+
+# Shared settings for every template; each template's own keys win.
+composition_semaphore_template_defaults:
+  type: job
+  repository_name: infra
+  inventory_name: infra
+  environment_name: default
+  arguments: []
+  allow_override_args_in_task: true

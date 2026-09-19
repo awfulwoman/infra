@@ -20,4 +20,7 @@ collections:
   - name: community.docker
   - name: community.general
   - name: community.healthchecksio
+  # Pinned: young, single-maintainer collection. Used by composition-semaphore.
+  - name: ebdruplab.semaphoreui
+    version: 4.0.3
   - name: hetzner.hcloud

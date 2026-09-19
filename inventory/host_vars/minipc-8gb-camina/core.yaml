@@ -97,6 +97,22 @@ traefik_providers:
 # volume on the OS drive.
 # -------------------------------------------------------------------
 onepassword_connect_data_bind_mount: true
+
+# Semaphore nightly runs, Europe/Berlin. Galaxy first so the core runs use
+# current collections; heartbeat last so its ping proves the night ran.
+# Before pushing a change that must be applied by hand first (a renumber
+# from the LAN address plan, say), pause that host's schedule here with
+# `active: false` and deploy semaphore: camina's own nightly core run
+# re-applies this list, so a pause made only in the UI does not last.
+composition_semaphore_schedules:
+  - {template: "minipc-8gb-camina: galaxy refresh", cron: "30 1 * * *"}
+  - {template: "minipc-8gb-camina: core", cron: "0 2 * * *"}
+  - {template: "server-64gb-storage: core", cron: "20 2 * * *"}
+  - {template: "minipc-8gb-homebrain: core", cron: "40 2 * * *"}
+  - {template: "minipc-8gb-agatha: core", cron: "0 3 * * *"}
+  - {template: "vps-hetzner-public01: core", cron: "20 3 * * *"}
+  - {template: "router-4gb-bertha: core", cron: "40 3 * * *"}
+  - {template: "semaphore heartbeat", cron: "30 4 * * *"}
 compositions:
   - 1password-connect
   - semaphore

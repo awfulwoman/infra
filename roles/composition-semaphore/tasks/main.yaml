@@ -65,3 +65,6 @@
     wait: true
     wait_timeout: 180
   notify: Restart Traefik
+
+- name: Configure the Semaphore project
+  ansible.builtin.import_tasks: project.yaml

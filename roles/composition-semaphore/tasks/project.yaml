@@ -1,0 +1,124 @@
+# code: language=ansible
+
+# ----------------------------
+# Configure the Semaphore project through its API.
+#
+# ebdruplab.semaphoreui.project_deploy matches every item by name: missing
+# ones are created and existing ones updated. project_deploy_variable_delete
+# stays false, so anything added by hand in the UI survives.
+# ----------------------------
+
+- name: "Read the fleet SSH key"
+  ansible.builtin.slurp:
+    src: "{{ composition_semaphore_fleet_key_path }}"
+  register: _semaphore_fleet_key
+  no_log: true
+
+- name: "Reset the template and schedule maps"
+  ansible.builtin.set_fact:
+    _semaphore_templates: {}
+    _semaphore_schedules: {}
+
+# Found on the controller, in the checkout running this play. (fileglob
+# cannot wildcard a directory.)
+- name: "Find the host playbooks"
+  ansible.builtin.find:
+    paths: "{{ role_path }}/../../playbooks/hosts"
+    patterns: core.yaml
+    recurse: true
+    depth: 2
+  delegate_to: localhost
+  become: false
+  register: _semaphore_host_playbooks
+
+- name: "Add a core template for every host playbook"
+  ansible.builtin.set_fact:
+    _semaphore_templates: >-
+      {{ _semaphore_templates | combine({
+           host ~ ': core': composition_semaphore_template_defaults | combine({
+             'name': host ~ ': core',
+             'playbook': 'playbooks/hosts/' ~ host ~ '/core.yaml',
+           })
+         }) }}
+  vars:
+    host: "{{ host_playbook | dirname | basename }}"
+  loop: "{{ _semaphore_host_playbooks.files | map(attribute='path') | sort }}"
+  loop_control:
+    loop_var: host_playbook
+    label: "{{ host_playbook | dirname | basename }}"
+
+- name: "Add the extra templates"
+  ansible.builtin.set_fact:
+    _semaphore_templates: >-
+      {{ _semaphore_templates | combine({
+           extra_template.name: composition_semaphore_template_defaults | combine(extra_template)
+         }) }}
+  loop: "{{ composition_semaphore_templates_extra }}"
+  loop_control:
+    loop_var: extra_template
+    label: "{{ extra_template.name }}"
+
+- name: "Add the schedules"
+  ansible.builtin.set_fact:
+    _semaphore_schedules: >-
+      {{ _semaphore_schedules | combine({
+           schedule.template: {
+             'name': 'nightly: ' ~ schedule.template,
+             'template_name': schedule.template,
+             'cron_format': schedule.cron,
+             'active': schedule.active | default(true),
+           }
+         }) }}
+  loop: "{{ composition_semaphore_schedules }}"
+  loop_control:
+    loop_var: schedule
+    label: "{{ schedule.cron }} {{ schedule.template }}"
+
+- name: "Configure the Semaphore project"
+  ansible.builtin.include_role:
+    name: ebdruplab.semaphoreui.project_deploy
+  vars:
+    project_deploy_semaphore_host: "https://{{ composition_dns_subdomains[0] }}.{{ domainname_infra }}"
+    project_deploy_semaphore_port: 443
+    project_deploy_semaphore_username: "{{ composition_semaphore_admin_login }}"
+    project_deploy_semaphore_password: "{{ composition_semaphore_admin_password }}"
+    project_deploy_force_project_update: true
+    project_deploy_variable_delete: false
+    project_deploy_config:
+      project:
+        name: "{{ composition_semaphore_project_name }}"
+        alert: false
+        max_parallel_tasks: "{{ composition_semaphore_max_parallel_tasks }}"
+      keys:
+        fleet:
+          name: "{{ composition_semaphore_fleet_key_name }}"
+          type: ssh
+          # Set on creation only, so re-runs do not rewrite it.
+          override_secret: false
+          ssh:
+            # Required by project_deploy; the inventory's ansible_user wins.
+            login: "{{ ansible_user }}"
+            passphrase: ""
+            private_key: "{{ _semaphore_fleet_key.content | b64decode }}"
+      # The repo is public: HTTPS, with Semaphore's built-in "None" key.
+      repositories:
+        - name: infra
+          git_url: https://github.com/awfulwoman/infra.git
+          git_branch: main
+          key_name: "None"
+      views: {}
+      inventories:
+        # The whole directory, as ansible.cfg loads it: hosts-unmanaged.yaml
+        # defines groups that bertha's dhcpd and named templates need.
+        infra:
+          name: infra
+          type: file
+          repository_name: infra
+          inventory_file: inventory/
+          ssh_key_name: "{{ composition_semaphore_fleet_key_name }}"
+      environments:
+        default:
+          name: default
+      templates: "{{ _semaphore_templates }}"
+      schedules: "{{ _semaphore_schedules }}"
+      integrations: {}

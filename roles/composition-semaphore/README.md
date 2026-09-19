@@ -60,44 +60,47 @@ provides both inside the container:
   at the same path. The role therefore assumes the host is a controller with
   that file.
 
-Projects, keys and templates live in Semaphore's database, not in this
-role. The `infra` project has:
+## Project configuration
 
-| Item | Value |
-|------|-------|
-| Repository | `https://github.com/awfulwoman/infra.git`, `main`, no key (public) |
+After the container is healthy, `tasks/project.yaml` configures the `infra`
+project through Semaphore's API with
+[`ebdruplab.semaphoreui.project_deploy`](https://github.com/ebdruplab/ansible-collection_ebdruplab)
+(pinned in `meta/requirements.yaml`). Every item is matched by name: missing
+ones are created, existing ones updated. `project_deploy_variable_delete` is
+false, so anything added by hand in the UI is left alone, but a declared item
+edited in the UI is reset on the next run.
+
+| Item | Source |
+|------|--------|
+| Project | `composition_semaphore_project_name`, `composition_semaphore_max_parallel_tasks` (1: Semaphore has no per-host lock, so one run at a time across the project) |
+| Access key | `composition_semaphore_fleet_key_name`, read from `composition_semaphore_fleet_key_path` on the host. Set on creation only (`override_secret: false`) |
+| Repository | `https://github.com/awfulwoman/infra.git`, `main`, Semaphore's built-in `None` key (the repo is public) |
 | Inventory | `inventory/` from the repository: the whole directory, as `ansible.cfg` loads it. `hosts-unmanaged.yaml` defines groups bertha's dhcpd and named templates need |
-| Access key | `fleet-ssh (camina)`: camina's `~/.ssh/id_ed25519`, authorized fleet-wide via the GitHub key updater |
-| Templates | `<host>: core` for each `playbooks/hosts/*/core.yaml`; `group: <dir>/<name>` for `playbooks/groups/*` except `kubernetes` and `personal`; `utility: deploy-promtail` and `utility: check-enablebanking-credentials`. Arguments can be overridden per run, e.g. `["--tags", "composition", "-e", "target_composition=reverseproxy"]` or `["--limit", "server-64gb-storage"]` |
+| Templates | `<host>: core` for every `playbooks/hosts/*/core.yaml`, found on the controller at run time, plus `composition_semaphore_templates_extra`. All merged over `composition_semaphore_template_defaults` |
+| Schedules | `composition_semaphore_schedules`, set in camina's host_vars |
 
-Left out on purpose: utility playbooks that write files into the checkout
-(`export-*`, `rekey-ansible-vault`, `*-cloud-init`, `list-ssh-aliases`),
-whose output would land in Semaphore's throwaway clone, plus one-offs and
-tests. `groups/infra/reboot-all` is left out so a fleet-wide reboot is never one
-click away.
+Templates allow per-run argument overrides, e.g.
+`["--tags", "composition", "-e", "target_composition=reverseproxy"]` or
+`["--limit", "server-64gb-storage"]`.
+
+Left out of `composition_semaphore_templates_extra` on purpose, with reasons
+in `defaults/main.yaml`: `groups/kubernetes`, `groups/personal`,
+`groups/infra/reboot-all`, and utility playbooks that write files into the
+checkout.
 
 ### Nightly schedules
 
-Europe/Berlin, staggered so runs do not overlap much:
-
-| Time | Template |
-|------|----------|
-| 01:30 | `minipc-8gb-camina: galaxy refresh` (`--tags ansible-core`) |
-| 02:00 | `minipc-8gb-camina: core` |
-| 02:20 | `server-64gb-storage: core` |
-| 02:40 | `minipc-8gb-homebrain: core` |
-| 03:00 | `minipc-8gb-agatha: core` |
-| 03:20 | `vps-hetzner-public01: core` |
-| 03:40 | `router-4gb-bertha: core` |
-| 04:30 | `semaphore heartbeat` (`playbooks/utility/semaphore-heartbeat.yaml`) |
-
-The heartbeat pings the healthchecks.io check "Semaphore scheduled runs
-(camina)". If the scheduler stops, the pings stop and healthchecks.io
-alerts. Peekaping watches `semaphore.<domain>` itself.
+Galaxy refresh first, so the core runs use current collections; the
+heartbeat last. The heartbeat (`playbooks/utility/semaphore-heartbeat.yaml`)
+pings the healthchecks.io check "Semaphore scheduled runs (camina)": if the
+scheduler stops, healthchecks.io alerts. Peekaping watches
+`semaphore.<domain>` itself.
 
 A scheduled run deploys whatever is on `main`. Before pushing a change that
 should be applied by hand first (a host renumber from the LAN address plan,
-say), pause that host's schedule in the UI.
+say), pause that host's schedule: add `active: false` to its entry in
+`composition_semaphore_schedules` and deploy this role. Pausing in the UI
+alone lasts only until camina's nightly core run redeploys this role.
 
 `--check` is not reliable: many read-only `command` tasks are skipped in
 check mode, and the facts parsed from them are then missing.
