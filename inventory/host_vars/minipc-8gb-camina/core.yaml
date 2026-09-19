@@ -114,6 +114,8 @@ composition_semaphore_schedules:
   - {template: "router-4gb-bertha: core", cron: "40 3 * * *"}
   - {template: "semaphore heartbeat", cron: "30 4 * * *"}
 compositions:
+  # camina is in the zfs group, so victoriametrics scrapes zfs-api-{host}.
+  - zfs-api
   - 1password-connect
   - semaphore
   - composition: reverseproxy

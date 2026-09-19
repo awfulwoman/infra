@@ -67,9 +67,9 @@ system_zfs_policy_mqtt_enabled: true
 # randolph has no other consumer of Traefik besides 1password-connect, so
 # it's the lowest-stakes host to prove the mechanism on.
 #
-# 1password-connect has since moved to camina, so this Traefik now has no
-# consumer at all and the pilot has nothing left to prove here. Kept running
-# for now; decide whether #270 has served its purpose before removing it.
+# 1password-connect has since moved to camina. Traefik stays because
+# zfs-api needs it: victoriametrics scrapes zfs-api-{host} over HTTPS for
+# every host in the zfs group, and randolph is one.
 # -------------------------------------------------------------------
 reverseproxy_use_letsencrypt: false
 reverseproxy_wildcard_cert: true
@@ -82,6 +82,9 @@ traefik_providers:
 # filter (roles/infra-named) instead of a hand-maintained cnames: list.
 # -------------------------------------------------------------------
 compositions:
+  # Was running here undeclared, so no zfs-api-{host} name was derived and
+  # victoriametrics could not scrape it.
+  - zfs-api
   - composition: reverseproxy
     labels:
       - "traefik-{host}"
