@@ -16,6 +16,21 @@ composition_semaphore_admin_login: admin
 composition_semaphore_admin_name: Admin
 composition_semaphore_admin_email: "admin@{{ domainname_infra }}"
 composition_semaphore_admin_password: "{{ vault_composition_semaphore_admin_password }}"
+# Where failure alerts go. Semaphore mails every project user who has the
+# alert flag set, so this is the admin account's address.
+composition_semaphore_admin_alert_email: "charlie@{{ domainname_personal }}"
+
+# Failure alerts by email. Semaphore only mails on a failed task
+# (services/tasks/TaskRunner_logging.go: sendMailAlert is called for
+# TaskFailStatus alone), so successful nightly runs stay quiet. Port 587
+# with STARTTLS: nullmailer's 465 is implicit TLS, which email_secure does
+# not mean here.
+composition_semaphore_email_alert: true
+composition_semaphore_email_host: "smtp.{{ vault_mailprovider_domain }}"
+composition_semaphore_email_port: "587"
+composition_semaphore_email_username: "{{ vault_mailprovider_user }}"
+composition_semaphore_email_password: "{{ vault_mailprovider_password }}"
+composition_semaphore_email_sender: "{{ vault_mailprovider_user }}"
 
 # Encrypts the access keys (SSH keys, vault passwords) Semaphore stores in
 # its database. Changing it makes every stored key unreadable.

@@ -8,6 +8,10 @@
 # stays false, so anything added by hand in the UI survives.
 # ----------------------------
 
+- name: "Set the Semaphore URL"
+  ansible.builtin.set_fact:
+    _semaphore_url: "https://{{ composition_dns_subdomains[0] }}.{{ domainname_infra }}"
+
 - name: "Read the fleet SSH key"
   ansible.builtin.slurp:
     src: "{{ composition_semaphore_fleet_key_path }}"
@@ -74,11 +78,82 @@
     loop_var: schedule
     label: "{{ schedule.cron }} {{ schedule.template }}"
 
+# Semaphore mails project users whose alert flag is set
+# (services/tasks/alert.go), so the admin account needs a real address.
+# SEMAPHORE_ADMIN_EMAIL only applies when the account is first created.
+- name: "Log in to Semaphore"
+  ebdruplab.semaphoreui.login:
+    host: "{{ _semaphore_url }}"
+    port: 443
+    username: "{{ composition_semaphore_admin_login }}"
+    password: "{{ composition_semaphore_admin_password }}"
+  register: _semaphore_login
+  no_log: true
+
+- name: "List Semaphore users"
+  ebdruplab.semaphoreui.user_list:
+    host: "{{ _semaphore_url }}"
+    port: 443
+    session_cookie: "{{ _semaphore_login.session_cookie }}"
+  register: _semaphore_users
+  no_log: true
+
+- name: "List Semaphore projects"
+  ebdruplab.semaphoreui.project_list:
+    host: "{{ _semaphore_url }}"
+    port: 443
+    session_cookie: "{{ _semaphore_login.session_cookie }}"
+  register: _semaphore_projects
+
+- name: "Ensure the admin user has a real address and receives alerts"
+  ebdruplab.semaphoreui.user_update:
+    host: "{{ _semaphore_url }}"
+    port: 443
+    session_cookie: "{{ _semaphore_login.session_cookie }}"
+    user_id: "{{ _semaphore_admin.id }}"
+    name: "{{ _semaphore_admin.name }}"
+    username: "{{ _semaphore_admin.username }}"
+    email: "{{ composition_semaphore_admin_alert_email }}"
+    alert: true
+    admin: true
+  vars:
+    _semaphore_admin: >-
+      {{ _semaphore_users.users
+         | selectattr('username', 'equalto', composition_semaphore_admin_login)
+         | first }}
+
+# project_deploy applies project settings only when it creates the project
+# (roles/project_deploy/tasks/project.yml): on an existing project, alert
+# and max_parallel_tasks are never updated. Set them here.
+- name: "Ensure the project settings"
+  ebdruplab.semaphoreui.project_update:
+    host: "{{ _semaphore_url }}"
+    port: 443
+    session_cookie: "{{ _semaphore_login.session_cookie }}"
+    project_id: "{{ _semaphore_project.id }}"
+    project:
+      name: "{{ composition_semaphore_project_name }}"
+      alert: true
+      max_parallel_tasks: "{{ composition_semaphore_max_parallel_tasks }}"
+  vars:
+    _semaphore_project: >-
+      {{ _semaphore_projects.projects
+         | selectattr('name', 'equalto', composition_semaphore_project_name)
+         | first }}
+  when: _semaphore_projects.projects | selectattr('name', 'equalto', composition_semaphore_project_name) | list | length > 0
+
+- name: "Log out of Semaphore"
+  ebdruplab.semaphoreui.logout:
+    host: "{{ _semaphore_url }}"
+    port: 443
+    session_cookie: "{{ _semaphore_login.session_cookie }}"
+  no_log: true
+
 - name: "Configure the Semaphore project"
   ansible.builtin.include_role:
     name: ebdruplab.semaphoreui.project_deploy
   vars:
-    project_deploy_semaphore_host: "https://{{ composition_dns_subdomains[0] }}.{{ domainname_infra }}"
+    project_deploy_semaphore_host: "{{ _semaphore_url }}"
     project_deploy_semaphore_port: 443
     project_deploy_semaphore_username: "{{ composition_semaphore_admin_login }}"
     project_deploy_semaphore_password: "{{ composition_semaphore_admin_password }}"
@@ -87,7 +162,8 @@
     project_deploy_config:
       project:
         name: "{{ composition_semaphore_project_name }}"
-        alert: false
+        # Master switch: with it off, no channel sends anything.
+        alert: true
         max_parallel_tasks: "{{ composition_semaphore_max_parallel_tasks }}"
       keys:
         fleet:

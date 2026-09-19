@@ -111,6 +111,32 @@ the run fetch from GitHub and use that inventory. The next deploy of this
 role resets both, which is the intent — the switch is deliberately
 temporary.
 
+### Failure alerts
+
+Semaphore emails on a failed task, via the mail provider `nullmailer` uses
+(`vault_mailprovider_*`), on port 587 with STARTTLS. Only failures are sent:
+`sendMailAlert` is called for `TaskFailStatus` alone, so the nightly runs
+stay quiet when they pass.
+
+Three things must line up, and the role sets all three:
+
+1. **Server**: `SEMAPHORE_EMAIL_*` in `.environment_vars`. Note the
+   container writes `config.json` only when it is missing, so these settings
+   live as environment variables, which override the file.
+2. **Project**: the `alert` master switch.
+3. **User**: Semaphore mails every project user whose `alert` flag is set,
+   so `tasks/project.yaml` gives the admin account
+   `composition_semaphore_admin_alert_email` and sets that flag.
+   `SEMAPHORE_ADMIN_EMAIL` applies only when the account is first created.
+
+`project_deploy` applies project settings **only when it creates the
+project**, so `alert` and `max_parallel_tasks` are set separately with
+`project_update` — otherwise they would silently drift on an existing
+project.
+
+Semaphore cannot report a run that never starts; that is what the heartbeat
+below is for.
+
 ### Nightly schedules
 
 Galaxy refresh first, so the core runs use current collections; the
