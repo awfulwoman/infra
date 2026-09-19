@@ -9,6 +9,9 @@ services:
     volumes:
       - "{{ composition_config }}/config:/etc/semaphore"
       - "{{ composition_config }}/data:/var/lib/semaphore"
+      # The repo's ansible.cfg hardcodes these paths.
+      - "{{ ansible_path }}/galaxy:{{ ansible_path }}/galaxy:ro"
+      - "{{ composition_config }}/vaultpassword:{{ ansible_vault_password_file }}:ro"
       - /etc/localtime:/etc/localtime:ro
     labels:
       - "traefik.enable=true"

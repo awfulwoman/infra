@@ -38,6 +38,19 @@
     - config
     - data
 
+# ansible.cfg hardcodes vault_password_file, so the container needs one at
+# that path. The host's copy is 0600 to ansible_user, which the container
+# user cannot read.
+- name: "Copy the vault password for the container user"
+  become: true
+  ansible.builtin.copy:
+    src: "{{ ansible_vault_password_file }}"
+    dest: "{{ composition_config }}/vaultpassword"
+    remote_src: true
+    owner: "{{ composition_semaphore_uid }}"
+    group: "0"
+    mode: "0400"
+
 # ----------------------------
 # Start composition
 # ----------------------------

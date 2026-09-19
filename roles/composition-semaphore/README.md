@@ -47,13 +47,30 @@ The admin account is created on first start only.
 
 ## Running this repo's playbooks
 
-Semaphore configuration (projects, keys, templates) is done in the UI and is
-not managed by this role. For this repo, a project needs:
+The repo's `ansible.cfg` hardcodes two controller paths, so the role
+provides both inside the container:
 
-- **Repository**: `git@github.com:awfulwoman/infra.git`, with an SSH key that
-  can read it.
-- **SSH key** for the fleet, stored as an access key.
-- **Vault password** for the `beanpod` identity, stored as an access key.
-- **Galaxy dependencies**: Semaphore only installs `roles/requirements.yml`
-  and `collections/requirements.yml`. This repo keeps them in
-  `meta/requirements.yaml`, so they need installing some other way.
+- **Galaxy content**: the host's `{{ ansible_path }}/galaxy` is mounted
+  read-only at the same path. `ansible-core` and the nightly
+  `automation-infra` run keep it current. Semaphore's own Galaxy install only
+  reads `roles/requirements.yml` and `collections/requirements.yml`, which
+  this repo does not have.
+- **Vault password**: the host's `ansible_vault_password_file` is copied to
+  `{{ composition_config }}/vaultpassword` (0400, container UID) and mounted
+  at the same path. The role therefore assumes the host is a controller with
+  that file.
+
+Projects, keys and templates live in Semaphore's database, not in this
+role. The `infra` project has:
+
+| Item | Value |
+|------|-------|
+| Repository | `https://github.com/awfulwoman/infra.git`, `main`, no key (public) |
+| Inventory | File `inventory/hosts.yaml` from the repository |
+| Access key | `fleet-ssh (camina)`: camina's `~/.ssh/id_ed25519`, authorized fleet-wide via the GitHub key updater |
+| Templates | `<host>: core` for each `playbooks/hosts/*/core.yaml`. Arguments can be overridden per run, e.g. `["--tags", "composition", "-e", "target_composition=reverseproxy"]` |
+
+`--check` is not reliable: many read-only `command` tasks are skipped in
+check mode, and the facts parsed from them are then missing.
+
+Not available in the image: Terraform (`infra-*` roles).
