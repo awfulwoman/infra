@@ -1,9 +1,6 @@
 - name: UK Server
   hosts: raspberry-pi4-4gb-albion
   roles:
-  - role: monitoring-healthchecksio
-    monitoring_healthchecksio_ping_type: start
-    tags: [monitoring, monitoring-healthchecksio]
   - role: hardware-raspberry-pi
     tags: [hardware, hardware-raspberry-pi]
   - role: bootstrap-ubuntu-server
@@ -31,9 +28,6 @@
   - role: system-promtail
     tags: [system, promtail, system-promtail]
     vars: {state: absent}
-  - role: monitoring-healthchecksio
-    monitoring_healthchecksio_ping_type: success
-    tags: [monitoring, monitoring-healthchecksio]
 
   handlers:
   - name: Reboot host

@@ -1,9 +1,6 @@
 - name: Bertha, lovely Bertha. Sometimes I think you're a dream!
   hosts: router-4gb-bertha
   roles:
-    - role: monitoring-healthchecksio
-      monitoring_healthchecksio_ping_type: start
-      tags: [monitoring, monitoring-healthchecksio]
     - role: bootstrap-ubuntu-server
       tags: [bootstrap, bootstrap-ubuntu-server]
     - role: network-netplan
@@ -23,9 +20,6 @@
       tags: [infra, infra-named]
     - role: infra-certbot
       tags: [infra, infra-certbot]
-    - role: monitoring-healthchecksio
-      monitoring_healthchecksio_ping_type: success
-      tags: [monitoring, monitoring-healthchecksio]
 
   handlers:
     - name: Reboot host

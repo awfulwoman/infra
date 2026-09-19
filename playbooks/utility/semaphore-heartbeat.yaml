@@ -1,0 +1,10 @@
+# Run by Semaphore as the last scheduled job each night. healthchecks.io
+# alerts when this ping stops, which catches a scheduler that is down or
+# disabled: Semaphore can alert on a run that fails, not on one that never
+# starts.
+- name: Semaphore scheduler heartbeat
+  hosts: minipc-8gb-camina
+  gather_facts: false
+  roles:
+    - role: monitoring-healthchecksio
+      monitoring_healthchecksio_name: "Semaphore scheduled runs (camina)"

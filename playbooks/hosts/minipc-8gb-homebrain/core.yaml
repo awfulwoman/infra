@@ -1,9 +1,6 @@
 - name: Home Automation - making lights go on and off in an overly-complicated way
   hosts: minipc-8gb-homebrain
   roles:
-  - role: monitoring-healthchecksio
-    monitoring_healthchecksio_ping_type: start
-    tags: [monitoring, monitoring-healthchecksio]
   - role: bootstrap-ubuntu-server
     tags: [bootstrap, bootstrap-ubuntu-server]
   - role: network-netplan
@@ -39,9 +36,6 @@
     vars: {state: absent}
   - role: system-logtide-syslog
     tags: [system, system-logtide-syslog]
-  - role: monitoring-healthchecksio
-    monitoring_healthchecksio_ping_type: success
-    tags: [monitoring, monitoring-healthchecksio]
 
   handlers:
   - name: Reboot host

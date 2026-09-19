@@ -1,9 +1,6 @@
 - name: Testbed for dual-NIC Linux router setup
   hosts: minipc-8gb-test-router
   roles:
-  - role: monitoring-healthchecksio
-    monitoring_healthchecksio_ping_type: start
-    tags: [monitoring, monitoring-healthchecksio]
   - role: bootstrap-ubuntu-server
     tags: [bootstrap, bootstrap-ubuntu-server]
   - role: network-netplan
@@ -18,9 +15,6 @@
     # - role: infra-certbot
     # - role: compositions
     # - role: backups-zfs-client
-  - role: monitoring-healthchecksio
-    monitoring_healthchecksio_ping_type: success
-    tags: [monitoring, monitoring-healthchecksio]
 
   handlers:
   - name: Reboot host

@@ -1,9 +1,6 @@
 - name: RANDOLPH!
   hosts: raspberry-pi4-4gb-randolph
   roles:
-  - role: monitoring-healthchecksio
-    monitoring_healthchecksio_ping_type: start
-    tags: [monitoring, monitoring-healthchecksio]
   - role: hardware-raspberry-pi
     tags: [hardware, hardware-raspberry-pi]
   - role: bootstrap-ubuntu-server
