@@ -66,9 +66,9 @@
     # installer) and must be refreshed before any package lookup is valid.
     cache_valid_time: "{{ 0 if (ubuntu_repo.changed or ubuntu_security_repo.changed) else 3600 }}"
 
-# - name: Automation key updater (GitHub SSH keys)
-#   ansible.builtin.include_role:
-#     name: automation-key-updater
+- name: Automation key updater (GitHub SSH keys)
+  ansible.builtin.include_role:
+    name: automation-key-updater
 
 - name: Ensure user has bash as default shell
   become: true
