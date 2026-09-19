@@ -1,0 +1,54 @@
+# code: language=ansible
+
+# ----------------------------
+# Core tasks
+# ----------------------------
+
+- name: "Create compose file"
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ composition_root }}/docker-compose.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0644"
+
+- name: "Create .env file"
+  ansible.builtin.template:
+    src: environment_vars.j2
+    dest: "{{ composition_root }}/.environment_vars"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0600"
+
+# ----------------------------
+# Specific tasks
+# ----------------------------
+
+- name: "Create data directories"
+  become: true
+  ansible.builtin.file:
+    path: "{{ composition_config }}/{{ dir_item }}"
+    state: directory
+    owner: "{{ composition_semaphore_uid }}"
+    group: "0"
+    mode: "0700"
+  loop_control:
+    loop_var: dir_item
+  loop:
+    - config
+    - data
+
+# ----------------------------
+# Start composition
+# ----------------------------
+
+- name: Start Docker Compose project
+  community.docker.docker_compose_v2:
+    project_src: "{{ composition_root }}"
+    state: present
+    build: never
+    pull: missing
+    remove_orphans: true
+    wait: true
+    wait_timeout: 180
+  notify: Restart Traefik

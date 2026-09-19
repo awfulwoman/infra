@@ -72,9 +72,8 @@ zfs:
 # ACME: camina is not reachable from the internet, so an HTTP-01 challenge
 # here cannot complete. Same arrangement as randolph (#270).
 #
-# Nothing behind it routes yet — it was added for a composition since removed,
-# and kept for whatever lands here next. Only `traefik-{host}` is registered.
-# Camina publishes no other host ports, so 80 and 443 are free.
+# Routes Connect and Semaphore. Camina publishes no other host ports, so 80
+# and 443 are free.
 # -------------------------------------------------------------------
 reverseproxy_use_letsencrypt: false
 reverseproxy_wildcard_cert: true
@@ -109,6 +108,7 @@ traefik_providers:
 onepassword_connect_data_bind_mount: true
 compositions:
   - 1password-connect
+  - semaphore
   - composition: reverseproxy
     labels:
       - "traefik-{host}"

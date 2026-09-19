@@ -1,0 +1,33 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  semaphore:
+    container_name: semaphore
+    image: "semaphoreui/semaphore:{{ composition_semaphore_image_tag }}"
+    restart: unless-stopped
+    env_file: .environment_vars
+    volumes:
+      - "{{ composition_config }}/config:/etc/semaphore"
+      - "{{ composition_config }}/data:/var/lib/semaphore"
+      - /etc/localtime:/etc/localtime:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.semaphore.rule=Host(`{{ composition_dns_subdomains[0] }}.{{ domainname_infra }}`)"
+      - "traefik.http.routers.semaphore.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
+      - "traefik.http.routers.semaphore.tls.certresolver=letsencrypt"
+{% endif %}
+      - "traefik.http.services.semaphore.loadbalancer.server.port=3000"
+    networks:
+      - "{{ default_docker_network }}"
+    healthcheck:
+      # Alpine image: busybox wget, no bash for a /dev/tcp probe.
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://localhost:3000/api/ping || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+networks:
+  "{{ default_docker_network }}":
+    external: true

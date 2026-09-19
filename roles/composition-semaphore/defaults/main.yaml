@@ -1,0 +1,22 @@
+# code: language=ansible
+composition_name: semaphore
+
+composition_dns_subdomains:
+  - semaphore
+
+composition_semaphore_image_tag: v2.19.12
+
+# The image runs as this UID (group 0). Bind-mounted directories must be
+# owned by it, not ansible_user.
+composition_semaphore_uid: "1001"
+
+# Created on first start only; changing these later does not update the
+# existing account.
+composition_semaphore_admin_login: admin
+composition_semaphore_admin_name: Admin
+composition_semaphore_admin_email: "admin@{{ domainname_infra }}"
+composition_semaphore_admin_password: "{{ vault_composition_semaphore_admin_password }}"
+
+# Encrypts the access keys (SSH keys, vault passwords) Semaphore stores in
+# its database. Changing it makes every stored key unreadable.
+composition_semaphore_access_key_encryption: "{{ vault_composition_semaphore_access_key_encryption }}"
