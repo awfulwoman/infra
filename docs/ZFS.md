@@ -13,7 +13,7 @@ zfs:
   fastpool:
     datasets:
       compositions:
-        policy: critical
+        policy: low
   slowpool:
     datasets:
       shared:
@@ -37,13 +37,26 @@ A dataset can have child datasets. Child datasets also use the `datasets` key.
 
 This infrastructure uses policies to drive ZFS snapshots and replication. You define a policy, then apply it to a dataset. The `policy` key assigns a policy to a dataset.
 
+One policy answers three questions: how long the host keeps the snapshots, whether the backup server pulls the dataset, and whether the dataset goes off-site.
+
+| Policy     | Snapshots | Backup server | Off-site |
+| ---------- | --------- | ------------- | -------- |
+| `none`     | No        | No            | No       |
+| `low`      | Yes       | No            | No       |
+| `high`     | Yes       | Yes           | No       |
+| `critical` | Yes       | Yes           | Yes      |
+
+A dataset with `policy: none` has no snapshots. As a result, the backup server cannot replicate it.
+
+Each composition must state its own policy. See [ADR-0001](adr/0001-policy-is-the-single-backup-flag.md).
+
 Relevant roles:
 
 - `system-zfs`: configures ZFS on a host by reading the `zfs` dictionary variable and creating the defined pools and datasets.
 - `system-zfs-policy`: configures a host's ZFS snapshots through the policy system.
 - `backups-zfs-server`: configures a host that replicates snapshots to itself via a pull mechanism. At least one host with this role is critical for backup operations.
 - `backups-zfs-client`: configures a host so that a `backups-zfs-server` host can pull its dataset snapshots.
-- `backups-zfs-offsite`: configures a host so that a `backups-zfs-server` host can push dataset snapshots to it.
+- `backups-zfs-archive-offsite`: configures a host so that a `backups-zfs-server` host can push dataset snapshots to it.
 
 ## Advanced Dataset Policy Management
 
@@ -57,45 +70,45 @@ Policy inheritance is a **configuration-time** feature. A parent dataset can aut
 
 When a dataset has `children_inherit_policy: true`, all its child datasets automatically inherit the parent's policy level **unless** they explicitly define their own policy. This inheritance happens during Ansible's configuration processing, before any scripts run.
 
-#### Use Case: Mixed-Priority Docker Compose Applications
+#### Use Case: Media Libraries
 
-A common case is a parent dataset that contains multiple Docker Compose applications. Most of them use the parent's backup level, but a few need different treatment.
-
-**Example from `dns` host:**
+A parent dataset can hold many children that share one backup level. A media library is the usual example. The parent sets the level once, and each child inherits it.
 
 ```yaml
 zfs:
-  fastpool:
+  slowpool:
     datasets:
-      compositions:
-        policy: critical
+      media:
+        policy: low
         children_inherit_policy: true
         datasets:
-          awfulwoman:
-            policy: none        # Explicitly override to skip backups
-          container-management:
-            policy: none        # Explicitly override to skip backups
-          reverseproxy:
-            policy: none        # Explicitly override to skip backups
-          # Other compositions inherit 'critical' automatically
+          music:
+            policy: critical    # Explicit override
+          shows:                # Inherits 'low'
+          movies:               # Inherits 'low'
 ```
 
-**What Happens:**
+**What happens:**
 
-- `fastpool/compositions` is marked `critical` with `children_inherit_policy: true`
-- `fastpool/compositions/awfulwoman` explicitly sets `policy: none` → gets `none` (override)
-- `fastpool/compositions/container-management` explicitly sets `policy: none` → gets `none` (override)
-- `fastpool/compositions/reverseproxy` explicitly sets `policy: none` → gets `none` (override)
-- Any other composition dataset inherits `critical` from its parent
+- `slowpool/media` is `low`, with `children_inherit_policy: true`.
+- `slowpool/media/music` states `policy: critical`, so it keeps that value.
+- `slowpool/media/shows` and `slowpool/media/movies` inherit `low`.
 
-This pattern is simpler than setting `policy: critical` on every composition dataset.
+#### Do not use `children_inherit_policy` for compositions
+
+Compositions are the exception. Each composition must state its own policy. See [ADR-0001](adr/0001-policy-is-the-single-backup-flag.md). An inherited policy does not satisfy this rule, because inheritance hides the decision.
+
+A pre-commit hook fails the commit when a composition has no stated policy. To run the same test manually, use this command:
+
+```bash
+scripts/validate-composition-policies.sh
+```
 
 #### When to Use `children_inherit_policy`
 
-- **Docker Compose parent datasets** where most containers use the same backup level
-- **Media libraries** with consistent policy (for example, all music folders are critical, all TV shows are low)
-- **Shared datasets** where you want a default policy but occasional overrides
-- **Development environments** with a baseline policy and specific exceptions
+- **Media libraries** with a consistent policy.
+- **Shared datasets** that need a default policy and occasional overrides.
+- **Development environments** with a baseline policy and specific exceptions.
 
 ### Runtime Child Discovery with `snapshots_discover_children`
 
@@ -118,23 +131,29 @@ zfs:
   fastpool:
     datasets:
       compositions:
-        policy: critical
+        policy: low
         snapshots_discover_children: true
+        datasets:
+          immich:
+            policy: critical    # Each composition states its own policy
 ```
 
-**What Happens:**
+**What happens:**
 
-1. Ansible creates `fastpool/compositions` with `policy: critical`
-2. Docker Compose applications run and Docker creates child datasets:
+1. Ansible creates `fastpool/compositions` with `policy: low`.
+2. Docker Compose applications run, and Docker creates child datasets:
    - `fastpool/compositions/jellyfin_config`
    - `fastpool/compositions/immich_pgdata`
    - `fastpool/compositions/gitea_data`
-   - ... (dozens more)
-3. When `zfs-snapshot` runs, it:
-   - Queries ZFS: `zfs list -H -o name -r fastpool/compositions`
-   - Discovers all Docker-created children
-   - Applies `policy: critical` to each discovered child
-   - Creates snapshots for all of them
+   - Dozens more.
+3. When `zfs-snapshot` runs, it does these steps:
+   - It queries ZFS with `zfs list -H -o name -r fastpool/compositions`.
+   - It finds each child that Docker created.
+   - It applies `policy: low` to each child that it found.
+   - It applies `policy: critical` to `immich`, because that child is declared.
+   - It creates the snapshots.
+
+A child that the scripts find gets the parent's `low` policy. As a result, that child is never replicated. This is the safety net for a composition that nobody declared, not a substitute for the declaration.
 
 **Observing Discoveries:**
 
@@ -146,7 +165,7 @@ sudo /opt/zfs-policy/zfs-snapshot --type hourly --dry-run --debug
 
 Example output:
 ```
-[DEBUG] Processing dataset: fastpool/compositions (policy: critical, snapshots_discover_children: true)
+[DEBUG] Processing dataset: fastpool/compositions (policy: low, snapshots_discover_children: true)
 [DEBUG] Discovered children for fastpool/compositions:
 [DEBUG]   - fastpool/compositions/jellyfin_config
 [DEBUG]   - fastpool/compositions/immich_pgdata
@@ -166,36 +185,36 @@ Example output:
 
 ### Combining Both Features
 
-You can use both `children_inherit_policy` and `snapshots_discover_children` together. This is useful when you have:
-- **Declared** children that need different policies (handled by inheritance)
-- **Undeclared** children created at runtime (handled by discovery)
+You can use `children_inherit_policy` and `snapshots_discover_children` together. This combination suits a parent that has both declared children and children that Docker creates at runtime.
+
+Compositions use discovery only, because each composition states its own policy.
 
 **Example:**
 
 ```yaml
 zfs:
-  fastpool:
+  slowpool:
     datasets:
-      compositions:
-        policy: critical
+      media:
+        policy: low
         children_inherit_policy: true
         snapshots_discover_children: true
         datasets:
-          logs:
+          scratch:
             policy: none        # Declared child with override
-          # Docker will create many more children at runtime
+          # Other children can appear at runtime
 ```
 
-**What Happens:**
+**What happens:**
 
-1. **Configuration time** (Ansible processes inventory):
-   - `fastpool/compositions` → `critical`
-   - `fastpool/compositions/logs` → `none` (explicit override)
+1. **Configuration time.** Ansible processes the inventory:
+   - `slowpool/media` becomes `low`.
+   - `slowpool/media/scratch` becomes `none`, because it states that value.
 
-2. **Runtime** (snapshot scripts execute):
-   - Scripts query ZFS and discover: `jellyfin_config`, `immich_pgdata`, `gitea_data`, etc.
-   - Discovered children get `critical` (parent's policy)
-   - Declared `logs` child gets `none` (already configured)
+2. **Runtime.** The snapshot scripts run:
+   - The scripts query ZFS and find the undeclared children.
+   - Each child that the scripts find gets `low`, the parent's policy.
+   - `slowpool/media/scratch` keeps `none`, because it is declared.
 
 ### Feature Comparison
 
@@ -253,7 +272,7 @@ zfs:
   fastpool:
     datasets:
       compositions:
-        policy: critical
+        policy: low
         snapshots_discover_children: true
         datasets:
           temp-data:
