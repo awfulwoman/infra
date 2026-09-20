@@ -459,6 +459,13 @@ def publish_mqtt_discovery(name, mqtt_host, mqtt_topic_prefix):
         "device_class": "safety",
         "unique_id": f"zfs_backups_{safe_id}",
         "json_attributes_topic": state_topic,
+        # The status message is retained, so without this a stale payload keeps
+        # asserting health forever. Belinda published "ok": true on 2026-05-27
+        # and every run after that aborted before reaching the publish, so Home
+        # Assistant showed green for four months while nothing replicated.
+        # Past this many seconds with no fresh message the entity goes
+        # unavailable, which is the truthful state.
+        "expire_after": {{ backups_zfs_server_mqtt_expire_after }},
     })
     cmd = ["mosquitto_pub", "-h", mqtt_host, "-t", discovery_topic, "-m", payload, "-r"]
     try:
@@ -467,6 +474,15 @@ def publish_mqtt_discovery(name, mqtt_host, mqtt_topic_prefix):
             error(f"mosquitto_pub discovery failed: {result.stderr.decode().strip()}")
     except Exception as e:
         error(f"Failed to publish MQTT discovery: {e}")
+
+
+def local_dataset_exists(dataset):
+    """Whether a local dataset exists at all, as opposed to being out of date."""
+    result = subprocess.run(
+        ["zfs", "list", "-H", "-o", "name", dataset],
+        capture_output=True, check=False
+    )
+    return result.returncode == 0
 
 
 def get_local_backup_datasets(name, datasets, destination):
@@ -497,17 +513,26 @@ def get_local_backup_datasets(name, datasets, destination):
     return result_datasets
 
 
-def publish_mqtt_status(name, datasets, destination, mqtt_host, mqtt_topic_prefix, stale_multiplier=2):
+def publish_mqtt_status(name, datasets, destination, mqtt_host, mqtt_topic_prefix, stale_multiplier=2, failure=None):
     """Publish pull status to MQTT after a successful pull."""
     now = datetime.now()
     stale_threshold = timedelta(hours=stale_multiplier * 2)
 
     all_datasets = get_local_backup_datasets(name, datasets, destination)
 
+    missing_datasets = []
     stale_datasets = []
     healthy_datasets = []
     for dataset in all_datasets:
         local_ds = f"{destination}/{name}/{dataset}"
+        # A dataset that has never replicated is not late, it is absent, and
+        # the two need different responses. Reported together they are
+        # indistinguishable: mail-archive-server and charlie/financial sat
+        # among genuinely stale entries for weeks without anyone noticing
+        # they had no copy at all.
+        if not local_dataset_exists(local_ds):
+            missing_datasets.append(dataset)
+            continue
         newest_time = get_newest_autosnap_time(local_ds)
         if newest_time is None or (now - newest_time) > stale_threshold:
             stale_datasets.append(dataset)
@@ -516,9 +541,11 @@ def publish_mqtt_status(name, datasets, destination, mqtt_host, mqtt_topic_prefi
 
     topic = f"{mqtt_topic_prefix}/{name}/backups"
     payload = json.dumps({
-        "ok": len(stale_datasets) == 0,
+        "ok": len(stale_datasets) == 0 and len(missing_datasets) == 0 and failure is None,
         "host": name,
         "pulled_at": now.strftime("%Y-%m-%dT%H:%M:%S"),
+        "failure": failure,
+        "missing_datasets": missing_datasets,
         "stale_datasets": stale_datasets,
         "healthy_datasets": healthy_datasets,
     })
@@ -571,7 +598,19 @@ if __name__ == "__main__":
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGHUP, signal_handler)
 
-    preflight(args.host, name, args.datasets, args.user, args.destination)
+    # Any dataset failing aborts the whole run, and the status publish used to
+    # sit after it, so a failed run left the previous retained message in
+    # place. That message is what Home Assistant reads, so a run that pulled
+    # nothing kept asserting the last healthy result. Publish either way, and
+    # say which failure ended the run.
+    failure = None
+    exit_code = 0
+    try:
+        preflight(args.host, name, args.datasets, args.user, args.destination)
+    except SystemExit as exc:
+        exit_code = exc.code if isinstance(exc.code, int) else 1
+        if exit_code != 0:
+            failure = f"pull aborted with exit {exit_code}"
 
     if args.mqtt_host:
         mqtt_name = args.mqtt_name if args.mqtt_name else name
@@ -583,4 +622,7 @@ if __name__ == "__main__":
             mqtt_host=args.mqtt_host,
             mqtt_topic_prefix=args.mqtt_topic_prefix,
             stale_multiplier={{ backups_zfs_server_stale_threshold_multiplier }},
+            failure=failure,
         )
+
+    sys.exit(exit_code)

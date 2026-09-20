@@ -26,3 +26,4 @@ backups_zfs_server_mqtt_enabled: false
 backups_zfs_server_mqtt_host: "mqtt.{{ domainname_infra }}"
 backups_zfs_server_mqtt_topic_prefix: "homeinfra/monitoring/zfs"
 backups_zfs_server_stale_threshold_multiplier: 2
+backups_zfs_server_mqtt_expire_after: 93600 # 26h, matching the healthchecks grace; longest cron gap is 10h
