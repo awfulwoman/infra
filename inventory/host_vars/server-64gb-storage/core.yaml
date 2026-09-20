@@ -230,8 +230,6 @@ zfs:
             policy: critical
           photos:
             policy: critical
-          email:
-            policy: critical
           financial:
             policy: critical
 
