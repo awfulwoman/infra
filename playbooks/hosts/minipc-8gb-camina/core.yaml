@@ -7,6 +7,8 @@
     tags: [network, network-netplan]
   - role: system-zfs
     tags: [system, zfs, system-zfs]
+  - role: system-zfs-policy
+    tags: [system, zfs, system-zfs-policy]
   - role: infothrill.nullmailer
     become: true
   - role: system-claude
@@ -17,6 +19,8 @@
     tags: [infra, client-cert-distribution]
   - role: system-compositions
     tags: [composition, zfs]
+  - role: backups-zfs-client
+    tags: [backups, zfs, backups-zfs-client]
   - role: system-logtide-syslog
     tags: [system, system-logtide-syslog]
 

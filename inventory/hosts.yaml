@@ -108,6 +108,13 @@ all:
         vps-hetzner-public01:
         raspberry-pi4-2gb-deedee:
         raspberry-pi4-4gb-randolph:
+        # Added 2026-09-20. Both declared critical or high datasets that
+        # nothing replicated, because neither host was a client: camina holds
+        # the 1Password Connect credentials every other recovery depends on.
+        # Agatha stays out of the zfs group on purpose — that group is
+        # victoriametrics' scrape target list, and agatha runs no zfs-api.
+        minipc-8gb-camina:
+        minipc-8gb-agatha:
         # raspberry-pi4-8gb-norman:
 
     # -------------------------------------------------------------------
