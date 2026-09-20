@@ -1,8 +1,13 @@
 # Composition name (used by composition-common dependency)
 composition_name: hermes-jarvis
 
+# Static list: infra-named derives DNS from it without templating it.
+# hermes-jarvis-api is the Traefik-published route to the API server. The
+# record exists even while the API server is off; the compose file only
+# routes it when it is on. The API key gates every request.
 composition_dns_subdomains:
   - hermes-jarvis
+  - hermes-jarvis-api
 
 # Upstream publishes a multi-arch image (amd64/arm64) to Docker Hub. The
 # docker-compose.yml in the repo builds from a source checkout instead;

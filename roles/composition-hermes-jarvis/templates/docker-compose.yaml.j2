@@ -27,10 +27,20 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.{{ composition_name }}.rule=Host(`{{ composition_dns_subdomains[0] }}.{{ domainname_infra }}`)"
       - "traefik.http.routers.{{ composition_name }}.tls=true"
+      - "traefik.http.routers.{{ composition_name }}.service={{ composition_name }}"
 {% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.{{ composition_name }}.tls.certresolver=letsencrypt"
 {% endif %}
       - "traefik.http.services.{{ composition_name }}.loadbalancer.server.port={{ composition_hermes_jarvis_dashboard_port }}"
+{% if composition_hermes_jarvis_api_server %}
+      - "traefik.http.routers.{{ composition_name }}-api.rule=Host(`{{ composition_dns_subdomains[1] }}.{{ domainname_infra }}`)"
+      - "traefik.http.routers.{{ composition_name }}-api.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
+      - "traefik.http.routers.{{ composition_name }}-api.tls.certresolver=letsencrypt"
+{% endif %}
+      - "traefik.http.routers.{{ composition_name }}-api.service={{ composition_name }}-api"
+      - "traefik.http.services.{{ composition_name }}-api.loadbalancer.server.port={{ composition_hermes_jarvis_api_server_port }}"
+{% endif %}
     networks:
       - "{{ default_docker_network }}"
 {% if composition_hermes_jarvis_dashboard %}
