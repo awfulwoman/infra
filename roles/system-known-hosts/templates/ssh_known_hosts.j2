@@ -1,0 +1,6 @@
+# Managed by Ansible (system-known-hosts). Do not edit.
+{% for r in system_known_hosts_scan.results if r.content is defined %}
+{% set h = hostvars[r.item.0] %}
+{% set names = [h.host_name | default(''), h.host_name_medium | default(''), h.host_name_short | default(''), h.host_fqdn | default(''), h.ansible_host | default(''), h.host_ipv4 | default(''), h.host_tailscale_ipv4 | default('')] | select | unique | join(',') %}
+{{ names }} {{ (r.content | b64decode).split()[0:2] | join(' ') }}
+{% endfor %}

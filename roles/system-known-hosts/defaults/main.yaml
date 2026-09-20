@@ -1,0 +1,11 @@
+# code: language=ansible
+
+# Inventory group whose host keys are published.
+system_known_hosts_group: infra
+
+# Host key types to publish. Each needs /etc/ssh/ssh_host_<type>_key.pub on the host.
+system_known_hosts_key_types: [ed25519]
+
+# System-wide file. Read by every ssh client on this host, including containers
+# that bind mount it.
+system_known_hosts_path: /etc/ssh/ssh_known_hosts

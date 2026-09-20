@@ -1,0 +1,29 @@
+# code: language=ansible
+
+- name: Read host public keys from every host in the group
+  ansible.builtin.slurp:
+    src: "/etc/ssh/ssh_host_{{ item.1 }}_key.pub"
+  delegate_to: "{{ item.0 }}"
+  loop: "{{ groups[system_known_hosts_group] | product(system_known_hosts_key_types) | list }}"
+  loop_control:
+    label: "{{ item.0 }} {{ item.1 }}"
+  register: system_known_hosts_scan
+  ignore_unreachable: true
+  failed_when: false
+  changed_when: false
+
+- name: Warn about hosts whose key could not be read
+  ansible.builtin.debug:
+    msg: "No {{ item.item.1 }} key from {{ item.item.0 }}. It is left out of {{ system_known_hosts_path }}."
+  loop: "{{ system_known_hosts_scan.results | rejectattr('content', 'defined') | list }}"
+  loop_control:
+    label: "{{ item.item.0 }} {{ item.item.1 }}"
+
+- name: Write the system-wide known_hosts file
+  become: true
+  ansible.builtin.template:
+    src: ssh_known_hosts.j2
+    dest: "{{ system_known_hosts_path }}"
+    owner: root
+    group: root
+    mode: "0644"

@@ -15,6 +15,8 @@
     tags: [system, system-claude]
   - role: ansible-core
     tags: [ansible, ansible-core]
+  - role: system-known-hosts
+    tags: [system, system-known-hosts]
   - role: client-cert-distribution
     tags: [infra, client-cert-distribution]
   - role: system-compositions
