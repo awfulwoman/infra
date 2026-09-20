@@ -51,9 +51,16 @@ zfs:
         disks: "/dev/disk/by-id/usb-USB_SanDisk_3.2Gen1_04019e9fe6c6a78c38433ef74ac7c349509bbebdf62487b32caa928ab040d565e70500000000000000000000aca7d3dcff9c801891558107a32b60e7-0:0"
     datasets:
       compositions:
-        policy: critical
-        children_inherit_policy: true
+        # Every composition states its own policy; see ADR-0001. The parent
+        # stays low so anything Docker creates and nobody declared is
+        # snapshotted briefly and never replicated.
+        policy: low
         snapshots_discover_children: true
+        datasets:
+          zfs-api:
+            policy: none
+          reverseproxy:
+            policy: low
 
 # -------------------------------------------------------------------
 # ZFS POLICY

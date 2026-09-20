@@ -50,15 +50,114 @@ zfs:
           - /dev/disk/by-id/scsi-SATA_SanDisk_SDSSDH3_22087N455301
     datasets:
       compositions:
-        policy: critical
+        # Every composition states its own policy; see ADR-0001. The parent
+        # stays low so anything Docker creates and nobody declared is
+        # snapshotted briefly and never replicated.
+        policy: low
         snapshots_discover_children: true
         datasets:
+          # Irreplaceable: the originals, the scans, the money and the mail.
+          immich:
+            policy: critical
+          paperless-ngx:
+            policy: critical
+          finances:
+            policy: critical
+          karakeep:
+            policy: critical
+          # Holds mail that has been deleted server-side and exists nowhere
+          # else. See meta#6.
+          mail-archive-server:
+            policy: critical
+
+          # Worth a second copy, but GitHub, the fediverse or a re-sync
+          # already holds a version of it.
+          gitea:
+            policy: high
+          audiobookshelf:
+            policy: high
+          syncthing:
+            policy: high
+          matrix:
+            policy: high
+          freshrss:
+            policy: high
+          gotosocial:
+            policy: high
+          n8n:
+            policy: high
+          memorybank:
+            policy: high
+          gateway:
+            policy: high
+          vikunja:
+            policy: high
+          github2karakeep:
+            policy: high
+
           # A monitoring history database is rewritten constantly, so every
           # snapshot pins a fresh copy of the whole file. Peekaping's 326M
           # of data had accumulated 10.2G across 45 critical-policy
           # snapshots. The history is not worth that, so: fewer copies.
           gatus:
             policy: low
+          # Same shape as gatus: small live data, constant rewrites.
+          logtide:
+            policy: low
+          loki:
+            policy: low
+          victoriametrics:
+            policy: low
+          scrutiny:
+            policy: low
+          # Rebuildable from OSM extracts, and the largest thing on the pool.
+          nominatim:
+            policy: low
+          # Metadata and cache. A rebuild re-scans the library.
+          jellyfin:
+            policy: low
+          downloads:
+            policy: low
+          tubesync:
+            policy: low
+          podderton:
+            policy: low
+          jarvis:
+            policy: low
+          nabu:
+            policy: low
+          reverseproxy:
+            policy: low
+
+          # Rebuilt by Ansible, or re-downloaded. Nothing here is state.
+          zfs-api:
+            policy: none
+          logtide-agent:
+            policy: none
+          container-management:
+            policy: none
+          gitea-runners:
+            policy: none
+          llm-inference-calculator:
+            policy: none
+          homepage:
+            policy: none
+          piper:
+            policy: none
+          libretranslate:
+            policy: none
+          kiwix:
+            policy: none
+          searxng:
+            policy: none
+          mcp-kagisearch:
+            policy: none
+          mcp-openzim:
+            policy: none
+          mcp-searxng:
+            policy: none
+          mcp-weather:
+            policy: none
       shared:
         datasets:
           nominatim:

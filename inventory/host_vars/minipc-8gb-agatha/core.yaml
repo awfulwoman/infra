@@ -71,9 +71,23 @@ zfs:
         disks: /dev/disk/by-id/usb-USB_SanDisk_3.2Gen1_0501a15490cd8570a3ee0b097c73ec5d86b16253330bc66bea1cd0f129af314bb88b000000000000000000004ef5ad6800090c10915581071f2f575d-0:0
     datasets:
       compositions:
-        policy: critical
-        children_inherit_policy: true
+        # Every composition states its own policy; see ADR-0001. The parent
+        # stays low so anything Docker creates and nobody declared is
+        # snapshotted briefly and never replicated.
+        policy: low
         snapshots_discover_children: true
+        datasets:
+          hermes-nabu:
+            policy: low
+          hermes-jarvis:
+            policy: low
+          # Chat history is worth a second copy, but it is not irreplaceable.
+          open-webui:
+            policy: high
+          # Serves the wildcard cert rather than running ACME, so a local
+          # snapshot is enough to recover from a bad deploy.
+          reverseproxy:
+            policy: low
 
 
 # -------------------------------------------------------------------

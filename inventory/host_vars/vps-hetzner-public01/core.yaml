@@ -62,8 +62,26 @@ zfs:
           - /dev/disk/by-id/scsi-0HC_Volume_104390137
     datasets:
       compositions:
-        policy: critical
+        # Every composition states its own policy; see ADR-0001. The parent
+        # stays low so anything Docker creates and nobody declared is
+        # snapshotted briefly and never replicated.
+        policy: low
         snapshots_discover_children: true
+        datasets:
+          # Unlike the internal hosts, this one runs real ACME. A local
+          # snapshot covers a bad deploy; host loss means re-issuing.
+          reverseproxy:
+            policy: low
+          # Serves fastpool/sites/awfulwoman, which is critical in its own
+          # right below. This dataset is just the container's config.
+          awfulwoman:
+            policy: low
+          container-management:
+            policy: none
+          zfs-api:
+            policy: none
+          logtide-agent:
+            policy: none
       sites:
         datasets:
           awfulwoman:

@@ -53,9 +53,22 @@ zfs:
         disks: /dev/disk/by-id/scsi-SATA_Intenso_SSD_Sata_AA000000000000005228-part3
     datasets:
       compositions:
-        policy: critical
-        children_inherit_policy: true
+        # Every composition states its own policy; see ADR-0001. The parent
+        # stays low so anything Docker creates and nobody declared is
+        # snapshotted briefly and never replicated.
+        policy: low
         snapshots_discover_children: true
+        datasets:
+          zfs-api:
+            policy: none
+          # Losing the Connect credentials file locks us out of the vault
+          # that every other recovery depends on.
+          1password-connect:
+            policy: critical
+          semaphore:
+            policy: high
+          reverseproxy:
+            policy: low
       # Working checkouts on the control node, including the one Semaphore
       # mounts as its "infra (local)" repository.
       repos:

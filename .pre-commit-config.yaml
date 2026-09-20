@@ -17,6 +17,12 @@ repos:
         language: system
         pass_filenames: false
         files: ^(inventory/|plugins/filters/dns_records\.py)
+      - id: validate-composition-policies
+        name: Validate every composition states a ZFS policy
+        entry: scripts/validate-composition-policies.sh
+        language: system
+        pass_filenames: false
+        files: ^(inventory/|plugins/filters/zfs_datasets\.py)
 #     - repo: https://github.com/jackdewinter/pymarkdown
 #       rev: v0.9.34
 #       hooks:

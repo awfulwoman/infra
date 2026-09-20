@@ -66,6 +66,18 @@ zfs:
           - /dev/disk/by-id/scsi-SATA_WDC_WD20SPZX-22U_WD-WX82E2125JHD
     datasets:
       compositions:
+        # Every composition states its own policy; see ADR-0001. The parent
+        # stays low so anything Docker creates and nobody declared is
+        # snapshotted briefly and never replicated.
+        policy: low
+        snapshots_discover_children: true
+        datasets:
+          reverseproxy:
+            policy: low
+          container-management:
+            policy: none
+          zfs-api:
+            policy: none
       backups:
         datasets:
           raw:

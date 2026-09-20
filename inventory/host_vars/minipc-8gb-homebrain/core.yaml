@@ -50,8 +50,43 @@ zfs:
             policy: critical
       compositions:
         state: present
-        policy: critical
+        # Every composition states its own policy; see ADR-0001. The parent
+        # stays low so anything Docker creates and nobody declared is
+        # snapshotted briefly and never replicated.
+        policy: low
         snapshots_discover_children: true
+        datasets:
+          # Retained topics and broker state: cheap to keep, tedious to lose.
+          mqtt:
+            policy: high
+          reverseproxy:
+            policy: low
+          container-management:
+            policy: none
+          # The house itself. Most of the size is recorder churn rather than
+          # configuration, which is why it is not split out yet.
+          homeassistant:
+            policy: critical
+          homeassistant-personal:
+            policy: critical
+          esphome:
+            policy: high
+          # Matter fabric credentials: losing these means re-commissioning
+          # every device by hand.
+          matter:
+            policy: critical
+          owntracks:
+            policy: critical
+          # Zigbee network key and device pairings. Tiny, and painful to
+          # rebuild one device at a time.
+          zigbee2mqtt:
+            policy: critical
+          watchyourlan:
+            policy: low
+          zfs-api:
+            policy: none
+          logtide-agent:
+            policy: none
 
 # -------------------------------------------------------------------
 # MISC
