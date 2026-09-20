@@ -23,7 +23,7 @@
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0644"
-  notify: Restart Chives
+  notify: Restart Nabu
 
 - name: "Create state directory"
   ansible.builtin.file:
