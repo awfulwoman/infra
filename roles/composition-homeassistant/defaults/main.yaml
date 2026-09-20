@@ -3,4 +3,3 @@ composition_name: homeassistant
 
 composition_dns_subdomains:
   - homeassistant
-  - ha

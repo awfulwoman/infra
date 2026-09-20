@@ -3,4 +3,3 @@ composition_name: jellyfin
 
 composition_dns_subdomains:
   - jellyfin
-  - jellyfin-vue

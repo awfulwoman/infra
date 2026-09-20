@@ -249,7 +249,6 @@ zfs_nfs_exports:
 # -------------------------------------------------------------------
 cnames_additional:
   - musicassistant.{{ domainname_infra }}
-  - wallabag.{{ domainname_infra }}
 
 # -------------------------------------------------------------------
 # COMPOSITIONS
@@ -260,7 +259,6 @@ cnames_additional:
 #     (Originally traefik.<pfqdn>, an older multi-label format - updated to
 #     the single-label traefik-{host} default in #271, since a *.ewwww.eu
 #     wildcard cert can't cover a multi-level name.)
-#   - syncthing: the live cname predates the {host}-suffixed default.
 #   - mcp-openzim: its declared default was never registered here.
 #   - nabu, jarvis: composition_dns_subdomains: [] on their own roles -
 #     neither name resolves via any mechanism today despite both having
@@ -293,8 +291,7 @@ compositions:
   - llm-inference-calculator
   - audiobookshelf
   - downloads
-  - composition: syncthing
-    labels: [syncthing]
+  - syncthing
   - karakeep
   - matrix
   - freshrss
