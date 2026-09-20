@@ -13,6 +13,7 @@ DEFAULT_destination = "{{ backups_zfs_server_local_dataset }}"
 DEFAULT_user="{{ vault_zfsbackups_user }}"
 DEFAULT_debug = False
 DEFAULT_quiet = False
+STALE_LOCK_HOURS = {{ backups_zfs_server_stale_lock_hours }}
 
 # Lockfile to prevent concurrent executions (set dynamically per host)
 _lockfile = None
@@ -87,6 +88,15 @@ def acquire_lock():
     except IOError as e:
         error(f"Failed to create lockfile: {e}")
         return False
+
+
+def lockfile_age_hours():
+    """How long the current lockfile has been held, or None if it is gone."""
+    try:
+        held_since = datetime.fromtimestamp(os.path.getmtime(_lockfile))
+    except OSError:
+        return None
+    return (datetime.now() - held_since).total_seconds() / 3600
 
 
 def release_lock():
@@ -587,9 +597,34 @@ if __name__ == "__main__":
     # Set host-specific lockfile to allow parallel pulls from different hosts
     _lockfile = get_lockfile_path(name)
 
-    # Acquire lockfile to prevent concurrent executions from this host
+    # Acquire lockfile to prevent concurrent executions from this host.
+    #
+    # A blocked run used to exit 0 unconditionally, and the wrapper pings the
+    # healthcheck on a zero exit, so a wedged lock reported success on every
+    # cron tick and nothing ever went red. A brief overlap is normal and still
+    # exits quietly — an initial send of a large dataset legitimately outlasts
+    # the next tick. A lock held past the threshold is not an overlap, it is a
+    # stuck run, and that has to be loud.
     if not acquire_lock():
-        # Exit with 0 (success) to prevent cron email alerts when another instance is running
+        held_for = lockfile_age_hours()
+        if held_for is not None and held_for >= STALE_LOCK_HOURS:
+            stuck = (f"lockfile held for {held_for:.1f}h, over the {STALE_LOCK_HOURS}h "
+                     f"threshold: the previous run is wedged and nothing is replicating")
+            error(stuck)
+            if args.mqtt_host:
+                mqtt_name = args.mqtt_name if args.mqtt_name else name
+                publish_mqtt_discovery(mqtt_name, args.mqtt_host, args.mqtt_topic_prefix)
+                publish_mqtt_status(
+                    name=mqtt_name,
+                    datasets=args.datasets,
+                    destination=args.destination,
+                    mqtt_host=args.mqtt_host,
+                    mqtt_topic_prefix=args.mqtt_topic_prefix,
+                    stale_multiplier={{ backups_zfs_server_stale_threshold_multiplier }},
+                    failure=stuck,
+                )
+            sys.exit(1)
+        info("Another instance is still running; leaving it to finish.")
         sys.exit(0)
 
     # Register cleanup handlers
