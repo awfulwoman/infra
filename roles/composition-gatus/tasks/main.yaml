@@ -1,0 +1,96 @@
+# code: language=ansible
+
+# ----------------------------
+# Build the endpoint list from inventory
+#
+# Same source data as DNS: the compositions: list on each host, through the
+# dns_records filter, plus each host's cnames_additional. A service that
+# gains a name gains a monitor on the next deploy.
+# ----------------------------
+
+- name: "Build dns_records filter input from hosts using data-driven compositions"
+  ansible.builtin.set_fact:
+    composition_gatus_dns_records_hosts: >-
+      {{
+        (composition_gatus_dns_records_hosts | default({})) | combine({
+          dns_host: {
+            'fqdn': hostvars[dns_host].host_pfqdn,
+            'tailscale_ipv4': hostvars[dns_host].host_tailscale_ipv4,
+            'compositions': hostvars[dns_host].compositions,
+          }
+        })
+      }}
+  loop: "{{ groups['infra'] }}"
+  loop_control:
+    loop_var: dns_host
+  when: hostvars[dns_host].compositions is defined
+
+- name: "Derive the service names"
+  ansible.builtin.set_fact:
+    composition_gatus_service_names: >-
+      {{
+        (
+          ((composition_gatus_dns_records_hosts | default({}))
+            | dns_records(lookup('composition_dns_subdomains'))
+          ).cnames.keys() | list
+          + (groups['infra']
+             | map('extract', hostvars)
+             | selectattr('cnames_additional', 'defined')
+             | map(attribute='cnames_additional')
+             | flatten
+             | map('regex_replace', '\.' ~ domainname_infra ~ '$', '')
+             | list)
+        ) | unique | sort
+      }}
+
+# ----------------------------
+# Core tasks
+# ----------------------------
+
+- name: "Create compose file"
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ composition_root }}/docker-compose.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0644"
+
+- name: "Create data directory"
+  ansible.builtin.file:
+    path: "{{ composition_config }}/data"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0755"
+
+- name: "Create config"
+  ansible.builtin.template:
+    src: config.yaml.j2
+    dest: "{{ composition_config }}/config.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    # Holds the SMTP password.
+    mode: "0600"
+  notify: Restart Gatus
+
+# ----------------------------
+# Start composition
+# ----------------------------
+
+- name: Start Docker Compose project
+  community.docker.docker_compose_v2:
+    project_src: "{{ composition_root }}"
+    state: present
+    build: never
+    pull: missing
+    remove_orphans: true
+    wait: true
+    wait_timeout: 120
+  notify: Restart Traefik
+
+- name: "Show the endpoint counts"
+  ansible.builtin.debug:
+    msg: >-
+      Gatus — hosts: {{ groups['infra'] | length }},
+      services: {{ composition_gatus_service_names | length }},
+      dns: {{ composition_gatus_dns_checks | length }}

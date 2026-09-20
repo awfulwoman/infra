@@ -1,0 +1,4 @@
+- name: Restart Gatus
+  community.docker.docker_compose_v2:
+    project_src: "{{ composition_root }}"
+    state: restarted

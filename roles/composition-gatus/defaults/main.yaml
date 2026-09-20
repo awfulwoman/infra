@@ -1,0 +1,60 @@
+# code: language=ansible
+composition_name: gatus
+
+composition_dns_subdomains:
+  - gatus
+
+composition_gatus_image: ghcr.io/twin/gatus:v5.36.0
+
+# Host liveness is an SSH connect, not ICMP: it proves the host is
+# reachable for Ansible, and avoids trusting an ICMP implementation
+# (see composition-peekaping/README.md).
+composition_gatus_ssh_port: 22
+
+composition_gatus_interval: 60s
+composition_gatus_service_interval: 120s
+
+# Most services answer something on /; plenty answer 401, 403 or 404 there
+# quite legitimately (APIs, MCP servers, apps that only serve a sub-path).
+# A 5xx or no connection at all is the real failure, so that is the default
+# condition. Services with a genuine health endpoint are listed in
+# composition_gatus_service_overrides and checked properly.
+composition_gatus_service_conditions:
+  - "[CONNECTED] == true"
+  - "[STATUS] < 500"
+
+# name (without the domain) -> {path, conditions}
+composition_gatus_service_overrides:
+  connect:
+    path: /health
+    conditions: ["[STATUS] == 200"]
+  semaphore:
+    path: /api/ping
+    conditions: ["[STATUS] == 200", "[BODY] == pong"]
+  gluetun:
+    path: /v1/publicip/ip
+    conditions: ["[STATUS] == 200"]
+  grafana:
+    path: /api/health
+    conditions: ["[STATUS] == 200"]
+
+# zfs-api-<host> serves Prometheus metrics; check that, not /.
+composition_gatus_zfs_api_path: /metrics
+
+# Resolvers to query, so a broken bind is caught by resolution failing
+# rather than by port 53 merely being open.
+composition_gatus_dns_checks:
+  - name: bertha resolver
+    resolver: "{{ hostvars['router-4gb-bertha'].host_ipv4 }}"
+    query: "{{ hostvars['server-64gb-storage'].host_pfqdn }}.{{ domainname_infra }}"
+    expect: "{{ hostvars['server-64gb-storage'].host_ipv4 }}"
+
+# Failure alerts by email, through the provider nullmailer uses.
+composition_gatus_alert_email_to: "charlie@{{ domainname_personal }}"
+composition_gatus_alert_email_from: "{{ vault_mailprovider_user }}"
+composition_gatus_alert_email_username: "{{ vault_mailprovider_user }}"
+composition_gatus_alert_email_password: "{{ vault_mailprovider_password }}"
+composition_gatus_alert_email_host: "smtp.{{ vault_mailprovider_domain }}"
+composition_gatus_alert_email_port: 587
+composition_gatus_alert_failure_threshold: 3
+composition_gatus_alert_success_threshold: 2

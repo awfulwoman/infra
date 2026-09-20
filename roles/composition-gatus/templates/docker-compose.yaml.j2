@@ -1,0 +1,27 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  gatus:
+    container_name: gatus
+    image: "{{ composition_gatus_image }}"
+    restart: unless-stopped
+    volumes:
+      - "{{ composition_config }}/config.yaml:/config/config.yaml:ro"
+      - "{{ composition_config }}/data:/data"
+      - /etc/localtime:/etc/localtime:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.gatus.rule=Host(`{{ composition_dns_subdomains[0] }}.{{ domainname_infra }}`)"
+      - "traefik.http.routers.gatus.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
+      - "traefik.http.routers.gatus.tls.certresolver=letsencrypt"
+{% endif %}
+      - "traefik.http.services.gatus.loadbalancer.server.port=8080"
+    networks:
+      - "{{ default_docker_network }}"
+    # No healthcheck: the image is FROM scratch, so there is no shell and
+    # no wget to probe with. Traefik and the /health endpoint cover it.
+
+networks:
+  "{{ default_docker_network }}":
+    external: true

@@ -1,0 +1,62 @@
+# {{ ansible_managed }}
+# Endpoints are derived from inventory — the same compositions: and
+# cnames_additional data that drives DNS. Edit the role, not this file.
+storage:
+  type: sqlite
+  path: /data/data.db
+
+alerting:
+  email:
+    from: "{{ composition_gatus_alert_email_from }}"
+    username: "{{ composition_gatus_alert_email_username }}"
+    password: "{{ composition_gatus_alert_email_password }}"
+    host: "{{ composition_gatus_alert_email_host }}"
+    port: {{ composition_gatus_alert_email_port }}
+    to: "{{ composition_gatus_alert_email_to }}"
+    default-alert:
+      enabled: true
+      failure-threshold: {{ composition_gatus_alert_failure_threshold }}
+      success-threshold: {{ composition_gatus_alert_success_threshold }}
+      send-on-resolved: true
+
+endpoints:
+{% for host in groups['infra'] | sort %}
+  - name: "{{ hostvars[host].host_name_short | default(host) }}"
+    group: hosts
+    url: "tcp://{{ hostvars[host].host_ipv4 }}:{{ composition_gatus_ssh_port }}"
+    interval: {{ composition_gatus_interval }}
+    conditions:
+      - "[CONNECTED] == true"
+    alerts:
+      - type: email
+{% endfor %}
+{% for check in composition_gatus_dns_checks %}
+  - name: "{{ check.name }}"
+    group: dns
+    url: "{{ check.resolver }}"
+    interval: {{ composition_gatus_interval }}
+    dns:
+      query-name: "{{ check.query }}"
+      query-type: A
+    conditions:
+      - "[DNS_RCODE] == NOERROR"
+      - "[BODY] == {{ check.expect }}"
+    alerts:
+      - type: email
+{% endfor %}
+{% for name in composition_gatus_service_names %}
+{% set override = composition_gatus_service_overrides.get(name, {}) %}
+{% set path = override.path | default(composition_gatus_zfs_api_path if name.startswith('zfs-api-') else '/') %}
+  - name: "{{ name }}"
+    group: services
+    url: "https://{{ name }}.{{ domainname_infra }}{{ path }}"
+    interval: {{ composition_gatus_service_interval }}
+    client:
+      insecure: true
+    conditions:
+{% for condition in override.conditions | default(composition_gatus_service_conditions) %}
+      - "{{ condition }}"
+{% endfor %}
+    alerts:
+      - type: email
+{% endfor %}
