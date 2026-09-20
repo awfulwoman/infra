@@ -28,3 +28,18 @@ composition_nabu_mcps:
   - url: "http://mcp-searxng:3000/mcp" # on same host
     auth_key: "{{ vault_mcp_searxng_auth_token }}"
   - url: "http://mcp-weather:8000/mcp" # on same host
+
+# Home Assistant MCP. Appended to the list above by config.yaml.j2, not listed
+# in it, so an empty token drops the server from config.yaml entirely.
+#
+# The path must be /api/mcp - HA's Streamable HTTP endpoint. Do NOT copy
+# /mcp_server/sse from composition-hermes-*: that is the legacy HTTP+SSE
+# transport, which opens a GET stream and then POSTs to a session URL read
+# back off it. Chives' MCP client only POSTs JSON-RPC to one fixed URL, and HA
+# answers POST /mcp_server/sse with 405. Both endpoints front the same tools.
+#
+# The token is a long-lived HA access token minted for this bot alone, so it
+# can be revoked without touching jarvis' or either hermes bot's. Chives sends
+# auth_key as `Authorization: Bearer`, which is what HA wants.
+composition_nabu_homeassistant_url: "https://homeassistant.{{ domainname_infra }}/api/mcp"
+composition_nabu_homeassistant_token: "{{ vault_chives_nabu_homeassistant_token | default('') }}"

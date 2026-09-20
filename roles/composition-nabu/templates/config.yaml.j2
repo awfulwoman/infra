@@ -1,6 +1,15 @@
-{% if composition_nabu_mcps %}
+{#
+  Home Assistant is appended rather than being an entry in
+  composition_nabu_mcps so that leaving composition_nabu_homeassistant_token
+  empty omits the server instead of emitting one with a blank auth_key - which
+  HA would answer 401, leaving a permanent "Could not reach MCP server"
+  warning in the chives log.
+#}
+{% set _homeassistant = [{'url': composition_nabu_homeassistant_url, 'auth_key': composition_nabu_homeassistant_token}] if composition_nabu_homeassistant_token else [] %}
+{% set _mcps = composition_nabu_mcps + _homeassistant %}
+{% if _mcps %}
 mcp_servers:
-{% for mcp in composition_nabu_mcps %}
+{% for mcp in _mcps %}
   - url: {{ mcp.url }}
 {% if mcp.auth_key is defined %}
     auth_key: {{ mcp.auth_key }}
