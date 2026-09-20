@@ -17,9 +17,9 @@ repos:
         language: system
         pass_filenames: false
         files: ^(inventory/|plugins/filters/dns_records\.py)
-      - id: validate-composition-policies
-        name: Validate every composition states a ZFS policy
-        entry: scripts/validate-composition-policies.sh
+      - id: validate-zfs-policies
+        name: Validate ZFS policy declarations
+        entry: scripts/validate-zfs-policies.sh
         language: system
         pass_filenames: false
         files: ^(inventory/|plugins/filters/zfs_datasets\.py)

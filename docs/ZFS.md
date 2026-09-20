@@ -98,10 +98,10 @@ zfs:
 
 Compositions are the exception. Each composition must state its own policy. See [ADR-0001](adr/0001-policy-is-the-single-backup-flag.md). An inherited policy does not satisfy this rule, because inheritance hides the decision.
 
-A pre-commit hook fails the commit when a composition has no stated policy. To run the same test manually, use this command:
+A pre-commit hook fails the commit when a composition has no stated policy. The same hook fails when a declared dataset falls to `policy: none` below a `high` or `critical` parent, because that dataset gets no snapshots and cannot be replicated. To run the same test manually, use this command:
 
 ```bash
-scripts/validate-composition-policies.sh
+scripts/validate-zfs-policies.sh
 ```
 
 #### When to Use `children_inherit_policy`

@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""Validate that every composition states a ZFS policy.
+"""Validate that a host's ZFS policy declarations mean what they appear to.
+
+Two checks, both catching a declaration that silently protects nothing.
 
 The compositions parent dataset is `low`, so a composition nobody decided
 about is snapshotted briefly and never replicated. ADR-0001 makes that a hard
@@ -20,7 +22,10 @@ import yaml
 REPO_ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(REPO_ROOT / "plugins" / "filters"))
 
-from zfs_datasets import compositions_missing_policy  # noqa: E402
+from zfs_datasets import (  # noqa: E402
+    compositions_missing_policy,
+    unprotected_children,
+)
 
 # Matches the composition-common role default.
 DEFAULT_COMPOSITIONS_DATASET = "fastpool/compositions"
@@ -92,6 +97,39 @@ def find_missing(host_vars_root, dataset_names):
     return missing_by_host, checked
 
 
+def find_unprotected(host_vars_root):
+    """Return {host: [(dataset, parent_policy), ...]} for children left at none."""
+    by_host = {}
+    for host_dir in sorted(p for p in host_vars_root.iterdir() if p.is_dir()):
+        host_vars = load_host_vars(host_dir)
+        zfs = host_vars.get("zfs")
+        if not zfs:
+            continue
+        found = unprotected_children(zfs)
+        if found:
+            by_host[host_dir.name] = found
+    return by_host
+
+
+def report_unprotected(by_host, stream):
+    total = sum(len(v) for v in by_host.values())
+    print(
+        f"\n{total} dataset(s) fall to policy none under a protected parent:",
+        file=stream,
+    )
+    for host, entries in sorted(by_host.items()):
+        print(f"  {host}", file=stream)
+        for dataset, parent_policy in entries:
+            print(f"    {dataset}  (parent is {parent_policy})", file=stream)
+    print(
+        "\nPolicy none disables autosnap, so these are never snapshotted and "
+        "cannot be\nreplicated, while the parent above them is backed up as "
+        "normal. State a policy,\nor state none explicitly if that is what you "
+        "mean.",
+        file=stream,
+    )
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -101,13 +139,23 @@ def main():
     )
     args = parser.parse_args()
 
+    host_vars_root = REPO_ROOT / "inventory" / "host_vars"
     dataset_names = load_dataset_names(REPO_ROOT / "roles")
-    missing_by_host, checked = find_missing(
-        REPO_ROOT / "inventory" / "host_vars", dataset_names
-    )
+    missing_by_host, checked = find_missing(host_vars_root, dataset_names)
+    unprotected_by_host = find_unprotected(host_vars_root)
 
-    if not missing_by_host:
-        print(f"composition policies OK: {checked} compositions, all state a policy")
+    if not missing_by_host and not unprotected_by_host:
+        print(
+            f"ZFS policies OK: {checked} compositions all state a policy, "
+            "and no dataset falls to none under a protected parent"
+        )
+        return
+
+    if unprotected_by_host and not missing_by_host:
+        stream = sys.stdout if args.report else sys.stderr
+        report_unprotected(unprotected_by_host, stream)
+        if not args.report:
+            sys.exit(1)
         return
 
     total = sum(len(names) for names in missing_by_host.values())
@@ -118,6 +166,9 @@ def main():
         print(f"  {host}", file=stream)
         for name in names:
             print(f"    {name}", file=stream)
+
+    if unprotected_by_host:
+        report_unprotected(unprotected_by_host, stream)
 
     if not args.report:
         print(

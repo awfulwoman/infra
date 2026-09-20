@@ -3,6 +3,7 @@ from zfs_datasets import (
     compositions_missing_policy,
     datasets_with_policy,
     offsite_datasets,
+    unprotected_children,
 )
 
 
@@ -331,3 +332,99 @@ def test_composition_name_override_is_not_satisfied_by_the_entry_name():
         'fastpool/compositions',
         {'1password-connect': 'onepassword-connect'},
     ) == ['1password-connect']
+
+
+# ---------------------------------------------------------------------------
+# A declared child must not silently fall to 'none' under a protected parent.
+#
+# policy: none disables autosnap, and a dataset with no snapshots cannot be
+# replicated at all. slowpool/shared/documents/paperless-ngx sat like this for
+# months: the parent was critical and dutifully backed up holding 0.3M, while
+# the child holding 18.8M of scanned documents had never been snapshotted.
+# ---------------------------------------------------------------------------
+
+
+def test_child_without_policy_under_critical_parent_is_reported():
+    zfs = {
+        'slowpool': {
+            'datasets': {
+                'documents': {
+                    'policy': 'critical',
+                    'datasets': {'paperless-ngx': None},
+                },
+            },
+        },
+    }
+
+    assert unprotected_children(zfs) == [
+        ('slowpool/documents/paperless-ngx', 'critical'),
+    ]
+
+
+def test_child_stating_none_is_left_alone():
+    """Choosing none deliberately is fine; falling into it is not."""
+    zfs = {
+        'slowpool': {
+            'datasets': {
+                'documents': {
+                    'policy': 'critical',
+                    'datasets': {'scratch': {'policy': 'none'}},
+                },
+            },
+        },
+    }
+
+    assert unprotected_children(zfs) == []
+
+
+def test_child_inheriting_from_a_protected_parent_is_fine():
+    zfs = {
+        'slowpool': {
+            'datasets': {
+                'media': {
+                    'policy': 'high',
+                    'children_inherit_policy': True,
+                    'datasets': {'books': None},
+                },
+            },
+        },
+    }
+
+    assert unprotected_children(zfs) == []
+
+
+def test_child_under_an_unprotected_parent_is_not_reported():
+    """Only a protected parent makes a none child surprising."""
+    zfs = {
+        'slowpool': {
+            'datasets': {
+                'scratch': {
+                    'policy': 'low',
+                    'datasets': {'tmp': None},
+                },
+            },
+        },
+    }
+
+    assert unprotected_children(zfs) == []
+
+
+def test_top_level_dataset_without_a_parent_is_not_reported():
+    zfs = {'slowpool': {'datasets': {'loose': None}}}
+
+    assert unprotected_children(zfs) == []
+
+
+def test_high_parent_counts_as_protected():
+    zfs = {
+        'slowpool': {
+            'datasets': {
+                'metrics': {
+                    'policy': 'high',
+                    'datasets': {'zfs': None},
+                },
+            },
+        },
+    }
+
+    assert unprotected_children(zfs) == [('slowpool/metrics/zfs', 'high')]

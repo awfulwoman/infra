@@ -24,9 +24,9 @@ if ! "$PY" -c 'import yaml' 2>/dev/null; then
 fi
 
 if ! "$PY" -c 'import yaml' 2>/dev/null; then
-  echo "validate-composition-policies: no Python with PyYAML found" >&2
+  echo "validate-zfs-policies: no Python with PyYAML found" >&2
   echo "  tried python3 and the interpreter behind 'ansible'" >&2
   exit 1
 fi
 
-exec "$PY" scripts/validate-composition-policies.py "$@"
+exec "$PY" scripts/validate-zfs-policies.py "$@"

@@ -168,6 +168,33 @@ def datasets_with_policy(zfs_dict):
     return result
 
 
+def unprotected_children(zfs_dict):
+    """Return declared children that fell to 'none' under a protected parent.
+
+    Each item is (dataset, parent_policy). A dataset resolves to 'none' when
+    nothing states a policy for it and no parent passes one down, and 'none'
+    disables autosnap — so the dataset is never snapshotted and can never be
+    replicated. Under a high or critical parent that is almost always an
+    oversight rather than a decision, and it is invisible: the parent keeps
+    being backed up, so the tree looks protected.
+
+    Stating `policy: none` outright is left alone. The point is to catch the
+    ones nobody chose.
+    """
+    records = {r['dataset']: r for r in resolve_datasets(zfs_dict)}
+
+    found = []
+    for path, record in records.items():
+        if record['policy'] != 'none' or record['states_policy']:
+            continue
+        if '/' not in path:
+            continue
+        parent = records.get(path.rsplit('/', 1)[0])
+        if parent and parent['policy'] in BACKUP_POLICIES:
+            found.append((path, parent['policy']))
+    return found
+
+
 def composition_name(entry):
     """A compositions: entry is either a bare name or a mapping carrying labels."""
     if isinstance(entry, dict):
