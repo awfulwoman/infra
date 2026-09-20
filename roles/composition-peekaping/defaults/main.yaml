@@ -18,6 +18,9 @@ composition_peekaping_tag_color: "#ef4444"
 
 # Monitor cadence defaults, in seconds. Peekaping rejects a config where
 # timeout * 0.8 >= interval, so keep timeout comfortably below interval.
+# Host liveness is checked by connecting to SSH rather than by ICMP.
+composition_peekaping_ssh_port: 22
+
 composition_peekaping_monitor_interval: 60
 composition_peekaping_monitor_timeout: 16
 composition_peekaping_monitor_max_retries: 3
