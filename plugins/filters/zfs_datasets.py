@@ -74,6 +74,9 @@ def _visit(name, config, result, path, inherited_policy):
     record = {
         'dataset': '/'.join(dataset_path),
         'policy': policy,
+        # Whether the policy was decided here, as opposed to inherited or
+        # defaulted. Compositions must decide for themselves; see ADR-0001.
+        'states_policy': states_own_policy,
     }
 
     for field in ('properties', 'delegation'):
@@ -163,6 +166,36 @@ def datasets_with_policy(zfs_dict):
             entry['snapshots_discover_children'] = True
         result.append(entry)
     return result
+
+
+def composition_name(entry):
+    """A compositions: entry is either a bare name or a mapping carrying labels."""
+    if isinstance(entry, dict):
+        return entry.get('composition')
+    return entry
+
+
+def compositions_missing_policy(compositions, zfs_dict, compositions_dataset):
+    """Return compositions that never stated a policy, in declaration order.
+
+    The compositions parent is `low`, so a composition nobody decided about
+    would be snapshotted briefly and never replicated. Inheriting a policy
+    does not count: the decision has to be visible next to the service.
+    """
+    stated = {
+        record['dataset']
+        for record in resolve_datasets(zfs_dict)
+        if record['states_policy']
+    }
+
+    missing = []
+    for entry in compositions or []:
+        name = composition_name(entry)
+        if name is None:
+            continue
+        if '%s/%s' % (compositions_dataset, name) not in stated:
+            missing.append(name)
+    return missing
 
 
 class FilterModule(object):

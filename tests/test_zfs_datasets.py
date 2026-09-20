@@ -1,4 +1,9 @@
-from zfs_datasets import backup_datasets, datasets_with_policy, offsite_datasets
+from zfs_datasets import (
+    backup_datasets,
+    compositions_missing_policy,
+    datasets_with_policy,
+    offsite_datasets,
+)
 
 
 def names(datasets):
@@ -178,3 +183,107 @@ def test_properties_are_carried_through_inheritance():
         d for d in backup_datasets(zfs) if d['dataset'] == 'slowpool/backups/raw'
     )
     assert raw['properties'] == {'encryption': 'aes-256-gcm'}
+
+
+# ---------------------------------------------------------------------------
+# Every composition must state its own policy.
+#
+# The compositions parent is 'low', so a composition nobody decided about is
+# silently unprotected. That has to be an error, not a default.
+# ---------------------------------------------------------------------------
+
+
+def test_composition_without_policy_is_reported():
+    compositions = ['immich', 'jellyfin']
+    zfs = {
+        'fastpool': {
+            'datasets': {
+                'compositions': {
+                    'policy': 'low',
+                    'datasets': {
+                        'immich': {'policy': 'critical'},
+                    },
+                },
+            },
+        },
+    }
+
+    assert compositions_missing_policy(
+        compositions, zfs, 'fastpool/compositions'
+    ) == ['jellyfin']
+
+
+def test_composition_declared_as_mapping_is_understood():
+    """Entries may be a mapping when they carry Traefik labels."""
+    compositions = [{'composition': 'reverseproxy', 'labels': []}]
+    zfs = {
+        'fastpool': {
+            'datasets': {
+                'compositions': {
+                    'policy': 'low',
+                    'datasets': {'reverseproxy': {'policy': 'none'}},
+                },
+            },
+        },
+    }
+
+    assert compositions_missing_policy(compositions, zfs, 'fastpool/compositions') == []
+
+
+def test_inherited_policy_does_not_count_as_stated():
+    """Inheriting a policy is not the same as deciding one."""
+    compositions = ['immich']
+    zfs = {
+        'fastpool': {
+            'datasets': {
+                'compositions': {
+                    'policy': 'critical',
+                    'children_inherit_policy': True,
+                    'datasets': {'immich': {}},
+                },
+            },
+        },
+    }
+
+    assert compositions_missing_policy(
+        compositions, zfs, 'fastpool/compositions'
+    ) == ['immich']
+
+
+def test_composition_dataset_root_is_respected():
+    """Hosts that keep compositions on another pool are checked there."""
+    compositions = ['gitea']
+    zfs = {
+        'slowpool': {
+            'datasets': {
+                'compositions': {
+                    'policy': 'low',
+                    'datasets': {'gitea': {'policy': 'high'}},
+                },
+            },
+        },
+    }
+
+    assert compositions_missing_policy(compositions, zfs, 'slowpool/compositions') == []
+    assert compositions_missing_policy(
+        compositions, zfs, 'fastpool/compositions'
+    ) == ['gitea']
+
+
+def test_all_compositions_decided_reports_nothing():
+    compositions = ['immich', 'jellyfin']
+    zfs = {
+        'fastpool': {
+            'datasets': {
+                'compositions': {
+                    'policy': 'low',
+                    'datasets': {
+                        'immich': {'policy': 'critical'},
+                        'jellyfin': {'policy': 'low'},
+                    },
+                },
+            },
+        },
+    }
+
+    assert compositions_missing_policy(compositions, zfs, 'fastpool/compositions') == []
