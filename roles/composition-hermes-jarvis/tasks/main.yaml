@@ -151,6 +151,29 @@
   when: state | default('present') == 'present' and composition_hermes_jarvis_manage_config
   notify: Restart Hermes
 
+# hermes_cli/env_loader.py loads /opt/data/.env with override=True, so that
+# file beats the container environment for any key it defines - the reverse
+# of what this role's .environment_vars assumes. The image ships .env as a
+# 545-line commented example, and `hermes setup` appends a generated
+# API_SERVER_KEY to it, which then silently shadows ours: the API server
+# answers 401 to the key Ansible handed to every client.
+#
+# Deleting the line puts .environment_vars back in charge. Safe to do: no
+# code path regenerates the key (the server refuses to start without one
+# rather than minting one), and API_SERVER_KEY is not in env_loader's
+# narrow _PROFILE_MANAGED_ENV_KEYS clear-list, so dropping it from .env
+# does not also strip the inherited value.
+#
+# It is the only key that collides today - MATRIX_*, GATEWAY_MCP_TOKEN and
+# HERMES_DASHBOARD_* appear in .env as comments only.
+- name: Stop /opt/data/.env shadowing the API server key from .environment_vars
+  ansible.builtin.lineinfile:
+    path: "{{ composition_config }}/data/.env"
+    regexp: '^\s*API_SERVER_KEY\s*='
+    state: absent
+  when: state | default('present') == 'present' and composition_hermes_jarvis_api_server
+  notify: Restart Hermes
+
 # ----------------------------
 # Start composition
 # ----------------------------

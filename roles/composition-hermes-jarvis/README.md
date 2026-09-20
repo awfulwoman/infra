@@ -29,7 +29,7 @@ rewrite against the same image:
 | `network_mode: host` | `{{ default_docker_network }}` | Traefik routes by label |
 | `~/.hermes` | `{{ composition_config }}/data` | State lands on ZFS, so snapshots cover it |
 | Separate `gateway` and `dashboard` services | One container | The image supervises both under s6; `HERMES_DASHBOARD=1` starts the dashboard slot |
-| Secrets in `.env` next to the compose file | `.environment_vars` from the vault | Environment variables beat `/opt/data/.env` |
+| Secrets in `.env` next to the compose file | `.environment_vars` from the vault | Secrets come from the vault, not a file beside the compose file |
 
 ## Why one container per bot
 
@@ -197,8 +197,29 @@ Ansible templates `config.yaml` on every run, so `hermes setup` and
 `hermes config set` inside the container do not survive. Change the role
 variables instead. To hand the file back to Hermes - to run the interactive
 provider wizard, say - set `composition_hermes_jarvis_manage_config: false`.
-Note that `hermes config set` routes API keys to `/opt/data/.env`, which
-`.environment_vars` overrides.
+
+## /opt/data/.env beats the container environment
+
+`hermes config set` routes API keys to `/opt/data/.env`, and that file
+**wins over `.environment_vars`** - `hermes_cli/env_loader.py` loads it with
+`override=True`. This is the opposite of the usual Docker expectation and it
+fails silently: the variable is correct in `docker exec … printenv`, while
+the process itself sees Hermes' value.
+
+The image ships `.env` as a ~545-line commented example, so almost nothing
+collides. `API_SERVER_KEY` does, because `hermes setup` appends a generated
+one - which then shadows the key Ansible gave every client, and the API
+server answers `401 Invalid gateway API key` to a key that looks right
+everywhere you check. `tasks/main.yaml` deletes that line when the API
+server is enabled.
+
+Nothing regenerates the key (the server refuses to start without one rather
+than minting one), and `API_SERVER_KEY` is absent from env_loader's narrow
+`_PROFILE_MANAGED_ENV_KEYS` clear-list, so removing it from `.env` does not
+also strip the inherited value.
+
+If another variable ever starts behaving as though the role never set it,
+check `grep -v '^\s*#' /opt/data/.env` first.
 
 ## DNS
 
