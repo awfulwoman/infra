@@ -90,9 +90,9 @@ traefik_providers:
 # -------------------------------------------------------------------
 # COMPOSITIONS
 # Internal DNS for this host is derived from this list by the dns_records
-# filter (roles/infra-named): hermes-nabu/hermes-jarvis register their own
-# subdomains, reverseproxy registers `traefik-{host}`. Run infra-named on
-# bertha after a deploy that changes this list.
+# filter (roles/infra-named): hermes-nabu/hermes-jarvis/open-webui register
+# their own subdomains, reverseproxy registers `traefik-{host}`. Run
+# infra-named on bertha after a deploy that changes this list.
 #
 # hermes-agent (single container, multiple Hermes "profiles") is retired -
 # see composition-hermes-nabu/README.md#why-one-container-per-bot for why:
@@ -104,6 +104,10 @@ traefik_providers:
 compositions:
   - hermes-nabu
   - hermes-jarvis
+  # Moved here from server-64gb-storage on 2026-09-20 so it sits on this
+  # host's Docker network, where it can reach hermes-jarvis' API server by
+  # container name. Registers `chat`.
+  - open-webui
   - composition: reverseproxy
     labels:
       - "traefik-{host}"
@@ -143,6 +147,13 @@ composition_hermes_nabu_matrix_allowed_users:
 composition_hermes_jarvis_dashboard_theme: midnight
 composition_hermes_jarvis_dashboard_font: system-sans
 
+# Serves /v1/models and /v1/chat/completions on 8642 so open-webui below can
+# front the agent - tools, memory and all - instead of the Hermes dashboard's
+# own chat pane. No host port is published, so this is reachable only from
+# {{ default_docker_network }}; the key is what stops anything else on that
+# network driving Jarvis, and the role asserts it is set.
+composition_hermes_jarvis_api_server: true
+
 composition_hermes_jarvis_mcp_servers:
   gateway:
     url: "https://gateway.{{ domainname_infra }}/mcp"
@@ -170,3 +181,20 @@ composition_hermes_jarvis_matrix_access_token: "{{ vault_hermes_jarvis_matrix_ac
 composition_hermes_jarvis_matrix_device_id: "A6ZT7fkulU"
 composition_hermes_jarvis_matrix_allowed_users:
   - "@awfulwoman:matrix.{{ domainname_infra }}"
+
+# -------------------------------------------------------------------
+# OPEN WEBUI
+# Moved from server-64gb-storage 2026-09-20. It lives here rather than
+# there so it can reach hermes-jarvis' api_server by container name on
+# {{ default_docker_network }} - across hosts that would have meant
+# publishing 8642 through Traefik on its own subdomain.
+#
+# Two backends: Malcolm's Ollama (raw models, the role default) and Jarvis
+# himself. The Jarvis entry is the point of the move - Hermes fingerprints
+# an incoming conversation onto one of its own sessions, so a stateless
+# chat client still gets the agent's memory and tools. Approvals, skills
+# and cron stay on the Hermes dashboard.
+# -------------------------------------------------------------------
+composition_open_webui_openai_apis:
+  - url: "http://hermes-jarvis:8642/v1"
+    key: "{{ vault_hermes_jarvis_api_server_key }}"
