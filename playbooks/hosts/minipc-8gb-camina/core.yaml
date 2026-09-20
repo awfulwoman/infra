@@ -17,6 +17,8 @@
     tags: [ansible, ansible-core]
   - role: system-known-hosts
     tags: [system, system-known-hosts]
+  - role: system-ssh-aliases
+    tags: [system, system-ssh-aliases]
   - role: client-cert-distribution
     tags: [infra, client-cert-distribution]
   - role: system-compositions

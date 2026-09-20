@@ -1,0 +1,7 @@
+# code: language=ansible
+
+# Inventory group whose hosts get an alias block.
+system_ssh_aliases_group: infra
+
+# Per-user ssh config that receives the blocks.
+system_ssh_aliases_config: "{{ ansible_facts['user_dir'] }}/.ssh/config"

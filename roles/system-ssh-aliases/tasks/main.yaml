@@ -1,0 +1,21 @@
+# code: language=ansible
+
+- name: Ensure .ssh directory exists
+  ansible.builtin.file:
+    path: "{{ system_ssh_aliases_config | dirname }}"
+    state: directory
+    mode: "0700"
+
+# Same marker format as playbooks/utility/list-ssh-aliases.yaml, so the two
+# manage the same blocks without duplicating them.
+- name: Write an SSH config block for each host
+  ansible.builtin.blockinfile:
+    path: "{{ system_ssh_aliases_config }}"
+    create: true
+    mode: "0600"
+    marker: "# {mark} ANSIBLE MANAGED: {{ hostvars[item].host_name }}"
+    block: |
+      Host {{ hostvars[item].host_name }} {{ hostvars[item].host_name_medium }} {{ hostvars[item].host_name_short }}
+        HostName {{ hostvars[item].ansible_host }}
+        User {{ hostvars[item].ansible_user }}
+  loop: "{{ groups[system_ssh_aliases_group] }}"
