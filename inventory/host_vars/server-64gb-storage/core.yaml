@@ -52,7 +52,13 @@ zfs:
       compositions:
         policy: critical
         snapshots_discover_children: true
-        datasets: {}
+        datasets:
+          # A monitoring history database is rewritten constantly, so every
+          # snapshot pins a fresh copy of the whole file. Peekaping's 326M
+          # of data had accumulated 10.2G across 45 critical-policy
+          # snapshots. The history is not worth that, so: fewer copies.
+          gatus:
+            policy: low
       shared:
         datasets:
           nominatim:
