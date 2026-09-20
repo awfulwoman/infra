@@ -136,7 +136,18 @@ compositions:
 composition_hermes_nabu_dashboard_theme: midnight
 composition_hermes_nabu_dashboard_font: system-sans
 
-composition_hermes_nabu_mcp_servers: {}
+composition_hermes_nabu_mcp_servers:
+  homeassistant:
+    # HA's MCP Server integration speaks SSE only; Hermes defaults to
+    # Streamable HTTP, so the transport must be named.
+    url: "https://homeassistant.{{ domainname_infra }}/mcp_server/sse"
+    transport: sse
+    enabled: true
+    headers:
+      Authorization: "Bearer ${HOMEASSISTANT_MCP_TOKEN}"
+
+composition_hermes_nabu_mcp_env:
+  HOMEASSISTANT_MCP_TOKEN: "{{ vault_hermes_nabu_homeassistant_token }}"
 # Hermes only disables whole toolsets, not individual tools. "browser"
 # covers the ones we want gone (browser_exec, browser_vault_*) along with
 # the rest of the browser_* tools.
@@ -180,6 +191,14 @@ composition_hermes_jarvis_mcp_servers:
     # Traefik endpoint (Tailscale-scoped, no auth per its own README).
     url: "https://weathermcp.{{ domainname_infra }}/mcp"
     enabled: true
+  homeassistant:
+    # HA's MCP Server integration speaks SSE only; Hermes defaults to
+    # Streamable HTTP, so the transport must be named.
+    url: "https://homeassistant.{{ domainname_infra }}/mcp_server/sse"
+    transport: sse
+    enabled: true
+    headers:
+      Authorization: "Bearer ${HOMEASSISTANT_MCP_TOKEN}"
 
 composition_hermes_jarvis_mcp_env:
   # gateway labels this client "hermes" in its /mcp usage log; the secret
@@ -187,6 +206,9 @@ composition_hermes_jarvis_mcp_env:
   # (The "jarvis" label in composition_gateway_server_auth_clients belongs
   # to the separate composition-jarvis chives bot, not this container.)
   GATEWAY_MCP_TOKEN: "{{ vault_gateway_mcp_token_hermes }}"
+  # Long-lived HA token created for this bot alone, so it can be revoked
+  # independently of nabu's.
+  HOMEASSISTANT_MCP_TOKEN: "{{ vault_hermes_jarvis_homeassistant_token }}"
 
 composition_hermes_jarvis_matrix: true
 composition_hermes_jarvis_matrix_homeserver: "https://matrix.{{ domainname_infra }}"
