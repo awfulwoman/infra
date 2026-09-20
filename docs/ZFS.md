@@ -305,10 +305,10 @@ These tables show how each policy influences the snapshot scheduling, retention,
 
 If `autosnap` is true, `systemd` timers trigger a snapshotting script at these frequencies:
 
-- `Frequently`: The script activates once per minute.
-- `Hourly`: The script activates once each hour.
-- `Monthly`: The script activates once each month.
-- `Yearly`: The script activates once per year.
+- `Hourly`: The script activates once each hour, on the hour.
+- `Daily`: The script activates once each day, at 00:15.
+- `Monthly`: The script activates on the first day of each month, at 00:20.
+- `Yearly`: The script activates on 1 January, at 00:25.
 
 #### Snapshot Creation
 
@@ -316,12 +316,14 @@ The `autosnap` policy column decides if the scripts create automatic snapshots f
 
 If the number in a column is greater than 0, the scripts create a ZFS snapshot at that period.
 
-| Policy ID        | frequently | hourly | monthly | yearly | autosnap | autoprune |
-| ---------------- | ---------- | ------ | ------- | ------ | -------- | --------- |
-| `none` (default) | 0          | 0      | 0       | 0      | FALSE    | FALSE     |
-| `low`            | 0          | 3      | 1       | 0      | TRUE     | TRUE      |
-| `high`           | 0          | 24     | 1       | 1      | TRUE     | TRUE      |
-| `critical`       | 0          | 36     | 3       | 5      | TRUE     | TRUE      |
+| Policy ID        | hourly | daily | monthly | yearly | autosnap | autoprune |
+| ---------------- | ------ | ----- | ------- | ------ | -------- | --------- |
+| `none` (default) | 0      | 0     | 0       | 0      | FALSE    | TRUE      |
+| `low`            | 3      | 7     | 1       | 0      | TRUE     | TRUE      |
+| `high`           | 24     | 14    | 1       | 1      | TRUE     | TRUE      |
+| `critical`       | 36     | 30    | 3       | 5      | TRUE     | TRUE      |
+
+CAUTION: Do not set `policy: none` to pause snapshots. The policy keeps `autoprune` on, and all four retention counts are 0. As a result, the prune script destroys every automatic snapshot of that dataset on its next run. The script runs each hour, at 30 minutes past. Manual snapshots are safe, because the script only reads snapshots with the `autosnap_` prefix.
 
 #### Snapshot Pruning
 
