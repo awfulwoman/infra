@@ -38,11 +38,11 @@ Rows already written to `config` by an earlier boot are simply ignored while thi
 
 ## Authentication
 
-`composition_open_webui_auth` maps to `WEBUI_AUTH`, and is `false` - the historical setting for this role, on the assumption the host is only reachable over Tailscale.
+`composition_open_webui_auth` maps to `WEBUI_AUTH`, and is `true`. The role ran with it off historically, on the assumption the host is only reachable over Tailscale - but Tailscale governs who reaches the host, not what they may drive once there, and an entry in `composition_open_webui_openai_apis` can be an agent with a shell (Hermes runs its terminal toolset inside its own container). With auth off, anyone who opens the UI inherits that.
 
-Turn it on when an agent endpoint is wired in. With auth off, anyone who reaches the UI inherits whatever that agent can do, which in Hermes' case includes a shell inside its container. The first account created after switching it on becomes the admin.
+The first account created becomes the admin. Open the site and register before anyone else does.
 
-The flag only travels one way on a live install: Open WebUI refuses to disable auth once any user exists in its database, so going back to `false` later means clearing the data directory first. Going `false` -> `true` is fine at any point.
+The flag only travels one way on a live install: Open WebUI refuses to disable auth once any user exists in its database, so going back to `false` later means clearing the data directory first. Going `false` -> `true` is fine at any point, and needs no reset - though an install that ran with auth off may hold an auto-created account, so check `user` and `auth` in `webui.db` before flipping, or you get a login prompt for a password nobody has.
 
 ## Key variables
 

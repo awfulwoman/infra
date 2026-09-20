@@ -41,9 +41,13 @@ composition_open_webui_openai_apis: []
 # -------------------------------------------------------------------
 composition_open_webui_persistent_config: false
 
-# Open WebUI's own login. Off here, as it has been since this role was
-# written - the host sits behind Tailscale. Worth turning on once an agent
-# endpoint is wired into composition_open_webui_openai_apis: anyone who can
-# reach the UI then gets that agent's tools, terminal included. The first
-# account created after switching it on becomes the admin.
-composition_open_webui_auth: false
+# Open WebUI's own login. On: Tailscale decides who can reach the host, not
+# who may drive what is behind it, and an entry in
+# composition_open_webui_openai_apis can be an agent with a shell (Hermes'
+# terminal toolset runs inside its container). The first account created
+# becomes the admin.
+#
+# This only travels one way on a live install - Open WebUI refuses to
+# disable auth once any user exists - so going back to false means clearing
+# the data directory first.
+composition_open_webui_auth: true
