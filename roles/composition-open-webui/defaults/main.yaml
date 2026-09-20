@@ -1,9 +1,29 @@
 # Composition name (used by composition-common dependency)
 composition_name: open-webui
 
+composition_dns_subdomains:
+  - chat
+
 # Ollama API URL. Defaults to the shared llm_default_ollama_base_url (Malcolm).
 # Override per-host if Ollama is running elsewhere.
 composition_open_webui_ollama_base_url: "{{ llm_default_ollama_base_url }}"
 
-composition_dns_subdomains:
-  - chat
+# -------------------------------------------------------------------
+# OPENAI-COMPATIBLE ENDPOINTS
+# Anything that speaks /v1/models and /v1/chat/completions can be added
+# here alongside Ollama - another inference server, or an agent that
+# fronts one (see composition-hermes-jarvis' api_server).
+#
+# A list of {url, key} pairs. Open WebUI takes these as two separate
+# semicolon-separated env lists matched up by position, so both fields are
+# mandatory - tasks/main.yaml asserts that. Empty list turns the whole
+# OpenAI connector off, leaving Ollama as the only backend.
+# -------------------------------------------------------------------
+composition_open_webui_openai_apis: []
+
+# Open WebUI's own login. Off here, as it has been since this role was
+# written - the host sits behind Tailscale. Worth turning on once an agent
+# endpoint is wired into composition_open_webui_openai_apis: anyone who can
+# reach the UI then gets that agent's tools, terminal included. The first
+# account created after switching it on becomes the admin.
+composition_open_webui_auth: false

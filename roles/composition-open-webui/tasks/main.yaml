@@ -1,6 +1,66 @@
 # code: language=ansible
 
 # ----------------------------
+# Remove composition (state: absent)
+# ----------------------------
+
+- name: Stop and remove Docker Compose project
+  community.docker.docker_compose_v2:
+    project_src: "{{ composition_root }}"
+    state: absent
+    remove_orphans: true
+  register: _open_webui_compose_down
+  failed_when:
+    - _open_webui_compose_down is failed
+    - "'no such file or directory' not in (_open_webui_compose_down.msg | default('') | lower)"
+  when: state | default('present') == 'absent'
+
+- name: Remove compose and environment files
+  become: true
+  ansible.builtin.file:
+    path: "{{ composition_root }}/{{ absent_file }}"
+    state: absent
+  loop_control:
+    loop_var: absent_file
+  loop:
+    - docker-compose.yaml
+    - .environment_vars
+  when: state | default('present') == 'absent'
+
+# Accounts, chat history and model config live here. Removing the
+# composition removes them - the ZFS dataset itself is left behind, same as
+# every other composition-* role.
+- name: Remove the Open WebUI data directory
+  become: true
+  ansible.builtin.file:
+    path: "{{ composition_config }}/data"
+    state: absent
+  when: state | default('present') == 'absent'
+
+# ----------------------------
+# Preflight
+# ----------------------------
+
+# Open WebUI reads OPENAI_API_BASE_URLS and OPENAI_API_KEYS as two
+# semicolon-separated lists matched up by position, so a missing key would
+# silently shift every later endpoint onto the wrong credential.
+- name: Assert every OpenAI-compatible endpoint has a url and a key
+  ansible.builtin.assert:
+    that:
+      - openai_api.url | default('') | length > 0
+      - openai_api.key | default('') | length > 0
+    fail_msg: >-
+      Each composition_open_webui_openai_apis entry needs both `url` and
+      `key`. Open WebUI pairs the two env lists by position, so a blank
+      entry silently misaligns the rest.
+    quiet: true
+  loop: "{{ composition_open_webui_openai_apis }}"
+  loop_control:
+    loop_var: openai_api
+    label: "{{ openai_api.url | default('<no url>') }}"
+  when: state | default('present') == 'present'
+
+# ----------------------------
 # Core tasks
 # ----------------------------
 
@@ -11,6 +71,7 @@
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0774"
+  when: state | default('present') == 'present'
 
 - name: "Create .env file"
   ansible.builtin.template:
@@ -18,7 +79,12 @@
     dest: "{{ composition_root }}/.environment_vars"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: "0774"
+    # Carries the API keys for every OpenAI-compatible endpoint, so it is
+    # not world-readable like the rest of this role's files, and --diff
+    # would otherwise print them in full.
+    mode: "0600"
+  no_log: true
+  when: state | default('present') == 'present'
 
 # ----------------------------
 # Specific tasks
@@ -28,6 +94,7 @@
   ansible.builtin.file:
     path: "{{ composition_config }}/data"
     state: directory
+  when: state | default('present') == 'present'
 
 # ----------------------------
 # Start composition
@@ -39,4 +106,5 @@
     state: present
     build: always
     remove_orphans: true
+  when: state | default('present') == 'present'
   notify: Restart Traefik
