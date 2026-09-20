@@ -2,6 +2,11 @@ TZ="Europe/Berlin"
 OLLAMA_BASE_URL="{{ composition_open_webui_ollama_base_url }}"
 WEBUI_AUTH={{ composition_open_webui_auth | string | capitalize }}
 
+# False = re-read every setting below from this file on each boot, instead
+# of seeding webui.db once and letting the DB win forever after. Required
+# for key rotation to reach the app at all - see defaults/main.yaml.
+ENABLE_PERSISTENT_CONFIG={{ composition_open_webui_persistent_config | string | capitalize }}
+
 {% if composition_open_webui_openai_apis | length > 0 %}
 # OpenAI-compatible endpoints. Two semicolon-separated lists, paired up by
 # position - entry N of BASE_URLS is authenticated by entry N of API_KEYS.

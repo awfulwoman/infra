@@ -21,6 +21,26 @@ composition_open_webui_ollama_base_url: "{{ llm_default_ollama_base_url }}"
 # -------------------------------------------------------------------
 composition_open_webui_openai_apis: []
 
+# -------------------------------------------------------------------
+# CONFIG PERSISTENCE
+# Open WebUI's env vars are only a FIRST-BOOT SEED: it copies them into
+# the `config` table in webui.db, and from then on the DB wins
+# (models/config.py seed_defaults: "Existing DB values take precedence
+# over defaults", inserting only `if key not in existing_keys`).
+#
+# That silently breaks key rotation - change the vault key, redeploy, and
+# Hermes moves to the new key while Open WebUI keeps serving the old one
+# out of its database, with the vault, both .environment_vars and
+# `printenv` all showing the new value.
+#
+# False makes persistent_enabled_for() return False for every key, so
+# Config.get() falls back to the env-derived default on every boot and
+# this role stays authoritative. The trade: settings changed in the admin
+# UI no longer survive a restart - all config has to come from here.
+# Chats, users, models and prompts are separate tables and unaffected.
+# -------------------------------------------------------------------
+composition_open_webui_persistent_config: false
+
 # Open WebUI's own login. Off here, as it has been since this role was
 # written - the host sits behind Tailscale. Worth turning on once an agent
 # endpoint is wired into composition_open_webui_openai_apis: anyone who can

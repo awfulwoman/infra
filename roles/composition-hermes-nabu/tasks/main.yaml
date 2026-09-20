@@ -151,6 +151,24 @@
   when: state | default('present') == 'present' and composition_hermes_nabu_manage_config
   notify: Restart Hermes
 
+# hermes_cli/env_loader.py loads /opt/data/.env with override=True, so that
+# file beats the container environment for any key it defines - the reverse
+# of what .environment_vars assumes. `hermes setup` appends a generated
+# API_SERVER_KEY to the image's shipped example .env, which then shadows
+# ours and makes the API server 401 the key Ansible gave every client,
+# while the vault, .environment_vars and `printenv` all look correct.
+#
+# Dormant while composition_hermes_nabu_api_server is false; this is here
+# so turning it on does not reproduce the bug hermes-jarvis hit. See
+# composition-hermes-jarvis/README.md#optdataenv-beats-the-container-environment
+- name: Stop /opt/data/.env shadowing the API server key from .environment_vars
+  ansible.builtin.lineinfile:
+    path: "{{ composition_config }}/data/.env"
+    regexp: '^\s*API_SERVER_KEY\s*='
+    state: absent
+  when: state | default('present') == 'present' and composition_hermes_nabu_api_server
+  notify: Restart Hermes
+
 # ----------------------------
 # Start composition
 # ----------------------------

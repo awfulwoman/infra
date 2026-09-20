@@ -24,6 +24,18 @@ A bare container name (`hermes-jarvis`) only resolves for a composition on the *
 
 The endpoint does not have to be a plain inference server. [`composition-hermes-jarvis`](../composition-hermes-jarvis) can expose its agent on an OpenAI-compatible port (`composition_hermes_jarvis_api_server`), which makes Open WebUI a front end for the agent - tools, memory and all - rather than for a bare model. Hermes maps a stateless chat completion onto one of its own sessions by fingerprinting the conversation, specifically so clients like this one get continuity; its dashboard stays the place for approvals, skills and cron.
 
+## Config persistence, and why rotation needs it off
+
+Open WebUI's environment variables are a **first-boot seed only**. On start it copies them into the `config` table in `webui.db`, and from then on the database wins - `models/config.py`'s `seed_defaults` says so outright ("Existing DB values take precedence over defaults") and inserts only `if key not in existing_keys`.
+
+This silently breaks key rotation. Change `vault_hermes_jarvis_api_server_key`, redeploy, and Hermes starts accepting only the new key while Open WebUI keeps presenting the old one from its database - every place you would check (the vault, both `.environment_vars` files, `docker exec … printenv`) shows the new value, and the endpoint still 401s.
+
+`composition_open_webui_persistent_config: false` (the default here) sets `ENABLE_PERSISTENT_CONFIG=False`, which makes `persistent_enabled_for()` return False for every key, so `Config.get()` returns the env-derived default on each boot and this role stays authoritative.
+
+The trade-off is not scoped to keys: **settings changed in the admin UI stop surviving restarts**, reverting to whatever the role sets. Chats, users, models and prompts live in separate tables and are unaffected. Set it to `true` if you would rather configure through the UI - and then rotate keys in the UI too, or clear the `openai.api_keys` row from `webui.db`, because a redeploy will not do it.
+
+Rows already written to `config` by an earlier boot are simply ignored while this is off; they do not need clearing.
+
 ## Authentication
 
 `composition_open_webui_auth` maps to `WEBUI_AUTH`, and is `false` - the historical setting for this role, on the assumption the host is only reachable over Tailscale.
