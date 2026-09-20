@@ -41,3 +41,7 @@ backups_zfs_server_stale_lock_hours: 24 # a pull still holding the lock past thi
 # `zfs release <tag> <snapshot>` before decommissioning.
 backups_zfs_server_hold_enabled: true
 backups_zfs_server_hold_tag: "zfsbackup-{{ inventory_hostname }}"
+
+# Minutes between each client's pull. Seven clients at 7 minutes spans 42
+# minutes, well inside the smallest gap in the schedule.
+backups_zfs_server_cron_stagger_minutes: 7

@@ -29,7 +29,13 @@
           - zfs-backups
           - "{{ inventory_hostname }}"
           - "{{ item }}"
-        schedule: "{{ backups_zfs_server_cron_minute }} {{ backups_zfs_server_cron_hour }} * * *"
+        # Must track the staggered cron minute below, or the check expects the
+        # ping at a time the client no longer runs.
+        schedule: >-
+          {{ (backups_zfs_server_cron_minute | int
+              + groups[backups_zfs_server_pull_group].index(item) | int
+              * backups_zfs_server_cron_stagger_minutes | int) % 60 }}
+          {{ backups_zfs_server_cron_hour }} * * *
         grace: 93600
         tz: Europe/Berlin
       loop: "{{ groups[backups_zfs_server_pull_group] }}"
@@ -250,15 +256,24 @@
   when: _datasets | length > 0
   loop: "{{ groups[backups_zfs_server_pull_group] }}"
 
+# Each client gets its own minute past the hour. Every client used to share
+# one minute, and the lockfile is per-client so they do not serialise: on
+# 2026-09-20 all six fired together on top of an in-flight receive and took a
+# four-core Pi to a load average of 325, unresponsive to a one-line read for
+# the best part of an hour. Spacing them costs nothing — the schedule has
+# hours of slack — and keeps one slow client from starving the rest.
 - name: Ensure that pull backup cronjobs are managed for each client
   become: true
   vars:
     _datasets: "{{ hostvars[item].zfs | default({}) | zfs_backup_datasets }}"
     _has_datasets: "{{ _datasets | length > 0 }}"
+    _index: "{{ groups[backups_zfs_server_pull_group].index(item) }}"
   ansible.builtin.cron:
     name: "zfs-pull-backups {{ item }}"
     hour: "{{ backups_zfs_server_cron_hour }}"
-    minute: "{{ backups_zfs_server_cron_minute }}"
+    minute: >-
+      {{ (backups_zfs_server_cron_minute | int
+          + _index | int * backups_zfs_server_cron_stagger_minutes | int) % 60 }}
     job: "{{ backups_zfs_server_script_path }}/scripts/pull-{{ item }}.sh >/dev/null"
     state: "{{ 'present' if _has_datasets else 'absent' }}"
   loop: "{{ groups[backups_zfs_server_pull_group] }}"
