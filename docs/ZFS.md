@@ -279,6 +279,30 @@ zfs:
             policy: none        # Explicitly exclude this one
 ```
 
+#### A dataset looks empty, but its directory holds data
+
+**Problem:** A dataset has a `critical` policy and almost no data. The service that uses it clearly holds more than that.
+
+**Cause:** A process wrote to the mountpoint directory while the dataset was not mounted. The files went to the parent filesystem. When the dataset mounts again, it covers those files. The files stay on the parent, and the snapshots of the dataset do not contain them.
+
+This defeats the policy without an error. The dataset is snapshotted and replicated, but the data is on the parent.
+
+To find these files, compare the two views:
+
+```bash
+# What the mounted dataset shows
+sudo ls -la /fastpool/pools/vms/vm-example
+
+# What the parent filesystem holds at the same path
+sudo zfs unmount fastpool/pools/vms/vm-example
+sudo ls -la /fastpool/pools/vms/vm-example
+sudo zfs mount fastpool/pools/vms/vm-example
+```
+
+If the second listing shows files, move them into the dataset. Then delete the copies on the parent.
+
+CAUTION: Do not unmount a dataset that a running service uses. Stop the service first.
+
 #### Performance with Many Children
 
 **Problem:** You are concerned about performance when the scripts discover hundreds of datasets.
