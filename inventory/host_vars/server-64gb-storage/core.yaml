@@ -169,8 +169,6 @@ zfs:
             datasets:
               vm-claude-dev:
                 policy: critical
-              vm-homeassistant:
-                policy: critical
               vm-downloads:
                 policy: critical
               vm-media:
