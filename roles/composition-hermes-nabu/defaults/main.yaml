@@ -1,8 +1,15 @@
 # Composition name (used by composition-common dependency)
 composition_name: hermes-nabu
 
+# Static list: infra-named derives DNS from it without templating it.
+# hermes-nabu-api is the Traefik-published route to the API server, so
+# clients on other hosts (e.g. Home Assistant) can reach the
+# OpenAI-compatible endpoint. The record exists even while the API server is
+# off; the compose file only routes it when it is on. The API key gates every
+# request.
 composition_dns_subdomains:
   - hermes-nabu
+  - hermes-nabu-api
 
 # Upstream publishes a multi-arch image (amd64/arm64) to Docker Hub. The
 # docker-compose.yml in the repo builds from a source checkout instead;
