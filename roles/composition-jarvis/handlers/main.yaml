@@ -4,9 +4,9 @@
 # changed config.yaml needs an explicit restart to take effect, since
 # Compose won't recreate a container just because a bind-mounted file's
 # content changed underneath it.
-- name: Restart Nabu
+- name: Restart Jarvis
   ansible.builtin.command:
-    cmd: docker restart nabu
+    cmd: docker restart jarvis
   register: _restart_chives
   failed_when:
     - _restart_chives.rc != 0
