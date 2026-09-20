@@ -8,7 +8,7 @@ composition_gatus_image: ghcr.io/twin/gatus:v5.36.0
 
 # Host liveness is an SSH connect, not ICMP: it proves the host is
 # reachable for Ansible, and avoids trusting an ICMP implementation
-# (see composition-peekaping/README.md).
+# (see this role's README).
 composition_gatus_ssh_port: 22
 
 composition_gatus_interval: 60s

@@ -1,6 +1,7 @@
 # {{ ansible_managed }}
 # Endpoints are derived from inventory — the same compositions: and
-# cnames_additional data that drives DNS. Edit the role, not this file.
+# cnames_additional data that drives DNS, plus each host's
+# tcp_monitors_additional. Edit the role, not this file.
 storage:
   type: sqlite
   path: /data/data.db
@@ -43,6 +44,18 @@ endpoints:
       - "[BODY] == {{ check.expect }}"
     alerts:
       - type: email
+{% endfor %}
+{% for host in groups['infra'] | sort %}
+{% for monitor in hostvars[host].tcp_monitors_additional | default([]) %}
+  - name: "{{ monitor.name }}"
+    group: services
+    url: "tcp://{{ monitor.host }}:{{ monitor.port }}"
+    interval: {{ composition_gatus_service_interval }}
+    conditions:
+      - "[CONNECTED] == true"
+    alerts:
+      - type: email
+{% endfor %}
 {% endfor %}
 {% for name in composition_gatus_service_names %}
 {% set override = composition_gatus_service_overrides.get(name, {}) %}

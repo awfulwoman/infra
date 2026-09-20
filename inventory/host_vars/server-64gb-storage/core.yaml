@@ -307,8 +307,6 @@ compositions:
   - gateway
   - paperless-ngx
   - vikunja
-  - peekaping
-  # Running alongside peekaping while the two are compared.
   - gatus
   - mcp-kagisearch
   - composition: mcp-openzim
