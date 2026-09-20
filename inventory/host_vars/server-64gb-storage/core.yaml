@@ -188,7 +188,12 @@ zfs:
           documents:
             policy: critical
             datasets:
+              # Holds 18.8M of this dataset's 19.1M: the documents themselves.
+              # With no stated policy it resolved to none, so it was never
+              # snapshotted and could never be replicated, while its parent
+              # was faithfully backed up holding almost nothing.
               paperless-ngx:
+                policy: critical
           models:
             policy: high
           photos:
