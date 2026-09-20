@@ -287,3 +287,47 @@ def test_all_compositions_decided_reports_nothing():
     }
 
     assert compositions_missing_policy(compositions, zfs, 'fastpool/compositions') == []
+
+
+def test_composition_name_override_is_used():
+    """A role can rename its dataset, so the policy is stated under that name."""
+    compositions = ['1password-connect']
+    zfs = {
+        'fastpool': {
+            'datasets': {
+                'compositions': {
+                    'policy': 'low',
+                    'datasets': {'onepassword-connect': {'policy': 'critical'}},
+                },
+            },
+        },
+    }
+
+    assert compositions_missing_policy(
+        compositions,
+        zfs,
+        'fastpool/compositions',
+        {'1password-connect': 'onepassword-connect'},
+    ) == []
+
+
+def test_composition_name_override_is_not_satisfied_by_the_entry_name():
+    """Stating the policy under the composition's own name misses the dataset."""
+    compositions = ['1password-connect']
+    zfs = {
+        'fastpool': {
+            'datasets': {
+                'compositions': {
+                    'policy': 'low',
+                    'datasets': {'1password-connect': {'policy': 'critical'}},
+                },
+            },
+        },
+    }
+
+    assert compositions_missing_policy(
+        compositions,
+        zfs,
+        'fastpool/compositions',
+        {'1password-connect': 'onepassword-connect'},
+    ) == ['1password-connect']

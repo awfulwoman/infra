@@ -175,13 +175,20 @@ def composition_name(entry):
     return entry
 
 
-def compositions_missing_policy(compositions, zfs_dict, compositions_dataset):
+def compositions_missing_policy(
+    compositions, zfs_dict, compositions_dataset, dataset_names=None
+):
     """Return compositions that never stated a policy, in declaration order.
 
     The compositions parent is `low`, so a composition nobody decided about
     would be snapshotted briefly and never replicated. Inheriting a policy
     does not count: the decision has to be visible next to the service.
+
+    A composition role can override `composition_name`, which renames its
+    dataset. Pass those overrides as `dataset_names` ({entry: dataset}), or a
+    policy stated under the entry's own name silently protects nothing.
     """
+    dataset_names = dataset_names or {}
     stated = {
         record['dataset']
         for record in resolve_datasets(zfs_dict)
@@ -193,7 +200,8 @@ def compositions_missing_policy(compositions, zfs_dict, compositions_dataset):
         name = composition_name(entry)
         if name is None:
             continue
-        if '%s/%s' % (compositions_dataset, name) not in stated:
+        dataset = dataset_names.get(name, name)
+        if '%s/%s' % (compositions_dataset, dataset) not in stated:
             missing.append(name)
     return missing
 

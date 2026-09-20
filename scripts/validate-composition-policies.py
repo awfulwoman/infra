@@ -46,7 +46,29 @@ def load_host_vars(host_dir):
     return merged
 
 
-def find_missing(host_vars_root):
+def load_dataset_names(roles_root):
+    """Map composition name to dataset name, for roles that rename their dataset.
+
+    composition-1password-connect sets composition_name: onepassword-connect,
+    so its dataset is fastpool/compositions/onepassword-connect. A policy
+    stated under 1password-connect would protect nothing.
+    """
+    overrides = {}
+    for role_dir in sorted(roles_root.glob("composition-*")):
+        defaults = role_dir / "defaults" / "main.yaml"
+        if not defaults.is_file():
+            continue
+        data = yaml.load(defaults.read_text(), Loader=InventoryLoader)
+        if not isinstance(data, dict):
+            continue
+        name = data.get("composition_name")
+        entry = role_dir.name[len("composition-"):]
+        if name and name != entry:
+            overrides[entry] = name
+    return overrides
+
+
+def find_missing(host_vars_root, dataset_names):
     """Return {host: [composition, ...]} for compositions with no stated policy."""
     missing_by_host = {}
     checked = 0
@@ -62,6 +84,7 @@ def find_missing(host_vars_root):
             compositions,
             host_vars.get("zfs") or {},
             host_vars.get("compositions_dataset") or DEFAULT_COMPOSITIONS_DATASET,
+            dataset_names,
         )
         if missing:
             missing_by_host[host_dir.name] = missing
@@ -78,7 +101,10 @@ def main():
     )
     args = parser.parse_args()
 
-    missing_by_host, checked = find_missing(REPO_ROOT / "inventory" / "host_vars")
+    dataset_names = load_dataset_names(REPO_ROOT / "roles")
+    missing_by_host, checked = find_missing(
+        REPO_ROOT / "inventory" / "host_vars", dataset_names
+    )
 
     if not missing_by_host:
         print(f"composition policies OK: {checked} compositions, all state a policy")

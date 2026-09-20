@@ -62,8 +62,10 @@ zfs:
           zfs-api:
             policy: none
           # Losing the Connect credentials file locks us out of the vault
-          # that every other recovery depends on.
-          1password-connect:
+          # that every other recovery depends on. The dataset is named for
+          # composition_name in composition-1password-connect, not the
+          # composition itself.
+          onepassword-connect:
             policy: critical
           semaphore:
             policy: high

@@ -152,7 +152,8 @@ zfs:
             policy: none
           mcp-kagisearch:
             policy: none
-          mcp-openzim:
+          # Named for composition_name in composition-mcp-openzim.
+          openzim-mcp:
             policy: none
           mcp-searxng:
             policy: none
