@@ -1,7 +1,20 @@
 # config.yaml is a bind-mounted file, so a change to it does not make Compose
 # recreate the container. Hermes only reads it at startup, so restart by hand.
+#
+# stop_timeout is not decoration: s6 takes ~15s to bring the gateway and
+# dashboard down on agatha, and the module's fallback is 10 ("stop_timeout or
+# 10", module_utils/_module_container/module.py), which fails the handler with
+# "tried to kill container, but did not receive an exit event" and leaves the
+# old process running with the config it was restarted to pick up.
+#
+# The compose file's stop_grace_period does NOT cover this: the module sends
+# its own parameter and never reads the container's StopTimeout. That setting
+# is still worth having for `docker compose down` and a bare `docker stop`,
+# which do honour it. Comparison for this option is "ignore", so setting it
+# here does not make the module recreate the container.
 - name: Restart Hermes
   community.docker.docker_container:
     name: "{{ composition_name }}"
     state: started
     restart: true
+    stop_timeout: 60

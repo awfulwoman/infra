@@ -11,6 +11,12 @@ services:
     # restart-looping. The dashboard is not started here - it is a separate s6
     # slot that /init brings up when HERMES_DASHBOARD is set.
     command: ["gateway", "run"]
+    # s6 needs ~15s to bring the gateway and dashboard down; Docker's default
+    # is 10, so a plain `docker stop` or `compose down` SIGKILLs it mid-write.
+    # The "Restart Hermes" handler does NOT get this - community.docker sends
+    # its own stop_timeout and ignores the container's StopTimeout - so that
+    # value is set separately in handlers/main.yaml. Keep the two in step.
+    stop_grace_period: 60s
     volumes:
       # Upstream mounts ~/.hermes here. Instead the agent's whole state -
       # config.yaml, .env, memories, skills, cron, sessions, logs - lives on
