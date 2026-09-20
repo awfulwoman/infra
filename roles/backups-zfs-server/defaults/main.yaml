@@ -28,3 +28,16 @@ backups_zfs_server_mqtt_topic_prefix: "homeinfra/monitoring/zfs"
 backups_zfs_server_stale_threshold_multiplier: 2
 backups_zfs_server_mqtt_expire_after: 93600 # 26h, matching the healthchecks grace; longest cron gap is 10h
 backups_zfs_server_stale_lock_hours: 24 # a pull still holding the lock past this is wedged, not merely slow
+
+# ZFS holds on the client's snapshots.
+#
+# The pull keeps one hold per dataset, on the snapshot the replica currently
+# sits on, so the client's retention cannot prune the common base out from
+# under an incremental send. Without this, an outage longer than retention
+# ends replication for that dataset permanently and silently.
+#
+# The cost: if this backup server is retired, its holds stay behind and pin
+# one snapshot per dataset on every client. Release them with
+# `zfs release <tag> <snapshot>` before decommissioning.
+backups_zfs_server_hold_enabled: true
+backups_zfs_server_hold_tag: "zfsbackup-{{ inventory_hostname }}"

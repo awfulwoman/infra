@@ -14,6 +14,8 @@ DEFAULT_user="{{ vault_zfsbackups_user }}"
 DEFAULT_debug = False
 DEFAULT_quiet = False
 STALE_LOCK_HOURS = {{ backups_zfs_server_stale_lock_hours }}
+HOLD_ENABLED = {{ backups_zfs_server_hold_enabled | bool }}
+HOLD_TAG = "{{ backups_zfs_server_hold_tag }}"
 
 # Lockfile to prevent concurrent executions (set dynamically per host)
 _lockfile = None
@@ -373,6 +375,88 @@ def ensure_parent_datasets_exist(dataset_path):
             info(f"Created parent dataset: {parent}")
 
 
+def remote_run(host, user, args):
+    """Run one command on the client over SSH. Returns (rc, stdout, stderr)."""
+    result = subprocess.run(
+        ['ssh', f'{user}@{host}'] + args,
+        capture_output=True, check=False
+    )
+    return (result.returncode,
+            result.stdout.decode().strip(),
+            result.stderr.decode().strip())
+
+
+def snapshots_we_hold(host, user, dataset):
+    """Snapshots of `dataset` on the client that carry our hold tag."""
+    # userrefs narrows to the handful of snapshots carrying any hold at all,
+    # so we ask for tags on those rather than on the thousands a critical
+    # dataset accumulates.
+    rc, out, _ = remote_run(host, user, [
+        'zfs', 'get', '-H', '-o', 'name,value', '-t', 'snapshot',
+        '-d', '1', 'userrefs', dataset,
+    ])
+    if rc != 0 or not out:
+        return []
+
+    candidates = [
+        line.split('\t')[0] for line in out.splitlines()
+        if line.split('\t')[-1] not in ('0', '-')
+    ]
+    if not candidates:
+        return []
+
+    rc, out, _ = remote_run(host, user, ['zfs', 'holds', '-H'] + candidates)
+    if rc != 0 or not out:
+        return []
+
+    held = []
+    for line in out.splitlines():
+        parts = line.split('\t')
+        if len(parts) >= 2 and parts[1] == HOLD_TAG:
+            held.append(parts[0])
+    return held
+
+
+def update_hold(host, user, dataset, keep):
+    """Pin the snapshot the replica now sits on; let the previous one go.
+
+    Retention on the client prunes by age and knows nothing about what this
+    backup server still needs. Once the last snapshot the two share is gone,
+    no incremental send is possible and the only route back is destroying the
+    replica and sending the whole dataset again. That is how fifteen datasets
+    here stopped replicating between May and July 2026, silently, one outage
+    at a time.
+
+    A hold makes that snapshot undestroyable, so the common base survives
+    however long the backup server is away.
+    """
+    if not HOLD_ENABLED:
+        return
+
+    target = f"{dataset}@{keep}"
+    held = snapshots_we_hold(host, user, dataset)
+
+    if target not in held:
+        rc, _, err = remote_run(host, user, ['zfs', 'hold', HOLD_TAG, target])
+        if rc != 0 and 'already exists' not in err:
+            # Worth saying, but not worth failing the pull: the data arrived,
+            # and the next run will try the hold again.
+            error(f"Could not hold {target}: {err}")
+            return
+        debug(f"Held {target} as {HOLD_TAG}")
+
+    # Exactly one snapshot per dataset stays held. Leave the old bases pinned
+    # and the client keeps every snapshot it ever sent us, filling its pool.
+    for snapshot in held:
+        if snapshot == target:
+            continue
+        rc, _, err = remote_run(host, user, ['zfs', 'release', HOLD_TAG, snapshot])
+        if rc != 0:
+            error(f"Could not release {snapshot}: {err}")
+        else:
+            debug(f"Released hold on {snapshot}")
+
+
 def pulldatasets(host, name, dataset, user, destination):
     local_dataset = f"{destination}/{name}/{dataset}"
 
@@ -419,8 +503,10 @@ def pulldatasets(host, name, dataset, user, destination):
             if not send_and_receive(send_cmd, receive_cmd_incremental):
                 sys.exit(1)
             info(f"Success! Latest snapshot is '{latest_remote}'")
+            update_hold(host, user, dataset, latest_remote)
         else:
             info("Only one snapshot exists, no incremental receive needed.")
+            update_hold(host, user, dataset, earliest_remote)
 
     else:
         # Incremental sync: find latest common snapshot and sync from there
@@ -429,6 +515,10 @@ def pulldatasets(host, name, dataset, user, destination):
         if latest_common == latest_remote:
             info(f"Up-to-date!")
             debug(f"Latest is {dataset}@{latest_remote}")
+            # Nothing to transfer, but the hold still has to move forward, or
+            # a dataset that rarely changes keeps its base pinned at an
+            # ever-older snapshot and eventually loses it anyway.
+            update_hold(host, user, dataset, latest_remote)
             return
 
         info(f"Partially synced.")
@@ -439,6 +529,7 @@ def pulldatasets(host, name, dataset, user, destination):
         if not send_and_receive(send_cmd, receive_cmd):
             sys.exit(1)
         info(f"Success. Latest snapshot is now '{latest_remote}'.")
+        update_hold(host, user, dataset, latest_remote)
 
     print('\n')
 
