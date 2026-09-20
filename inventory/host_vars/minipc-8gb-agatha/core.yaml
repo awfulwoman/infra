@@ -136,6 +136,13 @@ compositions:
 composition_hermes_nabu_dashboard_theme: midnight
 composition_hermes_nabu_dashboard_font: system-sans
 
+# OpenAI-compatible API on 8642, so other containers can drive Nabu (e.g. as a
+# Home Assistant conversation agent). No host port is published; it is
+# reachable on {{ default_docker_network }} and, through Traefik, at
+# hermes-nabu-api.{{ domainname_infra }}. The key gates every request, and the
+# role asserts it is set.
+composition_hermes_nabu_api_server: true
+
 composition_hermes_nabu_mcp_servers:
   homeassistant:
     # HA's MCP Server integration speaks SSE only; Hermes defaults to

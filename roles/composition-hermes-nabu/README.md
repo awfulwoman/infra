@@ -162,7 +162,7 @@ The response's `access_token` is `vault_hermes_nabu_matrix_access_token`.
 | `composition_hermes_nabu_disabled_toolsets` | `[]` | Toolset names to drop (`agent.disabled_toolsets`) |
 | `composition_hermes_nabu_mcp_env` | `{}` | `ENVVAR: value` pairs → `.environment_vars` (for `${ENVVAR}` in `mcp_servers`) |
 | `composition_hermes_nabu_dashboard` | `true` | Run the dashboard slot |
-| `composition_hermes_nabu_api_server` | `false` | Expose the OpenAI-compatible API on 8642 |
+| `composition_hermes_nabu_api_server` | `false` | Expose the OpenAI-compatible API on 8642, and publish it through Traefik at `hermes-nabu-api.<domain>` |
 | `composition_hermes_nabu_manage_config` | `true` | Let Ansible own `config.yaml` |
 | `composition_hermes_nabu_matrix` | `false` | Connect the gateway to a Matrix homeserver |
 | `composition_hermes_nabu_matrix_homeserver` | `""` | e.g. `https://matrix.ewwww.eu`; mandatory when on |
