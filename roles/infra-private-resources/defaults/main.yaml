@@ -21,62 +21,9 @@ infra_privateresources_network_mode: "nat"
 infra_privateresources_pool_path: "/fastpool/pools/vms"
 
 # VM definitions
-infra_privateresources_vms:
-  - id: claude_dev
-    name: "vm-claude-dev"
-    description: "Claude Code development machine"
-    source_image_url: "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img"
-    memory: 8192  # 8GB
-    vcpus: 4
-    disk_size_gb: 100  # Docker images, source code, build artifacts
-    ip_address: "192.168.122.10"
-    gateway: "192.168.122.1"
-    dns: "192.168.122.1"
-    mac_address: "52:54:00:00:02:00"
-    graphics: false
-    # Disabled 2026-08-01: was silently autostarting on every host reboot,
-    # contending for disk I/O alongside ~70 Docker containers also starting at
-    # once. Start manually with `virsh start vm-claude-dev` when needed.
-    autostart: false
-
-  # - id: homeautomation
-  #   name: "vm-homeautomation"
-  #   description: "Home automation VM"
-  #   source_image_url: "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img"
-  #   memory: 2048  # 2GB
-  #   vcpus: 2
-  #   disk_size_gb: 50  # HA database, config, snapshots, recordings
-  #   ip_address: "192.168.122.11"
-  #   gateway: "192.168.122.1"
-  #   dns: "192.168.122.1"
-  #   mac_address: "52:54:00:00:02:01"
-  #   graphics: false
-  #   autostart: false
-
-  # - id: downloads
-  #   name: "vm-downloads"
-  #   description: "Downloads and Arr stack compositions"
-  #   source_image_url: "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img"
-  #   memory: 4096  # 4GB
-  #   vcpus: 4
-  #   disk_size_gb: 50  # Torrent temp, Arr databases (media on NFS)
-  #   ip_address: "192.168.122.12"
-  #   gateway: "192.168.122.1"
-  #   dns: "192.168.122.1"
-  #   mac_address: "52:54:00:00:02:02"
-  #   graphics: false
-  #   autostart: false
-
-  # - id: media
-  #   name: "vm-media"
-  #   description: "Jellyfin, Immich, MusicAssistant, Audiobookshelf"
-  #   source_image_url: "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img"
-  #   memory: 6144  # 6GB
-  #   vcpus: 4
-  #   disk_size_gb: 100  # Metadata, transcode cache, thumbnails
-  #   ip_address: "192.168.122.13"
-  #   gateway: "192.168.122.1"
-  #   dns: "192.168.122.1"
-  #   mac_address: "52:54:00:00:02:03"
-  #   graphics: false
-  #   autostart: false
+#
+# Empty since 2026-09-20. Every VM was shut off and unused: claude-dev and
+# downloads had not been written since 2026-08-01, media since 2026-02-08.
+# Their disks and datasets were removed at the same time. The libvirt network
+# and pool path stay, so a new VM only needs an entry here.
+infra_privateresources_vms: []

@@ -162,17 +162,6 @@ zfs:
       shared:
         datasets:
           nominatim:
-      pools:
-        datasets:
-          vms:
-            policy: critical
-            datasets:
-              vm-claude-dev:
-                policy: critical
-              vm-downloads:
-                policy: critical
-              vm-media:
-                policy: critical
   slowpool:
     vdevs:
       - type: mirror
