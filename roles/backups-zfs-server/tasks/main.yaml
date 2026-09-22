@@ -30,12 +30,10 @@
           - "{{ inventory_hostname }}"
           - "{{ item }}"
         # Must track the staggered cron minute below, or the check expects the
-        # ping at a time the client no longer runs.
-        schedule: >-
-          {{ (backups_zfs_server_cron_minute | int
-              + groups[backups_zfs_server_pull_group].index(item) | int
-              * backups_zfs_server_cron_stagger_minutes | int) % 60 }}
-          {{ backups_zfs_server_cron_hour }} * * *
+        # ping at a time the client no longer runs. Kept on one line: in a
+        # folded scalar a more-indented continuation keeps its newline, which
+        # produced a schedule the healthchecks API rejected outright.
+        schedule: "{{ (backups_zfs_server_cron_minute | int + (groups[backups_zfs_server_pull_group].index(item) * backups_zfs_server_cron_stagger_minutes | int)) % 60 }} {{ backups_zfs_server_cron_hour }} * * *"
         grace: 93600
         tz: Europe/Berlin
       loop: "{{ groups[backups_zfs_server_pull_group] }}"
@@ -271,9 +269,7 @@
   ansible.builtin.cron:
     name: "zfs-pull-backups {{ item }}"
     hour: "{{ backups_zfs_server_cron_hour }}"
-    minute: >-
-      {{ (backups_zfs_server_cron_minute | int
-          + _index | int * backups_zfs_server_cron_stagger_minutes | int) % 60 }}
+    minute: "{{ (backups_zfs_server_cron_minute | int + (_index | int * backups_zfs_server_cron_stagger_minutes | int)) % 60 }}"
     job: "{{ backups_zfs_server_script_path }}/scripts/pull-{{ item }}.sh >/dev/null"
     state: "{{ 'present' if _has_datasets else 'absent' }}"
   loop: "{{ groups[backups_zfs_server_pull_group] }}"
