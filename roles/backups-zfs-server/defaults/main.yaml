@@ -45,3 +45,12 @@ backups_zfs_server_hold_tag: "zfsbackup-{{ inventory_hostname }}"
 # Minutes between each client's pull. Seven clients at 7 minutes spans 42
 # minutes, well inside the smallest gap in the schedule.
 backups_zfs_server_cron_stagger_minutes: 7
+
+# One lock shared by every pull and push, so only one replication job runs on
+# this host at a time. The stagger alone spaces out the starts, but a pull
+# that outlasts its slot still overlaps the next client's. A job that cannot
+# get the lock within the wait gives up without running, sends no healthcheck
+# ping, and is caught by the healthcheck grace. 90 minutes sits inside the
+# smallest gap in the pull schedule (10:00 to 12:00).
+backups_zfs_server_global_lock: /run/zfs-backups.lock
+backups_zfs_server_global_lock_wait_seconds: 5400

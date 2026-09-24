@@ -260,6 +260,11 @@
 # four-core Pi to a load average of 325, unresponsive to a one-line read for
 # the best part of an hour. Spacing them costs nothing — the schedule has
 # hours of slack — and keeps one slow client from starving the rest.
+#
+# Spacing the starts was not enough: the per-client lockfile does not stop a
+# long pull overlapping the next client's, and belinda wedged again on
+# 2026-09-24. Every job now also takes one host-wide flock and runs at idle
+# CPU and IO priority, so replication queues instead of piling up.
 - name: Ensure that pull backup cronjobs are managed for each client
   become: true
   vars:
@@ -270,7 +275,10 @@
     name: "zfs-pull-backups {{ item }}"
     hour: "{{ backups_zfs_server_cron_hour }}"
     minute: "{{ (backups_zfs_server_cron_minute | int + (_index | int * backups_zfs_server_cron_stagger_minutes | int)) % 60 }}"
-    job: "{{ backups_zfs_server_script_path }}/scripts/pull-{{ item }}.sh >/dev/null"
+    job: >-
+      flock -w {{ backups_zfs_server_global_lock_wait_seconds }} {{ backups_zfs_server_global_lock }}
+      nice -n 19 ionice -c 3
+      {{ backups_zfs_server_script_path }}/scripts/pull-{{ item }}.sh >/dev/null
     state: "{{ 'present' if _has_datasets else 'absent' }}"
   loop: "{{ groups[backups_zfs_server_pull_group] }}"
 
@@ -330,6 +338,8 @@
     hour: "{{ backups_zfs_server_offsite_cron_hour }}"
     minute: "{{ backups_zfs_server_offsite_cron_minute }}"
     job: >-
+      flock -w {{ backups_zfs_server_global_lock_wait_seconds }} {{ backups_zfs_server_global_lock }}
+      nice -n 19 ionice -c 3
       {{ backups_zfs_server_script_path }}/zfs-push-backups
       --host {{ item }}
       --user {{ vault_zfsbackups_user }}
