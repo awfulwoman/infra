@@ -39,7 +39,7 @@ alone.
 
 | Variable | Where | Description |
 |---|---|---|
-| `syncthing_folders` | `group_vars/infra/core.yaml` | Folder list: `id`, `label`, `path`, `hosts`, `ignores` |
+| `syncthing_folders` | `group_vars/infra/core.yaml` | Folder list: `id`, `label`, `path`, `hosts`, `ignores`, optional `rescan_interval` (seconds; omitted = leave Syncthing's own value) |
 | `syncthing_api_key` | `vault_syncthing_api_key` | Shared key; each daemon gets it as `STGUIAPIKEY` |
 | `syncthing_gui_user` / `syncthing_gui_password` | defaults / vault | Web UI login |
 | `syncthing_api_url` | instance host_vars | Overrides the Traefik endpoint |

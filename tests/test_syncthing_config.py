@@ -121,3 +121,17 @@ def test_member_host_missing_from_peers_is_rejected():
 
     with pytest.raises(ValueError, match="no-such-host"):
         syncthing_host_config([folder], PEERS, STORAGE, "/var/syncthing")
+
+
+def test_rescan_interval_is_passed_through_when_declared():
+    folder = dict(CHARLIE, rescan_interval=300)
+
+    result = syncthing_host_config([folder], PEERS, STORAGE, "/var/syncthing")
+
+    assert result["folders"][0]["rescanIntervalS"] == 300
+
+
+def test_rescan_interval_is_left_to_syncthing_when_not_declared():
+    result = syncthing_host_config([CHARLIE], PEERS, STORAGE, "/var/syncthing")
+
+    assert "rescanIntervalS" not in result["folders"][0]

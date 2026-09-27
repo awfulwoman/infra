@@ -117,6 +117,14 @@ environment_config:
 syncthing_obsidian_ignores:
   - ".obsidian/workspace*.json"
   - ".trash"
+  # Finder litter on malcolm. (?d) lets Syncthing delete it when it would
+  # otherwise block removing a directory.
+  - "(?d).DS_Store"
+
+# malcolm's filesystem watcher misses some changes (a burst of new files, a
+# deletion), leaving them for the default hourly rescan. These folders are
+# tiny, so a 5-minute rescan costs nothing and bounds the delay.
+syncthing_obsidian_rescan_interval: 300
 
 syncthing_folders:
   - id: obsidian-charlie
@@ -127,6 +135,7 @@ syncthing_folders:
       - apple-macmini-m4-16gb-malcolm
       - minipc-8gb-agatha
     ignores: "{{ syncthing_obsidian_ignores }}"
+    rescan_interval: "{{ syncthing_obsidian_rescan_interval }}"
   - id: obsidian-agentmemory
     label: "Obsidian: AgentMemory"
     path: Obsidian/AgentMemory
@@ -137,3 +146,4 @@ syncthing_folders:
       # Served to agents by composition-basic-memory.
       - minipc-8gb-camina
     ignores: "{{ syncthing_obsidian_ignores }}"
+    rescan_interval: "{{ syncthing_obsidian_rescan_interval }}"

@@ -45,19 +45,20 @@ def syncthing_host_config(folders, peers, this_host, folder_root):
         if this_host not in folder["hosts"]:
             continue
         members = folder["hosts"]
-        result["folders"].append(
-            {
-                "id": folder["id"],
-                "label": folder["label"],
-                "path": "%s/%s" % (root, folder["path"].strip("/")),
-                "type": "sendreceive",
-                "fsWatcherEnabled": True,
-                "devices": [
-                    _folder_device(d)
-                    for d in sorted(peers[h]["device_id"] for h in members)
-                ],
-            }
-        )
+        entry = {
+            "id": folder["id"],
+            "label": folder["label"],
+            "path": "%s/%s" % (root, folder["path"].strip("/")),
+            "type": "sendreceive",
+            "fsWatcherEnabled": True,
+            "devices": [
+                _folder_device(d)
+                for d in sorted(peers[h]["device_id"] for h in members)
+            ],
+        }
+        if "rescan_interval" in folder:
+            entry["rescanIntervalS"] = int(folder["rescan_interval"])
+        result["folders"].append(entry)
         result["ignores"][folder["id"]] = list(folder.get("ignores", []))
         for host in members:
             if host != this_host and host not in listed:
