@@ -53,12 +53,21 @@
   loop_control:
     label: "{{ item.item.key }}"
 
-# The API key bypasses GUI auth, so a request with only basic auth tells us
-# whether the declared login already works. The stored password is a bcrypt
-# hash, so comparing config would never match.
+# The stored password is a bcrypt hash, so compare by logging in. /rest/*
+# rejects basic auth without a CSRF token; /meta.js does not, and returns 403
+# for wrong credentials once a user is set.
+- name: "Read web UI config on {{ _syncthing_host }}"
+  ansible.builtin.uri:
+    url: "{{ _syncthing_url }}/rest/config/gui"
+    validate_certs: "{{ _syncthing_validate }}"
+    headers:
+      X-API-Key: "{{ syncthing_api_key }}"
+  register: _syncthing_gui
+  no_log: true
+
 - name: "Check web UI login on {{ _syncthing_host }}"
   ansible.builtin.uri:
-    url: "{{ _syncthing_url }}/rest/system/ping"
+    url: "{{ _syncthing_url }}/meta.js"
     validate_certs: "{{ _syncthing_validate }}"
     url_username: "{{ syncthing_gui_user }}"
     url_password: "{{ syncthing_gui_password }}"
@@ -67,7 +76,8 @@
   register: _syncthing_login
   no_log: true
 
-# Syncthing bcrypt-hashes a plaintext password it receives through the API.
+# Syncthing bcrypt-hashes a plaintext password it receives through the API,
+# then restarts its GUI listener, which can cut the response off.
 - name: "Set web UI login on {{ _syncthing_host }}"
   ansible.builtin.uri:
     url: "{{ _syncthing_url }}/rest/config/gui"
@@ -80,7 +90,26 @@
       user: "{{ syncthing_gui_user }}"
       password: "{{ syncthing_gui_password }}"
   changed_when: true
-  when: _syncthing_login.status != 200
+  failed_when: false
+  when: >-
+    _syncthing_gui.json.user != syncthing_gui_user
+    or not _syncthing_gui.json.password
+    or _syncthing_login.status != 200
+  register: _syncthing_gui_set
+  no_log: true
+
+- name: "Verify web UI login on {{ _syncthing_host }}" # noqa: no-handler
+  ansible.builtin.uri:
+    url: "{{ _syncthing_url }}/meta.js"
+    validate_certs: "{{ _syncthing_validate }}"
+    url_username: "{{ syncthing_gui_user }}"
+    url_password: "{{ syncthing_gui_password }}"
+    force_basic_auth: true
+  register: _syncthing_login_after
+  until: _syncthing_login_after.status == 200
+  retries: 15
+  delay: 2
+  when: _syncthing_gui_set is changed
   no_log: true
 
 - name: "Check restart-required on {{ _syncthing_host }}"

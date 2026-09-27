@@ -52,7 +52,10 @@ def syncthing_host_config(folders, peers, this_host, folder_root):
                 "path": "%s/%s" % (root, folder["path"].strip("/")),
                 "type": "sendreceive",
                 "fsWatcherEnabled": True,
-                "devices": [_folder_device(peers[h]["device_id"]) for h in members],
+                "devices": [
+                    _folder_device(d)
+                    for d in sorted(peers[h]["device_id"] for h in members)
+                ],
             }
         )
         result["ignores"][folder["id"]] = list(folder.get("ignores", []))

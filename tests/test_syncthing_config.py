@@ -35,10 +35,12 @@ def test_folder_path_is_joined_to_host_root_and_lists_every_member():
             "path": "/var/syncthing/Obsidian/Charlie",
             "type": "sendreceive",
             "fsWatcherEnabled": True,
+            # Sorted by device ID, as Syncthing stores them, so a re-run
+            # compares equal to the live object.
             "devices": [
-                folder_device("STORAGE-ID"),
-                folder_device("MALCOLM-ID"),
                 folder_device("AGATHA-ID"),
+                folder_device("MALCOLM-ID"),
+                folder_device("STORAGE-ID"),
             ],
         }
     ]
