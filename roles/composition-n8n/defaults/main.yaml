@@ -6,3 +6,8 @@ composition_dns_subdomains:
 
 n8n_db_password: "{{ vault_n8n_db_password }}"
 n8n_encryption_key: "{{ vault_n8n_encryption_key }}"
+
+# Expose newly created workflows to the instance-level MCP server. No env var
+# exists for this, and the UI/API toggle is locked while MCP is env-managed,
+# so tasks/main.yaml writes n8n's settings row directly.
+n8n_mcp_auto_expose_new_workflows: true

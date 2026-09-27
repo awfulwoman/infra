@@ -45,3 +45,32 @@
     build: always
     remove_orphans: true
   notify: Restart Traefik
+
+# ----------------------------
+# MCP settings without an env var
+# ----------------------------
+
+# Retries cover a first deploy, where n8n may still be creating its tables.
+- name: Read MCP auto-expose setting
+  ansible.builtin.command: >-
+    docker exec n8n_db psql -U n8n -d n8n -tAc
+    "select value from settings where key = 'mcp.autoExposeNewWorkflows'"
+  register: n8n_mcp_auto_expose_current
+  until: n8n_mcp_auto_expose_current.rc == 0
+  retries: 12
+  delay: 5
+  changed_when: false
+
+- name: Set MCP auto-expose setting
+  ansible.builtin.command: >-
+    docker exec n8n_db psql -U n8n -d n8n -tAc
+    "insert into settings (key, value, \"loadOnStartup\")
+    values ('mcp.autoExposeNewWorkflows', '{{ n8n_mcp_auto_expose_new_workflows | string | lower }}', true)
+    on conflict (key) do update set value = excluded.value"
+  when: n8n_mcp_auto_expose_current.stdout != (n8n_mcp_auto_expose_new_workflows | string | lower)
+  register: n8n_mcp_auto_expose_set
+
+# n8n caches the value, so it only sees the new row after a restart.
+- name: Restart n8n to load MCP settings
+  ansible.builtin.command: docker restart n8n
+  when: n8n_mcp_auto_expose_set is changed
