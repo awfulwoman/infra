@@ -16,3 +16,7 @@ N8N_HOST=n8n.{{ domainname_infra }}
 N8N_PORT=5678
 N8N_PROTOCOL=https
 WEBHOOK_URL=https://n8n.{{ domainname_infra }}/
+
+# Instance-level MCP server (/mcp-server/http); env-managed, so the UI toggle is locked
+N8N_MCP_MANAGED_BY_ENV=true
+N8N_MCP_ACCESS_ENABLED=true
