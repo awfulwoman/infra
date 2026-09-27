@@ -44,7 +44,8 @@ services:
 
   tika:
     container_name: paperless_tika
-    image: docker.io/apache/tika:latest
+    # Pinned to 3.x: Tika 4 returns 406 for the JSON Accept header paperless's tika-client sends
+    image: docker.io/apache/tika:3.3.1.0
     restart: unless-stopped
     networks:
       - "{{ default_docker_network }}"
