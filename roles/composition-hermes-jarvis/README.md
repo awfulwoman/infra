@@ -149,6 +149,29 @@ curl -s -X POST https://<homeserver>/_matrix/client/v3/login \
 
 The response's `access_token` is `vault_hermes_jarvis_matrix_access_token`.
 
+## GitHub
+
+The `github` entry in `composition_hermes_jarvis_mcp_servers` (core.yaml) points
+at GitHub's own hosted remote MCP server (`api.githubcopilot.com/mcp/`), not
+the archived `@modelcontextprotocol/server-github` that Hermes' own MCP docs
+still show as an example - that package is deprecated in favor of
+[github/github-mcp-server](https://github.com/github/github-mcp-server),
+whose remote variant needs nothing running inside this container: no `npx`/
+Node, no `gh` CLI (not in the image), no SSH key. Repo reads, file edits,
+branches, PRs and issues all go through the GitHub API under
+`GITHUB_TOKEN`, not a literal `git clone` - `git` and `openssh-client` are
+present in the image if a real local clone is ever wanted instead (`HOME` is
+`/opt/data`, which is the one persistent volume, so `~/.ssh` or
+`~/.git-credentials` would survive restarts).
+
+**Getting a token.** Run `scripts/hermes-jarvis-github-token-wizard.sh` from
+the repo root - it walks GitHub's fine-grained token page, then encrypts the
+result into the vault as `vault_hermes_jarvis_github_token`. Fine-grained
+tokens are web-UI-only to create (no `gh`/API path), so this can't be
+scripted end to end. Token shape: all repositories, `Contents`/`Issues`/
+`Pull requests` permissions set to Read and write (`Metadata: Read-only` is
+automatic). Give it a bounded expiration and re-run the wizard to rotate it.
+
 ## Key variables
 
 | Variable | Default | Description |
@@ -182,6 +205,7 @@ The response's `access_token` is `vault_hermes_jarvis_matrix_access_token`.
 | `vault_hermes_jarvis_dashboard_secret` | when dashboard is on | Signs session cookies; without it sessions die on restart |
 | `vault_hermes_jarvis_api_server_key` | when API server is on | Bearer key for the API endpoint |
 | `vault_hermes_jarvis_matrix_access_token` | when Matrix is on | Full account access - see Matrix section above |
+| `vault_hermes_jarvis_github_token` | for the `github` MCP server | Fine-grained PAT, all repos, Contents/Issues/Pull requests Read and write - see GitHub section above |
 
 Generate secrets with `openssl rand -hex 32`.
 

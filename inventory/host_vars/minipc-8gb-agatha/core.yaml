@@ -206,6 +206,17 @@ composition_hermes_jarvis_mcp_servers:
     enabled: true
     headers:
       Authorization: "Bearer ${HOMEASSISTANT_MCP_TOKEN}"
+  github:
+    # GitHub's own hosted remote server - no binary/npx/gh-cli needed inside
+    # the container, unlike the archived @modelcontextprotocol/server-github
+    # that Hermes' own MCP docs still show as an example. Repo access, file
+    # reads/writes, PRs and issues all go through the GitHub API under this
+    # token rather than a literal `git clone` - no SSH key or git credential
+    # wiring required. Docs: https://github.com/github/github-mcp-server
+    url: "https://api.githubcopilot.com/mcp/"
+    enabled: true
+    headers:
+      Authorization: "Bearer ${GITHUB_TOKEN}"
 
 composition_hermes_jarvis_mcp_env:
   # gateway labels this client "hermes" in its /mcp usage log; the secret
@@ -216,6 +227,10 @@ composition_hermes_jarvis_mcp_env:
   # Long-lived HA token created for this bot alone, so it can be revoked
   # independently of nabu's.
   HOMEASSISTANT_MCP_TOKEN: "{{ vault_hermes_jarvis_homeassistant_token }}"
+  # Fine-grained PAT, all repos, Contents/Issues/Pull requests: Read and
+  # write. Created via the wizard - see
+  # scripts/wizards/hermes-jarvis-github-token.sh.
+  GITHUB_TOKEN: "{{ vault_hermes_jarvis_github_token | default('') }}"
 
 composition_hermes_jarvis_matrix: true
 composition_hermes_jarvis_matrix_homeserver: "https://matrix.{{ domainname_infra }}"
