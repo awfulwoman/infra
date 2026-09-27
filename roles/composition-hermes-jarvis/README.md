@@ -151,46 +151,37 @@ The response's `access_token` is `vault_hermes_jarvis_matrix_access_token`.
 
 ## GitHub
 
-The `github` entry in `composition_hermes_jarvis_mcp_servers` (core.yaml) points
-at GitHub's own hosted remote MCP server (`api.githubcopilot.com/mcp/`), not
-the archived `@modelcontextprotocol/server-github` that Hermes' own MCP docs
-still show as an example - that package is deprecated in favor of
+Jarvis works on GitHub as a dedicated helperbot account, not as awfulwoman.
+The helperbot has no access to awfulwoman's repos, so it cannot commit to
+them. It forks a public repo into its own account, pushes branches to the
+fork, and opens a PR (or an issue) against the awfulwoman repo. No
+collaborator invites or branch-protection rulesets are needed. This only
+works for public repos.
+
+**Token.** `GITHUB_TOKEN` is `vault_github_helperbot_hermes_token`
+(`group_vars/infra/vault_external_github.yaml`), a **classic** PAT on the
+helperbot with only the `public_repo` scope. It must be a classic PAT:
+GitHub does not let fine-grained PATs contribute to public repos where the
+account is not a member. No API can create tokens, so rotate it by hand in
+the helperbot's GitHub settings.
+
+**API side.** The `github` entry in `composition_hermes_jarvis_mcp_servers`
+(core.yaml) points at GitHub's hosted remote MCP server
+(`api.githubcopilot.com/mcp/`). Hermes' own MCP docs still show the
+archived `@modelcontextprotocol/server-github` package. Its replacement is
 [github/github-mcp-server](https://github.com/github/github-mcp-server),
-whose remote variant needs nothing running inside this container: no `npx`/
-Node, no `gh` CLI (not in the image), no SSH key. Repo reads, file edits,
-branches, PRs and issues all go through the GitHub API under
-`GITHUB_TOKEN`, not a literal `git clone` - `git` and `openssh-client` are
-present in the image if a real local clone is ever wanted instead (`HOME` is
-`/opt/data`, which is the one persistent volume, so `~/.ssh` or
-`~/.git-credentials` would survive restarts).
+whose remote variant needs nothing inside this container. Forks, PRs and
+issues go through it.
 
-**Bot identity, not the personal account.** `GITHUB_TOKEN` is a fine-grained
-PAT issued under a *separate* bot GitHub account invited as a collaborator on
-each repo, not this user's own account. That separation is what makes
-PR-only enforcement possible at all: a PAT under the user's own account is
-indistinguishable from the user at the API level, so branch protection can't
-tell "Jarvis pushed" apart from "the user pushed" and force only one of them
-through a PR. A distinct login is a distinct actor that a branch-protection
-ruleset can target, while the user's own account sits on that ruleset's
-bypass list and keeps pushing straight to `main` as usual.
-
-Per repo, that means: the bot account is an invited collaborator (`push`
-permission), and a ruleset named `jarvis-bot-pr-only` requires a pull request
-on the default branch with the user's account on `bypass_actors`. There's no
-org-wide or account-wide "all repos, including future ones" setting for a
-personal (non-org) account - a brand new repo needs the bot invited and the
-ruleset created for it same as any other, before Jarvis gets PR-only access
-to it.
-
-**Setup.** Run `scripts/hermes-jarvis-github-bot-setup.sh` from the repo
-root. It walks creating the bot account and its fine-grained token (both
-web-UI-only - no `gh`/API path exists for either), encrypts the token into
-the vault as `vault_hermes_jarvis_github_bot_token`, then uses the human's
-own `gh` session to loop over every current private repo: invite the bot,
-accept the invite as the bot, and create/update that ruleset. Token shape:
-all repositories, `Contents`/`Issues`/`Pull requests` permissions set to Read
-and write (`Metadata: Read-only` is automatic), bounded expiration - re-run
-the wizard's token stages to rotate it.
+**Local work.** When `composition_hermes_jarvis_git_github_login` is set,
+the role writes `/opt/data/.gitconfig`. `/opt/data` is `HOME` inside the
+container and is the persistent volume. The file sets the helperbot's name
+and noreply email; the role looks up the email's numeric ID from the public
+GitHub API at deploy time. It also sets a credential helper that reads
+`$GITHUB_TOKEN` from the environment when git asks, so the token is not
+written to disk. The terminal toolset can then `git clone` the helperbot's
+fork over HTTPS, edit and test it, and push. The image has `git` and
+`python3` but no `gh` CLI, and nothing installs a repo's own toolchain.
 
 ## Key variables
 
@@ -204,6 +195,7 @@ the wizard's token stages to rotate it.
 | `composition_hermes_jarvis_mcp_servers` | `{}` | MCP servers for this bot |
 | `composition_hermes_jarvis_disabled_toolsets` | `[]` | Toolset names to drop (`agent.disabled_toolsets`) |
 | `composition_hermes_jarvis_mcp_env` | `{}` | `ENVVAR: value` pairs → `.environment_vars` (for `${ENVVAR}` in `mcp_servers`) |
+| `composition_hermes_jarvis_git_github_login` | `""` | GitHub login to commit as; writes `/opt/data/.gitconfig` - see GitHub section above |
 | `composition_hermes_jarvis_dashboard` | `true` | Run the dashboard slot |
 | `composition_hermes_jarvis_api_server` | `false` | Expose the OpenAI-compatible API on 8642, and publish it through Traefik at `hermes-jarvis-api.<domain>` |
 | `composition_hermes_jarvis_manage_config` | `true` | Let Ansible own `config.yaml` |
@@ -225,7 +217,6 @@ the wizard's token stages to rotate it.
 | `vault_hermes_jarvis_dashboard_secret` | when dashboard is on | Signs session cookies; without it sessions die on restart |
 | `vault_hermes_jarvis_api_server_key` | when API server is on | Bearer key for the API endpoint |
 | `vault_hermes_jarvis_matrix_access_token` | when Matrix is on | Full account access - see Matrix section above |
-| `vault_hermes_jarvis_github_bot_token` | for the `github` MCP server | Fine-grained PAT under the bot account, all repos it collaborates on, Contents/Issues/Pull requests Read and write - see GitHub section above |
 
 Generate secrets with `openssl rand -hex 32`.
 

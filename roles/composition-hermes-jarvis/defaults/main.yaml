@@ -60,6 +60,17 @@ composition_hermes_jarvis_disabled_toolsets: []
 # -------------------------------------------------------------------
 composition_hermes_jarvis_mcp_env: {}
 
+# -------------------------------------------------------------------
+# GIT
+# GitHub login the agent commits and pushes as. When set, the role writes
+# /opt/data/.gitconfig (HOME inside the container) with that identity and a
+# credential helper that hands git $GITHUB_TOKEN from the environment at
+# runtime, so the token never lands on disk. The commit email is the
+# account's noreply address, looked up from the public GitHub API.
+# Empty = leave git unconfigured.
+# -------------------------------------------------------------------
+composition_hermes_jarvis_git_github_login: ""
+
 # `hermes setup` writes these into config.yaml; declare them here so the
 # role's template does not drop them on the next play. Empty = omit the key
 # (Hermes uses its own default).

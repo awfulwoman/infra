@@ -1,0 +1,7 @@
+# {{ ansible_managed }}
+[user]
+	name = {{ composition_hermes_jarvis_git_github_login }}
+	email = {{ _hermes_jarvis_git_github_user.json.id }}+{{ composition_hermes_jarvis_git_github_login }}@users.noreply.github.com
+[credential "https://github.com"]
+	helper =
+	helper = "!f() { test \"$1\" = get && echo username={{ composition_hermes_jarvis_git_github_login }} && echo \"password=$GITHUB_TOKEN\"; }; f"

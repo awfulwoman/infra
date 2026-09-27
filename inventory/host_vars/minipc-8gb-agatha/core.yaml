@@ -227,11 +227,13 @@ composition_hermes_jarvis_mcp_env:
   # Long-lived HA token created for this bot alone, so it can be revoked
   # independently of nabu's.
   HOMEASSISTANT_MCP_TOKEN: "{{ vault_hermes_jarvis_homeassistant_token }}"
-  # Fine-grained PAT under a separate bot GitHub account (not this user's own),
-  # so branch-protection rulesets can force Jarvis through PRs while the human
-  # account still pushes straight to main - see composition-hermes-jarvis
-  # README.md#github. Created via scripts/hermes-jarvis-github-bot-setup.sh.
-  GITHUB_TOKEN: "{{ vault_hermes_jarvis_github_bot_token | default('') }}"
+  # Token on the dedicated helperbot account, not awfulwoman's. The helperbot
+  # has no access to awfulwoman repos, so it can only fork, push to its own
+  # forks, and open PRs/issues - see composition-hermes-jarvis README.md#github.
+  GITHUB_TOKEN: "{{ vault_github_helperbot_hermes_token }}"
+
+# Commits and pushes (to the helperbot's own forks) as the helperbot.
+composition_hermes_jarvis_git_github_login: "{{ vault_github_helperbot_username }}"
 
 composition_hermes_jarvis_matrix: true
 composition_hermes_jarvis_matrix_homeserver: "https://matrix.{{ domainname_infra }}"

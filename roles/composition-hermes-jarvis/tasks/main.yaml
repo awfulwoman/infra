@@ -151,6 +151,24 @@
   when: state | default('present') == 'present' and composition_hermes_jarvis_manage_config
   notify: Restart Hermes
 
+# The noreply email needs the account's numeric ID; the login alone only
+# works for accounts created before July 2017.
+- name: Look up the GitHub account the agent commits as
+  ansible.builtin.uri:
+    url: "https://api.github.com/users/{{ composition_hermes_jarvis_git_github_login }}"
+    return_content: true
+  register: _hermes_jarvis_git_github_user
+  when: state | default('present') == 'present' and composition_hermes_jarvis_git_github_login | length > 0
+
+- name: Deploy git config for the agent
+  ansible.builtin.template:
+    src: gitconfig.j2
+    dest: "{{ composition_config }}/data/.gitconfig"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0644"
+  when: state | default('present') == 'present' and composition_hermes_jarvis_git_github_login | length > 0
+
 # hermes_cli/env_loader.py loads /opt/data/.env with override=True, so that
 # file beats the container environment for any key it defines - the reverse
 # of what this role's .environment_vars assumes. The image ships .env as a
