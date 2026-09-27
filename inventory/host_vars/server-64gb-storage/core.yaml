@@ -198,7 +198,6 @@ zfs:
             policy: high
           photos:
             policy: critical
-          syncthing:
           logs:
             datasets:
               loki:
