@@ -71,6 +71,12 @@ zfs:
             policy: high
           reverseproxy:
             policy: low
+          # A replica of the AgentMemory folder; storage holds the backed-up
+          # hub. basic-memory's index is rebuilt from the notes.
+          syncthing:
+            policy: low
+          basic-memory:
+            policy: low
       # Working checkouts on the control node, including the one Semaphore
       # mounts as its "infra (local)" repository.
       repos:
@@ -138,6 +144,17 @@ compositions:
   - zfs-api
   - 1password-connect
   - semaphore
+  # AgentMemory folder for basic-memory (syncthing_folders).
+  - syncthing
+  # Shared agent memory over MCP. Registers `basic-memory`.
+  - basic-memory
   - composition: reverseproxy
     labels:
       - "traefik-{host}"
+
+# -------------------------------------------------------------------
+# BASIC MEMORY
+# Serves the AgentMemory Syncthing folder (composition-syncthing's default
+# data path on this host) to agents over MCP.
+# -------------------------------------------------------------------
+composition_basic_memory_vault_path: "/{{ compositions_dataset }}/syncthing/data/Obsidian/AgentMemory"

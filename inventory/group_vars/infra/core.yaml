@@ -122,7 +122,7 @@ syncthing_folders:
   - id: obsidian-charlie
     label: "Obsidian: Charlie"
     path: Obsidian/Charlie
-    hosts: &syncthing_obsidian_hosts
+    hosts:
       - server-64gb-storage
       - apple-macmini-m4-16gb-malcolm
       - minipc-8gb-agatha
@@ -130,5 +130,10 @@ syncthing_folders:
   - id: obsidian-agentmemory
     label: "Obsidian: AgentMemory"
     path: Obsidian/AgentMemory
-    hosts: *syncthing_obsidian_hosts
+    hosts:
+      - server-64gb-storage
+      - apple-macmini-m4-16gb-malcolm
+      - minipc-8gb-agatha
+      # Served to agents by composition-basic-memory.
+      - minipc-8gb-camina
     ignores: "{{ syncthing_obsidian_ignores }}"

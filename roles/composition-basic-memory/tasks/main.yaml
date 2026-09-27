@@ -1,0 +1,57 @@
+# code: language=ansible
+---
+- name: Assert vault path is configured
+  ansible.builtin.assert:
+    that:
+      - composition_basic_memory_vault_path | length > 0
+    fail_msg: >-
+      composition_basic_memory_vault_path must point at the synced AgentMemory
+      folder on this host (see syncthing_folders).
+    quiet: true
+
+# Docker would create a missing bind-mount source as root, leaving a folder
+# neither Syncthing nor the container (both this user) can write into.
+- name: Ensure vault directory exists
+  ansible.builtin.file:
+    path: "{{ composition_basic_memory_vault_path }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0775"
+
+- name: Ensure state and cache directories exist
+  ansible.builtin.file:
+    path: "{{ composition_config }}/{{ item }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0700"
+  loop: [state, cache]
+
+# Only seeds the project name: basic-memory rewrites this file itself
+# (sync timestamps, migrations), so it is never overwritten afterwards.
+- name: Seed project config
+  ansible.builtin.copy:
+    dest: "{{ composition_config }}/state/config.json"
+    content: "{{ {'projects': {composition_basic_memory_project: {'path': '/app/data'}},
+                 'default_project': composition_basic_memory_project} | to_nice_json }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0600"
+    force: false
+
+- name: Create compose file
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ composition_root }}/docker-compose.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0600"
+
+- name: Start Docker Compose project
+  community.docker.docker_compose_v2:
+    project_src: "{{ composition_root }}"
+    state: present
+    pull: missing
+    remove_orphans: true
+  notify: Restart Traefik

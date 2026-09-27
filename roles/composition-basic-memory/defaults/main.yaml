@@ -1,0 +1,17 @@
+composition_name: basic-memory
+
+composition_dns_subdomains:
+  - basic-memory
+
+composition_basic_memory_image: ghcr.io/basicmachines-co/basic-memory:0.23.2
+
+# The one project this server exposes (--project), rooted at the vault.
+composition_basic_memory_project: agentmemory
+
+# Host path of the notes, mounted at /app/data. A Syncthing folder, so it
+# must be set per host; there is no sane default.
+composition_basic_memory_vault_path: ""
+
+# Traefik basic auth: the server has no auth of its own. htpasswd line
+# (bcrypt) for Traefik; clients hold the plaintext vault_basic_memory_password.
+composition_basic_memory_htpasswd: "{{ vault_basic_memory_htpasswd }}"

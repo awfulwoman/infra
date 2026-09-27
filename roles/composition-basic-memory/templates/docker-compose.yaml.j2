@@ -1,0 +1,51 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  basic-memory:
+    container_name: basic-memory
+    image: "{{ composition_basic_memory_image }}"
+    restart: unless-stopped
+    command:
+      - basic-memory
+      - mcp
+      - --transport
+      - streamable-http
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8000"
+      - --project
+      - "{{ composition_basic_memory_project }}"
+    environment:
+      BASIC_MEMORY_HOME: /app/data
+      BASIC_MEMORY_PROJECT_ROOT: /app/data
+      BASIC_MEMORY_AUTO_UPDATE: "false"
+    volumes:
+      - "{{ composition_basic_memory_vault_path }}:/app/data"
+      # Config, SQLite index and search state.
+      - "{{ composition_config }}/state:/home/appuser/.basic-memory"
+      # Embedding model for semantic search, fetched on first use.
+      - "{{ composition_config }}/cache:/home/appuser/.cache"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.basic-memory.rule=Host(`basic-memory.{{ domainname_infra }}`)"
+      - "traefik.http.routers.basic-memory.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
+      - "traefik.http.routers.basic-memory.tls.certresolver=letsencrypt"
+{% endif %}
+      - "traefik.http.routers.basic-memory.middlewares=basic-memory-auth"
+      # `$` doubled: compose would otherwise interpolate the bcrypt hash.
+      - "traefik.http.middlewares.basic-memory-auth.basicauth.users={{ composition_basic_memory_htpasswd | replace('$', '$$') }}"
+      - "traefik.http.services.basic-memory.loadbalancer.server.port=8000"
+    networks:
+      - "{{ default_docker_network }}"
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/localhost/8000'"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+networks:
+  "{{ default_docker_network }}":
+    external: true
