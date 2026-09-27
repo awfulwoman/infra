@@ -1,0 +1,15 @@
+---
+# Keep in step with composition-basic-memory and Hermes-Jarvis' plugin.
+system_basic_memory_version: "0.23.2"
+# From basic-memory's uv.lock for that release. --prerelease=allow (needed for
+# its fastmcp beta) otherwise pulls sqlite-vec alphas built for AVX. Harmless
+# on Apple Silicon; pinned everywhere for one set of versions.
+system_basic_memory_sqlite_vec_version: "0.1.9"
+
+system_basic_memory_uv_bin: /opt/homebrew/bin/uv
+
+# The one project, made the default so tools and Claude Code's hooks use it
+# without naming it.
+system_basic_memory_project: agentmemory
+# Local path of the notes: the AgentMemory Syncthing folder. Required.
+# system_basic_memory_project_path:

@@ -38,5 +38,7 @@
     tags: [system, syncthing, system-syncthing-macos]
   - role: system-obsidian-desktop
     tags: [system, system-obsidian-desktop]
+  - role: system-basic-memory
+    tags: [system, system-basic-memory]
   - role: system-aw-deploy
     tags: [system, system-aw-deploy]

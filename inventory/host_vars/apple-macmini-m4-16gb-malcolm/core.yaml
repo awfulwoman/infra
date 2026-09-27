@@ -104,6 +104,13 @@ syncthing_api_url: "https://{{ host_fqdn }}:8384"
 syncthing_api_validate_certs: false
 
 # -------------------------------------------------------------------
+# BASIC MEMORY
+# Local bm for Claude Code on this host (stdio MCP server and the Basic
+# Memory plugin's hooks), over the synced AgentMemory folder.
+# -------------------------------------------------------------------
+system_basic_memory_project_path: "{{ syncthing_folder_root }}/Obsidian/AgentMemory"
+
+# -------------------------------------------------------------------
 # APPLE REMINDERS SERVER
 # -------------------------------------------------------------------
 # Login-keychain password, used only to headlessly provision the code-signing

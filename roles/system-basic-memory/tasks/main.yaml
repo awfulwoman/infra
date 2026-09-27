@@ -1,0 +1,86 @@
+# code: language=ansible
+---
+- name: Assert macOS and a project path
+  ansible.builtin.assert:
+    that:
+      - ansible_facts['os_family'] == 'Darwin'
+      - system_basic_memory_project_path is defined
+      - system_basic_memory_project_path | length > 0
+    fail_msg: "system-basic-memory is macOS-only and needs system_basic_memory_project_path"
+    quiet: true
+
+- name: Set bm paths
+  ansible.builtin.set_fact:
+    _bm: "{{ ansible_facts['user_dir'] }}/.local/bin/bm"
+    _bm_python: "{{ ansible_facts['user_dir'] }}/.local/share/uv/tools/basic-memory/bin/python"
+
+- name: Check installed basic-memory and sqlite-vec versions
+  ansible.builtin.command:
+    argv:
+      - "{{ _bm_python }}"
+      - -c
+      - >-
+        import importlib.metadata as m;
+        print(*(p + "==" + m.version(p) for p in ("basic-memory", "sqlite-vec")))
+  register: _bm_versions
+  changed_when: false
+  failed_when: false
+
+- name: Install the pinned bm CLI
+  ansible.builtin.command:
+    argv:
+      - "{{ system_basic_memory_uv_bin }}"
+      - tool
+      - install
+      - --force
+      - --prerelease=allow
+      - --with
+      - "sqlite-vec=={{ system_basic_memory_sqlite_vec_version }}"
+      - "basic-memory=={{ system_basic_memory_version }}"
+  changed_when: true
+  when: >-
+    (_bm_versions.stdout | default('') | trim) !=
+    'basic-memory==' ~ system_basic_memory_version
+    ~ ' sqlite-vec==' ~ system_basic_memory_sqlite_vec_version
+
+# Upgrades come from the pinned version above, not from bm itself.
+- name: Read bm auto_update setting
+  ansible.builtin.command:
+    argv: ["{{ _bm }}", config, get, auto_update]
+  register: _bm_auto_update
+  changed_when: false
+
+- name: Disable bm auto-update
+  ansible.builtin.command:
+    argv: ["{{ _bm }}", config, set, auto_update, "false"]
+  changed_when: true
+  when: "'false' not in (_bm_auto_update.stdout | lower)"
+
+- name: List bm projects
+  ansible.builtin.command:
+    argv: ["{{ _bm }}", project, list, --json]
+  register: _bm_projects_raw
+  changed_when: false
+
+- name: Parse bm projects
+  ansible.builtin.set_fact:
+    _bm_projects: "{{ (_bm_projects_raw.stdout | from_json).projects }}"
+
+- name: Register the project
+  ansible.builtin.command:
+    argv:
+      - "{{ _bm }}"
+      - project
+      - add
+      - "{{ system_basic_memory_project }}"
+      - "{{ system_basic_memory_project_path }}"
+  changed_when: true
+  when: system_basic_memory_project not in (_bm_projects | map(attribute='name'))
+
+- name: Make it the default project
+  ansible.builtin.command:
+    argv: ["{{ _bm }}", project, default, "{{ system_basic_memory_project }}"]
+  changed_when: true
+  when: >-
+    not (_bm_projects | selectattr('name', 'eq', system_basic_memory_project)
+         | selectattr('is_default') | list)
