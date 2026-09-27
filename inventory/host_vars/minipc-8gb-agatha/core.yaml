@@ -217,6 +217,13 @@ composition_hermes_jarvis_mcp_servers:
     enabled: true
     headers:
       Authorization: "Bearer ${GH_TOKEN}"
+  n8n:
+    # n8n's instance-level MCP server on server-64gb-storage (enabled by env
+    # in composition-n8n). Only workflows toggled "available in MCP" can run.
+    url: "https://n8n.{{ domainname_infra }}/mcp-server/http"
+    enabled: true
+    headers:
+      Authorization: "Bearer ${N8N_MCP_TOKEN}"
 
 composition_hermes_jarvis_mcp_env:
   # gateway labels this client "hermes" in its /mcp usage log; the secret
@@ -231,6 +238,11 @@ composition_hermes_jarvis_mcp_env:
   # has no access to awfulwoman repos, so it can only fork, push to its own
   # forks, and open PRs/issues - see composition-hermes-jarvis README.md#github.
   GH_TOKEN: "{{ vault_github_helperbot_hermes_token }}"
+  # n8n MCP key: a non-expiring JWT minted in the n8n UI (Settings >
+  # Instance-level MCP > API key) for the owner account. Signed with a secret
+  # derived from N8N_ENCRYPTION_KEY, so it survives n8n redeploys; rotating
+  # it in the UI invalidates this copy.
+  N8N_MCP_TOKEN: "{{ vault_n8n_mcp_key }}"
 
 # Commits and pushes (to the helperbot's own forks) as the helperbot.
 composition_hermes_jarvis_git_github_login: "{{ vault_github_helperbot_username }}"
