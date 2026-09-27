@@ -1,0 +1,19 @@
+# code: language=ansible
+---
+- name: Reset peer map
+  ansible.builtin.set_fact:
+    _syncthing_peers: {}
+
+# Device IDs come from each instance's key pair, so they are read live rather
+# than recorded: a rebuilt instance is re-paired on the next run.
+- name: Discover instances
+  ansible.builtin.include_tasks: discover.yaml
+  loop: "{{ syncthing_folders | map(attribute='hosts') | flatten | unique }}"
+  loop_control:
+    loop_var: _syncthing_host
+
+- name: Configure instances
+  ansible.builtin.include_tasks: instance.yaml
+  loop: "{{ _syncthing_peers.keys() | list }}"
+  loop_control:
+    loop_var: _syncthing_host

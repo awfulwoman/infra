@@ -1,0 +1,35 @@
+# code: language=ansible
+---
+- name: "Resolve API endpoint for {{ _syncthing_host }}"
+  ansible.builtin.set_fact:
+    _syncthing_url: >-
+      {{ hostvars[_syncthing_host]['syncthing_api_url']
+         | default('https://syncthing-' ~ hostvars[_syncthing_host]['host_name'] ~ '.' ~ domainname_infra) }}
+    _syncthing_validate: "{{ hostvars[_syncthing_host]['syncthing_api_validate_certs'] | default(true) }}"
+
+- name: "Wait for Syncthing API on {{ _syncthing_host }}"
+  ansible.builtin.uri:
+    url: "{{ _syncthing_url }}/rest/noauth/health"
+    validate_certs: "{{ _syncthing_validate }}"
+  register: _syncthing_health
+  until: _syncthing_health.status == 200
+  retries: 15
+  delay: 2
+
+- name: "Read device ID of {{ _syncthing_host }}"
+  ansible.builtin.uri:
+    url: "{{ _syncthing_url }}/rest/system/status"
+    validate_certs: "{{ _syncthing_validate }}"
+    headers:
+      X-API-Key: "{{ syncthing_api_key }}"
+  register: _syncthing_status
+
+- name: "Record {{ _syncthing_host }}"
+  ansible.builtin.set_fact:
+    _syncthing_peers: >-
+      {{ _syncthing_peers | combine({_syncthing_host: {
+           'device_id': _syncthing_status.json.myID,
+           'address': hostvars[_syncthing_host]['host_ipv4'] | default(''),
+           'url': _syncthing_url,
+           'validate_certs': _syncthing_validate,
+           'folder_root': hostvars[_syncthing_host]['syncthing_folder_root'] | default('/var/syncthing')}}) }}

@@ -93,12 +93,15 @@ system_claude_settings_group: "staff"
 system_claude_profile_file: ".zshrc"
 
 # -------------------------------------------------------------------
-# OBSIDIAN
+# SYNCTHING
+# Native (system-syncthing-macos), outside ~/Documents so the launchd agent
+# isn't blocked by TCC. Desktop Obsidian opens the vaults from here and
+# bridges them to Obsidian Sync for the iPhone (system-obsidian-desktop).
+# camina reaches the API directly; Syncthing serves a self-signed cert.
 # -------------------------------------------------------------------
-system_obsidian_headless_vaults:
-  - name: "AgentMemory"
-    path: "{{ ansible_facts['user_dir'] }}/Documents/Personal/AgentMemory"
-    password: "{{ vault_obsidian_vault_key }}"
+syncthing_folder_root: "/Users/{{ vault_server_username }}/Syncthing"
+syncthing_api_url: "https://{{ host_fqdn }}:8384"
+syncthing_api_validate_certs: false
 
 # -------------------------------------------------------------------
 # APPLE REMINDERS SERVER

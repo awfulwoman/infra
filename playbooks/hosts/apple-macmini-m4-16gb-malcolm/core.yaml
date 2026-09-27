@@ -34,7 +34,9 @@
     tags: [system, system-git]
   - role: system-nvm
     tags: [system, system-nvm]
-  - role: system-obsidian-headless
-    tags: [system, system-obsidian-headless]
+  - role: system-syncthing-macos
+    tags: [system, syncthing, system-syncthing-macos]
+  - role: system-obsidian-desktop
+    tags: [system, system-obsidian-desktop]
   - role: system-aw-deploy
     tags: [system, system-aw-deploy]

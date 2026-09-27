@@ -9,8 +9,8 @@ composition_gateway_imap_port: 993
 composition_gateway_imap_username: "{{ vault_mailprovider_user }}"
 composition_gateway_imap_password: "{{ vault_mailprovider_password }}"
 
-# Absolute path on the host to a synced Obsidian vault (e.g. from
-# system-obsidian-headless). Must be set per-host; there is no sane default.
+# Absolute path on the host to a synced Obsidian vault (a Syncthing folder).
+# Must be set per-host; there is no sane default.
 composition_gateway_obsidian_vault_path: ""
 
 # Malcolm's name in the infra zone that bertha serves, not a Tailscale MagicDNS

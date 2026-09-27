@@ -25,9 +25,9 @@ that bertha serves, not the shared Docker network. Calendar replaces the previou
 Google Calendar OAuth backend. Contacts replaces the previous Radicale/CardDAV backend.
 
 The Obsidian notes and issues tools read and write a vault bind-mounted from the host.
-This role does **not** sync that vault. Run
-[`system-obsidian-headless`](../system-obsidian-headless) on the same host first, then
-point `composition_gateway_obsidian_vault_path` at its synced vault path.
+This role does **not** sync that vault. It is a Syncthing folder declared in
+`syncthing_folders` (see [`system-syncthing-config`](../system-syncthing-config));
+point `composition_gateway_obsidian_vault_path` at its path on this host.
 
 ## Key variables
 

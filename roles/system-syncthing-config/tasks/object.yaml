@@ -1,0 +1,37 @@
+# code: language=ansible
+---
+# Upsert one device or folder. Starts from the live object (or Syncthing's
+# defaults for a new one) and overlays only the declared fields, so settings
+# made in the UI survive unless the inventory states otherwise.
+- name: "Read current object {{ _kind ~ '/' ~ _key }}"
+  ansible.builtin.uri:
+    url: "{{ _syncthing_url }}/rest/config/{{ _kind }}s/{{ _key }}"
+    validate_certs: "{{ _syncthing_validate }}"
+    headers:
+      X-API-Key: "{{ syncthing_api_key }}"
+    status_code: [200, 404]
+  register: _syncthing_current
+
+- name: "Read defaults for {{ _kind }}"
+  ansible.builtin.uri:
+    url: "{{ _syncthing_url }}/rest/config/defaults/{{ _kind }}"
+    validate_certs: "{{ _syncthing_validate }}"
+    headers:
+      X-API-Key: "{{ syncthing_api_key }}"
+  register: _syncthing_defaults
+  when: _syncthing_current.status == 404
+
+- name: "Write object {{ _kind ~ '/' ~ _key }}"
+  ansible.builtin.uri:
+    url: "{{ _syncthing_url }}/rest/config/{{ _kind }}s/{{ _key }}"
+    method: PUT
+    validate_certs: "{{ _syncthing_validate }}"
+    headers:
+      X-API-Key: "{{ syncthing_api_key }}"
+    body_format: json
+    body: "{{ _desired }}"
+  changed_when: true
+  when: _syncthing_current.status == 404 or _desired != _syncthing_current.json
+  vars:
+    _base: "{{ _syncthing_defaults.json if _syncthing_current.status == 404 else _syncthing_current.json }}"
+    _desired: "{{ _base | combine(item) }}"

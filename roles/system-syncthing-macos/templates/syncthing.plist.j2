@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>{{ system_syncthing_macos_label }}</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>{{ system_syncthing_macos_bin }}</string>
+        <string>serve</string>
+        <string>--no-browser</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>ProcessType</key>
+    <string>Background</string>
+    <key>StandardOutPath</key>
+    <string>{{ ansible_facts.user_dir }}/Library/Logs/syncthing.log</string>
+    <key>StandardErrorPath</key>
+    <string>{{ ansible_facts.user_dir }}/Library/Logs/syncthing.log</string>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>STGUIADDRESS</key>
+        <string>{{ system_syncthing_macos_gui_address }}</string>
+        <key>STGUIAPIKEY</key>
+        <string>{{ system_syncthing_macos_api_key }}</string>
+        <key>STNODEFAULTFOLDER</key>
+        <string>1</string>
+    </dict>
+</dict>
+</plist>

@@ -6,8 +6,18 @@
       - composition_gateway_obsidian_vault_path | length > 0
     fail_msg: >-
       composition_gateway_obsidian_vault_path must point at a synced vault on
-      this host (see the system-obsidian-headless role).
+      this host (a Syncthing folder, see system-syncthing-config).
     quiet: true
+
+# Docker would create a missing bind-mount source as root, leaving a folder
+# Syncthing (running as this user) cannot write into.
+- name: Ensure Obsidian vault directory exists
+  ansible.builtin.file:
+    path: "{{ composition_gateway_obsidian_vault_path }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0775"
 
 - name: "Create compose file"
   ansible.builtin.template:

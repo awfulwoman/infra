@@ -1,0 +1,33 @@
+# code: language=ansible
+---
+- name: "Assert macOS"
+  ansible.builtin.assert:
+    that: ansible_facts['os_family'] == 'Darwin'
+    fail_msg: "system-obsidian-desktop is macOS-only"
+
+- name: "Install Obsidian"
+  community.general.homebrew_cask:
+    name: obsidian
+    state: present
+
+# Obsidian Sync only runs while the app is open, so keep it running in the
+# logged-in GUI session (Malcolm auto-logs in).
+- name: "Deploy LaunchAgent plist"
+  ansible.builtin.template:
+    src: obsidian-desktop.plist.j2
+    dest: "{{ ansible_facts.user_dir }}/Library/LaunchAgents/{{ system_obsidian_desktop_label }}.plist"
+    mode: "0644"
+  notify: Reload obsidian-desktop launchd agent
+
+- name: "Check if launchd agent is bootstrapped"
+  ansible.builtin.command: launchctl print gui/{{ ansible_facts.user_uid }}/{{ system_obsidian_desktop_label }}
+  register: _obsidian_launchd
+  failed_when: false
+  changed_when: false
+
+- name: "Bootstrap launchd agent"
+  ansible.builtin.command: >-
+    launchctl bootstrap gui/{{ ansible_facts.user_uid }}
+    {{ ansible_facts.user_dir }}/Library/LaunchAgents/{{ system_obsidian_desktop_label }}.plist
+  changed_when: true
+  when: _obsidian_launchd.rc != 0

@@ -1,0 +1,8 @@
+---
+- name: Reload syncthing launchd agent
+  ansible.builtin.shell: >
+    launchctl bootout gui/{{ ansible_facts.user_uid }} "$PLIST" 2>/dev/null || true;
+    launchctl bootstrap gui/{{ ansible_facts.user_uid }} "$PLIST"
+  environment:
+    PLIST: "{{ ansible_facts.user_dir }}/Library/LaunchAgents/{{ system_syncthing_macos_label }}.plist"
+  changed_when: true

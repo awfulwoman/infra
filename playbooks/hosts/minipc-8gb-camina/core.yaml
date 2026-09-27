@@ -23,6 +23,9 @@
     tags: [infra, client-cert-distribution]
   - role: system-compositions
     tags: [composition, zfs]
+  # Configures every Syncthing instance over its API (syncthing_folders).
+  - role: system-syncthing-config
+    tags: [syncthing, system-syncthing-config]
   - role: backups-zfs-client
     tags: [backups, zfs, backups-zfs-client]
   - role: system-logtide-syslog

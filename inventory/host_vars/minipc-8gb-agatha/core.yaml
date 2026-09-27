@@ -88,6 +88,9 @@ zfs:
           # snapshot is enough to recover from a bad deploy.
           reverseproxy:
             policy: low
+          # Copies of the Obsidian vaults; storage holds the backed-up hub.
+          syncthing:
+            policy: low
 
 
 # -------------------------------------------------------------------
@@ -122,6 +125,9 @@ compositions:
   # host's Docker network, where it can reach hermes-jarvis' API server by
   # container name. Registers `chat`.
   - open-webui
+  # Obsidian vaults (Charlie, AgentMemory) for the agents here. Registers
+  # `syncthing-{host}`; folders are set from camina (system-syncthing-config).
+  - syncthing
   - composition: reverseproxy
     labels:
       - "traefik-{host}"

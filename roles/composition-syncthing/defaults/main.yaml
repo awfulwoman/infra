@@ -6,4 +6,8 @@ composition_name: syncthing
 composition_dns_subdomains:
   - "syncthing-{host}"
 
-syncthing_paths: false
+# Host path mounted at /var/syncthing: Syncthing's config plus every folder
+# (system-syncthing-config places declared folders under it).
+composition_syncthing_data_path: "{{ composition_root }}/data"
+
+composition_syncthing_api_key: "{{ vault_syncthing_api_key }}"

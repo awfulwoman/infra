@@ -44,10 +44,6 @@ zfs:
       - type: stripe
         disks: /dev/disk/by-id/scsi-SATA_INTENSO_SSD_AA000000000000001079
     datasets:
-      misc:
-        datasets:
-          syncthing:
-            policy: critical
       compositions:
         state: present
         # Every composition states its own policy; see ADR-0001. The parent

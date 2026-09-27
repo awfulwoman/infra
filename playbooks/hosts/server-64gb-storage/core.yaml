@@ -29,8 +29,6 @@
     tags: [backups, zfs, backups-zfs-client]
   - role: system-nvm
     tags: [system, system-nvm]
-  - role: system-obsidian-headless
-    tags: [system, system-obsidian-headless]
   - role: client-cert-distribution
     tags: [infra, client-cert-distribution]
   # composition-nominatim is folded in here (so it's genuinely data-driven,

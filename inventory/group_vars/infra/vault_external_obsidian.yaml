@@ -1,3 +1,7 @@
+# Obsidian account login and vault E2E password. No longer used by any role
+# (obsidian-headless retired, #296); kept for the one-off desktop Obsidian
+# Sync login on malcolm (roles/system-obsidian-desktop/README.md).
+
 vault_obsidian_user: !vault |
           $ANSIBLE_VAULT;1.2;AES256;beanpod
           30633632323666663437373464356139646365363031646230363231646466643137353562313463

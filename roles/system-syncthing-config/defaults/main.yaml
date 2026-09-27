@@ -1,0 +1,18 @@
+---
+# Run from camina. Every instance is reached over its own API; per-instance
+# settings are read from that host's hostvars, falling back to these.
+
+syncthing_api_key: "{{ vault_syncthing_api_key }}"
+
+# Web UI login, applied to every instance. The API key bypasses it.
+syncthing_gui_user: awfulwoman
+syncthing_gui_password: "{{ vault_syncthing_gui_password }}"
+
+# Inventory-wide (group_vars/infra/core.yaml). Each entry:
+#   id, label, path (relative to the host's syncthing_folder_root), hosts, ignores
+syncthing_folders: []
+
+# Per-host overrides (set in the instance's host_vars):
+#   syncthing_api_url            default https://syncthing-<host_name>.<domainname_infra> (its Traefik)
+#   syncthing_api_validate_certs default true
+#   syncthing_folder_root        default /var/syncthing (the container's data mount)

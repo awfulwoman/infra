@@ -1,0 +1,47 @@
+# code: language=ansible
+---
+- name: "Assert macOS"
+  ansible.builtin.assert:
+    that: ansible_facts['os_family'] == 'Darwin'
+    fail_msg: "system-syncthing-macos is macOS-only"
+
+- name: "Assert folder root is outside TCC-protected folders"
+  ansible.builtin.assert:
+    that:
+      - syncthing_folder_root is defined
+      - not (syncthing_folder_root | regex_search('/(Documents|Desktop|Downloads)(/|$)'))
+    fail_msg: "Set syncthing_folder_root outside ~/Documents, ~/Desktop and ~/Downloads"
+    quiet: true
+
+# Run by our own LaunchAgent rather than `brew services`, which cannot pass
+# the environment below.
+- name: "Install Syncthing"
+  community.general.homebrew:
+    name: syncthing
+    state: present
+
+- name: "Ensure folder root exists"
+  ansible.builtin.file:
+    path: "{{ syncthing_folder_root }}"
+    state: directory
+    mode: "0755"
+
+- name: "Deploy LaunchAgent plist"
+  ansible.builtin.template:
+    src: syncthing.plist.j2
+    dest: "{{ ansible_facts.user_dir }}/Library/LaunchAgents/{{ system_syncthing_macos_label }}.plist"
+    mode: "0600"
+  notify: Reload syncthing launchd agent
+
+- name: "Check if launchd agent is bootstrapped"
+  ansible.builtin.command: launchctl print gui/{{ ansible_facts.user_uid }}/{{ system_syncthing_macos_label }}
+  register: _syncthing_launchd
+  failed_when: false
+  changed_when: false
+
+- name: "Bootstrap launchd agent"
+  ansible.builtin.command: >-
+    launchctl bootstrap gui/{{ ansible_facts.user_uid }}
+    {{ ansible_facts.user_dir }}/Library/LaunchAgents/{{ system_syncthing_macos_label }}.plist
+  changed_when: true
+  when: _syncthing_launchd.rc != 0

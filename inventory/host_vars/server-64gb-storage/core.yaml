@@ -304,17 +304,18 @@ traefik_providers:
   - wildcard-cert
 
 # -------------------------------------------------------------------
-# OBSIDIAN
+# SYNCTHING
+# Config and folders live on slowpool/charlie/syncthing (critical), which
+# makes this the backed-up hub for every synced folder, the Obsidian vaults
+# included.
 # -------------------------------------------------------------------
-system_obsidian_headless_vaults:
-  - name: "Charlie"
-    path: "{{ ansible_facts['user_dir'] }}/obsidian-vaults/Charlie"
-    password: "{{ vault_obsidian_vault_key }}"
+composition_syncthing_data_path: /slowpool/charlie/syncthing
 
 # -------------------------------------------------------------------
 # MCP GATEWAY
+# The Obsidian: Charlie Syncthing folder (see syncthing_folders).
 # -------------------------------------------------------------------
-composition_gateway_obsidian_vault_path: "{{ ansible_facts['user_dir'] }}/obsidian-vaults/Charlie"
+composition_gateway_obsidian_vault_path: "{{ composition_syncthing_data_path }}/Obsidian/Charlie"
 
 # -------------------------------------------------------------------
 # MISC

@@ -17,27 +17,15 @@
     dest: "{{ composition_root }}/.environment_vars"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
+    mode: "0600"
 
-# ----------------------------
-# Specific tasks
-# ----------------------------
-
-# - name: Create directories
-#   file:
-#     path: "{{ composition_config }}/{{ dir_item }}"
-#     state: directory
-#   loop_control:
-#     loop_var: dir_item
-#   loop:
-#     - whatever1
-#     - whatever2
-#     - whatever3
-
-# - name: Copy over files
-#   become: true
-#   ansible.builtin.copy:
-#     src: filename.txt
-#     dest: "{{ composition_config }}/filename.txt
+- name: "Create data directory"
+  ansible.builtin.file:
+    path: "{{ composition_syncthing_data_path }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0775"
 
 # ----------------------------
 # Start composition

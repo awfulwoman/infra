@@ -23,7 +23,7 @@ services:
     networks:
       - "{{ default_docker_network }}"
     volumes:
-      - "/slowpool/charlie/syncthing:/var/syncthing"
+      - "{{ composition_syncthing_data_path }}:/var/syncthing"
 
     healthcheck:
       test: curl -fkLsS -m 2 127.0.0.1:8384/rest/noauth/health | grep -o --color=never OK || exit 1

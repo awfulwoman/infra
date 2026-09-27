@@ -1,0 +1,78 @@
+---
+# One-off teardown of obsidian-headless on storage and malcolm, now that the
+# vaults sync through Syncthing and desktop Obsidian on malcolm bridges them to
+# Obsidian Sync (#296).
+#
+# Signs out of Obsidian, stops and removes the services, and uninstalls the npm
+# package. Leaves the stale vault copies on malcolm
+# (~/Documents/Personal/{Charlie,AgentMemory}, last synced July 2026) alone:
+# deleting them is a separate decision. Idempotent; safe to rerun.
+- name: Retire obsidian-headless (storage)
+  hosts: server-64gb-storage
+  tasks:
+  - name: Stop and disable obsidian-headless.service
+    become: true
+    ansible.builtin.systemd_service:
+      name: obsidian-headless
+      state: stopped
+      enabled: false
+    failed_when: false
+
+  - name: Remove unit file
+    become: true
+    ansible.builtin.file:
+      path: /etc/systemd/system/obsidian-headless.service
+      state: absent
+    register: _ob_unit
+
+  - name: Reload systemd # noqa: no-handler
+    become: true
+    ansible.builtin.systemd_service:
+      daemon_reload: true
+    when: _ob_unit.changed
+
+  - name: Remove empty vault directories
+    become: true
+    ansible.builtin.command: rmdir {{ ansible_facts['user_dir'] }}/obsidian-vaults/Charlie {{ ansible_facts['user_dir'] }}/obsidian-vaults
+    register: _ob_rmdir
+    changed_when: _ob_rmdir.rc == 0
+    failed_when: false
+
+- name: Retire obsidian-headless (malcolm)
+  hosts: apple-macmini-m4-16gb-malcolm
+  tasks:
+  - name: Unload LaunchAgents
+    ansible.builtin.command: launchctl bootout gui/{{ ansible_facts['user_uid'] }}/com.awfulwoman.{{ item }}
+    loop: &ob_agents
+      - obsidian-headless
+      - obsidian-headless-personal
+      - obsidian-headless-charlie
+      - obsidian-headless-agentmemory
+    register: _ob_bootout
+    changed_when: _ob_bootout.rc == 0
+    failed_when: false
+
+  - name: Remove LaunchAgent plists and logs
+    ansible.builtin.file:
+      path: "{{ item }}"
+      state: absent
+    loop: >-
+      {{ (_ob_agents | map('regex_replace', '^(.*)$', ansible_facts['user_dir'] ~ '/Library/LaunchAgents/com.awfulwoman.\1.plist') | list)
+         + (_ob_agents | map('regex_replace', '^(.*)$', ansible_facts['user_dir'] ~ '/Library/Logs/\1.log') | list) }}
+    vars:
+      _ob_agents: *ob_agents
+
+- name: Remove obsidian-headless package
+  hosts: server-64gb-storage:apple-macmini-m4-16gb-malcolm
+  tasks:
+  - name: Sign out and uninstall via nvm-managed npm
+    ansible.builtin.shell: |
+      [ -s "$HOME/.nvm/nvm.sh" ] && . "$HOME/.nvm/nvm.sh"
+      command -v ob >/dev/null || exit 0
+      ob logout || true
+      npm uninstall -g obsidian-headless
+      echo removed
+    args:
+      executable: /bin/bash
+    register: _ob_npm
+    changed_when: "'removed' in _ob_npm.stdout"

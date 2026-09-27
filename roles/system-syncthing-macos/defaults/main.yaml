@@ -1,0 +1,11 @@
+---
+system_syncthing_macos_label: com.awfulwoman.syncthing
+system_syncthing_macos_bin: /opt/homebrew/bin/syncthing
+# Bound beyond localhost so camina (system-syncthing-config) can reach the API.
+# https:// makes Syncthing serve its own self-signed certificate.
+system_syncthing_macos_gui_address: "https://0.0.0.0:8384"
+system_syncthing_macos_api_key: "{{ vault_syncthing_api_key }}"
+
+# Shared with system-syncthing-config. Must sit outside ~/Documents, ~/Desktop
+# and ~/Downloads: TCC blocks launchd agents from those.
+# syncthing_folder_root:

@@ -109,3 +109,26 @@ environment_config:
   ANSIBLE_INFRA_DIR: "{{ ansible_infra_dir }}"
   TF_VAR_digitalocean_token: "{{ vault_ddns_digitalocean_token }}"
   TF_VAR_hcloud_token: "{{ vault_hetzner_api_key_rw }}"
+
+# Syncthing folders, applied to every member by system-syncthing-config (run
+# from camina). `path` is relative to each host's syncthing_folder_root.
+# Malcolm also bridges the Obsidian vaults to Obsidian Sync for the iPhone
+# (system-obsidian-desktop).
+syncthing_obsidian_ignores:
+  - ".obsidian/workspace*.json"
+  - ".trash"
+
+syncthing_folders:
+  - id: obsidian-charlie
+    label: "Obsidian: Charlie"
+    path: Obsidian/Charlie
+    hosts: &syncthing_obsidian_hosts
+      - server-64gb-storage
+      - apple-macmini-m4-16gb-malcolm
+      - minipc-8gb-agatha
+    ignores: "{{ syncthing_obsidian_ignores }}"
+  - id: obsidian-agentmemory
+    label: "Obsidian: AgentMemory"
+    path: Obsidian/AgentMemory
+    hosts: *syncthing_obsidian_hosts
+    ignores: "{{ syncthing_obsidian_ignores }}"
