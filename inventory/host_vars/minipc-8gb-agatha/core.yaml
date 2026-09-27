@@ -230,20 +230,6 @@ composition_hermes_jarvis_mcp_servers:
     enabled: true
     headers:
       Authorization: "Bearer ${N8N_MCP_TOKEN}"
-  basic_memory:
-    # Shared agent memory on camina (composition-basic-memory), the
-    # AgentMemory notes that every agent reads and writes. Traefik basic auth.
-    url: "https://basic-memory.{{ domainname_infra }}/mcp"
-    enabled: true
-    headers:
-      Authorization: "Basic ${BASIC_MEMORY_MCP_AUTH}"
-    # The server is pinned to one project; the bot has no business managing
-    # projects or (cloud-only) workspaces.
-    tools:
-      exclude:
-        - create_memory_project
-        - delete_project
-        - list_workspaces
 
 composition_hermes_jarvis_mcp_env:
   # gateway labels this client "hermes" in its /mcp usage log; the secret
@@ -263,8 +249,11 @@ composition_hermes_jarvis_mcp_env:
   # derived from N8N_ENCRYPTION_KEY, so it survives n8n redeploys; rotating
   # it in the UI invalidates this copy.
   N8N_MCP_TOKEN: "{{ vault_n8n_mcp_key }}"
-  # base64(agents:password) for the basic-memory Traefik basic auth.
-  BASIC_MEMORY_MCP_AUTH: "{{ ('agents:' ~ vault_basic_memory_password) | b64encode }}"
+
+# Shared agent memory: the basic-memory Hermes plugin over this host's copy
+# of the AgentMemory Syncthing folder (composition-syncthing's default data
+# path), which composition-basic-memory on camina also serves.
+composition_hermes_jarvis_basic_memory_path: "/{{ compositions_dataset }}/syncthing/data/Obsidian/AgentMemory"
 
 # Commits and pushes (to the helperbot's own forks) as the helperbot.
 composition_hermes_jarvis_git_github_login: "{{ vault_github_helperbot_username }}"

@@ -192,6 +192,16 @@
   when: state | default('present') == 'present' and composition_hermes_jarvis_api_server
   notify: Restart Hermes
 
+- name: Deploy basic-memory plugin config
+  ansible.builtin.template:
+    src: basic-memory.json.j2
+    dest: "{{ composition_config }}/data/basic-memory.json"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0644"
+  when: state | default('present') == 'present' and composition_hermes_jarvis_basic_memory_path | length > 0
+  notify: Restart Hermes
+
 # ----------------------------
 # Start composition
 # ----------------------------
@@ -203,3 +213,85 @@
     remove_orphans: true
   when: state | default('present') == 'present'
   notify: Restart Traefik
+
+# ----------------------------
+# Basic Memory plugin
+# Installed with Hermes' own installer and uv, inside the running container,
+# as the hermes user. Both land under /opt/data, so they survive image pulls.
+# Enabling is config.yaml's job (plugins.enabled, memory.provider).
+# ----------------------------
+
+- name: Read installed plugin metadata
+  ansible.builtin.slurp:
+    src: "{{ composition_config }}/data/plugins/.install-metadata.json"
+  register: _hermes_jarvis_plugin_meta
+  failed_when: false
+  when: state | default('present') == 'present' and composition_hermes_jarvis_basic_memory_path | length > 0
+
+- name: Install the basic-memory Hermes plugin at the pinned commit
+  community.docker.docker_container_exec:
+    container: "{{ composition_name }}"
+    user: hermes
+    env:
+      HOME: /opt/data
+    argv:
+      - hermes
+      - plugins
+      - install
+      - basicmachines-co/basic-memory/integrations/hermes
+      - --ref
+      - "{{ composition_hermes_jarvis_basic_memory_plugin_ref }}"
+      - --force
+      - --no-enable
+  when:
+    - state | default('present') == 'present'
+    - composition_hermes_jarvis_basic_memory_path | length > 0
+    - >-
+      ((_hermes_jarvis_plugin_meta.content | default('e30=') | b64decode | from_json)
+        ['basic-memory'] | default({})).revision | default('')
+      != composition_hermes_jarvis_basic_memory_plugin_ref
+  notify: Restart Hermes
+
+- name: Check the installed bm CLI and sqlite-vec versions
+  community.docker.docker_container_exec:
+    container: "{{ composition_name }}"
+    user: hermes
+    argv:
+      - /opt/data/.local/share/uv/tools/basic-memory/bin/python
+      - -c
+      - >-
+        import importlib.metadata as m;
+        print(*(p + "==" + m.version(p) for p in ("basic-memory", "sqlite-vec")))
+  register: _hermes_jarvis_bm_version
+  changed_when: false
+  failed_when: false
+  when: state | default('present') == 'present' and composition_hermes_jarvis_basic_memory_path | length > 0
+
+# The plugin would otherwise self-install the latest prerelease on first use.
+- name: Install the pinned bm CLI
+  community.docker.docker_container_exec:
+    container: "{{ composition_name }}"
+    user: hermes
+    env:
+      HOME: /opt/data
+    argv:
+      - uv
+      - tool
+      - install
+      - --force
+      # Releases depend on pre-release fastmcp builds, but allowing
+      # pre-releases wholesale also pulls sqlite-vec alphas built for AVX,
+      # which agatha's Celeron lacks (SIGILL on first DB access). Pin the
+      # stable build basic-memory's own image locks to.
+      - --prerelease=allow
+      - --with
+      - "sqlite-vec=={{ composition_hermes_jarvis_basic_memory_sqlite_vec_version }}"
+      - "basic-memory=={{ composition_hermes_jarvis_basic_memory_version }}"
+  when:
+    - state | default('present') == 'present'
+    - composition_hermes_jarvis_basic_memory_path | length > 0
+    - >-
+      (_hermes_jarvis_bm_version.stdout | default('') | trim) !=
+      'basic-memory==' ~ composition_hermes_jarvis_basic_memory_version
+      ~ ' sqlite-vec==' ~ composition_hermes_jarvis_basic_memory_sqlite_vec_version
+  notify: Restart Hermes
