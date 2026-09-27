@@ -216,7 +216,7 @@ composition_hermes_jarvis_mcp_servers:
     url: "https://api.githubcopilot.com/mcp/"
     enabled: true
     headers:
-      Authorization: "Bearer ${GITHUB_TOKEN}"
+      Authorization: "Bearer ${GH_TOKEN}"
 
 composition_hermes_jarvis_mcp_env:
   # gateway labels this client "hermes" in its /mcp usage log; the secret
@@ -230,7 +230,7 @@ composition_hermes_jarvis_mcp_env:
   # Token on the dedicated helperbot account, not awfulwoman's. The helperbot
   # has no access to awfulwoman repos, so it can only fork, push to its own
   # forks, and open PRs/issues - see composition-hermes-jarvis README.md#github.
-  GITHUB_TOKEN: "{{ vault_github_helperbot_hermes_token }}"
+  GH_TOKEN: "{{ vault_github_helperbot_hermes_token }}"
 
 # Commits and pushes (to the helperbot's own forks) as the helperbot.
 composition_hermes_jarvis_git_github_login: "{{ vault_github_helperbot_username }}"

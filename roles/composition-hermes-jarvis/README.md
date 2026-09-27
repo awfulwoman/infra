@@ -158,7 +158,7 @@ fork, and opens a PR (or an issue) against the awfulwoman repo. No
 collaborator invites or branch-protection rulesets are needed. This only
 works for public repos.
 
-**Token.** `GITHUB_TOKEN` is `vault_github_helperbot_hermes_token`
+**Token.** `GH_TOKEN` is `vault_github_helperbot_hermes_token`
 (`group_vars/infra/vault_external_github.yaml`), a **classic** PAT on the
 helperbot with only the `public_repo` scope. It must be a classic PAT:
 GitHub does not let fine-grained PATs contribute to public repos where the
@@ -178,7 +178,7 @@ the role writes `/opt/data/.gitconfig`. `/opt/data` is `HOME` inside the
 container and is the persistent volume. The file sets the helperbot's name
 and noreply email; the role looks up the email's numeric ID from the public
 GitHub API at deploy time. It also sets a credential helper that reads
-`$GITHUB_TOKEN` from the environment when git asks, so the token is not
+`$GH_TOKEN` from the environment when git asks, so the token is not
 written to disk. The terminal toolset can then `git clone` the helperbot's
 fork over HTTPS, edit and test it, and push. The image has `git` and
 `python3` but no `gh` CLI, and nothing installs a repo's own toolchain.
