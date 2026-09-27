@@ -227,7 +227,7 @@ stage "Store it in the vault"
 say "Encrypting with the repo's 'beanpod' vault identity (ansible.cfg) -"
 say "you'll be prompted for the vault password, not the token."
 
-ENCRYPTED="$(cd "$REPO_ROOT" && ansible-vault encrypt_string --vault-id beanpod@prompt --name "$VAR_NAME" "$GITHUB_TOKEN")"
+ENCRYPTED="$(cd "$REPO_ROOT" && ansible-vault encrypt_string --vault-id beanpod@prompt --encrypt-vault-id beanpod --name "$VAR_NAME" "$GITHUB_TOKEN")"
 unset GITHUB_TOKEN
 
 {
