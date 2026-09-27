@@ -180,62 +180,101 @@ finish() {
 }
 
 # ──────────────────────────────────────────────────────────────────────────
-# STAGES: Hermes-Jarvis GitHub fine-grained PAT
+# STAGES: Hermes-Jarvis GitHub bot identity + PR-only enforcement
+#
+# Why a bot account: a fine-grained PAT under your OWN account is
+# indistinguishable from you at the API level, so branch protection can't
+# tell "Jarvis pushed" from "Charlie pushed" - there's no way to let you push
+# straight to main while forcing the same identity through PRs. A separate
+# bot account with its own login gives Jarvis a distinct identity that
+# branch-protection rulesets can target while bypassing you.
 # ──────────────────────────────────────────────────────────────────────────
 
-TOTAL_STAGES=2
+TOTAL_STAGES=5
 
 # This wizard must be run with the repo root (where ansible.cfg lives) as the
 # working directory, and against the real inventory checkout - not a
 # throwaway worktree - since it edits a vault file in place.
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 VAULT_FILE="$REPO_ROOT/inventory/host_vars/minipc-8gb-agatha/vault_hermes_jarvis.yaml"
-VAR_NAME="vault_hermes_jarvis_github_token"
+VAR_NAME="vault_hermes_jarvis_github_bot_token"
+RULESET_NAME="jarvis-bot-pr-only"
 
-banner "Hermes-Jarvis: GitHub fine-grained token"
+banner "Hermes-Jarvis: GitHub bot identity + PR-only enforcement"
 
-say "This wires up the 'github' MCP server already added to"
-say "composition_hermes_jarvis_mcp_servers (core.yaml) - GitHub's own hosted"
-say "remote MCP server at api.githubcopilot.com. It reads/writes repo files,"
-say "opens PRs and files issues over the GitHub API using this token; there's"
-say "no local git clone, no SSH key involved."
+say "This gives Jarvis its own GitHub login (distinct from yours), and locks"
+say "every private repo you own today so that login can only merge through a"
+say "pull request - while your own account keeps pushing straight to main."
+say "It wires the 'github' MCP server already in core.yaml"
+say "(composition_hermes_jarvis_mcp_servers.github, GitHub's hosted remote"
+say "server at api.githubcopilot.com) to the bot's token instead of yours."
 
-# ── Stage 1: create the token in GitHub's UI ───────────────────────────────
-stage "Create the fine-grained token"
-say "GitHub only lets you create fine-grained tokens through the web UI -"
-say "there's no gh CLI or API command for it."
+if ! command -v gh >/dev/null 2>&1; then
+  warn "gh CLI not found - stages 4 and 5 need it to invite the bot and set"
+  warn "branch protection. Install it first: https://cli.github.com"
+  exit 1
+fi
+if ! gh auth status >/dev/null 2>&1; then
+  warn "gh isn't authenticated as you yet. Run 'gh auth login' first, then re-run this wizard."
+  exit 1
+fi
+HUMAN_LOGIN="$(gh api user --jq .login)"
+HUMAN_ID="$(gh api user --jq .id)"
+
+# ── Stage 1: create the bot's own GitHub account ───────────────────────────
+stage "Create the bot's GitHub account"
+say "GitHub needs its own email per account - use an alias or a mailbox you"
+say "control, not your main address, so the bot's account and yours ($HUMAN_LOGIN)"
+say "stay clearly separate."
+open_url "https://github.com/join"
+step "Pick a username that reads as a bot, e.g. '${HUMAN_LOGIN}-jarvis'."
+step "Verify the email and finish signup."
+step "Turn on 2FA for it (Settings → Password and authentication) - it holds"
+note "  write access to your private repos, same as any collaborator account."
+ask BOT_LOGIN "Bot account's GitHub username:"
+if [[ -z "$BOT_LOGIN" ]]; then
+  warn "no username entered - can't continue."
+  exit 1
+fi
+
+# ── Stage 2: create the bot's fine-grained PAT ─────────────────────────────
+stage "Create the bot's fine-grained token"
+say "Log in as $BOT_LOGIN (a private/incognito window keeps this session"
+say "separate from your own $HUMAN_LOGIN login) and create its token there."
+say "Fine-grained tokens are web-UI-only to create - no gh CLI or API path."
 open_url "https://github.com/settings/personal-access-tokens/new"
 step "Token name: e.g. 'hermes-jarvis'."
-step "Expiration: pick a bounded period (e.g. 90 days), not 'No expiration' -"
-note "  you'll re-run this wizard to rotate it when it lapses."
-step "Resource owner: your personal account."
-step "Repository access: 'All repositories' (current + future private repos)."
+step "Expiration: a bounded period (e.g. 90 days), not 'No expiration' - you'll"
+note "  re-run this wizard's stages 2-3 to rotate it when it lapses."
+step "Resource owner: $BOT_LOGIN (the bot account, not yours)."
+step "Repository access: 'All repositories' - this tracks whatever $BOT_LOGIN"
+note "  has been invited to as a collaborator, present tense, so repos added"
+note "  as collaborations later don't need a new token."
 step "Under 'Permissions' → 'Repository permissions', set:"
 note "    Contents      → Read and write"
 note "    Issues        → Read and write"
 note "    Pull requests → Read and write"
 note "  (Metadata: Read-only is added automatically - leave it.)"
 step "Click 'Generate token' and copy the value (github.com only shows it once)."
-ask_secret GITHUB_TOKEN "Paste the token:"
-if [[ -z "$GITHUB_TOKEN" ]]; then
+ask_secret BOT_TOKEN "Paste the bot's token:"
+if [[ -z "$BOT_TOKEN" ]]; then
   warn "no token entered - nothing to encrypt. Re-run the wizard when you have one."
   exit 1
 fi
 
-# ── Stage 2: encrypt it into the vault file ─────────────────────────────────
-stage "Store it in the vault"
+# ── Stage 3: encrypt it into the vault file ────────────────────────────────
+stage "Store the bot's token in the vault"
 say "Encrypting with the repo's 'beanpod' vault identity (ansible.cfg) -"
 say "you'll be prompted for the vault password, not the token."
 
-ENCRYPTED="$(cd "$REPO_ROOT" && ansible-vault encrypt_string --vault-id beanpod@prompt --encrypt-vault-id beanpod --name "$VAR_NAME" "$GITHUB_TOKEN")"
-unset GITHUB_TOKEN
+ENCRYPTED="$(cd "$REPO_ROOT" && ansible-vault encrypt_string --vault-id beanpod@prompt --encrypt-vault-id beanpod --name "$VAR_NAME" "$BOT_TOKEN")"
 
 {
   printf '\n'
-  printf '# Fine-grained PAT for the github MCP server\n'
-  printf '# (composition_hermes_jarvis_mcp_servers.github, core.yaml). All\n'
-  printf '# repositories, Contents/Issues/Pull requests: Read and write. Created via\n'
-  printf '# scripts/hermes-jarvis-github-token-wizard.sh, %s.\n' "$(date +%Y-%m-%d)"
+  printf '# Fine-grained PAT for the bot account (%s) that backs the github MCP\n' "$BOT_LOGIN"
+  printf '# server (composition_hermes_jarvis_mcp_servers.github, core.yaml). All\n'
+  printf '# repositories %s collaborates on, Contents/Issues/Pull requests: Read and\n' "$BOT_LOGIN"
+  printf '# write. Created via scripts/hermes-jarvis-github-bot-setup.sh, %s.\n' "$(date +%Y-%m-%d)"
   printf '%s\n' "$ENCRYPTED"
 } >> "$VAULT_FILE"
 
@@ -244,6 +283,94 @@ printf '  %s✓ appended%s %s to %s\n' "$GREEN" "$RESET" "$VAR_NAME" "$VAULT_FIL
 confirm "Review the diff now (git -C \"$REPO_ROOT\" diff -- \"$VAULT_FILE\")?" && \
   git -C "$REPO_ROOT" diff -- "$VAULT_FILE"
 
-SKIPPED+=("deploy: run the ansible-deploy skill (or ansible-playbook playbooks/hosts/minipc-8gb-agatha/core.yaml) targeting the hermes-jarvis composition to push the token and restart the container")
+# ── Stage 4: bulk-provision every current private repo ────────────────────
+stage "Invite the bot + require PRs on every private repo"
+say "For each private repo you own: invite $BOT_LOGIN as a collaborator,"
+say "accept that invite using the bot's own token, then create a ruleset"
+say "requiring pull requests on the default branch - with $HUMAN_LOGIN ($HUMAN_ID)"
+say "on the bypass list, so you keep pushing straight to main."
+note "Repos this misses because they don't exist yet still need this rerun -"
+note "there's no 'all future repos' shortcut on a personal (non-org) account."
+
+mapfile -t REPOS < <(gh repo list "$HUMAN_LOGIN" --visibility private --no-archived \
+  --json nameWithOwner --jq '.[].nameWithOwner' -L 1000)
+
+if (( ${#REPOS[@]} == 0 )); then
+  warn "no private, non-archived repos found under $HUMAN_LOGIN - nothing to provision."
+else
+  say "Found ${#REPOS[@]} repo(s):"
+  for r in "${REPOS[@]}"; do note "  - $r"; done
+  if confirm "Invite $BOT_LOGIN and require PRs on all ${#REPOS[@]} of these?"; then
+    OK=0
+    for repo in "${REPOS[@]}"; do
+      printf '  %s→%s %s\n' "$BLUE" "$RESET" "$repo"
+
+      if gh api "repos/$repo/collaborators/$BOT_LOGIN" --method PUT -f permission=push >/dev/null 2>&1; then
+        note "    invited $BOT_LOGIN"
+      else
+        SKIPPED+=("$repo: collaborator invite failed - check by hand")
+        warn "    collaborator invite failed, skipping ruleset for this repo"
+        continue
+      fi
+
+      INVITE_ID="$(GH_TOKEN="$BOT_TOKEN" gh api /user/repository_invitations \
+        --jq ".[] | select(.repository.full_name==\"$repo\") | .id" 2>/dev/null | head -n1)"
+      if [[ -n "$INVITE_ID" ]]; then
+        if GH_TOKEN="$BOT_TOKEN" gh api "/user/repository_invitations/$INVITE_ID" --method PATCH >/dev/null 2>&1; then
+          note "    accepted invite as $BOT_LOGIN"
+        else
+          SKIPPED+=("$repo: $BOT_LOGIN needs to accept its collaborator invite by hand")
+          warn "    couldn't accept invite as $BOT_LOGIN - accept it by hand"
+        fi
+      fi # no pending invite usually means $BOT_LOGIN was already a collaborator - fine
+
+      EXISTING_ID="$(gh api "repos/$repo/rulesets" --jq ".[] | select(.name==\"$RULESET_NAME\") | .id" 2>/dev/null | head -n1)"
+      RULESET_JSON=$(cat <<JSON
+{
+  "name": "$RULESET_NAME",
+  "target": "branch",
+  "enforcement": "active",
+  "conditions": { "ref_name": { "include": ["~DEFAULT_BRANCH"], "exclude": [] } },
+  "rules": [ { "type": "pull_request", "parameters": { "required_approving_review_count": 0 } } ],
+  "bypass_actors": [ { "actor_id": $HUMAN_ID, "actor_type": "User", "bypass_mode": "always" } ]
+}
+JSON
+)
+      if [[ -n "$EXISTING_ID" ]]; then
+        METHOD=PUT; PATH_SUFFIX="repos/$repo/rulesets/$EXISTING_ID"
+      else
+        METHOD=POST; PATH_SUFFIX="repos/$repo/rulesets"
+      fi
+      if printf '%s' "$RULESET_JSON" | gh api "$PATH_SUFFIX" --method "$METHOD" --input - >/dev/null 2>&1; then
+        note "    require-PR ruleset set, $HUMAN_LOGIN can still bypass"
+        OK=$((OK + 1))
+      else
+        SKIPPED+=("$repo: ruleset create/update failed - check by hand (Settings → Rules)")
+        warn "    ruleset create/update failed"
+      fi
+    done
+    say "Done: $OK/${#REPOS[@]} repos fully provisioned."
+  else
+    note "skipped the bulk provisioning step"
+  fi
+fi
+unset BOT_TOKEN
+
+# ── Stage 5: retire the old personal-account token ─────────────────────────
+stage "Retire the old personal-account token"
+say "Jarvis previously ran on a fine-grained PAT under your own account"
+say "($HUMAN_LOGIN) - vault_hermes_jarvis_github_token. That's superseded by"
+say "$BOT_LOGIN's token now, and leaving it live is needless standing access."
+open_url "https://github.com/settings/personal-access-tokens"
+step "Find the 'hermes-jarvis' token under your own account and delete it."
+if confirm "Deleted? (removes it from GitHub's side - the vault entry is handled next)"; then
+  note "good - remove vault_hermes_jarvis_github_token from $VAULT_FILE by hand"
+  note "(it's still vault-encrypted there; deleting the line is enough, no re-encrypt needed)"
+else
+  SKIPPED+=("delete the old personal-account fine-grained PAT ('hermes-jarvis') and its vault_hermes_jarvis_github_token entry in $VAULT_FILE")
+fi
+
+SKIPPED+=("deploy: run the ansible-deploy skill (or ansible-playbook playbooks/hosts/minipc-8gb-agatha/core.yaml) targeting the hermes-jarvis composition to push the new token and restart the container")
+SKIPPED+=("new repos later: re-run stage 4 (or repeat its two gh api calls by hand) to invite $BOT_LOGIN and require PRs there too")
 
 finish

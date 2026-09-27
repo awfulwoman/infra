@@ -227,10 +227,11 @@ composition_hermes_jarvis_mcp_env:
   # Long-lived HA token created for this bot alone, so it can be revoked
   # independently of nabu's.
   HOMEASSISTANT_MCP_TOKEN: "{{ vault_hermes_jarvis_homeassistant_token }}"
-  # Fine-grained PAT, all repos, Contents/Issues/Pull requests: Read and
-  # write. Created via the wizard - see
-  # scripts/wizards/hermes-jarvis-github-token.sh.
-  GITHUB_TOKEN: "{{ vault_hermes_jarvis_github_token | default('') }}"
+  # Fine-grained PAT under a separate bot GitHub account (not this user's own),
+  # so branch-protection rulesets can force Jarvis through PRs while the human
+  # account still pushes straight to main - see composition-hermes-jarvis
+  # README.md#github. Created via scripts/hermes-jarvis-github-bot-setup.sh.
+  GITHUB_TOKEN: "{{ vault_hermes_jarvis_github_bot_token | default('') }}"
 
 composition_hermes_jarvis_matrix: true
 composition_hermes_jarvis_matrix_homeserver: "https://matrix.{{ domainname_infra }}"

@@ -164,13 +164,33 @@ present in the image if a real local clone is ever wanted instead (`HOME` is
 `/opt/data`, which is the one persistent volume, so `~/.ssh` or
 `~/.git-credentials` would survive restarts).
 
-**Getting a token.** Run `scripts/hermes-jarvis-github-token-wizard.sh` from
-the repo root - it walks GitHub's fine-grained token page, then encrypts the
-result into the vault as `vault_hermes_jarvis_github_token`. Fine-grained
-tokens are web-UI-only to create (no `gh`/API path), so this can't be
-scripted end to end. Token shape: all repositories, `Contents`/`Issues`/
-`Pull requests` permissions set to Read and write (`Metadata: Read-only` is
-automatic). Give it a bounded expiration and re-run the wizard to rotate it.
+**Bot identity, not the personal account.** `GITHUB_TOKEN` is a fine-grained
+PAT issued under a *separate* bot GitHub account invited as a collaborator on
+each repo, not this user's own account. That separation is what makes
+PR-only enforcement possible at all: a PAT under the user's own account is
+indistinguishable from the user at the API level, so branch protection can't
+tell "Jarvis pushed" apart from "the user pushed" and force only one of them
+through a PR. A distinct login is a distinct actor that a branch-protection
+ruleset can target, while the user's own account sits on that ruleset's
+bypass list and keeps pushing straight to `main` as usual.
+
+Per repo, that means: the bot account is an invited collaborator (`push`
+permission), and a ruleset named `jarvis-bot-pr-only` requires a pull request
+on the default branch with the user's account on `bypass_actors`. There's no
+org-wide or account-wide "all repos, including future ones" setting for a
+personal (non-org) account - a brand new repo needs the bot invited and the
+ruleset created for it same as any other, before Jarvis gets PR-only access
+to it.
+
+**Setup.** Run `scripts/hermes-jarvis-github-bot-setup.sh` from the repo
+root. It walks creating the bot account and its fine-grained token (both
+web-UI-only - no `gh`/API path exists for either), encrypts the token into
+the vault as `vault_hermes_jarvis_github_bot_token`, then uses the human's
+own `gh` session to loop over every current private repo: invite the bot,
+accept the invite as the bot, and create/update that ruleset. Token shape:
+all repositories, `Contents`/`Issues`/`Pull requests` permissions set to Read
+and write (`Metadata: Read-only` is automatic), bounded expiration - re-run
+the wizard's token stages to rotate it.
 
 ## Key variables
 
@@ -205,7 +225,7 @@ automatic). Give it a bounded expiration and re-run the wizard to rotate it.
 | `vault_hermes_jarvis_dashboard_secret` | when dashboard is on | Signs session cookies; without it sessions die on restart |
 | `vault_hermes_jarvis_api_server_key` | when API server is on | Bearer key for the API endpoint |
 | `vault_hermes_jarvis_matrix_access_token` | when Matrix is on | Full account access - see Matrix section above |
-| `vault_hermes_jarvis_github_token` | for the `github` MCP server | Fine-grained PAT, all repos, Contents/Issues/Pull requests Read and write - see GitHub section above |
+| `vault_hermes_jarvis_github_bot_token` | for the `github` MCP server | Fine-grained PAT under the bot account, all repos it collaborates on, Contents/Issues/Pull requests Read and write - see GitHub section above |
 
 Generate secrets with `openssl rand -hex 32`.
 
