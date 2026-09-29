@@ -183,29 +183,6 @@ written to disk. The terminal toolset can then `git clone` the helperbot's
 fork over HTTPS, edit and test it, and push. The image has `git` and
 `python3` but no `gh` CLI, and nothing installs a repo's own toolchain.
 
-## Shared memory (Basic Memory)
-
-When `composition_hermes_jarvis_basic_memory_path` is set, Jarvis uses the
-[Basic Memory Hermes plugin](https://github.com/basicmachines-co/basic-memory/tree/main/integrations/hermes)
-as his external memory provider. It searches memory before answering, writes
-a summary note at the end of each session, and adds ten `bm_*` tools. The
-built-in `MEMORY.md`/`USER.md` stay active alongside it.
-
-The notes are the AgentMemory Syncthing folder, bind-mounted at
-`/opt/memory`. `composition-basic-memory` on camina serves the same files over
-MCP, so Jarvis, Claude Code and the other agents share one memory.
-
-- The plugin is installed with `hermes plugins install --ref <sha>` and the
-  `bm` CLI with `uv tool install`, both under `/opt/data`. They survive image
-  pulls, and the role reinstalls them only when the pins change.
-  `config.yaml` enables the plugin (`plugins.enabled`, `memory.provider`).
-- **`sqlite-vec` is pinned.** Installing with `--prerelease=allow`, which the
-  `fastmcp` beta needs, otherwise pulls a `sqlite-vec` alpha built for AVX.
-  agatha's Celeron has no AVX, so `bm` dies with "Illegal instruction" on its
-  first database access.
-- Per-turn capture is off. It would copy every chat, Matrix included, into
-  the shared vault. Session summaries go to `sessions/hermes-jarvis/`.
-
 ## Key variables
 
 | Variable | Default | Description |

@@ -61,31 +61,6 @@ composition_hermes_jarvis_disabled_toolsets: []
 composition_hermes_jarvis_mcp_env: {}
 
 # -------------------------------------------------------------------
-# BASIC MEMORY
-# Hermes memory-provider plugin backed by Basic Memory: search before
-# answering, session-end summary notes, bm_* tools. It runs its own `bm` over
-# the notes at this host path, bind-mounted at /opt/memory - a Syncthing
-# folder shared with composition-basic-memory, so every agent sees the same
-# memory. Empty = off.
-# -------------------------------------------------------------------
-composition_hermes_jarvis_basic_memory_path: ""
-composition_hermes_jarvis_basic_memory_project: agentmemory
-# v0.23.2 plus the follow-up commit declaring manifest_version 1, which is all
-# Hermes' installer accepts. Plugin code is unchanged from the release.
-composition_hermes_jarvis_basic_memory_plugin_ref: ca6017b73f1a16b43715867ae0fedd9b468eb68b
-# The bm CLI the plugin drives; keep in step with composition-basic-memory.
-composition_hermes_jarvis_basic_memory_version: "0.23.2"
-# sqlite-vec from basic-memory's uv.lock for that release. Newer alphas need
-# AVX; agatha's Celeron J4105 has none.
-composition_hermes_jarvis_basic_memory_sqlite_vec_version: "0.1.9"
-# Per-turn capture would copy every chat, Matrix included, into the shared
-# vault; session-end summaries carry what matters.
-composition_hermes_jarvis_basic_memory_capture_per_turn: false
-composition_hermes_jarvis_basic_memory_capture_session_end: true
-composition_hermes_jarvis_basic_memory_capture_folder: sessions/hermes-jarvis
-composition_hermes_jarvis_basic_memory_remember_folder: remember/hermes-jarvis
-
-# -------------------------------------------------------------------
 # GIT
 # GitHub login the agent commits and pushes as. When set, the role writes
 # /opt/data/.gitconfig (HOME inside the container) with that identity and a

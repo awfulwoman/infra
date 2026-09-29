@@ -250,11 +250,6 @@ composition_hermes_jarvis_mcp_env:
   # it in the UI invalidates this copy.
   N8N_MCP_TOKEN: "{{ vault_n8n_mcp_key }}"
 
-# Shared agent memory: the basic-memory Hermes plugin over this host's copy
-# of the AgentMemory Syncthing folder (composition-syncthing's default data
-# path), which composition-basic-memory on camina also serves.
-composition_hermes_jarvis_basic_memory_path: "/{{ compositions_dataset }}/syncthing/data/Obsidian/AgentMemory"
-
 # Commits and pushes (to the helperbot's own forks) as the helperbot.
 composition_hermes_jarvis_git_github_login: "{{ vault_github_helperbot_username }}"
 

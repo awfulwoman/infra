@@ -54,17 +54,6 @@ agent:
     - {{ _ts }}
 {% endfor %}
 {% endif %}
-{% if composition_hermes_jarvis_basic_memory_path %}
-
-# External memory provider (installed into /opt/data/plugins by the role).
-# Built-in MEMORY.md/USER.md stay active alongside it.
-plugins:
-  enabled:
-    - basic-memory
-
-memory:
-  provider: basic-memory
-{% endif %}
 {% if composition_hermes_jarvis_mcp_servers | length > 0 %}
 
 # MCP servers for this bot. Bearer tokens are not written here - the

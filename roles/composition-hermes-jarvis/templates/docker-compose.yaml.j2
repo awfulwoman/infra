@@ -23,11 +23,6 @@ services:
       # the compositions dataset instead, so ZFS snapshots cover it.
       - "{{ composition_config }}/data:/opt/data"
       - /etc/localtime:/etc/localtime:ro
-{% if composition_hermes_jarvis_basic_memory_path %}
-      # Shared agent memory (Syncthing folder), read and written by the
-      # basic-memory plugin.
-      - "{{ composition_hermes_jarvis_basic_memory_path }}:/opt/memory"
-{% endif %}
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.{{ composition_name }}.rule=Host(`{{ composition_dns_subdomains[0] }}.{{ domainname_infra }}`)"
