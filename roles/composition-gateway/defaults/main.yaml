@@ -4,10 +4,15 @@ composition_name: gateway
 composition_dns_subdomains:
   - gateway
 
-composition_gateway_imap_host: "imap.{{ vault_mailprovider_domain }}"
-composition_gateway_imap_port: 993
-composition_gateway_imap_username: "{{ vault_mailprovider_user }}"
-composition_gateway_imap_password: "{{ vault_mailprovider_password }}"
+# composition-mail-archive-server — Gateway holds no IMAP credentials at
+# all now (handoff spec §0: the archive is the sole holder of mail
+# credentials). Both compositions run on server-64gb-storage sharing
+# default_docker_network, so it's reached by container name, same pattern
+# as every other composition-to-composition call on that host. The token
+# is the archive's own "gateway"-labelled token (vault_composition_gateway.yaml),
+# not a new one.
+composition_gateway_mail_archive_server_base_url: "http://mail-archive-server:4103"
+composition_gateway_mail_archive_server_bearer_token: "{{ vault_gateway_mail_archive_server_token }}"
 
 # Absolute path on the host to a synced Obsidian vault (a Syncthing folder).
 # Must be set per-host; there is no sane default.

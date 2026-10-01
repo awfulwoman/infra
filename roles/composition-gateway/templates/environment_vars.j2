@@ -1,10 +1,8 @@
 # Managed by Ansible - do not edit manually
 # roles/composition-gateway
 
-GATEWAY_IMAP__HOST={{ composition_gateway_imap_host }}
-GATEWAY_IMAP__PORT={{ composition_gateway_imap_port }}
-GATEWAY_IMAP__USERNAME={{ composition_gateway_imap_username }}
-GATEWAY_IMAP__PASSWORD={{ composition_gateway_imap_password }}
+GATEWAY_MAIL_ARCHIVE_SERVER__BASE_URL={{ composition_gateway_mail_archive_server_base_url }}
+GATEWAY_MAIL_ARCHIVE_SERVER__BEARER_TOKEN={{ composition_gateway_mail_archive_server_bearer_token }}
 
 GATEWAY_OBSIDIAN__VAULT_PATH=/vault
 
