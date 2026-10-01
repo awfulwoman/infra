@@ -23,7 +23,6 @@ all:
         raspberry-pi4-2gb-pikvm:
         vps-hetzner-public01:
         server-64gb-storage:
-        minipc-8gb-test-router:
         raspberry-pi4-2gb-deedee:
         raspberry-pi4-4gb-randolph:
         raspberry-pi4-8gb-norman:
@@ -44,7 +43,6 @@ all:
         minipc-8gb-agatha:
         vps-hetzner-public01:
         server-64gb-storage:
-        minipc-8gb-test-router:
         raspberry-pi4-2gb-deedee:
         raspberry-pi4-4gb-randolph:
         raspberry-pi4-8gb-norman:

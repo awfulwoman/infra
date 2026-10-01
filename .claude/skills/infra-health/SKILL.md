@@ -15,7 +15,6 @@ All infra hosts are reachable by short alias (from `~/.ssh/config`):
 | pikvm | raspberry-pi4-2gb-pikvm |
 | public01 | vps-hetzner-public01 |
 | storage | server-64gb-storage |
-| test-router | minipc-8gb-test-router |
 | deedee | raspberry-pi4-2gb-deedee |
 | randolph | raspberry-pi4-4gb-randolph |
 | norman | raspberry-pi4-8gb-norman |
@@ -24,7 +23,7 @@ All infra hosts are reachable by short alias (from `~/.ssh/config`):
 ## Host reachability
 
 ```bash
-for host in backups homebrain malcolm pikvm public01 storage test-router deedee randolph norman belinda; do
+for host in backups homebrain malcolm pikvm public01 storage deedee randolph norman belinda; do
   ssh -o ConnectTimeout=3 -o BatchMode=yes $host 'echo "$HOSTNAME ok"' 2>/dev/null || echo "$host: UNREACHABLE"
 done
 ```
