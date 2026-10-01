@@ -88,3 +88,4 @@
     build: always
     remove_orphans: true
   notify: Restart Traefik
+  ignore_errors: true
