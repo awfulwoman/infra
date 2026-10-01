@@ -1,0 +1,67 @@
+# Composition name (used by composition-common dependency)
+composition_name: wiki-compiler
+
+# Deliberately never exposed through Traefik or a published port. It shares
+# compositions' Docker bridge network with composition-gateway on the same
+# host and is reached by container name from composition-wiki-site (which
+# only reads its output folder, not this API) — nothing calls it from
+# outside. The empty list is still required: the dns_records filter looks
+# this key up unconditionally (see roles/composition-logtide-agent/defaults).
+composition_dns_subdomains: []
+
+composition_wiki_compiler_image: ghcr.io/awfulwoman/wiki-compiler:latest
+composition_wiki_compiler_port: 8080
+
+# Host paths of the two Syncthing folders this composition mounts — set per
+# host in host_vars (see syncthing_folders in group_vars/infra/core.yaml).
+# Charlie is read-only (the compiler only ever reads notes); PersonalWiki is
+# read-write (the compiler is the one thing that writes pages into it).
+composition_wiki_compiler_notes_path: ""
+composition_wiki_compiler_output_path: ""
+
+# gateway shares this host's default_docker_network and default port
+# (composition-gateway's GATEWAY_SERVER__PORT), reached by container name.
+# The token is this compiler's own labelled entry in
+# composition_gateway_server_auth_clients (vault_gateway_mcp_token_wiki) —
+# kept in sync by hand across the two roles, same as every other gateway
+# client.
+composition_wiki_compiler_gateway_url: "http://gateway:4000/mcp"
+composition_wiki_compiler_gateway_token: "{{ vault_gateway_mcp_token_wiki }}"
+
+# Malcolm's Ollama, over its native API (not the OpenAI-compatible /v1 one
+# hermes-jarvis uses). The model is already an Ollama Cloud model proxied
+# through that same local Ollama (group_vars/infra/core.yaml), so "malcolm's
+# Ollama" and "cloud model" are one setting, not two.
+composition_wiki_compiler_ollama_url: "{{ llm_default_ollama_base_url }}"
+composition_wiki_compiler_model: "{{ llm_default_model }}"
+
+# Guards the shared, metered Ollama Cloud account (also used by the Hermes
+# bots on agatha). Starts small; raise after watching `wiki-compiler usage`
+# for a few days — see docs/superpowers/plans/2026-10-01-wiki-compiler-and-wiki-site.md.
+composition_wiki_compiler_daily_call_budget: 50
+composition_wiki_compiler_daily_token_budget: 100000
+composition_wiki_compiler_run_interval_minutes: 60
+
+# email deliberately left out of the starting source list: it needs a
+# `filter-report` pass on a real sample before it backfills into the wiki
+# (see the plan doc). Flipping it on is a separate, deliberate step.
+composition_wiki_compiler_sources: "calendar,bookmarks,contacts,reminders,location"
+
+# Authenticates the compiler's own /run, /usage, /lint, /filter-report HTTP
+# API (not the gateway call) — nothing calls these yet but the server
+# refuses to start without a token.
+composition_wiki_compiler_api_token: "{{ vault_wiki_compiler_api_token }}"
+
+# Reverse-geocodes location pings for the home-radius drop rule. Empty by
+# default: the rule is a no-op until HOME_LAT/HOME_LON are set, and nothing
+# here should guess at real coordinates. Set the three
+# vault_wiki_compiler_home_* secrets to turn it on.
+composition_wiki_compiler_home_lat: "{{ vault_wiki_compiler_home_lat | default('') }}"
+composition_wiki_compiler_home_lon: "{{ vault_wiki_compiler_home_lon | default('') }}"
+composition_wiki_compiler_home_radius_m: "{{ vault_wiki_compiler_home_radius_m | default('') }}"
+# The local Nominatim composition never worked (awfulwoman/infra#299 removes
+# it); this points straight at the hosted public instance instead. Its usage
+# policy caps requests at 1/second with no key — fine for a once-an-hour
+# backfill of a handful of location clusters, but never raise
+# VISIT_RADIUS_M's effective call volume without checking that still holds.
+composition_wiki_compiler_geocoder_url: "https://nominatim.org"

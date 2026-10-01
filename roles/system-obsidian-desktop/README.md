@@ -18,7 +18,7 @@ Do this over Screen Sharing on Malcolm. Sync login can't be automated because
 of MFA and a GUI-only flow.
 
 1. Open Obsidian and log in to your Obsidian account (Settings → General).
-2. For each vault (**Charlie**, **AgentMemory**):
+2. For each vault (**Charlie**, **AgentMemory**, **PersonalWiki**):
    1. Open folder as vault: `~/Syncthing/Obsidian/<vault>`.
    2. Settings → Sync → connect it to the remote vault of the same name. The
       E2E password is `vault_obsidian_vault_key`.

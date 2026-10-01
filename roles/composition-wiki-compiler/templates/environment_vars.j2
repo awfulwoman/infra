@@ -1,0 +1,20 @@
+# Managed by Ansible - do not edit manually (roles/composition-wiki-compiler)
+
+GATEWAY_URL={{ composition_wiki_compiler_gateway_url }}
+GATEWAY_TOKEN={{ composition_wiki_compiler_gateway_token }}
+OUTPUT_DIR=/data/output
+STATE_DIR=/data/state
+NOTES_DIR=/data/notes
+OLLAMA_URL={{ composition_wiki_compiler_ollama_url }}
+MODEL={{ composition_wiki_compiler_model }}
+API_TOKEN={{ composition_wiki_compiler_api_token }}
+SOURCES={{ composition_wiki_compiler_sources }}
+DAILY_CALL_BUDGET={{ composition_wiki_compiler_daily_call_budget }}
+DAILY_TOKEN_BUDGET={{ composition_wiki_compiler_daily_token_budget }}
+RUN_INTERVAL_MINUTES={{ composition_wiki_compiler_run_interval_minutes }}
+GEOCODER_URL={{ composition_wiki_compiler_geocoder_url }}
+{% if composition_wiki_compiler_home_lat %}
+HOME_LAT={{ composition_wiki_compiler_home_lat }}
+HOME_LON={{ composition_wiki_compiler_home_lon }}
+HOME_RADIUS_M={{ composition_wiki_compiler_home_radius_m }}
+{% endif %}

@@ -94,6 +94,10 @@ zfs:
             policy: high
           github2karakeep:
             policy: high
+          # Rebuildable from the sources (notes + gateway data), but not
+          # free to redo -- the ingest dedup state and usage history.
+          wiki-compiler:
+            policy: high
 
           # A monitoring history database is rewritten constantly, so every
           # snapshot pins a fresh copy of the whole file. Peekaping's 326M
@@ -113,6 +117,11 @@ zfs:
           # Rebuildable from OSM extracts, and the largest thing on the pool.
           nominatim:
             policy: low
+          # Pure Quartz build output of the PersonalWiki Syncthing folder --
+          # the real content is that folder, already covered by the
+          # syncthing dataset below.
+          wiki-site:
+            policy: none
           # Metadata and cache. A rebuild re-scans the library.
           jellyfin:
             policy: low
@@ -317,6 +326,15 @@ composition_syncthing_data_path: /slowpool/charlie/syncthing
 composition_gateway_obsidian_vault_path: "{{ composition_syncthing_data_path }}/Obsidian/Charlie"
 
 # -------------------------------------------------------------------
+# WIKI-COMPILER / WIKI-SITE
+# The Obsidian: PersonalWiki Syncthing folder is both the compiler's write
+# target and the site's read-only build source (see syncthing_folders).
+# -------------------------------------------------------------------
+composition_wiki_compiler_notes_path: "{{ composition_syncthing_data_path }}/Obsidian/Charlie"
+composition_wiki_compiler_output_path: "{{ composition_syncthing_data_path }}/Obsidian/PersonalWiki"
+composition_wiki_site_vault_path: "{{ composition_syncthing_data_path }}/Obsidian/PersonalWiki"
+
+# -------------------------------------------------------------------
 # MISC
 # -------------------------------------------------------------------
 # Media storage
@@ -414,3 +432,5 @@ compositions:
   - nabu
   - jarvis
   - nominatim
+  - wiki-compiler
+  - wiki-site

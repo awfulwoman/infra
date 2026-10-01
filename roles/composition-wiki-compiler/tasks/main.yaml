@@ -1,0 +1,61 @@
+# code: language=ansible
+
+- name: "Assert Syncthing folder paths are configured"
+  ansible.builtin.assert:
+    that:
+      - composition_wiki_compiler_notes_path | length > 0
+      - composition_wiki_compiler_output_path | length > 0
+    fail_msg: >-
+      composition_wiki_compiler_notes_path and _output_path must point at the
+      synced Charlie and PersonalWiki Syncthing folders on this host (see
+      syncthing_folders in group_vars/infra/core.yaml).
+    quiet: true
+
+- name: "Assert required secrets are configured"
+  ansible.builtin.assert:
+    that:
+      - composition_wiki_compiler_gateway_token | length > 0
+      - composition_wiki_compiler_api_token | length > 0
+    fail_msg: >-
+      composition_wiki_compiler_gateway_token (vault_gateway_mcp_token_wiki)
+      and composition_wiki_compiler_api_token (vault_wiki_compiler_api_token)
+      must both be set — see this role's README.
+    quiet: true
+
+# Docker would create a missing bind-mount source as root, leaving a folder
+# neither Syncthing nor the container (both this user) can write into. The
+# notes folder is read-only inside the container but still needs to exist
+# with the right owner on the host for the same reason.
+- name: "Ensure the Syncthing folders exist"
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0775"
+  loop:
+    - "{{ composition_wiki_compiler_notes_path }}"
+    - "{{ composition_wiki_compiler_output_path }}"
+
+- name: "Create compose file"
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ composition_root }}/docker-compose.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0644"
+
+- name: "Create .env file"
+  ansible.builtin.template:
+    src: environment_vars.j2
+    dest: "{{ composition_root }}/.environment_vars"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0600"
+
+- name: Start Docker Compose project
+  community.docker.docker_compose_v2:
+    project_src: "{{ composition_root }}"
+    state: present
+    pull: always
+    remove_orphans: true

@@ -1,0 +1,22 @@
+#!/bin/bash
+# Managed by Ansible - do not edit manually (roles/composition-wiki-site)
+set -euo pipefail
+
+# `quartz create` installs the template's plugins over the network, so it's
+# only worth doing once per container filesystem, not on every restart.
+# Re-running it is otherwise harmless (same flags, same result) -- this
+# guard is purely to avoid redundant npm installs.
+if [ ! -f /app/.quartz-initialized ]; then
+    npx quartz create \
+        --template obsidian \
+        --strategy symlink \
+        --source /data/wiki \
+        --links shortest \
+        --baseUrl "{{ composition_wiki_site_base_url }}"
+    touch /app/.quartz-initialized
+fi
+
+# --watch rebuilds whenever the compiler writes a new page; --serve binds
+# every interface (quartz's server.listen() takes no host argument), so
+# Traefik reaches it by container name.
+exec npx quartz build --serve --watch --port 8080

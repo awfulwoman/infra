@@ -1,0 +1,22 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  wiki-compiler:
+    container_name: "{{ composition_name }}"
+    image: "{{ composition_wiki_compiler_image }}"
+    restart: unless-stopped
+    user: "{{ ansible_facts['user_uid'] }}:{{ ansible_facts['user_gid'] }}"
+    env_file: .environment_vars
+    volumes:
+      - "{{ composition_wiki_compiler_notes_path }}:/data/notes:ro"
+      - "{{ composition_wiki_compiler_output_path }}:/data/output"
+      - "{{ composition_config }}:/data/state"
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+    # No compose-level override: the image's own HEALTHCHECK (python
+    # urllib against /health) already proves the HTTP server is listening.
+
+networks:
+  "{{ default_docker_network }}":
+    external: true

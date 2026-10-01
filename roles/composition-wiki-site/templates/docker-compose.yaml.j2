@@ -1,0 +1,31 @@
+# code: language=ansible
+name: "{{ composition_name }}"
+services:
+  wiki-site:
+    container_name: "{{ composition_name }}"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    user: "{{ ansible_facts['user_uid'] }}:{{ ansible_facts['user_gid'] }}"
+    volumes:
+      - "{{ composition_wiki_site_vault_path }}:/data/wiki:ro"
+    networks:
+      - "{{ default_docker_network }}"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.wiki-site.rule=Host(`{{ composition_dns_subdomains[0] }}.{{ domainname_infra }}`)"
+      - "traefik.http.routers.wiki-site.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
+      - "traefik.http.routers.wiki-site.tls.certresolver=letsencrypt"
+{% endif %}
+      - "traefik.http.routers.wiki-site.middlewares=wiki-site-auth"
+      # `$` doubled: compose would otherwise interpolate the bcrypt hash.
+      - "traefik.http.middlewares.wiki-site-auth.basicauth.users={{ composition_wiki_site_htpasswd | replace('$', '$$') }}"
+      - "traefik.http.services.wiki-site.loadbalancer.server.port=8080"
+    # No compose-level healthcheck override: the image's own HEALTHCHECK
+    # (bash /dev/tcp probe) already proves the HTTP server is listening.
+
+networks:
+  "{{ default_docker_network }}":
+    external: true

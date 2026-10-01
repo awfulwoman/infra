@@ -1,0 +1,31 @@
+FROM node:22-bookworm-slim
+
+ARG UID=1000
+ARG GID=1000
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends git ca-certificates \
+    && rm -rf /var/lib/apt/lists/* \
+    && (getent group ${GID} || groupadd --gid ${GID} app) \
+    && useradd --uid ${UID} --gid ${GID} --create-home --shell /usr/sbin/nologin app
+
+WORKDIR /app
+
+# Quartz has no published package -- it's designed to be cloned and
+# customised in place, not installed as a dependency.
+RUN git clone --depth 1 --branch {{ composition_wiki_site_quartz_ref }} \
+        https://github.com/jackyzha0/quartz.git . \
+    && npm ci
+
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh && chown -R ${UID}:${GID} /app
+USER app
+
+EXPOSE 8080
+
+# No curl/wget in this base image; a bash /dev/tcp probe needs no extra
+# install (see docs: docker-healthcheck rule).
+HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
+    CMD bash -c 'echo > /dev/tcp/localhost/8080' || exit 1
+
+ENTRYPOINT ["/entrypoint.sh"]

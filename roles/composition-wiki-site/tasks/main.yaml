@@ -1,0 +1,50 @@
+# code: language=ansible
+
+- name: "Assert vault path is configured"
+  ansible.builtin.assert:
+    that:
+      - composition_wiki_site_vault_path | length > 0
+    fail_msg: >-
+      composition_wiki_site_vault_path must point at the synced PersonalWiki
+      folder on this host (see syncthing_folders).
+    quiet: true
+
+- name: "Ensure vault directory exists"
+  ansible.builtin.file:
+    path: "{{ composition_wiki_site_vault_path }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0775"
+
+- name: "Create Dockerfile"
+  ansible.builtin.template:
+    src: Dockerfile.j2
+    dest: "{{ composition_root }}/Dockerfile"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0644"
+
+- name: "Create entrypoint script"
+  ansible.builtin.template:
+    src: entrypoint.sh.j2
+    dest: "{{ composition_root }}/entrypoint.sh"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0755"
+
+- name: "Create compose file"
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ composition_root }}/docker-compose.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0644"
+
+- name: Start Docker Compose project
+  community.docker.docker_compose_v2:
+    project_src: "{{ composition_root }}"
+    state: present
+    build: always
+    remove_orphans: true
+  notify: Restart Traefik

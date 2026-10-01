@@ -1,0 +1,21 @@
+# Composition name (used by composition-common dependency)
+composition_name: wiki-site
+
+composition_dns_subdomains:
+  - wiki
+
+# No published image exists for Quartz (https://quartz.jzhao.xyz) — it's
+# designed to be cloned and customised, not installed as a package. This
+# pins the upstream commit so a rebuild is reproducible.
+composition_wiki_site_quartz_ref: v5.0.0
+
+# Host path of the PersonalWiki Syncthing folder (same one
+# composition-wiki-compiler writes into) — set per host.
+composition_wiki_site_vault_path: ""
+
+composition_wiki_site_base_url: "wiki.{{ domainname_infra }}"
+
+# Traefik basic auth: Quartz has no auth of its own. htpasswd line (bcrypt)
+# for Traefik; the user holds the plaintext vault_wiki_password. Same
+# pattern as composition-basic-memory.
+composition_wiki_site_htpasswd: "{{ vault_wiki_htpasswd }}"

@@ -147,3 +147,14 @@ syncthing_folders:
       - minipc-8gb-camina
     ignores: "{{ syncthing_obsidian_ignores }}"
     rescan_interval: "{{ syncthing_obsidian_rescan_interval }}"
+  - id: obsidian-personalwiki
+    label: "Obsidian: PersonalWiki"
+    path: Obsidian/PersonalWiki
+    hosts:
+      # composition-wiki-compiler writes here; composition-wiki-site reads
+      # it read-only to build the static site. Malcolm is the only link to
+      # Obsidian Sync, for the phone (awfulwoman/infra#297).
+      - server-64gb-storage
+      - apple-macmini-m4-16gb-malcolm
+    ignores: "{{ syncthing_obsidian_ignores }}"
+    rescan_interval: "{{ syncthing_obsidian_rescan_interval }}"

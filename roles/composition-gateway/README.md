@@ -67,6 +67,7 @@ own secrets in `inventory/group_vars/infra/vault_gateway.yaml`:
 ansible-vault encrypt_string "$(openssl rand -hex 32)" --name 'vault_gateway_mcp_token_laptop'
 ansible-vault encrypt_string "$(openssl rand -hex 32)" --name 'vault_gateway_mcp_token_gw_cli'
 ansible-vault encrypt_string "$(openssl rand -hex 32)" --name 'vault_gateway_mcp_token_hermes'
+ansible-vault encrypt_string "$(openssl rand -hex 32)" --name 'vault_gateway_mcp_token_wiki'
 ```
 
 Each new secret must also be set on the client: `Authorization: Bearer <laptop secret>`
