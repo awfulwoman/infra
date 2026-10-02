@@ -60,8 +60,10 @@ composition_wiki_compiler_home_lat: "{{ vault_wiki_compiler_home_lat | default('
 composition_wiki_compiler_home_lon: "{{ vault_wiki_compiler_home_lon | default('') }}"
 composition_wiki_compiler_home_radius_m: "{{ vault_wiki_compiler_home_radius_m | default('') }}"
 # The local Nominatim composition never worked (awfulwoman/infra#299 removes
-# it); this points straight at the hosted public instance instead. Its usage
+# it); this points straight at the hosted public instance instead --
+# nominatim.org is only the project's docs site (confirmed live: it 404s
+# on /reverse), the real API is nominatim.openstreetmap.org. Its usage
 # policy caps requests at 1/second with no key — fine for a once-an-hour
 # backfill of a handful of location clusters, but never raise
 # VISIT_RADIUS_M's effective call volume without checking that still holds.
-composition_wiki_compiler_geocoder_url: "https://nominatim.org"
+composition_wiki_compiler_geocoder_url: "https://nominatim.openstreetmap.org"

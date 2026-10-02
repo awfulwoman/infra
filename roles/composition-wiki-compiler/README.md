@@ -52,7 +52,8 @@ low; raise them after a few days of `docker exec wiki-compiler wiki-compiler usa
 ## Geocoding
 
 `composition_wiki_compiler_geocoder_url` points at the public
-`https://nominatim.org` (the local Nominatim composition never worked —
-awfulwoman/infra#299 removes it). That instance's usage policy caps requests
-at 1/second with no key; fine for an hourly backfill of a handful of
-location clusters.
+`https://nominatim.openstreetmap.org` (the local Nominatim composition
+never worked — awfulwoman/infra#299 removes it; `nominatim.org` is only the
+project's docs site, not the API — confirmed live). That instance's usage
+policy caps requests at 1/second with no key; fine for an hourly backfill of
+a handful of location clusters.
