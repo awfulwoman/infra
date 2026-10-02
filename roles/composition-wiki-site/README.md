@@ -10,13 +10,26 @@ customised, not installed as a package — so this role builds its own small
 image (`Dockerfile.j2`) from a pinned upstream tag
 (`composition_wiki_site_quartz_ref`) rather than pulling one.
 
+Pinned to v4 (`v4.5.2`), not the newer v5: v5.0.0's fresh-clone Docker build
+is broken by a currently-open upstream bug (jackyzha0/quartz#2429/#2442),
+confirmed by actually building and running it, not just reading the issue
+tracker.
+
 ## How it stays current
 
 The container's entrypoint runs `quartz create` once per container
 filesystem (symlinking `/data/wiki` in as Quartz's content folder, fully
-non-interactively — see `entrypoint.sh.j2`), then
-`quartz build --serve --watch`. `--watch` rebuilds automatically whenever
-`composition-wiki-compiler` writes a new page; `--serve` binds every
+non-interactively, then patching `baseUrl` with `sed` since v4's `create`
+has no flag for it — see `entrypoint.sh.j2`).
+
+It does **not** use `--watch`: v4's `--watch` never fires through a
+symlinked content folder (jackyzha0/quartz#2077, closed upstream as "try
+v5" — not an option here, see above). Instead, the entrypoint runs
+`quartz build --serve` once (serving whatever is on disk in `public/`
+from then on) and reruns plain `quartz build` on a timer
+(`composition_wiki_site_rebuild_interval_seconds`) in the background —
+verified by hand that a running `--serve` process really does pick up a
+rebuild made while it's up, with no restart needed. `--serve` binds every
 interface (Quartz's own server takes no host argument), so Traefik reaches
 it by container name on port 8080.
 

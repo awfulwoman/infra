@@ -6,8 +6,24 @@ composition_dns_subdomains:
 
 # No published image exists for Quartz (https://quartz.jzhao.xyz) — it's
 # designed to be cloned and customised, not installed as a package. This
-# pins the upstream commit so a rebuild is reproducible.
-composition_wiki_site_quartz_ref: v5.0.0
+# pins the upstream tag so a rebuild is reproducible.
+#
+# Pinned to v4, not the newer v5: v5.0.0's fresh-clone Docker build is
+# broken by a currently-open upstream bug (generated plugin index doesn't
+# match what the build expects — jackyzha0/quartz#2429/#2442), confirmed
+# by actually building and running it. v4.5.2 builds and serves content
+# correctly (verified the same way) but has its own known, maintainer
+# "closed, try v5" limitation: --watch never fires through a symlinked
+# content folder (jackyzha0/quartz#2077) — worked around in
+# entrypoint.sh.j2 with a plain rebuild timer instead of --watch.
+composition_wiki_site_quartz_ref: v4.5.2
+
+# How often the entrypoint re-runs `quartz build` while `--serve` keeps
+# serving whatever is on disk in `public/` (see the --watch note above).
+# Comfortably under RUN_INTERVAL_MINUTES (wiki-compiler's own default
+# cadence), so a new page shows up reasonably promptly without rebuilding
+# needlessly often.
+composition_wiki_site_rebuild_interval_seconds: 300
 
 # Host path of the PersonalWiki Syncthing folder (same one
 # composition-wiki-compiler writes into) — set per host.

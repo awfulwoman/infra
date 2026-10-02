@@ -2,21 +2,29 @@
 # Managed by Ansible - do not edit manually (roles/composition-wiki-site)
 set -euo pipefail
 
-# `quartz create` installs the template's plugins over the network, so it's
-# only worth doing once per container filesystem, not on every restart.
-# Re-running it is otherwise harmless (same flags, same result) -- this
-# guard is purely to avoid redundant npm installs.
+# v4 `create` has no --template/--baseUrl flags (those are v5-only, and v5's
+# fresh-clone Docker build is broken by an upstream bug -- see
+# defaults/main.yaml). It only needs doing once per container filesystem.
 if [ ! -f /app/.quartz-initialized ]; then
     npx quartz create \
-        --template obsidian \
         --strategy symlink \
         --source /data/wiki \
-        --links shortest \
-        --baseUrl "{{ composition_wiki_site_base_url }}"
+        --links shortest
+    sed -i "s#baseUrl: \".*\"#baseUrl: \"{{ composition_wiki_site_base_url }}\"#" quartz.config.ts
     touch /app/.quartz-initialized
 fi
 
-# --watch rebuilds whenever the compiler writes a new page; --serve binds
-# every interface (quartz's server.listen() takes no host argument), so
-# Traefik reaches it by container name.
-exec npx quartz build --serve --watch --port 8080
+# Quartz's own --watch never fires through a symlinked content folder
+# (jackyzha0/quartz#2077, closed upstream as "try v5" -- not an option
+# here, see defaults/main.yaml). Rebuild on a plain timer instead:
+# `quartz build --serve` (no --watch) serves whatever is on disk in
+# `public/` per request, so a separate periodic `quartz build` is enough
+# to keep it current -- verified by hand, not just read from source.
+(
+    while true; do
+        sleep {{ composition_wiki_site_rebuild_interval_seconds }}
+        npx quartz build || true
+    done
+) &
+
+exec npx quartz build --serve --port 8080
