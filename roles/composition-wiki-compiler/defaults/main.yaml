@@ -36,10 +36,13 @@ composition_wiki_compiler_ollama_url: "{{ llm_default_ollama_base_url }}"
 composition_wiki_compiler_model: "{{ llm_default_model }}"
 
 # Guards the shared, metered Ollama Cloud account (also used by the Hermes
-# bots on agatha). Starts small; raise after watching `wiki-compiler usage`
-# for a few days — see docs/superpowers/plans/2026-10-01-wiki-compiler-and-wiki-site.md.
-composition_wiki_compiler_daily_call_budget: 50
-composition_wiki_compiler_daily_token_budget: 100000
+# bots on agatha) -- see docs/superpowers/plans/2026-10-01-wiki-compiler-and-wiki-site.md.
+# Started at 50/100000 (conservative, per the plan); raised once that
+# first real run showed real `extract`/`resolve` calls working but the
+# whole 50-call budget going to a single large bookmarks backlog before
+# any entity crossed the publish threshold -- still a cap, not unbounded.
+composition_wiki_compiler_daily_call_budget: 300
+composition_wiki_compiler_daily_token_budget: 300000
 composition_wiki_compiler_run_interval_minutes: 60
 
 # email deliberately left out of the starting source list: it needs a
