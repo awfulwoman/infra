@@ -28,7 +28,7 @@
 # with the right owner on the host for the same reason.
 - name: "Ensure the Syncthing folders exist"
   ansible.builtin.file:
-    path: "{{ item }}"
+    path: "{{ syncthing_path }}"
     state: directory
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
@@ -36,6 +36,8 @@
   loop:
     - "{{ composition_wiki_compiler_notes_path }}"
     - "{{ composition_wiki_compiler_output_path }}"
+  loop_control:
+    loop_var: syncthing_path
 
 - name: "Create compose file"
   ansible.builtin.template:
