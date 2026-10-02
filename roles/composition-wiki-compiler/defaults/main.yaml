@@ -37,14 +37,17 @@ composition_wiki_compiler_model: "{{ llm_default_model }}"
 
 # Guards the shared, metered Ollama Cloud account (also used by the Hermes
 # bots on agatha) -- see docs/superpowers/plans/2026-10-01-wiki-compiler-and-wiki-site.md.
-# Started at 50/100000 (conservative, per the plan); raised to 300/300000
-# once the first real run proved extract/resolve work but spent the whole
-# budget on bookmarks alone; raised again (still with the user's explicit
-# go-ahead each time, not unilaterally) to actually clear today's
-# remaining reminders/contacts/location backlog and reach compile_dirty
-# at least once -- still a cap, not unbounded.
-composition_wiki_compiler_daily_call_budget: 600
-composition_wiki_compiler_daily_token_budget: 600000
+# Started at 50/100000; raised to 300/300000, then 600/600000, each time
+# with the user's explicit go-ahead, as consecutive runs kept exhausting
+# the budget on calendar/bookmarks alone before reaching location (a full
+# 12-month backfill's worth of visits, each rate-limited to Nominatim's
+# 1/second cap) and reaching compile_dirty even once. Raised 10x from
+# there (600 -> 6000) on the user's own explicit instruction, after
+# checking the real Ollama Cloud account's own usage dashboard showed
+# only 0.1% of today's real token budget spent -- this self-imposed cap
+# was far more conservative than the account itself needed.
+composition_wiki_compiler_daily_call_budget: 6000
+composition_wiki_compiler_daily_token_budget: 6000000
 composition_wiki_compiler_run_interval_minutes: 60
 
 # email deliberately left out of the starting source list: it needs a
