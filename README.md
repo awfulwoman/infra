@@ -1,3 +1,4 @@
+![zfs-snapshots](https://healthchecks.io/badge/37a7ad4c-57bd-4cea-9118-f2c5df/tM_ZE7lU-2/zfs-snapshots.svg)
 
 # My Home Infra
 
