@@ -50,6 +50,15 @@ composition_wiki_compiler_daily_call_budget: 6000
 composition_wiki_compiler_daily_token_budget: 6000000
 composition_wiki_compiler_run_interval_minutes: 60
 
+# Page synthesis (compile) draws on its own reserved daily budget, separate
+# from extract's above, so an ingest backlog can't starve it. Was never set
+# here, so it ran on the code default (200 calls / 400k tokens) -- which the
+# first regeneration alone used up, leaving the next run unable to write a
+# single page (compile_backlog stuck). A synthesis call is ~1k tokens, so this
+# is still a modest cap.
+composition_wiki_compiler_daily_synth_call_budget: 1000
+composition_wiki_compiler_daily_synth_token_budget: 2000000
+
 # The wiki is purely the owner's software/practical projects and the interests
 # behind them (wiki-compiler docs/superpowers/plans/2026-10-04-projects-and-
 # interests.md): repos (via gateway's repo tools), the Charlie vault (NOTES_DIR,
