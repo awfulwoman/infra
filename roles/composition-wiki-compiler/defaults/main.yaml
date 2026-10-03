@@ -58,6 +58,33 @@ composition_wiki_compiler_run_interval_minutes: 60
 # scope. email stays off too.
 composition_wiki_compiler_sources: "repos,notes,bookmarks"
 
+# Exactly which GitHub repos the wiki reads (REPOS_INCLUDE): the repos in the
+# owner's ~/Code/awfulwoman workspace that have a GitHub remote. Not "every
+# repo on the account" -- that's 50, including years-old experiments and
+# confidential private ones. A new project repo needs adding here. (ralph is
+# in the workspace but has no repo on GitHub; bank-export and
+# reconcile_statements have no remote at all.)
+composition_wiki_compiler_repos_include:
+  - agents
+  - apple-calendar-server
+  - apple-contacts-server
+  - apple-reminders-server
+  - awfulwoman
+  - awfulwoman.com
+  - chives
+  - dreame
+  - gateway
+  - ha-openai-compatible
+  - infra
+  - mail-archive-server
+  - memorybank
+  - meta
+  - personal-cloud
+  - podderton
+  - vagrant-claude-wrapper
+  - wiki-compiler
+  - zfs-api
+
 # Authenticates the compiler's own /run, /usage, /lint, /filter-report HTTP
 # API (not the gateway call) — nothing calls these yet but the server
 # refuses to start without a token.
