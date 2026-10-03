@@ -104,8 +104,8 @@ all:
         server-64gb-storage:
         minipc-8gb-homebrain:
         vps-hetzner-public01:
-        raspberry-pi4-2gb-deedee:
-        raspberry-pi4-4gb-randolph:
+        # raspberry-pi4-2gb-deedee:
+        # raspberry-pi4-4gb-randolph:
         # Added 2026-09-20. Both declared critical or high datasets that
         # nothing replicated, because neither host was a client: camina holds
         # the 1Password Connect credentials every other recovery depends on.
