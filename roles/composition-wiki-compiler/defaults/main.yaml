@@ -53,7 +53,13 @@ composition_wiki_compiler_run_interval_minutes: 60
 # email deliberately left out of the starting source list: it needs a
 # `filter-report` pass on a real sample before it backfills into the wiki
 # (see the plan doc). Flipping it on is a separate, deliberate step.
-composition_wiki_compiler_sources: "calendar,bookmarks,contacts,reminders,location"
+#
+# notes added alongside the narrative-pages rework (docs/superpowers/plans/
+# 2026-10-03-narrative-pages.md): ingest_notes/sources/notes.py were
+# already fully implemented and tested, just never enabled here --
+# NOTES_DIR is already mounted read-only from the Charlie Syncthing
+# folder above.
+composition_wiki_compiler_sources: "calendar,bookmarks,contacts,reminders,location,notes"
 
 # Authenticates the compiler's own /run, /usage, /lint, /filter-report HTTP
 # API (not the gateway call) — nothing calls these yet but the server
