@@ -1,4 +1,5 @@
 ![zfs-snapshots](https://healthchecks.io/badge/37a7ad4c-57bd-4cea-9118-f2c5df/tM_ZE7lU-2/zfs-snapshots.svg)
+![Semaphore scheduled runs (camina)](https://healthchecks.io/b/2/e66bfeed-cb54-4333-a8ad-3fbc2308b0db.svg)
 
 # My Home Infra
 
