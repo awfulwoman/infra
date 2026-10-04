@@ -21,8 +21,6 @@
     tags: [infra, infra-named]
   - role: infra-certbot
     tags: [infra, infra-certbot]
-  - role: system-claude
-    tags: [system, system-claude]
   - role: client-cert-distribution
     tags: [infra, client-cert-distribution]
   - role: system-compositions
