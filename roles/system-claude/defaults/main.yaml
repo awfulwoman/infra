@@ -36,7 +36,7 @@ system_claude_env_export: "{{ 'export ' if ansible_facts['os_family'] == 'Darwin
 # Environment variables exported for Claude Code. Keyed by name so a changed
 # value replaces its old line rather than appending a second export.
 system_claude_environment:
-  ANTHROPIC_MODEL: claude-sonnet-5
+  ANTHROPIC_MODEL: claude-sonnet-5-5
   CLAUDE_CODE_ENABLE_PROMPT_SUGGESTION: "false"
   CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY: "1"
   CLAUDE_CONFIG_DIR: "{{ system_claude_settings_path }}"
