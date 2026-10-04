@@ -125,3 +125,15 @@
     mode: "0664"
   notify: Restart ufw
   when: docker_port_open | default(false) | bool
+
+# Lets any host pull private images from GHCR. Credentials go in the Ansible
+# user's ~/.docker/config.json, which is what compose uses when it pulls.
+- name: Flush handlers so the daemon is running before logging in
+  ansible.builtin.meta: flush_handlers
+
+- name: Log in to GHCR so private images can be pulled
+  community.docker.docker_login:
+    registry_url: ghcr.io
+    username: "{{ docker_ghcr_username }}"
+    password: "{{ vault_github_ghcr_read_token }}"
+  when: vault_github_ghcr_read_token is defined

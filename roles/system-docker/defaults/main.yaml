@@ -1,0 +1,4 @@
+# code: language=ansible
+# GitHub account that owns the GHCR packages this host pulls.
+# The password is vault_github_ghcr_read_token (a classic PAT with read:packages).
+docker_ghcr_username: awfulwoman
