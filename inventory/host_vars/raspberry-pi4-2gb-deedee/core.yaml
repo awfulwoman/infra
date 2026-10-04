@@ -67,8 +67,6 @@ zfs:
         policy: critical
       terraform:
         policy: critical
-      claude:
-        policy: critical
       repos:
         policy: critical
 
