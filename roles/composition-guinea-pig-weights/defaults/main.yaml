@@ -1,0 +1,10 @@
+# code: language=ansible
+# Composition name (used by composition-common dependency)
+composition_name: guinea-pig-weights
+
+composition_dns_subdomains:
+  - guineapigs
+
+# Published from the public repo awfulwoman/guinea-pig-weights. The image is
+# rebuilt daily with fresh weights, so pull on every deploy.
+composition_guinea_pig_weights_image: ghcr.io/awfulwoman/guinea-pig-weights:latest

@@ -168,6 +168,9 @@ zfs:
             policy: none
           mcp-weather:
             policy: none
+          # Rebuilt daily from the public sheet; the data lives in git and the image.
+          guinea-pig-weights:
+            policy: none
       shared:
         datasets:
           nominatim:
@@ -434,3 +437,4 @@ compositions:
   - nominatim
   - wiki-compiler
   - wiki-site
+  - guinea-pig-weights
