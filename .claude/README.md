@@ -20,8 +20,10 @@ own subdirectory: `skills/<name>/SKILL.md`.
 | Skill | Description |
 |-------|-------------|
 | `ansible-deploy` | Deploy Ansible playbooks to hosts or groups, and select the right playbook and tags |
-| `create-composition` | Create a new Docker Compose-based Ansible role (`composition-*`), from a GitHub repo or install docs |
 | `infra-health` | Check that infra hosts are reachable, that compositions run and stay healthy, and find cnames in host_vars with no matching composition |
+
+Creating a new `composition-*` role is covered by the user-level
+`awfulwoman-ansible-create-composition` skill in the `agents` repo.
 
 ## Rules
 
