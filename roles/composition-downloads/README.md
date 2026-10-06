@@ -1,12 +1,12 @@
 # Downloads
 
-The full *arr media automation stack, with all torrent traffic routed through a Mullvad WireGuard VPN through [Gluetun](https://github.com/qdm12/gluetun). Downloads land in a shared media path, which Jellyfin and Audiobookshelf read from.
+The full *arr media automation stack, with all torrent traffic routed through an iVPN WireGuard VPN through [Gluetun](https://github.com/qdm12/gluetun). Downloads land in a shared media path, which Jellyfin and Audiobookshelf read from.
 
 ## Services
 
 | Container | Purpose | Port |
 |-----------|---------|------|
-| **Gluetun** | WireGuard VPN gateway (Mullvad, Zurich) | `8000` (control API) |
+| **Gluetun** | WireGuard VPN gateway (iVPN, Zurich) | `8000` (control API) |
 | **qBittorrent** | Torrent client with VueTorrent UI | `8080` (via Gluetun) |
 | **Transmission** | Secondary torrent client | `9091` (via Gluetun) |
 | **Prowlarr** | Indexer aggregator for all *arr apps | `9696` |
@@ -19,14 +19,14 @@ The full *arr media automation stack, with all torrent traffic routed through a 
 
 ## VPN
 
-qBittorrent and Transmission run with `network_mode: service:gluetun`. All their traffic exits through Mullvad WireGuard. Radarr, Sonarr, and Lidarr wait for Gluetun to become healthy before they start.
+qBittorrent and Transmission run with `network_mode: service:gluetun`. All their traffic exits through iVPN WireGuard. Radarr, Sonarr, and Lidarr wait for Gluetun to become healthy before they start.
 
-VPN credentials are vault-encrypted:
+VPN credentials are vault-encrypted in `inventory/group_vars/infra/vault_external_ivpn.yaml`:
 
 | Variable | Purpose |
 |----------|---------|
-| `vault_mullvad_wireguard_private_key` | WireGuard private key |
-| `vault_mullvad_wireguard_ipaddress` | WireGuard assigned IPv4 address |
+| `vault_external_ivpn_wireguard_private_key` | WireGuard private key (generated on the iVPN account WireGuard page) |
+| `vault_external_ivpn_ipv4` | IPv4 address iVPN assigns to that key, without a prefix (the role appends `/32`) |
 
 The server is pinned to `SERVER_CITIES=zurich, SERVER_COUNTRIES=switzerland`.
 

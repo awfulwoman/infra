@@ -326,7 +326,7 @@ Scope: Hetzner, 6× DigitalOcean, Tailscale OAuth, 3× GitHub, healthchecks.io, 
 
 Handle carefully — a wrong ZFS passphrase locks a pool.
 
-Scope: `vault_zfsbackups_privatekey_b64` (~125 lines), `vault_zfsbackups_public_key`, `vault_mullvad_wireguard_private_key`, `vault_sitedeployer_*`, `vault_zfs_passphrase` (3 hosts).
+Scope: `vault_zfsbackups_privatekey_b64` (~125 lines), `vault_zfsbackups_public_key`, `vault_external_ivpn_wireguard_private_key`, `vault_sitedeployer_*`, `vault_zfs_passphrase` (3 hosts).
 
 - [ ] **Step 1: Migrate one host's `vault_zfs_passphrase` and verify pool decryption before touching the others**
 - [ ] **Step 2: Migrate the remaining keys, verifying each consumer**
