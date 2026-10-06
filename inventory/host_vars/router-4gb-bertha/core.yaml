@@ -24,6 +24,9 @@ host_ipv4: 192.168.1.1 # bertha's LAN address (on enp1s0f0)
 host_mac: "00:1f:29:5b:55:a6" # enp1s0f0 (LAN) NIC
 host_ipv4_subnet: 24
 host_tailscale_ipv4: 100.80.1.1
+# bertha runs its own resolver (BIND), so Tailscale must not manage DNS.
+# `tailscale up` refuses to enrol unless every non-default pref is repeated.
+tailscale_args: "--accept-dns=false"
 # The WAN (enp2s0) is the netplan "primary" and runs DHCP off the Fritz!Box.
 # Making the WAN the DHCP primary is deliberate: static mode would have the role
 # emit `default via {{ network_netplan_gateway }}` (192.168.1.1) — a default
