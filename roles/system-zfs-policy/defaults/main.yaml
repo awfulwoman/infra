@@ -14,7 +14,7 @@ system_zfs_policy_script_path: /opt/zfs-policy
 system_zfs_policy_log_dir: /var/log/zfs-policy
 
 # Cache file for API consumption
-system_zfs_policy_cache_file: /var/cache/zfs-snapshot-report.json
+system_zfs_policy_cache_file: /var/cache/zfs-snapshot-report/report.json
 
 # Policy definitions (retention counts)
 # See docs/zfs.md for policy details

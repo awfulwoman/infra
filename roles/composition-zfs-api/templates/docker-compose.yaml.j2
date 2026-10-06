@@ -9,7 +9,7 @@ services:
       - /dev/zfs:/dev/zfs:ro
       - {{ composition_zfs_api_zfs_policy_path }}:{{ composition_zfs_api_zfs_policy_path }}:ro
       - {{ composition_zfs_api_zfs_log_path }}:{{ composition_zfs_api_zfs_log_path }}:ro
-      - {{ system_zfs_policy_cache_file }}:{{ system_zfs_policy_cache_file }}:ro
+      - {{ system_zfs_policy_cache_file | dirname }}:{{ system_zfs_policy_cache_file | dirname }}:ro
       - {{ composition_config }}/app/swagger.yaml:/app/swagger.yaml:ro
     env_file: .environment_vars
 {% if composition_zfs_api_traefik_enabled %}
