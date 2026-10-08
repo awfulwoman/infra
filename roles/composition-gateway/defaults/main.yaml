@@ -41,6 +41,13 @@ composition_gateway_calendar_server_bearer_token: "{{ vault_gateway_calendar_ser
 composition_gateway_karakeep_base_url: "https://karakeep.{{ domainname_infra }}"
 composition_gateway_karakeep_api_key: "{{ vault_karakeep_api }}"
 
+# eBay Browse API (read-only listings and search). Application keyset from
+# developer.ebay.com — an app token only, no eBay user login. The marketplace
+# is the fallback when a bare item ID or a search gives no domain to infer one.
+composition_gateway_ebay_client_id: "{{ vault_external_ebay_client_id }}"
+composition_gateway_ebay_client_secret: "{{ vault_external_ebay_cert_id }}"
+composition_gateway_ebay_marketplace: EBAY_DE
+
 composition_gateway_owntracks_base_url: "https://owntracks-recorder.{{ domainname_infra }}"
 composition_gateway_owntracks_username: ""
 composition_gateway_owntracks_password: ""
