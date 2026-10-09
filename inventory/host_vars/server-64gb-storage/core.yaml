@@ -114,9 +114,6 @@ zfs:
             policy: low
           scrutiny:
             policy: low
-          # Rebuildable from OSM extracts, and the largest thing on the pool.
-          nominatim:
-            policy: low
           # Pure Quartz build output of the PersonalWiki Syncthing folder --
           # the real content is that folder, already covered by the
           # syncthing dataset below.
@@ -171,9 +168,6 @@ zfs:
           # Rebuilt daily from the public sheet; the data lives in git and the image.
           guinea-pig-weights:
             policy: none
-      shared:
-        datasets:
-          nominatim:
   slowpool:
     vdevs:
       - type: mirror
@@ -434,7 +428,6 @@ compositions:
   - kiwix
   - nabu
   - jarvis
-  - nominatim
   - wiki-compiler
   - wiki-site
   - guinea-pig-weights

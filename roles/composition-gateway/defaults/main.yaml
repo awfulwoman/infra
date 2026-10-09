@@ -55,7 +55,9 @@ composition_gateway_owntracks_user: charlie
 composition_gateway_owntracks_device: iphone
 
 composition_gateway_reminders_api_tokens: "{{ vault_gateway_reminders_api_token_iphone }}"
-composition_gateway_reminders_nominatim_url: "https://nominatim.{{ domainname_infra }}"
+# Hosted public API (the local composition never worked, see #299).
+# nominatim.org is docs-only; the API lives at nominatim.openstreetmap.org.
+composition_gateway_reminders_nominatim_url: "https://nominatim.openstreetmap.org"
 
 # apple-contacts-server (real macOS Contacts via the Contacts framework) — storage
 # backend for Contacts, running natively on Malcolm (a different host — the
