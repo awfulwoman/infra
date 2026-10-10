@@ -9,7 +9,7 @@ host_region: ber
 host_site: xberg
 host_pfqdn: "{{ host_name }}.{{ host_site }}.{{ host_region }}"
 host_fqdn: "{{ host_pfqdn }}.{{ domainname_infra }}"
-host_description: "Dedicated backup server (being sunsetted)"
+host_description: "Dedicated backup server"
 
 # -------------------------------------------------------------------
 # NETWORK
@@ -57,11 +57,16 @@ zfs:
             policy: none
           zfs-api:
             policy: none
-      encryptedbackups:
-        state: present
+      backups:
+        datasets:
+          raw:
+            properties:
+              encryption: aes-256-gcm
+              keylocation: "{{ vault_zfs_default_encryption_passphrase_path }}"
+              keyformat: passphrase
 
 # Backups
-backups_zfs_server_local_dataset: slowpool/encryptedbackups
+backups_zfs_server_local_dataset: slowpool/backups/raw
 backups_zfs_server_offsite_enabled: false
 
 # -------------------------------------------------------------------
