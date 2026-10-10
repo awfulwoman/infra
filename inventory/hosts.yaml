@@ -26,7 +26,7 @@ all:
         raspberry-pi4-2gb-deedee:
         raspberry-pi4-4gb-randolph:
         raspberry-pi4-8gb-norman:
-        raspberry-pi5-4gb-belinda:
+        # raspberry-pi5-4gb-belinda: # Drives died (infra#300), re-add when repurposed
 
 
     # -------------------------------------------------------------------
