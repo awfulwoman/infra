@@ -1,4 +1,7 @@
-- name: Belinda the Backup Server
+# Belinda was the second ZFS backup server. Her disks died (infra#300), so the
+# ZFS, backup and composition roles are gone. She is a bare host until she is
+# given a new job.
+- name: Belinda, awaiting a new role
   hosts: raspberry-pi5-4gb-belinda
   roles:
   - role: bootstrap-ubuntu-server
@@ -7,16 +10,6 @@
     tags: [network, network-netplan]
   - role: hardware-raspberry-pi
     tags: [hardware, hardware-raspberry-pi]
-  - role: system-zfs
-    tags: [system, zfs, system-zfs]
-  - role: system-zfs-policy
-    tags: [system, zfs, system-zfs-policy]
-  - role: backups-zfs-server
-    tags: [backups, zfs, backups-zfs-server]
-  - role: client-cert-distribution
-    tags: [infra, client-cert-distribution]
-  - role: system-compositions
-    tags: [composition, zfs]
   - role: client-nut
     state: absent
     tags: [client, client-nut]

@@ -9,7 +9,7 @@ host_region: ber
 host_site: kberg
 host_pfqdn: "{{ host_name }}.{{ host_site }}.{{ host_region }}"
 host_fqdn: "{{ host_pfqdn }}.{{ domainname_infra }}"
-host_description: "Raspberry Pi 5 backup server"
+host_description: "Raspberry Pi 5, decommissioned as backup server (infra#300), awaiting new role"
 
 # -------------------------------------------------------------------
 # NETWORK
@@ -51,80 +51,3 @@ raspberry_pi_config_overrides:
   - "dtparam=pciex1"
   - "dtparam=pciex1_gen=3" # https://docs.radxa.com/en/accessories/storage/penta-sata-hat/penta-for-rpi5
   - "dtoverlay=pcie-32bit-dma-pi5" # JMB585 AHCI probe fails (errno=-12) since a kernel regression forces 32bit DMA: https://github.com/raspberrypi/linux/issues/7375
-
-
-# -------------------------------------------------------------------
-# ZFS
-# -------------------------------------------------------------------
-
-zfs:
-  slowpool:
-    vdevs:
-      - type: mirror
-        disks:
-          - /dev/disk/by-id/scsi-SATA_WDC_WeD20SPZX-22U_WD-WX12A6317XCK
-          - /dev/disk/by-id/scsi-SATA_WDC_WD20SPZX-22U_WD-WX82E2125JHD
-    datasets:
-      compositions:
-        # Every composition states its own policy; see ADR-0001. The parent
-        # stays low so anything Docker creates and nobody declared is
-        # snapshotted briefly and never replicated.
-        policy: low
-        snapshots_discover_children: true
-        datasets:
-          reverseproxy:
-            policy: low
-          container-management:
-            policy: none
-          zfs-api:
-            policy: none
-      backups:
-        datasets:
-          raw:
-            properties:
-              encryption: aes-256-gcm
-              keylocation: "{{ vault_zfs_default_encryption_passphrase_path }}"
-              keyformat: passphrase
-
-# -------------------------------------------------------------------
-# COMPOSITIONS
-# -------------------------------------------------------------------
-compositions_dataset: slowpool/compositions
-# compositions list moved to playbook (see playbooks/hosts/raspberry-pi5-4gb-belinda/core.yaml)
-
-# -------------------------------------------------------------------
-# BACKUPS
-# -------------------------------------------------------------------
-backups_zfs_server_local_dataset: slowpool/backups/raw
-backups_zfs_server_offsite_enabled: false
-backups_zfs_server_offsite_bwlimit: 3M
-backups_zfs_server_healthchecksio_enabled: true
-backups_zfs_server_mqtt_enabled: true
-
-# -------------------------------------------------------------------
-# ZFS POLICY
-# -------------------------------------------------------------------
-system_zfs_policy_snapshots_enable: false
-
-# -------------------------------------------------------------------
-# REVERSEPROXY (#271 - internal wildcard cert rollout)
-# -------------------------------------------------------------------
-reverseproxy_use_letsencrypt: false
-reverseproxy_wildcard_cert: true
-traefik_providers:
-  - wildcard-cert
-
-# -------------------------------------------------------------------
-# COMPOSITIONS
-# Internal DNS for this host is derived from this list by the dns_records
-# filter (roles/infra-named) instead of a hand-maintained cnames: list.
-# reverseproxy's default labels (whoami/traefik) are suppressed here: they
-# were never actually registered as cnames for this host, and exposing a
-# Traefik dashboard/debug endpoint should be a deliberate call, not a side
-# effect of this migration.
-# -------------------------------------------------------------------
-compositions:
-  - composition: reverseproxy
-    labels: []
-  - container-management
-  - zfs-api

@@ -90,7 +90,6 @@ all:
         server-8gb-backups:
         # raspberry-pi4-4gb-albion: # Has died
         vps-hetzner-public01:
-        raspberry-pi5-4gb-belinda:
         raspberry-pi4-2gb-deedee:
         raspberry-pi4-4gb-randolph:
         # raspberry-pi4-8gb-norman:
@@ -122,7 +121,7 @@ all:
     zfs_backup_servers:
       hosts:
         server-8gb-backups:
-        raspberry-pi5-4gb-belinda:
+        # raspberry-pi5-4gb-belinda: # Drives died, decommissioned (infra#300)
 
     # -------------------------------------------------------------------
     # ZFS REPLICATION DESTINATIONS - OFFSITE
