@@ -234,11 +234,19 @@ zfs:
                 policy: critical
               youtube:
       charlie:
-        # 496G sits directly in this dataset (Dropbox, ABC Self Assessment),
-        # not in a child. At `none` it was never snapshotted, so it had one
-        # copy while its children were replicated around it.
+        # 496G sits directly in this dataset, not in a child:
+        #   - Dropbox/ (198G)
+        # It also held 299G of photos from March 2021 in a photos/ directory
+        # that the charlie/photos dataset is mounted on top of, so they could
+        # not be seen. Those now live in the photos-2021 dataset.
+        # At `none` it was never snapshotted, so it had one copy while its
+        # children were replicated around it.
         policy: critical
         datasets:
+          # An Apple Photos export: 48,665 files in folders 0-F. Under half
+          # are also in Immich (compared by checksum, 2026-10-11).
+          photos-2021:
+            policy: critical
           email:
             policy: critical
           syncthing:
