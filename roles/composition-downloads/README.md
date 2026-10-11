@@ -15,6 +15,7 @@ The full *arr media automation stack, with all torrent traffic routed through an
 | **Lidarr** | Music collection manager | `8686` |
 | **Bazarr** | Subtitle manager for Radarr/Sonarr | `6767` |
 | **Jellyseerr** | Media request portal | `5055` |
+| **Shelfarr** | Book/audiobook requester (pinned tag; Libation companion omitted) | `80` |
 | **librofm-downloader** | Syncs purchases from Libro.fm as M4B audiobooks | `13377` |
 
 ## VPN

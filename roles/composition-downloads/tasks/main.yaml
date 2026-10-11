@@ -39,6 +39,7 @@
     - sonarr
     - librofm
     - jellyseerr
+    - shelfarr
 
 - name: Create torrent directories
   ansible.builtin.file:

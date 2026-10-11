@@ -348,6 +348,38 @@ services:
       retries: 3
       start_period: 30s
 
+  # Book/audiobook requester. Libation (Audible) companion omitted: not used.
+  shelfarr:
+    image: "{{ composition_downloads_shelfarr_image }}"
+    container_name: shelfarr
+    restart: unless-stopped
+    environment:
+      - SOLID_QUEUE_IN_PUMA=1
+      - PUID=1000
+      - PGID=1000
+      - "TZ=Europe/Berlin"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.shelfarr.rule=Host(`shelfarr.{{ domainname_infra }}`)"
+      - "traefik.http.routers.shelfarr.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
+      - "traefik.http.routers.shelfarr.tls.certresolver=letsencrypt"
+{% endif %}
+      - "traefik.http.services.shelfarr.loadbalancer.server.port=80"
+    volumes:
+      - "{{ composition_config }}/shelfarr:/rails/storage"
+      - "{{ shared_media_path }}/audiobooks:/audiobooks"
+      - "{{ shared_media_path }}/books:/ebooks"
+      - "{{ shared_media_path }}/downloads/torrents:/downloads"
+    networks:
+      - "{{ default_docker_network }}"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:80/up"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
 networks:
   "{{ default_docker_network }}":
     external: true
