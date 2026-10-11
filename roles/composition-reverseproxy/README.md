@@ -20,7 +20,7 @@ Deploys [Traefik v3](https://traefik.io/) as the central HTTP/HTTPS reverse prox
 
 ## Providers
 
-You can deploy static provider files in `templates/providers/` to `<composition_config>/providers/` through `traefik_providers`. Pre-built providers exist for: `esphome`, `gotosocial`, `homeassistant`, `immich`, `musicassistant`, `personalsite`, `watchyourlan`.
+You can deploy static provider files in `templates/providers/` to `<composition_config>/providers/` through `traefik_providers`. Pre-built providers exist for: `esphome`, `gotosocial`, `homeassistant`, `immich`, `personalsite`, `watchyourlan`.
 
 `reverseproxy_vm_routes` supports dynamic VM route proxying. Each entry specifies a `name`, `host`, `backend`, and optional `middlewares` list.
 
