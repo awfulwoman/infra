@@ -6,7 +6,7 @@ terraform {
     }
     hcloud = {
       source  = "hetznercloud/hcloud"
-      version = "~> 1.58"
+      version = "~> 1.60" # Storage Boxes left experimental in 1.60
     }
   }
 }

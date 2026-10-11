@@ -27,6 +27,33 @@ infra_publicresources_hcloud_volume:
     size: 20
     server_id: public26
 
+# Storage Boxes. Passwords reach Terraform as variables at apply time (see
+# tasks/main.yaml) and are never written into the rendered .tf files.
+#
+# Hetzner assigns each account its username and hostname; read them from the
+# Terraform outputs after the first apply.
+infra_publicresources_hcloud_storage_box:
+  - id: offsite
+    name: offsite-backups
+    description: >
+      The Offsite copy. Holds the restic repository that the backup server
+      fills. See docs/adr/0002-offsite-copy-is-a-restic-repository.md.
+    type: bx21 # 5 TB
+    region: fsn1
+    password: "{{ vault_offsite_storagebox_password }}"
+    # Snapshots are taken by Hetzner and are read-only over SFTP, so the
+    # credentials on the backup server cannot remove them. They are the cover
+    # against a compromised backup server deleting the repository.
+    snapshots:
+      hour: 5 # UTC
+      minute: 0
+      keep: 14
+    subaccounts:
+      - id: restic
+        home_directory: restic
+        description: restic repository, written by the backup server
+        password: "{{ vault_offsite_storagebox_subaccount_password }}"
+
 infra_publicresources_hcloud_firewall:
   - id: web
     apply_to_label: secured

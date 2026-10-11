@@ -67,6 +67,20 @@
     var: tf_files
   when: infra_publicresources_debug
 
+# Passed at apply time so that no password is written into a .tf file.
+- name: Collect Storage Box passwords as Terraform variables
+  no_log: true
+  ansible.builtin.set_fact:
+    infra_publicresources_tf_variables: >-
+      {% set data = namespace(vars={}) %}
+      {%- for box in infra_publicresources_hcloud_storage_box | default([]) -%}
+        {%- set _ = data.vars.update({'storage_box_' ~ box.id ~ '_password': box.password}) -%}
+        {%- for sub in box.subaccounts | default([]) -%}
+          {%- set _ = data.vars.update({'storage_box_' ~ box.id ~ '_' ~ sub.id ~ '_password': sub.password}) -%}
+        {%- endfor -%}
+      {%- endfor -%}
+      {{ data.vars }}
+
 - name: Run Terraform
   when: infra_publicresources_tf_apply
   block:
@@ -75,6 +89,8 @@
         project_path: "{{ infra_publicresources_terraform_working_dir }}"
         state: present
         force_init: true
+        provider_upgrade: "{{ infra_publicresources_provider_upgrade }}"
+        variables: "{{ infra_publicresources_tf_variables }}"
       register: tf_plan
       check_mode: true
 
@@ -88,3 +104,15 @@
       community.general.terraform:
         project_path: "{{ infra_publicresources_terraform_working_dir }}"
         state: present
+        variables: "{{ infra_publicresources_tf_variables }}"
+      register: tf_apply
+
+    # Hetzner assigns these. The backup server's host_vars need them.
+    - name: Show Storage Box sub-accounts
+      vars:
+        _outputs: "{{ tf_apply.outputs | default(tf_plan.outputs) | default({}) }}"
+      ansible.builtin.debug:
+        msg: "{{ item.key }}: {{ item.value.value }}"
+      loop: "{{ _outputs | dict2items | selectattr('key', 'match', '^storage_box_') }}"
+      loop_control:
+        label: "{{ item.key }}"

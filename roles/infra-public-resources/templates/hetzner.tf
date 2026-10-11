@@ -104,6 +104,14 @@ resource "hcloud_server" "{{ server.id }}" {
     ipv6_enabled = true
   }
 
+  # ssh_keys and user_data only take effect when a server is created, but a
+  # change to either forces a replacement. The key list comes from GitHub and
+  # changes whenever a key is added there, so without this an unrelated apply
+  # destroys the server.
+  lifecycle {
+    ignore_changes = [ssh_keys, user_data]
+  }
+
 {% if server.labels is defined %}
   labels = {
     {% for label in server.labels %}
@@ -139,6 +147,82 @@ resource "hcloud_volume" "{{ volume.id }}" {
 
 {% endfor %}
 {% endif %}
+
+#############################################################################
+# STORAGE BOXES
+# File storage reached over SFTP. Used for the Offsite copy.
+#############################################################################
+{% for box in infra_publicresources_hcloud_storage_box | default([]) %}
+
+variable "storage_box_{{ box.id }}_password" {
+  type      = string
+  sensitive = true
+}
+
+resource "hcloud_storage_box" "{{ box.id }}" {
+  name             = "{{ box.name }}"
+  storage_box_type = "{{ box.type }}"
+  location         = "{{ box.region }}"
+  password         = var.storage_box_{{ box.id }}_password
+
+  access_settings = {
+    reachable_externally = true
+    ssh_enabled          = true
+    samba_enabled        = false
+    webdav_enabled       = false
+    zfs_enabled          = true
+  }
+
+{% if box.snapshots is defined %}
+  snapshot_plan = {
+    hour          = {{ box.snapshots.hour }}
+    minute        = {{ box.snapshots.minute }}
+    max_snapshots = {{ box.snapshots.keep }}
+  }
+
+{% endif %}
+  delete_protection = true
+
+  # Replacing a Storage Box destroys everything in it.
+  lifecycle {
+    prevent_destroy = true
+    ignore_changes  = [ssh_keys]
+  }
+}
+
+{% for sub in box.subaccounts | default([]) %}
+variable "storage_box_{{ box.id }}_{{ sub.id }}_password" {
+  type      = string
+  sensitive = true
+}
+
+resource "hcloud_storage_box_subaccount" "{{ box.id }}_{{ sub.id }}" {
+  storage_box_id = hcloud_storage_box.{{ box.id }}.id
+  name           = "{{ sub.id }}"
+  home_directory = "{{ sub.home_directory }}"
+  password       = var.storage_box_{{ box.id }}_{{ sub.id }}_password
+{% if sub.description is defined %}
+  description    = "{{ sub.description }}"
+{% endif %}
+
+  access_settings = {
+    reachable_externally = true
+    ssh_enabled          = true
+    samba_enabled        = false
+    webdav_enabled       = false
+    readonly             = false
+  }
+}
+
+output "storage_box_{{ box.id }}_{{ sub.id }}" {
+  value = {
+    host = hcloud_storage_box_subaccount.{{ box.id }}_{{ sub.id }}.server
+    user = hcloud_storage_box_subaccount.{{ box.id }}_{{ sub.id }}.username
+  }
+}
+
+{% endfor %}
+{% endfor %}
 
 #############################################################################
 # FLOATING IPS

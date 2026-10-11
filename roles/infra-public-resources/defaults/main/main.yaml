@@ -1,3 +1,6 @@
 infra_publicresources_terraform_working_dir: "{{ terraform_working_dir }}/public-resources"
 infra_publicresources_debug: false
 infra_publicresources_tf_apply: true
+# Set to true for one run after changing a version constraint in versions.tf.
+# The lock file pins the provider version, so init fails until it is upgraded.
+infra_publicresources_provider_upgrade: false
