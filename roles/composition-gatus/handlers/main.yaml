@@ -1,4 +1,8 @@
+# Restart by container name, not by compose project. Handlers run at the end
+# of the play, after every other composition has set its own composition_root,
+# so a project_src here can point at the wrong composition. The container name
+# is fixed in docker-compose.yaml.j2.
 - name: Restart Gatus
-  community.docker.docker_compose_v2:
-    project_src: "{{ composition_root }}"
-    state: restarted
+  community.docker.docker_container:
+    name: gatus
+    restart: true
