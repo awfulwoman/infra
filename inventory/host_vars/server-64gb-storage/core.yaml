@@ -234,8 +234,13 @@ zfs:
                 policy: critical
               youtube:
       charlie:
-        policy: none
+        # 496G sits directly in this dataset (Dropbox, ABC Self Assessment),
+        # not in a child. At `none` it was never snapshotted, so it had one
+        # copy while its children were replicated around it.
+        policy: critical
         datasets:
+          email:
+            policy: critical
           syncthing:
             policy: critical
           photos:
