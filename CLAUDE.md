@@ -48,6 +48,7 @@ The primary configuration management tool. Structure:
   - `bootstrap-*`: Essential configurations for a host type (personal machines, Ubuntu servers)
   - `composition-*`: Docker Compose applications (~39 roles - homeassistant, gitea, jellyfin, etc.)
   - `backups-zfs-*`: ZFS backup infrastructure (client, server, offsite)
+  - `backups-restic-offsite`: The Offsite copy, sent by the backup server with restic (ADR-0002)
   - `system-*`: System configurations (docker, zfs, zfs-policy, security)
   - `server-*`: Server half of client-server pairs (nfs, nut)
   - `client-*`: Client half of client-server pairs (nfs, nut)

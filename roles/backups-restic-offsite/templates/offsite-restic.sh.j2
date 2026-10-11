@@ -1,0 +1,44 @@
+#!/bin/bash
+# {{ ansible_managed }}
+set -a
+. {{ backups_restic_offsite_config_dir }}/env
+set +a
+
+SCRIPT={{ backups_restic_offsite_script_path }}/zfs-offsite-restic
+
+case "$1" in
+  backup)
+    exec "$SCRIPT" backup \
+      --replica-root {{ backups_restic_offsite_replica_root }} \
+      --limit-upload {{ backups_restic_offsite_limit_upload }} \
+      --keep-daily {{ backups_restic_offsite_keep_daily }} \
+      --keep-weekly {{ backups_restic_offsite_keep_weekly }} \
+      --keep-monthly {{ backups_restic_offsite_keep_monthly }} \
+      --stale-hours {{ backups_restic_offsite_stale_hours }} \
+{% if backups_restic_offsite_mqtt_enabled %}
+      --mqtt-host {{ backups_restic_offsite_mqtt_host }} \
+      --mqtt-topic-prefix {{ backups_restic_offsite_mqtt_topic_prefix }} \
+      --mqtt-name {{ inventory_hostname }} \
+      --mqtt-expire-after {{ backups_restic_offsite_mqtt_expire_after }} \
+{% endif %}
+      --targets \
+{% for target in backups_restic_offsite_targets %}
+        {{ target }}{{ " \\" if not loop.last }}
+{% endfor %}
+    ;;
+  prune)
+    exec "$SCRIPT" prune
+    ;;
+  check)
+    exec "$SCRIPT" check --read-data-subset {{ backups_restic_offsite_check_read_data_subset }}
+    ;;
+  restic)
+    # Any restic command against the offsite repository, e.g. `restic snapshots`.
+    shift
+    exec restic "$@"
+    ;;
+  *)
+    echo "usage: $0 {backup|prune|check|restic <args>}" >&2
+    exit 2
+    ;;
+esac

@@ -369,6 +369,8 @@ This table shows how widely each policy replicates snapshots across the infrastr
 - `Onsite`: The main onsite backup host pulls snapshots to itself.
 - `Offsite`: The onsite backup host pushes the dataset's snapshots to a remote backup host.
 
+No ZFS offsite host exists at present. Until one does, the backup server sends `critical` datasets offsite with restic instead. See [ADR-0002](adr/0002-offsite-copy-is-a-restic-repository.md) and the `backups-restic-offsite` role.
+
 **Onsite** replication hosts are trusted. Datasets on them are encrypted, but the ZFS key stays loaded, so the host can access the datasets.
 
 **Offsite** hosts are not trusted. Datasets backed up to them are encrypted, and the decryption key is not present on the remote host. This protects against data theft, even if someone compromises the offsite host.

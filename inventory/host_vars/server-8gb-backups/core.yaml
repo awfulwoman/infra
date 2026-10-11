@@ -69,6 +69,14 @@ zfs:
 backups_zfs_server_local_dataset: slowpool/backups/raw
 backups_zfs_server_offsite_enabled: false
 
+# Offsite copy: restic to a Hetzner Storage Box. See ADR-0002.
+# Host and user are assigned by Hetzner; copy them from the Terraform outputs
+# of infra-public-resources, then set enabled to true.
+backups_restic_offsite_enabled: true
+backups_restic_offsite_sftp_host: u689042-sub1.your-storagebox.de
+backups_restic_offsite_sftp_user: u689042-sub1
+backups_restic_offsite_mqtt_enabled: true
+
 # -------------------------------------------------------------------
 # COMPOSITIONS
 # -------------------------------------------------------------------

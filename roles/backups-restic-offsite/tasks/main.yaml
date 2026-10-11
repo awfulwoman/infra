@@ -1,0 +1,227 @@
+# ###################################################################
+# Send the backup server's replicas offsite with restic
+# ###################################################################
+
+- name: Build list of offsite targets
+  ansible.builtin.set_fact:
+    backups_restic_offsite_targets: >-
+      {% set data = namespace(targets=[]) %}
+      {%- for client in groups[backups_restic_offsite_pull_group] -%}
+        {%- for ds in (hostvars[client].zfs | default({}) | zfs_offsite_datasets) -%}
+          {% set data.targets = data.targets + [client ~ '/' ~ ds.dataset] %}
+        {%- endfor -%}
+      {%- endfor -%}
+      {{ data.targets }}
+
+- name: Ensure offsite cronjobs are absent when offsite is disabled
+  become: true
+  ansible.builtin.cron:
+    name: "offsite-restic {{ item }}"
+    state: absent
+  loop: [backup, prune, check]
+  when: not backups_restic_offsite_enabled
+
+- name: Configure the offsite job
+  when: backups_restic_offsite_enabled
+  block:
+    - name: Ensure the sub-account is known and there is something to send
+      ansible.builtin.assert:
+        that:
+          - backups_restic_offsite_sftp_host | length > 0
+          - backups_restic_offsite_sftp_user | length > 0
+          - backups_restic_offsite_targets | length > 0
+        fail_msg: >-
+          Set backups_restic_offsite_sftp_host and backups_restic_offsite_sftp_user
+          from the Terraform outputs of infra-public-resources. See the role README.
+
+    - name: Ensure apt packages are installed
+      become: true
+      ansible.builtin.apt:
+        name:
+          - restic
+          - sshpass
+          - mosquitto-clients
+        state: present
+
+    - name: Ensure directories exist
+      become: true
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        owner: root
+        group: root
+        mode: "0700"
+      loop:
+        - /root/.ssh
+        - "{{ backups_restic_offsite_config_dir }}"
+        - "{{ backups_restic_offsite_cache_dir }}"
+
+    # Generated on the host and never copied off it. Losing it costs nothing:
+    # a new one is installed with the sub-account password.
+    - name: Ensure the offsite SSH key exists
+      become: true
+      ansible.builtin.command:
+        cmd: ssh-keygen -q -t ed25519 -N "" -C "offsite-restic@{{ inventory_hostname }}" -f {{ backups_restic_offsite_ssh_key }}
+        creates: "{{ backups_restic_offsite_ssh_key }}"
+
+    - name: Ensure root's SSH config names the Storage Box
+      become: true
+      ansible.builtin.blockinfile:
+        path: /root/.ssh/config
+        create: true
+        owner: root
+        group: root
+        mode: "0600"
+        marker: "# {mark} ANSIBLE MANAGED: offsite-restic"
+        block: |
+          Host {{ backups_restic_offsite_ssh_alias }}
+            HostName {{ backups_restic_offsite_sftp_host }}
+            User {{ backups_restic_offsite_sftp_user }}
+            Port {{ backups_restic_offsite_sftp_port }}
+            IdentityFile {{ backups_restic_offsite_ssh_key }}
+            IdentitiesOnly yes
+            ServerAliveInterval 60
+            ServerAliveCountMax 240
+
+    - name: Read the Storage Box host key
+      ansible.builtin.command:
+        cmd: ssh-keyscan -T 10 -p {{ backups_restic_offsite_sftp_port }} {{ backups_restic_offsite_sftp_host }}
+      register: _offsite_hostkey
+      changed_when: false
+
+    - name: Ensure root trusts the Storage Box host key
+      become: true
+      ansible.builtin.known_hosts:
+        name: "[{{ backups_restic_offsite_sftp_host }}]:{{ backups_restic_offsite_sftp_port }}"
+        key: "{{ _offsite_hostkey.stdout }}"
+        path: /root/.ssh/known_hosts
+        state: present
+
+    - name: Test key login to the sub-account
+      become: true
+      ansible.builtin.command:
+        cmd: ssh -o BatchMode=yes {{ backups_restic_offsite_ssh_alias }} ls
+      register: _offsite_key_login
+      changed_when: false
+      failed_when: false
+
+    # Hetzner has no API for a sub-account's keys; they live in its own
+    # .ssh/authorized_keys. The password is used this once to put the key there.
+    - name: Install the SSH key on the sub-account
+      become: true
+      when: _offsite_key_login.rc != 0
+      ansible.builtin.command:
+        cmd: >-
+          sshpass -e ssh-copy-id -s
+          -i {{ backups_restic_offsite_ssh_key }}.pub
+          -p {{ backups_restic_offsite_sftp_port }}
+          -o PubkeyAuthentication=no
+          {{ backups_restic_offsite_sftp_user }}@{{ backups_restic_offsite_sftp_host }}
+      environment:
+        SSHPASS: "{{ backups_restic_offsite_sftp_password }}"
+      no_log: true
+      changed_when: true
+
+    - name: Ensure the repository password file exists
+      become: true
+      ansible.builtin.copy:
+        content: "{{ backups_restic_offsite_repo_password }}\n"
+        dest: "{{ backups_restic_offsite_config_dir }}/password"
+        owner: root
+        group: root
+        mode: "0600"
+      no_log: true
+
+    - name: Ensure the restic environment file exists
+      become: true
+      ansible.builtin.copy:
+        content: |
+          RESTIC_REPOSITORY=sftp:{{ backups_restic_offsite_ssh_alias }}:{{ backups_restic_offsite_repo_path }}
+          RESTIC_PASSWORD_FILE={{ backups_restic_offsite_config_dir }}/password
+          RESTIC_CACHE_DIR={{ backups_restic_offsite_cache_dir }}
+        dest: "{{ backups_restic_offsite_config_dir }}/env"
+        owner: root
+        group: root
+        mode: "0600"
+
+    - name: Ensure script directory exists
+      become: true
+      ansible.builtin.file:
+        path: "{{ backups_restic_offsite_script_path }}/scripts"
+        state: directory
+        mode: "0774"
+
+    - name: Ensure the offsite script exists
+      become: true
+      ansible.builtin.copy:
+        src: offsite_restic.py
+        dest: "{{ backups_restic_offsite_script_path }}/zfs-offsite-restic"
+        owner: root
+        group: root
+        mode: "0755"
+
+    # One wrapper loads the environment for every use, cron or by hand:
+    #   sudo offsite-restic.sh restic snapshots
+    #   sudo offsite-restic.sh backup
+    - name: Ensure the offsite wrapper exists
+      become: true
+      ansible.builtin.template:
+        src: offsite-restic.sh.j2
+        dest: "{{ backups_restic_offsite_script_path }}/scripts/offsite-restic.sh"
+        owner: root
+        group: root
+        mode: "0750"
+
+    - name: Check whether the repository exists
+      become: true
+      ansible.builtin.command:
+        cmd: "{{ backups_restic_offsite_script_path }}/scripts/offsite-restic.sh restic cat config"
+      register: _offsite_repo
+      changed_when: false
+      failed_when: false
+
+    - name: Initialise the repository
+      become: true
+      when: _offsite_repo.rc != 0
+      ansible.builtin.command:
+        cmd: "{{ backups_restic_offsite_script_path }}/scripts/offsite-restic.sh restic init"
+      changed_when: true
+
+    # Not behind the pull jobs' host-wide lock. The first run uploads for days,
+    # and a pull that cannot get that lock within 90 minutes gives up, so
+    # sharing it would stop local replication for as long as the upload lasts.
+    # This job only reads a held snapshot, at idle priority.
+    - name: Ensure the offsite backup cronjob exists
+      become: true
+      ansible.builtin.cron:
+        name: "offsite-restic backup"
+        hour: "{{ backups_restic_offsite_cron_hour }}"
+        minute: "{{ backups_restic_offsite_cron_minute }}"
+        job: >-
+          flock -n {{ backups_restic_offsite_lock }}
+          nice -n 19 ionice -c 3
+          {{ backups_restic_offsite_script_path }}/scripts/offsite-restic.sh backup 2>&1 | logger -t offsite-restic
+
+    - name: Ensure the offsite prune cronjob exists
+      become: true
+      ansible.builtin.cron:
+        name: "offsite-restic prune"
+        weekday: "{{ backups_restic_offsite_prune_weekday }}"
+        hour: "{{ backups_restic_offsite_prune_hour }}"
+        minute: "0"
+        job: >-
+          flock -n {{ backups_restic_offsite_lock }}
+          nice -n 19 ionice -c 3
+          {{ backups_restic_offsite_script_path }}/scripts/offsite-restic.sh prune 2>&1 | logger -t offsite-restic
+
+    - name: Ensure the offsite check cronjob exists
+      become: true
+      ansible.builtin.cron:
+        name: "offsite-restic check"
+        day: "{{ backups_restic_offsite_check_day }}"
+        hour: "{{ backups_restic_offsite_check_hour }}"
+        minute: "0"
+        job: >-
+          flock -n {{ backups_restic_offsite_lock }}
+          nice -n 19 ionice -c 3
+          {{ backups_restic_offsite_script_path }}/scripts/offsite-restic.sh check 2>&1 | logger -t offsite-restic

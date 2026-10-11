@@ -1,0 +1,58 @@
+# Off until the Storage Box exists and its sub-account is known; see README.
+backups_restic_offsite_enabled: false
+
+# The sub-account Terraform creates (infra-public-resources). Hetzner assigns
+# both values, so they are copied here from the Terraform outputs after the
+# first apply. Neither is a secret.
+backups_restic_offsite_sftp_host: ""
+backups_restic_offsite_sftp_user: ""
+backups_restic_offsite_sftp_port: 23
+backups_restic_offsite_sftp_password: "{{ vault_offsite_storagebox_subaccount_password }}"
+
+# Path of the repository inside the sub-account's home directory.
+backups_restic_offsite_repo_path: restic
+backups_restic_offsite_repo_password: "{{ vault_offsite_restic_repo_password }}"
+
+# Where the replicas live, and which clients' datasets are in scope. Both
+# default to what backups-zfs-server already uses.
+backups_restic_offsite_replica_root: "{{ backups_zfs_server_local_dataset }}"
+backups_restic_offsite_pull_group: "{{ backups_zfs_server_pull_group | default('zfs_backup_clients') }}"
+
+backups_restic_offsite_script_path: /opt/zfsbackup
+backups_restic_offsite_config_dir: /etc/offsite-restic
+backups_restic_offsite_cache_dir: /var/cache/offsite-restic
+backups_restic_offsite_ssh_key: /root/.ssh/offsite_restic_ed25519
+backups_restic_offsite_ssh_alias: offsite-restic
+backups_restic_offsite_lock: /run/offsite-restic.lock
+
+# KiB/s. The uplink is 10 Mbit/s (about 1220 KiB/s); this leaves a fifth of it
+# for everything else in the house. 0 removes the limit.
+backups_restic_offsite_limit_upload: 1000
+
+# Daily, after the midnight pulls have settled. A run that is still uploading
+# when the next one is due is left alone; the next one is skipped.
+backups_restic_offsite_cron_hour: "2"
+backups_restic_offsite_cron_minute: "30"
+
+# Retention inside the repository.
+backups_restic_offsite_keep_daily: 7
+backups_restic_offsite_keep_weekly: 4
+backups_restic_offsite_keep_monthly: 12
+
+# Prune rewrites packs over the uplink, so it runs weekly rather than nightly.
+backups_restic_offsite_prune_weekday: "0"
+backups_restic_offsite_prune_hour: "14"
+
+# Monthly integrity check that downloads and verifies a sample of the data.
+backups_restic_offsite_check_day: "15"
+backups_restic_offsite_check_hour: "14"
+backups_restic_offsite_check_read_data_subset: "2%"
+
+# A target whose newest offsite copy is older than this is reported stale.
+backups_restic_offsite_stale_hours: 72
+
+# Status goes to Home Assistant over MQTT, like the pull status.
+backups_restic_offsite_mqtt_enabled: "{{ backups_zfs_server_mqtt_enabled | default(false) }}"
+backups_restic_offsite_mqtt_host: "mqtt.{{ domainname_infra }}"
+backups_restic_offsite_mqtt_topic_prefix: "homeinfra/monitoring/zfs"
+backups_restic_offsite_mqtt_expire_after: 93600 # 26h; a daily job that misses a day goes unavailable
