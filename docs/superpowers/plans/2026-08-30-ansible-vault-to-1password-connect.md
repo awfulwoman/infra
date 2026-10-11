@@ -14,7 +14,7 @@
 
 Secrets currently live as ~110 `vault_*` variables across 56 Ansible Vault files, all protected by a single password in `/opt/ansible/.vaultpassword`. Rotation means editing ciphertext and committing it, and git history keeps every superseded secret forever.
 
-1Password Connect is already deployed on `raspberry-pi4-4gb-randolph` at `https://connect.{{ domainname_infra }}`, with two working consumers (`composition-gateway`, `composition-finances`). The infrastructure exists; what is missing is a way to use it that does not require rewriting all ~40 consuming roles.
+1Password Connect was originally deployed on `raspberry-pi4-4gb-randolph` and now runs on `minipc-8gb-camina` (Task 2) at `https://connect.{{ domainname_infra }}`, with two working consumers (`composition-gateway`, `composition-finances`). The infrastructure exists; what is missing is a way to use it that does not require rewriting all ~40 consuming roles.
 
 **Be honest about the size of the win.** The Connect token will live in the controller's environment, which is the same shape as the vault password file living on the controller: one secret on one box unlocks everything. What this migration actually buys is no ciphertext in git history, rotation without a commit, a 1Password audit log, and scoped revocable tokens. It is a workflow and hygiene improvement, not a step change in threat model.
 

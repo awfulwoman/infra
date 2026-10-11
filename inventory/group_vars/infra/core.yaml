@@ -36,7 +36,7 @@ config_system_language: 'en_GB.UTF-8'
 repo_url: https://github.com/awfulwoman/infra
 repo_name: infra
 
-# 1Password Connect — coordinates for the server on randolph.
+# 1Password Connect — coordinates for the server on camina.
 #
 # Secrets too sensitive to live in the repo (even vault-encrypted) are fetched
 # from here at playbook runtime instead. The scoped, rotatable read token is

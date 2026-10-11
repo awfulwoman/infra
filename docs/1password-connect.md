@@ -2,7 +2,7 @@
 
 1Password Connect is a self-hosted server. It syncs a 1Password vault locally and exposes secrets through a REST API. Ansible Vault no longer needs to store these secrets for day-to-day use. Secrets stay in 1Password. Ansible fetches them at playbook runtime with short-lived, rotatable tokens.
 
-The Connect server runs on `raspberry-pi4-4gb-randolph`. Traefik exposes it at `https://connect.{{ domainname_infra }}`.
+The Connect server runs on `minipc-8gb-camina`. Traefik exposes it at `https://connect.{{ domainname_infra }}`.
 
 ## Architecture
 
@@ -50,7 +50,7 @@ Paste the output into `inventory/group_vars/infra/vault_onepassword_connect.yaml
 ### 3. Deploy
 
 ```bash
-ansible-playbook playbooks/hosts/raspberry-pi4-4gb-randolph/core.yaml \
+ansible-playbook playbooks/hosts/minipc-8gb-camina/core.yaml \
   --tags composition -e target_composition=1password-connect
 ```
 
