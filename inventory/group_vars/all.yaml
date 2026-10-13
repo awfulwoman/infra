@@ -62,8 +62,9 @@ domainname_personal: "{{ vault_domainname_aw }}"
 #   wildcard_cert   - the internal *.ewwww.eu wildcard is mounted and set as
 #                     Traefik's default certificate, so internal routers no
 #                     longer need ACME at all.
-# Both true at once is the public01 case: ACME kept alive for genuinely public
-# names the internal wildcard can never cover, wildcard used for everything else.
+# No host sets use_letsencrypt any more: public names get their certificates
+# from bertha too (reverseproxy_extra_cert_dirs). The default stays true only
+# for a host that has not been given the wildcard yet.
 reverseproxy_use_letsencrypt: true
 reverseproxy_wildcard_cert: false
 

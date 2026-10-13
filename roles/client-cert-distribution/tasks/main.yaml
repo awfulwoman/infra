@@ -1,98 +1,13 @@
 # code: language=ansible
 
-- name: Ensure install directory exists
-  become: true
-  ansible.builtin.file:
-    dest: "{{ client_cert_distribution_install_dir }}"
-    state: directory
-    owner: root
-    group: root
-    mode: "0700"
-
-- name: Read the candidate bundle from the certificate host
-  ansible.builtin.slurp:
-    src: "{{ client_cert_distribution_source_dir }}/{{ client_cert_distribution_bundle_name }}.{{ item }}"
-  delegate_to: "{{ client_cert_distribution_source_host }}"
-  loop: [fullchain.crt, key]
-  register: candidate_bundle
-  no_log: true
-
-- name: Write candidate fullchain
-  become: true
-  ansible.builtin.copy:
-    content: "{{ candidate_bundle.results[0].content | b64decode }}"
-    dest: "{{ client_cert_distribution_install_dir }}/.fullchain.crt.new"
-    owner: root
-    group: root
-    mode: "0644"
-
-- name: Write candidate private key
-  become: true
-  ansible.builtin.copy:
-    content: "{{ candidate_bundle.results[1].content | b64decode }}"
-    dest: "{{ client_cert_distribution_install_dir }}/.key.new"
-    owner: root
-    group: root
-    mode: "0600"
-  no_log: true
-
-- name: Read candidate certificate details
-  become: true
-  community.crypto.x509_certificate_info:
-    path: "{{ client_cert_distribution_install_dir }}/.fullchain.crt.new"
-  register: candidate_cert_info
-
-- name: Read candidate private key details
-  become: true
-  community.crypto.openssl_privatekey_info:
-    path: "{{ client_cert_distribution_install_dir }}/.key.new"
-  register: candidate_key_info
-
-# Refuses the whole play here if invalid - nothing past this point runs, so
-# the currently-installed bundle is never touched and the healthchecksio
-# ping below is never reached.
-- name: Refuse an invalid or mismatched candidate bundle
-  ansible.builtin.assert:
-    that:
-      - not candidate_cert_info.expired
-      - candidate_cert_info.public_key_fingerprints.sha256 == candidate_key_info.public_key_fingerprints.sha256
-    fail_msg: >-
-      Downloaded cert bundle failed validation - refusing to install.
-      expired={{ candidate_cert_info.expired }},
-      key_matches_cert={{ candidate_cert_info.public_key_fingerprints.sha256 == candidate_key_info.public_key_fingerprints.sha256 }}
-    success_msg: "Candidate bundle validated: not expired, key matches certificate."
-
-# ansible.builtin.copy with remote_src always writes to a temp file in the
-# destination directory and renames it into place - the same atomic pattern
-# infra-certbot's own distribute step uses (#268).
-- name: Atomically install validated fullchain
-  become: true
-  ansible.builtin.copy:
-    remote_src: true
-    src: "{{ client_cert_distribution_install_dir }}/.fullchain.crt.new"
-    dest: "{{ client_cert_distribution_install_dir }}/fullchain.crt"
-    owner: root
-    group: root
-    mode: "0644"
-
-- name: Atomically install validated private key
-  become: true
-  ansible.builtin.copy:
-    remote_src: true
-    src: "{{ client_cert_distribution_install_dir }}/.key.new"
-    dest: "{{ client_cert_distribution_install_dir }}/privkey.key"
-    owner: root
-    group: root
-    mode: "0600"
-
-- name: Remove temp download files
-  become: true
-  ansible.builtin.file:
-    path: "{{ item }}"
-    state: absent
-  loop:
-    - "{{ client_cert_distribution_install_dir }}/.fullchain.crt.new"
-    - "{{ client_cert_distribution_install_dir }}/.key.new"
+# One bundle failing validation stops the play, so the ping below is reached
+# only when every bundle this host is meant to hold is installed and valid.
+- name: Install each certificate bundle
+  ansible.builtin.include_tasks: bundle.yaml
+  loop: "{{ client_cert_distribution_bundles }}"
+  loop_control:
+    loop_var: cert_bundle
+    label: "{{ cert_bundle.name }}"
 
 # Dead-man's switch: only pinged once a validated bundle is actually
 # installed. A broken pull/validate stops the ping while the previously

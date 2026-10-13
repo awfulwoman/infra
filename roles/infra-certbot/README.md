@@ -9,3 +9,7 @@ This role uses internal network certs only, and it must handle wildcards. For th
 The role downloads the certs to the host. A separate role is needed to distribute them elsewhere.
 
 A domain entry in `infra_certbot_domains` can set `distribute: true`. This copies its newest fullchain and private key into `infra_certbot_distribution_dir` on every run, so the role heals itself if that directory is ever wiped or falls out of sync. This write is local and atomic; the role touches nothing outside the host. Serving that directory to other hosts is out of scope for this role.
+
+An entry without `subdomain` is a certificate for the bare domain. A wildcard does not cover its own apex, so a domain that needs both gets two entries.
+
+An entry can set `key: <filename>` to use a private key other than `infra_certbot_csr_private_key_filename`. The role creates it on first use. Entries that name the same key share it. Every host a bundle is distributed to holds that bundle's key, so give certificates a separate key when they go to fewer hosts than the rest.

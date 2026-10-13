@@ -2,6 +2,10 @@ tls:
   certificates:
     - certFile: {{ reverseproxy_wildcard_cert_dir }}/fullchain.crt
       keyFile: {{ reverseproxy_wildcard_cert_dir }}/privkey.key
+{% for cert_dir in reverseproxy_extra_cert_dirs %}
+    - certFile: {{ cert_dir }}/fullchain.crt
+      keyFile: {{ cert_dir }}/privkey.key
+{% endfor %}
   stores:
     default:
       defaultCertificate:

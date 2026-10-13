@@ -63,6 +63,9 @@ services:
 {% endif %}
 {% if reverseproxy_wildcard_cert %}
       - "{{ reverseproxy_wildcard_cert_dir }}:{{ reverseproxy_wildcard_cert_dir }}:ro"
+{% for cert_dir in reverseproxy_extra_cert_dirs %}
+      - "{{ cert_dir }}:{{ cert_dir }}:ro"
+{% endfor %}
 {% endif %}
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "/etc/localtime:/etc/localtime:ro"

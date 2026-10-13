@@ -9,8 +9,8 @@ http:
     gotosocial:
       service: gotosocial
       rule: "Host(`gts.awfulwoman.com`)"
-      tls:
-        certresolver: letsencrypt
+      # Certificate comes from reverseproxy_extra_cert_dirs, matched by SNI.
+      tls: {}
       entrypoints:
         - web
         - websecure

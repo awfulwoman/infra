@@ -32,6 +32,7 @@ host that consumes `client_cert_distribution_install_dir` must do that (see
 | `client_cert_distribution_source_dir` | `/fastpool/acme/distribution` | Directory on the source host holding the bundle. |
 | `client_cert_distribution_bundle_name` | `*.{{ domainname_infra }}` | Filename stem the source host publishes the bundle under. |
 | `client_cert_distribution_install_dir` | `/etc/ssl/internal-wildcard` | Where the validated `fullchain.crt` / `privkey.key` land. |
+| `client_cert_distribution_bundles` | the one bundle above | List of `{name, install_dir}`. Each is read, checked and installed in turn. A host that also serves other certificates lists every bundle it holds. |
 | `client_cert_distribution_healthcheck` | `true` | Set `false` to skip the Healthchecks.io ping. |
 | `client_cert_distribution_healthcheck_name` | `{{ inventory_hostname }} - Internal Wildcard Cert` | Name of the check in Healthchecks.io. |
 

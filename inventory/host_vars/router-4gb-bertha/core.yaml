@@ -154,9 +154,28 @@ acme_path: "/fastpool/acme"
 # staging with throwaway test subdomains — bertha is the one host that
 # mints the real thing. distribute: true copies the fullchain + key into
 # infra_certbot_distribution_dir, ready for #269 to serve to other hosts.
+#
+# The public names follow the same route, so that the internet-facing host
+# serves certificates it was handed and holds no DNS token to get them itself.
+# A wildcard does not cover its own apex, hence two entries for the personal
+# domain. They share public.key, which only this host and public01 ever hold;
+# the internal wildcard's key is on every host that serves it.
 infra_certbot_domains:
   - domain: "{{ domainname_infra }}"
     subdomain: "*"
+    distribute: true
+  - domain: "{{ domainname_personal }}"
+    key: public.key
+    distribute: true
+  - domain: "{{ domainname_personal }}"
+    subdomain: "*"
+    key: public.key
+    distribute: true
+  - domain: "{{ vault_domainname_wc }}"
+    key: public.key
+    distribute: true
+  - domain: "{{ vault_domainname_se }}"
+    key: public.key
     distribute: true
 infra_certbot_dir: https://acme-v02.api.letsencrypt.org/directory
 

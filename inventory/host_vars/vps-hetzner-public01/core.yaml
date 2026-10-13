@@ -68,8 +68,8 @@ zfs:
         policy: low
         snapshots_discover_children: true
         datasets:
-          # Unlike the internal hosts, this one runs real ACME. A local
-          # snapshot covers a bad deploy; host loss means re-issuing.
+          # Holds nothing that cannot be redeployed: certificates come from
+          # bertha. A local snapshot covers a bad deploy.
           reverseproxy:
             policy: low
           # Serves fastpool/sites/awfulwoman, which is critical in its own
@@ -94,19 +94,31 @@ zfs:
 # -------------------------------------------------------------------
 # SITES
 # -------------------------------------------------------------------
-# REVERSEPROXY (#276 - dual mode: wildcard default + scoped ACME)
+# REVERSEPROXY
 #
-# The one host in the estate that needs both mechanisms at once. The
-# letsencrypt resolver stays alive here, but only for the genuinely public
-# names that the internal *.ewwww.eu wildcard can never cover:
-#   - gts.awfulwoman.com          (gotosocial file provider, below)
-#   - awfulwoman.com + the two old redirect domains
-#                                 (composition-awfulwoman's "beta" router)
-# Every internal name on this host now takes the wildcard as Traefik's default
-# certificate instead. No internal router references the resolver: the
-# certresolver labels are guarded on reverseproxy_wildcard_cert estate-wide.
-reverseproxy_use_letsencrypt: true
+# No ACME here. This host is on the internet, and answering DNS challenges
+# meant keeping a read-write Hetzner token on it. Every certificate it serves
+# is issued on bertha and handed over by client-cert-distribution:
+#   - the internal wildcard, Traefik's default, for the internal names
+#   - the personal domain, apex and wildcard (the wildcard covers gts. and
+#     any later subdomain; it does not cover the apex)
+#   - the two old redirect domains
+# The public ones share a key that only bertha and this host hold.
+reverseproxy_use_letsencrypt: false
 reverseproxy_wildcard_cert: true
+
+client_cert_distribution_bundles:
+  - name: "*.{{ domainname_infra }}"
+    install_dir: /etc/ssl/internal-wildcard
+  - name: "{{ domainname_personal }}"
+    install_dir: /etc/ssl/public/personal-apex
+  - name: "*.{{ domainname_personal }}"
+    install_dir: /etc/ssl/public/personal-wildcard
+  - name: "{{ vault_domainname_wc }}"
+    install_dir: /etc/ssl/public/redirect-wc
+  - name: "{{ vault_domainname_se }}"
+    install_dir: /etc/ssl/public/redirect-se
+reverseproxy_extra_cert_dirs: "{{ client_cert_distribution_bundles[1:] | map(attribute='install_dir') | list }}"
 
 traefik_providers:
   - gotosocial

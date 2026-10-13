@@ -4,5 +4,10 @@ client_cert_distribution_source_host: router-4gb-bertha
 client_cert_distribution_source_dir: /fastpool/acme/distribution
 client_cert_distribution_bundle_name: "*.{{ domainname_infra }}"
 client_cert_distribution_install_dir: /etc/ssl/internal-wildcard
+# Every bundle this host holds. A host that serves more than the internal
+# wildcard lists the lot, each with its own install directory.
+client_cert_distribution_bundles:
+  - name: "{{ client_cert_distribution_bundle_name }}"
+    install_dir: "{{ client_cert_distribution_install_dir }}"
 client_cert_distribution_healthcheck: true
 client_cert_distribution_healthcheck_name: "{{ inventory_hostname }} - Internal Wildcard Cert"

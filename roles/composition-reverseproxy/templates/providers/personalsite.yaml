@@ -11,8 +11,8 @@ http:
     awfulwoman:
       service: awfulwoman
       rule: "Host(`awfulwoman.com`)"
-      tls:
-        certresolver: letsencrypt
+      # Certificate comes from reverseproxy_extra_cert_dirs, matched by SNI.
+      tls: {}
       entrypoints:
         - web
         - websecure
