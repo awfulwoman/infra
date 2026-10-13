@@ -138,7 +138,12 @@ composition_semaphore_schedules:
   - {template: "minipc-8gb-agatha: core", cron: "0 3 * * *"}
   - {template: "vps-hetzner-public01: core", cron: "20 3 * * *"}
   - {template: "router-4gb-bertha: core", cron: "40 3 * * *"}
-  - {template: "semaphore heartbeat", cron: "30 4 * * *"}
+  - {template: "server-8gb-backups: core", cron: "0 4 * * *"}
+  # deedee's core run includes Terraform: it applies, unattended, whenever
+  # the plan differs. Set `active: false` here before switching deedee off,
+  # or every night reports a failed run.
+  - {template: "raspberry-pi4-2gb-deedee: core", cron: "20 4 * * *"}
+  - {template: "semaphore heartbeat", cron: "50 4 * * *"}
 compositions:
   # camina is in the zfs group, so victoriametrics scrapes zfs-api-{host}.
   - zfs-api

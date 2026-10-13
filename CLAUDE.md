@@ -104,6 +104,16 @@ Located in `roles/infra-*/templates/` for provisioning infrastructure:
 
 Templates are split by provider (`digitalocean.tf`, `hetzner.tf`) and rendered by Ansible during playbook runs.
 
+### Nightly Semaphore runs
+
+Semaphore on camina (`composition-semaphore`) runs each scheduled host's `core.yaml` every night, between 01:30 and 05:00 Europe/Berlin. The list is `composition_semaphore_schedules` in `inventory/host_vars/minipc-8gb-camina/core.yaml`; a host that is not in it is only configured when someone runs its playbook by hand.
+
+- **Runs deploy GitHub `main`, not the local checkout.** A change applied by hand and left unpushed is reverted by that night's run. Push it, or pause the host's schedule with `active: false` and deploy the semaphore composition.
+- **Anything in a host's `core.yaml` happens unattended.** That includes Terraform on deedee (`infra-public-resources` applies whenever the plan differs) and certificate issuing on bertha (`infra-certbot`).
+- **Certificates renew this way.** bertha issues them; each host's `client-cert-distribution` collects them on its own run. bertha runs after most hosts, so a renewed certificate reaches them the following night.
+- **One run at a time.** A manual run started from Semaphore queues behind the nightly ones.
+- **A heartbeat runs last** and pings healthchecks.io, which alerts if the night's runs stop happening.
+
 ### Scripts (`scripts/`)
 
 Utility shell scripts for common operations (e.g., `flush-dns.sh`).
