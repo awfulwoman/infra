@@ -67,12 +67,16 @@
     var: tf_files
   when: infra_publicresources_debug
 
-# Passed at apply time so that no password is written into a .tf file.
-- name: Collect Storage Box passwords as Terraform variables
+# Passed at apply time so that no secret is written into a .tf file or into
+# the host's environment, where every user and process could read it.
+- name: Collect tokens and Storage Box passwords as Terraform variables
   no_log: true
   ansible.builtin.set_fact:
     infra_publicresources_tf_variables: >-
-      {% set data = namespace(vars={}) %}
+      {% set data = namespace(vars={
+        'hcloud_token': infra_publicresources_hcloud_token,
+        'digitalocean_token': infra_publicresources_digitalocean_token,
+      }) %}
       {%- for box in infra_publicresources_hcloud_storage_box | default([]) -%}
         {%- set _ = data.vars.update({'storage_box_' ~ box.id ~ '_password': box.password}) -%}
         {%- for sub in box.subaccounts | default([]) -%}
@@ -100,7 +104,7 @@
       when: infra_publicresources_debug
 
     - name: Ensure Terraform plan is applied
-      when: (tf_plan.changed) and (not tf_plan.failed)
+      when: (tf_plan.changed) and (not tf_plan.failed) and (not infra_publicresources_tf_plan_only)
       community.general.terraform:
         project_path: "{{ infra_publicresources_terraform_working_dir }}"
         state: present

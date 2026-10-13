@@ -26,3 +26,24 @@
     create: true
     mode: "0644"
   loop: "{{ environment_config | dict2items }}"
+
+- name: Remove retired environment variables (Debian)
+  become: true
+  when:
+    - environment_config_absent | length > 0
+    - ansible_facts['os_family'] == 'Debian'
+  ansible.builtin.lineinfile:
+    path: "{{ environment_file if environment_file else '/etc/environment' }}"
+    regexp: "^{{ item }}\\s*="
+    state: absent
+  loop: "{{ environment_config_absent }}"
+
+- name: Remove retired environment variables (macOS)
+  when:
+    - environment_config_absent | length > 0
+    - ansible_facts['os_family'] == 'Darwin'
+  ansible.builtin.lineinfile:
+    path: "{{ environment_file if environment_file else ansible_facts.user_dir + '/.zshenv' }}"
+    regexp: "^export {{ item }}\\s*="
+    state: absent
+  loop: "{{ environment_config_absent }}"

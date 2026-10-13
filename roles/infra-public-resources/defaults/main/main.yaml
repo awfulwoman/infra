@@ -1,6 +1,13 @@
 infra_publicresources_terraform_working_dir: "{{ terraform_working_dir }}/public-resources"
 infra_publicresources_debug: false
 infra_publicresources_tf_apply: true
+# Set to true to stop after the plan. With infra_publicresources_debug it
+# shows what an apply would do without doing it.
+infra_publicresources_tf_plan_only: false
 # Set to true for one run after changing a version constraint in versions.tf.
 # The lock file pins the provider version, so init fails until it is upgraded.
 infra_publicresources_provider_upgrade: false
+# Handed to Terraform as variables on each run. They are deliberately not in
+# the host's environment: a token there is readable by everything on the host.
+infra_publicresources_hcloud_token: "{{ vault_hetzner_api_key_rw }}"
+infra_publicresources_digitalocean_token: "{{ vault_ddns_digitalocean_token }}"

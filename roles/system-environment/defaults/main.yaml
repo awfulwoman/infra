@@ -5,6 +5,11 @@
 #   ANOTHER_VAR: "another_value"
 environment_config: {}
 
+# Variable names to remove from the target file. The tasks above only ever add
+# or change a line, so dropping a key from environment_config leaves its old
+# value behind on every host. Name it here to take it out.
+environment_config_absent: []
+
 # Override the target file. If unset, defaults to /etc/environment on Debian
 # and ~/.zshenv on macOS.
 environment_file: ""

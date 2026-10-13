@@ -107,8 +107,13 @@ environment_config:
   ANSIBLE_ROLES_PATH: "{{ ansible_roles_path }}:./roles"
   ANSIBLE_COLLECTIONS_PATH: "{{ ansible_collections_path }}"
   ANSIBLE_INFRA_DIR: "{{ ansible_infra_dir }}"
-  TF_VAR_digitalocean_token: "{{ vault_ddns_digitalocean_token }}"
-  TF_VAR_hcloud_token: "{{ vault_hetzner_api_key_rw }}"
+
+# These held the Terraform tokens, world-readable, on every host. Terraform
+# now gets them at apply time (infra-public-resources). Kept here so a host
+# that was switched off during the cleanup still loses them on its next run.
+environment_config_absent:
+  - TF_VAR_digitalocean_token
+  - TF_VAR_hcloud_token
 
 # Syncthing folders, applied to every member by system-syncthing-config (run
 # from camina). `path` is relative to each host's syncthing_folder_root.

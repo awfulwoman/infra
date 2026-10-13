@@ -1,3 +1,5 @@
 TZ="Europe/Berlin"
-DO_AUTH_TOKEN="{{ vault_letsencrypt_digitalocean_token }}"
+{# Only the ACME resolver reads this, and it answers DNS challenges with it. #}
+{% if reverseproxy_use_letsencrypt %}
 HETZNER_API_TOKEN="{{ vault_hetzner_api_key_rw }}"
+{% endif %}
