@@ -22,5 +22,5 @@ collections:
   - name: community.healthchecksio
   # Pinned: young, single-maintainer collection. Used by composition-semaphore.
   - name: ebdruplab.semaphoreui
-    version: 4.0.3
+    version: 4.0.4
   - name: hetzner.hcloud
