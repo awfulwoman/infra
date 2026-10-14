@@ -2,6 +2,12 @@
 // Paths map Micropub post types onto the Hugo sections in awfulwoman.com.
 export default {
   plugins: ["@indiekit/preset-hugo", "@indiekit/store-github"],
+  "@indiekit/store-github": {
+    user: "{{ composition_indiekit_github_user }}",
+    repo: "{{ composition_indiekit_github_repo }}",
+    branch: "{{ composition_indiekit_github_branch }}",
+    // token comes from GITHUB_TOKEN
+  },
   application: {
     name: "Indiekit",
     timeZone: "Europe/Berlin",
