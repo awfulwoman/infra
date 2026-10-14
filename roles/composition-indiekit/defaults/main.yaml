@@ -1,0 +1,27 @@
+# code: language=ansible
+# Composition name (used by composition-common dependency)
+composition_name: indiekit
+
+# DNS labels: read by the composition_dns_subdomains lookup, not by this role.
+# Tailscale-only: indie.{{ domainname_infra }} is never published publicly.
+composition_dns_subdomains:
+  - indie
+
+# NOTE: unverified. ghcr.io/getindiekit/indiekit returned DENIED on tag listing
+# when this role was drafted, so confirm this tag exists before deploying.
+composition_indiekit_image: ghcr.io/getindiekit/indiekit:1.0.0-beta.31
+composition_indiekit_mongo_image: mongo:8
+
+# The site Indiekit publishes to. This is the IndieAuth identity ("me"), not
+# the Indiekit endpoint itself; the site's <head> must link to the endpoints.
+composition_indiekit_publication_url: "https://awfulwoman.com"
+
+# Content store: commits land on main and trigger the site's own build.
+composition_indiekit_github_user: awfulwoman
+composition_indiekit_github_repo: awfulwoman.com
+composition_indiekit_github_branch: main
+
+composition_indiekit_secret: "{{ vault_composition_indiekit_secret }}"
+# Empty on first deploy. Visit /auth/new-password, copy the hash, vault it.
+composition_indiekit_password_secret: "{{ vault_composition_indiekit_password_secret | default('') }}"
+composition_indiekit_github_token: "{{ vault_composition_indiekit_github_token }}"

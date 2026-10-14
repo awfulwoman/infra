@@ -94,6 +94,10 @@ zfs:
             policy: high
           github2karakeep:
             policy: high
+          # Mongo holds IndieAuth tokens and post metadata; the posts
+          # themselves live in git, so a lost DB only costs a re-login.
+          indiekit:
+            policy: low
           # Rebuildable from the sources (notes + gateway data), but not
           # free to redo -- the ingest dedup state and usage history.
           wiki-compiler:
@@ -433,3 +437,4 @@ compositions:
   - wiki-compiler
   - wiki-site
   - guinea-pig-weights
+  - indiekit

@@ -1,0 +1,7 @@
+# code: language=ansible
+- name: Restart indiekit
+  community.docker.docker_compose_v2:
+    project_src: "{{ composition_root }}"
+    services:
+      - indiekit
+    state: restarted

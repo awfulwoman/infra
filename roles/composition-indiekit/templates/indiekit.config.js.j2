@@ -1,0 +1,67 @@
+// Managed by Ansible (composition-indiekit). Secrets come from the environment.
+// Paths map Micropub post types onto the Hugo sections in awfulwoman.com.
+export default {
+  plugins: ["@indiekit/preset-hugo", "@indiekit/store-github"],
+  application: {
+    name: "Indiekit",
+    timeZone: "Europe/Berlin",
+  },
+  publication: {
+    me: process.env.PUBLICATION_URL,
+    locale: "en-GB",
+    timeZone: "Europe/Berlin",
+    postTypes: {
+      article: {
+        name: "Post",
+        post: {
+          path: "content/posts/{yyyy}/{slug}/index.md",
+          url: "posts/{slug}",
+        },
+        media: { path: "content/posts/{yyyy}/{slug}/files/{filename}" },
+      },
+      note: {
+        name: "Note",
+        post: {
+          path: "content/notes/{yyyy}/{MM}/{dd}/{slug}.md",
+          url: "notes/{yyyy}/{MM}/{dd}/{slug}",
+        },
+      },
+      bookmark: {
+        name: "Bookmark",
+        post: {
+          path: "content/bookmarks/{yyyy}/{MM}/{dd}/{slug}.md",
+          url: "bookmarks/{yyyy}/{MM}/{dd}/{slug}",
+        },
+      },
+      like: {
+        name: "Like",
+        post: {
+          path: "content/likes/{yyyy}/{MM}/{dd}/{slug}.md",
+          url: "likes/{yyyy}/{MM}/{dd}/{slug}",
+        },
+      },
+      reply: {
+        name: "Reply",
+        post: {
+          path: "content/replies/{yyyy}/{MM}/{dd}/{slug}.md",
+          url: "replies/{yyyy}/{MM}/{dd}/{slug}",
+        },
+      },
+      repost: {
+        name: "Repost",
+        post: {
+          path: "content/reposts/{yyyy}/{MM}/{dd}/{slug}.md",
+          url: "reposts/{yyyy}/{MM}/{dd}/{slug}",
+        },
+      },
+      photo: {
+        name: "Photo",
+        post: {
+          path: "content/photos/{yyyy}/{MM}/{dd}/{slug}/index.md",
+          url: "photos/{yyyy}/{MM}/{dd}/{slug}",
+        },
+        media: { path: "content/photos/{yyyy}/{MM}/{dd}/{slug}/{filename}" },
+      },
+    },
+  },
+};
