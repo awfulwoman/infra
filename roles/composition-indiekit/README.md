@@ -5,7 +5,7 @@ that publishes posts to awfulwoman.com by committing Markdown to
 `awfulwoman/awfulwoman.com` on `main`. The existing GitHub Actions build then
 deploys the site.
 
-Endpoint: `https://indie.{{ domainname_infra }}` (Tailscale only, never public).
+Endpoint: `https://indie.<personal domain>` (public; DNS CNAME in infra-public-resources).
 The IndieAuth identity is `https://awfulwoman.com`; the site `<head>` must link
 to this endpoint (`micropub`, `authorization_endpoint`, `token_endpoint`).
 
@@ -13,18 +13,24 @@ to this endpoint (`micropub`, `authorization_endpoint`, `token_endpoint`).
 
 | Variable | Purpose |
 | --- | --- |
-| `composition_indiekit_image` | Pinned image. Unverified at draft time. |
+| `composition_indiekit_build_context` | Pinned upstream git commit to build. |
 | `composition_indiekit_publication_url` | Site URL (IndieAuth `me`). |
 | `vault_composition_indiekit_secret` | Signs tokens. |
 | `vault_composition_indiekit_password_secret` | Login password hash (see below). |
 | `vault_composition_indiekit_github_token` | Fine-grained PAT, contents:write on the site repo only. |
 
-## First deploy
+## Password
 
-1. Deploy with no `password_secret`.
-2. Visit `/auth/new-password`, set a password, copy the hash.
-3. Vault it as `vault_composition_indiekit_password_secret`, redeploy.
-   Hashes contain `$`; the env template single-quotes it.
+Set out of band: the bcrypt hash of the login password is vaulted as
+`vault_composition_indiekit_password_secret`, and Traefik blocks
+`/auth/new-password` so the web setup form is never exposed. To rotate, hash a
+new password (`bcrypt`, cost 10), re-vault it, redeploy. Hashes contain `$`;
+the env template single-quotes them.
+
+## Image
+
+Built from a pinned upstream commit (`composition_indiekit_build_context`);
+no image is published upstream yet.
 
 ## Data
 

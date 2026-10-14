@@ -4,6 +4,9 @@ services:
   indiekit:
     container_name: indiekit
     image: "{{ composition_indiekit_image }}"
+    build:
+      context: "{{ composition_indiekit_build_context }}"
+      dockerfile: docker/Dockerfile
     restart: unless-stopped
     env_file: .environment_vars
     volumes:
@@ -13,11 +16,17 @@ services:
         condition: service_healthy
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.indiekit.rule=Host(`{{ composition_dns_subdomains[0] }}.{{ domainname_infra }}`)"
+      - "traefik.http.routers.indiekit.rule=Host(`{{ composition_indiekit_hostname }}`)"
       - "traefik.http.routers.indiekit.tls=true"
 {% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.indiekit.tls.certresolver=letsencrypt"
 {% endif %}
+      # The password is set out of band (hash vaulted), so the web form that
+      # sets it must never be reachable. noop@internal answers 418.
+      - "traefik.http.routers.indiekit-block.rule=Host(`{{ composition_indiekit_hostname }}`) && PathPrefix(`/auth/new-password`)"
+      - "traefik.http.routers.indiekit-block.priority=1000"
+      - "traefik.http.routers.indiekit-block.tls=true"
+      - "traefik.http.routers.indiekit-block.service=noop@internal"
       - "traefik.http.services.indiekit.loadbalancer.server.port=3000"
     networks:
       - "{{ default_docker_network }}"

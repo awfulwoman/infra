@@ -2,14 +2,15 @@
 # Composition name (used by composition-common dependency)
 composition_name: indiekit
 
-# DNS labels: read by the composition_dns_subdomains lookup, not by this role.
-# Tailscale-only: indie.{{ domainname_infra }} is never published publicly.
-composition_dns_subdomains:
-  - indie
+# Public name (indie.<personal domain>) lives in the public Hetzner zone
+# (infra-public-resources), not in internal DNS, so no internal labels.
+composition_dns_subdomains: []
+composition_indiekit_hostname: "indie.{{ domainname_personal }}"
 
-# NOTE: unverified. ghcr.io/getindiekit/indiekit returned DENIED on tag listing
-# when this role was drafted, so confirm this tag exists before deploying.
-composition_indiekit_image: ghcr.io/getindiekit/indiekit:1.0.0-beta.31
+# No image is published to ghcr.io/getindiekit/indiekit yet, so build from a
+# pinned upstream commit (the Dockerfile only exists on main, not on tags).
+composition_indiekit_build_context: "https://github.com/getindiekit/indiekit.git#5308a2f58b63c11bccad13d65fc5d07ce0465a8f"
+composition_indiekit_image: indiekit:local
 composition_indiekit_mongo_image: mongo:8
 
 # The site Indiekit publishes to. This is the IndieAuth identity ("me"), not
