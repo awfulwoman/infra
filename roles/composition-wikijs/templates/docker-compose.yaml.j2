@@ -1,0 +1,48 @@
+# code: language=ansible-jinja
+name: "{{ composition_name }}"
+services:
+  wikijs:
+    container_name: wikijs
+    image: "{{ composition_wikijs_image }}"
+    restart: unless-stopped
+    env_file: .environment_vars
+    depends_on:
+      wikijs-db:
+        condition: service_healthy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.wikijs.rule=Host(`{{ composition_dns_subdomains[0] }}.{{ domainname_infra }}`)"
+      - "traefik.http.routers.wikijs.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
+      - "traefik.http.routers.wikijs.tls.certresolver=letsencrypt"
+{% endif %}
+      - "traefik.http.services.wikijs.loadbalancer.server.port=3000"
+    networks:
+      - "{{ default_docker_network }}"
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/127.0.0.1/3000'"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  wikijs-db:
+    container_name: wikijs_db
+    image: "{{ composition_wikijs_db_image }}"
+    restart: unless-stopped
+    env_file: .environment_vars
+    volumes:
+      - "{{ composition_config }}/postgres:/var/lib/postgresql"
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - "{{ default_docker_network }}"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U wikijs"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+      start_period: 30s
+
+networks:
+  "{{ default_docker_network }}":
+    external: true

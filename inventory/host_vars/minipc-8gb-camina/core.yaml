@@ -77,6 +77,9 @@ zfs:
             policy: low
           basic-memory:
             policy: low
+          # Wiki pages and users live only in the postgres sidecar.
+          wikijs:
+            policy: high
       # Working checkouts on the control node, including the one Semaphore
       # mounts as its "infra (local)" repository.
       repos:
@@ -153,6 +156,8 @@ compositions:
   - syncthing
   # Shared agent memory over MCP. Registers `basic-memory`.
   - basic-memory
+  # Wiki.js at wikijs.{{ domainname_infra }} ("wiki" is wiki-site's label).
+  - wikijs
   - composition: reverseproxy
     labels:
       - "traefik-{host}"

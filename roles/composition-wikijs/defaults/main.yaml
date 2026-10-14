@@ -1,0 +1,14 @@
+# code: language=ansible
+# Composition name (used by composition-common dependency)
+composition_name: wikijs
+
+# "wiki" is already taken by composition-wiki-site.
+composition_dns_subdomains:
+  - wikijs
+
+# Floating major tag: follows 2.x releases, never 3.x (still beta upstream).
+# Deploys use pull: always, so the nightly run picks up new releases.
+composition_wikijs_image: ghcr.io/requarks/wiki:2
+composition_wikijs_db_image: postgres:17
+
+composition_wikijs_db_password: "{{ vault_composition_wikijs_db_password }}"
