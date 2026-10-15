@@ -8,7 +8,7 @@ composition_micropub_server_hostname: "indie.{{ domainname_personal }}"
 
 # Our own image, built and tested by GitHub Actions. Pin a sha-<short> tag so a
 # rollback is a one-line change.
-composition_micropub_server_image: ghcr.io/awfulwoman/micropub-server:sha-174ce45
+composition_micropub_server_image: ghcr.io/awfulwoman/micropub-server:sha-5df715b
 
 # The site published to: the IndieAuth identity ("me").
 composition_micropub_server_publication_url: "https://awfulwoman.com"
