@@ -76,9 +76,9 @@ zfs:
           # right below. This dataset is just the container's config.
           awfulwoman:
             policy: low
-          # Mongo holds IndieAuth tokens and post metadata; the posts
+          # SQLite holds IndieAuth tokens and the share queue; the posts
           # themselves live in git, so a lost DB only costs a re-login.
-          indiekit:
+          micropub-server:
             policy: low
           container-management:
             policy: none
@@ -148,6 +148,6 @@ compositions:
     labels: []
   - container-management
   - awfulwoman
-  - indiekit
+  - micropub-server
   - zfs-api
   - logtide-agent

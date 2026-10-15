@@ -1,0 +1,37 @@
+# Managed by Ansible (composition-micropub-server). Secrets come from the environment.
+{% set site = lookup('ansible.builtin.file', 'site-micropub.yaml') | from_yaml %}
+application:
+  name: awfulwoman.com publishing
+  time_zone: Europe/Berlin
+  token_ttl_days: 90
+
+publication:
+  profile:
+    name: Charlie O'Hara
+
+store:
+  type: github
+  owner: awfulwoman
+  repo: awfulwoman.com
+  branch: main
+
+channels:
+  main: {name: Main}
+  bandnames: {name: Band names}
+
+# The site's own copy wins once data/micropub.yaml is committed there; until then (or if it is
+# broken) the server falls back to the copy below, taken from docs/deploy/site-micropub.yaml.
+site_config_path: data/micropub.yaml
+template:
+  mapping: {{ site.mapping | to_json }}
+  omit: {{ site.omit | to_json }}
+post_types: {{ site.post_types | to_json }}
+
+syndication:
+  require_live: true
+{% if composition_micropub_server_mastodon_token %}
+  mastodon:
+    url: https://indieweb.social
+    user: awfulwoman
+    checked: true
+{% endif %}

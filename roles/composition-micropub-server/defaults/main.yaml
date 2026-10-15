@@ -1,0 +1,21 @@
+# code: language=ansible
+composition_name: micropub-server
+
+# Public name (indie.<personal domain>) lives in the public Hetzner zone
+# (infra-public-resources), not in internal DNS, so no internal labels.
+composition_dns_subdomains: []
+composition_micropub_server_hostname: "indie.{{ domainname_personal }}"
+
+# Our own image, built and tested by GitHub Actions. Pin a sha-<short> tag so a
+# rollback is a one-line change.
+composition_micropub_server_image: ghcr.io/awfulwoman/micropub-server:sha-686dbe8
+
+# The site published to: the IndieAuth identity ("me").
+composition_micropub_server_publication_url: "https://awfulwoman.com"
+
+composition_micropub_server_secret: "{{ vault_composition_micropub_server_secret }}"
+# bcrypt hash accepted as is; replace with an argon2 PASSWORD_HASH later.
+composition_micropub_server_password_secret: "{{ vault_composition_micropub_server_password_secret }}"
+composition_micropub_server_github_token: "{{ vault_composition_micropub_server_github_token }}"
+# Empty until a Mastodon token exists; syndication to Mastodon is skipped without it.
+composition_micropub_server_mastodon_token: "{{ vault_composition_micropub_server_mastodon_token | default('') }}"

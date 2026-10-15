@@ -1,0 +1,149 @@
+# awfulwoman.com/data/micropub.yaml
+#
+# How this site's content is laid out, for the Micropub server (micropub-server). It reads this
+# file from the repo, so a layout change and the matching change here travel in one commit.
+# Hugo layouts can read it too (site.Data.micropub).
+#
+# mapping     JF2 property -> front matter key. Anything not listed keeps its name, with - as _.
+# omit        properties never written to front matter.
+# post_types  where each kind of post lives and what its URL is. import_slug says where {slug}
+#             comes from for files that already exist: "title" for /posts/:slug/, else the filename.
+version: 1
+mapping:
+  name: title
+  published: date
+  updated: lastmod
+  summary: description
+  category: tags
+  bookmark-of: bookmark_of
+  like-of: like_of
+  repost-of: repost_of
+  in-reply-to: in_reply_to
+  quotation-of: quote_of
+  photo: images
+  video: videos
+omit:
+  - uid
+  - slug
+  - url
+  - publishDate
+  - channel
+post_types:
+  note:
+    name: Note
+    post:
+      path: content/notes/{yyyy}/{MM}/{dd}/{HH}{mm}.md
+      url: notes/{yyyy}/{MM}/{dd}/{HH}{mm}/
+    properties:
+      - content
+      - category
+      - location
+      - photo
+    required_properties:
+      - content
+  article:
+    name: Post
+    import_slug: title
+    post:
+      path: content/posts/{yyyy}/{slug}/index.md
+      url: posts/{slug}/
+    properties:
+      - name
+      - content
+      - summary
+      - category
+      - photo
+    required_properties:
+      - name
+      - content
+  bookmark:
+    name: Bookmark
+    discovery: bookmark-of
+    post:
+      path: content/bookmarks/{yyyy}/{MM}/{dd}/{HH}{mm}.md
+      url: bookmarks/{yyyy}/{MM}/{dd}/{HH}{mm}/
+    properties:
+      - bookmark-of
+      - name
+      - content
+      - category
+    required_properties:
+      - bookmark-of
+  like:
+    name: Like
+    post:
+      path: content/likes/{yyyy}/{MM}/{dd}/{HH}{mm}.md
+      url: likes/{yyyy}/{MM}/{dd}/{HH}{mm}/
+    properties:
+      - like-of
+    required_properties:
+      - like-of
+  reply:
+    name: Reply
+    post:
+      path: content/replies/{yyyy}/{MM}/{dd}/{HH}{mm}.md
+      url: replies/{yyyy}/{MM}/{dd}/{HH}{mm}/
+    properties:
+      - in-reply-to
+      - content
+    required_properties:
+      - in-reply-to
+  repost:
+    name: Repost
+    post:
+      path: content/reposts/{yyyy}/{MM}/{dd}/{HH}{mm}.md
+      url: reposts/{yyyy}/{MM}/{dd}/{HH}{mm}/
+    properties:
+      - repost-of
+      - content
+    required_properties:
+      - repost-of
+  quote:
+    name: Quote
+    discovery: quotation-of
+    post:
+      path: content/quotes/{yyyy}/{MM}/{dd}/{HH}{mm}.md
+      url: quotes/{yyyy}/{MM}/{dd}/{HH}{mm}/
+    properties:
+      - quotation-of
+      - content
+    required_properties:
+      - quotation-of
+      - content
+  photo:
+    name: Photo
+    post:
+      path: content/photos/{yyyy}/{MM}/{dd}/{HH}{mm}/index.md
+      url: photos/{yyyy}/{MM}/{dd}/{HH}{mm}/
+    properties:
+      - photo
+      - name
+      - content
+      - category
+      - location
+    required_properties:
+      - photo
+  checkin:
+    name: Checkin
+    discovery: checkin
+    discovery_first: true
+    post:
+      path: content/checkins/{yyyy}/{MM}/{dd}/{HH}{mm}/index.md
+      url: checkins/{yyyy}/{MM}/{dd}/{HH}{mm}/
+    properties:
+      - checkin
+      - content
+      - photo
+      - category
+    required_properties:
+      - checkin
+  bandname:
+    name: Band name
+    channel: bandnames
+    post:
+      path: content/bandnames/{yyyy}/{MM}/{slug}.md
+      url: bandnames/{yyyy}/{MM}/{slug}/
+    properties:
+      - name
+    required_properties:
+      - name

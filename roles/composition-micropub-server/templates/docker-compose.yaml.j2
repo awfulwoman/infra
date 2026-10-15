@@ -1,0 +1,34 @@
+# code: language=ansible-jinja
+name: "{{ composition_name }}"
+services:
+  micropub-server:
+    container_name: micropub-server
+    image: "{{ composition_micropub_server_image }}"
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp
+    env_file: .environment_vars
+    volumes:
+      - "{{ composition_config }}/config.yaml:/config/config.yaml:ro"
+      - "{{ composition_config }}/data:/data"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.micropub-server.rule=Host(`{{ composition_micropub_server_hostname }}`)"
+      - "traefik.http.routers.micropub-server.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
+      - "traefik.http.routers.micropub-server.tls.certresolver=letsencrypt"
+{% endif %}
+      # The old Indiekit password form; this server has no such page, but the block is free.
+      - "traefik.http.routers.micropub-server-block.rule=Host(`{{ composition_micropub_server_hostname }}`) && PathPrefix(`/auth/new-password`)"
+      - "traefik.http.routers.micropub-server-block.priority=1000"
+      - "traefik.http.routers.micropub-server-block.tls=true"
+      - "traefik.http.routers.micropub-server-block.service=noop@internal"
+      - "traefik.http.services.micropub-server.loadbalancer.server.port=8000"
+    networks:
+      - "{{ default_docker_network }}"
+    # The image defines its own HEALTHCHECK (GET /health), so none is repeated here.
+
+networks:
+  "{{ default_docker_network }}":
+    external: true
