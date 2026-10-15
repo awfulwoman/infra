@@ -50,7 +50,7 @@ composition_gatus_url_checks:
     # Redirects to the apex; do not follow it.
     ignore_redirect: true
     conditions:
-      - "[STATUS] == 301"
+      - "[STATUS] == 308"
   # /health reports store "degraded" when the GitHub token cannot write, the
   # failure that cost an hour on the first Indiekit deploy.
   - name: micropub-server
