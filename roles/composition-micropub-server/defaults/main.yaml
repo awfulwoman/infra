@@ -18,6 +18,6 @@ composition_micropub_server_secret: "{{ vault_composition_micropub_server_secret
 composition_micropub_server_password_secret: "{{ vault_composition_micropub_server_password_secret }}"
 composition_micropub_server_github_token: "{{ vault_composition_micropub_server_github_token }}"
 # Shared with the GitHub webhook on the site repo. Empty: the webhook endpoint is off.
-composition_micropub_server_webhook_secret: "{{ vault_composition_micropub_server_webhook_secret | default('') }}"
+composition_micropub_server_webhook_secret: "{{ vault_github_webhook_micropub_server_secret | default('') }}"
 # Empty until a Mastodon token exists; syndication to Mastodon is skipped without it.
 composition_micropub_server_mastodon_token: "{{ vault_composition_micropub_server_mastodon_token | default('') }}"
