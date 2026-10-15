@@ -51,6 +51,10 @@ composition_gatus_service_overrides:
     conditions: ["[STATUS] == 200"]
 ```
 
+Public services outside `domainname_infra` (e.g. `micropub-server`, whose
+`/health` must report `store == ok`) go in `composition_gatus_url_checks`
+as full URLs.
+
 `zfs-api-<host>` names are checked on `/metrics` automatically.
 
 ## Alerting

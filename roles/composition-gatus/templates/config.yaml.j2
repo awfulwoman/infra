@@ -73,3 +73,15 @@ endpoints:
     alerts:
       - type: email
 {% endfor %}
+{% for check in composition_gatus_url_checks %}
+  - name: "{{ check.name }}"
+    group: services
+    url: "{{ check.url }}"
+    interval: {{ composition_gatus_service_interval }}
+    conditions:
+{% for condition in check.conditions %}
+      - "{{ condition }}"
+{% endfor %}
+    alerts:
+      - type: email
+{% endfor %}

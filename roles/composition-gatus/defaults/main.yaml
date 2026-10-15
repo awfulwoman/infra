@@ -38,6 +38,17 @@ composition_gatus_service_overrides:
     path: /api/health
     conditions: ["[STATUS] == 200"]
 
+# Checks for services that are not under domainname_infra (public sites), so
+# the derived names cannot reach them. Each: {name, url, conditions}.
+composition_gatus_url_checks:
+  # /health reports store "degraded" when the GitHub token cannot write, the
+  # failure that cost an hour on the first Indiekit deploy.
+  - name: micropub-server
+    url: "https://indie.{{ domainname_personal }}/health"
+    conditions:
+      - "[STATUS] == 200"
+      - "[BODY].store == ok"
+
 # zfs-api-<host> serves Prometheus metrics; check that, not /.
 composition_gatus_zfs_api_path: /metrics
 
