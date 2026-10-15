@@ -17,6 +17,14 @@ services:
       # on bertha and handed to this host (reverseproxy_extra_cert_dirs), so
       # Traefik picks the matching one by SNI.
       - "traefik.http.services.beta.loadbalancer.server.port=80"
+      # www redirects to the apex (the wildcard certificate already covers it).
+      - "traefik.http.routers.beta-www.rule=Host(`www.{{ domainname_personal }}`)"
+      - "traefik.http.routers.beta-www.tls=true"
+      - "traefik.http.routers.beta-www.middlewares=beta-www-redirect"
+      - "traefik.http.routers.beta-www.service=noop@internal"
+      - "traefik.http.middlewares.beta-www-redirect.redirectregex.regex=^https://www[.]{{ domainname_personal | replace('.', '[.]') }}/(.*)"
+      - "traefik.http.middlewares.beta-www-redirect.redirectregex.replacement=https://{{ domainname_personal }}/$${1}"
+      - "traefik.http.middlewares.beta-www-redirect.redirectregex.permanent=true"
     volumes:
       - "{{ awfulwoman_path }}:/usr/share/nginx/html"
       - "{{ composition_config }}/nginx.conf:/etc/nginx/nginx.conf"

@@ -78,6 +78,10 @@ endpoints:
     group: services
     url: "{{ check.url }}"
     interval: {{ composition_gatus_service_interval }}
+{% if check.ignore_redirect | default(false) %}
+    client:
+      ignore-redirect: true
+{% endif %}
     conditions:
 {% for condition in check.conditions %}
       - "{{ condition }}"
