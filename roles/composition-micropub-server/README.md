@@ -12,7 +12,7 @@ Cut-over steps: `docs/deploy/README.md` in the micropub-server repo.
 | `composition_micropub_server_image` | Pinned `sha-` tag of the GHCR image. |
 | `vault_composition_micropub_server_secret` | Signs sessions and tokens. |
 | `vault_composition_micropub_server_password_secret` | bcrypt login hash. |
-| `vault_composition_micropub_server_github_token` | PAT, Contents read/write on the site repo. |
+| `vault_github_micropub_server_token` | PAT, Contents read/write on the site repo. |
 | `vault_github_webhook_micropub_server_secret` | Optional; enables `/webhooks/github` for build tracking. Same secret as the GitHub webhook. |
 | `vault_composition_micropub_server_mastodon_token` | Optional; enables Mastodon sharing. |
 
