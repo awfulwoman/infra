@@ -41,6 +41,12 @@ composition_gateway_calendar_server_bearer_token: "{{ vault_gateway_calendar_ser
 composition_gateway_karakeep_base_url: "https://karakeep.{{ domainname_infra }}"
 composition_gateway_karakeep_api_key: "{{ vault_karakeep_api }}"
 
+# micropub-server: the draft-post tools. The token has the `draft update media`
+# scopes and not `delete`, so the gateway can only create and edit drafts.
+# Empty until the token is made and vaulted; the tools then report "not configured".
+composition_gateway_micropub_base_url: "https://indie.{{ domainname_personal }}"
+composition_gateway_micropub_token: "{{ vault_github_micropub_server_gateway_token | default('') }}"
+
 # eBay Browse API (read-only listings and search). Application keyset from
 # developer.ebay.com — an app token only, no eBay user login. The marketplace
 # is the fallback when a bare item ID or a search gives no domain to infer one.
