@@ -137,13 +137,15 @@ post_types:
       - category
     required_properties:
       - checkin
-  bandname:
-    name: Band name
-    channel: bandnames
+  page:
+    name: Page
+    channel: pages
     post:
-      path: content/bandnames/{yyyy}/{MM}/{slug}.md
-      url: bandnames/{yyyy}/{MM}/{slug}/
+      path: content/{slug}.md
+      url: "{slug}/"
     properties:
       - name
+      - content
     required_properties:
       - name
+      - content
