@@ -4,6 +4,9 @@ PUBLICATION_URL="{{ composition_micropub_server_publication_url }}/"
 SECRET="{{ composition_micropub_server_secret }}"
 PASSWORD_SECRET='{{ composition_micropub_server_password_secret }}'
 GITHUB_TOKEN="{{ composition_micropub_server_github_token }}"
+{% if composition_micropub_server_webhook_secret %}
+WEBHOOK_SECRET="{{ composition_micropub_server_webhook_secret }}"
+{% endif %}
 {% if composition_micropub_server_mastodon_token %}
 MASTODON_ACCESS_TOKEN="{{ composition_micropub_server_mastodon_token }}"
 {% endif %}

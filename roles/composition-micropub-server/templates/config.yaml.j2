@@ -27,6 +27,10 @@ template:
   omit: {{ site.omit | to_json }}
 post_types: {{ site.post_types | to_json }}
 
+# The workflow run that means "the site is live" (webhook, needs WEBHOOK_SECRET).
+deploy:
+  workflow: Build site and push to server
+
 syndication:
   require_live: true
 {% if composition_micropub_server_mastodon_token %}
