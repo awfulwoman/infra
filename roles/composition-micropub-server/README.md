@@ -2,7 +2,7 @@
 
 [micropub-server](https://github.com/awfulwoman/micropub-server): our Python Micropub and
 IndieAuth server. Publishes posts to awfulwoman.com by committing Hugo Markdown to
-`awfulwoman/awfulwoman.com` on `main`. Replaces `composition-indiekit`.
+`awfulwoman/awfulwoman.com` on `main`. Replaced the Indiekit composition.
 
 Endpoint: `https://indie.<personal domain>` (public; CNAME in infra-public-resources).
 Cut-over steps: `docs/deploy/README.md` in the micropub-server repo.
