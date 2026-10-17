@@ -21,8 +21,8 @@ composition_micropub_server_github_token: "{{ vault_github_micropub_server_token
 composition_micropub_server_webhook_secret: "{{ vault_github_webhook_micropub_server_secret | default('') }}"
 # Empty until a Mastodon token exists; syndication to Mastodon is skipped without it.
 # The Mastodon-API server to share to (GoToSocial works).
-composition_micropub_server_mastodon_url: https://CHANGE-ME.example
-composition_micropub_server_mastodon_user: awfulwoman
+composition_micropub_server_mastodon_url: https://gts.awfulwoman.com
+composition_micropub_server_mastodon_user: charlie
 composition_micropub_server_mastodon_service_name: GoToSocial
 composition_micropub_server_mastodon_character_limit: 5000
 composition_micropub_server_mastodon_token: "{{ vault_composition_micropub_server_mastodon_token | default('') }}"
