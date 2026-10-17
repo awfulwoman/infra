@@ -82,8 +82,6 @@ zfs:
             policy: high
           freshrss:
             policy: high
-          gotosocial:
-            policy: high
           n8n:
             policy: high
           memorybank:
@@ -311,7 +309,7 @@ composition_mail_archive_server_imap_accounts: "{{ charlie_email_accounts }}"
 
 # -------------------------------------------------------------------
 # REVERSEPROXY (#271 - internal wildcard cert rollout)
-# gotosocial/awfulwoman.com are terminated by public01's Traefik, which
+# awfulwoman.com is terminated by public01's Traefik, which
 # reverse-proxies to this host's container ports directly - storage's own
 # Traefik has no genuinely public router, so no scoped ACME exception
 # is needed here (unlike public01, see #271).
@@ -412,7 +410,6 @@ compositions:
   - podderton
   - homepage
   - piper
-  - gotosocial
   - libretranslate
   - n8n
   - memorybank

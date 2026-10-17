@@ -80,6 +80,10 @@ zfs:
           # themselves live in git, so a lost DB only costs a re-login.
           micropub-server:
             policy: low
+          # SQLite DB holds the account signing keys. Losing it breaks
+          # federation for good.
+          gotosocial:
+            policy: critical
           container-management:
             policy: none
           zfs-api:
@@ -91,8 +95,6 @@ zfs:
           awfulwoman:
             policy: critical
           pixelfed:
-            policy: critical
-          gotosocial:
             policy: critical
 
 # -------------------------------------------------------------------
@@ -149,5 +151,6 @@ compositions:
   - container-management
   - awfulwoman
   - micropub-server
+  - gotosocial
   - zfs-api
   - logtide-agent
