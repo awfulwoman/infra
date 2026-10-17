@@ -32,8 +32,8 @@ post_types:
   note:
     name: Note
     post:
-      path: content/notes/{yyyy}/{MM}/{dd}/{HH}{mm}.md
-      url: notes/{yyyy}/{MM}/{dd}/{HH}{mm}/
+      path: content/notes/{yyyy}/{MM}/{dd}/{slug}.md
+      url: notes/{yyyy}/{MM}/{dd}/{slug}/
     properties:
       - content
       - category
@@ -45,8 +45,10 @@ post_types:
     name: Post
     import_slug: title
     post:
-      path: content/posts/{yyyy}/{slug}/index.md
+      path: content/posts/{yyyy}/{MM}/{dd}/{slug}/index.md
       url: posts/{slug}/
+      aliases:
+        - /posts/{yyyy}/{MM}/{dd}/{slug}/
     properties:
       - name
       - content
@@ -60,8 +62,8 @@ post_types:
     name: Bookmark
     discovery: bookmark-of
     post:
-      path: content/bookmarks/{yyyy}/{MM}/{dd}/{HH}{mm}.md
-      url: bookmarks/{yyyy}/{MM}/{dd}/{HH}{mm}/
+      path: content/bookmarks/{yyyy}/{MM}/{dd}/{slug}.md
+      url: bookmarks/{yyyy}/{MM}/{dd}/{slug}/
     properties:
       - bookmark-of
       - name
@@ -72,8 +74,8 @@ post_types:
   like:
     name: Like
     post:
-      path: content/likes/{yyyy}/{MM}/{dd}/{HH}{mm}.md
-      url: likes/{yyyy}/{MM}/{dd}/{HH}{mm}/
+      path: content/likes/{yyyy}/{MM}/{dd}/{slug}.md
+      url: likes/{yyyy}/{MM}/{dd}/{slug}/
     properties:
       - like-of
     required_properties:
@@ -81,8 +83,8 @@ post_types:
   reply:
     name: Reply
     post:
-      path: content/replies/{yyyy}/{MM}/{dd}/{HH}{mm}.md
-      url: replies/{yyyy}/{MM}/{dd}/{HH}{mm}/
+      path: content/replies/{yyyy}/{MM}/{dd}/{slug}.md
+      url: replies/{yyyy}/{MM}/{dd}/{slug}/
     properties:
       - in-reply-to
       - content
@@ -91,8 +93,8 @@ post_types:
   repost:
     name: Repost
     post:
-      path: content/reposts/{yyyy}/{MM}/{dd}/{HH}{mm}.md
-      url: reposts/{yyyy}/{MM}/{dd}/{HH}{mm}/
+      path: content/reposts/{yyyy}/{MM}/{dd}/{slug}.md
+      url: reposts/{yyyy}/{MM}/{dd}/{slug}/
     properties:
       - repost-of
       - content
@@ -102,8 +104,8 @@ post_types:
     name: Quote
     discovery: quotation-of
     post:
-      path: content/quotes/{yyyy}/{MM}/{dd}/{HH}{mm}.md
-      url: quotes/{yyyy}/{MM}/{dd}/{HH}{mm}/
+      path: content/quotes/{yyyy}/{MM}/{dd}/{slug}.md
+      url: quotes/{yyyy}/{MM}/{dd}/{slug}/
     properties:
       - quotation-of
       - content
@@ -113,8 +115,8 @@ post_types:
   photo:
     name: Photo
     post:
-      path: content/photos/{yyyy}/{MM}/{dd}/{HH}{mm}/index.md
-      url: photos/{yyyy}/{MM}/{dd}/{HH}{mm}/
+      path: content/photos/{yyyy}/{MM}/{dd}/{slug}/index.md
+      url: photos/{yyyy}/{MM}/{dd}/{slug}/
     properties:
       - photo
       - name
@@ -128,8 +130,8 @@ post_types:
     discovery: checkin
     discovery_first: true
     post:
-      path: content/checkins/{yyyy}/{MM}/{dd}/{HH}{mm}/index.md
-      url: checkins/{yyyy}/{MM}/{dd}/{HH}{mm}/
+      path: content/checkins/{yyyy}/{MM}/{dd}/{slug}/index.md
+      url: checkins/{yyyy}/{MM}/{dd}/{slug}/
     properties:
       - checkin
       - content
