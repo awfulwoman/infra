@@ -16,11 +16,15 @@
 
 ## Volumes
 
-| Path | Purpose |
-|------|---------|
-| `{{ composition_config }}/config.yaml` | Full GoToSocial configuration file |
-| `{{ composition_config }}/data` | SQLite database and local media storage |
-| `{{ composition_config }}/.cache` | Application cache |
+This composition runs on public01. Only data that must survive goes on the block storage. The rest is on the VM disk and can be rebuilt.
+
+| Path | Where | Purpose |
+|------|-------|---------|
+| `{{ composition_config }}/config.yaml` | Block storage | Full GoToSocial configuration file |
+| `{{ composition_config }}/db` | Block storage (critical) | SQLite database. It holds the account signing keys. |
+| `{{ composition_root }}/media/<account id>` | Block storage (critical) | Media of the two local accounts: charlie and the instance actor |
+| `gotosocial-media` Docker volume | VM disk | Remote media cache. GoToSocial keeps it for 7 days and fetches it again on demand. |
+| `gotosocial-cache` Docker volume | VM disk | Wazero compile cache |
 
 ## Notable Configuration (`templates/config.yaml`)
 
@@ -30,7 +34,7 @@
 - **Federation mode**: Blocklist (open by default, explicit blocks only).
 - **Trusted proxies**: Docker subnets (`172.17/16`, `172.18/16`) and Tailscale (`100.64/10`) — required for correct client IP resolution behind Traefik.
 - **Let's Encrypt**: Disabled — TLS handled by Traefik.
-- Pinned to `superseriousbusiness/gotosocial:0.21.2`.
+- Pinned to `superseriousbusiness/gotosocial:0.22.2`.
 
 ## Integrations
 
@@ -39,3 +43,16 @@
 ## Notes
 
 CAUTION: Do not change the `host` value in `config.yaml` after the first run of the instance. This will break all federated URIs.
+
+## Clean-up after the move from storage to public01
+
+The instance moved from storage to public01 on 2026-10-17. Do these steps when you are sure that the new instance is stable (a few days):
+
+- [ ] On storage, remove the stopped `gotosocial` container and its `/fastpool/compositions/gotosocial` dataset. It holds the old copy of the database.
+- [ ] On storage, destroy the snapshot `fastpool/compositions/gotosocial@pre-move-public01`.
+- [ ] On public01, destroy the snapshot `fastpool/compositions/gotosocial@pre-split`.
+- [ ] On public01, optional: delete the old remote-account folders in `/fastpool/compositions/gotosocial/media/`. Keep only the two local account folders. These are not backed up.
+- [ ] On public01, remove the empty `fastpool/sites/gotosocial` dataset.
+- [ ] Remove the gotosocial healthcheck for storage.
+
+Do not start the old container on storage. Two live copies with the same signing keys confuse remote servers.
