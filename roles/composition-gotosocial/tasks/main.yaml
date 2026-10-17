@@ -37,21 +37,7 @@
     - data
     - .cache
 
-# Public zone lives at Hetzner. Runs from the controller so the read-write
-# token never lands on public01. gts is a CNAME to the apex, which is the
-# floating IP of public01.
-- name: Register domain
-  hetzner.hcloud.zone_rrset:
-    api_token: "{{ vault_hetzner_api_key_rw }}"
-    zone: "{{ domainname_personal }}"
-    name: gts
-    type: CNAME
-    ttl: 300
-    records:
-      - value: "{{ domainname_personal }}."
-    state: present
-  delegate_to: localhost
-  become: false
+# DNS for gts is declared in infra-public-resources (aw_a_gts), not here.
 
 - name: Ensure config exists
   ansible.builtin.template:

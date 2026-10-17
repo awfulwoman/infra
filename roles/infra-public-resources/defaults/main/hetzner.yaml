@@ -152,7 +152,8 @@ infra_publicresources_hetzner_domain:
         id: aw_a_shared
       - type: CNAME
         hostname: gts
-        value: "{{ vault_domainname_aw }}"
+        # Trailing dot: without it the target is relative to the zone.
+        value: "{{ vault_domainname_aw }}."
         id: aw_a_gts
       - type: CNAME
         hostname: indie
