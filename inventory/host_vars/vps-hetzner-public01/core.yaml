@@ -80,10 +80,24 @@ zfs:
           # themselves live in git, so a lost DB only costs a re-login.
           micropub-server:
             policy: low
-          # SQLite DB holds the account signing keys. Losing it breaks
-          # federation for good.
+          # sqlite.db holds the account signing keys. Losing it breaks
+          # federation for good. It also holds every remote account and
+          # status we have seen, which cannot be split out of the file.
           gotosocial:
             policy: critical
+            datasets:
+              # Media storage. Remote media is cached for 7 days and fetched
+              # again on demand, so most of this is disposable. Only the two
+              # local accounts' folders are worth keeping.
+              media:
+                policy: none
+                datasets:
+                  # charlie: uploads
+                  0187RRDATEFQV68DZQR4TJAVDJ:
+                    policy: critical
+                  # gts.awfulwoman.com, the instance actor: thumbnail, emoji
+                  01HGCPFTQC6BWRPEABB7R792C9:
+                    policy: critical
           container-management:
             policy: none
           zfs-api:

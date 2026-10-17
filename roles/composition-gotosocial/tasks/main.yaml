@@ -34,7 +34,7 @@
   loop_control:
     loop_var: dir_item
   loop:
-    - data
+    - db
     - .cache
 
 # DNS for gts is declared in infra-public-resources (aw_a_gts), not here.

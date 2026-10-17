@@ -160,7 +160,7 @@ db-type: "sqlite"
 #
 # Examples: ["localhost","my.db.host","127.0.0.1","192.111.39.110",":memory:", "sqlite.db"]
 # Default: ""
-db-address: "sqlite.db"
+db-address: "/gotosocial/db/sqlite.db"
 
 # Int. Port for postgres database connection; ignored for sqlite.
 # Examples: [5432, 1234, 6969]

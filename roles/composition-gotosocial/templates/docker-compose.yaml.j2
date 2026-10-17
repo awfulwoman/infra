@@ -13,7 +13,8 @@ services:
       - "traefik.enable=true"
     volumes:
       - "{{ composition_config }}/config.yaml:/gotosocial/config.yaml"
-      - "{{ composition_config }}/data:/gotosocial/storage"
+      - "{{ composition_config }}/db:/gotosocial/db"
+      - "{{ composition_root }}/media:/gotosocial/storage"
       - "{{ composition_config }}/.cache:/gotosocial/.cache"
       - /etc/localtime:/etc/localtime:ro
     networks:
