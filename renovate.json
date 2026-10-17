@@ -13,5 +13,17 @@
             "/docker-compose.yaml/",
             "/docker-compose.yaml.j2/"
         ]
-    }
+    },
+    "packageRules": [
+        {
+            "description": "GoToSocial patch releases merge themselves. Minor and major stay as PRs: they have needed config changes, and database migrations only go forward.",
+            "matchPackageNames": [
+                "superseriousbusiness/gotosocial"
+            ],
+            "matchUpdateTypes": [
+                "patch"
+            ],
+            "automerge": true
+        }
+    ]
 }
