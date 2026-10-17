@@ -3,6 +3,11 @@ composition_name: gotosocial
 
 gotosocial_domain: "gts.awfulwoman.com"
 
+# Media folders of the two local accounts. These hold uploads and are backed
+# up; see the gotosocial datasets in the public01 zfs vars.
+gotosocial_local_account_id: 0187RRDATEFQV68DZQR4TJAVDJ # charlie
+gotosocial_instance_account_id: 01HGCPFTQC6BWRPEABB7R792C9 # gts.awfulwoman.com
+
 # Has its own external domain via its own ACME cert (see gotosocial_domain
 # above) — out of scope for the internal wildcard/derived zone entirely.
 composition_dns_subdomains: []

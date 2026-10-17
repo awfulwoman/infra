@@ -86,9 +86,9 @@ zfs:
           gotosocial:
             policy: critical
             datasets:
-              # Media storage. Remote media is cached for 7 days and fetched
-              # again on demand, so most of this is disposable. Only the two
-              # local accounts' folders are worth keeping.
+              # Mount points for the two local accounts' media folders. The
+              # remote media cache is a Docker volume on the VM disk instead,
+              # because it is rebuildable.
               media:
                 policy: none
                 datasets:

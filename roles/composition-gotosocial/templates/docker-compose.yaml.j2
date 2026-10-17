@@ -14,8 +14,13 @@ services:
     volumes:
       - "{{ composition_config }}/config.yaml:/gotosocial/config.yaml"
       - "{{ composition_config }}/db:/gotosocial/db"
-      - "{{ composition_root }}/media:/gotosocial/storage"
-      - "{{ composition_config }}/.cache:/gotosocial/.cache"
+      # Remote media cache and compile cache live on the VM disk. They are
+      # rebuildable, so they stay off the block storage. Only the two local
+      # accounts' media folders are mounted over it from the volume.
+      - gotosocial-media:/gotosocial/storage
+      - "{{ composition_root }}/media/{{ gotosocial_local_account_id }}:/gotosocial/storage/{{ gotosocial_local_account_id }}"
+      - "{{ composition_root }}/media/{{ gotosocial_instance_account_id }}:/gotosocial/storage/{{ gotosocial_instance_account_id }}"
+      - gotosocial-cache:/gotosocial/.cache
       - /etc/localtime:/etc/localtime:ro
     networks:
       - "{{ default_docker_network }}"
@@ -25,6 +30,12 @@ services:
       timeout: 10s
       retries: 3
       start_period: 30s
+
+volumes:
+  gotosocial-media:
+    name: gotosocial-media
+  gotosocial-cache:
+    name: gotosocial-cache
 
 networks:
   "{{ default_docker_network }}":
