@@ -3,3 +3,12 @@ IP_HASH_SALT="{{ composition_webmention_server_ip_hash_salt }}"
 {% if composition_webmention_server_github_webhook_secret %}
 GITHUB_WEBHOOK_SECRET="{{ composition_webmention_server_github_webhook_secret }}"
 {% endif %}
+{% if composition_webmention_server_session_secret %}
+SESSION_SECRET="{{ composition_webmention_server_session_secret }}"
+{% endif %}
+{% if composition_webmention_server_admin_api_token %}
+ADMIN_API_TOKEN="{{ composition_webmention_server_admin_api_token }}"
+{% endif %}
+{% if composition_webmention_server_ha_webhook_url %}
+HA_WEBHOOK_URL="{{ composition_webmention_server_ha_webhook_url }}"
+{% endif %}

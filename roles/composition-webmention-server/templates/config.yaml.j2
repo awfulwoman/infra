@@ -6,6 +6,10 @@ site:
   hosts: {{ composition_webmention_server_site_hosts | to_json }}
   sitemap: {{ composition_webmention_server_site_url }}sitemap.xml
 
+admin:
+  me: {{ composition_webmention_server_admin_me }}
+  authorization_endpoint: {{ composition_webmention_server_authorization_endpoint }}
+
 # Likes and reposts that come through Bridgy are approved on arrival; everything
 # else waits for review (`docker exec webmention-server webmention-server mentions`).
 moderation:

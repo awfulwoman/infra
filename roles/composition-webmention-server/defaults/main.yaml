@@ -38,3 +38,13 @@ composition_webmention_server_send_skip_hosts:
 
 # Shared with the GitHub webhook on the site repo (Workflow runs). Empty: the endpoint is off.
 composition_webmention_server_github_webhook_secret: "{{ vault_composition_webmention_server_github_webhook_secret | default('') }}"
+
+# Who may sign in to /admin, and where they sign in: micropub-server is the IndieAuth server.
+composition_webmention_server_admin_me: "{{ composition_webmention_server_site_url }}"
+composition_webmention_server_authorization_endpoint: "https://indie.{{ domainname_personal }}/auth"
+# Sign the admin session cookie. Empty: /admin is off.
+composition_webmention_server_session_secret: "{{ vault_composition_webmention_server_session_secret | default('') }}"
+# Bearer token for /admin/api (the gateway, scripts). Empty: the API is off.
+composition_webmention_server_admin_api_token: "{{ vault_composition_webmention_server_admin_api_token | default('') }}"
+# A Home Assistant webhook, for "new mentions to review" and alerts. Empty: no notices.
+composition_webmention_server_ha_webhook_url: "{{ vault_composition_webmention_server_ha_webhook_url | default('') }}"
