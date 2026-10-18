@@ -7,6 +7,10 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: unless-stopped
+    # entrypoint.sh execs `npm exec`, which becomes PID 1 and never reaps the
+    # esbuild children orphaned by each periodic `quartz build` (one zombie
+    # per rebuild). tini as PID 1 reaps them.
+    init: true
     user: "{{ ansible_facts['user_uid'] }}:{{ ansible_facts['user_gid'] }}"
     volumes:
       - "{{ composition_wiki_site_vault_path }}:/data/wiki:ro"
