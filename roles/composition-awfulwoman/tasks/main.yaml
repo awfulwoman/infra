@@ -32,6 +32,15 @@
     group: "{{ ansible_user }}"
     mode: "0644"
 
+- name: Ensure the nginx server config exists
+  ansible.builtin.template:
+    src: default.conf
+    dest: "{{ composition_config }}/default.conf"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0644"
+  notify: Restart awfulwoman
+
 - name: Ensure group "nginx" exists
   become: true
   ansible.builtin.group:
