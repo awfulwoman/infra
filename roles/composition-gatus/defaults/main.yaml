@@ -58,6 +58,11 @@ composition_gatus_url_checks:
     conditions:
       - "[STATUS] == 200"
       - "[BODY].store == ok"
+  - name: webmention-server
+    url: "https://webmention.{{ domainname_personal }}/health"
+    conditions:
+      - "[STATUS] == 200"
+      - "[BODY].status == ok"
 
 # zfs-api-<host> serves Prometheus metrics; check that, not /.
 composition_gatus_zfs_api_path: /metrics

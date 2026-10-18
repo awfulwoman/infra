@@ -1,0 +1,13 @@
+# Managed by Ansible (composition-webmention-server). Secrets come from the environment.
+public_url: https://{{ composition_webmention_server_hostname }}
+
+site:
+  url: {{ composition_webmention_server_site_url }}
+  hosts: {{ composition_webmention_server_site_hosts | to_json }}
+  sitemap: {{ composition_webmention_server_site_url }}sitemap.xml
+
+# Likes and reposts that come through Bridgy are approved on arrival; everything
+# else waits for review (`docker exec webmention-server webmention-server mentions`).
+moderation:
+  auto_approve:
+    - {types: [like, repost], hosts: [brid.gy]}

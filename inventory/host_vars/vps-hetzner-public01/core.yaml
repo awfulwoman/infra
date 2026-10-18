@@ -80,6 +80,10 @@ zfs:
           # themselves live in git, so a lost DB only costs a re-login.
           micropub-server:
             policy: low
+          # SQLite holds received mentions and moderation decisions. Senders
+          # do not resend, so a lost database loses the replies for good.
+          webmention-server:
+            policy: high
           # sqlite.db holds the account signing keys. Losing it breaks
           # federation for good. It also holds every remote account and
           # status we have seen, which cannot be split out of the file.
@@ -165,6 +169,7 @@ compositions:
   - container-management
   - awfulwoman
   - micropub-server
+  - webmention-server
   - gotosocial
   - zfs-api
   - logtide-agent

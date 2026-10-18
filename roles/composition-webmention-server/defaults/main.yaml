@@ -1,0 +1,20 @@
+# code: language=ansible
+composition_name: webmention-server
+
+# Public name (webmention.<personal domain>) lives in the public Hetzner zone
+# (infra-public-resources), not in internal DNS, so no internal labels.
+composition_dns_subdomains: []
+composition_webmention_server_hostname: "webmention.{{ domainname_personal }}"
+
+# Our own image, built and tested by GitHub Actions. Tracks latest (pulled on every run);
+# pin a sha-<short> tag to roll back.
+composition_webmention_server_image: ghcr.io/awfulwoman/webmention-server:latest
+
+# The site that receives Webmentions, and its sitemap.
+composition_webmention_server_site_url: "https://{{ domainname_personal }}/"
+composition_webmention_server_site_hosts:
+  - "{{ domainname_personal }}"
+  - "www.{{ domainname_personal }}"
+
+# Salts the hashes that rate limiting keys on.
+composition_webmention_server_ip_hash_salt: "{{ vault_composition_webmention_server_ip_hash_salt }}"

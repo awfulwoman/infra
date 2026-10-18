@@ -160,6 +160,11 @@ infra_publicresources_hetzner_domain:
         # Trailing dot: without it the target is relative to the zone.
         value: "{{ vault_domainname_aw }}."
         id: aw_a_indie
+      - type: CNAME
+        hostname: webmention
+        # Trailing dot: without it the target is relative to the zone.
+        value: "{{ vault_domainname_aw }}."
+        id: aw_a_webmention
       - type: A
         hostname: photos
         value: infra_publicresources_hcloud_floating_ip.bonjo.ip_address
