@@ -14,15 +14,14 @@
       local_only: false
   actions:
 {% if composition_homeassistant_webmention_notify %}
-{% for service in composition_homeassistant_webmention_notify %}
-    - action: {{ service }}
+{% for entity in composition_homeassistant_webmention_notify %}
+    - action: notify.send_message
+      target:
+        entity_id: {{ entity }}
       data:
         title: "{% raw %}{{ trigger.json.title }}{% endraw %}"
-        message: "{% raw %}{{ trigger.json.message }}{% endraw %}"
-        data:
-          # iOS opens "url" when the notice is tapped, Android opens "clickAction".
-          url: "{% raw %}{{ trigger.json.url }}{% endraw %}"
-          clickAction: "{% raw %}{{ trigger.json.url }}{% endraw %}"
+        # A notify entity takes a title and a message only, so the link rides along in the text.
+        message: "{% raw %}{{ trigger.json.message }}{% endraw %}\n{% raw %}{{ trigger.json.url }}{% endraw %}"
 {% endfor %}
 {% else %}
     # No phone chosen yet (composition_homeassistant_webmention_notify): show it in HA instead.

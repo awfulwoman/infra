@@ -38,5 +38,5 @@ loaded with `automation manual: !include_dir_merge_list automations/`, next to
   through a Nabu Casa cloud webhook. The id is `vault_composition_homeassistant_webmention_webhook_id`.
   Turn the cloud webhook on in Settings > Home Assistant Cloud > Webhooks, put the
   `https://hooks.nabu.casa/...` URL in `vault_composition_webmention_server_ha_webhook_url`, and set
-  `composition_homeassistant_webmention_notify` to the phone's notify action. A change to any
+  `composition_homeassistant_webmention_notify` to the phone's notify entity. A change to any
   of these files restarts HA.
