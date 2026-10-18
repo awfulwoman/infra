@@ -18,3 +18,19 @@ composition_webmention_server_site_hosts:
 
 # Salts the hashes that rate limiting keys on.
 composition_webmention_server_ip_hash_salt: "{{ vault_composition_webmention_server_ip_hash_salt }}"
+
+# Sending is off until `seed` has run in the container (see README). Then set this to true.
+composition_webmention_server_send_enabled: false
+# Post permalinks only, matching the url patterns in the site's data/micropub.yaml.
+composition_webmention_server_send_source_paths:
+  - '^/(notes|bookmarks|likes|replies|reposts|photos|quotes|checkins)/\d{4}/\d{2}/\d{2}/[^/]+/$'
+  - '^/posts/[^/]+/$'
+# Pages we never send to: our own syndication copies (Bridgy covers those) and the Wayback
+# Machine link that every bookmark carries.
+composition_webmention_server_send_skip_hosts:
+  - gts.awfulwoman.com
+  - bsky.app
+  - web.archive.org
+
+# Shared with the GitHub webhook on the site repo (Workflow runs). Empty: the endpoint is off.
+composition_webmention_server_github_webhook_secret: "{{ vault_composition_webmention_server_github_webhook_secret | default('') }}"

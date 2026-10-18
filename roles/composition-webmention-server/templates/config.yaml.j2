@@ -11,3 +11,8 @@ site:
 moderation:
   auto_approve:
     - {types: [like, repost], hosts: [brid.gy]}
+
+send:
+  enabled: {{ composition_webmention_server_send_enabled | bool | to_json }}
+  source_paths: {{ composition_webmention_server_send_source_paths | to_json }}
+  skip_hosts: {{ composition_webmention_server_send_skip_hosts | to_json }}
