@@ -20,6 +20,11 @@ GATEWAY_MICROPUB__BASE_URL={{ composition_gateway_micropub_base_url }}
 GATEWAY_MICROPUB__TOKEN={{ composition_gateway_micropub_token }}
 {% endif %}
 
+{% if composition_gateway_webmentions_token %}
+GATEWAY_WEBMENTIONS__BASE_URL={{ composition_gateway_webmentions_base_url }}
+GATEWAY_WEBMENTIONS__TOKEN={{ composition_gateway_webmentions_token }}
+{% endif %}
+
 GATEWAY_EBAY__CLIENT_ID={{ composition_gateway_ebay_client_id }}
 GATEWAY_EBAY__CLIENT_SECRET={{ composition_gateway_ebay_client_secret }}
 GATEWAY_EBAY__MARKETPLACE={{ composition_gateway_ebay_marketplace }}

@@ -47,6 +47,11 @@ composition_gateway_karakeep_api_key: "{{ vault_karakeep_api }}"
 composition_gateway_micropub_base_url: "https://indie.{{ domainname_personal }}"
 composition_gateway_micropub_token: "{{ vault_github_micropub_server_gateway_token | default('') }}"
 
+# webmention-server: the tools to review Webmentions and send them by hand. The token is its
+# admin API token; the tools only list, approve, reject and send, never trust, block or delete.
+composition_gateway_webmentions_base_url: "https://webmention.{{ domainname_personal }}"
+composition_gateway_webmentions_token: "{{ vault_composition_webmention_server_admin_api_token | default('') }}"
+
 # eBay Browse API (read-only listings and search). Application keyset from
 # developer.ebay.com — an app token only, no eBay user login. The marketplace
 # is the fallback when a bare item ID or a search gives no domain to infer one.
