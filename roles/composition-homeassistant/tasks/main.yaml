@@ -46,6 +46,28 @@
   notify:
     - Restart HA
 
+- name: Ensure the directory for automations managed here exists
+  ansible.builtin.file:
+    path: "{{ composition_root }}/config/homeassistant/automations"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0755"
+
+- name: Copy over the automations managed here
+  ansible.builtin.template:
+    src: "ha/automations/{{ ha_automation }}.yaml"
+    dest: "{{ composition_root }}/config/homeassistant/automations/{{ ha_automation }}.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0640"
+  loop_control:
+    loop_var: ha_automation
+  loop:
+    - webmention
+  notify:
+    - Restart HA
+
 - name: Ensure HA www directory exists
   ansible.builtin.file:
     path: "{{ composition_root }}/config/homeassistant/www"

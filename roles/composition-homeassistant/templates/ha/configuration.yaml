@@ -99,7 +99,12 @@ logbook:
 #############################################################################
 # INCLUDES
 #############################################################################
-automation: !include automations.yaml
+# Two sources of automations. The file is the one the UI editor writes; the directory is
+# managed from infra (templates/ha/automations/). Both are needed: a UI edit never touches the
+# directory, and a deploy never touches the file.
+# https://www.home-assistant.io/docs/configuration/splitting_configuration/#advanced-usage
+automation ui: !include automations.yaml
+automation manual: !include_dir_merge_list automations/
 script: !include scripts.yaml
 scene: !include scenes.yaml
 input_select: !include input_select.yaml

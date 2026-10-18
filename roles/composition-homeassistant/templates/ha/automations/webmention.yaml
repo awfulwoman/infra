@@ -1,0 +1,34 @@
+# Managed by Ansible (composition-homeassistant). Notices from webmention-server on public01:
+# new Webmentions to review, and alerts when its queue sticks or sending keeps failing.
+# The server POSTs {"title", "message", "url"} to the cloud webhook of this automation.
+- id: webmention_notices
+  alias: Webmention notices
+  description: From webmention-server. Edit the file in infra, not here.
+  mode: queued
+  triggers:
+    - trigger: webhook
+      webhook_id: !secret webmention_webhook_id
+      allowed_methods:
+        - POST
+      # The default is true, which would refuse the cloud webhook.
+      local_only: false
+  actions:
+{% if composition_homeassistant_webmention_notify %}
+{% for service in composition_homeassistant_webmention_notify %}
+    - action: {{ service }}
+      data:
+        title: "{% raw %}{{ trigger.json.title }}{% endraw %}"
+        message: "{% raw %}{{ trigger.json.message }}{% endraw %}"
+        data:
+          # iOS opens "url" when the notice is tapped, Android opens "clickAction".
+          url: "{% raw %}{{ trigger.json.url }}{% endraw %}"
+          clickAction: "{% raw %}{{ trigger.json.url }}{% endraw %}"
+{% endfor %}
+{% else %}
+    # No phone chosen yet (composition_homeassistant_webmention_notify): show it in HA instead.
+    - action: persistent_notification.create
+      data:
+        notification_id: webmention_notice
+        title: "{% raw %}{{ trigger.json.title }}{% endraw %}"
+        message: "{% raw %}{{ trigger.json.message }}{% endraw %} {% raw %}{{ trigger.json.url }}{% endraw %}"
+{% endif %}
