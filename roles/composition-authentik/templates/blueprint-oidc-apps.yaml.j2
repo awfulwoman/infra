@@ -16,6 +16,10 @@ entries:
       client_id: {{ slug }}
       client_secret: !Env AUTHENTIK_OIDC_{{ slug | upper | replace('-', '_') }}_SECRET
       sub_mode: hashed_user_id
+      # Empty by default in 2026.x, which rejects every authorization request.
+      grant_types:
+        - authorization_code
+        - refresh_token
       signing_key: !Find [authentik_crypto.certificatekeypair, [name, authentik Self-signed Certificate]]
       redirect_uris:
 {% for uri in app.redirect_uris %}
