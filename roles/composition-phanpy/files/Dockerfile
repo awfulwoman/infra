@@ -22,5 +22,5 @@ RUN PHANPY_CLIENT_NAME="${PHANPY_CLIENT_NAME}" \
     npm run build
 
 # Unprivileged nginx: runs as uid 101, listens on 8080.
-FROM nginxinc/nginx-unprivileged:1.30.6-alpine
+FROM nginxinc/nginx-unprivileged:1.31.7-alpine
 COPY --from=build /src/dist /usr/share/nginx/html
