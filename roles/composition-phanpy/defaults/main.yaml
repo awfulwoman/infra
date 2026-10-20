@@ -1,0 +1,11 @@
+# code: language=ansible
+# Composition name (used by composition-common dependency)
+composition_name: phanpy
+
+# DNS labels: read by the composition_dns_subdomains lookup, not by this role.
+composition_dns_subdomains:
+  - fedi
+
+# Build-time settings (Vite bakes these into the static bundle).
+composition_phanpy_client_name: "Phanpy"
+composition_phanpy_default_instance: "gts.awfulwoman.com"

@@ -1,0 +1,34 @@
+# code: language=ansible-jinja
+name: "{{ composition_name }}"
+services:
+  phanpy:
+    container_name: phanpy
+    image: phanpy:local
+    build:
+      context: .
+      args:
+        PHANPY_CLIENT_NAME: "{{ composition_phanpy_client_name }}"
+        PHANPY_WEBSITE: "https://{{ composition_dns_subdomains[0] }}.{{ domainname_infra }}"
+        PHANPY_DEFAULT_INSTANCE: "{{ composition_phanpy_default_instance }}"
+        PHANPY_DISALLOW_ROBOTS: "1"
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.phanpy.rule=Host(`{{ composition_dns_subdomains[0] }}.{{ domainname_infra }}`)"
+      - "traefik.http.routers.phanpy.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
+      - "traefik.http.routers.phanpy.tls.certresolver=letsencrypt"
+{% endif %}
+      - "traefik.http.services.phanpy.loadbalancer.server.port=8080"
+    networks:
+      - "{{ default_docker_network }}"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://127.0.0.1:8080/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+networks:
+  "{{ default_docker_network }}":
+    external: true

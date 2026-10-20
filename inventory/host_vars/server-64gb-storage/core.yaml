@@ -147,6 +147,9 @@ zfs:
             policy: none
           llm-inference-calculator:
             policy: none
+          # Static client; all state lives in the browser.
+          phanpy:
+            policy: none
           homepage:
             policy: none
           piper:
@@ -403,6 +406,7 @@ compositions:
   - jellyfin
   - immich
   - llm-inference-calculator
+  - phanpy
   - audiobookshelf
   - downloads
   - syncthing

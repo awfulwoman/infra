@@ -14,6 +14,19 @@
             "/docker-compose.yaml.j2/"
         ]
     },
+    "customManagers": [
+        {
+            "customType": "regex",
+            "description": "Release versions pinned as Dockerfile build args, marked with a renovate comment.",
+            "managerFilePatterns": [
+                "/(^|/)Dockerfile$/"
+            ],
+            "matchStrings": [
+                "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)( versioning=(?<versioning>\\S+))?\\s+ARG \\S+=(?<currentValue>\\S+)"
+            ],
+            "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver-coerced{{/if}}"
+        }
+    ],
     "packageRules": [
         {
             "description": "GoToSocial patch releases merge themselves. Minor and major stay as PRs: they have needed config changes, and database migrations only go forward.",
