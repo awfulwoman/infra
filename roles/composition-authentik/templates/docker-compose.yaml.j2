@@ -1,0 +1,79 @@
+# code: language=ansible-jinja
+name: "{{ composition_name }}"
+services:
+  authentik:
+    container_name: authentik
+    image: "{{ composition_authentik_image }}"
+    command: server
+    restart: unless-stopped
+    env_file: .environment_vars
+    shm_size: 512mb
+    depends_on:
+      authentik-db:
+        condition: service_healthy
+    volumes:
+      - "{{ composition_config }}/data:/data"
+      - "{{ composition_config }}/custom-templates:/templates"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.authentik.rule=Host(`{{ composition_dns_subdomains[0] }}.{{ domainname_infra }}`)"
+      - "traefik.http.routers.authentik.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
+      - "traefik.http.routers.authentik.tls.certresolver=letsencrypt"
+{% endif %}
+      - "traefik.http.services.authentik.loadbalancer.server.port=9000"
+    networks:
+      - "{{ default_docker_network }}"
+    healthcheck:
+      test: ["CMD", "ak", "healthcheck"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  authentik-worker:
+    container_name: authentik-worker
+    image: "{{ composition_authentik_image }}"
+    command: worker
+    restart: unless-stopped
+    env_file: .environment_vars
+    shm_size: 512mb
+    # Root is upstream's default so the worker can reach the Docker socket
+    # (outpost auto-deploy). Revisit if outposts are run by hand instead.
+    user: root
+    depends_on:
+      authentik-db:
+        condition: service_healthy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - "{{ composition_config }}/data:/data"
+      - "{{ composition_config }}/certs:/certs"
+      - "{{ composition_config }}/custom-templates:/templates"
+    networks:
+      - "{{ default_docker_network }}"
+    healthcheck:
+      test: ["CMD", "ak", "healthcheck"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  authentik-db:
+    container_name: authentik_db
+    image: "{{ composition_authentik_postgres_image }}"
+    restart: unless-stopped
+    env_file: .environment_vars
+    volumes:
+      - "{{ composition_config }}/postgres:/var/lib/postgresql/data"
+    networks:
+      - "{{ default_docker_network }}"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d authentik -U authentik"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+networks:
+  "{{ default_docker_network }}":
+    external: true

@@ -90,6 +90,9 @@ zfs:
             policy: high
           vikunja:
             policy: high
+          # Identity provider: every SSO login and app link depends on it.
+          authentik:
+            policy: critical
           github2karakeep:
             policy: high
           # Rebuildable from the sources (notes + gateway data), but not
@@ -417,6 +420,7 @@ compositions:
   - gateway
   - paperless-ngx
   - vikunja
+  - authentik
   - gatus
   - mcp-kagisearch
   - composition: mcp-openzim

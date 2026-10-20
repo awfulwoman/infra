@@ -1,0 +1,13 @@
+# code: language=ansible
+# Composition name (used by composition-common dependency)
+composition_name: authentik
+
+# DNS labels: read by the composition_dns_subdomains lookup, not by this role.
+composition_dns_subdomains:
+  - authentik
+
+composition_authentik_image: ghcr.io/goauthentik/server:2026.8.4
+composition_authentik_postgres_image: docker.io/library/postgres:16-alpine
+
+composition_authentik_secret_key: "{{ vault_composition_authentik_secret_key }}"
+composition_authentik_db_password: "{{ vault_composition_authentik_db_password }}"

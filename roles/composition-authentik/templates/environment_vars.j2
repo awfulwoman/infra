@@ -1,0 +1,14 @@
+TZ="Europe/Berlin"
+
+# Postgres
+POSTGRES_DB=authentik
+POSTGRES_USER=authentik
+POSTGRES_PASSWORD={{ composition_authentik_db_password }}
+
+# Authentik
+AUTHENTIK_SECRET_KEY={{ composition_authentik_secret_key }}
+AUTHENTIK_POSTGRESQL__HOST=authentik-db
+AUTHENTIK_POSTGRESQL__NAME=authentik
+AUTHENTIK_POSTGRESQL__USER=authentik
+AUTHENTIK_POSTGRESQL__PASSWORD={{ composition_authentik_db_password }}
+AUTHENTIK_ERROR_REPORTING__ENABLED=false
