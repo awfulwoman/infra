@@ -24,11 +24,11 @@
 # Specific tasks
 # ----------------------------
 
-- name: Create directories
+# No mode: postgres/ is owned by the container user, so chmod would fail.
+- name: Create directories  # noqa: risky-file-permissions
   ansible.builtin.file:
     path: "{{ composition_config }}/{{ dir_item }}"
     state: directory
-    mode: "0755"
   loop_control:
     loop_var: dir_item
   loop:
