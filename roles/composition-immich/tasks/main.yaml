@@ -25,13 +25,26 @@
 # ----------------------------
 
 - name: Create directories
-  file:
+  ansible.builtin.file:
     path: "{{ composition_config }}/{{ dir_item }}"
     state: directory
+    mode: "0755"
   loop_control:
     loop_var: dir_item
   loop:
     - postgres
+
+# Config file makes the Admin > Settings UI read-only; only oauth is set here,
+# the rest stays at Immich defaults.
+- name: Create Immich config file
+  ansible.builtin.template:
+    src: immich-config.json.j2
+    dest: "{{ composition_config }}/immich.json"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0600"
+  no_log: true
+  notify: Restart Immich server
 
 # - name: Copy over files
 #   become: true

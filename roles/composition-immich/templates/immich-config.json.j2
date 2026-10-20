@@ -1,0 +1,13 @@
+{
+  "oauth": {
+    "enabled": true,
+    "issuerUrl": "{{ authentik_url }}/application/o/immich/",
+    "clientId": "immich",
+    "clientSecret": "{{ authentik_oidc_apps['immich'].client_secret }}",
+    "scope": "openid email profile",
+    "buttonText": "Login with Authentik",
+    "autoRegister": false,
+    "mobileOverrideEnabled": true,
+    "mobileRedirectUri": "https://immich.{{ domainname_infra }}/api/oauth/mobile-redirect"
+  }
+}

@@ -1,0 +1,7 @@
+# code: language=ansible
+- name: Restart Immich server
+  community.docker.docker_compose_v2:
+    project_src: "{{ composition_root }}"
+    services:
+      - immich-server
+    state: restarted
