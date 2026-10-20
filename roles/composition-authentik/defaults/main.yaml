@@ -6,8 +6,5 @@ composition_name: authentik
 composition_dns_subdomains:
   - authentik
 
-composition_authentik_image: ghcr.io/goauthentik/server:2026.8.4
-composition_authentik_postgres_image: docker.io/library/postgres:16-alpine
-
 composition_authentik_secret_key: "{{ vault_composition_authentik_secret_key }}"
 composition_authentik_db_password: "{{ vault_composition_authentik_db_password }}"

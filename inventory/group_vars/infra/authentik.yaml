@@ -1,0 +1,16 @@
+---
+# OIDC apps registered in Authentik. Read by two sides so they cannot drift:
+# composition-authentik renders each entry into a blueprint, and the app's own
+# role reads the same entry for its client id/secret/issuer.
+# Secrets live in vault_composition_authentik.yaml.
+authentik_url: "https://authentik.{{ domainname_infra }}"
+
+authentik_oidc_apps:
+  immich:
+    name: Immich
+    redirect_uris:
+      - "https://immich.{{ domainname_infra }}/auth/login"
+      - "https://immich.{{ domainname_infra }}/user-settings"
+      - "app.immich:///oauth-callback"
+      - "https://immich.{{ domainname_infra }}/api/oauth/mobile-redirect"
+    client_secret: "{{ vault_composition_authentik_immich_client_secret }}"

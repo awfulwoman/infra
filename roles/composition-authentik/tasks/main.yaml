@@ -38,6 +38,17 @@
     - data
     - certs
     - custom-templates
+    - blueprints
+
+# Applied by the worker on change, no restart needed. Client secrets reach it
+# through .environment_vars (!Env), never through this file.
+- name: Create OIDC apps blueprint
+  ansible.builtin.template:
+    src: blueprint-oidc-apps.yaml.j2
+    dest: "{{ composition_config }}/blueprints/oidc-apps.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0644"
 
 - name: Create postgres data directory
   ansible.builtin.file:

@@ -12,3 +12,8 @@ AUTHENTIK_POSTGRESQL__NAME=authentik
 AUTHENTIK_POSTGRESQL__USER=authentik
 AUTHENTIK_POSTGRESQL__PASSWORD={{ composition_authentik_db_password }}
 AUTHENTIK_ERROR_REPORTING__ENABLED=false
+
+# OIDC client secrets, read by blueprints via !Env
+{% for slug, app in authentik_oidc_apps.items() %}
+AUTHENTIK_OIDC_{{ slug | upper | replace('-', '_') }}_SECRET={{ app.client_secret }}
+{% endfor %}

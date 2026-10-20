@@ -3,7 +3,7 @@ name: "{{ composition_name }}"
 services:
   authentik:
     container_name: authentik
-    image: "{{ composition_authentik_image }}"
+    image: ghcr.io/goauthentik/server:2026.8.4
     command: server
     restart: unless-stopped
     env_file: .environment_vars
@@ -33,7 +33,7 @@ services:
 
   authentik-worker:
     container_name: authentik-worker
-    image: "{{ composition_authentik_image }}"
+    image: ghcr.io/goauthentik/server:2026.8.4
     command: worker
     restart: unless-stopped
     env_file: .environment_vars
@@ -48,6 +48,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - "{{ composition_config }}/data:/data"
       - "{{ composition_config }}/certs:/certs"
+      - "{{ composition_config }}/blueprints:/blueprints/custom:ro"
       - "{{ composition_config }}/custom-templates:/templates"
     networks:
       - "{{ default_docker_network }}"
@@ -60,7 +61,7 @@ services:
 
   authentik-db:
     container_name: authentik_db
-    image: "{{ composition_authentik_postgres_image }}"
+    image: docker.io/library/postgres:16-alpine
     restart: unless-stopped
     env_file: .environment_vars
     volumes:
