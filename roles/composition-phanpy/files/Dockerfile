@@ -1,7 +1,7 @@
 # Phanpy has no upstream image. Upstream recommends a custom build, since
 # PHANPY_* settings are baked in at build time by Vite.
 
-FROM node:24.22.0-alpine AS build
+FROM node:24.22.1-alpine AS build
 
 # renovate: datasource=github-releases depName=cheeaun/phanpy versioning=loose
 ARG PHANPY_VERSION=2026.10.09.febb38d
