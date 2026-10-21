@@ -45,6 +45,7 @@
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0774"
+  register: gotosocial_config
 
 # ----------------------------
 # Start composition
@@ -56,4 +57,7 @@
     state: present
     build: always
     remove_orphans: true
+    # config.yaml is bind-mounted, so compose can't see it change; GTS only
+    # reads it at startup.
+    recreate: "{{ 'always' if gotosocial_config.changed else 'auto' }}"
   notify: Restart Traefik

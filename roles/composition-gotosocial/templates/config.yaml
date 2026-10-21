@@ -1178,7 +1178,7 @@ advanced-cookies-samesite: "lax"
 #
 # Examples: [1000, 500, 0]
 # Default: 300
-advanced-rate-limit-requests: 300
+advanced-rate-limit-requests: 1000
 
 # Array of string. CIDRs to except from rate limit restrictions.
 # Any IPs inside the CIDR range(s) will not have rate limiting
