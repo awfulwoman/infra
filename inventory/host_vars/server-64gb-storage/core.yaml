@@ -412,9 +412,7 @@ compositions:
   - syncthing
   - karakeep
   - matrix
-  # Disabled 2026-10-21 for PHP2Shell (CVE-2026-109618/109619). Re-enable once
-  # lscr.io/linuxserver/freshrss ships PHP 8.5.12+.
-  # - freshrss
+  - freshrss
   - tubesync
   - podderton
   - homepage
