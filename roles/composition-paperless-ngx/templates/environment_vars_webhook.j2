@@ -1,0 +1,15 @@
+TZ="Europe/Berlin"
+PAPERLESS_URL=http://webserver:8000
+PAPERLESS_API_TOKEN={{ paperless_ngx_api_token }}
+PDF_TRANSLATE_URL={{ paperless_ngx_translate_pdf_translate_url }}
+LIBRETRANSLATE_URL={{ paperless_ngx_translate_libretranslate_url }}
+TRANSLATE_SOURCE_LANG={{ paperless_ngx_translate_source_lang }}
+TRANSLATE_TARGET_LANG={{ paperless_ngx_translate_target_lang }}
+TRANSLATE_OUTPUT={{ paperless_ngx_translate_output }}
+TRANSLATE_TIMEOUT={{ paperless_ngx_translate_timeout }}
+TRANSLATE_LOG_FILE=/data/translate.log
+PDF_TRANSLATE_SERVICE=Ollama
+PDF_TRANSLATE_OLLAMA_URL={{ paperless_ngx_translate_ollama_url }}
+PDF_TRANSLATE_OLLAMA_MODEL={{ paperless_ngx_translate_ollama_model }}
+# Recommended upstream for Paperless-archived PDFs (fragmented text layers).
+PDF_TRANSLATE_MERGE_BLOCKS=true

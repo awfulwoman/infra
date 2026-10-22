@@ -1,6 +1,7 @@
 #!/bin/sh
 # Fire-and-forget hook called by paperless-ngx after a document is consumed.
-# Paperless sets DOCUMENT_ID in the environment. We never block on the response.
+# Paperless sets DOCUMENT_ID in the environment. We never block on the response:
+# the webhook replies at once and translates in the background.
 
 set -u
 
@@ -13,8 +14,8 @@ curl --max-time 5 -fsS \
     -X POST \
     -H "Content-Type: application/json" \
     -d "$(printf '{"document_id": %d}' "${DOCUMENT_ID}")" \
-    http://translator:5000/translate \
+    http://pdf-translate-webhook:8081/webhook \
     >/dev/null 2>&1 \
-    || echo "post_consume: translator unreachable for doc ${DOCUMENT_ID}"
+    || echo "post_consume: pdf-translate-webhook unreachable for doc ${DOCUMENT_ID}"
 
 exit 0

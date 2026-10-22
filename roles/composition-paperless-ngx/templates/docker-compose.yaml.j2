@@ -68,10 +68,6 @@ services:
         condition: service_started
       tika:
         condition: service_started
-{% if paperless_ngx_translate_enabled %}
-      translator:
-        condition: service_started
-{% endif %}
     volumes:
       - "{{ composition_config }}/data:/usr/src/paperless/data"
       - "{{ paperless_ngx_translate_media_path }}:/usr/src/paperless/media"
@@ -99,22 +95,27 @@ services:
       start_period: 1m
 
 {% if paperless_ngx_translate_enabled %}
-  translator:
-    container_name: paperless_translator
-    build:
-      context: ./translator
+  # Translates new documents via composition-pdf-translate and uploads the
+  # result as a linked companion document. Called by the post-consume hook.
+  pdf-translate-webhook:
+    container_name: pdf-translate-webhook
+    image: ghcr.io/jctots/pdf-translate-paperless-webhook:0.2.1
     restart: unless-stopped
-    env_file: .environment_vars_translator
-    depends_on:
-      broker:
-        condition: service_healthy
+    env_file: .environment_vars_webhook
+    environment:
+      # Loads sitecustomize.py: Paperless 3.x tasks API shim (see that file).
+      PYTHONPATH: /compat
+    volumes:
+      - "{{ composition_config }}/pdf-translate-webhook:/data"
+      - "{{ composition_root }}/pdf-translate-webhook-compat:/compat:ro"
     networks:
       - "{{ default_docker_network }}"
     healthcheck:
-      test: ["CMD", "curl", "-fs", "http://localhost:5000/healthz"]
+      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/127.0.0.1/8081'"]
       interval: 30s
-      timeout: 5s
+      timeout: 10s
       retries: 3
+      start_period: 30s
 
 {% endif %}
 networks:

@@ -9,53 +9,62 @@ translation of non-English documents into English on ingest.
 |---------|---------|
 | `webserver` | Paperless-ngx (UI + consumer worker) |
 | `db` | Postgres 16 |
-| `broker` | Redis 8 (paperless celery on DB 0, translator queue on DB 1) |
+| `broker` | Redis 8 (paperless celery) |
 | `gotenberg` | Office/PDF conversion |
 | `tika` | Text extraction |
-| `translator` | Auto-translation sidecar (optional, see below) |
+| `pdf-translate-webhook` | Auto-translation sidecar (optional, see below) |
 
 ## Auto-translation
 
-When `paperless_ngx_translate_enabled` is `true` (default), the role builds and
-runs a custom `translator` service. It reuses the existing
-[`composition-libretranslate`](../composition-libretranslate/README.md) instance
-on the same host through the shared `default_docker_network`.
+When `paperless_ngx_translate_enabled` is `true` (default), the role runs the
+[pdf-translate Paperless webhook](https://github.com/jctots/pdf-translate/tree/main/paperless_webhook)
+as `pdf-translate-webhook`. It uses
+[`composition-pdf-translate`](../composition-pdf-translate/README.md) and
+[`composition-libretranslate`](../composition-libretranslate/README.md) on the
+same host through the shared `default_docker_network`.
 
-On each consumed document, paperless invokes the post-consume hook (a small
-shell script mounted read-only into the webserver), which fires a fire-and-forget
-POST to the translator. When the translator receives the job, it does the following:
+On each consumed document, paperless runs the post-consume hook (a small shell
+script mounted read-only into the webserver). The hook sends
+`{"document_id": N}` to the webhook and does not wait. The webhook then:
 
-1. Adds the job to the queue on Redis DB 1.
-2. Picks it up with a single worker thread.
-3. Detects the language with LibreTranslate.
-4. Applies OCR cleanup.
-5. Translates non-English content in chunks.
-6. Posts the result back to paperless as a note with the prefix `**Auto-translation`.
+1. Detects the language with LibreTranslate. Documents that are not
+   `paperless_ngx_translate_source_lang` (`de`) are skipped.
+2. Sends the PDF to pdf-translate, which translates with Ollama on Malcolm
+   (`translategemma:12b`).
+3. Uploads the translated PDF as a new document titled `[EN] <title>`, tagged
+   `auto-translated`.
+4. Links the original and the companion through the `translation` custom field
+   (Document Link). The role creates this field through the API.
 
-The translator never changes the original OCR `content` field.
+On failure the original gets the `translation-failed` tag. To retry,
+run the backfill for that ID (see below). The original is never changed.
 
-### Manual triggers
+`files/pdf-translate-webhook/sitecustomize.py` patches the webhook (0.2.1) for
+the Paperless 3.x tasks API. Without it, companions upload but are never
+linked (`uploaded_unlinked`). Remove it when upstream supports 3.x.
 
-The translator exposes these internal HTTP endpoints (not Traefik-fronted):
+We use the post-consume hook, not a Paperless Workflow, so nothing is set up by
+hand in the UI.
 
-| Method | Path | Purpose |
-|--------|------|---------|
-| `POST` | `/translate` | Body `{"document_id": N}` — enqueue a translation |
-| `GET`  | `/status`    | Queue + counter snapshot |
-| `GET`  | `/healthz`   | Redis + LibreTranslate + paperless reachability |
+Log: `config/pdf-translate-webhook/translate.log` (one JSON line per document).
 
-From the host:
+### Backfill existing documents
 
 ```bash
-docker exec paperless_translator curl -fsS http://localhost:5000/status
+docker exec -it pdf-translate-webhook python backfill.py --start 1 --end 50 --dry-run
+docker exec -it pdf-translate-webhook python backfill.py --start 1 --end 50
 ```
 
 ### Kill switch
 
-Set `paperless_ngx_translate_enabled: false` to turn off the translator. This
-removes the translator service from compose, drops the post-consume environment
-variable, and skips the translator build step. Paperless continues to work
-normally.
+Set `paperless_ngx_translate_enabled: false` to turn off translation. This
+removes the webhook service from compose and drops the post-consume
+environment variable. Paperless continues to work normally.
+
+### History
+
+This replaced a custom `translator` sidecar that added LibreTranslate text as a
+note. Existing `**Auto-translation` notes stay on their documents.
 
 ## DNS
 
@@ -69,5 +78,4 @@ Registers subdomain: `paperless`
 | `vault_paperless_ngx_secret_key` | Django secret key |
 | `vault_paperless_ngx_admin_password` | Initial admin password |
 | `vault_paperless_ngx_admin_mail` | Initial admin email |
-| `vault_paperless_ngx_libretranslate_api_key` | LibreTranslate API key (required when translation enabled) |
 | `vault_paperless_ngx_api_token` | Paperless REST API token (required when translation enabled) |

@@ -1,0 +1,16 @@
+# code: language=ansible
+# Composition name (used by composition-common dependency)
+composition_name: pdf-translate
+
+# DNS labels: read by the composition_dns_subdomains lookup, not by this role.
+composition_dns_subdomains:
+  - pdf-translate
+
+# Translation backend. Ollama runs natively on Malcolm (system-ollama).
+composition_pdf_translate_ollama_url: "{{ llm_default_ollama_base_url }}"
+# Must be listed in Malcolm's system_ollama_models so it is pulled.
+composition_pdf_translate_ollama_model: "translategemma:12b"
+# Seconds per Ollama call (one text block). Upstream default is 30.
+composition_pdf_translate_block_timeout: 300.0
+composition_pdf_translate_source_lang: "de"
+composition_pdf_translate_target_lang: "en"

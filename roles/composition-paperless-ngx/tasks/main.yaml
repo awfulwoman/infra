@@ -46,32 +46,31 @@
     mode: "0774"
   when: paperless_ngx_translate_enabled
 
-- name: Create translator build context directory
+- name: Create pdf-translate webhook data directory
   ansible.builtin.file:
-    path: "{{ composition_root }}/translator"
+    path: "{{ composition_config }}/pdf-translate-webhook"
+    state: directory
+    mode: "0755"
+  when: paperless_ngx_translate_enabled
+
+- name: Create pdf-translate webhook compat directory
+  ansible.builtin.file:
+    path: "{{ composition_root }}/pdf-translate-webhook-compat"
     state: directory
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: "0774"
+    mode: "0755"
   when: paperless_ngx_translate_enabled
 
-- name: Render translator build context
-  ansible.builtin.template:
-    src: "translator/{{ tpl_item }}.j2"
-    dest: "{{ composition_root }}/translator/{{ tpl_item }}"
+- name: Copy pdf-translate webhook Paperless 3.x compat shim
+  ansible.builtin.copy:
+    src: pdf-translate-webhook/sitecustomize.py
+    dest: "{{ composition_root }}/pdf-translate-webhook-compat/sitecustomize.py"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0644"
-  loop_control:
-    loop_var: tpl_item
-  loop:
-    - Dockerfile
-    - requirements.txt
-    - app.py
-    - ocr_cleanup.py
-    - test_translator.py
   when: paperless_ngx_translate_enabled
-  notify: Rebuild translator
+  register: paperless_ngx_webhook_compat
 
 - name: Render post-consume script
   ansible.builtin.template:
@@ -82,14 +81,26 @@
     mode: "0755"
   when: paperless_ngx_translate_enabled
 
-- name: Render translator env file
+- name: Render pdf-translate webhook env file
   ansible.builtin.template:
-    src: environment_vars_translator.j2
-    dest: "{{ composition_root }}/.environment_vars_translator"
+    src: environment_vars_webhook.j2
+    dest: "{{ composition_root }}/.environment_vars_webhook"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: "0660"
+    mode: "0600"
+  no_log: true
   when: paperless_ngx_translate_enabled
+
+# The custom LibreTranslate translator sidecar was replaced by pdf-translate.
+- name: Remove old translator files
+  ansible.builtin.file:
+    path: "{{ composition_root }}/{{ old_item }}"
+    state: absent
+  loop_control:
+    loop_var: old_item
+  loop:
+    - translator
+    - .environment_vars_translator
 
 # ----------------------------
 # Start composition
@@ -99,6 +110,43 @@
   community.docker.docker_compose_v2:
     project_src: "{{ composition_root }}"
     state: present
-    build: always
     remove_orphans: true
   notify: Restart Traefik
+
+- name: Restart pdf-translate webhook after compat shim change
+  community.docker.docker_compose_v2:
+    project_src: "{{ composition_root }}"
+    state: restarted
+    services:
+      - pdf-translate-webhook
+  when: paperless_ngx_translate_enabled and paperless_ngx_webhook_compat is changed
+
+# The webhook links each original to its companion through this field.
+- name: Ensure translation custom field exists
+  when: paperless_ngx_translate_enabled
+  block:
+    - name: Look up translation custom field
+      ansible.builtin.uri:
+        url: "https://paperless.{{ domainname_infra }}/api/custom_fields/?name__iexact=translation"
+        headers:
+          Authorization: "Token {{ paperless_ngx_api_token }}"
+        return_content: true
+      register: paperless_ngx_translation_field
+      retries: 10
+      delay: 15
+      until: paperless_ngx_translation_field.status == 200
+      no_log: true
+
+    - name: Create translation custom field
+      ansible.builtin.uri:
+        url: "https://paperless.{{ domainname_infra }}/api/custom_fields/"
+        method: POST
+        headers:
+          Authorization: "Token {{ paperless_ngx_api_token }}"
+        body_format: json
+        body:
+          name: translation
+          data_type: documentlink
+        status_code: 201
+      when: paperless_ngx_translation_field.json.count == 0
+      no_log: true
