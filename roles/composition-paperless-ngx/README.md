@@ -30,7 +30,7 @@ script mounted read-only into the webserver). The hook sends
 1. Detects the language with LibreTranslate. Documents that are not
    `paperless_ngx_translate_source_lang` (`de`) are skipped.
 2. Sends the PDF to pdf-translate, which translates with Ollama on Malcolm
-   (`translategemma:12b`).
+   (`translategemma:4b`).
 3. Uploads the translated PDF as a new document titled `[EN] <title>`, tagged
    `auto-translated`.
 4. Links the original and the companion through the `translation` custom field

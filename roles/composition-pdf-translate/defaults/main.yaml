@@ -9,7 +9,9 @@ composition_dns_subdomains:
 # Translation backend. Ollama runs natively on Malcolm (system-ollama).
 composition_pdf_translate_ollama_url: "{{ llm_default_ollama_base_url }}"
 # Must be listed in Malcolm's system_ollama_models so it is pulled.
-composition_pdf_translate_ollama_model: "translategemma:12b"
+# 4b over 12b: ~4x faster on Malcolm (108 s vs ~7 min for a 2-page letter),
+# and 12b dropped content and invented a sign-off in testing.
+composition_pdf_translate_ollama_model: "translategemma:4b"
 # Seconds per Ollama call (one text block). Upstream default is 30.
 composition_pdf_translate_block_timeout: 300.0
 composition_pdf_translate_source_lang: "de"

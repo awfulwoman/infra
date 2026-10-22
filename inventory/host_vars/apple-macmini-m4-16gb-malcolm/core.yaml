@@ -86,7 +86,7 @@ system_ollama_env:
 system_ollama_models:
   - "{{ llm_default_model }}"
   # Used by composition-pdf-translate and paperless-ngx's pdf-translate-webhook on storage.
-  - "translategemma:12b"
+  - "translategemma:4b"
 
 # -------------------------------------------------------------------
 # CLAUDE

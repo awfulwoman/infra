@@ -7,8 +7,8 @@ services:
     restart: unless-stopped
     env_file: .environment_vars
     # Upstream hard-codes a 30 s timeout per Ollama call (config.TRANSLATE_TIMEOUT,
-    # no env var). translategemma:12b on Malcolm runs at ~12 tokens/s, so long
-    # text blocks time out. Patch the constant before the backends import it.
+    # no env var). Long text blocks on Malcolm can take longer, so patch the
+    # constant before the backends import it.
     command:
       - python
       - -c

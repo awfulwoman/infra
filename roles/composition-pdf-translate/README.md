@@ -11,15 +11,15 @@ Runs [pdf-translate](https://github.com/jctots/pdf-translate): upload a PDF and 
 
 ## Translation backend
 
-Ollama on Malcolm (`llm_default_ollama_base_url`), model `translategemma:12b`. Malcolm pulls the model through `system_ollama_models`. LibreTranslate is not used for translation.
+Ollama on Malcolm (`llm_default_ollama_base_url`), model `translategemma:4b`. Malcolm pulls the model through `system_ollama_models`. LibreTranslate is not used for translation.
 
 ## Key variables
 
 | Variable | Default | Description |
 |---|---|---|
 | `composition_pdf_translate_ollama_url` | `{{ llm_default_ollama_base_url }}` | Ollama API URL |
-| `composition_pdf_translate_ollama_model` | `translategemma:12b` | Translation model |
-| `composition_pdf_translate_block_timeout` | `300.0` | Seconds per Ollama call. Upstream hard-codes 30, which is too short for the 12b model on Malcolm (~12 tokens/s). The compose `command` patches it at start |
+| `composition_pdf_translate_ollama_model` | `translategemma:4b` | Translation model |
+| `composition_pdf_translate_block_timeout` | `300.0` | Seconds per Ollama call. Upstream hard-codes 30, which is too short for long text blocks on Malcolm. The compose `command` patches it at start |
 | `composition_pdf_translate_source_lang` | `de` | UI default source language |
 | `composition_pdf_translate_target_lang` | `en` | UI default target language |
 
