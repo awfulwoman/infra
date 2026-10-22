@@ -1,0 +1,49 @@
+# code: language=ansible
+# Composition name (used by composition-common dependency)
+composition_name: translation-server
+
+# DNS labels: read by the composition_dns_subdomains lookup, not by this role.
+# (`translate` is LibreTranslate's.)
+composition_dns_subdomains:
+  - translation
+
+# Our own image, built and tested by GitHub Actions. Tracks latest (pulled on every run);
+# pin a sha-<short> tag to roll back.
+composition_translation_server_image: ghcr.io/awfulwoman/translation-server:latest
+
+# Backends (spec 03). Ollama runs natively on Malcolm (system-ollama).
+composition_translation_server_backends:
+  default: local
+  local:
+    type: ollama
+    url: "{{ llm_default_ollama_base_url }}"
+    model: translategemma:4b
+    label: translategemma:4b (Malcolm)
+    private: true
+  cloud:
+    type: ollama
+    url: "{{ llm_default_ollama_base_url }}"
+    model: gemma4:31b-cloud
+    label: gemma4:31b-cloud — Ollama cloud
+    private: false
+
+# API keys, name → key. The connector uses `paperless`.
+composition_translation_server_api_keys:
+  paperless: "{{ vault_composition_translation_server_paperless_key }}"
+
+# ----------------------------
+# Paperless connector
+# ----------------------------
+
+composition_translation_server_connector_enabled: true
+# The compose service name: Django rejects the container name (underscore) as a Host.
+composition_translation_server_paperless_container_url: http://webserver:8000
+# Used by this role's API calls from the host, to create tags, field and workflow.
+composition_translation_server_paperless_url: "https://paperless.{{ domainname_infra }}"
+# Paperless permissions are per object, so a non-admin user cannot see other owners'
+# documents. The connector uses the existing admin API token.
+composition_translation_server_paperless_token: "{{ vault_paperless_ngx_api_token }}"
+composition_translation_server_webhook_secret: "{{ vault_composition_translation_server_webhook_secret }}"
+composition_translation_server_source_langs: [DE]
+composition_translation_server_target_lang: EN-GB
+composition_translation_server_add_note: false

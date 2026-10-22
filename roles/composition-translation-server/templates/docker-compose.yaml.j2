@@ -1,0 +1,50 @@
+# code: language=ansible-jinja
+name: "{{ composition_name }}"
+services:
+  translation-server:
+    container_name: translation-server
+    image: "{{ composition_translation_server_image }}"
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp
+    env_file: .environment_vars
+    volumes:
+      - "{{ composition_config }}/config.yaml:/config/config.yaml:ro"
+      - "{{ composition_config }}/data:/data"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.translation-server.rule=Host(`{{ composition_dns_subdomains[0] }}.{{ domainname_infra }}`)"
+      - "traefik.http.routers.translation-server.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
+      - "traefik.http.routers.translation-server.tls.certresolver=letsencrypt"
+{% endif %}
+      - "traefik.http.services.translation-server.loadbalancer.server.port=8000"
+    networks:
+      - "{{ default_docker_network }}"
+    # The image defines its own HEALTHCHECK (GET /health), so none is repeated here.
+
+{% if composition_translation_server_connector_enabled %}
+  # Receives Paperless workflow webhooks; no Traefik router. Paperless reaches it by
+  # container name on the shared network.
+  translation-connector:
+    container_name: translation-connector
+    image: "{{ composition_translation_server_image }}"
+    command: ["connector"]
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp
+    env_file: .environment_vars_connector
+    volumes:
+      - "{{ composition_config }}/config.yaml:/config/config.yaml:ro"
+      - "{{ composition_config }}/connector:/data"
+    depends_on:
+      - translation-server
+    networks:
+      - "{{ default_docker_network }}"
+
+{% endif %}
+networks:
+  "{{ default_docker_network }}":
+    external: true

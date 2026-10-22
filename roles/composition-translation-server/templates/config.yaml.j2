@@ -1,0 +1,15 @@
+# Managed by Ansible (composition-translation-server). See the repo's docs/specs/06-deployment.md.
+public_url: "https://{{ composition_dns_subdomains[0] }}.{{ domainname_infra }}"
+
+backends:
+{{ composition_translation_server_backends | to_nice_yaml(indent=2) | indent(2, first=true) }}
+jobs:
+  retention_hours: 72
+
+paperless:
+  url: "{{ composition_translation_server_paperless_container_url }}"
+  server_url: http://translation-server:8000
+  source_langs: {{ composition_translation_server_source_langs | to_json }}
+  target_lang: "{{ composition_translation_server_target_lang }}"
+  backend: local
+  add_note: {{ composition_translation_server_add_note | bool | lower }}

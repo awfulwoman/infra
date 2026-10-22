@@ -1,4 +1,4 @@
 dependencies:
   - role: composition-common
     vars:
-      composition_name: pdf-translate
+      composition_name: translation-server

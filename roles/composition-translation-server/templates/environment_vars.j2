@@ -1,0 +1,2 @@
+TZ="Europe/Berlin"
+API_KEYS="{% for name, key in composition_translation_server_api_keys.items() %}{{ name }}:{{ key }}{{ '' if loop.last else ',' }}{% endfor %}"

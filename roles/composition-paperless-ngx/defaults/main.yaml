@@ -17,24 +17,8 @@ paperless_ngx_admin_mail: "{{ vault_paperless_ngx_admin_mail }}"
 paperless_ngx_translate_media_path: "{{ composition_config }}/media"
 
 # ----------------------------
-# Auto-translation
+# API
 # ----------------------------
 
-# Companion translated PDFs via composition-pdf-translate (Ollama on Malcolm).
-paperless_ngx_translate_enabled: true
-# pdf-translate and LibreTranslate are reached by container name on the default Docker network.
-paperless_ngx_translate_pdf_translate_url: "http://pdf-translate:7860"
-# LibreTranslate is only used for language detection; Ollama does the translation.
-paperless_ngx_translate_libretranslate_url: "http://libretranslate:5000"
-paperless_ngx_translate_ollama_url: "{{ llm_default_ollama_base_url }}"
-# Keep in step with composition_pdf_translate_ollama_model and Malcolm's system_ollama_models.
-paperless_ngx_translate_ollama_model: "translategemma:4b"
-# Only documents detected as this language are translated ("auto" skips detection and translates everything).
-paperless_ngx_translate_source_lang: "de"
-paperless_ngx_translate_target_lang: "en"
-# pdf | sbs (side-by-side) | both
-paperless_ngx_translate_output: "pdf"
-# Seconds to wait for one document. Local LLM translation of long documents is slow.
-paperless_ngx_translate_timeout: 1800
-# Paperless REST API token used by the webhook to read documents and upload companions.
+# Paperless REST API token (admin). Used by composition-translation-server's connector.
 paperless_ngx_api_token: "{{ vault_paperless_ngx_api_token }}"

@@ -1,0 +1,72 @@
+# code: language=ansible
+
+# ----------------------------
+# Core tasks
+# ----------------------------
+
+- name: "Create compose file"
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ composition_root }}/docker-compose.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0644"
+
+- name: "Create .environment_vars files"
+  ansible.builtin.template:
+    src: "{{ env_item.src }}"
+    dest: "{{ composition_root }}/{{ env_item.dest }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0600"
+  loop_control:
+    loop_var: env_item
+  loop:
+    - {src: environment_vars.j2, dest: .environment_vars}
+    - {src: environment_vars_connector.j2, dest: .environment_vars_connector}
+  no_log: true
+  notify: Restart translation-server
+
+# ----------------------------
+# Specific tasks
+# ----------------------------
+
+# The containers run as uid 1000: jobs, cache and connector state live here.
+- name: Create data directories
+  ansible.builtin.file:
+    path: "{{ composition_config }}/{{ dir_item }}"
+    state: directory
+    owner: "1000"
+    group: "1000"
+    mode: "0750"
+  become: true
+  loop_control:
+    loop_var: dir_item
+  loop:
+    - data
+    - connector
+
+- name: "Create config.yaml"
+  ansible.builtin.template:
+    src: config.yaml.j2
+    dest: "{{ composition_config }}/config.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0644"
+  notify: Restart translation-server
+
+# ----------------------------
+# Start composition
+# ----------------------------
+
+- name: Start Docker Compose project
+  community.docker.docker_compose_v2:
+    project_src: "{{ composition_root }}"
+    state: present
+    pull: always
+    remove_orphans: true
+  notify: Restart Traefik
+
+- name: Set up Paperless for the connector
+  ansible.builtin.include_tasks: paperless.yaml
+  when: composition_translation_server_connector_enabled

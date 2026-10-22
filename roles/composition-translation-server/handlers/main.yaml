@@ -1,0 +1,5 @@
+# code: language=ansible
+- name: Restart translation-server
+  community.docker.docker_compose_v2:
+    project_src: "{{ composition_root }}"
+    state: restarted

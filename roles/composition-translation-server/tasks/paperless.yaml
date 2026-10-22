@@ -1,0 +1,123 @@
+# code: language=ansible
+# Paperless objects the connector expects (translation-server spec 05), made through
+# the Paperless REST API so nothing is set up by hand.
+
+- name: Look up Paperless tags
+  ansible.builtin.uri:
+    url: "{{ composition_translation_server_paperless_url }}/api/tags/?name__iexact={{ tag_item | urlencode }}"
+    headers:
+      Authorization: "Token {{ composition_translation_server_paperless_token }}"
+  register: translation_server_tag_lookup
+  loop_control:
+    loop_var: tag_item
+  loop: &translation_server_tags
+    - auto-translated
+    - translation-failed
+    - translate
+  no_log: true
+
+- name: Create missing Paperless tags
+  ansible.builtin.uri:
+    url: "{{ composition_translation_server_paperless_url }}/api/tags/"
+    method: POST
+    headers:
+      Authorization: "Token {{ composition_translation_server_paperless_token }}"
+    body_format: json
+    body:
+      name: "{{ tag_result.tag_item }}"
+      matching_algorithm: 0  # none: only the connector and people set these tags
+    status_code: 201
+  loop_control:
+    loop_var: tag_result
+    label: "{{ tag_result.tag_item }}"
+  loop: "{{ translation_server_tag_lookup.results }}"
+  when: tag_result.json.count == 0
+  no_log: true
+
+- name: Read Paperless tag ids
+  ansible.builtin.uri:
+    url: "{{ composition_translation_server_paperless_url }}/api/tags/?name__iexact={{ tag_item | urlencode }}"
+    headers:
+      Authorization: "Token {{ composition_translation_server_paperless_token }}"
+  register: translation_server_tags
+  loop_control:
+    loop_var: tag_item
+  loop: *translation_server_tags
+  no_log: true
+
+- name: Look up the translation custom field
+  ansible.builtin.uri:
+    url: "{{ composition_translation_server_paperless_url }}/api/custom_fields/?name__iexact=translation"
+    headers:
+      Authorization: "Token {{ composition_translation_server_paperless_token }}"
+  register: translation_server_field
+  no_log: true
+
+- name: Create the translation custom field
+  ansible.builtin.uri:
+    url: "{{ composition_translation_server_paperless_url }}/api/custom_fields/"
+    method: POST
+    headers:
+      Authorization: "Token {{ composition_translation_server_paperless_token }}"
+    body_format: json
+    body:
+      name: translation
+      data_type: documentlink
+    status_code: 201
+  when: translation_server_field.json.count == 0
+  no_log: true
+
+- name: Build the workflow definition
+  ansible.builtin.set_fact:
+    # name → id, e.g. {"translate": 12}
+    translation_server_tag_ids: >-
+      {{ translation_server_tags.results | map(attribute='json.results') | map('first')
+         | items2dict(key_name='name', value_name='id') }}
+
+- name: Build the workflow definition (body)
+  ansible.builtin.set_fact:
+    translation_server_workflow:
+      name: Translate to English
+      order: 10
+      enabled: true
+      triggers:
+        # 2 = Document Added. Companions carry auto-translated, so they never fire.
+        - type: 2
+          sources: [1, 2, 3, 4]
+          filter_has_not_tags: ["{{ translation_server_tag_ids['auto-translated'] }}"]
+        # 3 = Document Updated: adding the `translate` tag (re)translates one document.
+        - type: 3
+          filter_has_tags: ["{{ translation_server_tag_ids['translate'] }}"]
+          filter_has_not_tags: ["{{ translation_server_tag_ids['auto-translated'] }}"]
+      actions:
+        # 4 = Webhook
+        - type: 4
+          webhook:
+            url: http://translation-connector:8000/paperless/webhook
+            use_params: false
+            as_json: true
+            body: !unsafe '{"document_id": "{{ doc_id }}"}'
+            headers:
+              Authorization: "Bearer {{ composition_translation_server_webhook_secret }}"
+            include_document: false
+  no_log: true
+
+- name: Look up the workflow
+  ansible.builtin.uri:
+    url: "{{ composition_translation_server_paperless_url }}/api/workflows/?page_size=1000"
+    headers:
+      Authorization: "Token {{ composition_translation_server_paperless_token }}"
+  register: translation_server_workflows
+  no_log: true
+
+- name: Create the workflow
+  ansible.builtin.uri:
+    url: "{{ composition_translation_server_paperless_url }}/api/workflows/"
+    method: POST
+    headers:
+      Authorization: "Token {{ composition_translation_server_paperless_token }}"
+    body_format: json
+    body: "{{ translation_server_workflow }}"
+    status_code: 201
+  when: translation_server_workflows.json.results | selectattr('name', 'equalto', 'Translate to English') | list | length == 0
+  no_log: true

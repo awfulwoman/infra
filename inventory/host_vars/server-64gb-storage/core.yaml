@@ -156,9 +156,9 @@ zfs:
             policy: none
           libretranslate:
             policy: none
-          # Only a UI config.json, which the role seeds.
-          pdf-translate:
-            policy: none
+          # Jobs expire after 72 h and the segment cache can be rebuilt.
+          translation-server:
+            policy: low
           kiwix:
             policy: none
           searxng:
@@ -421,7 +421,7 @@ compositions:
   - homepage
   - piper
   - libretranslate
-  - pdf-translate
+  - translation-server
   - n8n
   - memorybank
   - mail-archive-server
