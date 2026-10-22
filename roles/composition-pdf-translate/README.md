@@ -13,6 +13,8 @@ Runs [pdf-translate](https://github.com/jctots/pdf-translate): upload a PDF and 
 
 Ollama on Malcolm (`llm_default_ollama_base_url`), model `translategemma:4b`. Malcolm pulls the model through `system_ollama_models`. LibreTranslate is not used for translation.
 
+Paperless's automatic translations always use the local model, so documents stay on the LAN. For a better translation of a document you are happy to send to Ollama's cloud, open **Backend settings** in the UI and set **Translation model** to `gemma4:31b-cloud` for that run. It fixed the 4b model's small errors in testing, at the same speed. Do not click **Save configuration** with a cloud model set: that makes it the UI default.
+
 ## Key variables
 
 | Variable | Default | Description |
