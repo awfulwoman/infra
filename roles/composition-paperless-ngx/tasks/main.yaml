@@ -37,20 +37,6 @@
     - export
     - consume
 
-# pdf-translate (the webhook sidecar and its post-consume hook) was replaced by
-# composition-translation-server, which Paperless calls through a workflow webhook.
-- name: Remove old translation files
-  ansible.builtin.file:
-    path: "{{ old_item }}"
-    state: absent
-  loop_control:
-    loop_var: old_item
-  loop:
-    - "{{ composition_root }}/.environment_vars_webhook"
-    - "{{ composition_root }}/pdf-translate-webhook-compat"
-    - "{{ composition_config }}/scripts"
-    - "{{ composition_config }}/pdf-translate-webhook"
-
 # ----------------------------
 # Start composition
 # ----------------------------
