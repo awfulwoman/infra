@@ -48,3 +48,10 @@ composition_webmention_server_session_secret: "{{ vault_composition_webmention_s
 composition_webmention_server_admin_api_token: "{{ vault_composition_webmention_server_admin_api_token | default('') }}"
 # A Home Assistant webhook, for "new mentions to review" and alerts. Empty: no notices.
 composition_webmention_server_ha_webhook_url: "{{ vault_composition_webmention_server_ha_webhook_url | default('') }}"
+
+# Backfeed: likes, boosts and replies on our GoToSocial copies come back as mentions.
+# The token is a GoToSocial application with read:notifications, read:statuses and
+# read:accounts only. Empty: backfeed is off.
+composition_webmention_server_backfeed_host: "gts.{{ domainname_personal }}"
+composition_webmention_server_backfeed_account: charlie
+composition_webmention_server_gts_access_token: "{{ vault_composition_webmention_server_gts_access_token | default('') }}"

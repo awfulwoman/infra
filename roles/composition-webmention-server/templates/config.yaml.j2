@@ -10,13 +10,20 @@ admin:
   me: {{ composition_webmention_server_admin_me }}
   authorization_endpoint: {{ composition_webmention_server_authorization_endpoint }}
 
-# Likes and reposts that come through Bridgy are approved on arrival; everything
-# else waits for review (`docker exec webmention-server webmention-server mentions`).
+# Likes and reposts that come through Bridgy, or from our own GoToSocial (backfeed),
+# are approved on arrival; everything else waits for review
+# (`docker exec webmention-server webmention-server mentions`).
 moderation:
   auto_approve:
-    - {types: [like, repost], hosts: [brid.gy]}
+    - {types: [like, repost], hosts: [brid.gy, {{ composition_webmention_server_backfeed_host }}]}
 
 send:
   enabled: {{ composition_webmention_server_send_enabled | bool | to_json }}
   source_paths: {{ composition_webmention_server_send_source_paths | to_json }}
   skip_hosts: {{ composition_webmention_server_send_skip_hosts | to_json }}
+
+# Likes, boosts and replies on our GoToSocial copies. On only when a token is set.
+backfeed:
+  enabled: {{ (composition_webmention_server_gts_access_token | length > 0) | to_json }}
+  instance: https://{{ composition_webmention_server_backfeed_host }}
+  account: {{ composition_webmention_server_backfeed_account }}
