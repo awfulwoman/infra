@@ -81,6 +81,15 @@ options {
   # them. Beware! - if the forwarders are down, the NS will not
   # answer non-authoritative queries at all!
   # forward only;
+{% if bind_max_cache_size %}
+
+  # -----------------------------------------------------------
+  # Cache size
+  # -----------------------------------------------------------
+  # Applies to each view's cache separately, so with split-horizon views the
+  # total is twice this.
+  max-cache-size {{ bind_max_cache_size }};
+{% endif %}
 {% if bind_rpz_enabled and not bind_split_horizon_enabled %}
 
   # -----------------------------------------------------------

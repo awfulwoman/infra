@@ -96,54 +96,18 @@ dhcpd_dns_servers:
 # -------------------------------------------------------------------
 # DNS SERVER (infra-named) — bertha is the LAN's primary authoritative DNS
 # -------------------------------------------------------------------
-# Role default advertises dns01 -> 192.168.1.2 (deedee). bertha now takes over:
-# this also sets the SOA primary (template uses [0]) and its glue A/PTR records.
-bind_records_nameservers:
-  - name: dns01
-    ip: 192.168.1.1
-# Apex/www A records now live in group_vars/infra (shared infra-zone topology).
+# Nameservers, listeners, DNAME alias, RPZ filtering and split-horizon views
+# are shared with deedee (the fallback): group_vars/dns_servers.yaml.
+# Apex/www A records live in group_vars/infra (shared infra-zone topology).
 
-# Keep BIND off the WAN (Fritz!Box) side — bind everywhere EXCEPT that subnet.
-# The firewall already blocks WAN:53, this removes the listener too (defence in
-# depth). LAN is IPv4-only, so no v6 DNS listener is needed at all.
-bind_listen_on: "!192.168.178.0/24; any;"
-bind_listen_on_v6: "none;"
-
-# Serve the previous internal domain as a DNAME alias onto the current one, so
-# devices still hard-coded to search i.affordablepotatoes.com resolve to the
-# ewwww.eu records (e.g. jellyfin.i.affordablepotatoes.com -> jellyfin.ewwww.eu).
-bind_dname_aliases:
-  - i.affordablepotatoes.com
-
-# -------------------------------------------------------------------
-# DNS FILTERING (infra-named RPZ) — network-wide ad/tracker blocking
-# -------------------------------------------------------------------
-# dhcpd hands out bertha as the ONLY resolver, so filtering here cannot be
-# bypassed by a client picking a different DNS server. Role default is `false`;
-# this is the one host where it makes sense.
-bind_rpz_enabled: true
-# HaGeZi Ultimate: maximum coverage, higher false-positive risk. See the role
-# README for lighter tiers and how to layer the malware/phishing list alongside.
-bind_rpz_zones:
-  - name: rpz.hagezi-ultimate
-    url: https://raw.githubusercontent.com/hagezi/dns-blocklists/main/rpz/ultimate.txt
-# Domains a blocklist gets wrong. The internal domain and the DNAME alias above
-# are protected automatically — only add genuine false positives here.
-bind_rpz_allowlist_extra: []
+# The firewall already blocks WAN:53; the shared bind_listen_on also excludes
+# the Fritz!Box subnet, so BIND has no WAN listener either (defence in depth).
 
 # -------------------------------------------------------------------
 # PUBLIC DNS (infra-named, #272) — bertha is the one host that publishes
 # the derived record set to the public Hetzner zone.
 # -------------------------------------------------------------------
 bind_public_dns_enabled: true
-
-# -------------------------------------------------------------------
-# SPLIT-HORIZON VIEWS (infra-named, #262) — LAN clients keep getting
-# host_ipv4, Tailscale-only clients (e.g. a phone on mobile data) now get
-# host_tailscale_ipv4 for the same names, instead of a LAN address they
-# can't route to. bertha is the sole DHCP-advertised LAN resolver, so this
-# is the one host where it's meaningful.
-bind_split_horizon_enabled: true
 
 # -------------------------------------------------------------------
 # ACME

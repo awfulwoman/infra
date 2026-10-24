@@ -177,4 +177,9 @@ Loading Multi Normal raises named's RSS to about 250 MB, and adds about 2
 seconds to startup. This is fine on bertha (4 GB). Check the available memory
 before you enable this on a smaller host.
 
+With split-horizon views, every policy zone loads once per view. Ultimate in
+two views takes named to about 690 MB before the cache fills. On deedee (2 GB)
+`bind_max_cache_size` caps the cache, because BIND's default allows each
+view's cache to grow to 90% of RAM. The cap applies per view.
+
 This role is for personal use only. It is not intended for other people.

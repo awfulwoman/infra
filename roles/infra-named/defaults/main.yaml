@@ -52,13 +52,17 @@ bind_acl_groups:
     iprange: 192.168.1.0/24
   - name: Tailscale
     iprange: 100.64.0.0/10
+# Cap on each view's resolver cache (BIND size spec, e.g. "64m"). Empty = BIND's
+# default of 90% of RAM, which is too much on a small host that also loads RPZ.
+bind_max_cache_size: ""
 # Forwarding DNS servers (if any)
 bind_forwarders:
   - 1.1.1.1 # Cloudflare
-# Manually created NS records
+# Manually created NS records. [0] is the SOA primary. Deployments with more
+# than one server set the full list in inventory (group_vars/dns_servers).
 bind_records_nameservers:
   - name: "dns01"
-    ip: 192.168.1.2
+    ip: 192.168.1.1
   # - name: "dns02"
   #   ip: 172.16.0.3
 # Manually created A records — deployment-specific zone data, so set these where

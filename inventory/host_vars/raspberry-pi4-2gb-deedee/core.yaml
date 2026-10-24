@@ -101,6 +101,14 @@ system_zfs_policy_healthchecksio_enabled: true
 system_zfs_policy_mqtt_enabled: true
 
 # -------------------------------------------------------------------
+# DNS SERVER (infra-named) — fallback for bertha
+# Shared settings: group_vars/dns_servers.yaml
+# -------------------------------------------------------------------
+# RPZ (Ultimate, loaded once per view) leaves ~470 MB free on this 2 GB Pi.
+# BIND's default cache limit is 90% of RAM per view, so cap it: 2 x 64 MB.
+bind_max_cache_size: 64m
+
+# -------------------------------------------------------------------
 # COMPOSITIONS
 # Internal DNS for this host is derived from this list by the dns_records
 # filter (roles/infra-named) instead of a hand-maintained cnames: list.

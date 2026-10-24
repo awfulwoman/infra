@@ -109,8 +109,8 @@ traefik_providers:
 # randolph had to give it up in the same change.
 #
 # Which path a read takes depends on how the caller reaches bertha. Its
-# split-horizon views (bind_split_horizon_enabled, router-4gb-bertha
-# core.yaml:143) answer LAN clients with host_ipv4 and tailnet clients with
+# split-horizon views (bind_split_horizon_enabled,
+# group_vars/dns_servers.yaml) answer LAN clients with host_ipv4 and tailnet clients with
 # host_tailscale_ipv4, for the same name — so connect.{{ domainname_infra }}
 # resolves to 192.168.1.23 or 100.80.1.23 accordingly, and both reach this
 # host's Traefik.

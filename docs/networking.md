@@ -147,9 +147,10 @@ harness records how every service name resolves from the LAN and from
 
 ## How bertha chooses the answer
 
-`bind_split_horizon_enabled: true` in bertha's `host_vars` turns on two
-BIND views. Bertha is the only host where this setting is meaningful,
-because it is the only DHCP-advertised resolver.
+`bind_split_horizon_enabled: true` in `group_vars/dns_servers.yaml` turns
+on two BIND views. The `dns_servers` group is bertha and deedee. deedee
+(`192.168.1.2`, `100.80.1.2`) is a matched fallback: it serves the same
+zones, views and RPZ filtering, so it gives the same answers as bertha.
 
 The views select on the **source address** of the query, not on the
 interface:

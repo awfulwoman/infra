@@ -71,6 +71,17 @@ all:
 
 
     # -------------------------------------------------------------------
+    # DNS SERVERS
+    # Hosts serving the internal zone (infra-named). bertha is primary;
+    # deedee is a matched fallback so internal names resolve if bertha's
+    # BIND is down. Shared settings: group_vars/dns_servers.yaml
+    # -------------------------------------------------------------------
+    dns_servers:
+      hosts:
+        router-4gb-bertha:
+        raspberry-pi4-2gb-deedee:
+
+    # -------------------------------------------------------------------
     # HOME AUTOMATION
     # Hosts running home automation services
     # -------------------------------------------------------------------

@@ -1,0 +1,56 @@
+---
+# DNS Server Group Variables
+# Applied to all hosts in the 'dns_servers' inventory group (infra-named).
+#
+# Every host here must give the same answer for the same query: clients that
+# are handed several resolvers spread queries across them, not just fail over.
+# Host-specific settings (public DNS publishing, cache size) stay in host_vars.
+
+# -------------------------------------------------------------------
+# NAMESERVERS
+# -------------------------------------------------------------------
+# [0] is the SOA primary in every zone template. Each entry also gets NS and
+# glue A/PTR records.
+bind_records_nameservers:
+  - name: dns01
+    ip: 192.168.1.1 # bertha
+  - name: dns02
+    ip: 192.168.1.2 # deedee
+
+# -------------------------------------------------------------------
+# LISTENERS
+# -------------------------------------------------------------------
+# Bind everywhere except the Fritz!Box subnet (only bertha has a NIC there; on
+# other hosts the exclusion is a no-op). LAN is IPv4-only, so no v6 listener.
+bind_listen_on: "!192.168.178.0/24; any;"
+bind_listen_on_v6: "none;"
+
+# -------------------------------------------------------------------
+# LEGACY DOMAIN
+# -------------------------------------------------------------------
+# Serve the previous internal domain as a DNAME alias onto the current one, so
+# devices still hard-coded to search i.affordablepotatoes.com resolve to the
+# ewwww.eu records (e.g. jellyfin.i.affordablepotatoes.com -> jellyfin.ewwww.eu).
+bind_dname_aliases:
+  - i.affordablepotatoes.com
+
+# -------------------------------------------------------------------
+# SPLIT-HORIZON VIEWS (#262)
+# -------------------------------------------------------------------
+# LAN clients get host_ipv4, Tailscale clients (e.g. a phone on mobile data)
+# get host_tailscale_ipv4 for the same names.
+bind_split_horizon_enabled: true
+
+# -------------------------------------------------------------------
+# DNS FILTERING (RPZ) — network-wide ad/tracker blocking
+# -------------------------------------------------------------------
+# Every advertised resolver filters, so a client cannot dodge the blocklist by
+# picking a different server. See the role README for list tiers.
+bind_rpz_enabled: true
+# HaGeZi Ultimate: maximum coverage, higher false-positive risk.
+bind_rpz_zones:
+  - name: rpz.hagezi-ultimate
+    url: https://raw.githubusercontent.com/hagezi/dns-blocklists/main/rpz/ultimate.txt
+# Domains a blocklist gets wrong. The internal domain and the DNAME alias above
+# are protected automatically — only add genuine false positives here.
+bind_rpz_allowlist_extra: []
