@@ -33,7 +33,9 @@ ansible-playbook playbooks/hosts/router-4gb-bertha/core.yaml --tags infra-named
 
 A zone change triggers `rndc reload`, not a restart. named keeps its cache and
 the RPZ blocklists in memory, so the new name answers within about a second.
-Only a config change (`named.conf*`) restarts named. The public zone is read
+Only a config change (`named.conf*`) restarts named. The SOA serial only
+changes when the zone's content changes (`tasks/zone-file.yaml`), so a run with
+nothing new leaves the zone files alone and does not reload at all. The public zone is read
 once and only the missing or changed records are written to Hetzner.
 
 Records have a 1 hour TTL (`bind_default_ttl`), and a "no such name" answer is

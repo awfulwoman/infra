@@ -1,0 +1,50 @@
+# Render one zone file, bumping its SOA serial only when the zone's content
+# actually changed. Included once per zone by main.yaml.
+#
+# Expects:
+#   bind_zone_template  template to render (db.zone / db.reverse.zone)
+#   bind_zone_dest      path of the zone file on the host
+#   bind_zone_origin    zone name, for named-checkzone
+#
+# The serial is the only line that differs between two renders of unchanged
+# data, so it can't come from the template itself or every run would report a
+# change (and reload named). Instead: render with a neutral serial, compare
+# against the file on disk with its serial neutralised the same way, and reuse
+# the current serial when they match. A real change gets a timestamp serial
+# that is always higher than the current one, so secondaries and DDNS journals
+# would stay consistent if either is ever added.
+- name: Read the current zone file ({{ bind_zone_origin }})
+  become: true
+  ansible.builtin.slurp:
+    src: "{{ bind_zone_dest }}"
+  register: bind_zone_current
+  failed_when: false
+
+- name: Work out the zone serial ({{ bind_zone_origin }})
+  ansible.builtin.set_fact:
+    bind_zone_serial: >-
+      {{
+        bind_zone_current_serial if bind_zone_unchanged else
+        [now(utc=true, fmt='%y%m%d%H%M') | int, bind_zone_current_serial + 1] | max
+      }}
+  vars:
+    bind_zone_current_text: "{{ (bind_zone_current.content | default('')) | b64decode }}"
+    bind_zone_current_serial: >-
+      {{ (bind_zone_current_text | regex_search('^\s*(\d+) ; Serial', '\1', multiline=true) or ['0']) | first | int }}
+    bind_zone_unchanged: >-
+      {{
+        (bind_zone_current_text | regex_replace('(?m)^(\s*)\d+ ; Serial', '\g<1>0 ; Serial'))
+        == lookup('ansible.builtin.template', bind_zone_template, template_vars={'bind_zone_serial': 0})
+      }}
+
+- name: Ensure zone file is up to date ({{ bind_zone_origin }})
+  become: true
+  ansible.builtin.template:
+    src: "{{ bind_zone_template }}"
+    dest: "{{ bind_zone_dest }}"
+    owner: root
+    group: bind
+    mode: "0644"
+    validate: "named-checkzone {{ bind_zone_origin }} %s"
+  notify:
+    - Reload named zones

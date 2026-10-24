@@ -230,84 +230,24 @@
         ]
       }}
 
-- name: Check for zone changes
-  become: true
-  ansible.builtin.template:
-    src: db.zone
-    dest: "{{ item.dest }}"
-    owner: root
-    group: bind
-    mode: "0644"
+- name: Ensure forward zone files are up to date
+  ansible.builtin.include_tasks: zone-file.yaml
   vars:
-    bind_zone_ip_field: "{{ item.ip_field }}"
+    bind_zone_template: db.zone
+    bind_zone_dest: "{{ bind_zone_view.dest }}"
+    bind_zone_origin: "{{ bind_domain }}"
+    bind_zone_ip_field: "{{ bind_zone_view.ip_field }}"
   loop: "{{ bind_zone_views }}"
   loop_control:
-    label: "{{ item.name }}"
-  register: zone_check
+    loop_var: bind_zone_view
+    label: "{{ bind_zone_view.name }}"
 
-- name: Check for reverse zone changes
-  become: true
-  ansible.builtin.template:
-    src: db.reverse.zone
-    dest: "/etc/bind/zones/db.{{ bind_domain }}.reverse.zone"
-    owner: root
-    group: bind
-    mode: "0644"
-  register: reverse_zone_check
-
-- name: Ensure zone file exists
-  become: true
-  ansible.builtin.template:
-    src: db.zone
-    dest: "{{ item.item.dest }}"
-    owner: root
-    group: bind
-    mode: "0644"
-    validate: named-checkzone {{ bind_domain }} %s
+- name: Ensure reverse zone file is up to date
+  ansible.builtin.include_tasks: zone-file.yaml
   vars:
-    bind_zone_ip_field: "{{ item.item.ip_field }}"
-  loop: "{{ zone_check.results }}"
-  loop_control:
-    label: "{{ item.item.name }}"
-  when: item.changed
-  notify:
-    - Reload named zones
-
-- name: Ensure reverse zone file exists
-  become: true
-  ansible.builtin.template:
-    src: db.reverse.zone
-    dest: "/etc/bind/zones/db.{{ bind_domain }}.reverse.zone"
-    owner: root
-    group: bind
-    mode: "0644"
-    validate: "named-checkzone {{ bind_iprange_reversed }}.in-addr.arpa %s"
-  when: reverse_zone_check.changed
-  notify:
-    - Reload named zones
-
-- name: Replace serial in zone file if changed
-  become: true
-  ansible.builtin.lineinfile:
-    path: "{{ item.item.dest }}"
-    regexp: "^  1234567890 ; Serial"
-    line: "  {{ now(utc=true, fmt='%y%m%d%H%M') }} ; Serial"
-  loop: "{{ zone_check.results }}"
-  loop_control:
-    label: "{{ item.item.name }}"
-  when: item.changed
-  notify:
-    - Reload named zones
-
-- name: Replace serial in reverse zone file if changed
-  become: true
-  ansible.builtin.lineinfile:
-    path: "/etc/bind/zones/db.{{ bind_domain }}.reverse.zone"
-    regexp: "^  1234567890 ; Serial"
-    line: "  {{ now(utc=true, fmt='%y%m%d%H%M') }} ; Serial"
-  when: reverse_zone_check.changed
-  notify:
-    - Reload named zones
+    bind_zone_template: db.reverse.zone
+    bind_zone_dest: "/etc/bind/zones/db.{{ bind_domain }}.reverse.zone"
+    bind_zone_origin: "{{ bind_iprange_reversed }}.in-addr.arpa"
 
 - name: Deploy legacy-domain DNAME alias zones
   become: true
