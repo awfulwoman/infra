@@ -1,0 +1,35 @@
+# code: language=ansible-jinja
+name: "{{ composition_name }}"
+services:
+  voicepacks:
+    container_name: voicepacks
+    image: ghcr.io/awfulwoman/dreame:latest
+    restart: unless-stopped
+    env_file: .environment_vars
+    read_only: true
+    tmpfs:
+      - /tmp
+    volumes:
+      - "{{ composition_config }}/build:/app/build"
+      - "{{ composition_config }}/models:/app/models"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.voicepacks.rule=Host(`{{ composition_dns_subdomains[0] }}.{{ domainname_infra }}`)"
+      - "traefik.http.routers.voicepacks.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
+      - "traefik.http.routers.voicepacks.tls.certresolver=letsencrypt"
+{% endif %}
+      - "traefik.http.services.voicepacks.loadbalancer.server.port=8000"
+    networks:
+      - "{{ default_docker_network }}"
+    healthcheck:
+      # The image ships curl (robot.py uses it for Valetudo)
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+networks:
+  "{{ default_docker_network }}":
+    external: true

@@ -1,0 +1,13 @@
+# code: language=ansible
+# Composition name (used by composition-common dependency)
+composition_name: voicepacks
+
+# DNS labels: read by the composition_dns_subdomains lookup, not by this role.
+composition_dns_subdomains:
+  - voicepacks
+
+# Valetudo on the Dreame L10 Pro. Installs are refused (503) when empty.
+composition_voicepacks_robot: 192.168.1.102
+
+# Bearer token for POST /voices/<name>/generate and /install
+composition_voicepacks_api_token: "{{ vault_composition_voicepacks_api_token }}"

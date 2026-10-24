@@ -135,6 +135,10 @@ zfs:
             policy: low
           reverseproxy:
             policy: low
+          # Generated voice packs and a downloaded Piper model; the service
+          # regenerates missing packs on start.
+          voicepacks:
+            policy: low
 
           # Rebuilt by Ansible, or re-downloaded. Nothing here is state.
           zfs-api:
@@ -442,3 +446,4 @@ compositions:
   - wiki-compiler
   - wiki-site
   - guinea-pig-weights
+  - voicepacks
