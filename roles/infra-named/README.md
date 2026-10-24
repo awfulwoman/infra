@@ -22,6 +22,25 @@ named-checkzone DOMAINNAME /etc/bind/zones/db.DOMAINNAME.zone
 named-checkzone 168.192.in-addr.arpa /etc/bind/zones/db.DOMAINNAME.reverse.zone
 ```
 
+## Adding a record
+
+Add the composition (or `cnames_additional` entry) to the host's inventory, then
+run only this role on bertha:
+
+```bash
+ansible-playbook playbooks/hosts/router-4gb-bertha/core.yaml --tags infra-named
+```
+
+A zone change triggers `rndc reload`, not a restart. named keeps its cache and
+the RPZ blocklists in memory, so the new name answers within about a second.
+Only a config change (`named.conf*`) restarts named. The public zone is read
+once and only the missing or changed records are written to Hetzner.
+
+Records have a 1 hour TTL (`bind_default_ttl`), and a "no such name" answer is
+cached for 5 minutes (`bind_negative_ttl`). If a client looked up the name
+before it existed, it sees the new record after at most 5 minutes. To skip the
+wait on a Mac, flush its cache (`scripts/flush-dns.sh`).
+
 ## Reverse zone
 
 The reverse zone holds exactly one PTR per address: the canonical

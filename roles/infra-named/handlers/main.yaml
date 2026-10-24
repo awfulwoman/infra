@@ -4,3 +4,18 @@
   ansible.builtin.service:
     name: named
     state: restarted
+
+# Zone data changes only need a reload: named re-reads the zones whose files
+# changed and keeps its cache and the (unchanged, large) RPZ blocklists in
+# memory, so a new record is live in about a second, with no DNS outage.
+# Config changes still notify the restart above. The retries cover the case
+# where both fire in one run and named is still starting up.
+- name: Reload named zones
+  become: true
+  ansible.builtin.command:
+    cmd: rndc reload
+  register: bind_rndc_reload
+  until: bind_rndc_reload.rc == 0
+  retries: 5
+  delay: 2
+  changed_when: true

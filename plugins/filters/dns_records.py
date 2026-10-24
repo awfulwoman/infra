@@ -50,12 +50,44 @@ def derive_dns_records(hosts, compositions):
     return {"a_records": a_records, "cnames": cnames}
 
 
+def _normalise(value):
+    return value.rstrip(".").lower()
+
+
+def diff_public_records(derived, existing, zone, ttl):
+    """Compare the derived record set against the RRSets already in the public
+    zone and return only what has to be written. Add-only, like the publish
+    tasks it feeds: names outside the derived set are never touched."""
+    current = {(r["name"], r["type"]): r for r in existing}
+
+    def needs_write(name, type_, value):
+        rrset = current.get((name, type_))
+        if rrset is None or rrset.get("ttl") != ttl:
+            return True
+        return [_normalise(r["value"]) for r in rrset["records"]] != [_normalise(value)]
+
+    a_upserts = [
+        {"name": a["name"], "value": a["target"]}
+        for a in derived["a_records"].values()
+        if needs_write(a["name"], "A", a["target"])
+    ]
+    a_deletes = [label for label in derived["cnames"] if (label, "A") in current]
+    cname_upserts = []
+    for label, target in derived["cnames"].items():
+        value = f"{target}.{zone}."
+        if needs_write(label, "CNAME", value):
+            cname_upserts.append({"name": label, "value": value})
+
+    return {"a_upserts": a_upserts, "a_deletes": a_deletes, "cname_upserts": cname_upserts}
+
+
 class FilterModule(object):
     """Custom filters for deriving DNS records from inventory data"""
 
     def filters(self):
         return {
             "dns_records": self.dns_records,
+            "dns_public_changes": diff_public_records,
         }
 
     def dns_records(self, hosts, compositions):

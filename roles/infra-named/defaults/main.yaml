@@ -1,5 +1,10 @@
 bind_domain: "{{ domainname_infra }}"
-bind_default_ttl: 604800 # 1 week
+# Short TTLs, so a changed record reaches clients quickly. LAN query volume is
+# tiny, so the extra lookups cost nothing.
+bind_default_ttl: 3600 # 1 hour
+# SOA minimum = how long a client caches NXDOMAIN. Keep it short: a name looked
+# up just before it was added must not stay "missing" for long.
+bind_negative_ttl: 300 # 5 minutes
 # Addresses BIND binds to (BIND address-match-list syntax). Default `any;`
 # matches BIND's own default. Override per host to exclude untrusted interfaces.
 bind_listen_on: "any;"

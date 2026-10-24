@@ -6,7 +6,7 @@ $ORIGIN {{ bind_iprange_reversed }}.IN-ADDR.ARPA.
   604800 ; Refresh
   86400 ; Retry
   2419200 ; Expire
-  604800 ; Negative Cache TTL
+  {{ bind_negative_ttl }} ; Negative Cache TTL
 )
 
 ; Nameservers - from config

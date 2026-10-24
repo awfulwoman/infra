@@ -103,7 +103,7 @@
     validate: named-checkzone -q rpz.allowlist %s
   when: bind_rpz_enabled
   notify:
-    - Restart named
+    - Reload named zones
 
 - name: Ensure RPZ refresh timer is scheduled
   become: true
@@ -271,7 +271,7 @@
     label: "{{ item.item.name }}"
   when: item.changed
   notify:
-    - Restart named
+    - Reload named zones
 
 - name: Ensure reverse zone file exists
   become: true
@@ -284,7 +284,7 @@
     validate: "named-checkzone {{ bind_iprange_reversed }}.in-addr.arpa %s"
   when: reverse_zone_check.changed
   notify:
-    - Restart named
+    - Reload named zones
 
 - name: Replace serial in zone file if changed
   become: true
@@ -297,7 +297,7 @@
     label: "{{ item.item.name }}"
   when: item.changed
   notify:
-    - Restart named
+    - Reload named zones
 
 - name: Replace serial in reverse zone file if changed
   become: true
@@ -307,7 +307,7 @@
     line: "  {{ now(utc=true, fmt='%y%m%d%H%M') }} ; Serial"
   when: reverse_zone_check.changed
   notify:
-    - Restart named
+    - Reload named zones
 
 - name: Deploy legacy-domain DNAME alias zones
   become: true
@@ -320,7 +320,7 @@
     validate: "named-checkzone {{ item }} %s"
   loop: "{{ bind_dname_aliases | default([]) }}"
   notify:
-    - Restart named
+    - Reload named zones
 
 # Every write above is validated in isolation (named-checkconf/checkzone on
 # that one file), but none of them can see errors that only exist once

@@ -12,9 +12,24 @@
 # composition's own current label collides with it.
 #
 # A CNAME can't coexist with an A record at the same name (invalid DNS), so
-# for every derived label this first clears any A record the old
-# self-registration mechanism may have left there, then creates the CNAME.
-# The delete is a safe no-op if nothing exists at that name.
+# any A record the old self-registration mechanism left at a derived label is
+# cleared before that label's CNAME is created.
+#
+# The zone is read once and diffed against the derived set (dns_public_changes
+# filter), so each run only writes the records that are missing or changed. An
+# unchanged zone costs one API call, not two per label.
+- name: Read the public zone's current RRSets
+  hetzner.hcloud.zone_rrset_info:
+    api_token: "{{ vault_hetzner_api_key_rw }}"
+    zone: "{{ domainname_infra }}"
+  register: public_dns_current
+
+- name: Work out which public records need writing
+  ansible.builtin.set_fact:
+    public_dns_changes: >-
+      {{ dns_records_derived | dns_public_changes(public_dns_current.hcloud_zone_rrset_info,
+         domainname_infra, bind_public_dns_ttl | int) }}
+
 - name: Publish one A record per host to the public zone
   hetzner.hcloud.zone_rrset:
     api_token: "{{ vault_hetzner_api_key_rw }}"
@@ -23,9 +38,9 @@
     type: A
     ttl: "{{ bind_public_dns_ttl }}"
     records:
-      - value: "{{ host_record.target }}"
+      - value: "{{ host_record.value }}"
     state: present
-  loop: "{{ dns_records_derived.a_records.values() | list }}"
+  loop: "{{ public_dns_changes.a_upserts }}"
   loop_control:
     loop_var: host_record
     label: "{{ host_record.name }}"
@@ -37,7 +52,7 @@
     name: "{{ dns_cname_label }}"
     type: A
     state: absent
-  loop: "{{ dns_records_derived.cnames.keys() | list }}"
+  loop: "{{ public_dns_changes.a_deletes }}"
   loop_control:
     loop_var: dns_cname_label
 
@@ -45,15 +60,16 @@
   hetzner.hcloud.zone_rrset:
     api_token: "{{ vault_hetzner_api_key_rw }}"
     zone: "{{ domainname_infra }}"
-    name: "{{ dns_cname_label }}"
+    name: "{{ dns_cname.name }}"
     type: CNAME
     ttl: "{{ bind_public_dns_ttl }}"
     records:
-      - value: "{{ dns_records_derived.cnames[dns_cname_label] }}.{{ domainname_infra }}."
+      - value: "{{ dns_cname.value }}"
     state: present
-  loop: "{{ dns_records_derived.cnames.keys() | list }}"
+  loop: "{{ public_dns_changes.cname_upserts }}"
   loop_control:
-    loop_var: dns_cname_label
+    loop_var: dns_cname
+    label: "{{ dns_cname.name }}"
   register: public_dns_cname_result
 
 - name: Healthchecks block (reached only after every record above succeeded)
