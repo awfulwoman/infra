@@ -19,7 +19,7 @@ curl https://voicepacks.<domainname_infra>/job
 
 | Variable | Default | Description |
 |---|---|---|
-| `composition_voicepacks_robot` | `192.168.1.102` | Valetudo `host[:port]`. Empty disables installs |
+| `composition_voicepacks_robot` | Derek's `host_ipv4` (`unmanaged-robot-derek`) | Valetudo `host[:port]`. Empty disables installs |
 | `composition_voicepacks_api_token` | vault | Token for the `POST` endpoints |
 
 ## Data

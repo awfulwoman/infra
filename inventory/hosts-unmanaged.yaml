@@ -145,7 +145,9 @@ all:
         unmanaged-robot-derek:
           host_name: robot-derek
           host_description: Derek the cleaning robot
-          host_ipv4: false
+          # Fixed, outside the DHCP pool: composition-voicepacks installs
+          # voice packs through Valetudo at this address.
+          host_ipv4: 192.168.1.230
           host_mac: "24:18:c6:14:86:ba"
 
         # Satellites
@@ -233,7 +235,6 @@ all:
         # EXISTING entry an address fixes the display.
         #
         #   192.168.1.101  34:fd:6a:38:cc:64  ->  av-appletv
-        #   192.168.1.109  24:18:c6:14:86:ba  ->  robot-derek
         #   192.168.1.114  c8:f0:9e:2f:a1:f0  ->  custom-weather-station
         #                                         (announces itself as
         #                                          "device-sensor-atmosphere-ext")

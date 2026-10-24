@@ -6,8 +6,8 @@ composition_name: voicepacks
 composition_dns_subdomains:
   - voicepacks
 
-# Valetudo on the Dreame L10 Pro. Installs are refused (503) when empty.
-composition_voicepacks_robot: 192.168.1.102
+# Valetudo on Derek, the Dreame L10 Pro. Installs are refused (503) when empty.
+composition_voicepacks_robot: "{{ hostvars['unmanaged-robot-derek']['host_ipv4'] }}"
 
 # Bearer token for POST /voices/<name>/generate and /install
 composition_voicepacks_api_token: "{{ vault_composition_voicepacks_api_token }}"
