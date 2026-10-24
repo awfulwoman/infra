@@ -1,0 +1,10 @@
+# code: language=ansible
+
+# Kept alongside network-tailscale-token's own default: `include_role` does not
+# expose an included role's defaults to the including role, so each role that
+# builds an API URL needs its own copy.
+tailscale_api_base: https://api.tailscale.com/api/v2
+
+# The tailnet's global nameservers, in order. Empty = leave the tailnet's
+# setting alone.
+tailscale_dns_nameservers: []

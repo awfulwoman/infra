@@ -68,12 +68,26 @@ composition_gatus_url_checks:
 composition_gatus_zfs_api_path: /metrics
 
 # Resolvers to query, so a broken bind is caught by resolution failing
-# rather than by port 53 merely being open.
+# rather than by port 53 merely being open. Each DNS server is queried on both
+# paths, because split-horizon gives each its own view: the LAN address answers
+# with LAN addresses, the Tailscale address with Tailscale ones.
 composition_gatus_dns_checks:
   - name: bertha resolver
     resolver: "{{ hostvars['router-4gb-bertha'].host_ipv4 }}"
     query: "{{ hostvars['server-64gb-storage'].host_pfqdn }}.{{ domainname_infra }}"
     expect: "{{ hostvars['server-64gb-storage'].host_ipv4 }}"
+  - name: bertha resolver (tailnet)
+    resolver: "{{ hostvars['router-4gb-bertha'].host_tailscale_ipv4 }}"
+    query: "{{ hostvars['server-64gb-storage'].host_pfqdn }}.{{ domainname_infra }}"
+    expect: "{{ hostvars['server-64gb-storage'].host_tailscale_ipv4 }}"
+  - name: deedee resolver
+    resolver: "{{ hostvars['raspberry-pi4-2gb-deedee'].host_ipv4 }}"
+    query: "{{ hostvars['server-64gb-storage'].host_pfqdn }}.{{ domainname_infra }}"
+    expect: "{{ hostvars['server-64gb-storage'].host_ipv4 }}"
+  - name: deedee resolver (tailnet)
+    resolver: "{{ hostvars['raspberry-pi4-2gb-deedee'].host_tailscale_ipv4 }}"
+    query: "{{ hostvars['server-64gb-storage'].host_pfqdn }}.{{ domainname_infra }}"
+    expect: "{{ hostvars['server-64gb-storage'].host_tailscale_ipv4 }}"
 
 # Failure alerts by email, through the provider nullmailer uses.
 composition_gatus_alert_email_to: "charlie@{{ domainname_personal }}"

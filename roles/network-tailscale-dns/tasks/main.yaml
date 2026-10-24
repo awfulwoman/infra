@@ -1,0 +1,51 @@
+# code: language=ansible
+
+- name: Set the tailnet's global nameservers
+  when: tailscale_dns_nameservers | length > 0
+  block:
+
+    - name: Obtain a Tailscale API token
+      ansible.builtin.include_role:
+        name: network-tailscale-token
+
+    - name: Read the tailnet's current nameservers
+      ansible.builtin.uri:
+        url: "{{ tailscale_api_base }}/tailnet/-/dns/nameservers"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ tailscale_api_token }}"
+        status_code: 200
+      register: tailscale_dns_current
+      no_log: true
+
+    # The POST replaces the whole list. Order matters: Tailscale tries the
+    # first nameserver first.
+    #
+    # no_log keeps the bearer token out of the failure output, so the status
+    # is checked separately below rather than by `status_code`.
+    - name: Replace the tailnet's nameservers
+      when: tailscale_dns_current.json.dns | default([]) != tailscale_dns_nameservers
+      ansible.builtin.uri:
+        url: "{{ tailscale_api_base }}/tailnet/-/dns/nameservers"
+        method: POST
+        headers:
+          Authorization: "Bearer {{ tailscale_api_token }}"
+        body_format: json
+        body:
+          dns: "{{ tailscale_dns_nameservers }}"
+        status_code: 200
+      register: tailscale_dns_set
+      changed_when: tailscale_dns_set.status | default(0) == 200
+      failed_when: false
+      no_log: true
+
+    - name: Assert Tailscale accepted the nameservers
+      when: tailscale_dns_set is not skipped
+      ansible.builtin.assert:
+        that:
+          - tailscale_dns_set.status | default(0) == 200
+        fail_msg: >-
+          Tailscale refused nameservers {{ tailscale_dns_nameservers }} (HTTP
+          {{ tailscale_dns_set.status | default('no response') }}). 403 means
+          the OAuth client lacks write access to the dns scope.
+        quiet: true

@@ -63,6 +63,7 @@ The primary configuration management tool. Structure:
     - `network-tailscale-token`: Exchanges Tailscale OAuth credentials for an API bearer token
     - `network-tailscale-authkey`: Mints a one-time Tailscale enrolment key
     - `network-tailscale-address`: Pins a host's Tailscale IPv4 to the inventory's `host_tailscale_ipv4`
+    - `network-tailscale-dns`: Sets the tailnet's global nameservers (run from bertha)
   - `infra-*`: Infrastructure resources provisioned via Terraform
 - **`playbooks/`**: Split into `hosts/` (per-host) and `groups/` (per-group), plus `utility/`
   - Each host directory has several playbook files:

@@ -18,6 +18,8 @@
       tags: [infra, infra-dhcpd]
     - role: infra-named
       tags: [infra, infra-named]
+    - role: network-tailscale-dns
+      tags: [network, network-tailscale-dns]
     - role: infra-certbot
       tags: [infra, infra-certbot]
 

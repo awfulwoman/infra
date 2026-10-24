@@ -96,14 +96,14 @@ depends on where the client is and which resolver it uses.
 
 | Path | Client | Resolver | Answer |
 |------|--------|----------|--------|
-| 1 | On the LAN, not on the tailnet | bertha at `192.168.1.1`, from DHCP | LAN address (`192.168.1.x`) |
-| 2 | On the tailnet — **including every managed host** | bertha at `100.80.1.1` | Tailscale address (`100.80.x.x`) |
+| 1 | On the LAN, not on the tailnet | bertha at `192.168.1.1` (deedee at `.2` as fallback), from DHCP | LAN address (`192.168.1.x`) |
+| 2 | On the tailnet — **including every managed host** | bertha at `100.80.1.1` (deedee at `100.80.1.2` as fallback) | Tailscale address (`100.80.x.x`) |
 | 3 | Anywhere, public resolver | Hetzner public zone | Tailscale address (`100.80.x.x`) |
 
 Path 1 covers the devices that are on the LAN but **not** on the tailnet:
-IoT devices, the TV, guests. `infra-dhcpd` hands out bertha as the **only**
-resolver. Such a client therefore cannot fall through to a public resolver
-and bypass the internal zone or the ad blocking.
+IoT devices, the TV, guests. `infra-dhcpd` hands out only bertha and deedee as
+resolvers. They give identical answers. Such a client therefore cannot fall
+through to a public resolver and bypass the internal zone or the ad blocking.
 
 Path 2 covers a phone on mobile data, and also **every managed host**,
 including the ones sitting on the LAN. This surprises people.
@@ -126,12 +126,13 @@ never over the LAN, even when a LAN cable joins them. And a wrong
 `host_tailscale_ipv4` breaks host-to-host traffic, because the name every
 composition uses resolves through this view.
 
-The tailnet's global nameserver is set to `100.80.1.1`. That setting lives
-in the Tailscale admin console, not in this repository. It is readable
-through the API:
+The tailnet's global nameservers are `100.80.1.1` (bertha), then
+`100.80.1.2` (deedee, the fallback). The `network-tailscale-dns` role sets
+them from bertha's playbook, from the `dns_servers` group. It reads them
+through the API and writes only when they differ:
 
 ```bash
-GET /api/v2/tailnet/-/dns/nameservers   →   {"dns": ["100.80.1.1"]}
+GET /api/v2/tailnet/-/dns/nameservers   →   {"dns": ["100.80.1.1", "100.80.1.2"]}
 ```
 
 Path 3 is the fallback for a client that does not use bertha as its

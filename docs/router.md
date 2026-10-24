@@ -159,9 +159,10 @@ tunnel, so tightening the firewall cannot lock you out of management.
 ## DHCP
 
 `infra-dhcpd` runs the ISC DHCP server. It binds to the LAN NIC only
-(`dhcpd_interface: enp1s0`). It hands out **only** bertha (`192.168.1.1`) as
-the resolver. This is deliberate: it is not a public secondary, so clients
-cannot fall through and bypass bertha's split-horizon DNS.
+(`dhcpd_interface: enp1s0`). It hands out **only** the `dns_servers` group as
+resolvers: bertha (`192.168.1.1`), then deedee (`192.168.1.2`) as fallback.
+This is deliberate: there is no public secondary, so clients cannot fall
+through and bypass split-horizon DNS or RPZ filtering.
 
 > The role default binds to `enp3s0`, a NIC bertha does not have. At the
 > default, the server serves nobody. The `dhcpd_interface` override is

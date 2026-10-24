@@ -87,11 +87,18 @@ dhcpd_enabled: true
 # Bind to the LAN NIC. The role default is `enp3s0` — which doesn't exist on
 # this host, so the server was serving nobody (clients had stale/foreign IPs).
 dhcpd_interface: enp1s0f0
-# Hand out ONLY the router as resolver. The role default appends 8.8.8.8 as a
-# secondary, which would let clients bypass bertha's authoritative/split-horizon
-# DNS whenever they fall through to it.
-dhcpd_dns_servers:
-  - 192.168.1.1
+# Hand out ONLY our own resolvers: the dns_servers group, in inventory order
+# (bertha, then deedee as fallback). Both give identical answers, so it does
+# not matter which one a client picks. Never a public resolver (the role
+# default appends 8.8.8.8): that would bypass split-horizon DNS and RPZ.
+dhcpd_dns_servers: "{{ groups['dns_servers'] | map('extract', hostvars, 'host_ipv4') | list }}"
+
+# -------------------------------------------------------------------
+# TAILNET DNS (network-tailscale-dns) — tailnet-wide, so set from here only
+# -------------------------------------------------------------------
+# Same resolvers as DHCP, by Tailscale address, so tailnet clients get the
+# tailscale view from either server.
+tailscale_dns_nameservers: "{{ groups['dns_servers'] | map('extract', hostvars, 'host_tailscale_ipv4') | list }}"
 
 # -------------------------------------------------------------------
 # DNS SERVER (infra-named) — bertha is the LAN's primary authoritative DNS

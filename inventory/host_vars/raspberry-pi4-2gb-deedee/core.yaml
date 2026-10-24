@@ -63,8 +63,6 @@ zfs:
             policy: none
           zfs-api:
             policy: none
-      acme:
-        policy: critical
       terraform:
         policy: critical
       repos:
@@ -74,7 +72,6 @@ zfs:
 # MISC
 # -------------------------------------------------------------------
 
-acme_path: "/fastpool/acme"
 terraform_working_dir: "/fastpool/terraform"
 
 # -------------------------------------------------------------------

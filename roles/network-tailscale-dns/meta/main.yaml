@@ -1,0 +1,5 @@
+galaxy_info:
+  role_name: network-tailscale-dns
+  description: Sets the tailnet's global DNS nameservers via the Tailscale API
+  min_ansible_version: "2.14"
+dependencies: []
