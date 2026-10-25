@@ -15,6 +15,7 @@ mapping:
   updated: lastmod
   summary: description
   category: tags
+  topic: topics
   bookmark-of: bookmark_of
   like-of: like_of
   repost-of: repost_of

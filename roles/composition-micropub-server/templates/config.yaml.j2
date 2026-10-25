@@ -22,6 +22,8 @@ channels:
 # The site's own copy wins once data/micropub.yaml is committed there; until then (or if it is
 # broken) the server falls back to the copy below, taken from docs/deploy/site-micropub.yaml.
 site_config_path: data/micropub.yaml
+# The site's topic map (micropub-server spec 15).
+topics_path: data/topics.yaml
 template:
   mapping: {{ site.mapping | to_json }}
   omit: {{ site.omit | to_json }}
