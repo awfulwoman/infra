@@ -36,10 +36,11 @@ ubuntupro_attach: true
 
 # -------------------------------------------------------------------
 # ZFS
-# fastpool: the third partition of the internal 256GB SATA SSD as a
-# single-disk stripe vdev — no redundancy. Same layout as homebrain:
-# part1 /boot/efi, part2 /, part3 fastpool. The Wyse 5070 implements a
-# single SATA port, so the OS and the pool necessarily share one device.
+# fastpool: the whole 32GB SanDisk USB 3.2 stick as a single-disk stripe
+# vdev — no redundancy. Moved on 2026-10-25 from the third partition of the
+# internal SATA SSD (the Wyse 5070 has a single SATA port, so the OS and the
+# pool shared one device); sda3 is now unused. A USB stick is slower and less
+# durable than the SSD, so the pool stays small (~28GB).
 #
 # It carries the compositions dataset, so the 1Password Connect config
 # and (via onepassword_connect_data_bind_mount below) its sync database
@@ -50,7 +51,7 @@ zfs:
   fastpool:
     vdevs:
       - type: stripe
-        disks: /dev/disk/by-id/scsi-SATA_Intenso_SSD_Sata_AA000000000000005228-part3
+        disks: /dev/disk/by-id/usb-USB_SanDisk_3.2Gen1_05013339465940b3e5f53cc46a400badc71f79fa21915f8ba457982e1fe5e49e920400000000000000000000e0bbd14a009d0010915581071f2f6704-0:0
     datasets:
       compositions:
         # Every composition states its own policy; see ADR-0001. The parent
