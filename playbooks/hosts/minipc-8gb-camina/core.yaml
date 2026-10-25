@@ -11,6 +11,8 @@
     tags: [system, zfs, system-zfs-policy]
   - role: infothrill.nullmailer
     become: true
+  - role: system-homebrew
+    tags: [system, system-homebrew]
   - role: system-claude
     tags: [system, system-claude]
   - role: ansible-core
