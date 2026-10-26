@@ -17,6 +17,11 @@ mapping:
   category: tags
   topic: topics
   bookmark-of: bookmark_of
+  bookmark-site: bookmark_site
+  bookmark-description: bookmark_description
+  bookmark-image: bookmark_image
+  bookmark-card: bookmark_card
+  bookmark-card-archived: bookmark_card_archived
   like-of: like_of
   repost-of: repost_of
   in-reply-to: in_reply_to
@@ -33,7 +38,7 @@ post_types:
   note:
     name: Note
     post:
-      path: content/notes/{yyyy}/{MM}/{dd}/{slug}.md
+      path: content/notes/{yyyy}/{MM}/{dd}/{slug}/index.md
       url: notes/{yyyy}/{MM}/{dd}/{slug}/
     properties:
       - content
@@ -63,7 +68,7 @@ post_types:
     name: Bookmark
     discovery: bookmark-of
     post:
-      path: content/bookmarks/{yyyy}/{MM}/{dd}/{slug}.md
+      path: content/bookmarks/{yyyy}/{MM}/{dd}/{slug}/index.md
       url: bookmarks/{yyyy}/{MM}/{dd}/{slug}/
     properties:
       - bookmark-of
@@ -115,13 +120,15 @@ post_types:
       - content
   photo:
     name: Photo
+    discovery_without:  # a photo with words is a note, titled or not
+      - content
+    discovery_without_type: note
     post:
       path: content/photos/{yyyy}/{MM}/{dd}/{slug}/index.md
       url: photos/{yyyy}/{MM}/{dd}/{slug}/
     properties:
       - photo
       - name
-      - content
       - category
       - location
     required_properties:
