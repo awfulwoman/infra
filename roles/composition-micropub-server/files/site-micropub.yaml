@@ -23,6 +23,11 @@ mapping:
   bookmark-card: bookmark_card
   bookmark-card-archived: bookmark_card_archived
   like-of: like_of
+  like-site: like_site
+  like-description: like_description
+  like-image: like_image
+  like-card: like_card
+  like-card-archived: like_card_archived
   repost-of: repost_of
   in-reply-to: in_reply_to
   quotation-of: quote_of
@@ -80,7 +85,7 @@ post_types:
   like:
     name: Like
     post:
-      path: content/likes/{yyyy}/{MM}/{dd}/{slug}.md
+      path: content/likes/{yyyy}/{MM}/{dd}/{slug}/index.md
       url: likes/{yyyy}/{MM}/{dd}/{slug}/
     properties:
       - like-of
