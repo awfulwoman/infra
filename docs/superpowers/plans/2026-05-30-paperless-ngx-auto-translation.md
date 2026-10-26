@@ -8,7 +8,7 @@
 
 **Tech Stack:** Ansible (Jinja2 templates), Python 3.12 (Flask, redis-py, requests), Docker Compose, LibreTranslate, paperless-ngx REST API.
 
-**Spec:** `docs/superpowers/specs/2026-05-30-paperless-ngx-auto-translation-design.md`
+**Spec:** `meta/specs/infra/2026-05-30-paperless-ngx-auto-translation-design.md`
 
 **Conventions to honour:**
 - Project `.claude/rules/ansible-vault.md` — inline secret-generation commands

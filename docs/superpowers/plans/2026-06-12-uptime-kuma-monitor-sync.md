@@ -12,7 +12,7 @@
 
 ## Reference: design spec
 
-The complete design spec lives at `docs/superpowers/specs/2026-06-12-uptime-kuma-monitor-sync-design.md`. Re-read it if anything below is unclear.
+The complete design spec lives at `meta/specs/infra/2026-06-12-uptime-kuma-monitor-sync-design.md`. Re-read it if anything below is unclear.
 
 ## Reference: key paths and vars
 
