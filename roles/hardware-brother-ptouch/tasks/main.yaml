@@ -1,0 +1,6 @@
+- name: Add user to lp group for the label printer
+  become: true
+  ansible.builtin.user:
+    name: "{{ ansible_user }}"
+    groups: lp
+    append: true
