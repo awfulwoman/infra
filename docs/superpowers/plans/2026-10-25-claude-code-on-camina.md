@@ -68,7 +68,7 @@
 
 ## Task 7: Connect to loopback
 
-- [ ] **Step 1: Do Step 4 of Task 2 in the 1Password plan** once Ansible runs from camina by default
+- [ ] **Step 1: Superseded.** Loopback would break Semaphore, which runs playbooks from a container. The Connect address is decided in meta `specs/infra/01-ansible-vault-to-1password-connect.md` (decision 1, item 4).
 
 ## Task 8: Cutover
 

@@ -8,6 +8,8 @@
 
 **Tech Stack:** Ansible, 1Password Connect REST API, `onepassword.connect` collection, Python (`urllib`, pytest)
 
+**Tracking:** work items, order and status live in `awfulwoman/meta` → `specs/infra/01-ansible-vault-to-1password-connect.md` (parent infra#285). Where the spec and this plan disagree, the spec wins. Known differences: Connect keeps a network address rather than loopback (Semaphore runs in a container), and items are named after the real `vault_external_*` / `vault_composition_*` files.
+
 ---
 
 ## Context
@@ -118,7 +120,7 @@ These are live defects found while surveying the vault surface. Fixing them firs
 - [ ] **Step 6: Scrub a leaked ciphertext block**
   `docs/superpowers/plans/2026-04-14-tailscale-dynamic-authkey.md:273` contains a real-looking `vault_tailscale_authkey` block for a variable no longer in the inventory. Treat as leaked.
 
-- [ ] **Step 7: Split the multi-subject vault files**
+- [x] **Step 7: Split the multi-subject vault files** — done (`e54a30d4`); three no-consumer secrets parked in `vault_legacy.yaml`.
   The naming scheme needs one subject per file. Two files break that, and both are fixed by the same edit as the migration:
   - `vault_compositions.yaml` holds 17 variables for ~10 apps. Split into `composition-gitea`, `composition-karakeep`, `composition-pinepods`, `composition-pihole`, `composition-qbittorrent`, `composition-arr` (radarr/sonarr/prowlarr), `composition-finances` (firefly), `composition-grafana`, `composition-vikunja`.
   - `vault_karakeep.yaml` (`vault_karakeep_api`) and the karakeep variables inside `vault_compositions.yaml` describe one role — merge into a single `composition-karakeep`.
