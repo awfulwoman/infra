@@ -60,7 +60,7 @@ as full URLs.
 ## Alerting
 
 Email on failure, through the provider `nullmailer` uses
-(`vault_mailprovider_*`), after `composition_gatus_alert_failure_threshold`
+(`mail_account_personal`), after `composition_gatus_alert_failure_threshold`
 consecutive failures, and again when resolved.
 
 ## Notes

@@ -9,13 +9,14 @@ configuration for the SMTP relay.
 
 The role deploys the configuration at `/etc/msmtprc` from a Jinja2 template.
 It sets up a single account (`mbox`) that uses STARTTLS on port 587.
-Credentials come from Ansible Vault variables:
+Credentials come from `mail_account_personal` (`inventory/group_vars/infra/core.yaml`),
+the one definition of Charlie's mailbox:
 
-| Vault Variable | Purpose |
+| Key | Purpose |
 |---|---|
-| `vault_smtp_host` | SMTP relay hostname |
-| `vault_smtp_user` | SMTP username / from address |
-| `vault_smtp_password` | SMTP password |
+| `domain` | SMTP relay is `smtp.<domain>` |
+| `username` | SMTP username / from address |
+| `password` | SMTP password |
 
 ## Design Notes
 

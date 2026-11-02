@@ -91,10 +91,10 @@ composition_gatus_dns_checks:
 
 # Failure alerts by email, through the provider nullmailer uses.
 composition_gatus_alert_email_to: "charlie@{{ domainname_personal }}"
-composition_gatus_alert_email_from: "{{ vault_mailprovider_user }}"
-composition_gatus_alert_email_username: "{{ vault_mailprovider_user }}"
-composition_gatus_alert_email_password: "{{ vault_mailprovider_password }}"
-composition_gatus_alert_email_host: "smtp.{{ vault_mailprovider_domain }}"
+composition_gatus_alert_email_from: "{{ mail_account_personal.username }}"
+composition_gatus_alert_email_username: "{{ mail_account_personal.username }}"
+composition_gatus_alert_email_password: "{{ mail_account_personal.password }}"
+composition_gatus_alert_email_host: "smtp.{{ mail_account_personal.domain }}"
 composition_gatus_alert_email_port: 587
 composition_gatus_alert_failure_threshold: 3
 composition_gatus_alert_success_threshold: 2

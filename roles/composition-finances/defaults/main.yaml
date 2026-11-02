@@ -26,10 +26,10 @@ firefly_app_url: "https://firefly.{{ domainname_infra }}"
 # lowered and there is no artisan command to set a password. Reuses the same
 # mailbox.org relay as nullmailer.
 firefly_mail_mailer: smtp
-firefly_mail_host: "smtp.{{ vault_mailprovider_domain }}"
+firefly_mail_host: "smtp.{{ mail_account_personal.domain }}"
 firefly_mail_port: 465
-firefly_mail_username: "{{ vault_mailprovider_user }}"
-firefly_mail_password: "{{ vault_mailprovider_password }}"
+firefly_mail_username: "{{ mail_account_personal.username }}"
+firefly_mail_password: "{{ mail_account_personal.password }}"
 
 # Port 465 is implicit TLS. Laravel only infers the smtps scheme when
 # encryption is exactly `tls` and the port is 465, so pin the scheme
@@ -38,8 +38,8 @@ firefly_mail_scheme: smtps
 firefly_mail_encryption: tls
 
 # mailbox.org only accepts a From address belonging to the account.
-firefly_mail_from: "{{ vault_mailprovider_user }}"
-firefly_site_owner: "{{ vault_mailprovider_user }}"
+firefly_mail_from: "{{ mail_account_personal.username }}"
+firefly_site_owner: "{{ mail_account_personal.username }}"
 
 # Raise to `debug` only to recover a reset link from the container log when
 # SMTP itself is broken; see README.

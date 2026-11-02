@@ -91,12 +91,20 @@ awfulwoman_opt_dir: /opt/awfulwoman
 # Hetzner
 hetzner_floating_ip: 78.47.163.140
 
+# Charlie's personal mailbox: the one definition every mail consumer reads.
+# The archive (storage's charlie_email_accounts) uses imap.<domain>; every
+# sender uses smtp.<domain> with the same login.
+mail_account_personal:
+  domain: "{{ vault_mailprovider_domain }}"
+  username: "{{ vault_mailprovider_user }}"
+  password: "{{ vault_mailprovider_password }}"
+
 nullmailer_mail_recipient: "hardcoded@{{ domainname_personal }}"
-nullmailer_relay_host: "smtp.{{ vault_mailprovider_domain }}"
+nullmailer_relay_host: "smtp.{{ mail_account_personal.domain }}"
 nullmailer_relay_port: 465
-nullmailer_relay_user: "{{ vault_mailprovider_user }}"
-nullmailer_relay_pass: "{{ vault_mailprovider_password }}"
-nullmailer_allmailfrom: "{{ vault_mailprovider_user }}"
+nullmailer_relay_user: "{{ mail_account_personal.username }}"
+nullmailer_relay_pass: "{{ mail_account_personal.password }}"
+nullmailer_allmailfrom: "{{ mail_account_personal.username }}"
 
 # Environment Variables
 environment_config:

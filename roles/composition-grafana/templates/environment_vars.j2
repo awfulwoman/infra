@@ -21,8 +21,8 @@ GF_SNAPSHOTS_EXTERNAL_ENABLED=false
 
 # SMTP / Email settings
 GF_SMTP_ENABLED=true
-GF_SMTP_HOST={{ vault_smtp_host }}:587
-GF_SMTP_USER={{ vault_smtp_user }}
-GF_SMTP_PASSWORD={{ vault_smtp_password }}
+GF_SMTP_HOST=smtp.{{ mail_account_personal.domain }}:587
+GF_SMTP_USER={{ mail_account_personal.username }}
+GF_SMTP_PASSWORD={{ mail_account_personal.password }}
 GF_SMTP_FROM_ADDRESS=alert@{{ domainname_personal }}
 GF_SMTP_FROM_NAME=Grafana

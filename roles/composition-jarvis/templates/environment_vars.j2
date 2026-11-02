@@ -14,10 +14,10 @@ CHIVES_EDITOR__USERNAME={{ composition_jarvis_editor_username }}
 CHIVES_EDITOR__PASSWORD={{ composition_jarvis_editor_password }}
 {% endif %}
 
-CHIVES_IMAP__HOST=imap.{{ vault_mailprovider_domain }}
+CHIVES_IMAP__HOST=imap.{{ mail_account_personal.domain }}
 CHIVES_IMAP__PORT=993
-CHIVES_IMAP__USERNAME={{ vault_mailprovider_user }}
-CHIVES_IMAP__PASSWORD={{ vault_mailprovider_password }}
+CHIVES_IMAP__USERNAME={{ mail_account_personal.username }}
+CHIVES_IMAP__PASSWORD={{ mail_account_personal.password }}
 
 CHIVES_EVENT_REMINDER_MINUTES={{ composition_jarvis_event_reminder_minutes }}
 CHIVES_IDLE_CHECKIN_HOURS={{ composition_jarvis_idle_checkin_hours }}

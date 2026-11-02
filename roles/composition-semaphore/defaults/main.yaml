@@ -26,11 +26,11 @@ composition_semaphore_admin_alert_email: "charlie@{{ domainname_personal }}"
 # with STARTTLS: nullmailer's 465 is implicit TLS, which email_secure does
 # not mean here.
 composition_semaphore_email_alert: true
-composition_semaphore_email_host: "smtp.{{ vault_mailprovider_domain }}"
+composition_semaphore_email_host: "smtp.{{ mail_account_personal.domain }}"
 composition_semaphore_email_port: "587"
-composition_semaphore_email_username: "{{ vault_mailprovider_user }}"
-composition_semaphore_email_password: "{{ vault_mailprovider_password }}"
-composition_semaphore_email_sender: "{{ vault_mailprovider_user }}"
+composition_semaphore_email_username: "{{ mail_account_personal.username }}"
+composition_semaphore_email_password: "{{ mail_account_personal.password }}"
+composition_semaphore_email_sender: "{{ mail_account_personal.username }}"
 
 # Encrypts the access keys (SSH keys, vault passwords) Semaphore stores in
 # its database. Changing it makes every stored key unreadable.

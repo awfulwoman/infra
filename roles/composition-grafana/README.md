@@ -45,7 +45,7 @@ Static dashboards in `files/dashboards/`:
 
 ## Alerting
 
-- Contact point: email to `alert@{{ domainname_personal }}` via SMTP (`vault_smtp_*`).
+- Contact point: email to `alert@{{ domainname_personal }}` via SMTP (`mail_account_personal`).
 - Alert rule: **ZFS Pool Not ONLINE** — fires when `zfs_pool_health < 1` for 2+ minutes.
 - Notification policy: group by folder + alertname, repeat every 4h.
 

@@ -286,9 +286,9 @@ system_zfs_policy_healthchecksio_enabled: true
 # -------------------------------------------------------------------
 charlie_email_accounts:
   - name: personal
-    host: "imap.{{ vault_mailprovider_domain }}"
-    username: "{{ vault_mailprovider_user }}"
-    password: "{{ vault_mailprovider_password }}"
+    host: "imap.{{ mail_account_personal.domain }}"
+    username: "{{ mail_account_personal.username }}"
+    password: "{{ mail_account_personal.password }}"
   # Gmail App Passwords are shown and often stored as "xxxx xxxx xxxx xxxx";
   # Google accepts them without the spaces, and mbsync's config parser rejects
   # an unquoted value containing spaces (it fails the whole file, taking every

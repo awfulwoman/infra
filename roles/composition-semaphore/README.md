@@ -114,7 +114,7 @@ temporary.
 ### Failure alerts
 
 Semaphore emails on a failed task, via the mail provider `nullmailer` uses
-(`vault_mailprovider_*`), on port 587 with STARTTLS. Only failures are sent:
+(`mail_account_personal`), on port 587 with STARTTLS. Only failures are sent:
 `sendMailAlert` is called for `TaskFailStatus` alone, so the nightly runs
 stay quiet when they pass.
 
