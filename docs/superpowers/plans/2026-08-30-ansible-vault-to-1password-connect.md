@@ -108,7 +108,8 @@ These are live defects found while surveying the vault surface. Fixing them firs
 - [ ] **Step 2: Stop echoing the vault password**
   `scripts/ansible-pull/bootstrap-ansible-ubuntu-server.sh:39` prints the vault password to stdout. Remove that line.
 
-- [ ] **Step 3: Delete dead secrets with no consumers**
+- [ ] **Step 3: Superseded.** The delete and keep lists now live in the meta spec appendix (`specs/infra/01-appendix-vault-inventory.md`) and infra#329. The list below is stale: some of it is now kept.
+  ~~Delete dead secrets with no consumers~~
   `vault_obsidian_user`, `vault_obsidian_password`, `vault_amazon_locker_name_main`, `vault_claudecode_longlived_token`, `vault_tailscale_id`, `vault_zfsbackup_password`, and the already-commented `vault_vagrant_*`.
 
 - [ ] **Step 4: Fix naming drifts**
