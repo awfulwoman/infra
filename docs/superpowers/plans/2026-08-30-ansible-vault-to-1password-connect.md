@@ -8,7 +8,7 @@
 
 **Tech Stack:** Ansible, 1Password Connect REST API, `onepassword.connect` collection, Python (`urllib`, pytest)
 
-**Tracking:** work items, order and status live in `awfulwoman/meta` → `specs/infra/01-ansible-vault-to-1password-connect.md` (parent infra#285). Where the spec and this plan disagree, the spec wins. Known differences: Connect keeps a network address rather than loopback (Semaphore runs in a container), and items are named after the real `vault_external_*` / `vault_composition_*` files.
+**Tracking:** work items, order and status live in `awfulwoman/meta` → `specs/infra/01-ansible-vault-to-1password-connect.md` (parent infra#285). Where the spec and this plan disagree, the spec wins. Known differences: Connect keeps a network address rather than loopback (Semaphore runs in a container), and items are grouped by what they are (Services, Service accounts, Hosts, External, Hardware) with `<Prefix> - <Subject>` titles, replacing this plan's `group/infra/...` path titles and its "storage mirrors the inventory" decision.
 
 ---
 
