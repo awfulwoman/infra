@@ -103,7 +103,7 @@ Located in `roles/infra-*/templates/` for provisioning infrastructure:
 - **Local**: QEMU/libvirt virtual machines
 - **Public**: Hetzner Cloud (servers, floating IPs, DNS, firewalls)
 
-Templates are split by provider (`digitalocean.tf`, `hetzner.tf`) and rendered by Ansible during playbook runs.
+Templates are rendered by Ansible during playbook runs.
 
 ### Nightly Semaphore runs
 

@@ -55,12 +55,17 @@
     group: "{{ ansible_user }}"
     mode: "0755"
   loop:
-    - digitalocean.tf
     - hetzner.tf
     - provider.tf
     - variables.tf
     - versions.tf
   register: tf_files
+
+# Ansible only adds files, so the old render would keep creating resources.
+- name: Ensure DigitalOcean Terraform file is absent
+  ansible.builtin.file:
+    dest: "{{ infra_publicresources_terraform_working_dir }}/digitalocean.tf"
+    state: absent
 
 - name: DEBUG TF files
   ansible.builtin.debug:
@@ -75,7 +80,6 @@
     infra_publicresources_tf_variables: >-
       {% set data = namespace(vars={
         'hcloud_token': infra_publicresources_hcloud_token,
-        'digitalocean_token': infra_publicresources_digitalocean_token,
       }) %}
       {%- for box in infra_publicresources_hcloud_storage_box | default([]) -%}
         {%- set _ = data.vars.update({'storage_box_' ~ box.id ~ '_password': box.password}) -%}

@@ -10,4 +10,3 @@ infra_publicresources_provider_upgrade: false
 # Handed to Terraform as variables on each run. They are deliberately not in
 # the host's environment: a token there is readable by everything on the host.
 infra_publicresources_hcloud_token: "{{ vault_hetzner_api_key_rw }}"
-infra_publicresources_digitalocean_token: "{{ vault_ddns_digitalocean_token }}"

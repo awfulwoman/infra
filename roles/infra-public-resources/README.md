@@ -4,19 +4,9 @@ This role holds the configuration for the public resources used in this infrastr
 
 The role reuses a few infra domains internally, through split-horizon DNS. See [infra-named](../infra-named) for more detail.
 
-## Importing DO records
+## DigitalOcean
 
-Get the record IDs:
-
-```bash
-doctl compute domain records list example.com
-```
-
-Apply the IDs to a TF stanza:
-
-```bash
-terraform import digitalocean_record.www example.com,<id from DO api>
-```
+The role no longer manages DigitalOcean resources.
 
 ## Storage Boxes
 
