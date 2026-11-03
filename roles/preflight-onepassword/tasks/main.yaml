@@ -1,0 +1,34 @@
+# Fail at the start of a run, with a clear message, when Connect cannot serve
+# secrets: so a missing token or a stopped Connect stops here, not halfway
+# through a deploy at the first lookup. Checked once per play, from the
+# controller (localhost: camina, the Semaphore container, or malcolm).
+- name: Check the 1Password Connect token is set
+  ansible.builtin.assert:
+    that:
+      - onepassword_connect_token | default('') | length > 0
+    quiet: true
+    fail_msg: >-
+      onepassword_connect_token is empty or undefined. It comes from
+      vault_onepassword_connect_infra_token_read in Ansible Vault
+      (group_vars/infra).
+  run_once: true
+  delegate_to: localhost
+
+- name: Check 1Password Connect answers
+  block:
+    - name: Ask Connect for /health
+      ansible.builtin.uri:
+        url: "{{ onepassword_connect_host }}/health"
+        timeout: "{{ preflight_onepassword_timeout }}"
+        return_content: false
+      changed_when: false
+  rescue:
+    - name: Connect is not answering
+      ansible.builtin.fail:
+        msg: >-
+          1Password Connect did not answer {{ onepassword_connect_host }}/health
+          within {{ preflight_onepassword_timeout }}s. Check the Connect
+          containers on camina and the Traefik route. No secret lookups will
+          work until it does.
+  run_once: true
+  delegate_to: localhost

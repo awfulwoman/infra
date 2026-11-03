@@ -1,6 +1,8 @@
 - name: DeeDee - aw man, we're off to Yonkers
   hosts: raspberry-pi4-2gb-deedee
   roles:
+  - role: preflight-onepassword
+    tags: [always, preflight-onepassword]
   - role: hardware-raspberry-pi
     tags: [hardware, hardware-raspberry-pi]
   - role: bootstrap-ubuntu-server

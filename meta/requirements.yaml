@@ -13,7 +13,6 @@ collections:
   - name: ansible.netcommon
   - name: ansible.posix
   - name: artis3n.tailscale
-  - name: bitwarden.secrets
   - name: community.crypto
   - name: community.digitalocean
   - name: community.dns
@@ -24,3 +23,4 @@ collections:
   - name: ebdruplab.semaphoreui
     version: 4.0.4
   - name: hetzner.hcloud
+  - name: onepassword.connect

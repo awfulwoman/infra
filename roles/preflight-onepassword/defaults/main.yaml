@@ -1,0 +1,2 @@
+# Seconds to wait for Connect's /health before failing the run.
+preflight_onepassword_timeout: 5

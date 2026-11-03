@@ -2,6 +2,8 @@
 - name: Malcolm, the little power-efficient Mac Mini
   hosts: apple-macmini-m4-16gb-malcolm
   roles:
+  - role: preflight-onepassword
+    tags: [always, preflight-onepassword]
   - role: bootstrap-macos-server
     tags: [bootstrap, bootstrap-macos-server]
   - role: hardware-apple

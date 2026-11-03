@@ -1,6 +1,8 @@
 - name: Bertha, lovely Bertha. Sometimes I think you're a dream!
   hosts: router-4gb-bertha
   roles:
+    - role: preflight-onepassword
+      tags: [always, preflight-onepassword]
     - role: bootstrap-ubuntu-server
       tags: [bootstrap, bootstrap-ubuntu-server]
     - role: network-netplan

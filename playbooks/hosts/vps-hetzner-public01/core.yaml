@@ -1,6 +1,8 @@
 - name: Out on the internet server
   hosts: vps-hetzner-public01
   roles:
+  - role: preflight-onepassword
+    tags: [always, preflight-onepassword]
   - role: bootstrap-ubuntu-server
     tags: [bootstrap, bootstrap-ubuntu-server]
   - role: virtual-hetzner

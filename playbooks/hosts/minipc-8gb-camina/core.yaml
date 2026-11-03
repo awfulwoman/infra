@@ -1,6 +1,8 @@
 - name: Camina — Ansible control node and 1Password Connect host
   hosts: minipc-8gb-camina
   roles:
+  - role: preflight-onepassword
+    tags: [always, preflight-onepassword]
   - role: bootstrap-ubuntu-server
     tags: [bootstrap, bootstrap-ubuntu-server]
   - role: network-netplan

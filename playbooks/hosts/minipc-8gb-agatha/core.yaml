@@ -1,6 +1,8 @@
 - name: Agatha — Hermes Agent host
   hosts: minipc-8gb-agatha
   roles:
+  - role: preflight-onepassword
+    tags: [always, preflight-onepassword]
   - role: bootstrap-ubuntu-server
     tags: [bootstrap, bootstrap-ubuntu-server]
   - role: system-sshkey

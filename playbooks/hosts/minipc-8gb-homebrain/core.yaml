@@ -1,6 +1,8 @@
 - name: Home Automation - making lights go on and off in an overly-complicated way
   hosts: minipc-8gb-homebrain
   roles:
+  - role: preflight-onepassword
+    tags: [always, preflight-onepassword]
   - role: bootstrap-ubuntu-server
     tags: [bootstrap, bootstrap-ubuntu-server]
   - role: network-netplan
