@@ -125,3 +125,25 @@ def test_vault_title_resolved_to_id():
     }
     client = OpConnectClient(HOST, "tok", "Infra", http=FakeHttp(routes))
     assert client.get_field("T", "f") == "v"
+
+
+def test_item_metadata_has_no_values():
+    routes = {
+        f"/v1/vaults/{VAULT}/items": [{"id": "i1"}, {"id": "i2"}],
+        f"/v1/vaults/{VAULT}/items/i1": {
+            "id": "i1", "title": "External - GitHub", "category": "SECURE_NOTE", "tags": ["external", "ansible"],
+            "fields": [{"id": "a", "label": "stars token", "value": "s3cret"}, {"id": "notesPlain", "label": "notesPlain"}],
+        },
+        f"/v1/vaults/{VAULT}/items/i2": {"id": "i2", "title": "Host - Camina", "category": "SERVER", "fields": []},
+    }
+    client = OpConnectClient(HOST, "tok", VAULT, http=FakeHttp(routes))
+
+    meta = client.item_metadata()
+
+    assert meta == [
+        {"id": "i1", "title": "External - GitHub", "category": "SECURE_NOTE", "tags": ["external", "ansible"],
+         "fields": [{"id": "a", "label": "stars token", "has_value": True},
+                    {"id": "notesPlain", "label": "notesPlain", "has_value": False}]},
+        {"id": "i2", "title": "Host - Camina", "category": "SERVER", "tags": [], "fields": []},
+    ]
+    assert "s3cret" not in repr(meta)

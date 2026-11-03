@@ -28,11 +28,11 @@ Use the `op` CLI to create the Connect server and generate credentials. This pro
 # Create the Connect server and grant it access to the Infra vault
 op connect server create "Home Infra" --vaults Infra
 
-# Issue an access token for Ansible to use
+# Issue the read access token for Ansible to use (grant read only; see Write token below for the separate write token)
 op connect token create "ansible" --server "Home Infra" --vault Infra
 ```
 
-Save the token output. The token appears only once. Store it as a vault-encrypted variable (see [Using Secrets in Ansible](#using-secrets-in-ansible)).
+Save the token output. The token appears only once. Store the **read** token as `vault_onepassword_connect_infra_token_read` (see [Using Secrets in Ansible](#using-secrets-in-ansible)).
 
 ### 2. Store credentials in Ansible Vault
 
@@ -65,23 +65,63 @@ The first authenticated request starts the sync. Once the initial sync completes
 
 ## Using Secrets in Ansible
 
-The `community.general.onepassword` lookup plugin retrieves secrets at playbook runtime. Set `OP_CONNECT_HOST` and `OP_CONNECT_TOKEN` as environment variables — either per-task or at the play level.
+The `onepassword_connect` lookup (`plugins/lookup/`) reads one field of one item by its **title**. It talks to Connect over HTTPS with Python's standard library, so it needs no `op` CLI and no extra packages, and it runs the same on camina, in the Semaphore container and on malcolm.
 
 ```yaml
-- hosts: all
-  environment:
-    OP_CONNECT_HOST: "https://connect.{{ domainname_infra }}"
-    OP_CONNECT_TOKEN: "{{ vault_onepassword_connect_token }}"
-  tasks:
-    - name: Configure service with secret from 1Password
-      ansible.builtin.template:
-        src: config.j2
-        dest: /etc/myapp/config
-      vars:
-        api_key: "{{ lookup('community.general.onepassword', 'Github', field='credential', vault='Infra') }}"
+github_stars_token: "{{ lookup('onepassword_connect', 'External - GitHub', 'stars token') }}"
 ```
 
-Store `vault_onepassword_connect_token` as a vault-encrypted variable. 1Password Connect scopes tokens per vault. You can rotate a token without touching the credentials file.
+- Arguments: the item title, then the field. The field matches a **label** first, then a field **id** (a Login or Server item's built-ins are `username` and `password`).
+- Optional `vault='...'` (name or ID) instead of the Infra vault.
+- Exactly one item must match the title. A missing item, missing field, duplicate title, empty value, HTTP error or unreachable Connect **raises**, naming the title and field and never the value. There is no `default=`: a secret that cannot be read must stop the run.
+- Each item is fetched once per run.
+- Fields only. Multi-line values and documents are not supported yet.
+
+Settings come from Ansible variables, not the environment (`group_vars/infra/core.yaml`):
+
+| Variable | Value |
+| --- | --- |
+| `onepassword_connect_host` | `https://connect.{{ domainname_infra }}`, the Traefik URL, from every host |
+| `onepassword_connect_token` | `vault_onepassword_connect_infra_token_read`, the **read** token, kept in Ansible Vault as a bootstrap credential |
+| `onepassword_connect_vault_id` | The Infra vault |
+
+Each host's `core.yaml` starts with the `preflight-onepassword` role. It stops the run, with a clear message, if the token is empty or `/health` does not answer.
+
+### Write token
+
+Creating or changing items needs a separate **write** token, scoped to the Infra vault only. It is **never** stored in Ansible Vault, Semaphore or the repo. Set it only in the shell that runs the provisioning, and close the shell afterwards:
+
+```bash
+export OP_CONNECT_TOKEN_WRITE='<token>'
+```
+
+## Groups, titles, tags and categories
+
+Every item in the Infra vault belongs to one group. The group sets the title prefix, the tag and the 1Password category. A category cannot be changed after an item is created.
+
+| Group | Title prefix | Tag | Category |
+| --- | --- | --- | --- |
+| App | `App - <App>` | `app` | Secure Note |
+| Login | `Infra - <App>` | `login` | Login |
+| Host | `Host - <Host>` | `host` | Server |
+| Hardware | `Hardware - <Device>` | `hardware` | Secure Note |
+| External | `External - <Provider>` | `external` | Secure Note |
+
+Items that a lookup reads also carry the tag `ansible`. Only Login items autofill. Each secret is a field on the item, labelled in lowercase words (`stars token`, `storage box password`). The full rules, and the item and label for every migrated variable, are in the [spec](https://github.com/awfulwoman/meta/blob/main/specs/infra/01-ansible-vault-to-1password-connect.md) and its [appendix](https://github.com/awfulwoman/meta/blob/main/specs/infra/01-appendix-vault-inventory.md).
+
+## Audit
+
+```bash
+ansible-playbook playbooks/utility/audit-secrets.yaml
+```
+
+It prints names only, never values, and fails if it finds errors:
+
+- every title a `lookup('onepassword_connect', ...)` names exists exactly once, has that field, and is tagged `ansible`;
+- every field with a value on an `ansible`-tagged item has a consumer: a lookup that names it, or its label as a whole word somewhere in `roles/`, `playbooks/`, `inventory/` or `scripts/` (built-in `username` and `password` need an explicit lookup);
+- every item has exactly one group tag and the matching title prefix, and no duplicate titles.
+
+Category and stray-tag findings are warnings. The checks live in `plugins/lookup/op_audit.py`, with tests in `tests/test_op_audit.py`.
 
 ## Bootstrap Paradox
 

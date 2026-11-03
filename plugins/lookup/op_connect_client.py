@@ -88,3 +88,22 @@ class OpConnectClient:
         if value in (None, ""):
             raise OpConnectError(f"item '{title}': field '{field}' is empty")
         return value
+
+    def item_metadata(self):
+        """Every item in the vault, without any value: title, category, tags,
+        and each field's id and label with a has_value flag. For audits."""
+        vault = self._resolve_vault()
+        out = []
+        for summary in self._get(f"/v1/vaults/{vault}/items"):
+            item = self._get(f"/v1/vaults/{vault}/items/{summary['id']}")
+            out.append({
+                "id": item["id"],
+                "title": item.get("title", ""),
+                "category": item.get("category", ""),
+                "tags": list(item.get("tags") or []),
+                "fields": [
+                    {"id": f.get("id", ""), "label": f.get("label", ""), "has_value": bool(f.get("value"))}
+                    for f in item.get("fields") or []
+                ],
+            })
+        return out
