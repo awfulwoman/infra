@@ -17,6 +17,7 @@ Standard library only: it runs as root from cron, outside any virtualenv.
 import argparse
 import json
 import os
+import re
 import subprocess
 import sys
 import time
@@ -95,11 +96,7 @@ def forget_command(keep):
 def _parse_restic_time(value):
     # restic prints nanoseconds; datetime accepts at most microseconds.
     value = value.replace('Z', '+00:00')
-    head, dot, tail = value.partition('.')
-    if dot:
-        digits = ''.join(ch for ch in tail if ch.isdigit())
-        offset = tail[len(digits):]
-        value = f'{head}.{digits[:6]}{offset}'
+    value = re.sub(r'(\.\d{6})\d+', r'\1', value)
     return datetime.fromisoformat(value).timestamp()
 
 
