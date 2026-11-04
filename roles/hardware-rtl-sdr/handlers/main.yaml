@@ -1,0 +1,14 @@
+- name: Unload RTL-SDR kernel drivers
+  become: true
+  # Order matters: rtl2832_sdr and the DVB driver depend on rtl2832.
+  # Fails if a module is not loaded or is busy. A reboot clears that case.
+  ansible.builtin.command: modprobe -r rtl2832_sdr dvb_usb_rtl28xxu rtl2832 rtl2830
+  register: rtl_sdr_modprobe
+  changed_when: rtl_sdr_modprobe.rc == 0
+  failed_when: false
+  notify: Reload udev rules
+
+- name: Reload udev rules
+  become: true
+  ansible.builtin.shell: udevadm control --reload-rules && udevadm trigger --subsystem-match=usb
+  changed_when: true

@@ -1,0 +1,33 @@
+- name: Install RTL-SDR tools
+  become: true
+  ansible.builtin.apt:
+    name:
+      - rtl-sdr
+    state: present
+
+- name: Blacklist the kernel DVB drivers for RTL2832U dongles
+  become: true
+  ansible.builtin.copy:
+    dest: /etc/modprobe.d/blacklist-rtl-sdr.conf
+    owner: root
+    group: root
+    mode: "0644"
+    content: |
+      # Managed by Ansible (hardware-rtl-sdr).
+      # These drivers claim the RTL-SDR dongle as a DVB-T tuner.
+      # That stops userspace SDR tools (rtl_433, readsb) from opening it.
+      blacklist dvb_usb_rtl28xxu
+      blacklist rtl2832
+      blacklist rtl2832_sdr
+      blacklist rtl2830
+  notify: Unload RTL-SDR kernel drivers
+
+- name: Install udev rule for RTL-SDR dongles
+  become: true
+  ansible.builtin.copy:
+    src: 99-rtl_sdr.rules
+    dest: /etc/udev/rules.d/99-rtl_sdr.rules
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Reload udev rules

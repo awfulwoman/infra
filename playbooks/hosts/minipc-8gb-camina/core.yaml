@@ -19,6 +19,8 @@
     tags: [system, system-claude]
   - role: hardware-brother-ptouch
     tags: [hardware, hardware-brother-ptouch]
+  - role: hardware-rtl-sdr
+    tags: [hardware, hardware-rtl-sdr]
   - role: ansible-core
     tags: [ansible, ansible-core]
   - role: system-known-hosts

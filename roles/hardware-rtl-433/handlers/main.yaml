@@ -1,0 +1,6 @@
+- name: Restart rtl_433
+  become: true
+  ansible.builtin.systemd:
+    name: rtl_433
+    state: restarted
+    daemon_reload: true

@@ -2,7 +2,7 @@
 Description=RTL_433 service script
 StartLimitIntervalSec=5
 Documentation=https://github.com/merbanan/rtl_433/README.md
-After=syslog.target network.target
+After=network.target
 
 [Service]
 Type=exec
@@ -17,8 +17,8 @@ RestartSec=30s
 # View with: sudo journalctl -f -u rtl_433 -o cat
 SyslogIdentifier=rtl_433
 
-StandardOutput=syslog
-StandardError=syslog
+StandardOutput=journal
+StandardError=journal
 
 [Install]
 WantedBy=multi-user.target

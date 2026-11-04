@@ -5,15 +5,6 @@
       - rtl-433
     state: present
 
-- name: Ensure udev rules exist
-  become: true
-  ansible.builtin.copy:
-    src: 99-rtl_sdr.rules
-    owner: root
-    group: root
-    mode: "0666"
-    dest: /etc/udev/rules.d/99-rtl_sdr.rules
-
 - name: Ensure config dir exists
   become: true
   ansible.builtin.file:
@@ -21,29 +12,32 @@
     state: directory
     owner: root
     group: root
-    mode: "0664"
+    mode: "0755"
 
-- name: Ensure service file exists
+- name: Ensure rtl_433 config exists
   become: true
   ansible.builtin.template:
     src: service.conf
     dest: /etc/rtl_433/service.conf
     owner: root
     group: root
-    mode: "0664"
+    mode: "0644"
+  notify: Restart rtl_433
 
-- name: Ensure service file exists
+- name: Ensure systemd unit exists
   become: true
   ansible.builtin.copy:
     src: rtl_433.service
     dest: /etc/systemd/system/rtl_433.service
     owner: root
     group: root
-    mode: "0664"
+    mode: "0644"
+  notify: Restart rtl_433
 
-- name: Ensure service is started
+- name: Ensure service is enabled and started
   become: true
   ansible.builtin.systemd:
     name: rtl_433
     state: started
+    enabled: true
     daemon_reload: true

@@ -15,7 +15,6 @@ The role publishes events to `rtl_433/<model>/<id>` on the MQTT broker at `mqtt.
 
 ## Notes
 
-- The udev rule targets the common RTL2838 chipset. Other RTL-SDR chipsets need a different `idProduct`.
 - The service restarts automatically after a failure, with a 30-second delay. This stops fast crash loops if the dongle is unplugged.
-- The role writes logs to the system journal, through syslog. View them with `journalctl -u rtl_433 -f -o cat`.
+- The role writes logs to the system journal, through the journal. View them with `journalctl -u rtl_433 -f -o cat`.
 - Only one rtl_433 process can own the dongle at a time. Do not run more than one instance on the same host.
