@@ -12,3 +12,10 @@
   become: true
   ansible.builtin.shell: udevadm control --reload-rules && udevadm trigger --subsystem-match=usb
   changed_when: true
+
+- name: Restart rtl_433
+  become: true
+  ansible.builtin.systemd:
+    name: rtl_433
+    state: restarted
+    daemon_reload: true

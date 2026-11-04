@@ -24,7 +24,7 @@
     mode: "0644"
   notify: Restart rtl_433
 
-- name: Ensure systemd unit exists
+- name: Ensure rtl_433 systemd unit exists
   become: true
   ansible.builtin.copy:
     src: rtl_433.service
@@ -34,7 +34,7 @@
     mode: "0644"
   notify: Restart rtl_433
 
-- name: Ensure service is enabled and started
+- name: Ensure rtl_433 service is enabled and started
   become: true
   ansible.builtin.systemd:
     name: rtl_433

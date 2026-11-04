@@ -53,7 +53,7 @@ The primary configuration management tool. Structure:
   - `server-*`: Server half of client-server pairs (nfs, nut)
   - `client-*`: Client half of client-server pairs (nfs, nut)
   - `virtual-*`: Virtualisation roles (qemu-host, qemu-guest, hetzner)
-  - `hardware-*`: Hardware-specific configs (raspberry-pi, zigbee-conbee, rtl-sdr, rtl-433)
+  - `hardware-*`: Hardware-specific configs (raspberry-pi, zigbee-conbee, rtl-sdr)
   - `automation-*`: Scheduled automation on a host (e.g., `automation-key-updater` refreshes authorized SSH keys from GitHub). Scheduled playbook runs live in Semaphore on camina (`composition-semaphore`)
   - `monitoring-*`: Monitoring integrations (healthchecksio, linux2mqtt)
   - `network-*`: Network configuration

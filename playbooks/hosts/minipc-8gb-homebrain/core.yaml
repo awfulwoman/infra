@@ -18,8 +18,6 @@
     tags: [server, server-nut]
   - role: system-mqtt2cmd
     tags: [system, system-mqtt2cmd]
-  - role: hardware-rtl-433
-    tags: [hardware, hardware-rtl-433]
   - role: backups-zfs-client
     tags: [backups, zfs, backups-zfs-client]
   - role: system-beep

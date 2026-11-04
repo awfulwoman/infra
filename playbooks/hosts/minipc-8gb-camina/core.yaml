@@ -20,6 +20,7 @@
   - role: hardware-brother-ptouch
     tags: [hardware, hardware-brother-ptouch]
   - role: hardware-rtl-sdr
+    vars: {rtl_sdr_mode: rtl_433}
     tags: [hardware, hardware-rtl-sdr]
   - role: ansible-core
     tags: [ansible, ansible-core]

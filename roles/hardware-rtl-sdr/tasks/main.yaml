@@ -1,3 +1,9 @@
+- name: Check the RTL-SDR mode is valid
+  ansible.builtin.assert:
+    that: rtl_sdr_mode in ['none', 'rtl_433']
+    fail_msg: "rtl_sdr_mode must be one of: none, rtl_433 (got '{{ rtl_sdr_mode }}')"
+    quiet: true
+
 - name: Install RTL-SDR tools
   become: true
   ansible.builtin.apt:
@@ -31,3 +37,11 @@
     group: root
     mode: "0644"
   notify: Reload udev rules
+
+- name: Configure rtl_433 mode
+  ansible.builtin.include_tasks: mode-rtl_433.yaml
+  when: rtl_sdr_mode == 'rtl_433'
+
+- name: Disable rtl_433 mode
+  ansible.builtin.include_tasks: mode-rtl_433-off.yaml
+  when: rtl_sdr_mode != 'rtl_433'

@@ -1,0 +1,13 @@
+# Another mode owns the dongle, so rtl_433 must not run.
+- name: Check for an rtl_433 unit
+  ansible.builtin.stat:
+    path: /etc/systemd/system/rtl_433.service
+  register: rtl_433_unit
+
+- name: Ensure rtl_433 service is stopped and disabled
+  become: true
+  ansible.builtin.systemd:
+    name: rtl_433
+    state: stopped
+    enabled: false
+  when: rtl_433_unit.stat.exists
