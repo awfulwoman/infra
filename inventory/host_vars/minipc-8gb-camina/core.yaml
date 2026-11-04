@@ -62,6 +62,9 @@ zfs:
         datasets:
           zfs-api:
             policy: none
+          # Receiver settings and bookmarks; quick to recreate, so low.
+          openwebrx:
+            policy: low
           # Losing the Connect credentials file locks us out of the vault
           # that every other recovery depends on. The dataset is named for
           # composition_name in composition-1password-connect, not the
@@ -159,6 +162,9 @@ compositions:
   - basic-memory
   # Wiki.js at wikijs.{{ domainname_infra }} ("wiki" is wiki-site's label).
   - wikijs
+  # Web SDR on the RTL-SDR dongle. Needs rtl_sdr_mode: openwebrx
+  # (core.yaml, hardware-rtl-sdr).
+  - openwebrx
   - composition: reverseproxy
     labels:
       - "traefik-{host}"

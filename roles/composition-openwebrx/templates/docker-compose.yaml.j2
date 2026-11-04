@@ -1,0 +1,35 @@
+# code: language=ansible-jinja
+name: "{{ composition_name }}"
+services:
+  openwebrx:
+    container_name: openwebrx
+    image: slechev/openwebrxplus:1.2.128
+    restart: unless-stopped
+    env_file: .environment_vars
+    # Allow USB character devices (major 189) even when the device number
+    # changes after a replug. See the upstream docker.md.
+    device_cgroup_rules:
+      - "c 189:* rwm"
+    volumes:
+      - /dev/bus/usb:/dev/bus/usb
+      - "{{ composition_config }}/etc:/etc/openwebrx"
+      - "{{ composition_config }}/var:/var/lib/openwebrx"
+    # Keep temporary decoder files in memory.
+    tmpfs:
+      - /tmp:mode=1777
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.openwebrx.rule=Host(`{{ composition_dns_subdomains[0] }}.{{ domainname_infra }}`)"
+      - "traefik.http.routers.openwebrx.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
+      - "traefik.http.routers.openwebrx.tls.certresolver=letsencrypt"
+{% endif %}
+      - "traefik.http.services.openwebrx.loadbalancer.server.port=8073"
+    networks:
+      - "{{ default_docker_network }}"
+    # No healthcheck override: the image ships /healthcheck.sh, which checks
+    # that OpenWebRX+ answers on :8073 (and optionally the SDR source count).
+
+networks:
+  "{{ default_docker_network }}":
+    external: true

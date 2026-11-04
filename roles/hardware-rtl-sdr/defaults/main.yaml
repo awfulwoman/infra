@@ -1,4 +1,6 @@
 # What the dongle is used for. Only one mode can own a dongle at a time.
 #   none     - host prep only (tools, driver blacklist, udev rule)
 #   rtl_433  - decode 433 MHz sensors and publish them to MQTT
+#   openwebrx - the composition-openwebrx container owns the dongle.
+#               This role only prepares the host and stops rtl_433.
 rtl_sdr_mode: none

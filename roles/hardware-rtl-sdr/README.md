@@ -22,6 +22,7 @@ Set `rtl_sdr_mode` on the role in the playbook:
 | Mode | Effect |
 |---|---|
 | `none` (default) | Base setup only. The role stops and disables `rtl_433` if it is present. |
+| `openwebrx` | Same host setup as `none`. The `composition-openwebrx` container uses the dongle. Add `openwebrx` to the host's `compositions:` list. |
 | `rtl_433` | Installs [rtl_433](https://github.com/merbanan/rtl_433), which decodes 433 MHz ISM band sensors (temperature sensors, weather stations, doorbells). It publishes events to MQTT. |
 
 Any other value fails the role.

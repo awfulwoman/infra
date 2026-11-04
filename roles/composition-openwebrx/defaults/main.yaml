@@ -1,0 +1,12 @@
+# code: language=ansible
+# Composition name (used by composition-common dependency)
+composition_name: openwebrx
+
+# DNS labels: read by the composition_dns_subdomains lookup, not by this role.
+composition_dns_subdomains:
+  - openwebrx
+
+# Admin login for OpenWebRX+ settings. The image creates this user on first
+# start only; changing it later does not reset an existing user's password.
+composition_openwebrx_admin_user: admin
+composition_openwebrx_admin_password: "{{ vault_composition_openwebrx_admin_password }}"

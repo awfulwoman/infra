@@ -1,7 +1,7 @@
 - name: Check the RTL-SDR mode is valid
   ansible.builtin.assert:
-    that: rtl_sdr_mode in ['none', 'rtl_433']
-    fail_msg: "rtl_sdr_mode must be one of: none, rtl_433 (got '{{ rtl_sdr_mode }}')"
+    that: rtl_sdr_mode in ['none', 'rtl_433', 'openwebrx']
+    fail_msg: "rtl_sdr_mode must be one of: none, rtl_433, openwebrx (got '{{ rtl_sdr_mode }}')"
     quiet: true
 
 - name: Install RTL-SDR tools
