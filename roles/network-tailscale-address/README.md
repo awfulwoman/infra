@@ -43,23 +43,19 @@ address.
 
 The roles that enrol a host onto the tailnet include this role immediately
 after enrolment: `bootstrap-ubuntu-server` and `system-pikvm`.
-`bootstrap-macos-server` also includes it, but that role does not enrol the
-host; it only holds the address.
+`system-tailscale-macos` also includes it.
 
 ## macOS
 
-Enrolment is not automated on macOS. `artis3n.tailscale.machine` dispatches
-on `ansible_facts['distribution']` (`MacOSX` here). It ships task files only
-for the Linux families, and fails on anything else. Its install path is apt,
-yum, or pacman, and none of these apply to an app bundle. Tailscale is
-installed by hand, as the standalone macOS app.
+Enrolment on macOS is done by `system-tailscale-macos` (brew formula plus
+headless `tailscaled` LaunchDaemon), because `artis3n.tailscale.machine` only
+supports the Linux families.
 
 Pinning the address is separate, and works the same way as on Linux: one API
 call, plus one local `tailscale ip -4`. Neither of these cares about the OS.
 This role needs `tailscale_bin` set to an absolute path, because the
-standalone app's CLI lives at `/usr/local/bin/tailscale` (a wrapper around
-the binary inside the app bundle). Ansible's non-interactive SSH session
-gets a PATH of `/usr/bin:/bin:/usr/sbin:/sbin`, which excludes that path.
+brew CLI lives at `/opt/homebrew/bin/tailscale`. Ansible's non-interactive SSH session
+gets a PATH of `/usr/bin:/bin:/usr/sbin:/sbin`, which excludes `/opt/homebrew/bin`.
 
 > **CAUTION:** After a run, confirm the address with `tailscale ip -4` on
 > the host. Getting `tailscale_bin` wrong does not fail the play: the read

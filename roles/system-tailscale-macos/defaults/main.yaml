@@ -1,0 +1,6 @@
+---
+system_tailscale_macos_bin: /opt/homebrew/bin/tailscale
+# Extra `tailscale up` flags, e.g. "--accept-dns=false".
+system_tailscale_macos_args: ""
+# Remove the standalone GUI app (and its /usr/local/bin wrapper) if present.
+system_tailscale_macos_remove_gui_app: true

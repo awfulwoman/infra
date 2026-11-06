@@ -1,0 +1,96 @@
+# code: language=ansible
+---
+- name: "Assert macOS"
+  ansible.builtin.assert:
+    that: ansible_facts['os_family'] == 'Darwin'
+    fail_msg: "system-tailscale-macos is macOS-only"
+
+# The GUI app and the tailscaled daemon fight over the same tunnel, so the app
+# must go before the daemon starts.
+- name: "Check for the GUI app"
+  ansible.builtin.stat:
+    path: /Applications/Tailscale.app
+  register: _tailscale_gui
+
+- name: "Remove the GUI app"
+  when: system_tailscale_macos_remove_gui_app and _tailscale_gui.stat.exists
+  block:
+    - name: "Log out of the GUI node"
+      ansible.builtin.command: /Applications/Tailscale.app/Contents/MacOS/Tailscale logout
+      failed_when: false
+      changed_when: true
+
+    - name: "Quit the GUI app"
+      ansible.builtin.command: osascript -e 'quit app "Tailscale"'
+      failed_when: false
+      changed_when: true
+
+    - name: "Delete the app and the CLI wrapper"
+      become: true
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - /Applications/Tailscale.app
+        - /usr/local/bin/tailscale
+
+- name: "Remove the Tailscale cask if installed"
+  community.general.homebrew_cask:
+    name: tailscale
+    state: absent
+
+- name: "Install Tailscale (formula, includes tailscaled)"
+  community.general.homebrew:
+    name: tailscale
+    state: present
+
+# Root LaunchDaemon, starts at boot with no login. brew services needs sudo
+# for this; `start` is idempotent.
+- name: "Start tailscaled at boot"
+  become: true
+  ansible.builtin.command: /opt/homebrew/bin/brew services start tailscale
+  environment:
+    HOME: "{{ ansible_facts.user_dir }}"
+  register: _tailscale_service
+  changed_when: "'Successfully' in _tailscale_service.stdout"
+
+- name: "Check Tailscale state"
+  ansible.builtin.command: "{{ system_tailscale_macos_bin }} status --json"
+  register: _tailscale_status
+  changed_when: false
+  failed_when: false
+  check_mode: false
+  retries: 5
+  delay: 2
+  until: _tailscale_status.stdout | length > 0
+
+- name: "Parse connection state"
+  ansible.builtin.set_fact:
+    _tailscale_connected: >-
+      {{ (_tailscale_status.stdout | from_json).BackendState | default('') == 'Running' }}
+
+- name: "Enrol"
+  when: not _tailscale_connected
+  block:
+    - name: "Generate Tailscale auth key"
+      ansible.builtin.include_role:
+        name: network-tailscale-authkey
+
+    - name: "tailscale up"
+      become: true
+      ansible.builtin.command:
+        argv: >-
+          {{ [system_tailscale_macos_bin, 'up',
+              '--authkey=' ~ tailscale_authkey,
+              '--hostname=' ~ host_name,
+              '--advertise-tags=' ~ (tailscale_node_tags | join(','))]
+             + (system_tailscale_macos_args | split) }}
+      no_log: true
+      changed_when: true
+
+# Must follow enrolment: a device only has an address to correct once it exists.
+- name: "Pin the inventory address"
+  ansible.builtin.include_role:
+    name: network-tailscale-address
+  vars:
+    tailscale_bin: "{{ system_tailscale_macos_bin }}"
