@@ -1,0 +1,10 @@
+[Unit]
+Description=Weekly removal of unused Docker images
+
+[Timer]
+OnCalendar={{ docker_image_prune_schedule }}
+RandomizedDelaySec=30m
+Persistent=true
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,20 @@
+# code: language=ansible
+# Included by main.yaml; also usable alone via include_role tasks_from: prune.
+- name: Install image prune service and timer
+  become: true
+  ansible.builtin.template:
+    src: "docker-image-prune.{{ item }}"
+    dest: "/etc/systemd/system/docker-image-prune.{{ item }}"
+    owner: root
+    group: root
+    mode: '0644'
+  loop: [service, timer]
+  register: _docker_prune_units
+
+- name: Enable the image prune timer
+  become: true
+  ansible.builtin.systemd:
+    name: docker-image-prune.timer
+    enabled: true
+    state: started
+    daemon_reload: "{{ _docker_prune_units is changed }}"

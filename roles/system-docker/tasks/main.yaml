@@ -137,3 +137,7 @@
     username: "{{ docker_ghcr_username }}"
     password: "{{ vault_github_ghcr_read_token }}"
   when: vault_github_ghcr_read_token is defined
+
+- name: Prune unused Docker images on a timer
+  ansible.builtin.include_tasks: prune.yaml
+  when: docker_image_prune_enabled | bool

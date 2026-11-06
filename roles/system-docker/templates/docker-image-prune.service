@@ -1,0 +1,8 @@
+[Unit]
+Description=Remove unused Docker images
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/docker image prune --all --force --filter until={{ docker_image_prune_keep_hours }}h
