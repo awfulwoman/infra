@@ -11,15 +11,17 @@
     state: directory
     mode: "0755"
 
-- name: Unload Homebrew-managed ollama service
-  ansible.builtin.command: "launchctl unload {{ ansible_facts.user_dir }}/Library/LaunchAgents/homebrew.mxcl.ollama.plist"
+- name: Unload Homebrew-managed ollama services
+  ansible.builtin.command: "launchctl unload {{ ansible_facts.user_dir }}/Library/LaunchAgents/{{ item }}.plist"
+  loop: "{{ system_ollama_brew_plists }}"
   failed_when: false
   changed_when: false
 
-- name: Remove Homebrew-managed ollama plist
+- name: Remove Homebrew-managed ollama plists
   ansible.builtin.file:
-    path: "{{ ansible_facts.user_dir }}/Library/LaunchAgents/homebrew.mxcl.ollama.plist"
+    path: "{{ ansible_facts.user_dir }}/Library/LaunchAgents/{{ item }}.plist"
     state: absent
+  loop: "{{ system_ollama_brew_plists }}"
 
 - name: Ensure launchd plist is deployed
   ansible.builtin.template:
