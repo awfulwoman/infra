@@ -58,6 +58,15 @@ composition_gatus_url_checks:
     conditions:
       - "[STATUS] == 200"
       - "[BODY].version == pat(*.*.*)"
+  # apple-reminders-server on malcolm. An authenticated read, because the
+  # failure that matters (meta.db unlinked under a running process) leaves the
+  # port open. The role's own watchdog restarts the service; this alerts.
+  - name: apple-reminders-server
+    url: "http://{{ hostvars['apple-macmini-m4-16gb-malcolm'].host_ipv4 }}:{{ system_apple_reminders_server_port | default(4100) }}/reminders"
+    headers:
+      Authorization: "Bearer {{ vault_gateway_reminders_server_token }}"
+    conditions:
+      - "[STATUS] == 200"
   # /health reports store "degraded" when the GitHub token cannot write, the
   # failure that cost an hour on the first Indiekit deploy.
   - name: micropub-server

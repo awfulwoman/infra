@@ -118,20 +118,14 @@ LaunchAgent, `com.awfulwoman.apple-reminders-server-watchdog`, that runs
 `system_apple_reminders_server_watchdog_interval` seconds (300). It makes one
 authenticated `GET /reminders`:
 
-- 2xx -> ping the Healthchecks.io check (so a *missing* ping — watchdog dead,
-  host down — also alerts).
-- anything else -> ping `.../fail`, and `launchctl kickstart -k` the main
+- 2xx -> nothing.
+- anything else -> `launchctl kickstart -k` the main
   agent **at most once per `..._watchdog_restart_cooldown` seconds** (1800).
   The cooldown matters because if the service is down because it is blocked on
   a Reminders TCC prompt (see below), every restart re-triggers that prompt on
-  Malcolm's screen. A failure inside the cooldown only alerts.
+  Malcolm's screen. A failure inside the cooldown is only logged.
 
-The Healthchecks.io check is created by the role (needs
-`vault_healthchecks_rw_apikey`, the same key `monitoring-healthchecksio` uses);
-name is `system_apple_reminders_server_healthchecksio_name`. If the API is
-unreachable at deploy time the watchdog still restarts the service, it just
-can't alert — set `system_apple_reminders_server_healthchecksio_enabled: false`
-to skip the check wiring entirely.
+Alerting is done by Gatus (`composition-gatus`, endpoint `apple-reminders-server`), which makes the same authenticated `GET /reminders`. The watchdog only restarts.
 
 ## Variables
 
@@ -148,8 +142,6 @@ to skip the check wiring entirely.
 | `system_apple_reminders_server_watchdog_enabled` | `true` | Deploy the liveness watchdog LaunchAgent |
 | `system_apple_reminders_server_watchdog_interval` | `300` | Watchdog probe interval, seconds |
 | `system_apple_reminders_server_watchdog_restart_cooldown` | `1800` | Minimum seconds between watchdog-triggered restarts |
-| `system_apple_reminders_server_healthchecksio_enabled` | `true` | Create/attach a Healthchecks.io check for the watchdog to ping |
-| `system_apple_reminders_server_healthchecksio_name` | `<host> - apple-reminders-server` | Healthchecks.io check name |
 | `system_apple_reminders_server_keychain_password` | `""` | Login-keychain password, from vault. Needed only to provision the signing cert headlessly on the first run (see Permission stability) |
 
 ## Reaching it from Gateway

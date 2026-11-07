@@ -82,6 +82,12 @@ endpoints:
     client:
       ignore-redirect: true
 {% endif %}
+{% if check.headers is defined %}
+    headers:
+{% for name, value in check.headers.items() %}
+      {{ name }}: "{{ value }}"
+{% endfor %}
+{% endif %}
     conditions:
 {% for condition in check.conditions %}
       - "{{ condition }}"

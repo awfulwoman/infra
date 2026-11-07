@@ -36,9 +36,8 @@ system_apple_reminders_server_backup_keep: 7
 
 # Periodic watchdog LaunchAgent: probes GET /reminders with the bearer token
 # every _interval seconds. On a non-2xx it kickstarts the main agent (-k, so a
-# wedged-but-alive process is killed and relaunched) and, when Healthchecks.io
-# wiring is enabled, pings the check's /fail endpoint. On success it pings the
-# check so a *missing* ping (watchdog itself dead, host down) also alerts.
+# wedged-but-alive process is killed and relaunched). Alerting is
+# done by Gatus (composition-gatus), not by the watchdog.
 system_apple_reminders_server_watchdog_enabled: true
 system_apple_reminders_server_watchdog_interval: 300
 # Minimum seconds between kickstarts. A probe failure inside this window only
@@ -47,13 +46,6 @@ system_apple_reminders_server_watchdog_interval: 300
 # restarted every interval.
 system_apple_reminders_server_watchdog_restart_cooldown: 1800
 system_apple_reminders_server_watchdog_plist_label: com.awfulwoman.apple-reminders-server-watchdog
-
-# Create/att a Healthchecks.io check for the watchdog to ping. Needs
-# vault_healthchecks_rw_apikey (same key monitoring-healthchecksio uses). If the
-# check can't be created the watchdog still restarts the service; it just can't
-# alert.
-system_apple_reminders_server_healthchecksio_enabled: true
-system_apple_reminders_server_healthchecksio_name: "{{ inventory_hostname }} - apple-reminders-server"
 
 # Login-keychain password, needed ONLY the first time the signing cert is
 # provisioned (to run `security set-key-partition-list` non-interactively so
