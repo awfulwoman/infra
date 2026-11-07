@@ -3,7 +3,7 @@ name: "{{ composition_name }}"
 services:
   openwebrx:
     container_name: openwebrx
-    image: slechev/openwebrxplus:1.2.128
+    image: slechev/openwebrxplus:1.2.130
     restart: unless-stopped
     env_file: .environment_vars
     # Allow USB character devices (major 189) even when the device number
