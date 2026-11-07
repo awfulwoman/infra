@@ -6,6 +6,7 @@ Installs and configures [Ollama](https://ollama.com/) as a background service, a
 
 - **Ubuntu/Debian**: installs Ollama via the official `install.sh` script and manages it as a systemd service. Deploys a systemd drop-in (`override.conf`) for environment variables.
 - **macOS**: installs Ollama via Homebrew and manages it as a per-user `launchd` LaunchAgent (`com.awfulwoman.ollama`).
+- **macOS**: removes any Homebrew-created Ollama service plist (`system_ollama_brew_plists`) on every run, so only `com.awfulwoman.ollama` serves.
 - Waits for the Ollama API (`127.0.0.1:11434`) to be ready.
 - Pulls each model listed in `system_ollama_models`.
 

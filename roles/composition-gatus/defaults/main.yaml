@@ -51,6 +51,13 @@ composition_gatus_url_checks:
     ignore_redirect: true
     conditions:
       - "[STATUS] == 301"
+  # Ollama on malcolm. Catches the API being down; it cannot see a duplicate
+  # `ollama serve` (brew service) or malcolm failing to resolve ollama.com.
+  - name: ollama-malcolm
+    url: "http://{{ hostvars['apple-macmini-m4-16gb-malcolm'].host_ipv4 }}:11434/api/version"
+    conditions:
+      - "[STATUS] == 200"
+      - "[BODY].version == pat(*.*.*)"
   # /health reports store "degraded" when the GitHub token cannot write, the
   # failure that cost an hour on the first Indiekit deploy.
   - name: micropub-server
