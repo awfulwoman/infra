@@ -175,3 +175,9 @@ compositions:
 # data path on this host) to agents over MCP.
 # -------------------------------------------------------------------
 composition_basic_memory_vault_path: "/{{ compositions_dataset }}/syncthing/data/Obsidian/AgentMemory"
+
+# -------------------------------------------------------------------
+# HOMEBREW
+# -------------------------------------------------------------------
+system_homebrew_formulae:
+  - opencode
