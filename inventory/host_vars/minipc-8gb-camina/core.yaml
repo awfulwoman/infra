@@ -76,10 +76,8 @@ zfs:
           reverseproxy:
             policy: low
           # A replica of the AgentMemory folder; storage holds the backed-up
-          # hub. basic-memory's index is rebuilt from the notes.
+          # hub.
           syncthing:
-            policy: low
-          basic-memory:
             policy: low
           # Wiki pages and users live only in the postgres sidecar.
           wikijs:
@@ -156,10 +154,7 @@ compositions:
   - zfs-api
   - 1password-connect
   - semaphore
-  # AgentMemory folder for basic-memory (syncthing_folders).
   - syncthing
-  # Shared agent memory over MCP. Registers `basic-memory`.
-  - basic-memory
   # Wiki.js at wikijs.{{ domainname_infra }} ("wiki" is wiki-site's label).
   - wikijs
   # Web SDR on the RTL-SDR dongle. Needs rtl_sdr_mode: openwebrx
@@ -168,13 +163,6 @@ compositions:
   - composition: reverseproxy
     labels:
       - "traefik-{host}"
-
-# -------------------------------------------------------------------
-# BASIC MEMORY
-# Serves the AgentMemory Syncthing folder (composition-syncthing's default
-# data path on this host) to agents over MCP.
-# -------------------------------------------------------------------
-composition_basic_memory_vault_path: "/{{ compositions_dataset }}/syncthing/data/Obsidian/AgentMemory"
 
 # -------------------------------------------------------------------
 # HOMEBREW

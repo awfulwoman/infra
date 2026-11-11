@@ -1,0 +1,46 @@
+---
+# One-off teardown of Basic Memory (AgentMemory), no longer wanted for Claude
+# Code. Stops the container on camina and uninstalls bm on malcolm.
+#
+# Leaves the AgentMemory notes alone, on every host: deleting them is a
+# separate decision. Remove Claude's own config for it (MCP server, plugin,
+# BM_BIN/outputStyle/basicMemory settings) by hand on each host. Idempotent;
+# safe to rerun.
+- name: Retire composition-basic-memory (camina)
+  hosts: minipc-8gb-camina
+  gather_facts: false
+  tasks:
+  - name: Check for the composition directory
+    ansible.builtin.stat:
+      path: /fastpool/compositions/basic-memory/docker-compose.yaml
+    register: _bm_compose
+
+  - name: Stop and remove the container
+    become: true
+    ansible.builtin.command:
+      cmd: docker compose down --remove-orphans
+      chdir: /fastpool/compositions/basic-memory
+    register: _bm_down
+    changed_when: "'Removed' in _bm_down.stderr"
+    when: _bm_compose.stat.exists
+
+  - name: Remove the compose file, index state and embedding cache
+    become: true
+    ansible.builtin.file:
+      path: "/fastpool/compositions/basic-memory/{{ item }}"
+      state: absent
+    loop: [docker-compose.yaml, config]
+
+- name: Retire system-basic-memory (malcolm)
+  hosts: apple-macmini-m4-16gb-malcolm
+  tasks:
+  - name: Uninstall bm
+    ansible.builtin.command: /opt/homebrew/bin/uv tool uninstall basic-memory
+    register: _bm_uninstall
+    changed_when: _bm_uninstall.rc == 0
+    failed_when: false
+
+  - name: Remove bm config and index
+    ansible.builtin.file:
+      path: "{{ ansible_facts['user_dir'] }}/.basic-memory"
+      state: absent
