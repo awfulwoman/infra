@@ -1,0 +1,46 @@
+# code: language=ansible-jinja
+name: "{{ composition_name }}"
+services:
+  agentmemory:
+    container_name: agentmemory
+    image: ghumarerohit/agentmemory:0.9.33
+    restart: unless-stopped
+    env_file: .environment_vars
+    environment:
+      AGENTMEMORY_DATA_DIR: /data
+      III_TELEMETRY_ENABLED: "false"
+      AGENTMEMORY_VIEWER_HOST: 0.0.0.0
+      # The viewer and REST API are reached through Traefik over TLS.
+      VIEWER_ALLOWED_HOSTS: "{{ composition_dns_subdomains[1] }}.{{ domainname_infra }}"
+      VIEWER_ALLOWED_ORIGINS: "https://{{ composition_dns_subdomains[1] }}.{{ domainname_infra }}"
+      REST_ALLOWED_ORIGINS: "https://{{ composition_dns_subdomains[1] }}.{{ domainname_infra }}"
+    volumes:
+      - "{{ composition_config }}/data:/data"
+    labels:
+      - "traefik.enable=true"
+      # REST API
+      - "traefik.http.routers.agentmemory.rule=Host(`{{ composition_dns_subdomains[0] }}.{{ domainname_infra }}`)"
+      - "traefik.http.routers.agentmemory.service=agentmemory"
+      - "traefik.http.routers.agentmemory.tls=true"
+      - "traefik.http.services.agentmemory.loadbalancer.server.port=3111"
+      # Viewer
+      - "traefik.http.routers.agentmemory-viewer.rule=Host(`{{ composition_dns_subdomains[1] }}.{{ domainname_infra }}`)"
+      - "traefik.http.routers.agentmemory-viewer.service=agentmemory-viewer"
+      - "traefik.http.routers.agentmemory-viewer.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
+      - "traefik.http.routers.agentmemory.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.agentmemory-viewer.tls.certresolver=letsencrypt"
+{% endif %}
+      - "traefik.http.services.agentmemory-viewer.loadbalancer.server.port=3113"
+    networks:
+      - "{{ default_docker_network }}"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3111/agentmemory/livez').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 90s
+
+networks:
+  "{{ default_docker_network }}":
+    external: true

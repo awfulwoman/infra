@@ -82,6 +82,9 @@ zfs:
           # Wiki pages and users live only in the postgres sidecar.
           wikijs:
             policy: high
+          # Agent memories and sessions; not recreatable.
+          agentmemory:
+            policy: high
       # Working checkouts on the control node, including the one Semaphore
       # mounts as its "infra (local)" repository.
       repos:
@@ -157,6 +160,8 @@ compositions:
   - syncthing
   # Wiki.js at wikijs.{{ domainname_infra }} ("wiki" is wiki-site's label).
   - wikijs
+  # Persistent memory for coding agents; REST + viewer behind Traefik.
+  - agentmemory
   # Web SDR on the RTL-SDR dongle. Needs rtl_sdr_mode: openwebrx
   # (core.yaml, hardware-rtl-sdr).
   - openwebrx

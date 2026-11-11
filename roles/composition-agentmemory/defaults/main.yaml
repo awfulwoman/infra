@@ -1,0 +1,11 @@
+# code: language=ansible
+# Composition name (used by composition-common dependency)
+composition_name: agentmemory
+
+# REST API on the first label, browser viewer on the second.
+composition_dns_subdomains:
+  - agentmemory
+  - agentmemory-viewer
+
+# Bearer token for the REST API and the viewer's API proxy.
+composition_agentmemory_secret: "{{ vault_composition_agentmemory_secret }}"
