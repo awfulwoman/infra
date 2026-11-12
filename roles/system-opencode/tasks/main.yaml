@@ -161,6 +161,21 @@
   no_log: true
   when: system_opencode_searxng
 
+- name: Remove the old in-config-dir App key (now lives outside the allow path)
+  ansible.builtin.file:
+    path: "{{ system_opencode_config_dir }}/github-app.pem"
+    state: absent
+  when: system_opencode_github
+
+- name: Ensure the opencode secrets directory exists
+  ansible.builtin.file:
+    path: "{{ system_opencode_github_app_key_file | dirname }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ system_opencode_group }}"
+    mode: "0700"
+  when: system_opencode_github
+
 - name: Write the GitHub App private key
   ansible.builtin.copy:
     content: "{{ vault_github_app_private_key }}"

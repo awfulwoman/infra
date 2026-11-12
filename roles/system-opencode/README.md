@@ -125,9 +125,10 @@ reading a long-lived credential. A GitHub App installation token (1 hour) is
 minted on demand; git and gh use it, and the App's private key is denied to the
 sandbox.
 
-- `~/.config/opencode/github-app.pem` holds the App private key (mode 0600,
-  from `vault_github_app_private_key`). It is in `system_opencode_sandbox_deny`,
-  so the agent cannot read it.
+- `~/.config/opencode-secrets/github-app.pem` holds the App private key (mode
+  0600, from `vault_github_app_private_key`). It lives *outside* every sandbox
+  allow path (a sibling of `~/.config/opencode`), so the agent cannot read it
+  by default — nono cannot deny a file inside an allowed directory.
 - `mint-github-token.sh` signs a JWT with that key and POSTs to
   `api.github.com` for an installation token. The wrapper runs it (outside the
   sandbox) to set `GH_TOKEN`/`GITHUB_TOKEN` for `gh`, and a git credential

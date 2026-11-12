@@ -36,10 +36,8 @@ system_opencode_sandbox_allow:
   - "$HOME/Code"
 # Extra read-only paths.
 system_opencode_sandbox_read: []
-# Paths denied even inside the allowed ones. The GitHub App private key is
-# always denied: the agent mints tokens via the wrapper, never reads the key.
-system_opencode_sandbox_deny:
-  - "{{ system_opencode_github_app_key_file }}"
+# Paths denied even inside the allowed ones.
+system_opencode_sandbox_deny: []
 
 # CLI (terminal client) settings the wrapper applies through
 # OPENCODE_CLI_CONFIG_CONTENT. opencode merges them over ~/.config/opencode/cli.json,
@@ -227,12 +225,14 @@ system_opencode_searxng_env_file: "{{ system_opencode_config_dir }}/searxng.env"
 # --- github ----------------------------------------------------------------
 # Lets the agent push to the awfulwoman repos and drive `gh` without ever
 # reading a long-lived credential. A helper mints a 1-hour GitHub App
-# installation token from a vaulted App private key; git and gh use that. The
-# App key sits in the sandbox deny list, so the agent cannot read it.
-# Disabled until the App exists and vault_github_app_private_key is set.
+# installation token from a vaulted App private key; git and gh use that.
+# The App key lives OUTSIDE every sandbox allow path (a sibling directory,
+# not ~/.config/opencode), so the agent cannot read it by default — nono
+# cannot deny a file inside an allowed directory. Disabled until the App
+# exists and vault_github_app_private_key is set.
 system_opencode_github: false
 system_opencode_github_app_id: "{{ vault_github_app_id }}"
 system_opencode_github_installation_id: "{{ vault_github_app_installation_id }}"
-system_opencode_github_app_key_file: "{{ system_opencode_config_dir }}/github-app.pem"
+system_opencode_github_app_key_file: "{{ ansible_facts.user_dir }}/.config/opencode-secrets/github-app.pem"
 system_opencode_github_mint_helper: "{{ system_opencode_config_dir }}/mint-github-token.sh"
 system_opencode_github_credential_helper: "{{ system_opencode_config_dir }}/git-credential-github.sh"
