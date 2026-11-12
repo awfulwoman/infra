@@ -41,8 +41,8 @@ fi
 {% endif %}
 {% if system_opencode_github %}
 # GitHub: mint a short-lived installation token for gh, and point git at HTTPS
-# via a credential helper that re-mints per push (so a long session never hits
-# an expired token). The App key itself is denied to the sandbox.
+# via a credential helper that reuses it. The App key itself is denied to the
+# sandbox, so only the wrapper (outside it) can mint; the token lasts an hour.
 export GH_TOKEN="$({{ system_opencode_github_mint_helper | quote }})"
 export GITHUB_TOKEN="$GH_TOKEN"
 export GIT_CONFIG_COUNT=2

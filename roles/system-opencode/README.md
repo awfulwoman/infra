@@ -131,8 +131,9 @@ sandbox.
 - `mint-github-token.sh` signs a JWT with that key and POSTs to
   `api.github.com` for an installation token. The wrapper runs it (outside the
   sandbox) to set `GH_TOKEN`/`GITHUB_TOKEN` for `gh`, and a git credential
-  helper re-runs it on every push, so a long session never uses an expired
-  token.
+  helper reuses `GH_TOKEN` for pushes. The token lasts an hour, so a session
+  older than that pushes with an expired token until it is restarted; only the
+  wrapper can mint a fresh one because the key is sandbox-denied.
 - Git is pointed at HTTPS via `url.*.insteadOf` in the wrapper, so the agent
   pushes over HTTPS with `x-access-token` + the minted token; the SSH remotes
   are left untouched for manual use.
