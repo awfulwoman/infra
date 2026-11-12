@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# Managed by Ansible (system-opencode). Local edits are overwritten.
+#
+# Runs opencode inside a nono sandbox. opencode v2 normally hands work to a
+# background server that nono cannot contain, so interactive use is forced to
+# --standalone (a private server inside the sandbox).
+#
+# This is a convenience, not enforcement: running the real binary directly
+# ({{ system_opencode_binary }}) is not sandboxed.
+set -euo pipefail
+
+real={{ system_opencode_binary | quote }}
+
+case "${1:-}" in
+  # Administrative commands: no --standalone support, run unsandboxed.
+  serve|auth|acp|service|upgrade|update|uninstall|models|stats|session|plugin|mcp|debug|api|--help|-h|--version|-v)
+    exec "$real" "$@"
+    ;;
+esac
+
+exec {{ system_opencode_nono_binary | quote }} run \
+  --profile {{ system_opencode_nono_profile | quote }} \
+  -- "$real" --standalone "$@"

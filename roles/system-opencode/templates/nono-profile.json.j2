@@ -1,0 +1,14 @@
+// Managed by Ansible (system-opencode). Local edits are overwritten.
+// Extends the nono opencode pack with extra filesystem access.
+{
+  "extends": {{ system_opencode_nono_pack | to_json }},
+  "meta": {
+    "name": {{ system_opencode_nono_profile | to_json }},
+    "description": "opencode with access to several repos",
+  },
+  "filesystem": {
+    "allow": {{ system_opencode_sandbox_allow | to_json }},
+    "read": {{ system_opencode_sandbox_read | to_json }},
+    "deny": {{ system_opencode_sandbox_deny | to_json }},
+  },
+}

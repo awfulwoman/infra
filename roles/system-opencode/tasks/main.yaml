@@ -21,3 +21,45 @@
     owner: "{{ ansible_user }}"
     group: "{{ system_opencode_group }}"
     mode: "0644"
+
+- name: Sandbox opencode with nono
+  when: system_opencode_sandbox
+  block:
+    - name: Install the nono opencode pack
+      ansible.builtin.command: "{{ system_opencode_nono_binary }} pull {{ system_opencode_nono_pack }}"
+      args:
+        creates: "{{ ansible_facts.user_dir }}/.config/nono/packages/{{ system_opencode_nono_pack }}"
+
+    - name: Ensure nono profiles directory exists
+      ansible.builtin.file:
+        path: "{{ ansible_facts.user_dir }}/.config/nono/profiles"
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: "{{ system_opencode_group }}"
+        mode: "0755"
+
+    - name: Write nono profile extending the opencode pack
+      ansible.builtin.template:
+        src: nono-profile.json.j2
+        dest: "{{ ansible_facts.user_dir }}/.config/nono/profiles/{{ system_opencode_nono_profile }}.jsonc"
+        owner: "{{ ansible_user }}"
+        group: "{{ system_opencode_group }}"
+        mode: "0644"
+
+    - name: Install sandboxing opencode wrapper
+      ansible.builtin.template:
+        src: opencode-wrapper.sh.j2
+        dest: "{{ system_opencode_wrapper_path }}"
+        owner: "{{ ansible_user }}"
+        group: "{{ system_opencode_group }}"
+        mode: "0755"
+
+    # Interactive bash runs `brew shellenv` after ~/.local/bin is added, which
+    # puts Homebrew's bin first and shadows the wrapper. An alias wins over PATH.
+    - name: Alias opencode to the sandboxing wrapper in interactive shells
+      ansible.builtin.lineinfile:
+        path: "{{ ansible_facts.user_dir }}/.bashrc"
+        regexp: "^alias opencode="
+        line: "alias opencode={{ system_opencode_wrapper_path | quote }}"
+        create: true
+        mode: "0644"

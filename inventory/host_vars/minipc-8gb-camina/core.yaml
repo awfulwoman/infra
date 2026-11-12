@@ -174,3 +174,4 @@ compositions:
 # -------------------------------------------------------------------
 system_homebrew_formulae:
   - opencode
+  - nono
