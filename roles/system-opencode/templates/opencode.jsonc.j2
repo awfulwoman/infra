@@ -17,7 +17,7 @@
     {{ rule | to_json }},
 {% endfor %}
   ],
-{% if system_opencode_agentmemory or system_opencode_gateway %}
+{% if system_opencode_agentmemory or system_opencode_gateway or system_opencode_searxng %}
   "mcp": {
     "servers": {
 {% endif %}
@@ -51,7 +51,19 @@
         "codemode": false,
       },
 {% endif %}
-{% if system_opencode_agentmemory or system_opencode_gateway %}
+{% if system_opencode_searxng %}
+      // Web search (SearXNG). One shared bearer token for the service; read
+      // from the environment, which the wrapper fills from a 0600 file.
+      "searxng": {
+        "type": "remote",
+        "url": {{ system_opencode_searxng_url | to_json }},
+        "headers": {
+          "Authorization": "Bearer {env:SEARXNG_MCP_TOKEN}",
+        },
+        "codemode": false,
+      },
+{% endif %}
+{% if system_opencode_agentmemory or system_opencode_gateway or system_opencode_searxng %}
     },
   },
 {% endif %}

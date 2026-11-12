@@ -30,6 +30,15 @@ if [ -r {{ system_opencode_gateway_env_file | quote }} ]; then
 fi
 
 {% endif %}
+{% if system_opencode_searxng %}
+# SearXNG MCP token (0600 file written by Ansible).
+if [ -r {{ system_opencode_searxng_env_file | quote }} ]; then
+  set -a
+  . {{ system_opencode_searxng_env_file | quote }}
+  set +a
+fi
+
+{% endif %}
 # CLI settings owned by Ansible; merged over the TUI-managed cli.json.
 export OPENCODE_CLI_CONFIG_CONTENT={{ system_opencode_cli_config | to_json | quote }}
 

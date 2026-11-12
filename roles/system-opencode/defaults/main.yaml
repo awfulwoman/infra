@@ -213,3 +213,11 @@ system_opencode_gateway: true
 system_opencode_gateway_url: "https://gateway.{{ domainname_infra }}/mcp"
 system_opencode_gateway_token: "{{ vault_gateway_mcp_token_opencode }}"
 system_opencode_gateway_env_file: "{{ system_opencode_config_dir }}/gateway.env"
+
+# --- searxng --------------------------------------------------------------
+# Web search through composition-mcp-searxng (https://searchmcp.<domain>/mcp).
+# The service has one shared bearer token, not per-client ones.
+system_opencode_searxng: true
+system_opencode_searxng_url: "https://searchmcp.{{ domainname_infra }}/mcp"
+system_opencode_searxng_token: "{{ vault_mcp_searxng_auth_token }}"
+system_opencode_searxng_env_file: "{{ system_opencode_config_dir }}/searxng.env"
