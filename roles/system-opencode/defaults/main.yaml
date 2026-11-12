@@ -3,6 +3,10 @@
 # discovers models from the native Ollama API at the same host and port.
 system_opencode_ollama_base_url: "{{ llm_default_openai_uri }}"
 
+# opencode plugins (npm package names). Loaded by opencode at start-up.
+system_opencode_plugins:
+  - "@slkiser/opencode-quota"
+
 # Default model as provider/model, e.g. "ollama/kimi-k3:cloud". Empty leaves
 # the choice to opencode.
 system_opencode_model: ""

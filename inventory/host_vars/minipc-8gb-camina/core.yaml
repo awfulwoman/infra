@@ -103,6 +103,8 @@ reverseproxy_use_letsencrypt: false
 reverseproxy_wildcard_cert: true
 traefik_providers:
   - wildcard-cert
+  # ollama.{{ domainname_infra }} -> Ollama on malcolm (llm_default_ollama_backend_url).
+  - ollama
 
 # -------------------------------------------------------------------
 # COMPOSITIONS
@@ -168,6 +170,7 @@ compositions:
   - composition: reverseproxy
     labels:
       - "traefik-{host}"
+      - ollama
 
 # -------------------------------------------------------------------
 # HOMEBREW

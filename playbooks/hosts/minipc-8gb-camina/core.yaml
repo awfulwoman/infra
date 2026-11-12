@@ -17,6 +17,8 @@
     tags: [system, system-homebrew]
   - role: system-claude
     tags: [system, system-claude]
+  - role: system-nvm
+    tags: [system, system-nvm]
   - role: system-opencode
     tags: [system, system-opencode]
   - role: hardware-brother-ptouch

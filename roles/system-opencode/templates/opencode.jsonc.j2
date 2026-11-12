@@ -17,6 +17,9 @@
     {{ rule | to_json }},
 {% endfor %}
   ],
+{% if system_opencode_plugins %}
+  "plugins": {{ system_opencode_plugins | to_json }},
+{% endif %}
   "providers": {
     // v2 discovers Ollama models and reads their context size, vision and
     // tool support from Ollama, so models are not listed here.

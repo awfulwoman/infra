@@ -3,8 +3,8 @@
 [agentmemory](https://github.com/rohitg00/agentmemory): persistent memory for coding agents (MCP and REST).
 
 - REST API: `https://agentmemory.{{ domainname_infra }}` (Traefik, port 3111)
-- Viewer: `https://agentmemory-viewer.{{ domainname_infra }}` (port 3113; asks for the bearer token)
-- Both need `Authorization: Bearer <secret>`.
+- Viewer: `https://agentmemory-viewer.{{ domainname_infra }}` (port 3113)
+- API calls need `Authorization: Bearer <secret>`. The viewer page itself loads without it and prompts for the token; `/agentmemory/livez` is also open.
 
 ## Variables
 
@@ -26,4 +26,10 @@
 
 ```bash
 ansible-playbook playbooks/hosts/minipc-8gb-camina/core.yaml --tags composition -e target_composition=agentmemory
+```
+
+The two DNS labels only resolve after the zone is published from bertha:
+
+```bash
+ansible-playbook playbooks/hosts/router-4gb-bertha/core.yaml --tags infra-named
 ```

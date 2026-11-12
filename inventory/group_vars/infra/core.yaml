@@ -25,7 +25,12 @@ llm_default_model: "gemma4:31b-cloud"
 # managed hosts resolve through bertha's `tailscale` view, because Tailscale
 # claims the `~.` routing domain on every enrolled host.
 llm_default_host: "{{ hostvars['apple-macmini-m4-16gb-malcolm']['host_fqdn'] }}"
-llm_default_ollama_base_url: "http://{{ llm_default_host }}:11434"
+# Ollama's own plain-HTTP address. Only the reverse proxy's `ollama` provider
+# (camina) should use it; everything else goes through the HTTPS name below.
+llm_default_ollama_backend_url: "http://{{ llm_default_host }}:11434"
+# What consumers call: Traefik on camina terminates TLS in front of the
+# backend above (composition-reverseproxy's ollama provider).
+llm_default_ollama_base_url: "https://ollama.{{ domainname_infra }}"
 llm_default_openai_uri: "{{ llm_default_ollama_base_url }}/v1"
 
 # Locale
