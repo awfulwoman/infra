@@ -2,8 +2,8 @@
 # Composition name (used by composition-common dependency)
 composition_name: scrutiny
 
-# Single label before {host} (hyphen, not dot) - a *.ewwww.eu wildcard cert
-# cannot cover a multi-level name like "scrutiny.<host>.ewwww.eu". See #271.
+# Single label before {host} (hyphen, not dot) - a *.<domain> wildcard cert
+# cannot cover a multi-level name like "scrutiny.<host>.<domain>". See #271.
 # Scrutiny reports on one machine's physical drives, so the name is
 # host-scoped: several hosts can run it without colliding.
 composition_dns_subdomains:

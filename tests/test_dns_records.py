@@ -6,7 +6,7 @@ from dns_records import DuplicateLabelError, derive_dns_records
 def test_fixed_single_host_service():
     hosts = {
         "minipc-8gb-homebrain": {
-            "fqdn": "minipc-8gb-homebrain.xberg.ber.ewwww.eu",
+            "fqdn": "minipc-8gb-homebrain.xberg.ber.example.test",
             "tailscale_ipv4": "100.80.1.130",
             "compositions": ["gitea"],
         },
@@ -18,12 +18,12 @@ def test_fixed_single_host_service():
     assert result == {
         "a_records": {
             "minipc-8gb-homebrain": {
-                "name": "minipc-8gb-homebrain.xberg.ber.ewwww.eu",
+                "name": "minipc-8gb-homebrain.xberg.ber.example.test",
                 "target": "100.80.1.130",
             },
         },
         "cnames": {
-            "gitea": "minipc-8gb-homebrain.xberg.ber.ewwww.eu",
+            "gitea": "minipc-8gb-homebrain.xberg.ber.example.test",
         },
     }
 
@@ -31,12 +31,12 @@ def test_fixed_single_host_service():
 def test_per_host_label_derived_from_host_name():
     hosts = {
         "minipc-8gb-homebrain": {
-            "fqdn": "minipc-8gb-homebrain.xberg.ber.ewwww.eu",
+            "fqdn": "minipc-8gb-homebrain.xberg.ber.example.test",
             "tailscale_ipv4": "100.80.1.130",
             "compositions": ["zfs-api"],
         },
         "server-64gb-storage": {
-            "fqdn": "server-64gb-storage.xberg.ber.ewwww.eu",
+            "fqdn": "server-64gb-storage.xberg.ber.example.test",
             "tailscale_ipv4": "100.80.1.116",
             "compositions": ["zfs-api"],
         },
@@ -46,15 +46,15 @@ def test_per_host_label_derived_from_host_name():
     result = derive_dns_records(hosts, compositions)
 
     assert result["cnames"] == {
-        "zfs-api.minipc-8gb-homebrain": "minipc-8gb-homebrain.xberg.ber.ewwww.eu",
-        "zfs-api.server-64gb-storage": "server-64gb-storage.xberg.ber.ewwww.eu",
+        "zfs-api.minipc-8gb-homebrain": "minipc-8gb-homebrain.xberg.ber.example.test",
+        "zfs-api.server-64gb-storage": "server-64gb-storage.xberg.ber.example.test",
     }
 
 
 def test_per_host_label_override():
     hosts = {
         "server-64gb-storage": {
-            "fqdn": "server-64gb-storage.xberg.ber.ewwww.eu",
+            "fqdn": "server-64gb-storage.xberg.ber.example.test",
             "tailscale_ipv4": "100.80.1.116",
             "compositions": [
                 {"composition": "jellyfin", "labels": ["media"]},
@@ -66,14 +66,14 @@ def test_per_host_label_override():
     result = derive_dns_records(hosts, compositions)
 
     assert result["cnames"] == {
-        "media": "server-64gb-storage.xberg.ber.ewwww.eu",
+        "media": "server-64gb-storage.xberg.ber.example.test",
     }
 
 
 def test_two_instances_of_one_composition_on_one_host():
     hosts = {
         "minipc-8gb-homebrain": {
-            "fqdn": "minipc-8gb-homebrain.xberg.ber.ewwww.eu",
+            "fqdn": "minipc-8gb-homebrain.xberg.ber.example.test",
             "tailscale_ipv4": "100.80.1.130",
             "compositions": [
                 {"composition": "syncthing", "name": "personal", "labels": ["sync-personal"]},
@@ -87,13 +87,13 @@ def test_two_instances_of_one_composition_on_one_host():
 
     assert result["a_records"] == {
         "minipc-8gb-homebrain": {
-            "name": "minipc-8gb-homebrain.xberg.ber.ewwww.eu",
+            "name": "minipc-8gb-homebrain.xberg.ber.example.test",
             "target": "100.80.1.130",
         },
     }
     assert result["cnames"] == {
-        "sync-personal": "minipc-8gb-homebrain.xberg.ber.ewwww.eu",
-        "sync-shared": "minipc-8gb-homebrain.xberg.ber.ewwww.eu",
+        "sync-personal": "minipc-8gb-homebrain.xberg.ber.example.test",
+        "sync-shared": "minipc-8gb-homebrain.xberg.ber.example.test",
     }
 
 
@@ -112,7 +112,7 @@ def test_labels_override_works_even_when_composition_has_no_declared_subdomains(
     """
     hosts = {
         "server-64gb-storage": {
-            "fqdn": "server-64gb-storage.xberg.ber.ewwww.eu",
+            "fqdn": "server-64gb-storage.xberg.ber.example.test",
             "tailscale_ipv4": "100.80.1.116",
             "compositions": [
                 {"composition": "undeclared-example", "labels": []},
@@ -129,12 +129,12 @@ def test_labels_override_works_even_when_composition_has_no_declared_subdomains(
 def test_duplicate_label_across_hosts_raises_naming_composition_and_hosts():
     hosts = {
         "minipc-8gb-homebrain": {
-            "fqdn": "minipc-8gb-homebrain.xberg.ber.ewwww.eu",
+            "fqdn": "minipc-8gb-homebrain.xberg.ber.example.test",
             "tailscale_ipv4": "100.80.1.130",
             "compositions": ["gitea"],
         },
         "server-64gb-storage": {
-            "fqdn": "server-64gb-storage.xberg.ber.ewwww.eu",
+            "fqdn": "server-64gb-storage.xberg.ber.example.test",
             "tailscale_ipv4": "100.80.1.116",
             "compositions": ["gitea"],
         },
@@ -159,7 +159,7 @@ def test_all_of_a_compositions_default_labels_are_derived():
     """
     hosts = {
         "server-64gb-storage": {
-            "fqdn": "server-64gb-storage.xberg.ber.ewwww.eu",
+            "fqdn": "server-64gb-storage.xberg.ber.example.test",
             "tailscale_ipv4": "100.80.1.116",
             "compositions": ["jellyfin"],
         },
@@ -169,6 +169,6 @@ def test_all_of_a_compositions_default_labels_are_derived():
     result = derive_dns_records(hosts, compositions)
 
     assert result["cnames"] == {
-        "jellyfin": "server-64gb-storage.xberg.ber.ewwww.eu",
-        "jellyfin-vue": "server-64gb-storage.xberg.ber.ewwww.eu",
+        "jellyfin": "server-64gb-storage.xberg.ber.example.test",
+        "jellyfin-vue": "server-64gb-storage.xberg.ber.example.test",
     }

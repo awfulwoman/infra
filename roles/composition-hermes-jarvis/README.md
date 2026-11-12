@@ -200,8 +200,8 @@ fork over HTTPS, edit and test it, and push. The image has `git` and
 | `composition_hermes_jarvis_api_server` | `false` | Expose the OpenAI-compatible API on 8642, and publish it through Traefik at `hermes-jarvis-api.<domain>` |
 | `composition_hermes_jarvis_manage_config` | `true` | Let Ansible own `config.yaml` |
 | `composition_hermes_jarvis_matrix` | `false` | Connect the gateway to a Matrix homeserver |
-| `composition_hermes_jarvis_matrix_homeserver` | `""` | e.g. `https://matrix.ewwww.eu`; mandatory when on |
-| `composition_hermes_jarvis_matrix_user_id` | `""` | e.g. `@jarvis:matrix.ewwww.eu`; mandatory when on |
+| `composition_hermes_jarvis_matrix_homeserver` | `""` | e.g. `https://matrix.<domain>`; mandatory when on |
+| `composition_hermes_jarvis_matrix_user_id` | `""` | e.g. `@jarvis:matrix.<domain>`; mandatory when on |
 | `composition_hermes_jarvis_matrix_allowed_users` | `[]` | Matrix IDs allowed to talk to the bot; env-only, no `config.yaml` equivalent |
 | `composition_hermes_jarvis_matrix_device_id` | `""` | Pins E2EE device identity - see above |
 | `composition_hermes_jarvis_matrix_require_mention` | `true` | Require `@mention` outside DMs |

@@ -135,7 +135,7 @@ compositions:
 # -------------------------------------------------------------------
 # HERMES NABU
 # "Nabu helps run the home" - no MCP servers, browser toolset disabled.
-# Own Matrix account: @nabu:matrix.ewwww.eu, registered against
+# Own Matrix account: @nabu:matrix.<domain>, registered against
 # composition-matrix (server-64gb-storage) 2026-09-11. device_id pins the
 # one minted at registration so E2EE keys survive restarts.
 # -------------------------------------------------------------------
@@ -178,7 +178,7 @@ composition_hermes_nabu_matrix_allowed_users:
 # -------------------------------------------------------------------
 # HERMES JARVIS
 # "Jarvis is Charlie's general assistant" - exclusive use of the gateway MCP
-# server. Own Matrix account: @jarvis:matrix.ewwww.eu, registered against
+# server. Own Matrix account: @jarvis:matrix.<domain>, registered against
 # composition-matrix (server-64gb-storage) 2026-09-11. device_id pins the
 # one minted at registration so E2EE keys survive restarts.
 # -------------------------------------------------------------------

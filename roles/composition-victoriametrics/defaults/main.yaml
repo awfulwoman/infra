@@ -23,8 +23,8 @@ composition_victoriametrics_scrape_interval: "60s"
 composition_victoriametrics_scrape_timeout: "30s"
 
 # Domain configuration
-# "zfs-metrics" not "zfs.metrics" - a *.ewwww.eu wildcard cert cannot cover
-# a multi-level name like "zfs.metrics.ewwww.eu". See #271.
+# "zfs-metrics" not "zfs.metrics" - a *.<domain> wildcard cert cannot cover
+# a multi-level name like "zfs.metrics.<domain>". See #271.
 composition_dns_subdomains:
   - "zfs-metrics"
 

@@ -1,6 +1,6 @@
 from dns_records import diff_public_records
 
-ZONE = "ewwww.eu"
+ZONE = "example.test"
 TTL = 300
 
 DERIVED = {
@@ -23,7 +23,7 @@ def rrset(name, type_, value, ttl=TTL):
 def in_sync():
     return [
         rrset("server-64gb-storage.xberg.ber", "A", "100.80.1.116"),
-        rrset("jellyfin", "CNAME", "server-64gb-storage.xberg.ber.ewwww.eu."),
+        rrset("jellyfin", "CNAME", "server-64gb-storage.xberg.ber.example.test."),
     ]
 
 
@@ -33,7 +33,7 @@ def test_empty_zone_publishes_everything():
     assert result == {
         "a_upserts": [{"name": "server-64gb-storage.xberg.ber", "value": "100.80.1.116"}],
         "a_deletes": [],
-        "cname_upserts": [{"name": "jellyfin", "value": "server-64gb-storage.xberg.ber.ewwww.eu."}],
+        "cname_upserts": [{"name": "jellyfin", "value": "server-64gb-storage.xberg.ber.example.test."}],
     }
 
 
@@ -49,7 +49,7 @@ def test_only_the_new_label_is_published():
     result = diff_public_records(derived, in_sync(), ZONE, TTL)
 
     assert result["a_upserts"] == []
-    assert result["cname_upserts"] == [{"name": "gitea", "value": "server-64gb-storage.xberg.ber.ewwww.eu."}]
+    assert result["cname_upserts"] == [{"name": "gitea", "value": "server-64gb-storage.xberg.ber.example.test."}]
 
 
 def test_changed_host_ip_is_republished():
@@ -63,16 +63,16 @@ def test_changed_host_ip_is_republished():
 
 def test_changed_ttl_is_republished():
     existing = in_sync()
-    existing[1] = rrset("jellyfin", "CNAME", "server-64gb-storage.xberg.ber.ewwww.eu.", ttl=3600)
+    existing[1] = rrset("jellyfin", "CNAME", "server-64gb-storage.xberg.ber.example.test.", ttl=3600)
 
     result = diff_public_records(DERIVED, existing, ZONE, TTL)
 
-    assert result["cname_upserts"] == [{"name": "jellyfin", "value": "server-64gb-storage.xberg.ber.ewwww.eu."}]
+    assert result["cname_upserts"] == [{"name": "jellyfin", "value": "server-64gb-storage.xberg.ber.example.test."}]
 
 
 def test_cname_comparison_ignores_trailing_dot_and_case():
     existing = in_sync()
-    existing[1] = rrset("jellyfin", "CNAME", "Server-64gb-Storage.xberg.ber.ewwww.eu")
+    existing[1] = rrset("jellyfin", "CNAME", "Server-64gb-Storage.xberg.ber.example.test")
 
     result = diff_public_records(DERIVED, existing, ZONE, TTL)
 
@@ -88,7 +88,7 @@ def test_legacy_a_record_at_a_cname_label_is_deleted_and_cname_published():
     result = diff_public_records(DERIVED, existing, ZONE, TTL)
 
     assert result["a_deletes"] == ["jellyfin"]
-    assert result["cname_upserts"] == [{"name": "jellyfin", "value": "server-64gb-storage.xberg.ber.ewwww.eu."}]
+    assert result["cname_upserts"] == [{"name": "jellyfin", "value": "server-64gb-storage.xberg.ber.example.test."}]
 
 
 def test_unrelated_records_are_left_alone():

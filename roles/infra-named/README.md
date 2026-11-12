@@ -55,8 +55,8 @@ nameserver labels, not the apex/`www` records in `bind_records_a`, not
 This matters because a PTR names the host, not the services on it. When the
 aliases were emitted too, `192.168.1.116` carried 52 PTR records. BIND rotates
 a multi-record RRset on every query (default cyclic `rrset-order`), so a
-reverse lookup returned whichever alias came up first — `prowlarr.ewwww.eu.`
-on one query, `www.ewwww.eu.` on the next. Consumers of reverse DNS
+reverse lookup returned whichever alias came up first — `prowlarr.<domain>.`
+on one query, `www.<domain>.` on the next. Consumers of reverse DNS
 (WatchYourLAN's device names, log lines, `sshd`) showed a random service
 instead of the machine.
 

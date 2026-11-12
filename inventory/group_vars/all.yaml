@@ -47,12 +47,22 @@ vault_domainname_aw: !vault |
 domainname_infra: "{{ vault_domainname_ew }}"
 domainname_personal: "{{ vault_domainname_aw }}"
 
+# Domain names that must not appear in git. The domain-guard pre-commit hook
+# (in each repo's own .pre-commit-config.yaml) reads them from a file written
+# from this list, so the values are never committed. The personal domain is the
+# public site's own name, so it is deliberately not here.
+domain_guard_domains:
+  - "{{ vault_domainname_ew }}"
+  - "{{ vault_domainname_rs }}"
+  - "{{ vault_domainname_se }}"
+  - "{{ vault_domainname_wc }}"
+
 # Host-level TLS posture. Read by every composition that emits a Traefik
 # certresolver label, not just composition-reverseproxy - role defaults are
 # role-scoped, so these have to live at inventory level to be in scope for all
 # of them. Override per host; see #276.
 #   use_letsencrypt - the letsencrypt ACME resolver exists in traefik.yaml.
-#   wildcard_cert   - the internal *.ewwww.eu wildcard is mounted and set as
+#   wildcard_cert   - the internal *.<domain> wildcard is mounted and set as
 #                     Traefik's default certificate, so internal routers no
 #                     longer need ACME at all.
 # No host sets use_letsencrypt any more: public names get their certificates

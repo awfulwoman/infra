@@ -10,7 +10,7 @@ import sys
 import urllib.request
 import urllib.error
 
-CONNECT_HOST = "https://connect.ewwww.eu"
+CONNECT_HOST = os.environ.get("OP_CONNECT_HOST", "").rstrip("/")
 VAULT_ID = "tsnrmqmuafgj2b5ajwykn7jwpi"
 
 
@@ -44,6 +44,11 @@ def main():
     parser.add_argument("--category", default="LOGIN", help="Item category (default: LOGIN)")
     parser.add_argument("--length", type=int, default=32, help="Password length (default: 32)")
     args = parser.parse_args()
+
+    if not CONNECT_HOST:
+        print("Error: OP_CONNECT_HOST environment variable not set "
+              "(Ansible's onepassword_connect_host)", file=sys.stderr)
+        sys.exit(1)
 
     token = os.environ.get("OP_CONNECT_TOKEN_WRITE")
     if not token:

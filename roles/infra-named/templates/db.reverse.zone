@@ -27,7 +27,7 @@ $ORIGIN {{ bind_iprange_reversed }}.IN-ADDR.ARPA.
 ; They used to be. The result was 52 PTRs on server-64gb-storage's address,
 ; and BIND rotates a multi-record RRset per query (default cyclic
 ; rrset-order), so any reverse lookup returned an arbitrary service name -
-; `prowlarr.ewwww.eu.` one second, `www.ewwww.eu.` the next. Anything doing
+; `prowlarr.<domain>.` one second, `www.<domain>.` the next. Anything doing
 ; reverse lookups (WatchYourLAN, logs, sshd) got a coin flip instead of the
 ; host. Forward CNAMEs are unaffected; they stay in db.zone.
 ; ---------------------------------------------------------------------------

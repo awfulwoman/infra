@@ -165,8 +165,8 @@ The response's `access_token` is `vault_hermes_nabu_matrix_access_token`.
 | `composition_hermes_nabu_api_server` | `false` | Expose the OpenAI-compatible API on 8642, and publish it through Traefik at `hermes-nabu-api.<domain>` |
 | `composition_hermes_nabu_manage_config` | `true` | Let Ansible own `config.yaml` |
 | `composition_hermes_nabu_matrix` | `false` | Connect the gateway to a Matrix homeserver |
-| `composition_hermes_nabu_matrix_homeserver` | `""` | e.g. `https://matrix.ewwww.eu`; mandatory when on |
-| `composition_hermes_nabu_matrix_user_id` | `""` | e.g. `@nabu:matrix.ewwww.eu`; mandatory when on |
+| `composition_hermes_nabu_matrix_homeserver` | `""` | e.g. `https://matrix.<domain>`; mandatory when on |
+| `composition_hermes_nabu_matrix_user_id` | `""` | e.g. `@nabu:matrix.<domain>`; mandatory when on |
 | `composition_hermes_nabu_matrix_allowed_users` | `[]` | Matrix IDs allowed to talk to the bot; env-only, no `config.yaml` equivalent |
 | `composition_hermes_nabu_matrix_device_id` | `""` | Pins E2EE device identity - see above |
 | `composition_hermes_nabu_matrix_require_mention` | `true` | Require `@mention` outside DMs |

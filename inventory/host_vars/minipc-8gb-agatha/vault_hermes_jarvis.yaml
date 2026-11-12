@@ -21,7 +21,7 @@ vault_hermes_jarvis_dashboard_secret: !vault |
           63653163643531316131386265646436636366666337663435326435313463343037333362333663
           32373465323435383931
 
-# @jarvis:matrix.ewwww.eu - registered against composition-matrix on
+# @jarvis:matrix.<domain> - registered against composition-matrix on
 # server-64gb-storage using vault_matrix_registration_token, 2026-09-11.
 # Registration returned the access token directly (device_id A6ZT7fkulU,
 # pinned in core.yaml's composition_hermes_jarvis_matrix_device_id). Grants

@@ -34,7 +34,7 @@ These two scripts prepare a machine for Ansible control, especially for ansible-
 ## Secrets
 
 * [Generate a Laravel app key](generate-laravel-key.sh) — generates a Laravel APP_KEY in the format `base64:<32 random bytes>`.
-* [Write a password to 1Password](op-infra-write.py) — generates a password and stores it in the 1Password Infra vault, through Connect.
+* [Write a password to 1Password](op-infra-write.py) — generates a password and stores it in the 1Password Infra vault, through Connect. Needs `OP_CONNECT_HOST` (Ansible's `onepassword_connect_host`) and `OP_CONNECT_TOKEN_WRITE` in the environment.
 
 ## Backups
 

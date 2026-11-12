@@ -103,7 +103,7 @@ The most common cause of a stuck deploy is a container with a failing healthchec
 
 ## DNS registration for new compositions
 
-Public DNS (`*.ewwww.eu` CNAMEs) is managed by the `infra-named` role on `router-4gb-bertha`, which writes records to Hetzner DNS. CNAMEs are derived automatically from the `compositions:` list in each host's `host_vars`. After adding a new composition to that list, register its subdomain by running:
+Public DNS (`*.<domain>` CNAMEs) is managed by the `infra-named` role on `router-4gb-bertha`, which writes records to Hetzner DNS. CNAMEs are derived automatically from the `compositions:` list in each host's `host_vars`. After adding a new composition to that list, register its subdomain by running:
 
 ```bash
 aw-deploy run playbooks/hosts/router-4gb-bertha/core.yaml --tags infra-named

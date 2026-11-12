@@ -50,7 +50,7 @@ A **rogue cname** is an entry in `inventory/host_vars/<host>/core.yaml` under `c
 
 1. Read the host's `cnames` list from `inventory/host_vars/<host>/core.yaml`
 2. Get running project names: `ssh <host> 'docker compose ls --format json | python3 -c "import sys,json;[print(p[\"Name\"]) for p in json.load(sys.stdin)]"'`
-3. For each cname, strip `.<domainname_infra>` (e.g. `.ewwww.eu`) to get the subdomain
+3. For each cname, strip `.<domainname_infra>` (e.g. `.<domain>`) to get the subdomain
 4. Look up the subdomain in the mapping table below to find the expected composition name
 5. Flag any where no matching project is running
 

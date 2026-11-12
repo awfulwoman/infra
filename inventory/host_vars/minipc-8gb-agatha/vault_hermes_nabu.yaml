@@ -21,7 +21,7 @@ vault_hermes_nabu_dashboard_secret: !vault |
           32656463643834313838636630353262653431623637303736313833326531336532613634386466
           65646464616630646632
 
-# @nabu:matrix.ewwww.eu - registered against composition-matrix on
+# @nabu:matrix.<domain> - registered against composition-matrix on
 # server-64gb-storage using vault_matrix_registration_token, 2026-09-11.
 # Registration returned the access token directly (device_id 9Qy6AoJuoL,
 # pinned in core.yaml's composition_hermes_nabu_matrix_device_id). Grants

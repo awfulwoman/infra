@@ -23,6 +23,18 @@ repos:
         language: system
         pass_filenames: false
         files: ^(inventory/|plugins/filters/zfs_datasets\.py)
+      - id: domain-guard
+        name: Keep private domain names out of commits
+        # The names live in a file outside the repo (written by Ansible from the
+        # vault), so they are never committed. Without that file the hook only
+        # warns, which keeps this config usable in an isolated VM or container.
+        language: system
+        entry: >-
+          bash -c 'f="${DOMAIN_GUARD_FILE:-$HOME/.config/domain-guard/domains}";
+          [ -s "$f" ] || { echo "domain-guard: no domain list at $f, skipping" >&2; exit 0; };
+          hits=$(grep -I -i -F -l -f "$f" -- "$@");
+          [ -z "$hits" ] || { printf "domain-guard: a private domain name appears in:\n%s\nUse the Ansible variable or a placeholder instead.\n" "$hits"; exit 1; }'
+          domain-guard
 #     - repo: https://github.com/jackdewinter/pymarkdown
 #       rev: v0.9.34
 #       hooks:

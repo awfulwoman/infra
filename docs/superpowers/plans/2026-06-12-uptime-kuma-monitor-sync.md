@@ -1188,22 +1188,22 @@ Deploy to the real `server-64gb-storage` host and confirm the monitors appear.
 - [ ] Confirm `/health` is reachable over Traefik+TLS from the control node:
 
   ```bash
-  curl -sf https://uptime-kuma-api.ewwww.eu/health
+  curl -sf https://uptime-kuma-api.<domain>/health
   ```
 
-  (Substitute `ewwww.eu` with whatever `domainname_infra` resolves to in your vault.)
+  (Substitute `<domain>` with whatever `domainname_infra` resolves to in your vault.)
 
   Expected output: `{"status":"ok"}`.
 
 - [ ] Confirm monitors are visible in the Uptime Kuma UI:
 
   ```bash
-  open https://uptime-kuma.ewwww.eu
+  open https://uptime-kuma.<domain>
   ```
 
   Log in with the username/password from `vault_uptime_kuma.yaml`. You should see:
   - One ping monitor per infra host, named with `host_name_short` (e.g. `storage`, `homebrain`, `backups`, ...).
-  - One HTTP monitor per cname across all infra hosts (e.g. `jellyfin.ewwww.eu`, `homeassistant.ewwww.eu`, `zfs-api.server-64gb-storage.ewwww.eu`, ...).
+  - One HTTP monitor per cname across all infra hosts (e.g. `jellyfin.<domain>`, `homeassistant.<domain>`, `zfs-api.server-64gb-storage.<domain>`, ...).
   - Every Ansible-managed monitor carries the `ansible-managed` tag.
 
 - [ ] Confirm idempotency: re-run the playbook and verify nothing changes:

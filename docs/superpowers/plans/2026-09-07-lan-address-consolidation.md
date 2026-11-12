@@ -209,7 +209,7 @@ inventory automatically but still require a redeploy on the right host:
 
 The managed-host PTR loop has no subnet check, which is why
 `dig +short 81.37.168.192.in-addr.arpa PTR @192.168.1.1` returns
-`vps-hetzner-public01.cloud.hetzner.ewwww.eu.` — a PTR for `192.168.37.81`, an address
+`vps-hetzner-public01.cloud.hetzner.<domain>.` — a PTR for `192.168.37.81`, an address
 that does not exist.
 
 Guard against **`bind_iprange_segment` as a /16** (`192.168.0.0/16`,
@@ -326,7 +326,7 @@ templates would fail if it ever ran).
 ```bash
 # Config validity, on bertha
 dhcpd -t -cf /etc/dhcp/dhcpd.conf
-named-checkzone 168.192.in-addr.arpa /etc/bind/zones/db.ewwww.eu.reverse.zone
+named-checkzone 168.192.in-addr.arpa /etc/bind/zones/db.<domain>.reverse.zone
 
 # Reachability. Expect test-router (offline ~46d) and possibly backups to fail —
 # that is pre-existing, not a cutover failure.

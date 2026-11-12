@@ -12,7 +12,7 @@
 
 ## Context
 
-bertha is the home router at 192.168.1.1. It runs BIND, dhcpd, and the ACME client that issues the internal wildcard certificate for `ewwww.eu`. The IPv4 firewall is already good: the INPUT and FORWARD chains default to DROP, and the WAN side reaches nothing.
+bertha is the home router at 192.168.1.1. It runs BIND, dhcpd, and the ACME client that issues the internal wildcard certificate for `<domain>`. The IPv4 firewall is already good: the INPUT and FORWARD chains default to DROP, and the WAN side reaches nothing.
 
 Three faults remain. Each one is independent of the other two.
 
@@ -26,7 +26,7 @@ Three faults remain. Each one is independent of the other two.
 
 ## Task 1: Remove the wildcard private key from the tailnet
 
-`cert-distribution.service` runs `python3 -m http.server` on `100.80.1.1:8420`. It serves `/fastpool/acme/distribution`, which holds `*.ewwww.eu.key`. There is no authentication. The tailnet has 15 peers, and the Tailscale policy is still a single allow-all grant. One compromised phone or laptop is enough to read the key and impersonate every internal service.
+`cert-distribution.service` runs `python3 -m http.server` on `100.80.1.1:8420`. It serves `/fastpool/acme/distribution`, which holds `*.<domain>.key`. There is no authentication. The tailnet has 15 peers, and the Tailscale policy is still a single allow-all grant. One compromised phone or laptop is enough to read the key and impersonate every internal service.
 
 ### The host firewall cannot correct this fault
 

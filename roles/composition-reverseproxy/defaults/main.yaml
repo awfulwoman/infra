@@ -1,10 +1,10 @@
 # Composition name (used by composition-common dependency)
 composition_name: reverseproxy
 
-# Single label before {host} (hyphen, not dot) - a *.ewwww.eu wildcard cert
-# cannot cover a multi-level name like "whoami.<host>.ewwww.eu" per the
+# Single label before {host} (hyphen, not dot) - a *.<domain> wildcard cert
+# cannot cover a multi-level name like "whoami.<host>.<domain>" per the
 # CA/Browser Forum baseline requirements (Let's Encrypt won't issue
-# *.*.ewwww.eu). See #271.
+# *.*.<domain>). See #271.
 composition_dns_subdomains:
   - "whoami-{host}"
   - "traefik-{host}"

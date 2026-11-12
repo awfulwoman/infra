@@ -1,5 +1,8 @@
 # Domain snapshots
 
+> The generated `domains-*.json` files hold real service names, so they are git-ignored
+> and stay on the machine that captured them. Keep a baseline locally and diff against it.
+
 A reproducible before/after record of how every registered service name
 resolves and serves TLS, captured from two vantages:
 

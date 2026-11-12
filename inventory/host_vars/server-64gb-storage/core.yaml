@@ -381,7 +381,7 @@ zfs_nfs_exports:
 # Overrides below all reproduce exactly what's live today:
 #   - reverseproxy: only traefik-{host} was ever registered, never whoami.
 #     (Originally traefik.<pfqdn>, an older multi-label format - updated to
-#     the single-label traefik-{host} default in #271, since a *.ewwww.eu
+#     the single-label traefik-{host} default in #271, since a *.<domain>
 #     wildcard cert can't cover a multi-level name.)
 #   - mcp-openzim: its declared default was never registered here.
 #   - nabu, jarvis: composition_dns_subdomains: [] on their own roles -

@@ -1,8 +1,8 @@
 # Composition name (used by composition-common dependency)
 composition_name: syncthing
 
-# Single label before {host} (hyphen, not dot) - a *.ewwww.eu wildcard cert
-# cannot cover a multi-level name like "syncthing.<host>.ewwww.eu". See #271.
+# Single label before {host} (hyphen, not dot) - a *.<domain> wildcard cert
+# cannot cover a multi-level name like "syncthing.<host>.<domain>". See #271.
 composition_dns_subdomains:
   - "syncthing-{host}"
 

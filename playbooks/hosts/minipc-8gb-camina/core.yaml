@@ -44,6 +44,24 @@
   - role: system-logtide-syslog
     tags: [system, system-logtide-syslog]
 
+  tasks:
+  # Feeds the domain-guard pre-commit hook. Outside every repo, so the names
+  # never reach git; 0600 because they come from the vault.
+  - name: Create the domain-guard directory
+    ansible.builtin.file:
+      path: "{{ ansible_facts.user_dir }}/.config/domain-guard"
+      state: directory
+      mode: "0700"
+    tags: [system, domain-guard]
+
+  - name: Write the domain-guard list
+    ansible.builtin.copy:
+      content: "{{ domain_guard_domains | join('\n') }}\n"
+      dest: "{{ ansible_facts.user_dir }}/.config/domain-guard/domains"
+      mode: "0600"
+    no_log: true
+    tags: [system, domain-guard]
+
   handlers:
   - name: Reboot host
     become: true
