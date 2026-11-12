@@ -178,3 +178,6 @@ compositions:
 system_homebrew_formulae:
   - opencode
   - nono
+  - pre-commit
+  # Used by awfulwoman.com's pre-commit hook to strip location data from photos.
+  - exiftool
