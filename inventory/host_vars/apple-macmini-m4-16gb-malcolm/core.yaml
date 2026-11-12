@@ -82,6 +82,8 @@ system_ollama_models:
   - "{{ llm_default_model }}"
   # Used by composition-translation-server on storage.
   - "translategemma:4b"
+  # Cloud model, offered to opencode on camina (v2 discovers models from Ollama).
+  - "deepseek-v4.1-flash:cloud"
 
 # -------------------------------------------------------------------
 # CLAUDE
