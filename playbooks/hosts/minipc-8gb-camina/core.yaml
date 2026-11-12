@@ -17,6 +17,8 @@
     tags: [system, system-homebrew]
   - role: system-claude
     tags: [system, system-claude]
+  - role: system-opencode
+    tags: [system, system-opencode]
   - role: hardware-brother-ptouch
     tags: [hardware, hardware-brother-ptouch]
   - role: hardware-rtl-sdr

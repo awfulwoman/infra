@@ -1,0 +1,17 @@
+// Managed by Ansible (system-opencode). Local edits are overwritten.
+// opencode v2 native format: https://v2.opencode.ai/config
+{
+  "$schema": "https://opencode.ai/config.json",
+{% if system_opencode_model %}
+  "model": {{ system_opencode_model | to_json }},
+{% endif %}
+  "providers": {
+    // v2 discovers Ollama models and reads their context size, vision and
+    // tool support from Ollama, so models are not listed here.
+    "ollama": {
+      "settings": {
+        "baseURL": {{ system_opencode_ollama_base_url | to_json }},
+      },
+    },
+  },
+}
