@@ -203,3 +203,13 @@ system_opencode_agentmemory_files:
   - src: plugin/opencode/commands/remember.md
     dest: commands/remember.md
     sha256: 8e27caf25ba2d2f1fd7944f0454c90cf9b4b5ff24054a91c5baeb242025fa6a9
+
+# --- gateway --------------------------------------------------------------
+# Registers the gateway MCP server (https://gateway.<domain>/mcp: email,
+# calendar, notes, bookmarks, reminders) as a remote server. opencode has its
+# own client token, `opencode` in composition_gateway_server_auth_clients, so it
+# can be revoked on its own. The wrapper exports it from a 0600 file.
+system_opencode_gateway: true
+system_opencode_gateway_url: "https://gateway.{{ domainname_infra }}/mcp"
+system_opencode_gateway_token: "{{ vault_gateway_mcp_token_opencode }}"
+system_opencode_gateway_env_file: "{{ system_opencode_config_dir }}/gateway.env"

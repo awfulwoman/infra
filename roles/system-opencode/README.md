@@ -102,3 +102,12 @@ See `defaults/main.yaml`.
 
 - Ubuntu/Debian
 - macOS
+
+## gateway
+
+Registers the gateway MCP server (`https://gateway.<domain>/mcp`: email, calendar, notes, bookmarks, reminders) as a `remote` server in `opencode.jsonc`.
+
+- opencode has its own client token, `vault_gateway_mcp_token_opencode`, listed as `opencode` in `composition_gateway_server_auth_clients`. It can be revoked without touching Claude's or Jarvis's tokens. Deploy `composition-gateway` after adding or rotating it.
+- The config holds `Bearer {env:GATEWAY_MCP_TOKEN}`, never the value. The token is written to `~/.config/opencode/gateway.env` (mode 0600), which the wrapper sources.
+- Variables: `system_opencode_gateway` (on/off), `_url`, `_token`, `_env_file`.
+- As with agentmemory, running the Homebrew binary directly skips the wrapper, so the token is not set and the server fails to authenticate.

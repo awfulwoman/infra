@@ -17,9 +17,11 @@
     {{ rule | to_json }},
 {% endfor %}
   ],
-{% if system_opencode_agentmemory %}
+{% if system_opencode_agentmemory or system_opencode_gateway %}
   "mcp": {
     "servers": {
+{% endif %}
+{% if system_opencode_agentmemory %}
       // Memory tools. The shim proxies to the agentmemory server named by
       // AGENTMEMORY_URL (all tools) and falls back to 7 local ones without it.
       "agentmemory": {
@@ -35,6 +37,21 @@
           "AGENTMEMORY_SECRET": "{env:AGENTMEMORY_SECRET}",
         },
       },
+{% endif %}
+{% if system_opencode_gateway %}
+      // Personal services (email, calendar, notes, bookmarks, reminders). The
+      // token is this client's own, read from the environment so it never
+      // lands in this file; the wrapper exports it from a 0600 file.
+      "gateway": {
+        "type": "remote",
+        "url": {{ system_opencode_gateway_url | to_json }},
+        "headers": {
+          "Authorization": "Bearer {env:GATEWAY_MCP_TOKEN}",
+        },
+        "codemode": false,
+      },
+{% endif %}
+{% if system_opencode_agentmemory or system_opencode_gateway %}
     },
   },
 {% endif %}
