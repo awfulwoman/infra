@@ -7,6 +7,15 @@
     group: "{{ system_opencode_group }}"
     mode: "0755"
 
+- name: Ensure the opencode secrets directory exists
+  ansible.builtin.file:
+    path: "{{ system_opencode_secrets_dir }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ system_opencode_group }}"
+    mode: "0700"
+  when: system_opencode_agentmemory or system_opencode_gateway or system_opencode_searxng or system_opencode_github
+
 # opencode merges every opencode.json(c) it finds, so a leftover .json from
 # before the move to JSONC would still apply.
 - name: Remove legacy opencode.json
@@ -167,14 +176,15 @@
     state: absent
   when: system_opencode_github
 
-- name: Ensure the opencode secrets directory exists
+- name: Remove old in-config-dir secret files (now in the secrets dir)
   ansible.builtin.file:
-    path: "{{ system_opencode_github_app_key_file | dirname }}"
-    state: directory
-    owner: "{{ ansible_user }}"
-    group: "{{ system_opencode_group }}"
-    mode: "0700"
-  when: system_opencode_github
+    path: "{{ system_opencode_config_dir }}/{{ item }}"
+    state: absent
+  loop:
+    - agentmemory.env
+    - gateway.env
+    - searxng.env
+  when: system_opencode_agentmemory or system_opencode_gateway or system_opencode_searxng
 
 - name: Write the GitHub App private key
   ansible.builtin.copy:

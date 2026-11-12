@@ -13,6 +13,10 @@ system_opencode_model: ""
 
 # Config directory and file. opencode follows XDG, so ~/.config on both OSes.
 system_opencode_config_dir: "{{ ansible_facts.user_dir }}/.config/opencode"
+# Secret files (tokens, the GitHub App key) live here, a sibling of the config
+# dir. The nono profile grants ~/.config/opencode but not this directory, so
+# the agent cannot read them by default.
+system_opencode_secrets_dir: "{{ ansible_facts.user_dir }}/.config/opencode-secrets"
 system_opencode_group: "{{ ansible_user }}"
 
 # --- nono sandbox ---------------------------------------------------------
@@ -189,7 +193,7 @@ system_opencode_agentmemory_url: "https://agentmemory.{{ domainname_infra }}"
 system_opencode_agentmemory_secret: "{{ vault_composition_agentmemory_secret }}"
 # Keep in step with the image tag in composition-agentmemory.
 system_opencode_agentmemory_version: "0.9.33"
-system_opencode_agentmemory_env_file: "{{ system_opencode_config_dir }}/agentmemory.env"
+system_opencode_agentmemory_env_file: "{{ system_opencode_secrets_dir }}/agentmemory.env"
 
 # Files fetched from the upstream repo at the tag above, with their checksums.
 # Update the checksums when the version changes.
@@ -212,7 +216,7 @@ system_opencode_agentmemory_files:
 system_opencode_gateway: true
 system_opencode_gateway_url: "https://gateway.{{ domainname_infra }}/mcp"
 system_opencode_gateway_token: "{{ vault_gateway_mcp_token_opencode }}"
-system_opencode_gateway_env_file: "{{ system_opencode_config_dir }}/gateway.env"
+system_opencode_gateway_env_file: "{{ system_opencode_secrets_dir }}/gateway.env"
 
 # --- searxng --------------------------------------------------------------
 # Web search through composition-mcp-searxng (https://searchmcp.<domain>/mcp).
@@ -220,7 +224,7 @@ system_opencode_gateway_env_file: "{{ system_opencode_config_dir }}/gateway.env"
 system_opencode_searxng: true
 system_opencode_searxng_url: "https://searchmcp.{{ domainname_infra }}/mcp"
 system_opencode_searxng_token: "{{ vault_mcp_searxng_auth_token }}"
-system_opencode_searxng_env_file: "{{ system_opencode_config_dir }}/searxng.env"
+system_opencode_searxng_env_file: "{{ system_opencode_secrets_dir }}/searxng.env"
 
 # --- github ----------------------------------------------------------------
 # Lets the agent push to the awfulwoman repos and drive `gh` without ever
@@ -233,6 +237,6 @@ system_opencode_searxng_env_file: "{{ system_opencode_config_dir }}/searxng.env"
 system_opencode_github: false
 system_opencode_github_app_id: "{{ vault_github_app_id }}"
 system_opencode_github_installation_id: "{{ vault_github_app_installation_id }}"
-system_opencode_github_app_key_file: "{{ ansible_facts.user_dir }}/.config/opencode-secrets/github-app.pem"
+system_opencode_github_app_key_file: "{{ system_opencode_secrets_dir }}/github-app.pem"
 system_opencode_github_mint_helper: "{{ system_opencode_config_dir }}/mint-github-token.sh"
 system_opencode_github_credential_helper: "{{ system_opencode_config_dir }}/git-credential-github.sh"

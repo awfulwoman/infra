@@ -52,7 +52,7 @@ Connects [composition-agentmemory](../composition-agentmemory/README.md)
   list it under `plugins` in `opencode.jsonc`, or it captures every event twice.
 
 The URL and bearer secret (`vault_composition_agentmemory_secret`) go in
-`~/.config/opencode/agentmemory.env` (mode 0600), which the wrapper exports. A
+`~/.config/opencode-secrets/agentmemory.env` (mode 0600), which the wrapper exports. A
 bare run of the Homebrew binary therefore has no memory. The plugin sends what
 the agent sees and does to that server. Keep `system_opencode_agentmemory_version`
 in step with the composition's image tag, and update the checksums with it.
@@ -108,13 +108,13 @@ See `defaults/main.yaml`.
 Registers the gateway MCP server (`https://gateway.<domain>/mcp`: email, calendar, notes, bookmarks, reminders) as a `remote` server in `opencode.jsonc`.
 
 - opencode has its own client token, `vault_gateway_mcp_token_opencode`, listed as `opencode` in `composition_gateway_server_auth_clients`. It can be revoked without touching Claude's or Jarvis's tokens. Deploy `composition-gateway` after adding or rotating it.
-- The config holds `Bearer {env:GATEWAY_MCP_TOKEN}`, never the value. The token is written to `~/.config/opencode/gateway.env` (mode 0600), which the wrapper sources.
+- The config holds `Bearer {env:GATEWAY_MCP_TOKEN}`, never the value. The token is written to `~/.config/opencode-secrets/gateway.env` (mode 0600), which the wrapper sources.
 - Variables: `system_opencode_gateway` (on/off), `_url`, `_token`, `_env_file`.
 - As with agentmemory, running the Homebrew binary directly skips the wrapper, so the token is not set and the server fails to authenticate.
 
 ## searxng
 
-Registers the SearXNG MCP server (`https://searchmcp.<domain>/mcp`, from `composition-mcp-searxng`) as a `remote` server, for web search. The service has a single shared bearer token (`vault_mcp_searxng_auth_token`), so unlike the gateway it cannot be revoked per client. The token goes in `~/.config/opencode/searxng.env` (mode 0600), sourced by the wrapper; the config holds `Bearer {env:SEARXNG_MCP_TOKEN}`.
+Registers the SearXNG MCP server (`https://searchmcp.<domain>/mcp`, from `composition-mcp-searxng`) as a `remote` server, for web search. The service has a single shared bearer token (`vault_mcp_searxng_auth_token`), so unlike the gateway it cannot be revoked per client. The token goes in `~/.config/opencode-secrets/searxng.env` (mode 0600), sourced by the wrapper; the config holds `Bearer {env:SEARXNG_MCP_TOKEN}`.
 
 Variables: `system_opencode_searxng` (on/off), `_url`, `_token`, `_env_file`.
 
