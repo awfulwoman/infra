@@ -31,6 +31,9 @@ sandbox, installed by `system-homebrew` (`nono` in `system_homebrew_formulae`).
   `nono run --profile opencode-local -- opencode --standalone`, and an alias in
   `.bashrc` points `opencode` at it (Homebrew's `shellenv` would otherwise
   shadow it on PATH)
+- The wrapper also sets `OPENCODE_CLI_CONFIG_CONTENT` from `system_opencode_cli_config`
+  (default: `app.exit` without `ctrl+c`). opencode merges it over `cli.json`, which
+  the TUI rewrites, so Ansible owns only these keys
 - Admin commands (`serve`, `auth`, `acp`, `service`, `models`, ...) bypass the
   sandbox, since they do not support `--standalone`
 
@@ -50,6 +53,7 @@ See `defaults/main.yaml`.
 
 - `system_opencode_ollama_base_url`: OpenAI-compatible endpoint, defaults to `llm_default_openai_uri`
 - `system_opencode_sandbox*`: sandbox switches and paths, see above
+- `system_opencode_cli_config`: CLI settings (e.g. keybinds) applied via the wrapper
 - `system_opencode_model`: optional default model, `provider/model` (e.g. `ollama/kimi-k3:cloud`)
 
 ## Platforms

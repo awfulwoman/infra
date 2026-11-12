@@ -34,3 +34,11 @@ system_opencode_sandbox_allow:
 system_opencode_sandbox_read: []
 # Paths denied even inside the allowed ones.
 system_opencode_sandbox_deny: []
+
+# CLI (terminal client) settings the wrapper applies through
+# OPENCODE_CLI_CONFIG_CONTENT. opencode merges them over ~/.config/opencode/cli.json,
+# which the TUI itself rewrites, so only keys owned here belong in this dict.
+# Dropping ctrl+c from app.exit stops it quitting; it still clears the prompt.
+system_opencode_cli_config:
+  keybinds:
+    app.exit: [ctrl+d, "<leader>q"]

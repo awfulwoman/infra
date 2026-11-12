@@ -11,6 +11,9 @@ set -euo pipefail
 
 real={{ system_opencode_binary | quote }}
 
+# CLI settings owned by Ansible; merged over the TUI-managed cli.json.
+export OPENCODE_CLI_CONFIG_CONTENT={{ system_opencode_cli_config | to_json | quote }}
+
 case "${1:-}" in
   # Administrative commands: no --standalone support, run unsandboxed.
   serve|auth|acp|service|upgrade|update|uninstall|models|stats|session|plugin|mcp|debug|api|--help|-h|--version|-v)
