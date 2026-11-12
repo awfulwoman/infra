@@ -144,8 +144,9 @@ To enable (once the App exists):
 1. Create a GitHub App owned by the account, install it on the repos, note its
    App ID and installation ID.
 2. `ansible-vault`-encrypt the App's private key as
-   `vault_github_app_private_key`.
-3. Set `system_opencode_github: true` and the two IDs.
+   `vault_github_app_private_key`, and the IDs as `vault_github_app_id` and
+   `vault_github_app_installation_id` (all in `vault_external_github.yaml`).
+3. Set `system_opencode_github: true`.
 
 Variables: `system_opencode_github` (on/off, default off), `_app_id`,
 `_installation_id`, `_app_key_file`, `_mint_helper`, `_credential_helper`.

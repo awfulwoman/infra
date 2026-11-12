@@ -231,8 +231,8 @@ system_opencode_searxng_env_file: "{{ system_opencode_config_dir }}/searxng.env"
 # App key sits in the sandbox deny list, so the agent cannot read it.
 # Disabled until the App exists and vault_github_app_private_key is set.
 system_opencode_github: false
-system_opencode_github_app_id: ""
-system_opencode_github_installation_id: ""
+system_opencode_github_app_id: "{{ vault_github_app_id }}"
+system_opencode_github_installation_id: "{{ vault_github_app_installation_id }}"
 system_opencode_github_app_key_file: "{{ system_opencode_config_dir }}/github-app.pem"
 system_opencode_github_mint_helper: "{{ system_opencode_config_dir }}/mint-github-token.sh"
 system_opencode_github_credential_helper: "{{ system_opencode_config_dir }}/git-credential-github.sh"
