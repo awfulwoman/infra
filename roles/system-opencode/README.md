@@ -17,6 +17,16 @@ and tool support, so no model list is kept here. `*:cloud` models are proxied by
 Ollama on malcolm to Ollama Cloud, using malcolm's own sign-in. Models without
 the `tools` capability cannot drive opencode's edit and shell tools.
 
+## Permissions
+
+`opencode.jsonc` carries an ordered `permissions` list (opencode v2, last match
+wins): ask for `shell` and `external_directory` by default, then allow the
+commands in `system_opencode_shell_allow`. `system_opencode_permissions_extra`
+is appended last, for hard denies such as `git push *`.
+
+Note: `~/.config/opencode/cli.json` can set `session.permissions: autoaccept`,
+which accepts every request and makes the `ask` rules moot.
+
 ## Sandbox (nono)
 
 opencode runs inside a [nono](https://github.com/nolabs-ai/nono) Landlock
@@ -54,6 +64,7 @@ See `defaults/main.yaml`.
 - `system_opencode_ollama_base_url`: OpenAI-compatible endpoint, defaults to `llm_default_openai_uri`
 - `system_opencode_sandbox*`: sandbox switches and paths, see above
 - `system_opencode_cli_config`: CLI settings (e.g. keybinds) applied via the wrapper
+- `system_opencode_permissions_default`, `_shell_allow`, `_extra`: permission rules, see above
 - `system_opencode_model`: optional default model, `provider/model` (e.g. `ollama/kimi-k3:cloud`)
 
 ## Platforms

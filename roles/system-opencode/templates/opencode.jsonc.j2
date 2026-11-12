@@ -5,6 +5,18 @@
 {% if system_opencode_model %}
   "model": {{ system_opencode_model | to_json }},
 {% endif %}
+  // The last matching rule wins: defaults first, then the allow-list, then extras.
+  "permissions": [
+{% for rule in system_opencode_permissions_default %}
+    {{ rule | to_json }},
+{% endfor %}
+{% for cmd in system_opencode_shell_allow %}
+    {{ {"action": "shell", "resource": cmd, "effect": "allow"} | to_json }},
+{% endfor %}
+{% for rule in system_opencode_permissions_extra %}
+    {{ rule | to_json }},
+{% endfor %}
+  ],
   "providers": {
     // v2 discovers Ollama models and reads their context size, vision and
     // tool support from Ollama, so models are not listed here.

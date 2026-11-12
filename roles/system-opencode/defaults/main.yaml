@@ -42,3 +42,86 @@ system_opencode_sandbox_deny: []
 system_opencode_cli_config:
   keybinds:
     app.exit: [ctrl+d, "<leader>q"]
+
+# --- permissions ----------------------------------------------------------
+# opencode v2 `permissions` rules, written to opencode.jsonc. The last matching
+# rule wins, so the defaults come first and the allow-list after. A trailing
+# " *" also matches the bare command.
+system_opencode_permissions_default:
+  - {action: external_directory, resource: "*", effect: ask}
+  - {action: shell, resource: "*", effect: ask}
+
+# Shell commands allowed without asking.
+system_opencode_shell_allow:
+  - "actionlint *"
+  - "bats *"
+  - "cat *"
+  - "command -v *"
+  - "cut *"
+  - "date *"
+  - "diff *"
+  - "docker ps *"
+  - "docker image ls *"
+  - "docker network ls *"
+  - "echo *"
+  - "exit *"
+  - "git *"
+  - "gh issue list *"
+  - "gh issue status *"
+  - "gh issue view *"
+  - "gh pr diff *"
+  - "gh pr list *"
+  - "gh pr status *"
+  - "gh pr view *"
+  - "gh repo view *"
+  - "gh run list *"
+  - "gh run view *"
+  - "gh search *"
+  - "gh workflow list *"
+  - "gh workflow view *"
+  - "grep *"
+  - "halfpipe *"
+  - "head *"
+  - "ls *"
+  - "man *"
+  - "mkdir *"
+  - "mktemp *"
+  - "nono why *"
+  - "opencode --version"
+  - "orb info *"
+  - "orb list *"
+  - "otool *"
+  - "paste *"
+  - "printf *"
+  - "pwd *"
+  - "rg *"
+  - "sed *"
+  - "shasum *"
+  - "shellcheck *"
+  - "strings *"
+  - "sleep *"
+  - "sort *"
+  - "tail *"
+  - "tee *"
+  - "test *"
+  - "touch *"
+  - "tr *"
+  - "true *"
+  - "uniq *"
+  - "wc *"
+  - "which *"
+  - "awk *"
+  - "chmod *"
+  - "env *"
+  - "find *"
+  - "jq *"
+  - "xargs *"
+  - "make *"
+  - "mise *"
+  - "npm *"
+  - "uv *"
+  - "node *"
+  - "python3 *"
+
+# Rules appended last (so they win), e.g. hard denies.
+system_opencode_permissions_extra: []
