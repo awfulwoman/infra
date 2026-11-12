@@ -39,6 +39,19 @@ if [ -r {{ system_opencode_searxng_env_file | quote }} ]; then
 fi
 
 {% endif %}
+{% if system_opencode_github %}
+# GitHub: mint a short-lived installation token for gh, and point git at HTTPS
+# via a credential helper that re-mints per push (so a long session never hits
+# an expired token). The App key itself is denied to the sandbox.
+export GH_TOKEN="$({{ system_opencode_github_mint_helper | quote }})"
+export GITHUB_TOKEN="$GH_TOKEN"
+export GIT_CONFIG_COUNT=2
+export GIT_CONFIG_KEY_0="url.https://x-access-token@github.com/.insteadOf"
+export GIT_CONFIG_VALUE_0="git@github.com:"
+export GIT_CONFIG_KEY_1="credential.helper"
+export GIT_CONFIG_VALUE_1="!{{ system_opencode_github_credential_helper }}"
+
+{% endif %}
 # CLI settings owned by Ansible; merged over the TUI-managed cli.json.
 export OPENCODE_CLI_CONFIG_CONTENT={{ system_opencode_cli_config | to_json | quote }}
 

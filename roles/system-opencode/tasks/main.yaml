@@ -160,3 +160,31 @@
     mode: "0600"
   no_log: true
   when: system_opencode_searxng
+
+- name: Write the GitHub App private key
+  ansible.builtin.copy:
+    content: "{{ vault_github_app_private_key }}"
+    dest: "{{ system_opencode_github_app_key_file }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ system_opencode_group }}"
+    mode: "0600"
+  no_log: true
+  when: system_opencode_github
+
+- name: Write the GitHub token mint helper
+  ansible.builtin.template:
+    src: mint-github-token.sh.j2
+    dest: "{{ system_opencode_github_mint_helper }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ system_opencode_group }}"
+    mode: "0700"
+  when: system_opencode_github
+
+- name: Write the git credential helper
+  ansible.builtin.template:
+    src: git-credential-github.sh.j2
+    dest: "{{ system_opencode_github_credential_helper }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ system_opencode_group }}"
+    mode: "0700"
+  when: system_opencode_github

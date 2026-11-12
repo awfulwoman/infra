@@ -117,3 +117,35 @@ Registers the gateway MCP server (`https://gateway.<domain>/mcp`: email, calenda
 Registers the SearXNG MCP server (`https://searchmcp.<domain>/mcp`, from `composition-mcp-searxng`) as a `remote` server, for web search. The service has a single shared bearer token (`vault_mcp_searxng_auth_token`), so unlike the gateway it cannot be revoked per client. The token goes in `~/.config/opencode/searxng.env` (mode 0600), sourced by the wrapper; the config holds `Bearer {env:SEARXNG_MCP_TOKEN}`.
 
 Variables: `system_opencode_searxng` (on/off), `_url`, `_token`, `_env_file`.
+
+## github (push + gh via a GitHub App)
+
+Lets the agent push to the awfulwoman repos and drive `gh` without ever
+reading a long-lived credential. A GitHub App installation token (1 hour) is
+minted on demand; git and gh use it, and the App's private key is denied to the
+sandbox.
+
+- `~/.config/opencode/github-app.pem` holds the App private key (mode 0600,
+  from `vault_github_app_private_key`). It is in `system_opencode_sandbox_deny`,
+  so the agent cannot read it.
+- `mint-github-token.sh` signs a JWT with that key and POSTs to
+  `api.github.com` for an installation token. The wrapper runs it (outside the
+  sandbox) to set `GH_TOKEN`/`GITHUB_TOKEN` for `gh`, and a git credential
+  helper re-runs it on every push, so a long session never uses an expired
+  token.
+- Git is pointed at HTTPS via `url.*.insteadOf` in the wrapper, so the agent
+  pushes over HTTPS with `x-access-token` + the minted token; the SSH remotes
+  are left untouched for manual use.
+- The App needs `Contents: read/write` (git) and `Issues: read/write` (`gh`),
+  installed on the repos it should reach.
+
+To enable (once the App exists):
+
+1. Create a GitHub App owned by the account, install it on the repos, note its
+   App ID and installation ID.
+2. `ansible-vault`-encrypt the App's private key as
+   `vault_github_app_private_key`.
+3. Set `system_opencode_github: true` and the two IDs.
+
+Variables: `system_opencode_github` (on/off, default off), `_app_id`,
+`_installation_id`, `_app_key_file`, `_mint_helper`, `_credential_helper`.
