@@ -8,4 +8,4 @@ Privacy-focused AI answering engine that combines internet knowledge with local 
 
 You configure Ollama and model selection through the web UI on first launch.
 
-The default Ollama API URL is `{{ llm_default_ollama_base_url }}` (Malcolm). You can override it with the `vane_ollama_api_url` variable.
+The default Ollama API URL is `{{ llm_default_ollama_base_url }}` (`https://ollama.<domain>`, a Traefik route on camina to Malcolm). You can override it with the `vane_ollama_api_url` variable.

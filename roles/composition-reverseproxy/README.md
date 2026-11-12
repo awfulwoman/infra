@@ -20,7 +20,9 @@ Deploys [Traefik v3](https://traefik.io/) as the central HTTP/HTTPS reverse prox
 
 ## Providers
 
-You can deploy static provider files in `templates/providers/` to `<composition_config>/providers/` through `traefik_providers`. Pre-built providers exist for: `esphome`, `gotosocial`, `homeassistant`, `immich`, `personalsite`, `watchyourlan`.
+You can deploy static provider files in `templates/providers/` to `<composition_config>/providers/` through `traefik_providers`. Pre-built providers exist for: `esphome`, `gotosocial`, `homeassistant`, `immich`, `ollama`, `personalsite`, `watchyourlan`.
+
+The `ollama` provider serves `ollama.<domain>` over TLS and proxies to Ollama on Malcolm (`llm_default_ollama_backend_url`). It is enabled on camina, which also claims the `ollama` DNS label. Consumers use `llm_default_ollama_base_url` / `llm_default_openai_uri`, which point at that name.
 
 `reverseproxy_vm_routes` supports dynamic VM route proxying. Each entry specifies a `name`, `host`, `backend`, and optional `middlewares` list.
 

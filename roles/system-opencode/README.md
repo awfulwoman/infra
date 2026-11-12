@@ -27,6 +27,18 @@ is appended last, for hard denies such as `git push *`.
 Note: `~/.config/opencode/cli.json` can set `session.permissions: autoaccept`,
 which accepts every request and makes the `ask` rules moot.
 
+## Quota display (opencode-quota)
+
+`system_opencode_plugins` loads `@slkiser/opencode-quota`, which shows Ollama
+Cloud session and weekly quota. It needs Node 22.13+ only for its terminal
+commands (`system-nvm` provides it). `system_opencode_quota_settings` writes the
+plugin's `settings.jsonc` with a custom provider that reads
+`<ollama url>/api/balance`. Malcolm's Ollama signs cloud requests with its own
+sign-in, so no API key is needed; the plugin only requires HTTPS and *a*
+bearer key, so `ollama.<domain>` (Traefik on camina) and a placeholder key do
+the job. Changes saved from the TUI's quota settings are overwritten on the
+next run.
+
 ## Sandbox (nono)
 
 opencode runs inside a [nono](https://github.com/nolabs-ai/nono) Landlock
@@ -61,7 +73,7 @@ Check with `nono profile show opencode-local` and, inside a session,
 
 See `defaults/main.yaml`.
 
-- `system_opencode_ollama_base_url`: OpenAI-compatible endpoint, defaults to `llm_default_openai_uri`
+- `system_opencode_ollama_base_url`: OpenAI-compatible endpoint, defaults to `llm_default_openai_uri` (`https://ollama.<domain>/v1`)
 - `system_opencode_sandbox*`: sandbox switches and paths, see above
 - `system_opencode_cli_config`: CLI settings (e.g. keybinds) applied via the wrapper
 - `system_opencode_permissions_default`, `_shell_allow`, `_extra`: permission rules, see above

@@ -155,7 +155,7 @@ The response's `access_token` is `vault_hermes_nabu_matrix_access_token`.
 |----------|---------|-------------|
 | `composition_hermes_nabu_image` | `nousresearch/hermes-agent:latest` | Published image |
 | `composition_hermes_nabu_model` | `{{ llm_default_model }}` | Model ID passed to Ollama |
-| `composition_hermes_nabu_base_url` | `{{ llm_default_openai_uri }}` | Malcolm's OpenAI-compatible endpoint |
+| `composition_hermes_nabu_base_url` | `{{ llm_default_openai_uri }}` | Ollama's OpenAI-compatible endpoint (`https://ollama.<domain>/v1`, Traefik on camina in front of Malcolm) |
 | `composition_hermes_nabu_context_length` | `64000` | Hermes' floor for agent use |
 | `composition_hermes_nabu_terminal_backend` | `local` | Shell tool backend |
 | `composition_hermes_nabu_mcp_servers` | `{}` | MCP servers for this bot |
@@ -207,8 +207,8 @@ Registers subdomain: `hermes-nabu`
 ## Deploying to a host
 
 The host needs a Traefik (`composition-reverseproxy`) for the dashboard to be
-reachable by name, and needs to resolve and reach `llm_default_host` on
-11434. After the first deploy, run `infra-named` on bertha to publish the
+reachable by name, and needs to resolve and reach `ollama.<domain>`
+(`llm_default_ollama_base_url`). After the first deploy, run `infra-named` on bertha to publish the
 `hermes-nabu` CNAME.
 
 ## Removing it

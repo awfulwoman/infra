@@ -129,3 +129,42 @@ system_opencode_shell_allow:
 
 # Rules appended last (so they win), e.g. hard denies.
 system_opencode_permissions_extra: []
+
+# --- opencode-quota -------------------------------------------------------
+# The plugin shows Ollama Cloud session/weekly quota. Ollama on malcolm signs
+# its cloud requests with its own sign-in, so /api/balance works through
+# ollama.<domain> without an API key. The plugin only accepts HTTPS (or
+# loopback) and always sends a bearer key, so a placeholder satisfies it.
+# Ollama ignores the Authorization header.
+system_opencode_ollama_placeholder_key: unused
+
+# Contents of ~/.config/opencode/opencode-quota/settings.jsonc.
+# providerId must be "ollama", our configured provider ("ollama-cloud" shows
+# nothing). Only settings that differ from the plugin's defaults belong here.
+system_opencode_quota_settings:
+  providers:
+    custom:
+      - id: ollama-malcolm
+        providerId: ollama
+        label: Ollama Cloud (via malcolm)
+        mode: remote-api
+        url: "{{ llm_default_ollama_base_url }}/api/balance"
+        format: json-v1
+        adapter:
+          mappings:
+            - resultType: quota
+              name: Session
+              label: "Session:"
+              resetTime: {path: [included, session, resets_at], encoding: iso-8601}
+              metric:
+                type: percentage
+                meaning: remaining
+                percentage: {path: [included, session, remaining_percent]}
+            - resultType: quota
+              name: Weekly
+              label: "Weekly:"
+              resetTime: {path: [included, weekly, resets_at], encoding: iso-8601}
+              metric:
+                type: percentage
+                meaning: remaining
+                percentage: {path: [included, weekly, remaining_percent]}

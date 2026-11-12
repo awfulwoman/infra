@@ -1,0 +1,29 @@
+# Ollama on Malcolm, behind TLS. Ollama itself only speaks plain HTTP, so this
+# gives every consumer one HTTPS name (ollama.{{ domainname_infra }}) that
+# follows llm_default_ollama_base_url. The backend is the raw address, never
+# that URL, or the route would proxy to itself.
+http:
+  routers:
+    ollama:
+      service: ollama
+      rule: "Host(`ollama.{{ domainname_infra }}`)"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
+      tls:
+        certresolver: letsencrypt
+{% else %}
+      # Empty mapping, not an omitted key: the router still terminates TLS,
+      # it just takes the default cert (the internal wildcard). See #276.
+      tls: {}
+{% endif %}
+      entrypoints:
+        - websecure
+
+  services:
+    ollama:
+      loadBalancer:
+        # Chat responses stream token by token; do not buffer them.
+        responseForwarding:
+          flushInterval: "100ms"
+        passHostHeader: false
+        servers:
+          - url: "{{ llm_default_ollama_backend_url }}"

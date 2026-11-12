@@ -58,6 +58,14 @@ composition_gatus_url_checks:
     conditions:
       - "[STATUS] == 200"
       - "[BODY].version == pat(*.*.*)"
+  # The same API through Traefik on camina, which is what consumers call
+  # (llm_default_ollama_base_url). Catches the route, DNS or certificate
+  # failing while Ollama itself is up.
+  - name: ollama-https
+    url: "{{ llm_default_ollama_base_url }}/api/version"
+    conditions:
+      - "[STATUS] == 200"
+      - "[BODY].version == pat(*.*.*)"
   # apple-reminders-server on malcolm. An authenticated read, because the
   # failure that matters (meta.db unlinked under a running process) leaves the
   # port open. The role's own watchdog restarts the service; this alerts.

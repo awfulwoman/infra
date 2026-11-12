@@ -26,6 +26,8 @@
     "ollama": {
       "settings": {
         "baseURL": {{ system_opencode_ollama_base_url | to_json }},
+        // Placeholder so opencode-quota's custom provider finds a key for "ollama".
+        "apiKey": {{ system_opencode_ollama_placeholder_key | to_json }},
       },
     },
   },
