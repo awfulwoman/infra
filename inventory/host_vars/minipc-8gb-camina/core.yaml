@@ -179,6 +179,13 @@ compositions:
 system_claude_agentmemory: true
 
 # -------------------------------------------------------------------
+# OPENCODE
+# -------------------------------------------------------------------
+# Agent push to GitHub via a minted GitHub App installation token, so it never
+# reads a long-lived credential. See roles/system-opencode/README.md.
+system_opencode_github: true
+
+# -------------------------------------------------------------------
 # HOMEBREW
 # -------------------------------------------------------------------
 system_homebrew_formulae:
