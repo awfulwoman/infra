@@ -52,4 +52,11 @@
       },
     },
   },
+{% if system_opencode_policies %}
+  "policies": [
+{% for p in system_opencode_policies %}
+    {{ p | to_json }},
+{% endfor %}
+  ],
+{% endif %}
 }

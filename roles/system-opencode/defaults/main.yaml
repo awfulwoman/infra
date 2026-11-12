@@ -130,6 +130,14 @@ system_opencode_shell_allow:
 # Rules appended last (so they win), e.g. hard denies.
 system_opencode_permissions_extra: []
 
+# --- policies ------------------------------------------------------------
+# opencode v2 `policies`, written to opencode.jsonc. Deny the built-in
+# `opencode` provider so its free-tier and Zen models (iceman-free, big-pickle,
+# ...) don't clutter the model picker. We use Ollama exclusively. Set to [] to
+# restore them.
+system_opencode_policies:
+  - {action: provider.use, resource: opencode, effect: deny}
+
 # --- opencode-quota -------------------------------------------------------
 # The plugin shows Ollama Cloud session/weekly quota. Ollama on malcolm signs
 # its cloud requests with its own sign-in, so /api/balance works through
