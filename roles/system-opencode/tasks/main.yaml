@@ -81,3 +81,62 @@
     group: "{{ system_opencode_group }}"
     mode: "0644"
   when: system_opencode_plugins | length > 0
+
+- name: Wire opencode to agentmemory
+  when: system_opencode_agentmemory
+  block:
+    - name: Ensure opencode plugin and command directories exist
+      ansible.builtin.file:
+        path: "{{ system_opencode_config_dir }}/{{ item }}"
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: "{{ system_opencode_group }}"
+        mode: "0755"
+      loop:
+        - plugins
+        - commands
+
+    - name: Check the installed agentmemory MCP shim
+      ansible.builtin.shell: |
+        . "{{ ansible_facts.user_dir }}/.nvm/nvm.sh"
+        npm ls --global --depth=0 @agentmemory/mcp
+      args:
+        executable: /bin/bash
+      environment:
+        HOME: "{{ ansible_facts.user_dir }}"
+        NVM_DIR: "{{ ansible_facts.user_dir }}/.nvm"
+      register: system_opencode_agentmemory_shim
+      changed_when: false
+      failed_when: false
+
+    - name: Install the agentmemory MCP shim with nvm's npm
+      ansible.builtin.shell: |
+        . "{{ ansible_facts.user_dir }}/.nvm/nvm.sh"
+        npm install --global @agentmemory/mcp@{{ system_opencode_agentmemory_version }}
+      args:
+        executable: /bin/bash
+      environment:
+        HOME: "{{ ansible_facts.user_dir }}"
+        NVM_DIR: "{{ ansible_facts.user_dir }}/.nvm"
+      when: "('@agentmemory/mcp@' ~ system_opencode_agentmemory_version) not in system_opencode_agentmemory_shim.stdout"
+
+    - name: Fetch the agentmemory capture plugin and slash commands
+      ansible.builtin.get_url:
+        url: "https://raw.githubusercontent.com/rohitg00/agentmemory/v{{ system_opencode_agentmemory_version }}/{{ item.src }}"
+        dest: "{{ system_opencode_config_dir }}/{{ item.dest }}"
+        checksum: "sha256:{{ item.sha256 }}"
+        owner: "{{ ansible_user }}"
+        group: "{{ system_opencode_group }}"
+        mode: "0644"
+      loop: "{{ system_opencode_agentmemory_files }}"
+      loop_control:
+        label: "{{ item.dest }}"
+
+    - name: Write the agentmemory environment file
+      ansible.builtin.template:
+        src: agentmemory.env.j2
+        dest: "{{ system_opencode_agentmemory_env_file }}"
+        owner: "{{ ansible_user }}"
+        group: "{{ system_opencode_group }}"
+        mode: "0600"
+      no_log: true

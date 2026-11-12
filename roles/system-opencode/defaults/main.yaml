@@ -168,3 +168,30 @@ system_opencode_quota_settings:
                 type: percentage
                 meaning: remaining
                 percentage: {path: [included, weekly, remaining_percent]}
+
+# --- agentmemory ----------------------------------------------------------
+# Wires composition-agentmemory (https://agentmemory.<domain>) into opencode
+# twice: the @agentmemory/mcp stdio shim for the memory tools, and the
+# agentmemory-capture plugin plus /recall and /remember for auto-capture.
+# Both read AGENTMEMORY_URL / AGENTMEMORY_SECRET from the environment. The
+# wrapper exports them from a 0600 env file, so unwrapped runs of the Homebrew
+# binary have no memory.
+system_opencode_agentmemory: true
+system_opencode_agentmemory_url: "https://agentmemory.{{ domainname_infra }}"
+system_opencode_agentmemory_secret: "{{ vault_composition_agentmemory_secret }}"
+# Keep in step with the image tag in composition-agentmemory.
+system_opencode_agentmemory_version: "0.9.33"
+system_opencode_agentmemory_env_file: "{{ system_opencode_config_dir }}/agentmemory.env"
+
+# Files fetched from the upstream repo at the tag above, with their checksums.
+# Update the checksums when the version changes.
+system_opencode_agentmemory_files:
+  - src: plugin/opencode/agentmemory-capture.ts
+    dest: plugins/agentmemory-capture.ts
+    sha256: 64c4fdb4129ef53dd7c2cfca6a413ab8f4c47fe59159ebeb108422adcd4af944
+  - src: plugin/opencode/commands/recall.md
+    dest: commands/recall.md
+    sha256: 3b05701dbade65e1192726592b922faace26bf0b659f31e7b54a6a584880e97b
+  - src: plugin/opencode/commands/remember.md
+    dest: commands/remember.md
+    sha256: 8e27caf25ba2d2f1fd7944f0454c90cf9b4b5ff24054a91c5baeb242025fa6a9

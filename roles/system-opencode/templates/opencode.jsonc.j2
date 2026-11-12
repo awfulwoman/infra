@@ -17,6 +17,27 @@
     {{ rule | to_json }},
 {% endfor %}
   ],
+{% if system_opencode_agentmemory %}
+  "mcp": {
+    "servers": {
+      // Memory tools. The shim proxies to the agentmemory server named by
+      // AGENTMEMORY_URL (all tools) and falls back to 7 local ones without it.
+      "agentmemory": {
+        "type": "local",
+        // Expose the tools directly. v2's default Code Mode hides them behind
+        // an `execute` tool, which smaller models do not call reliably.
+        "codemode": false,
+        // Installed globally by Ansible: npx cannot create its cache inside the
+        // nono sandbox, so the shim is run directly.
+        "command": ["bash", "-c", ". \"$HOME/.nvm/nvm.sh\" && exec agentmemory-mcp"],
+        "environment": {
+          "AGENTMEMORY_URL": {{ system_opencode_agentmemory_url | to_json }},
+          "AGENTMEMORY_SECRET": "{env:AGENTMEMORY_SECRET}",
+        },
+      },
+    },
+  },
+{% endif %}
 {% if system_opencode_plugins %}
   "plugins": {{ system_opencode_plugins | to_json }},
 {% endif %}

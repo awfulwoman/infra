@@ -39,6 +39,24 @@ bearer key, so `ollama.<domain>` (Traefik on camina) and a placeholder key do
 the job. Changes saved from the TUI's quota settings are overwritten on the
 next run.
 
+## agentmemory
+
+Connects [composition-agentmemory](../composition-agentmemory/README.md)
+(`https://agentmemory.<domain>`) to opencode in two ways:
+
+- **MCP:** `mcp.servers.agentmemory` runs the `@agentmemory/mcp` stdio shim
+  (via nvm's Node), proxying to the server for the full tool set.
+- **Plugin:** `agentmemory-capture.ts` in `~/.config/opencode/plugins/`
+  auto-captures session activity, plus `/recall` and `/remember` in
+  `commands/`. Fetched from the upstream tag with pinned checksums. Do not also
+  list it under `plugins` in `opencode.jsonc`, or it captures every event twice.
+
+The URL and bearer secret (`vault_composition_agentmemory_secret`) go in
+`~/.config/opencode/agentmemory.env` (mode 0600), which the wrapper exports. A
+bare run of the Homebrew binary therefore has no memory. The plugin sends what
+the agent sees and does to that server. Keep `system_opencode_agentmemory_version`
+in step with the composition's image tag, and update the checksums with it.
+
 ## Sandbox (nono)
 
 opencode runs inside a [nono](https://github.com/nolabs-ai/nono) Landlock
@@ -77,6 +95,7 @@ See `defaults/main.yaml`.
 - `system_opencode_sandbox*`: sandbox switches and paths, see above
 - `system_opencode_cli_config`: CLI settings (e.g. keybinds) applied via the wrapper
 - `system_opencode_permissions_default`, `_shell_allow`, `_extra`: permission rules, see above
+- `system_opencode_agentmemory*`: agentmemory URL, secret, version and fetched files
 - `system_opencode_model`: optional default model, `provider/model` (e.g. `ollama/kimi-k3:cloud`)
 
 ## Platforms

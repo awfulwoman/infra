@@ -11,6 +11,16 @@ set -euo pipefail
 
 real={{ system_opencode_binary | quote }}
 
+{% if system_opencode_agentmemory %}
+# agentmemory URL and secret (0600 file written by Ansible), for the MCP shim
+# and the capture plugin.
+if [ -r {{ system_opencode_agentmemory_env_file | quote }} ]; then
+  set -a
+  . {{ system_opencode_agentmemory_env_file | quote }}
+  set +a
+fi
+
+{% endif %}
 # CLI settings owned by Ansible; merged over the TUI-managed cli.json.
 export OPENCODE_CLI_CONFIG_CONTENT={{ system_opencode_cli_config | to_json | quote }}
 
