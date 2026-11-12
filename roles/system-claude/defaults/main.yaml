@@ -48,3 +48,22 @@ system_claude_settings_path: "{{ ansible_facts.user_dir }}/.config/claude"
 # Ubuntu: matches ansible_user (users have an eponymous group)
 # macOS: set to "staff" in host_vars
 system_claude_settings_group: "{{ ansible_user }}"
+
+# --- agentmemory ----------------------------------------------------------
+# Connects Claude Code to composition-agentmemory (https://agentmemory.<domain>)
+# through the @agentmemory/mcp stdio shim, registered at user scope. Needs
+# system-nvm to run first. Off by default; enabled per host.
+#
+# The secret is NOT put in system_claude_environment: that file is
+# /etc/environment on Ubuntu and is world-readable. It goes in a 0600 env file
+# that a wrapper sources before starting Claude Code, so the shim (and the
+# agentmemory plugin's hooks) inherit it.
+system_claude_agentmemory: false
+system_claude_agentmemory_url: "https://agentmemory.{{ domainname_infra }}"
+system_claude_agentmemory_secret: "{{ vault_composition_agentmemory_secret }}"
+# Keep in step with the image tag in composition-agentmemory.
+system_claude_agentmemory_version: "0.9.33"
+system_claude_agentmemory_env_file: "{{ system_claude_settings_path }}/agentmemory.env"
+# `claude` stays the real binary; an alias in .bashrc points at this wrapper.
+system_claude_wrapper_path: "{{ ansible_facts.user_dir }}/.local/bin/claude-agentmemory"
+system_claude_binary: "{{ ansible_facts.user_dir }}/.local/bin/claude"

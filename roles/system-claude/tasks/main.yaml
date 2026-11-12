@@ -109,3 +109,7 @@
     line: "set -g mouse on"
     create: true
     mode: "0644"
+
+- name: Connect Claude Code to agentmemory
+  ansible.builtin.include_tasks: agentmemory.yaml
+  when: system_claude_agentmemory

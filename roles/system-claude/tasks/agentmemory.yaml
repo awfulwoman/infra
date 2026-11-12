@@ -1,0 +1,97 @@
+---
+- name: Check the installed agentmemory MCP shim
+  ansible.builtin.shell: |
+    . "{{ ansible_facts.user_dir }}/.nvm/nvm.sh"
+    npm ls --global --depth=0 @agentmemory/mcp
+  args:
+    executable: /bin/bash
+  environment:
+    HOME: "{{ ansible_facts.user_dir }}"
+    NVM_DIR: "{{ ansible_facts.user_dir }}/.nvm"
+  register: system_claude_agentmemory_shim
+  changed_when: false
+  failed_when: false
+
+- name: Install the agentmemory MCP shim with nvm's npm
+  ansible.builtin.shell: |
+    . "{{ ansible_facts.user_dir }}/.nvm/nvm.sh"
+    npm install --global @agentmemory/mcp@{{ system_claude_agentmemory_version }}
+  args:
+    executable: /bin/bash
+  environment:
+    HOME: "{{ ansible_facts.user_dir }}"
+    NVM_DIR: "{{ ansible_facts.user_dir }}/.nvm"
+  when: "('@agentmemory/mcp@' ~ system_claude_agentmemory_version) not in system_claude_agentmemory_shim.stdout"
+
+- name: Write the agentmemory environment file
+  ansible.builtin.template:
+    src: agentmemory.env.j2
+    dest: "{{ system_claude_agentmemory_env_file }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ system_claude_settings_group }}"
+    mode: "0600"
+  no_log: true
+
+- name: Write the claude wrapper
+  ansible.builtin.template:
+    src: claude-wrapper.sh.j2
+    dest: "{{ system_claude_wrapper_path }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ system_claude_settings_group }}"
+    mode: "0755"
+
+- name: Point the claude alias at the wrapper
+  ansible.builtin.lineinfile:
+    path: "{{ ansible_facts.user_dir }}/{{ system_claude_profile_file }}"
+    regexp: "^alias claude="
+    line: "alias claude={{ system_claude_wrapper_path | quote }}"
+    create: true
+    mode: "0644"
+
+# The server entry holds no secret: Claude Code expands ${AGENTMEMORY_SECRET}
+# from its own environment, which the wrapper fills.
+- name: Define the agentmemory MCP server entry
+  ansible.builtin.set_fact:
+    system_claude_agentmemory_mcp:
+      type: stdio
+      command: bash
+      args:
+        - -c
+        - ". \"$HOME/.nvm/nvm.sh\" && exec agentmemory-mcp"
+      env:
+        AGENTMEMORY_URL: "{{ system_claude_agentmemory_url }}"
+        AGENTMEMORY_SECRET: "${AGENTMEMORY_SECRET}"
+
+- name: Read the registered agentmemory MCP server
+  ansible.builtin.command: "{{ system_claude_binary }} mcp get agentmemory"
+  environment:
+    HOME: "{{ ansible_facts.user_dir }}"
+    CLAUDE_CONFIG_DIR: "{{ system_claude_settings_path }}"
+  register: system_claude_agentmemory_registered
+  changed_when: false
+  failed_when: false
+
+- name: Register the agentmemory MCP server at user scope
+  when: >-
+    system_claude_agentmemory_registered.rc != 0
+    or system_claude_agentmemory_url not in system_claude_agentmemory_registered.stdout
+  environment:
+    HOME: "{{ ansible_facts.user_dir }}"
+    CLAUDE_CONFIG_DIR: "{{ system_claude_settings_path }}"
+  block:
+    - name: Remove any stale agentmemory MCP entry
+      ansible.builtin.command: "{{ system_claude_binary }} mcp remove --scope user agentmemory"
+      when: system_claude_agentmemory_registered.rc == 0
+      changed_when: true
+
+    - name: Add the agentmemory MCP entry
+      ansible.builtin.command:
+        argv:
+          - "{{ system_claude_binary }}"
+          - mcp
+          - add-json
+          - --scope
+          - user
+          - agentmemory
+          - "{{ system_claude_agentmemory_mcp | to_json }}"
+      changed_when: true

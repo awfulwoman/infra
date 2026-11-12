@@ -173,6 +173,12 @@ compositions:
       - ollama
 
 # -------------------------------------------------------------------
+# CLAUDE CODE
+# -------------------------------------------------------------------
+# Agent sessions only run on camina. See roles/system-claude/README.md.
+system_claude_agentmemory: true
+
+# -------------------------------------------------------------------
 # HOMEBREW
 # -------------------------------------------------------------------
 system_homebrew_formulae:

@@ -12,6 +12,7 @@ Installs the Claude Code CLI and configures the shell environment for it.
 - Exports Claude-related environment variables (model, feedback survey, prompt suggestion, config dir)
   into `.zshenv` on macOS, and removes any stale copies from `.zshrc`
 - Enables tmux mouse mode for scrollback
+- Optionally (`system_claude_agentmemory`) connects Claude Code to agentmemory, see below
 
 ## Variables
 
@@ -44,3 +45,22 @@ and reintroduces the split.
 
 - Ubuntu/Debian
 - macOS
+
+## agentmemory
+
+Off by default; camina enables it. When on, the role:
+
+- installs the `@agentmemory/mcp` stdio shim globally with nvm's npm (so `system-nvm` must run first)
+- writes `~/.config/claude/agentmemory.env` (mode 0600) with `AGENTMEMORY_URL` and `AGENTMEMORY_SECRET`
+- writes the wrapper `~/.local/bin/claude-agentmemory`, which sources that file and execs the real `claude`, and points `alias claude=` at it in `.bashrc`
+- registers the MCP server at user scope with `claude mcp add-json`. The entry holds the URL and `${AGENTMEMORY_SECRET}`, never the value, so the secret is not in `.claude.json`. It is re-registered when the URL changes.
+
+The secret must not go in `system_claude_environment`: on Ubuntu that is `/etc/environment`, which any local user can read.
+
+Running `~/.local/bin/claude` directly, or a non-interactive shell, starts Claude Code without the secret, so the MCP server fails to authenticate. Use the alias or the wrapper.
+
+Variables: `system_claude_agentmemory`, `_url`, `_secret` (vault), `_version` (keep in step with `composition-agentmemory`), `_env_file`, `system_claude_wrapper_path`.
+
+### Session capture (manual)
+
+The official plugin adds hooks that record prompts and tool calls. Installing it is interactive: `/plugin marketplace add rohitg00/agentmemory`, then `/plugin install agentmemory@agentmemory`, leaving the URL and secret options empty. Hooks then read `AGENTMEMORY_URL` and `AGENTMEMORY_SECRET` from the wrapper's environment (untested). The plugin's bundled MCP bridge ignores the env var; disable it so tools are not registered twice.

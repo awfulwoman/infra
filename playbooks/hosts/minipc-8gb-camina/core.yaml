@@ -15,10 +15,11 @@
     become: true
   - role: system-homebrew
     tags: [system, system-homebrew]
-  - role: system-claude
-    tags: [system, system-claude]
+  # nvm first: system-claude installs the agentmemory MCP shim with its npm.
   - role: system-nvm
     tags: [system, system-nvm]
+  - role: system-claude
+    tags: [system, system-claude]
   - role: system-opencode
     tags: [system, system-opencode]
   - role: hardware-brother-ptouch

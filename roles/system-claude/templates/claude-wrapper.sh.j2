@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Managed by Ansible (system-claude). Local edits are overwritten.
+#
+# Starts Claude Code with the agentmemory URL and secret in its environment
+# (0600 file written by Ansible), so the MCP shim and any agentmemory plugin
+# hooks can reach the server. Running {{ system_claude_binary }} directly
+# starts Claude Code without memory.
+set -euo pipefail
+
+if [ -r {{ system_claude_agentmemory_env_file | quote }} ]; then
+  set -a
+  . {{ system_claude_agentmemory_env_file | quote }}
+  set +a
+fi
+
+exec {{ system_claude_binary | quote }} "$@"
