@@ -164,22 +164,16 @@ system_opencode_quota_settings:
         format: json-v1
         adapter:
           mappings:
-            - resultType: quota
-              name: Session
-              label: "Session:"
-              resetTime: {path: [included, session, resets_at], encoding: iso-8601}
+            # Ollama's plan is now a dollar allowance per billing period (it was
+            # session and weekly percentages). Balance and allowance are USD.
+            - resultType: budget
+              name: Ollama
+              label: "Balance:"
+              resetTime: {path: [included, period, until], encoding: iso-8601}
               metric:
-                type: percentage
-                meaning: remaining
-                percentage: {path: [included, session, remaining_percent]}
-            - resultType: quota
-              name: Weekly
-              label: "Weekly:"
-              resetTime: {path: [included, weekly, resets_at], encoding: iso-8601}
-              metric:
-                type: percentage
-                meaning: remaining
-                percentage: {path: [included, weekly, remaining_percent]}
+                type: remaining-budget
+                remaining: {path: [included, balance_usd]}
+                budget: {path: [included, allowance_usd]}
 
 # --- agentmemory ----------------------------------------------------------
 # Wires composition-agentmemory (https://agentmemory.<domain>) into opencode
