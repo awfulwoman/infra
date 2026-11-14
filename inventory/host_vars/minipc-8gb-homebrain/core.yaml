@@ -86,6 +86,9 @@ zfs:
           # Stateless proxy: just env config in the compose file.
           wyoming-openai:
             policy: none
+          # Stateless proxy: config is env vars in the compose file.
+          ha-mcp:
+            policy: none
 
 # -------------------------------------------------------------------
 # MISC
@@ -136,6 +139,7 @@ compositions:
   - zfs-api
   - logtide-agent
   - wyoming-openai
+  - ha-mcp
 
 # -------------------------------------------------------------------
 # ZFS POLICY

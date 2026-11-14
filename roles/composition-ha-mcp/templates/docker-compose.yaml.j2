@@ -1,0 +1,31 @@
+# code: language=ansible-jinja
+name: "{{ composition_name }}"
+services:
+  ha-mcp:
+    container_name: ha-mcp
+    # Entrypoint ha-mcp-web is streamable HTTP on 8086; the image default is stdio.
+    image: ghcr.io/homeassistant-ai/ha-mcp:9.2.0
+    command: ["ha-mcp-web"]
+    restart: unless-stopped
+    env_file: .environment_vars
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ha-mcp.rule=Host(`{{ composition_dns_subdomains[0] }}.{{ domainname_infra }}`)"
+      - "traefik.http.routers.ha-mcp.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
+      - "traefik.http.routers.ha-mcp.tls.certresolver=letsencrypt"
+{% endif %}
+      - "traefik.http.services.ha-mcp.loadbalancer.server.port=8086"
+    networks:
+      - "{{ default_docker_network }}"
+    # The image has no HEALTHCHECK; bash is present, curl/wget are not confirmed.
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/localhost/8086'"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+networks:
+  "{{ default_docker_network }}":
+    external: true

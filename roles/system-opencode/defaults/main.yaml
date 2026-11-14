@@ -220,6 +220,14 @@ system_opencode_searxng_url: "https://searchmcp.{{ domainname_infra }}/mcp"
 system_opencode_searxng_token: "{{ vault_mcp_searxng_auth_token }}"
 system_opencode_searxng_env_file: "{{ system_opencode_secrets_dir }}/searxng.env"
 
+# --- ha-mcp ----------------------------------------------------------------
+# Home Assistant tools through composition-ha-mcp on homebrain. The endpoint has
+# no auth of its own: the secret path is the credential, so the whole URL lives
+# in the 0600 env file and the config only holds {env:HA_MCP_URL}.
+system_opencode_ha_mcp: true
+system_opencode_ha_mcp_url: "https://ha-mcp.{{ domainname_infra }}{{ vault_composition_ha_mcp_secret_path }}"
+system_opencode_ha_mcp_env_file: "{{ system_opencode_secrets_dir }}/ha-mcp.env"
+
 # --- github ----------------------------------------------------------------
 # Lets the agent push to the awfulwoman repos and drive `gh` without ever
 # reading a long-lived credential. A helper mints a 1-hour GitHub App

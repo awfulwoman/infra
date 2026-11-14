@@ -1,0 +1,15 @@
+# code: language=ansible
+# Composition name (used by composition-common dependency)
+composition_name: ha-mcp
+
+# MCP endpoint at https://ha-mcp.<domain>/<secret path>.
+composition_dns_subdomains:
+  - ha-mcp
+
+# The endpoint has no auth of its own: the secret path is the credential.
+# Must start with a slash, e.g. /private_<random>.
+composition_ha_mcp_secret_path: "{{ vault_composition_ha_mcp_secret_path }}"
+
+# Home Assistant long-lived access token (admin user recommended).
+composition_ha_mcp_homeassistant_url: "https://homeassistant.{{ domainname_infra }}"
+composition_ha_mcp_homeassistant_token: "{{ vault_composition_ha_mcp_homeassistant_token }}"

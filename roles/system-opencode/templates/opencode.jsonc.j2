@@ -17,7 +17,7 @@
     {{ rule | to_json }},
 {% endfor %}
   ],
-{% if system_opencode_agentmemory or system_opencode_gateway or system_opencode_searxng %}
+{% if system_opencode_agentmemory or system_opencode_gateway or system_opencode_searxng or system_opencode_ha_mcp %}
   "mcp": {
     "servers": {
 {% endif %}
@@ -63,7 +63,16 @@
         "codemode": false,
       },
 {% endif %}
-{% if system_opencode_agentmemory or system_opencode_gateway or system_opencode_searxng %}
+{% if system_opencode_ha_mcp %}
+      // Home Assistant control. The URL embeds the secret path, so it is read
+      // from the environment, which the wrapper fills from a 0600 file.
+      "homeassistant": {
+        "type": "remote",
+        "url": "{env:HA_MCP_URL}",
+        "codemode": false,
+      },
+{% endif %}
+{% if system_opencode_agentmemory or system_opencode_gateway or system_opencode_searxng or system_opencode_ha_mcp %}
     },
   },
 {% endif %}

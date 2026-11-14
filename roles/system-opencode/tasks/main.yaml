@@ -14,7 +14,7 @@
     owner: "{{ ansible_user }}"
     group: "{{ system_opencode_group }}"
     mode: "0700"
-  when: system_opencode_agentmemory or system_opencode_gateway or system_opencode_searxng or system_opencode_github
+  when: system_opencode_agentmemory or system_opencode_gateway or system_opencode_searxng or system_opencode_ha_mcp or system_opencode_github
 
 # opencode merges every opencode.json(c) it finds, so a leftover .json from
 # before the move to JSONC would still apply.
@@ -169,6 +169,16 @@
     mode: "0600"
   no_log: true
   when: system_opencode_searxng
+
+- name: Write the Home Assistant MCP environment file
+  ansible.builtin.template:
+    src: ha-mcp.env.j2
+    dest: "{{ system_opencode_ha_mcp_env_file }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ system_opencode_group }}"
+    mode: "0600"
+  no_log: true
+  when: system_opencode_ha_mcp
 
 - name: Remove the old in-config-dir App key (now lives outside the allow path)
   ansible.builtin.file:

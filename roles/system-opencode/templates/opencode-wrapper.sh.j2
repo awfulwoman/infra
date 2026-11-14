@@ -39,6 +39,15 @@ if [ -r {{ system_opencode_searxng_env_file | quote }} ]; then
 fi
 
 {% endif %}
+{% if system_opencode_ha_mcp %}
+# Home Assistant MCP URL, secret path included (0600 file written by Ansible).
+if [ -r {{ system_opencode_ha_mcp_env_file | quote }} ]; then
+  set -a
+  . {{ system_opencode_ha_mcp_env_file | quote }}
+  set +a
+fi
+
+{% endif %}
 {% if system_opencode_github %}
 # GitHub: mint a short-lived installation token for gh, and point git at HTTPS
 # via a credential helper that reuses it. The App key itself is denied to the

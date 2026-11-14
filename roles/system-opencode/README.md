@@ -118,6 +118,12 @@ Registers the SearXNG MCP server (`https://searchmcp.<domain>/mcp`, from `compos
 
 Variables: `system_opencode_searxng` (on/off), `_url`, `_token`, `_env_file`.
 
+## ha-mcp
+
+Registers Home Assistant's MCP server (`composition-ha-mcp` on homebrain, `https://ha-mcp.<domain>/<secret path>`) as a `remote` server named `homeassistant`. The endpoint has no auth beyond its secret path (`vault_composition_ha_mcp_secret_path`), so the full URL goes in `~/.config/opencode-secrets/ha-mcp.env` (mode 0600), sourced by the wrapper; the config holds `{env:HA_MCP_URL}`. Rotating the path means redeploying both roles.
+
+Variables: `system_opencode_ha_mcp` (on/off), `_url`, `_env_file`.
+
 ## github (push + gh via a GitHub App)
 
 Lets the agent push to the awfulwoman repos and drive `gh` without ever
