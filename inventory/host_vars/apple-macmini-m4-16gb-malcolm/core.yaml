@@ -84,6 +84,10 @@ system_ollama_models:
   - "translategemma:4b"
   # Cloud model, offered to opencode on camina (v2 discovers models from Ollama).
   - "deepseek-v4.1-flash:cloud"
+  # TTS (meta#23). phonon is Apache 2.0; the 40m multilingual variants are
+  # CC BY-NC 4.0 (non-commercial) — fine for home use.
+  - "phonon"
+  - "phonon:40m-de"
 
 # -------------------------------------------------------------------
 # CLAUDE
