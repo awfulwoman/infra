@@ -5,3 +5,10 @@
       - socat
       - yt-dlp
     state: present
+
+# gh is no longer needed on the macOS host. This role used to install it via
+# brew; uninstall it so it does not linger unmanaged.
+- name: Remove gh
+  community.general.homebrew:
+    name: gh
+    state: absent
