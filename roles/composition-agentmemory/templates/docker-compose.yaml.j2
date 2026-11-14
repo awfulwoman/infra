@@ -9,6 +9,8 @@ services:
     environment:
       AGENTMEMORY_DATA_DIR: /data
       III_TELEMETRY_ENABLED: "false"
+      # Long-lived sessions (opencode) hit the default cap of 500. 5000 is the max safe for export/import.
+      MAX_OBS_PER_SESSION: "5000"
       AGENTMEMORY_VIEWER_HOST: 0.0.0.0
       # The viewer and REST API are reached through Traefik over TLS.
       VIEWER_ALLOWED_HOSTS: "{{ composition_dns_subdomains[1] }}.{{ domainname_infra }}"
