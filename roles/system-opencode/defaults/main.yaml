@@ -240,3 +240,8 @@ system_opencode_github_installation_id: "{{ vault_github_app_installation_id }}"
 system_opencode_github_app_key_file: "{{ system_opencode_secrets_dir }}/github-app.pem"
 system_opencode_github_mint_helper: "{{ system_opencode_config_dir }}/mint-github-token.sh"
 system_opencode_github_credential_helper: "{{ system_opencode_config_dir }}/git-credential-github.sh"
+# gh's own config dir, kept inside the sandbox (under ~/.config/opencode, which
+# is r+w there) rather than the user's ~/.config/gh. That keeps the long-lived
+# OAuth token in ~/.config/gh/hosts.yml out of the sandbox: gh creates a minimal
+# config here and authenticates with GH_TOKEN (the minted App token) alone.
+system_opencode_gh_config_dir: "{{ system_opencode_config_dir }}/gh"

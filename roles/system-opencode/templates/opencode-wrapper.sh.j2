@@ -45,6 +45,10 @@ fi
 # sandbox, so only the wrapper (outside it) can mint; the token lasts an hour.
 export GH_TOKEN="$({{ system_opencode_github_mint_helper | quote }})"
 export GITHUB_TOKEN="$GH_TOKEN"
+# Point gh at a sandbox-local config dir so it never reads
+# ~/.config/gh/hosts.yml (the long-lived OAuth token). gh creates its minimal
+# config here and uses GH_TOKEN above.
+export GH_CONFIG_DIR={{ system_opencode_gh_config_dir | quote }}
 export GIT_CONFIG_COUNT=2
 export GIT_CONFIG_KEY_0="url.https://x-access-token@github.com/.insteadOf"
 export GIT_CONFIG_VALUE_0="git@github.com:"

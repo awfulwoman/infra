@@ -135,6 +135,11 @@ sandbox.
   helper reuses `GH_TOKEN` for pushes. The token lasts an hour, so a session
   older than that pushes with an expired token until it is restarted; only the
   wrapper can mint a fresh one because the key is sandbox-denied.
+- `gh` reads its config from `~/.config/gh`, but that directory is not in the
+  sandbox allow-list (its `hosts.yml` holds the long-lived OAuth token). The
+  wrapper instead sets `GH_CONFIG_DIR` to `~/.config/opencode/gh` (r+w in the
+  sandbox), so `gh` creates a minimal config there and authenticates with
+  `GH_TOKEN` alone, never touching the user's `~/.config/gh`.
 - Git is pointed at HTTPS via `url.*.insteadOf` in the wrapper, so the agent
   pushes over HTTPS with `x-access-token` + the minted token; the SSH remotes
   are left untouched for manual use.
