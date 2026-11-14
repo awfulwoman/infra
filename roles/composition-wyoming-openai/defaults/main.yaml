@@ -13,17 +13,19 @@ composition_wyoming_openai_port: 10300
 # Phonon is text-to-speech only, so this composition exposes TTS and no STT.
 composition_wyoming_openai_tts_url: "{{ llm_default_openai_uri }}"
 
-# One model, phonon:40m-multilingual, carries every voice (US/UK English,
-# German, French, Spanish, Portuguese), so a single shim instance can offer
+# One model, phonon:40m-multilingual, carries every voice (English US/UK,
+# French, German, Spanish, Portuguese), so a single shim instance can offer
 # them all — the proxy applies every configured voice to every model, which
 # breaks disjoint per-model voice sets. CC BY-NC 4.0 (non-commercial), fine
 # for home use.
 composition_wyoming_openai_tts_models: "phonon:40m-multilingual"
 
 # Region-prefixed display names for HA's voice picker. Keys are the phonon
-# voice names (also used as TTS_VOICES); values are what HA shows. Names must
-# stay single-word: the shim parses TTS_VOICES with .split(), so the multi-word
-# English "character" voices (Captain Silas Blackwater, ...) cannot be included.
+# voice names (sent to Ollama); values are what HA shows. Every voice the
+# model can generate is listed — non-English voices render English well
+# enough to be useful, so locale is a hint, not a limit. Multi-word character
+# names force the command: override in the compose template, because the
+# TTS_VOICES env var is space-split and would break them apart.
 composition_wyoming_openai_tts_voice_labels:
   # US English
   Zoey: "US - Zoey"
@@ -52,6 +54,22 @@ composition_wyoming_openai_tts_voice_labels:
   Spencer: "UK - Spencer"
   Toby: "UK - Toby"
   Teddy: "UK - Teddy"
+  # French
+  Noémie: "FR - Noémie"
+  Coralie: "FR - Coralie"
+  Tiphaine: "FR - Tiphaine"
+  Maëlys: "FR - Maëlys"
+  Orianne: "FR - Orianne"
+  Solène: "FR - Solène"
+  Ninon: "FR - Ninon"
+  Lilou: "FR - Lilou"
+  Hélène: "FR - Hélène"
+  Augustin: "FR - Augustin"
+  Arnaud: "FR - Arnaud"
+  Jules: "FR - Jules"
+  Baptiste: "FR - Baptiste"
+  Lucien: "FR - Lucien"
+  Marius: "FR - Marius"
   # German
   Nele: "DE - Nele"
   Jette: "DE - Jette"
@@ -66,5 +84,58 @@ composition_wyoming_openai_tts_voice_labels:
   Henrik: "DE - Henrik"
   Leon: "DE - Leon"
   Mika: "DE - Mika"
+  # Spanish (Spain)
+  Noa: "ES - Noa"
+  Lucía-Sol: "ES - Lucía-Sol"
+  Candela: "ES - Candela"
+  Celia: "ES - Celia"
+  Alba: "ES - Alba"
+  Alicia: "ES - Alicia"
+  Nerea: "ES - Nerea"
+  Marcos: "ES - Marcos"
+  Borja: "ES - Borja"
+  Iker: "ES - Iker"
+  Nuno: "ES - Nuno"
+  Izan: "ES - Izan"
+  Guillermo: "ES - Guillermo"
+  # Spanish (Mexico)
+  Rebeca: "MX - Rebeca"
+  Regina: "MX - Regina"
+  Danae: "MX - Danae"
+  Azucena: "MX - Azucena"
+  Jimena: "MX - Jimena"
+  Ximena: "MX - Ximena"
+  Lalo: "MX - Lalo"
+  Aldo: "MX - Aldo"
+  Yael: "MX - Yael"
+  Ulises: "MX - Ulises"
+  Leonel: "MX - Leonel"
+  Nico: "MX - Nico"
+  # Portuguese (Brazil)
+  Manuela-Lu: "PT - Manuela-Lu"
+  Isadora: "PT - Isadora"
+  Débora: "PT - Débora"
+  Rafaela: "PT - Rafaela"
+  Clarice: "PT - Clarice"
+  Flávia: "PT - Flávia"
+  Davi: "PT - Davi"
+  Igor: "PT - Igor"
+  Kauã: "PT - Kauã"
+  Vitor: "PT - Vitor"
+  Otávio: "PT - Otávio"
+  Marcelo: "PT - Marcelo"
+  # English character voices (Voice Design)
+  Captain Silas Blackwater: "CHAR - Captain Silas Blackwater"
+  Morwenna of the Deep: "CHAR - Morwenna of the Deep"
+  Old Mortlake: "CHAR - Old Mortlake"
+  Azgorath: "CHAR - Azgorath"
+  Fennick the Young Elf: "CHAR - Fennick the Young Elf"
+  The Thing Under the Stairs: "CHAR - The Thing Under the Stairs"
+  Vyrmathrax the Ancient: "CHAR - Vyrmathrax the Ancient"
+  Grub the Ogre: "CHAR - Grub the Ogre"
+  Master Aldric: "CHAR - Master Aldric"
+  The Snow Queen: "CHAR - The Snow Queen"
+  Sir Bramwell: "CHAR - Sir Bramwell"
+  Fairy Godmother: "CHAR - Fairy Godmother"
 
-composition_wyoming_openai_languages: "en de"
+composition_wyoming_openai_languages: "en fr de es pt"

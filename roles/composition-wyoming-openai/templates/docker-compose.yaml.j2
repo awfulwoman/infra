@@ -7,12 +7,15 @@ services:
     restart: unless-stopped
     ports:
       - "{{ composition_wyoming_openai_port }}:10300"
+    # Voices go on the command line, not TTS_VOICES, so multi-word character
+    # names ("Captain Silas Blackwater") survive — the env var is space-split.
+    # Everything else comes from the environment.
+    command: {{ (['python', '-m', 'wyoming_openai', '--tts-voices'] + (composition_wyoming_openai_tts_voice_labels.keys() | list)) | to_json }}
     environment:
       WYOMING_URI: tcp://0.0.0.0:10300
       WYOMING_LANGUAGES: "{{ composition_wyoming_openai_languages }}"
       TTS_OPENAI_URL: "{{ composition_wyoming_openai_tts_url }}"
       TTS_MODELS: "{{ composition_wyoming_openai_tts_models }}"
-      TTS_VOICES: "{{ composition_wyoming_openai_tts_voice_labels | dict2items | map(attribute='key') | join(' ') }}"
       TTS_VOICE_LABELS: '{{ composition_wyoming_openai_tts_voice_labels | to_json }}'
       TTS_BACKEND: "OPENAI"
     networks:
