@@ -82,6 +82,8 @@ system_ollama_models:
   - "{{ llm_default_model }}"
   # Used by composition-translation-server on storage.
   - "translategemma:4b"
+  # Embeddings for composition-agentmemory (semantic recall), local on malcolm.
+  - "embeddinggemma"
   # Cloud model, offered to opencode on camina (v2 discovers models from Ollama).
   - "deepseek-v4.1-flash:cloud"
   # TTS (meta#23): dedicated models, one per language. phonon (English,

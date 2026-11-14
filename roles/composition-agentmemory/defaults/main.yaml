@@ -21,3 +21,9 @@ composition_agentmemory_llm_base_url: "{{ llm_default_openai_uri }}"
 # Ollama ignores the key, but agentmemory requires one for an https URL.
 # Not a secret.
 composition_agentmemory_llm_api_key: "ollama"
+
+# Embeddings for semantic recall: a local model on malcolm, served over the
+# same OpenAI-compatible /v1 endpoint. Chat models (incl. :cloud) cannot embed.
+composition_agentmemory_embedding_model: "embeddinggemma"
+# embeddinggemma emits 768-dimension vectors.
+composition_agentmemory_embedding_dimensions: 768
