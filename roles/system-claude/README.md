@@ -5,7 +5,6 @@ Installs the Claude Code CLI and configures the shell environment for it.
 ## What it does
 
 - Installs OS dependencies (macOS via Homebrew, Ubuntu via apt)
-- Installs the `gh` GitHub CLI
 - Installs the Claude CLI via the official install script to `~/.local/bin/claude`
 - Makes sure that `~/.local/bin` is on `PATH` in the user's shell profile
 - Creates the Claude config directory (`CLAUDE_CONFIG_DIR`)

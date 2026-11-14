@@ -194,3 +194,4 @@ system_homebrew_formulae:
   - pre-commit
   # Used by awfulwoman.com's pre-commit hook to strip location data from photos.
   - exiftool
+  - gh

@@ -11,30 +11,24 @@
       - libonig-dev
     state: present
 
-# apt_key is deprecated and fails outright on Ubuntu 24.04. The URL already
-# serves a dearmored keyring, so fetching it to the signed-by path is all that
-# is needed — no gpg --dearmor step.
-- name: Add GitHub CLI repository key
-  become: true
-  ansible.builtin.get_url:
-    url: https://cli.github.com/packages/githubcli-archive-keyring.gpg
-    dest: /usr/share/keyrings/githubcli-archive-keyring.gpg
-    owner: root
-    group: root
-    mode: "0644"
-
-- name: Add GitHub CLI repository
-  become: true
-  vars:
-    _gh_arch: "{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'amd64' }}"
-  ansible.builtin.apt_repository:
-    repo: "deb [arch={{ _gh_arch }} signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main"
-    filename: github-cli
-    state: present
-
-- name: Install GitHub CLI
+# gh is now a Homebrew formula (system_homebrew_formulae), not an apt package
+# here. Remove the apt package, repo and key this role used to manage, leaving
+# brew's gh as the only one.
+- name: Remove the apt gh package
   become: true
   ansible.builtin.apt:
     name: gh
-    state: present
-    update_cache: true
+    state: absent
+
+- name: Remove the GitHub CLI apt repository
+  become: true
+  ansible.builtin.apt_repository:
+    repo: "deb https://cli.github.com/packages stable main"
+    filename: github-cli
+    state: absent
+
+- name: Remove the GitHub CLI repository key
+  become: true
+  ansible.builtin.file:
+    path: /usr/share/keyrings/githubcli-archive-keyring.gpg
+    state: absent

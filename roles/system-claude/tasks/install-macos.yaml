@@ -4,5 +4,4 @@
     name:
       - socat
       - yt-dlp
-      - gh
     state: present

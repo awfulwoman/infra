@@ -136,6 +136,7 @@ system_homebrew_formulae:
   - wget
   - herdr
   - pocket-tts
+  - gh
 
 system_homebrew_casks:
   - obsidian
