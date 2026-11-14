@@ -9,3 +9,15 @@ composition_dns_subdomains:
 
 # Bearer token for the REST API and the viewer's API proxy.
 composition_agentmemory_secret: "{{ vault_composition_agentmemory_secret }}"
+
+# -------------------------------------------------------------------
+# LLM
+# Malcolm's Ollama over its OpenAI-compatible /v1 endpoint. Used for
+# on-demand reflect/consolidate/crystallize. Auto-compress stays off: it
+# makes one call per captured observation.
+# -------------------------------------------------------------------
+composition_agentmemory_llm_model: "{{ llm_default_model }}"
+composition_agentmemory_llm_base_url: "{{ llm_default_openai_uri }}"
+# Ollama ignores the key, but agentmemory requires one for an https URL.
+# Not a secret.
+composition_agentmemory_llm_api_key: "ollama"
