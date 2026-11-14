@@ -12,7 +12,8 @@ services:
       WYOMING_LANGUAGES: "{{ composition_wyoming_openai_languages }}"
       TTS_OPENAI_URL: "{{ composition_wyoming_openai_tts_url }}"
       TTS_MODELS: "{{ composition_wyoming_openai_tts_models }}"
-      TTS_VOICES: "{{ composition_wyoming_openai_tts_voices }}"
+      TTS_VOICES: "{{ composition_wyoming_openai_tts_voice_labels | dict2items | map(attribute='key') | join(' ') }}"
+      TTS_VOICE_LABELS: '{{ composition_wyoming_openai_tts_voice_labels | to_json }}'
       TTS_BACKEND: "OPENAI"
     networks:
       - "{{ default_docker_network }}"
