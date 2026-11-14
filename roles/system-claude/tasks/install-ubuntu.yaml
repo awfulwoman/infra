@@ -12,19 +12,20 @@
     state: present
 
 # gh is now a Homebrew formula (system_homebrew_formulae), not an apt package
-# here. Remove the apt package, repo and key this role used to manage, leaving
-# brew's gh as the only one.
+# here. Remove the apt package, source and key this role used to manage, leaving
+# brew's gh as the only one. The source goes before the key so apt never sees a
+# source whose signed-by keyring has already been deleted (that would break
+# every later `apt update`).
 - name: Remove the apt gh package
   become: true
   ansible.builtin.apt:
     name: gh
     state: absent
 
-- name: Remove the GitHub CLI apt repository
+- name: Remove the GitHub CLI apt source
   become: true
-  ansible.builtin.apt_repository:
-    repo: "deb https://cli.github.com/packages stable main"
-    filename: github-cli
+  ansible.builtin.file:
+    path: /etc/apt/sources.list.d/github-cli.list
     state: absent
 
 - name: Remove the GitHub CLI repository key
