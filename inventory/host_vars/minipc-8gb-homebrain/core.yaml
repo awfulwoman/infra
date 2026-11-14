@@ -83,6 +83,9 @@ zfs:
             policy: none
           logtide-agent:
             policy: none
+          # Stateless proxy: just env config in the compose file.
+          wyoming-openai:
+            policy: none
 
 # -------------------------------------------------------------------
 # MISC
@@ -132,6 +135,7 @@ compositions:
   - watchyourlan
   - zfs-api
   - logtide-agent
+  - wyoming-openai
 
 # -------------------------------------------------------------------
 # ZFS POLICY

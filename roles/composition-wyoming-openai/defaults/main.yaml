@@ -1,0 +1,26 @@
+# code: language=ansible
+# Composition name (used by composition-common dependency)
+composition_name: wyoming-openai
+
+# Wyoming is a TCP protocol, not HTTP — no Traefik subdomain.
+composition_dns_subdomains: []
+
+# Wyoming TCP port, published on the host for HA's Wyoming integration to
+# reach. The container always listens on 10300.
+composition_wyoming_openai_port: 10300
+
+# TTS backend: malcolm's Ollama, over its OpenAI-compatible /v1 endpoint.
+# Phonon is text-to-speech only, so this composition exposes TTS and no STT.
+composition_wyoming_openai_tts_url: "{{ llm_default_openai_uri }}"
+
+# phonon (English, Apache 2.0) and phonon:40m-de (German, CC BY-NC 4.0,
+# non-commercial — fine for home use).
+composition_wyoming_openai_tts_models: "phonon phonon:40m-de"
+
+# "default" is the only voice name both models share. The proxy advertises
+# every configured voice on every model, so the per-model voice lists
+# (phonon has ~38 English voices, phonon:40m-de ~14 German) would collide
+# and need one shim instance per model. "default" keeps it clean for now.
+composition_wyoming_openai_tts_voices: "default"
+
+composition_wyoming_openai_languages: "en de"
