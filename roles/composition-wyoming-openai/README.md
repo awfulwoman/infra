@@ -7,7 +7,7 @@ the standard TTS backend — see meta#23.
 
 ## What it does
 
-- Runs the `ghcr.io/roryeckel/wyoming_openai:v0.9.0` container (Python 3.13-slim).
+- Runs the `ghcr.io/roryeckel/wyoming_openai:0.9.0` container (Python 3.13-slim).
 - Proxies Wyoming `synthesize` requests to Ollama's `/v1/audio/speech`
   (`TTS_OPENAI_URL`), TTS only — Phonon is text-to-speech, not STT.
 - Publishes the Wyoming TCP port on the host; HA's Wyoming integration connects to
