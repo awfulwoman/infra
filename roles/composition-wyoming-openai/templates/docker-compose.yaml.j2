@@ -1,22 +1,44 @@
 # code: language=ansible-jinja
 name: "{{ composition_name }}"
 services:
-  wyoming-openai:
-    container_name: wyoming-openai
+  wyoming-openai-en:
+    container_name: wyoming-openai-en
     image: ghcr.io/roryeckel/wyoming_openai:0.9.0
     restart: unless-stopped
     ports:
-      - "{{ composition_wyoming_openai_port }}:10300"
+      - "{{ composition_wyoming_openai_en_port }}:10300"
     # Voices go on the command line, not TTS_VOICES, so multi-word character
     # names ("Captain Silas Blackwater") survive — the env var is space-split.
-    # Everything else comes from the environment.
-    command: {{ (['python', '-m', 'wyoming_openai', '--tts-voices'] + (composition_wyoming_openai_tts_voice_labels.keys() | list)) | to_json }}
+    command: {{ (['python', '-m', 'wyoming_openai', '--tts-voices'] + (composition_wyoming_openai_en_voices.keys() | list)) | to_json }}
     environment:
       WYOMING_URI: tcp://0.0.0.0:10300
-      WYOMING_LANGUAGES: "{{ composition_wyoming_openai_languages }}"
+      WYOMING_LANGUAGES: "en"
       TTS_OPENAI_URL: "{{ composition_wyoming_openai_tts_url }}"
-      TTS_MODELS: "{{ composition_wyoming_openai_tts_models }}"
-      TTS_VOICE_LABELS: '{{ composition_wyoming_openai_tts_voice_labels | to_json }}'
+      TTS_MODELS: "{{ composition_wyoming_openai_en_model }}"
+      TTS_VOICE_LABELS: '{{ composition_wyoming_openai_en_voices | to_json }}'
+      TTS_BACKEND: "OPENAI"
+    networks:
+      - "{{ default_docker_network }}"
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/127.0.0.1/10300'"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  wyoming-openai-de:
+    container_name: wyoming-openai-de
+    image: ghcr.io/roryeckel/wyoming_openai:0.9.0
+    restart: unless-stopped
+    ports:
+      - "{{ composition_wyoming_openai_de_port }}:10300"
+    command: {{ (['python', '-m', 'wyoming_openai', '--tts-voices'] + (composition_wyoming_openai_de_voices.keys() | list)) | to_json }}
+    environment:
+      WYOMING_URI: tcp://0.0.0.0:10300
+      WYOMING_LANGUAGES: "de"
+      TTS_OPENAI_URL: "{{ composition_wyoming_openai_tts_url }}"
+      TTS_MODELS: "{{ composition_wyoming_openai_de_model }}"
+      TTS_VOICE_LABELS: '{{ composition_wyoming_openai_de_voices | to_json }}'
       TTS_BACKEND: "OPENAI"
     networks:
       - "{{ default_docker_network }}"
