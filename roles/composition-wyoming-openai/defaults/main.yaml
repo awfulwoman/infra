@@ -13,14 +13,19 @@ composition_wyoming_openai_port: 10300
 # Phonon is text-to-speech only, so this composition exposes TTS and no STT.
 composition_wyoming_openai_tts_url: "{{ llm_default_openai_uri }}"
 
-# phonon (English, Apache 2.0) and phonon:40m-de (German, CC BY-NC 4.0,
-# non-commercial — fine for home use).
-composition_wyoming_openai_tts_models: "phonon phonon:40m-de"
+# One model, phonon:40m-multilingual, carries every voice (US/UK English,
+# German, French, Spanish, Portuguese), so a single shim instance can offer
+# them all — the proxy applies every configured voice to every model, which
+# breaks disjoint per-model voice sets. CC BY-NC 4.0 (non-commercial), fine
+# for home use.
+composition_wyoming_openai_tts_models: "phonon:40m-multilingual"
 
-# "default" is the only voice name both models share. The proxy advertises
-# every configured voice on every model, so the per-model voice lists
-# (phonon has ~38 English voices, phonon:40m-de ~14 German) would collide
-# and need one shim instance per model. "default" keeps it clean for now.
-composition_wyoming_openai_tts_voices: "default"
+# US + UK + German catalogue voices. Single-word names only: the shim parses
+# TTS_VOICES with .split(), so the multi-word English "character" voices
+# (Captain Silas Blackwater, Fairy Godmother, ...) cannot pass through it.
+composition_wyoming_openai_tts_voices: >-
+  Zoey Juniper Everly Harper Hadley Delia Easton Micah Trevor Russell Preston Miles
+  Maeve Freya Pippa Elodie-Rose Imogen Lottie Bryony Alfie Hugh Edwin Spencer Toby Teddy
+  Nele Jette Annika Jule Lotta Josefine Svea Anton Mirko Mats Henrik Leon Mika
 
 composition_wyoming_openai_languages: "en de"
