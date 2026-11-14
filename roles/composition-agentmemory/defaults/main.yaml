@@ -16,7 +16,7 @@ composition_agentmemory_secret: "{{ vault_composition_agentmemory_secret }}"
 # on-demand reflect/consolidate/crystallize. Auto-compress stays off: it
 # makes one call per captured observation.
 # -------------------------------------------------------------------
-composition_agentmemory_llm_model: "{{ llm_default_model }}"
+composition_agentmemory_llm_model: "deepseek-v4.1-flash:cloud"
 composition_agentmemory_llm_base_url: "{{ llm_default_openai_uri }}"
 # Ollama ignores the key, but agentmemory requires one for an https URL.
 # Not a secret.
