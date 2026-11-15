@@ -93,7 +93,7 @@ in `defaults/main.yaml`: `groups/kubernetes`, `groups/personal`,
 (`/home/awful/Code/awfulwoman/infra` on camina) is the checkout this repo is
 edited in on the control node — Claude Code, an editor, a shell. It is
 registered as the repository `infra (local)`, with a matching inventory, and
-mounted read-only into the container **at the same absolute path**, so the
+mounted read-write into the container **at the same absolute path**, so the
 repository URL and the mount cannot drift apart.
 
 That path sits inside a `0750` home directory, which is fine: Docker creates
@@ -102,6 +102,15 @@ container's uid can traverse is its own synthetic tree, not the host's. The
 host side is resolved by the daemon as root. Only the checkout's own mode
 matters, and the role asserts it grants other `r-x`, naming the mode
 otherwise.
+
+It is mounted **read-write**, because the utilities that generate files in
+the tree — `export-dns-records-input`, `export-service-names`, both writing
+to `playbook_dir/../../scripts/` — fail on a read-only mount. Two costs come
+with that: a play can dirty or damage the checkout, and the files it creates
+belong to `composition_semaphore_uid`, not the ansible user (git can still
+commit them; the tree just ends up with two owners). Keeping the checkout on
+a snapshotted dataset, as camina's `repos` is (`policy: critical`), is the
+mitigation.
 
 A repository URL with no scheme is used in place, with no clone
 (`db/Repository.go`: `RepositoryLocal` returns the path itself), so a task

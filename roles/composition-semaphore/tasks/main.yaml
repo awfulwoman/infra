@@ -66,12 +66,12 @@
     path: "{{ composition_semaphore_local_repo_path }}"
   register: _semaphore_local_repo_stat
 
-# The mount is read-only, but the container still has to read it as
-# composition_semaphore_uid, which is neither the owner nor the group of a
-# checkout in a home directory. Docker creates the path's parents inside the
-# container as root 0755, so only the checkout's own mode matters. Fail here
-# rather than leaving the container to fail at inventory load with a bare
-# "permission denied".
+# The container has to read the checkout as composition_semaphore_uid, which
+# is neither the owner nor the group of a checkout in a home directory, so
+# the mode has to grant "other" r-x. Docker creates the path's parents inside
+# the container as root 0755, so only the checkout's own mode matters. Fail
+# here rather than leaving the container to fail at inventory load with a
+# bare "permission denied".
 - name: "Refuse a working checkout the container cannot read"
   ansible.builtin.assert:
     that:

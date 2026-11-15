@@ -54,12 +54,19 @@ composition_semaphore_fleet_key_name: "fleet-ssh ({{ host_name_short }})"
 composition_semaphore_fleet_key_path: "{{ ansible_facts.user_dir }}/.ssh/id_ed25519"
 
 # The working checkout on this host — where this repo is edited on the
-# control node (Claude Code, an editor, a shell) — mounted read-only and
+# control node (Claude Code, an editor, a shell) — mounted read-write and
 # registered as a second repository. Lets a task run uncommitted work, and
 # works when GitHub is unreachable. Nothing here updates it: it is a working
 # copy, pulled and pushed by hand. Scheduled templates use the GitHub
 # repository, so a nightly run always deploys what is on main; only the
 # "working copy" template uses this one.
+#
+# Read-write because the utilities that *generate* files in the tree
+# (export-dns-records-input, export-service-names) write to
+# playbook_dir/../../scripts/, and a read-only mount fails them. The cost is
+# that a play can dirty or damage this checkout, and anything it creates is
+# owned by composition_semaphore_uid rather than by the ansible user. Keep it
+# on a snapshotted dataset for that reason.
 composition_semaphore_local_repo_path: "{{ ansible_facts.user_dir }}/Code/awfulwoman/infra"
 
 # Mounted at the same absolute path as on the host, and used in place. Docker
