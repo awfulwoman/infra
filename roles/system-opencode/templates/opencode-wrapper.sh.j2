@@ -49,14 +49,60 @@ fi
 
 {% endif %}
 {% if system_opencode_github %}
-# GitHub: mint a short-lived installation token for gh, and point git at HTTPS
-# via a credential helper that reuses it. The App key itself is denied to the
-# sandbox, so only the wrapper (outside it) can mint; the token lasts an hour.
-export GH_TOKEN="$({{ system_opencode_github_mint_helper | quote }})"
+# GitHub: a short-lived installation token for git and gh. The App key is denied
+# to the sandbox, so only the wrapper (outside it) can mint. A running session
+# cannot have its environment refreshed, so the token lives in a file that the
+# credential helper and the gh shim read; GH_TOKEN below is only the starting
+# value, and the refresher keeps the file ahead of the hour.
+export OPENCODE_GITHUB_TOKEN_FILE={{ system_opencode_github_token_file | quote }}
+
+# Mint to a temporary file in the same directory and move it into place, so a
+# reader never sees a partial token.
+mint_github_token() {
+  local tmp
+  tmp=$(mktemp {{ system_opencode_config_dir | quote }}/.gh-token.XXXXXX) || return 1
+  if ! {{ system_opencode_github_mint_helper | quote }} >"$tmp" 2>/dev/null; then
+    rm -f "$tmp"
+    return 1
+  fi
+  chmod 0600 "$tmp"
+  mv -f "$tmp" {{ system_opencode_github_token_file | quote }}
+}
+
+if ! mint_github_token; then
+  printf 'opencode: could not mint a GitHub token; git push and gh will fail\n' >&2
+fi
+export GH_TOKEN="$(cat {{ system_opencode_github_token_file | quote }} 2>/dev/null || true)"
 export GITHUB_TOKEN="$GH_TOKEN"
+# Session-local, so the shim wins over Homebrew's gh without touching the
+# user's PATH or their own gh login.
+export PATH={{ system_opencode_github_shim_dir | quote }}:"$PATH"
+
+# Refresh for the life of the session. $$ stays this process across the exec
+# below, so the loop ends when the session does and never mints while nothing
+# is running. Start time plus command name identify the session, so a recycled
+# PID (another session starting as this one ends) cannot keep the loop alive.
+session_pid=$$
+session_start=$(ps -o lstart= -p "$session_pid" 2>/dev/null || true)
+session_alive() {
+  kill -0 "$session_pid" 2>/dev/null || return 1
+  [ -n "$session_start" ] || return 1
+  [ "$(ps -o lstart= -p "$session_pid" 2>/dev/null || true)" = "$session_start" ] || return 1
+  case "$(ps -o comm= -p "$session_pid" 2>/dev/null || true)" in
+    *opencode* | *nono*) return 0 ;;
+  esac
+  return 1
+}
+(
+  while sleep {{ system_opencode_github_token_refresh_seconds }}; do
+    session_alive || break
+    mint_github_token || true
+  done
+) &
+
 # Point gh at a sandbox-local config dir so it never reads
 # ~/.config/gh/hosts.yml (the long-lived OAuth token). gh creates its minimal
-# config here and uses GH_TOKEN above.
+# config here and authenticates with the token above.
 export GH_CONFIG_DIR={{ system_opencode_gh_config_dir | quote }}
 export GIT_CONFIG_COUNT=2
 export GIT_CONFIG_KEY_0="url.https://x-access-token@github.com/.insteadOf"

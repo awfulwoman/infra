@@ -224,6 +224,24 @@
     mode: "0700"
   when: system_opencode_github
 
+- name: Ensure the gh shim directory exists
+  ansible.builtin.file:
+    path: "{{ system_opencode_github_shim_dir }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ system_opencode_group }}"
+    mode: "0755"
+  when: system_opencode_github
+
+- name: Write the gh shim
+  ansible.builtin.template:
+    src: gh-shim.sh.j2
+    dest: "{{ system_opencode_github_shim_dir }}/gh"
+    owner: "{{ ansible_user }}"
+    group: "{{ system_opencode_group }}"
+    mode: "0755"
+  when: system_opencode_github
+
 - name: Ensure gh's sandbox-local config directory exists
   ansible.builtin.file:
     path: "{{ system_opencode_gh_config_dir }}"

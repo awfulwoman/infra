@@ -254,6 +254,18 @@ system_opencode_github_installation_id: "{{ vault_github_app_installation_id }}"
 system_opencode_github_app_key_file: "{{ system_opencode_secrets_dir }}/github-app.pem"
 system_opencode_github_mint_helper: "{{ system_opencode_config_dir }}/mint-github-token.sh"
 system_opencode_github_credential_helper: "{{ system_opencode_config_dir }}/git-credential-github.sh"
+# The current installation token. A running session cannot have its environment
+# refreshed, so this file is the source of truth: the credential helper and the
+# gh shim read it, and a background refresher in the wrapper rewrites it before
+# the token's hour runs out. GH_TOKEN is only the starting value.
+system_opencode_github_token_file: "{{ system_opencode_config_dir }}/gh-token"
+# Installation tokens last 60 minutes; re-mint at 45 to leave margin for a slow
+# GitHub response, and because a failed mint keeps the previous token.
+system_opencode_github_token_refresh_seconds: 2700
+# A gh shim in this directory is prepended to PATH for the session only, so a
+# refresh takes effect without touching the user's shell or their own gh login.
+system_opencode_github_shim_dir: "{{ system_opencode_config_dir }}/bin"
+system_opencode_github_gh_binary: "{{ '/home/linuxbrew/.linuxbrew/bin/gh' if ansible_facts['os_family'] == 'Debian' else '/opt/homebrew/bin/gh' }}"
 # gh's own config dir, kept inside the sandbox (under ~/.config/opencode, which
 # is r+w there) rather than the user's ~/.config/gh. That keeps the long-lived
 # OAuth token in ~/.config/gh/hosts.yml out of the sandbox: gh creates a minimal

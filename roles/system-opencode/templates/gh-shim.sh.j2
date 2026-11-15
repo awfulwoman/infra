@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Managed by Ansible (system-opencode). Local edits are overwritten.
+#
+# gh shim for opencode sessions. gh takes its token from GH_TOKEN in the
+# environment, which cannot be refreshed in a running session, so the wrapper
+# prepends this directory to PATH and points OPENCODE_GITHUB_TOKEN_FILE at a
+# token its refresher keeps current. gh then always starts with a live token.
+#
+# Outside opencode the marker is unset and this passes straight through, so an
+# interactive gh keeps using its own login rather than the agent's token.
+set -euo pipefail
+
+if [ -n "${OPENCODE_GITHUB_TOKEN_FILE:-}" ] && [ -r "$OPENCODE_GITHUB_TOKEN_FILE" ]; then
+  GH_TOKEN=$(<"$OPENCODE_GITHUB_TOKEN_FILE")
+  GITHUB_TOKEN=$GH_TOKEN
+  export GH_TOKEN GITHUB_TOKEN
+fi
+
+exec {{ system_opencode_github_gh_binary | quote }} "$@"

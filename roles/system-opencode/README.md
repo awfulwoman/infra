@@ -147,15 +147,29 @@ sandbox.
   by default — nono cannot deny a file inside an allowed directory.
 - `mint-github-token.sh` signs a JWT with that key and POSTs to
   `api.github.com` for an installation token. The wrapper runs it (outside the
-  sandbox) to set `GH_TOKEN`/`GITHUB_TOKEN` for `gh`, and a git credential
-  helper reuses `GH_TOKEN` for pushes. The token lasts an hour, so a session
-  older than that pushes with an expired token until it is restarted; only the
-  wrapper can mint a fresh one because the key is sandbox-denied.
+  sandbox) and writes the result to `~/.config/opencode/gh-token` (mode 0600).
+- The token file, not `GH_TOKEN`, is what readers use. A running session cannot
+  have its environment updated, so exporting a token once would leave every
+  child holding a value that dies after an hour. Instead the wrapper starts a
+  background refresher that re-mints before then (45 minutes, leaving margin),
+  and it exits when the session does: it watches the wrapper's own PID, which
+  `exec` keeps as the sandboxed process, and checks the process start time and
+  command name so a recycled PID cannot keep it alive. Nothing is minted while
+  no session runs; the file's last token expires on its own within the hour and
+  is left in place rather than deleted, so a running playbook cannot break a
+  live session.
+  The credential helper reads the file for pushes; `GH_TOKEN` is only the
+  starting value for anything that reads the environment once.
+- The `gh` shim is why `gh` also keeps working: `gh` takes its token from
+  `GH_TOKEN` and has no file option, so the wrapper prepends
+  `~/.config/opencode/bin` to `PATH` for the session. The shim re-reads the
+  token file on every invocation, and passes straight through when
+  `OPENCODE_GITHUB_TOKEN_FILE` is unset, so the user's own `gh` is unaffected.
 - `gh` reads its config from `~/.config/gh`, but that directory is not in the
   sandbox allow-list (its `hosts.yml` holds the long-lived OAuth token). The
   wrapper instead sets `GH_CONFIG_DIR` to `~/.config/opencode/gh` (r+w in the
   sandbox), so `gh` creates a minimal config there and authenticates with
-  `GH_TOKEN` alone, never touching the user's `~/.config/gh`.
+  the token alone, never touching the user's `~/.config/gh`.
 - Git is pointed at HTTPS via `url.*.insteadOf` in the wrapper, so the agent
   pushes over HTTPS with `x-access-token` + the minted token; the SSH remotes
   are left untouched for manual use.
@@ -172,4 +186,5 @@ To enable (once the App exists):
 3. Set `system_opencode_github: true`.
 
 Variables: `system_opencode_github` (on/off, default off), `_app_id`,
-`_installation_id`, `_app_key_file`, `_mint_helper`, `_credential_helper`.
+`_installation_id`, `_app_key_file`, `_mint_helper`, `_credential_helper`,
+`_token_file`, `_token_refresh_seconds`, `_shim_dir`, `_gh_binary`.
