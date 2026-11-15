@@ -23,6 +23,12 @@ repos:
         language: system
         pass_filenames: false
         files: ^(inventory/|plugins/filters/zfs_datasets\.py)
+      - id: validate-secret-logging
+        name: Refuse a task that prints a secret without no_log
+        entry: scripts/validate-secret-logging.sh
+        language: system
+        pass_filenames: false
+        files: ^(roles/|playbooks/)
       - id: domain-guard
         name: Keep private domain names out of commits
         # The names live in a file outside the repo (written by Ansible from the

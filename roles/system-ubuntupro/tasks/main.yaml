@@ -16,6 +16,8 @@
   when: vault_ubuntupro_token is defined and ubuntupro_attach is true and _ubuntupro_initial_registration_status is false
   ansible.builtin.command: "pro attach {{ vault_ubuntupro_token }}"
   become: true
+  # The token is in the command line, which Ansible prints on failure.
+  no_log: true
   register: ubuntupro_output_attachment
   changed_when: ubuntupro_output_attachment.rc == 0
   failed_when: (ubuntupro_output_attachment.rc != 0) and _ubuntupro_initial_registration_status is false
