@@ -40,5 +40,3 @@
     tags: [system, syncthing, system-syncthing-macos]
   - role: system-obsidian-desktop
     tags: [system, system-obsidian-desktop]
-  - role: system-aw-deploy
-    tags: [system, system-aw-deploy]
