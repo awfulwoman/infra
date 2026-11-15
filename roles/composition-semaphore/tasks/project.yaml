@@ -51,6 +51,33 @@
     loop_var: host_playbook
     label: "{{ host_playbook | dirname | basename }}"
 
+# The same run as "<host>: core", but from the working checkout: uncommitted
+# changes included, no network. The playbook is pinned here, not passed at run
+# time, so this cannot be turned into "run any playbook with the vault
+# unlocked" — which is why there is no general working-copy template. That is
+# the deploy loop for trying a change, from an agent or an editor, before it is
+# pushed. Never scheduled: a nightly run must deploy main.
+- name: "Add a working-copy core template for every host playbook"
+  ansible.builtin.set_fact:
+    _semaphore_templates: >-
+      {{ _semaphore_templates | combine({
+           host ~ ': core (local)': composition_semaphore_template_defaults | combine({
+             'name': host ~ ': core (local)',
+             'description': 'Same as "' ~ host ~ ': core", but from the working checkout: '
+                            ~ 'uncommitted changes included, no network. For trying a change '
+                            ~ 'before pushing.',
+             'playbook': 'playbooks/hosts/' ~ host ~ '/core.yaml',
+             'repository_name': 'infra (local)',
+             'inventory_name': 'infra (local)',
+           })
+         }) }}
+  vars:
+    host: "{{ host_playbook | dirname | basename }}"
+  loop: "{{ _semaphore_host_playbooks.files | map(attribute='path') | sort }}"
+  loop_control:
+    loop_var: host_playbook
+    label: "{{ host_playbook | dirname | basename }} (local)"
+
 - name: "Add the extra templates"
   ansible.builtin.set_fact:
     _semaphore_templates: >-
@@ -61,6 +88,22 @@
   loop_control:
     loop_var: extra_template
     label: "{{ extra_template.name }}"
+
+# A scheduled run must deploy main, so a schedule may never name one of the
+# working-copy templates — it would publish whatever happens to be in the
+# checkout at 02:00.
+- name: "Refuse a schedule against a working-copy template"
+  ansible.builtin.assert:
+    that:
+      - not (schedule.template.endswith(' (local)'))
+    fail_msg: >-
+      {{ schedule.template }} is a working-copy template: it runs the checkout
+      on the control node, not main. A scheduled run must deploy what is pushed.
+    quiet: true
+  loop: "{{ composition_semaphore_schedules }}"
+  loop_control:
+    loop_var: schedule
+    label: "{{ schedule.template }}"
 
 - name: "Add the schedules"
   ansible.builtin.set_fact:

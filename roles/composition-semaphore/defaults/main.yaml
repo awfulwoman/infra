@@ -59,7 +59,7 @@ composition_semaphore_fleet_key_path: "{{ ansible_facts.user_dir }}/.ssh/id_ed25
 # works when GitHub is unreachable. Nothing here updates it: it is a working
 # copy, pulled and pushed by hand. Scheduled templates use the GitHub
 # repository, so a nightly run always deploys what is on main; only the
-# "working copy" template uses this one.
+# "<host>: core (local)" templates use this one.
 #
 # Read-write because the utilities that *generate* files in the tree
 # (export-dns-records-input, export-service-names) write to
@@ -77,25 +77,17 @@ composition_semaphore_local_repo_path: "{{ ansible_facts.user_dir }}/Code/awfulw
 # that and names the mode when it does not.
 
 # A "<host>: core" template is generated for every
-# playbooks/hosts/*/core.yaml. These are added on top. Each item is merged
-# over the shared template settings in tasks/project.yaml.
+# playbooks/hosts/*/core.yaml, plus a "<host>: core (local)" twin that runs the
+# same playbook from the working checkout. These are added on top. Each item is
+# merged over the shared template settings in tasks/project.yaml.
+#
+# There is deliberately no "run any playbook from the checkout" template. A
+# deploy runs with the vault unlocked, so a playbook of one's choosing is a way
+# to print any secret into a log — and the logs are readable through the
+# gateway's Semaphore tools. Pinning the playbook per host keeps that out of
+# reach: what can be chosen at run time is a host and a set of arguments
+# (--tags, --limit), never the playbook itself.
 composition_semaphore_templates_extra:
-  # The agent's way to deploy the working tree rather than GitHub. The
-  # repository and inventory both point at the (local) pair: an inventory is
-  # bound to one repository, so a template carrying only one of them still
-  # clones from GitHub. Per-task overrides carry the playbook and the
-  # arguments (--tags, --limit), which is why the default playbook here is
-  # the heartbeat: pressing it with no arguments must not touch a host.
-  # Never scheduled — a nightly run must deploy main, not an editor buffer.
-  - name: working copy
-    description: >-
-      Run any playbook from this host's checkout instead of GitHub: uncommitted
-      work included, no network. Pass the playbook, then arguments (--tags,
-      --limit) as the task needs.
-    playbook: playbooks/utility/semaphore-heartbeat.yaml
-    repository_name: "infra (local)"
-    inventory_name: "infra (local)"
-    allow_override_args_in_task: true
   - name: "minipc-8gb-camina: galaxy refresh"
     description: >-
       Install Galaxy deps into /opt/ansible/galaxy on camina, which Semaphore

@@ -113,6 +113,7 @@ Semaphore on camina (`composition-semaphore`) runs each scheduled host's `core.y
 - **Anything in a host's `core.yaml` happens unattended.** That includes Terraform on deedee (`infra-public-resources` applies whenever the plan differs) and certificate issuing on bertha (`infra-certbot`).
 - **Certificates renew this way.** bertha issues them; each host's `client-cert-distribution` collects them on its own run. bertha runs after most hosts, so a renewed certificate reaches them the following night.
 - **One run at a time.** A manual run started from Semaphore queues behind the nightly ones.
+- **`<host>: core (local)` runs the working checkout instead of `main`.** Same playbook, uncommitted changes included, never scheduled — for trying a change before pushing it, including from an agent. There is deliberately no run-any-playbook template: a deploy runs with the vault unlocked, so an arbitrary playbook could print a secret into a log that the gateway hands back.
 - **A heartbeat runs last** and pings healthchecks.io, which alerts if the night's runs stop happening.
 
 ### Scripts (`scripts/`)

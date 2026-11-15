@@ -76,7 +76,7 @@ edited in the UI is reset on the next run.
 | Access key | `composition_semaphore_fleet_key_name`, read from `composition_semaphore_fleet_key_path` on the host. Set on creation only (`override_secret: false`) |
 | Repositories | `infra`: `https://github.com/awfulwoman/infra.git`, `main`, Semaphore's built-in `None` key (the repo is public). `infra (local)`: the working checkout, mounted at the same path — see below |
 | Inventories | `infra` and `infra (local)`, one per repository: `inventory/`, the whole directory, as `ansible.cfg` loads it. `hosts-unmanaged.yaml` defines groups bertha's dhcpd and named templates need |
-| Templates | `<host>: core` for every `playbooks/hosts/*/core.yaml`, found on the controller at run time, plus `composition_semaphore_templates_extra`. All merged over `composition_semaphore_template_defaults` |
+| Templates | `<host>: core` for every `playbooks/hosts/*/core.yaml`, found on the controller at run time; `<host>: core (local)` twins that run the same playbook from the working checkout; plus `composition_semaphore_templates_extra`. All merged over `composition_semaphore_template_defaults` |
 | Schedules | `composition_semaphore_schedules`, set in camina's host_vars |
 
 Templates allow per-run argument overrides, e.g.
@@ -127,20 +127,43 @@ repository. So the split is explicit:
 
 - **Every scheduled template uses `infra` (GitHub).** A nightly run deploys
   `main`, always.
-- **The `working copy` template** carries the `(local)` pair, and takes the
-  playbook and arguments as per-task overrides — `playbook` is honoured by
-  `local_executor.go`, and is validated to stay inside the repository. Its
-  default playbook is the heartbeat, so pressing it with no arguments cannot
-  touch a host.
+- **The `<host>: core (local)` templates** carry the `(local)` pair, with the
+  playbook pinned to that host's `core.yaml` and only the arguments overridable.
 
-To deploy the working tree: start the `working copy` template, set the
-playbook (e.g. `playbooks/hosts/server-64gb-storage/core.yaml`) and the
-arguments (e.g. `["--tags", "composition"]`, or `["--limit", …]`). The project
-runs one task at a time (`max_parallel_tasks: 1`), so an ad-hoc run queues
-behind a nightly one rather than colliding with it.
+To deploy the working tree: start `<host>: core (local)` with arguments such as
+`["--tags", "composition"]`. The project runs one task at a time
+(`max_parallel_tasks: 1`), so an ad-hoc run queues behind a nightly one rather
+than colliding with it.
 
-Because the template is declared here, a deploy of this role recreates it —
-it is not a UI-only change that drifts.
+Because the templates are declared here, a deploy of this role recreates them —
+they are not UI-only changes that drift. `project_deploy` only creates and
+updates, though: it never deletes, so a template that is *removed* from this
+role's declarations stays in the project until deleted in the UI. The retired
+`working copy` template is the case that matters — it took the playbook as a
+per-task override, which is exactly the capability the pinned per-host
+templates exist to remove — so delete it (and any `<host>: core` left behind by
+a host that no longer exists) once, in the UI.
+
+### Why there is no "run any playbook" template
+
+It is tempting to have one template that takes the playbook as a per-task
+override, since `local_executor.go` honours it and validates only that it stays
+inside the repository. Nothing in the project does that on purpose.
+
+A deploy runs with the vault unlocked: `ansible.cfg` points at the vault
+password file the role mounts, so every task has decrypted secrets available.
+A playbook of one's own choosing can therefore print any secret into the run
+log — and the run log is readable over the API by the gateway's Semaphore tools
+(`jobs_logs`), which is how the agent inspects failures. Keeping the playbook
+pinned per host means the only things choosable at run time are a host and a
+set of arguments, never the playbook.
+
+That is a real boundary only because *no* template allows a playbook override,
+so adding one back — in the UI or here — re-opens it. The gateway also masks
+secrets in the logs it returns (`_redact` in `gateway/tools/semaphore.py`), as
+defence in depth for the failure path: a task that dumps a secret while failing
+is masked before it reaches a caller. That masking is best-effort, not the
+control.
 
 ### Failure alerts
 
