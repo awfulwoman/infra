@@ -10,7 +10,7 @@ __pycache__
 .vagrant
 .worktrees
 .env
-.claude/scheduled_tasks.lock
+.opencode/scheduled_tasks.lock
 scripts/snapshot-domains-names.json
 scripts/dns-records-input.json
 

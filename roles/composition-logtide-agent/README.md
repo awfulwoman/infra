@@ -27,4 +27,4 @@ This role is safe to deploy on storage: `composition-logtide` no longer tails co
 
 **Exclusions.** `composition_logtide_agent_exclude_pattern` defaults to `^logtide-(backend|worker|agent)`. Without this exclusion, each of those feeds its own output back in: the backend logs every ingest request, the worker logs a line per batch it processes (including batches of its own lines, so it never idles), and the agent tails its own stdout. The rest of the stack — postgres, redis, frontend, fluent-bit — is ingested normally. This is what you want when Logtide itself is the thing that misbehaves.
 
-**No healthcheck.** This matches the other Fluent Bit container: the image's contents are not confirmed to include a usable probe (see `.claude/rules/docker-healthcheck.md`). Check it with `docker logs logtide-agent`, which is quiet at the default `warn` level.
+**No healthcheck.** This matches the other Fluent Bit container: the image's contents are not confirmed to include a usable probe (see `.opencode/rules/docker-healthcheck.md`). Check it with `docker logs logtide-agent`, which is quiet at the default `warn` level.

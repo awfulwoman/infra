@@ -94,7 +94,7 @@ role.
 |----------|----------|--------------|
 | `vault_matrix_registration_token` | when registration is open | Static token needed to register any account |
 
-Generate it with `openssl rand -hex 32`, per `.claude/rules/ansible-vault.md`.
+Generate it with `openssl rand -hex 32`, per `.opencode/rules/ansible-vault.md`.
 
 ## Volumes
 

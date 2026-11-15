@@ -152,6 +152,6 @@ This is needed whenever a composition is first added — deploying the compositi
 
 **A pinned upstream version can vanish** — a PyPI release can be yanked, and a Docker tag can be rebuilt against a newer base. A nightly run then fails on a `docker compose build` that worked last week. The build log names the failing `RUN` line; check the release still exists and that the base image is the one the role comments say it is deliberately pinned to.
 
-**Alpine images and `/dev/tcp`** — Alpine's busybox `sh` does not support `/dev/tcp`. Any role that runs on `louislam/uptime-kuma` or other Alpine-based images must use `bash -c 'echo > /dev/tcp/...'` in healthchecks (bash is present). See `.claude/rules/docker-healthcheck.md`.
+**Alpine images and `/dev/tcp`** — Alpine's busybox `sh` does not support `/dev/tcp`. Any role that runs on `louislam/uptime-kuma` or other Alpine-based images must use `bash -c 'echo > /dev/tcp/...'` in healthchecks (bash is present). See `.opencode/rules/docker-healthcheck.md`.
 
 **Socket.io / slow-connecting APIs** — lazy-connecting sidecar services (e.g. uptime-kuma-api) may take 60s+ to authenticate on first request. Set `timeout: 120` on any `uri` task that triggers the first connection.
