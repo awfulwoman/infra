@@ -2,6 +2,8 @@
 name: ansible-deploy
 description: Use when deploying Ansible playbooks to hosts or groups, selecting
   the right playbook file, or targeting specific roles or role types with tags.
+# Disabled: still describes aw-deploy, which has been removed. Rewrite before re-enabling.
+disable-model-invocation: true
 ---
 
 - `core.yaml` (if present) is the default playbook for a host or group
