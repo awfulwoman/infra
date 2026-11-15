@@ -92,7 +92,7 @@ composition_gateway_reminders_server_bearer_token: "{{ vault_gateway_reminders_s
 # the `fleet_key` SSH key the semaphore role itself stores. Left empty until it
 # is vaulted; the tools then report "not configured" instead of failing startup.
 composition_gateway_semaphore_base_url: "https://semaphore.{{ domainname_infra }}"
-composition_gateway_semaphore_token: "{{ vault_gateway_semaphore_api_token | default('') }}"
+composition_gateway_semaphore_token: "{{ vault_composition_gateway_semaphore_api_token | default('') }}"
 
 # Bearer tokens the server enforces on /mcp, one per calling client. Rendered into
 # GATEWAY_SERVER__AUTH_TOKENS as `label:secret` pairs — the label names the caller

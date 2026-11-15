@@ -48,7 +48,7 @@ point `composition_gateway_obsidian_vault_path` at its path on this host.
 | `composition_gateway_contacts_server_base_url` | Malcolm's infra-zone FQDN, port 4102 | apple-contacts-server backend for Contacts (see `system-apple-contacts-server`) |
 | `composition_gateway_contacts_server_bearer_token` | `vault_gateway_contacts_server_token` | Shared secret with `system-apple-contacts-server` |
 | `composition_gateway_semaphore_base_url` | `https://semaphore.{{ domainname_infra }}` | Ansible Semaphore UI (see `composition-semaphore`) |
-| `composition_gateway_semaphore_token` | `vault_gateway_semaphore_api_token` | Semaphore API token (Admin → API Tokens), not the admin password. Empty drops the tools |
+| `composition_gateway_semaphore_token` | `vault_composition_gateway_semaphore_api_token` | Semaphore API token (Admin → API Tokens), not the admin password. Empty drops the tools |
 | `composition_gateway_server_auth_clients` | `{jarvis: vault_gateway_mcp_token, laptop: …, gw-cli: …, hermes: …}` | Labelled bearer tokens for `/mcp`; the label is the caller name in the usage log. Empty-valued entries are dropped. |
 | `composition_gateway_usage_log_container_path` | `/var/log/gateway/usage.jsonl` | In-container path for the JSONL usage log; bind-mounted from `{{ composition_root }}/logs` |
 
@@ -80,11 +80,11 @@ in the laptop's `mcpServers.gateway` config, `GATEWAY_TOKEN=<gw-cli secret>` whe
 
 The Semaphore token is a *Semaphore API token* minted in the Semaphore UI under
 Admin → API Tokens for the admin account — it is not the admin password and not the
-`fleet_key` SSH key that `composition-semaphore` installs. Vault it as
-`vault_gateway_semaphore_api_token` in `inventory/group_vars/infra/vault_gateway.yaml`:
+`fleet_key` SSH key that `composition-semaphore` installs. It belongs with the other
+Semaphore secrets, in `inventory/group_vars/infra/vault_composition_semaphore.yaml`:
 
 ```bash
-ansible-vault encrypt_string '<token from Admin → API Tokens>' --name 'vault_gateway_semaphore_api_token'
+ansible-vault encrypt_string '<token from Admin → API Tokens>' --name 'vault_composition_gateway_semaphore_api_token'
 ```
 
 ## Volumes
