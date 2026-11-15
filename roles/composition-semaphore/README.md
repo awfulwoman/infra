@@ -74,7 +74,7 @@ edited in the UI is reset on the next run.
 |------|--------|
 | Project | `composition_semaphore_project_name`, `composition_semaphore_max_parallel_tasks` (1: Semaphore has no per-host lock, so one run at a time across the project) |
 | Access key | `composition_semaphore_fleet_key_name`, read from `composition_semaphore_fleet_key_path` on the host. Set on creation only (`override_secret: false`) |
-| Repositories | `infra`: `https://github.com/awfulwoman/infra.git`, `main`, Semaphore's built-in `None` key (the repo is public). `infra (local)`: see break-glass below |
+| Repositories | `infra`: `https://github.com/awfulwoman/infra.git`, `main`, Semaphore's built-in `None` key (the repo is public). `infra (local)`: the working checkout, mounted at `composition_semaphore_local_repo_container_path` — see below |
 | Inventories | `infra` and `infra (local)`, one per repository: `inventory/`, the whole directory, as `ansible.cfg` loads it. `hosts-unmanaged.yaml` defines groups bertha's dhcpd and named templates need |
 | Templates | `<host>: core` for every `playbooks/hosts/*/core.yaml`, found on the controller at run time, plus `composition_semaphore_templates_extra`. All merged over `composition_semaphore_template_defaults` |
 | Schedules | `composition_semaphore_schedules`, set in camina's host_vars |
@@ -90,26 +90,50 @@ in `defaults/main.yaml`: `groups/kubernetes`, `groups/personal`,
 ### The working checkout
 
 `composition_semaphore_local_repo_path`
-(`/fastpool/repos/awfulwoman/infra` on camina, on the `repos` dataset) is
-the checkout this repo is edited in on the control node — Claude Code, an editor, a shell. It is mounted
-read-only into the container and registered as the repository
-`infra (local)`, with a matching inventory.
+(`/home/awful/Code/awfulwoman/infra` on camina) is the checkout this repo is
+edited in on the control node — Claude Code, an editor, a shell. It is
+registered as the repository `infra (local)`, with a matching inventory, and
+mounted read-only into the container at
+`composition_semaphore_local_repo_container_path` (`/repos/infra`).
 
-A repository URL with no scheme is used in place, with no clone, so a run
-against it uses the working tree exactly as it stands, uncommitted changes
-included, and needs no network. That covers trying a change before pushing
-it, and running anything while GitHub is unreachable.
+The two paths differ because the container runs as uid
+`composition_semaphore_uid` (1001), which is neither the owner nor the group
+of a checkout under a home directory. Docker resolves the *host* side as root
+when it sets the mount up, so the host path can sit below a `0750` directory;
+what matters is that the *container-side* path is traversable, and the
+checkout itself is readable by "other". The role asserts that, and fails with
+a message naming the mode rather than leaving the container to fail at
+inventory load.
+
+A repository URL with no scheme is used in place, with no clone
+(`db/Repository.go`: `RepositoryLocal` returns the path itself), so a task
+against it uses the working tree exactly as it stands — uncommitted changes
+included, no network. That covers trying a change before pushing it, and
+deploying while GitHub is unreachable.
 
 Nothing in Ansible updates that checkout: it is a working copy, pulled and
 pushed by hand (`origin` is `git@github.com:…`, so camina's key pushes).
 
-Every template uses the GitHub repository, so a scheduled run always
-deploys what is on `main`. To run the working copy instead, switch a
-template's repository **and** its inventory to the `(local)` pair: an
-inventory is bound to one repository, so leaving the GitHub inventory makes
-the run fetch from GitHub and use that inventory. The next deploy of this
-role resets both, which is the intent — the switch is deliberately
-temporary.
+Which repository a task uses is fixed by its **template**, not by the task:
+Semaphore has no per-task inventory override, and an inventory is bound to one
+repository. So the split is explicit:
+
+- **Every scheduled template uses `infra` (GitHub).** A nightly run deploys
+  `main`, always.
+- **The `working copy` template** carries the `(local)` pair, and takes the
+  playbook and arguments as per-task overrides — `playbook` is honoured by
+  `local_executor.go`, and is validated to stay inside the repository. Its
+  default playbook is the heartbeat, so pressing it with no arguments cannot
+  touch a host.
+
+To deploy the working tree: start the `working copy` template, set the
+playbook (e.g. `playbooks/hosts/server-64gb-storage/core.yaml`) and the
+arguments (e.g. `["--tags", "composition"]`, or `["--limit", …]`). The project
+runs one task at a time (`max_parallel_tasks: 1`), so an ad-hoc run queues
+behind a nightly one rather than colliding with it.
+
+Because the template is declared here, a deploy of this role recreates it —
+it is not a UI-only change that drifts.
 
 ### Failure alerts
 

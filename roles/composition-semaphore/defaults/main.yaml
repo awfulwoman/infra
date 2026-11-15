@@ -55,17 +55,42 @@ composition_semaphore_fleet_key_path: "{{ ansible_facts.user_dir }}/.ssh/id_ed25
 
 # The working checkout on this host — where this repo is edited on the
 # control node (Claude Code, an editor, a shell) — mounted read-only and
-# registered as a second repository. Lets a template run uncommitted work,
-# and works when GitHub is unreachable. Nothing here updates it: it is a
-# working copy, pulled and pushed by hand. Templates use the GitHub
-# repository, so scheduled runs always deploy what is on main.
-# Override per host; on camina this is a dataset of its own (fastpool/repos).
+# registered as a second repository. Lets a task run uncommitted work, and
+# works when GitHub is unreachable. Nothing here updates it: it is a working
+# copy, pulled and pushed by hand. Scheduled templates use the GitHub
+# repository, so a nightly run always deploys what is on main; only the
+# "working copy" template uses this one.
 composition_semaphore_local_repo_path: "{{ ansible_facts.user_dir }}/Code/awfulwoman/infra"
+
+# Where the host path appears *inside* the container. It cannot be the same
+# path: the container runs as composition_semaphore_uid (1001), and a host
+# path below a directory that uid cannot traverse is unreachable even when
+# the checkout itself is world-readable. /home/awful is 0750 awful:awful,
+# so mounting at the identical path fails at inventory load. Docker resolves
+# the host side as root when it sets the mount up, so only the container-side
+# path needs to be traversable — /repos is created by Docker, 0755.
+composition_semaphore_local_repo_container_path: "/repos/infra"
 
 # A "<host>: core" template is generated for every
 # playbooks/hosts/*/core.yaml. These are added on top. Each item is merged
 # over the shared template settings in tasks/project.yaml.
 composition_semaphore_templates_extra:
+  # The agent's way to deploy the working tree rather than GitHub. The
+  # repository and inventory both point at the (local) pair: an inventory is
+  # bound to one repository, so a template carrying only one of them still
+  # clones from GitHub. Per-task overrides carry the playbook and the
+  # arguments (--tags, --limit), which is why the default playbook here is
+  # the heartbeat: pressing it with no arguments must not touch a host.
+  # Never scheduled — a nightly run must deploy main, not an editor buffer.
+  - name: working copy
+    description: >-
+      Run any playbook from this host's checkout instead of GitHub: uncommitted
+      work included, no network. Pass the playbook, then arguments (--tags,
+      --limit) as the task needs.
+    playbook: playbooks/utility/semaphore-heartbeat.yaml
+    repository_name: "infra (local)"
+    inventory_name: "infra (local)"
+    allow_override_args_in_task: true
   - name: "minipc-8gb-camina: galaxy refresh"
     description: >-
       Install Galaxy deps into /opt/ansible/galaxy on camina, which Semaphore
