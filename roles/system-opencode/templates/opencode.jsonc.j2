@@ -5,6 +5,11 @@
 {% if system_opencode_model %}
   "model": {{ system_opencode_model | to_json }},
 {% endif %}
+{% if system_opencode_rules_dir %}
+  // Loaded after the discovered AGENTS.md files. The rules directory is linked
+  // by the agents repo's install.py; this entry is what makes opencode read it.
+  "instructions": {{ [system_opencode_rules_dir ~ '/*.md'] | to_json }},
+{% endif %}
   // The last matching rule wins: defaults first, then the allow-list, then extras.
   "permissions": [
 {% for rule in system_opencode_permissions_default %}

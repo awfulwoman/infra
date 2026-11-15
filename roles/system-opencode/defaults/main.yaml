@@ -13,6 +13,12 @@ system_opencode_model: ""
 
 # Config directory and file. opencode follows XDG, so ~/.config on both OSes.
 system_opencode_config_dir: "{{ ansible_facts.user_dir }}/.config/opencode"
+
+# Instruction files, loaded after the discovered AGENTS.md. opencode has no
+# rules directory, and the user-level rules in the agents repo are linked into
+# this one by install.py — without the `instructions` entry they are linked and
+# never read.
+system_opencode_rules_dir: "{{ system_opencode_config_dir }}/rules"
 # Secret files (tokens, the GitHub App key) live here, a sibling of the config
 # dir. The nono profile grants ~/.config/opencode but not this directory, so
 # the agent cannot read them by default.
