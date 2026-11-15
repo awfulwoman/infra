@@ -79,6 +79,13 @@
 {% if system_opencode_plugins %}
   "plugins": {{ system_opencode_plugins | to_json }},
 {% endif %}
+{% if system_opencode_websearch == false %}
+  // No built-in web search: the SearXNG MCP server is the only one. The
+  // hosted providers cost per query and would silently shadow it.
+  "websearch": false,
+{% elif system_opencode_websearch %}
+  "websearch": {"provider": {{ system_opencode_websearch | to_json }}},
+{% endif %}
   "providers": {
     // v2 discovers Ollama models and reads their context size, vision and
     // tool support from Ollama, so models are not listed here.

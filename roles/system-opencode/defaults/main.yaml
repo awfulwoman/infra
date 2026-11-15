@@ -223,6 +223,15 @@ system_opencode_searxng_url: "https://searchmcp.{{ domainname_infra }}/mcp"
 system_opencode_searxng_token: "{{ vault_mcp_searxng_auth_token }}"
 system_opencode_searxng_env_file: "{{ system_opencode_secrets_dir }}/searxng.env"
 
+# --- web search ------------------------------------------------------------
+# opencode's own `websearch` tool, separate from the SearXNG MCP server above.
+# false removes the tool from model requests, so SearXNG is the only search:
+# nothing to pay per query, and nothing for the agent to fall back to when
+# SearXNG is reachable. A provider id (exa, firecrawl, parallel, tavily,
+# tinyfish, random) keeps the tool and pins that provider instead; "" omits the
+# key and leaves provider selection to the first-use prompt.
+system_opencode_websearch: false
+
 # --- ha-mcp ----------------------------------------------------------------
 # Home Assistant tools through composition-ha-mcp on homebrain. The endpoint has
 # no auth of its own: the secret path is the credential, so the whole URL lives

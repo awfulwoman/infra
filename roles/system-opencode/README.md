@@ -118,6 +118,16 @@ Registers the SearXNG MCP server (`https://searchmcp.<domain>/mcp`, from `compos
 
 Variables: `system_opencode_searxng` (on/off), `_url`, `_token`, `_env_file`.
 
+## web search
+
+opencode's own `websearch` tool — the built-in one, not the SearXNG MCP server. It is separate from SearXNG and has a fixed provider list (Exa, Firecrawl, Parallel, Tavily, TinyFish, plus the Console-hosted one), all of which cost per search. There is no way to point it at a self-hosted endpoint.
+
+`system_opencode_websearch` is written straight to the `websearch` key:
+
+- `false` (default) — writes `"websearch": false`, which removes the tool. SearXNG is then the only search: nothing to pay for, and no provider for the agent to fall back to when SearXNG is up.
+- A provider id (`tavily`, `exa`, `parallel`, `firecrawl`, `tinyfish`, `random`) — keeps the tool and pins that provider, read from the provider's own `*_API_KEY` or connected with `/connect`.
+- `""` — omits the key, leaving provider selection to the first-use prompt.
+
 ## ha-mcp
 
 Registers Home Assistant's MCP server (`composition-ha-mcp` on homebrain, `https://ha-mcp.<domain>/<secret path>`) as a `remote` server named `homeassistant`. The endpoint has no auth beyond its secret path (`vault_composition_ha_mcp_secret_path`), so the full URL goes in `~/.config/opencode-secrets/ha-mcp.env` (mode 0600), sourced by the wrapper; the config holds `{env:HA_MCP_URL}`. Rotating the path means redeploying both roles.
