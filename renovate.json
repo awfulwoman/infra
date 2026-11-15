@@ -29,6 +29,13 @@
     ],
     "packageRules": [
         {
+            "description": "mcp-kagisearch stays on Python 3.12: kagimcp 1.0.0 declares Requires-Python ==3.12.*, and 1.1.0 pulls pydantic-core, which has no cp315 wheels. Renovate bumped this to 3.15 twice (#308, #321) and broke the build each time.",
+            "matchFileNames": [
+                "roles/composition-mcp-kagisearch/templates/Dockerfile.j2"
+            ],
+            "enabled": false
+        },
+        {
             "description": "GoToSocial patch releases merge themselves. Minor and major stay as PRs: they have needed config changes, and database migrations only go forward.",
             "matchPackageNames": [
                 "superseriousbusiness/gotosocial"

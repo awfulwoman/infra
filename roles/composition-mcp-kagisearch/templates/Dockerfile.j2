@@ -1,4 +1,8 @@
-FROM python:3.15-slim
+# Pinned to 3.12 on purpose: kagimcp 1.0.0 declares `Requires-Python ==3.12.*`,
+# and 1.1.0 drags in pydantic-core, which has no cp315 wheels. Renovate bumped
+# this to 3.15 twice (#308, #321) and broke the build both times, so renovate.json
+# ignores this file. See cd9e2d12.
+FROM python:3.12-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
