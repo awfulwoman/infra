@@ -66,22 +66,23 @@
     path: "{{ composition_semaphore_local_repo_path }}"
   register: _semaphore_local_repo_stat
 
-# The mount is read-only but the container still has to read it as
+# The mount is read-only, but the container still has to read it as
 # composition_semaphore_uid, which is neither the owner nor the group of a
-# checkout in a home directory. Fail here rather than leaving the container
-# to fail at inventory load with a bare "permission denied".
+# checkout in a home directory. Docker creates the path's parents inside the
+# container as root 0755, so only the checkout's own mode matters. Fail here
+# rather than leaving the container to fail at inventory load with a bare
+# "permission denied".
 - name: "Refuse a working checkout the container cannot read"
   ansible.builtin.assert:
     that:
       - _semaphore_local_repo_stat.stat.isdir
       - ((_semaphore_local_repo_stat.stat.mode | int(base=8)) % 8) in [5, 7]
     fail_msg: >-
-      {{ composition_semaphore_local_repo_path }} is not readable and
-      traversable by "other". The Semaphore container runs as uid
-      {{ composition_semaphore_uid }}, so it can only read a checkout that
-      grants other r-x — chmod o+rx it, or point it at a path outside the
-      home directory. It is mounted at
-      {{ composition_semaphore_local_repo_container_path }}.
+      {{ composition_semaphore_local_repo_path }} is mode
+      {{ _semaphore_local_repo_stat.stat.mode }}: not readable and
+      traversable by "other", so the Semaphore container (uid
+      {{ composition_semaphore_uid }}, neither owner nor group here) cannot
+      read it. chmod o+rx the checkout.
     quiet: true
 
 # ----------------------------

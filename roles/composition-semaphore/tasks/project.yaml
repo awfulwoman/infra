@@ -184,11 +184,10 @@
           key_name: "None"
         # A path with no scheme is used in place, with no clone, so a task
         # can run what is in the working copy right now — uncommitted
-        # included. It is registered at the container-side path the compose
-        # file mounts, which differs from the host path because the
-        # container's uid cannot traverse every parent of a host checkout.
+        # included. It is mounted at this same path by the compose file, so
+        # the URL and the mount cannot drift apart.
         - name: infra (local)
-          git_url: "{{ composition_semaphore_local_repo_container_path }}"
+          git_url: "{{ composition_semaphore_local_repo_path }}"
           git_branch: main
           key_name: "None"
       views: {}

@@ -62,14 +62,12 @@ composition_semaphore_fleet_key_path: "{{ ansible_facts.user_dir }}/.ssh/id_ed25
 # "working copy" template uses this one.
 composition_semaphore_local_repo_path: "{{ ansible_facts.user_dir }}/Code/awfulwoman/infra"
 
-# Where the host path appears *inside* the container. It cannot be the same
-# path: the container runs as composition_semaphore_uid (1001), and a host
-# path below a directory that uid cannot traverse is unreachable even when
-# the checkout itself is world-readable. /home/awful is 0750 awful:awful,
-# so mounting at the identical path fails at inventory load. Docker resolves
-# the host side as root when it sets the mount up, so only the container-side
-# path needs to be traversable — /repos is created by Docker, 0755.
-composition_semaphore_local_repo_container_path: "/repos/infra"
+# Mounted at the same absolute path as on the host, and used in place. Docker
+# creates any missing parent directories *inside* the container as root,
+# mode 0755, so the host's own parents are irrelevant to the container's
+# uid — a checkout under a 0750 home directory is still readable. What does
+# matter is the checkout itself granting other r-x; tasks/main.yaml asserts
+# that and names the mode when it does not.
 
 # A "<host>: core" template is generated for every
 # playbooks/hosts/*/core.yaml. These are added on top. Each item is merged

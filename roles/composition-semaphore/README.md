@@ -74,7 +74,7 @@ edited in the UI is reset on the next run.
 |------|--------|
 | Project | `composition_semaphore_project_name`, `composition_semaphore_max_parallel_tasks` (1: Semaphore has no per-host lock, so one run at a time across the project) |
 | Access key | `composition_semaphore_fleet_key_name`, read from `composition_semaphore_fleet_key_path` on the host. Set on creation only (`override_secret: false`) |
-| Repositories | `infra`: `https://github.com/awfulwoman/infra.git`, `main`, Semaphore's built-in `None` key (the repo is public). `infra (local)`: the working checkout, mounted at `composition_semaphore_local_repo_container_path` — see below |
+| Repositories | `infra`: `https://github.com/awfulwoman/infra.git`, `main`, Semaphore's built-in `None` key (the repo is public). `infra (local)`: the working checkout, mounted at the same path — see below |
 | Inventories | `infra` and `infra (local)`, one per repository: `inventory/`, the whole directory, as `ansible.cfg` loads it. `hosts-unmanaged.yaml` defines groups bertha's dhcpd and named templates need |
 | Templates | `<host>: core` for every `playbooks/hosts/*/core.yaml`, found on the controller at run time, plus `composition_semaphore_templates_extra`. All merged over `composition_semaphore_template_defaults` |
 | Schedules | `composition_semaphore_schedules`, set in camina's host_vars |
@@ -93,17 +93,15 @@ in `defaults/main.yaml`: `groups/kubernetes`, `groups/personal`,
 (`/home/awful/Code/awfulwoman/infra` on camina) is the checkout this repo is
 edited in on the control node — Claude Code, an editor, a shell. It is
 registered as the repository `infra (local)`, with a matching inventory, and
-mounted read-only into the container at
-`composition_semaphore_local_repo_container_path` (`/repos/infra`).
+mounted read-only into the container **at the same absolute path**, so the
+repository URL and the mount cannot drift apart.
 
-The two paths differ because the container runs as uid
-`composition_semaphore_uid` (1001), which is neither the owner nor the group
-of a checkout under a home directory. Docker resolves the *host* side as root
-when it sets the mount up, so the host path can sit below a `0750` directory;
-what matters is that the *container-side* path is traversable, and the
-checkout itself is readable by "other". The role asserts that, and fails with
-a message naming the mode rather than leaving the container to fail at
-inventory load.
+That path sits inside a `0750` home directory, which is fine: Docker creates
+missing parents *inside* the container as root, mode `0755`, so what the
+container's uid can traverse is its own synthetic tree, not the host's. The
+host side is resolved by the daemon as root. Only the checkout's own mode
+matters, and the role asserts it grants other `r-x`, naming the mode
+otherwise.
 
 A repository URL with no scheme is used in place, with no clone
 (`db/Repository.go`: `RepositoryLocal` returns the path itself), so a task
