@@ -86,6 +86,14 @@ composition_gateway_contacts_server_bearer_token: "{{ vault_gateway_contacts_ser
 composition_gateway_reminders_server_base_url: "http://{{ composition_gateway_malcolm_host }}:4100"
 composition_gateway_reminders_server_bearer_token: "{{ vault_gateway_reminders_server_token }}"
 
+# Ansible Semaphore UI on camina — the tools inspect projects, task templates,
+# task runs and their logs, and start or stop runs. The token is a Semaphore API
+# token minted under Admin → API Tokens (Bearer), not the admin password and not
+# the `fleet_key` SSH key the semaphore role itself stores. Left empty until it
+# is vaulted; the tools then report "not configured" instead of failing startup.
+composition_gateway_semaphore_base_url: "https://semaphore.{{ domainname_infra }}"
+composition_gateway_semaphore_token: "{{ vault_gateway_semaphore_api_token | default('') }}"
+
 # Bearer tokens the server enforces on /mcp, one per calling client. Rendered into
 # GATEWAY_SERVER__AUTH_TOKENS as `label:secret` pairs — the label names the caller
 # in gateway's per-request usage log. jarvis keeps the original shared secret

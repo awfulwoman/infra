@@ -38,6 +38,11 @@ GATEWAY_REMINDERS_SERVER__BEARER_TOKEN={{ composition_gateway_reminders_server_b
 GATEWAY_CONTACTS_SERVER__BASE_URL={{ composition_gateway_contacts_server_base_url }}
 GATEWAY_CONTACTS_SERVER__BEARER_TOKEN={{ composition_gateway_contacts_server_bearer_token }}
 
+{% if composition_gateway_semaphore_token %}
+GATEWAY_SEMAPHORE__BASE_URL={{ composition_gateway_semaphore_base_url }}
+GATEWAY_SEMAPHORE__TOKEN={{ composition_gateway_semaphore_token }}
+{% endif %}
+
 GATEWAY_SERVER__HOST=0.0.0.0
 GATEWAY_SERVER__PORT=4000
 {% set _auth_pairs = [] %}
