@@ -10,11 +10,19 @@
 
 **Tracking:** work items, order and status live in `awfulwoman/meta` → `specs/infra/01-ansible-vault-to-1password-connect.md` (parent infra#285). Where the spec and this plan disagree, the spec wins. Known differences: Connect keeps a network address rather than loopback (Semaphore runs in a container), and items are grouped by what they are (Services, Service accounts, Hosts, External, Hardware) with `<Prefix> - <Subject>` titles, replacing this plan's `group/infra/...` path titles and its "storage mirrors the inventory" decision.
 
+**Updated 2026-11-16.** Counts and scopes below were refreshed against `55230796`. The full variable list is the meta appendix (`specs/infra/01-appendix-vault-inventory.md`). Where this plan quotes "~110" or "~58 items", read the appendix instead. Changes since the 2026-11-02 revision:
+
+- **Added:** `vault_composition_agentmemory_secret`; `vault_gateway_mcp_token_opencode`; `vault_github_app_{id,installation_id,private_key}` (opencode token minting); `vault_composition_gateway_semaphore_api_token`; `vault_composition_ha_mcp_{secret_path,homeassistant_token}`; `vault_composition_openwebrx_admin_password`; `vault_opencode_serve_password`; `vault_paperless_ngx_admin_mail`.
+- **Removed:** the Basic Memory pair (`vault_basic_memory_{password,htpasswd}`); `vault_jarvis_editor_password`; the chives and hermes Home Assistant tokens (`vault_chives_{nabu,jarvis}_homeassistant_token`, `vault_hermes_{nabu,jarvis}_homeassistant_token`); six DigitalOcean tokens (`7889ee24`; revoking them at DigitalOcean is still meta#12); `vault_smtp_*` (`6f51bd42`).
+- **Orphaned by the chives retirement (`55230796`):** `vault_chives_telegram_token` and `vault_chives_telegram_chat_id` in `vault_external_telegram.yaml` have no consumer left. Add them to the delete list in infra#329 unless hermes needs them.
+- **Infra moved:** `ansible-deploy` and `aw-deploy` are gone; playbook runs go through Semaphore (`composition-semaphore`), which has its own token and secrets in `vault_composition_semaphore.yaml`. Check how the lookup plugin and `OP_CONNECT_TOKEN` reach a Semaphore run (Task 3, Step 5) before the first migration.
+- **Pre-commit guard (`cd26a10a`):** private domain names are kept out of git. Mapping files and item titles must not embed them.
+
 ---
 
 ## Context
 
-Secrets currently live as ~110 `vault_*` variables across 56 Ansible Vault files, all protected by a single password in `/opt/ansible/.vaultpassword`. Rotation means editing ciphertext and committing it, and git history keeps every superseded secret forever.
+Secrets currently live as 170 distinct `vault_*` variables (182 definitions, counted 2026-11-16) across ~60 Ansible Vault files, all protected by a single password in `/opt/ansible/.vaultpassword`. Rotation means editing ciphertext and committing it, and git history keeps every superseded secret forever.
 
 1Password Connect was originally deployed on `raspberry-pi4-4gb-randolph` and now runs on `minipc-8gb-camina` (Task 2) at `https://connect.{{ domainname_infra }}`, with two working consumers (`composition-gateway`, `composition-finances`). The infrastructure exists; what is missing is a way to use it that does not require rewriting all ~40 consuming roles.
 
@@ -113,10 +121,11 @@ These are live defects found while surveying the vault surface. Fixing them firs
   `vault_obsidian_user`, `vault_obsidian_password`, `vault_amazon_locker_name_main`, `vault_claudecode_longlived_token`, `vault_tailscale_id`, `vault_zfsbackup_password`, and the already-commented `vault_vagrant_*`.
 
 - [ ] **Step 4: Fix naming drifts**
-  `vault_vane_searxng_secret_key` (referenced) vs `vault_searxng_secret_key` (defined); `vault_chives_telegram_chat_ids` (5 refs) vs `vault_chives_telegram_chat_id` (defined singular); plus the undefined-but-defaulted `vault_zfs_api_key` and `vault_grafana_admin_user`.
+  `vault_vane_searxng_secret_key` (referenced) vs `vault_searxng_secret_key` (defined); plus the undefined-but-defaulted `vault_zfs_api_key` and `vault_grafana_admin_user`.
 
 - [ ] **Step 5: Resolve `roles/*/vars/main.yaml` shadowing**
   `utility-ubuntu-cloud-init` and `utility-raspberry-pi-cloud-init` re-encrypt `vault_server_username`/`vault_server_password` at `vars/` precedence, overriding group_vars. Move to defaults or delete.
+  `roles/system-opencode/vars/main.yaml` is a third case: it defines `vault_opencode_serve_password` at `vars/` precedence (referenced from camina's `core.yaml`). Move it to a vault file in `group_vars` or `host_vars/minipc-8gb-camina` before it migrates.
 
 - [ ] **Step 6: Scrub a leaked ciphertext block**
   `docs/superpowers/plans/2026-04-14-tailscale-dynamic-authkey.md:273` contains a real-looking `vault_tailscale_authkey` block for a variable no longer in the inventory. Treat as leaked.
@@ -294,16 +303,16 @@ No secrets move in this task. The goal is a proven plugin.
 
 ~20 variables, lowest blast radius, each verifiable against a live API. This is the confidence-builder.
 
-Scope: Hetzner, 6× DigitalOcean, Tailscale OAuth, 3× GitHub, healthchecks.io, HuggingFace, Ubuntu Pro.
+Scope: Hetzner, Tailscale OAuth, GitHub (the 3 tokens plus the App's id, installation id and private key; the App key is multi-line, so check the field type), healthchecks.io, HuggingFace, Ubuntu Pro. DigitalOcean is out: its vault tokens are already removed.
 
 - [ ] **Step 1: Create the items in 1Password (Infra vault)**
-  These are existing live tokens, so **copy** them rather than generating new ones. Titles `group/infra/hetzner`, `group/infra/digitalocean`, `group/infra/tailscale`, `group/infra/github`, `group/infra/healthchecksio`, `group/infra/huggingface`, `group/infra/ubuntu`. Category: API Credential.
+  These are existing live tokens, so **copy** them rather than generating new ones. Titles `group/infra/hetzner`, `group/infra/tailscale`, `group/infra/github`, `group/infra/healthchecksio`, `group/infra/huggingface`, `group/infra/ubuntu`. Category: API Credential.
 
 - [ ] **Step 2: Add the mappings**
   One plaintext `inventory/group_vars/infra/onepassword_<subject>.yaml` per item, replacing the matching `vault_<subject>.yaml`.
 
 - [ ] **Step 3: Empty the corresponding vault files**
-  `vault_hetzner.yaml`, `vault_digitalocean.yaml`, `vault_tailscale.yaml`, `vault_github.yaml`, `vault_healthchecksio.yaml`, `vault_huggingface.yaml`, `vault_ubuntu.yaml`.
+  `vault_external_hetzner.yaml`, `vault_external_tailscale.yaml`, `vault_external_github.yaml`, `vault_external_healthchecksio.yaml`, `vault_external_huggingface.yaml`, `vault_external_ubuntu.yaml`.
 
 - [ ] **Step 4: Verify per the standard per-phase checks** (see Verification below)
 
@@ -318,6 +327,7 @@ Scope: Hetzner, 6× DigitalOcean, Tailscale OAuth, 3× GitHub, healthchecks.io, 
 - **Destructive to rotate:** `vault_n8n_encryption_key` (rotating makes stored n8n credentials permanently undecryptable), `vault_karakeep_meili`, `vault_paperless_ngx_secret_key`. These must be copied, never regenerated.
 - **Needs a coordinated change:** every DB password. Writing a new value into `.environment_vars` does not change what Postgres has stored — rotating requires updating the database too, per service.
 
+- [ ] **Step 0: Reconcile the composition list with the appendix.** Newer compositions to include: `agentmemory` (secret, bearer token, also read by `system-claude` and `system-opencode`), `ha-mcp` (secret path and HA token; the secret path is also read by the hermes hosts on agatha), `openwebrx`, and the Semaphore API token consumed by `composition-gateway`. Gone: `basic-memory`, `jarvis-editor`, and the chives HA tokens.
 - [ ] **Step 1: Per composition — create items, copying existing values**
 - [ ] **Step 2: Per composition — add mappings, empty the vault file, deploy, healthcheck**
 - [ ] **Step 3: Collapse the two bespoke consumers**
@@ -338,7 +348,7 @@ Scope: `vault_zfsbackups_privatekey_b64` (~125 lines), `vault_zfsbackups_public_
 
 ## Task 7: Migrate human-facing credentials
 
-Scope: `vault_password` (9 hosts), WiFi, mail account, Libro.fm, Obsidian, and app admin logins (uptime-kuma, grafana, paperless, pinepods, pihole, qbittorrent, jarvis-editor, peekaping).
+Scope: `vault_password` (one per host; the appendix lists them), WiFi, mail account, Libro.fm, Obsidian, and app admin logins (uptime-kuma, grafana, paperless, qbittorrent, peekaping, openwebrx, semaphore; pinepods, pihole and jarvis-editor are gone) and `vault_opencode_serve_password` (camina).
 
 These go in Infra like everything else, as Login-category items with the `url` field set so 1Password autofills them in a browser. Per-host logins are `host/<hostname>` with the built-in `username` and `password` fields; app logins are `group/infra/composition-<app>`.
 
@@ -421,7 +431,7 @@ Asserting on `| length` proves the secret resolved without printing it. Re-runni
 **What deliberately stays in Ansible Vault.** One residual encrypted file, `inventory/group_vars/infra/vault_onepassword_connect.yaml`, plus the privacy-screen variables:
 
 - `vault_onepassword_connect_credentials` — the credentials JSON the Connect server needs to boot. Cannot live in Connect (the bootstrap paradox, documented at `docs/1password-connect.md:86-89`).
-- Domain names (`vault_domainname_*`), `vault_mailprovider_domain` (40 refs), `vault_wifey_name`, disk serials, `vault_server_username`. These grant no access — they are privacy screens, not credentials. Fetching them from Connect would add latency and a runtime dependency for no security gain.
+- Domain names (`vault_domainname_*`), `vault_mailprovider_domain` (40 refs), `vault_paperless_ngx_admin_mail` (just `admin@<domain>`), `vault_wifey_name`, disk serials, `vault_server_username`. These grant no access — they are privacy screens, not credentials. Fetching them from Connect would add latency and a runtime dependency for no security gain.
 
 **The residual vault means two systems forever.** There is no end state with a single source of truth. The rule is: Connect holds anything that grants access; the vault holds the bootstrap credential and the privacy screens.
 
