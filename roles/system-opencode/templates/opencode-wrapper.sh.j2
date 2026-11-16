@@ -114,6 +114,26 @@ export GIT_CONFIG_VALUE_1="!{{ system_opencode_github_credential_helper }}"
 # CLI settings owned by Ansible; merged over the TUI-managed cli.json.
 export OPENCODE_CLI_CONFIG_CONTENT={{ system_opencode_cli_config | to_json | quote }}
 
+{% if system_opencode_serve %}
+# Remote server: the server owns tool execution, so it runs inside nono.
+# --listen-port lets the sandboxed process bind the API port. The Basic-auth
+# password comes from a 0600 file outside the sandbox's grants and reaches the
+# server through the environment. --allow-cwd is needed without a terminal.
+if [ "${1:-}" = serve ]; then
+  if [ -r {{ system_opencode_serve_env_file | quote }} ]; then
+    set -a
+    . {{ system_opencode_serve_env_file | quote }}
+    set +a
+  fi
+  shift
+  exec {{ system_opencode_nono_binary | quote }} run \
+    --profile {{ system_opencode_nono_profile | quote }} \
+    --allow-cwd \
+    --listen-port {{ system_opencode_serve_port }} \
+    -- "$real" serve "$@"
+fi
+
+{% endif %}
 case "${1:-}" in
   # Administrative commands: no --standalone support, run unsandboxed.
   serve|auth|acp|service|upgrade|update|uninstall|models|stats|session|plugin|mcp|debug|api|--help|-h|--version|-v)

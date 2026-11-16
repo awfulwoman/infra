@@ -1,0 +1,7 @@
+---
+- name: Restart opencode serve
+  become: true
+  ansible.builtin.systemd:
+    name: "{{ system_opencode_serve_unit }}"
+    state: restarted
+    daemon_reload: true

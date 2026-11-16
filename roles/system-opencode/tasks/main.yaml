@@ -14,7 +14,7 @@
     owner: "{{ ansible_user }}"
     group: "{{ system_opencode_group }}"
     mode: "0700"
-  when: system_opencode_agentmemory or system_opencode_gateway or system_opencode_searxng or system_opencode_ha_mcp or system_opencode_github
+  when: system_opencode_agentmemory or system_opencode_gateway or system_opencode_searxng or system_opencode_ha_mcp or system_opencode_github or system_opencode_serve
 
 # opencode merges every opencode.json(c) it finds, so a leftover .json from
 # before the move to JSONC would still apply.
@@ -275,3 +275,50 @@
     group: "{{ system_opencode_group }}"
     mode: "0700"
   when: system_opencode_github
+
+- name: Run opencode serve under nono
+  when: system_opencode_serve and system_opencode_sandbox
+  block:
+    - name: Write the opencode serve environment file
+      ansible.builtin.template:
+        src: serve.env.j2
+        dest: "{{ system_opencode_serve_env_file }}"
+        owner: "{{ ansible_user }}"
+        group: "{{ system_opencode_group }}"
+        mode: "0600"
+      no_log: true
+      notify: Restart opencode serve
+
+    - name: Install the opencode serve systemd unit
+      become: true
+      ansible.builtin.template:
+        src: opencode-serve.service.j2
+        dest: "/etc/systemd/system/{{ system_opencode_serve_unit }}.service"
+        owner: root
+        group: root
+        mode: "0644"
+      notify: Restart opencode serve
+
+    - name: Enable and start opencode serve
+      become: true
+      ansible.builtin.systemd:
+        name: "{{ system_opencode_serve_unit }}"
+        enabled: true
+        state: started
+        daemon_reload: true
+
+- name: Stop and disable opencode serve
+  become: true
+  ansible.builtin.systemd:
+    name: "{{ system_opencode_serve_unit }}"
+    enabled: false
+    state: stopped
+  failed_when: false
+  when: not system_opencode_serve
+
+- name: Remove the opencode serve unit
+  become: true
+  ansible.builtin.file:
+    path: "/etc/systemd/system/{{ system_opencode_serve_unit }}.service"
+    state: absent
+  when: not system_opencode_serve

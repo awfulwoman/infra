@@ -1,0 +1,20 @@
+# Managed by Ansible (system-opencode). Local edits are overwritten.
+[Unit]
+Description=opencode server (nono sandbox)
+Wants=network-online.target
+After=network-online.target tailscaled.service
+
+[Service]
+Type=simple
+User={{ ansible_user }}
+Group={{ system_opencode_group }}
+WorkingDirectory={{ system_opencode_serve_workdir }}
+Environment=HOME={{ ansible_facts.user_dir }}
+# The wrapper loads the password and MCP tokens, then runs the server under nono.
+ExecStart={{ system_opencode_wrapper_path }} serve --hostname {{ system_opencode_serve_host }} --port {{ system_opencode_serve_port }}
+# The tailnet address may not exist yet at boot; keep retrying.
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

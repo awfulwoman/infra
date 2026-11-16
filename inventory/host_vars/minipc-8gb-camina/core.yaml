@@ -85,6 +85,9 @@ zfs:
           # Agent memories and sessions; not recreatable.
           agentmemory:
             policy: high
+          # A daily scrape of ollama.com's public catalogue; rebuilt on start.
+          ollama-pricing:
+            policy: none
       # Working checkouts on the control node, including the one Semaphore
       # mounts as its "infra (local)" repository.
       repos:
@@ -187,6 +190,9 @@ system_claude_agentmemory: true
 # Agent push to GitHub via a minted GitHub App installation token, so it never
 # reads a long-lived credential. See roles/system-opencode/README.md.
 system_opencode_github: true
+# Sandboxed `opencode serve` on the tailnet address, for OpenCode Mobile. The
+# password is vault_opencode_serve_password in roles/system-opencode/vars.
+system_opencode_serve: true
 
 # -------------------------------------------------------------------
 # HOMEBREW

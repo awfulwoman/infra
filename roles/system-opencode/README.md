@@ -208,3 +208,31 @@ To enable (once the App exists):
 Variables: `system_opencode_github` (on/off, default off), `_app_id`,
 `_installation_id`, `_app_key_file`, `_mint_helper`, `_credential_helper`,
 `_token_file`, `_token_refresh_seconds`, `_shim_dir`, `_gh_binary`.
+
+## Remote server (opencode serve)
+
+`system_opencode_serve: true` runs `opencode serve` as a systemd service
+(`opencode-serve`) for remote clients such as the OpenCode Mobile app. In
+opencode v2 the server owns tool execution, so the wrapper runs `serve` inside
+nono (`--profile`, `--allow-cwd`, `--listen-port`) and every tool call the
+agent makes inherits the sandbox. Without the flag, the wrapper still runs
+`serve` unsandboxed.
+
+- Binds to `system_opencode_serve_host` (the Tailscale address) on
+  `system_opencode_serve_port`. The web UI, `/doc` and `/openapi.json` answer
+  without credentials; `/api/*` needs HTTP Basic, username `opencode`.
+- The password is `vault_opencode_serve_password` (encrypted in `vars/main.yaml`), written to
+  `~/.config/opencode-secrets/serve.env` (0600) and passed to the server via
+  `OPENCODE_SERVER_PASSWORD`. The sandbox cannot read the file, but the server
+  process, and so its agent, can see the variable.
+- One server is one sandbox: it grants the profile's paths plus
+  `system_opencode_serve_workdir`. Repos outside them are denied.
+- Per-repo `opencode.json`, `AGENTS.md` and plugins are disabled by the nono
+  pack. Terminals (persistent PTY) were not verified to stay inside the sandbox.
+
+To enable, set `system_opencode_serve: true` in the host's vars. To rotate the
+password, replace the value in `vars/main.yaml`:
+
+```bash
+openssl rand -hex 32 | tr -d '\n' | ansible-vault encrypt_string --stdin-name vault_opencode_serve_password
+```

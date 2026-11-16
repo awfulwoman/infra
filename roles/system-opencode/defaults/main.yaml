@@ -278,3 +278,20 @@ system_opencode_github_gh_binary: "{{ '/home/linuxbrew/.linuxbrew/bin/gh' if ans
 # OAuth token in ~/.config/gh/hosts.yml out of the sandbox: gh creates a minimal
 # config here and authenticates with GH_TOKEN (the minted App token) alone.
 system_opencode_gh_config_dir: "{{ system_opencode_config_dir }}/gh"
+
+# --- remote server (opencode serve) --------------------------------------
+# Runs `opencode serve` under nono as a systemd service, for remote clients such
+# as the OpenCode Mobile app. The server owns tool execution in opencode v2, so
+# the sandbox goes around the server, not the client. Off by default.
+system_opencode_serve: false
+# Bind to the tailnet address only: the API grants an agent shell, and the
+# web UI and /openapi.json answer without credentials.
+system_opencode_serve_host: "{{ host_tailscale_ipv4 }}"
+system_opencode_serve_port: 4096
+# nono grants this directory (--allow-cwd) on top of the profile's paths.
+system_opencode_serve_workdir: "{{ ansible_facts.user_dir }}/Code"
+# HTTP Basic password for the API; the username is always `opencode`.
+# Without it opencode prints a random one at every start.
+system_opencode_serve_password: "{{ vault_opencode_serve_password }}"
+system_opencode_serve_env_file: "{{ system_opencode_secrets_dir }}/serve.env"
+system_opencode_serve_unit: opencode-serve
