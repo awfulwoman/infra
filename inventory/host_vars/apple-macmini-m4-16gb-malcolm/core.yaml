@@ -69,7 +69,6 @@ tcp_monitors_additional:
 # -------------------------------------------------------------------
 system_ollama_env:
   OLLAMA_HOST: "0.0.0.0:11434"
-  # OLLAMA_NO_CLOUD: 1 # Disable usage of Ollama's cloud models and websearch
   OLLAMA_NUM_PARALLEL: 4
   OLLAMA_MAX_LOADED_MODELS: 4
   OLLAMA_ORIGINS: "*"
@@ -84,8 +83,35 @@ system_ollama_models:
   - "translategemma:4b"
   # Embeddings for composition-agentmemory (semantic recall), local on malcolm.
   - "embeddinggemma"
-  # Cloud model, offered to opencode on camina (v2 discovers models from Ollama).
+  # The Ollama Cloud catalogue (https://ollama.com/search?c=cloud), offered to
+  # opencode on camina, which offers whatever /api/tags returns. Each :cloud
+  # tag is a ~300-byte manifest: the weights stay on Ollama Cloud and malcolm's
+  # own sign-in proxies every request. One entry per family, preferring the
+  # generic :cloud alias, so the model picker does not show one model twice.
+  # gemma4 (31b) is covered by llm_default_model above.
+  - "beam:cloud"
+  # Decision-only: pulled for completeness, never offered by opencode.
+  - "clef:cloud"
   - "deepseek-v4.1-flash:cloud"
+  - "deepseek-v4-pro:cloud"
+  - "glm-5.2:cloud"
+  - "glm-5.3:cloud"
+  - "glm-5.3-flash:cloud"
+  - "gpt-oss:20b-cloud"
+  - "gpt-oss:120b-cloud"
+  - "inkling-2-small:cloud"
+  - "kimi-k2.6:cloud"
+  - "kimi-k2.7-code:cloud"
+  - "kimi-k3:cloud"
+  - "kimi-k3.1-pro:cloud"
+  - "mimo-v2.6-flash:cloud"
+  - "mimo-v2.6-pro:cloud"
+  - "minimax-m3:cloud"
+  - "minimax-m3.1-flash:cloud"
+  - "mistral-large-4:cloud"
+  - "muse-spark-open:cloud"
+  - "nemotron-3-super:cloud"
+  - "nemotron-3-ultra:cloud"
   # TTS (meta#23): dedicated models, one per language. phonon (English,
   # Apache 2.0) carries the US/UK/character voices; phonon:40m-de is German,
   # CC BY-NC 4.0 (non-commercial) — fine for home use.

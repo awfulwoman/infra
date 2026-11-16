@@ -14,8 +14,12 @@ This role only writes its user config, `~/.config/opencode/opencode.json`.
 
 opencode v2 discovers models from Ollama and reads their context size, vision
 and tool support, so no model list is kept here. `*:cloud` models are proxied by
-Ollama on malcolm to Ollama Cloud, using malcolm's own sign-in. Models without
-the `tools` capability cannot drive opencode's edit and shell tools.
+Ollama on malcolm to Ollama Cloud, using malcolm's own sign-in. The whole Ollama
+Cloud catalogue is pulled into `system_ollama_models` in
+`inventory/host_vars/apple-macmini-m4-16gb-malcolm/core.yaml`, where a new cloud
+model is added; there is nothing to change here. Models without the `tools`
+capability cannot drive opencode's edit and shell tools, and opencode only
+offers models reporting the `completion` capability.
 
 ## Permissions
 
