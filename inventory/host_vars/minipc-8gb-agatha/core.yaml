@@ -239,6 +239,8 @@ composition_hermes_jarvis_mcp_env:
 # installed on. git_github_login is the PAT fallback, ignored while this is on.
 composition_hermes_jarvis_github_app: true
 composition_hermes_jarvis_github_app_slug: robot-butler
+# gh CLI on the same App token (shim on PATH); see the role README.
+composition_hermes_jarvis_gh: true
 # Commits and pushes (to the helperbot's own forks) as the helperbot.
 composition_hermes_jarvis_git_github_login: "{{ vault_github_helperbot_username }}"
 

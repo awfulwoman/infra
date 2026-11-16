@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# {{ ansible_managed }}
+#
+# gh shim. gh takes its token from GH_TOKEN in the environment, which a running
+# container cannot refresh. The host timer rewrites /opt/data/.gh-token before
+# each token expires, so read it fresh on every call.
+set -euo pipefail
+
+TOKEN_FILE=/opt/data/.gh-token
+if [ -r "$TOKEN_FILE" ]; then
+  GH_TOKEN=$(<"$TOKEN_FILE")
+  GITHUB_TOKEN=$GH_TOKEN
+  export GH_TOKEN GITHUB_TOKEN
+fi
+# Keep gh's own config on the persistent volume, not an ephemeral HOME.
+export GH_CONFIG_DIR=${GH_CONFIG_DIR:-/opt/data/.config/gh}
+exec /opt/data/bin/gh-real "$@"

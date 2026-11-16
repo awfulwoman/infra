@@ -36,6 +36,7 @@
     - docker-compose.yaml
     - .environment_vars
     - github-app.pem
+    - gh-shim.sh
     - mint-github-token.sh
   when: state | default('present') == 'absent'
 
@@ -108,6 +109,7 @@
       - composition_hermes_jarvis_github_app_id | length > 0
       - composition_hermes_jarvis_github_app_installation_id | length > 0
       - vault_github_app_private_key | default('') | length > 0
+      - composition_hermes_jarvis_github_app or not composition_hermes_jarvis_gh
     fail_msg: >-
       composition_hermes_jarvis_github_app is true but the App slug, id,
       installation id or vault_github_app_private_key is unset.
@@ -234,6 +236,70 @@
     state: started
     enabled: true
   when: state | default('present') == 'present' and composition_hermes_jarvis_github_app
+
+# gh CLI: static binary on the data volume plus a token-reading shim that the
+# compose file bind-mounts at /usr/local/bin/gh.
+- name: Create the gh bin directory
+  ansible.builtin.file:
+    path: "{{ composition_hermes_jarvis_gh_bin_dir }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0755"
+  when: state | default('present') == 'present' and composition_hermes_jarvis_gh
+
+- name: Check the installed gh version
+  ansible.builtin.command: "{{ composition_hermes_jarvis_gh_bin_dir }}/gh-real --version"
+  register: _hermes_jarvis_gh_current
+  changed_when: false
+  failed_when: false
+  when: state | default('present') == 'present' and composition_hermes_jarvis_gh
+
+- name: Install gh
+  when:
+    - state | default('present') == 'present'
+    - composition_hermes_jarvis_gh
+    - composition_hermes_jarvis_gh_version not in (_hermes_jarvis_gh_current.stdout | default(''))
+  block:
+    # Scratch dir, not bin_dir: something else may already have left a `gh`
+    # there, and a `creates` guard on it would skip the download.
+    - name: Create a scratch directory for the gh release
+      ansible.builtin.tempfile:
+        state: directory
+        prefix: gh-
+      register: _hermes_jarvis_gh_tmp
+    - name: Download and extract the gh release
+      ansible.builtin.unarchive:
+        src: "https://github.com/cli/cli/releases/download/v{{ composition_hermes_jarvis_gh_version }}/gh_{{ composition_hermes_jarvis_gh_version }}_linux_{{ composition_hermes_jarvis_gh_arch }}.tar.gz"
+        dest: "{{ _hermes_jarvis_gh_tmp.path }}"
+        remote_src: true
+        extra_opts:
+          - --strip-components=2
+          - --wildcards
+          - "*/bin/gh"
+    - name: Put the binary at its final name
+      ansible.builtin.copy:
+        src: "{{ _hermes_jarvis_gh_tmp.path }}/gh"
+        dest: "{{ composition_hermes_jarvis_gh_bin_dir }}/gh-real"
+        remote_src: true
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: "0755"
+  always:
+    - name: Remove the scratch directory
+      ansible.builtin.file:
+        path: "{{ _hermes_jarvis_gh_tmp.path }}"
+        state: absent
+      when: _hermes_jarvis_gh_tmp.path is defined
+
+- name: Deploy the gh shim
+  ansible.builtin.template:
+    src: gh-shim.sh.j2
+    dest: "{{ composition_hermes_jarvis_gh_shim }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0755"
+  when: state | default('present') == 'present' and composition_hermes_jarvis_gh
 
 # The noreply email needs the account's numeric ID; the login alone only
 # works for accounts created before July 2017.

@@ -90,6 +90,17 @@ composition_hermes_jarvis_github_token_file: "{{ composition_config }}/data/.gh-
 # Tokens last 60 min; refresh at 45 to leave margin for a slow GitHub reply.
 composition_hermes_jarvis_github_token_refresh_minutes: 45
 
+# gh CLI. The image ships none. The static release binary goes on the data
+# volume (/opt/data/bin/gh-real) and a shim bind-mounted at /usr/local/bin/gh
+# loads GH_TOKEN from the rotating token file, as system-opencode's gh shim
+# does. Needs github_app. Subject to the App's permissions and install scope.
+composition_hermes_jarvis_gh: false
+# renovate: datasource=github-releases depName=cli/cli
+composition_hermes_jarvis_gh_version: "2.104.0"
+composition_hermes_jarvis_gh_arch: "{{ 'arm64' if ansible_architecture in ['aarch64', 'arm64'] else 'amd64' }}"
+composition_hermes_jarvis_gh_bin_dir: "{{ composition_config }}/data/bin"
+composition_hermes_jarvis_gh_shim: "{{ composition_root }}/gh-shim.sh"
+
 # `hermes setup` writes these into config.yaml; declare them here so the
 # role's template does not drop them on the next play. Empty = omit the key
 # (Hermes uses its own default).

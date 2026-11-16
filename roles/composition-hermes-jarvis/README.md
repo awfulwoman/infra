@@ -194,6 +194,14 @@ does, instead of the helperbot PAT.
 - Limits: the App reaches only repos it is installed on, so no forks of third-party
   repos. The helperbot PAT (`GH_TOKEN`) is only used when the App is off.
 
+**gh CLI.** With `composition_hermes_jarvis_gh: true` (needs the App), the role
+installs the static `gh` release (`composition_hermes_jarvis_gh_version`,
+Renovate-tracked) to `/opt/data/bin/gh-real` on the data volume. A shim
+(`<composition_root>/gh-shim.sh`) is bind-mounted read-only at
+`/usr/local/bin/gh`. It reads `/opt/data/.gh-token` per call, so the rotating App
+token works, and keeps gh's config in `/opt/data/.config/gh`. `gh` can only do
+what the App's permissions and install scope allow; it cannot fork third-party repos.
+
 ## Key variables
 
 | Variable | Default | Description |
@@ -208,6 +216,7 @@ does, instead of the helperbot PAT.
 | `composition_hermes_jarvis_mcp_env` | `{}` | `ENVVAR: value` pairs → `.environment_vars` (for `${ENVVAR}` in `mcp_servers`) |
 | `composition_hermes_jarvis_git_github_login` | `""` | GitHub login to commit as; writes `/opt/data/.gitconfig` - see GitHub section above |
 | `composition_hermes_jarvis_github_app` | `false` | Git via GitHub App installation token (timer-refreshed file); needs `_github_app_slug` |
+| `composition_hermes_jarvis_gh` | `false` | Install `gh` plus token shim; needs `_github_app` |
 | `composition_hermes_jarvis_dashboard` | `true` | Run the dashboard slot |
 | `composition_hermes_jarvis_api_server` | `false` | Expose the OpenAI-compatible API on 8642, and publish it through Traefik at `hermes-jarvis-api.<domain>` |
 | `composition_hermes_jarvis_manage_config` | `true` | Let Ansible own `config.yaml` |

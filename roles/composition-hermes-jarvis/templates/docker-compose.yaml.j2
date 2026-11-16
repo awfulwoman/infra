@@ -23,6 +23,10 @@ services:
       # the compositions dataset instead, so ZFS snapshots cover it.
       - "{{ composition_config }}/data:/opt/data"
       - /etc/localtime:/etc/localtime:ro
+{% if composition_hermes_jarvis_gh %}
+      # Shim on PATH: loads the rotating App token, then runs /opt/data/bin/gh-real.
+      - "{{ composition_hermes_jarvis_gh_shim }}:/usr/local/bin/gh:ro"
+{% endif %}
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.{{ composition_name }}.rule=Host(`{{ composition_dns_subdomains[0] }}.{{ domainname_infra }}`)"
