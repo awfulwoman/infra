@@ -1,0 +1,16 @@
+# code: language=ansible
+composition_name: ollama-pricing
+
+# Internal only: opencode on camina reads it, nothing else needs it.
+composition_dns_subdomains:
+  - ollama-pricing
+
+composition_ollama_pricing_hostname: "ollama-pricing.{{ domainname_infra }}"
+
+# Our own image, built and tested by GitHub Actions. Tracks latest (pulled on
+# every run); pin a sha-<short> tag to roll back.
+composition_ollama_pricing_image: ghcr.io/awfulwoman/ollama-pricing:latest
+
+# ollama.com prices change rarely, so one scrape a day is plenty. A restart
+# reloads the persisted copy, so it is the only freshness control.
+composition_ollama_pricing_refresh_seconds: 86400

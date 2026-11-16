@@ -11,6 +11,15 @@ system_opencode_plugins:
 # the choice to opencode.
 system_opencode_model: ""
 
+# --- ollama pricing -------------------------------------------------------
+# composition-ollama-pricing serves the Ollama Cloud catalogue in opencode's
+# model shape: `cost` in USD per million tokens, and ollama.com's `$` usage
+# tier in the display name. The plugin overlays those two fields on discovered
+# models and refreshes daily, so this role still keeps no model list. If it is
+# unreachable or off: models keep their discovered names and no cost is shown.
+system_opencode_ollama_pricing: true
+system_opencode_ollama_pricing_url: "https://ollama-pricing.{{ domainname_infra }}"
+
 # Config directory and file. opencode follows XDG, so ~/.config on both OSes.
 system_opencode_config_dir: "{{ ansible_facts.user_dir }}/.config/opencode"
 

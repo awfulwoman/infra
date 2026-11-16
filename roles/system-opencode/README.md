@@ -31,6 +31,22 @@ is appended last, for hard denies such as `git push *`.
 Note: `~/.config/opencode/cli.json` can set `session.permissions: autoaccept`,
 which accepts every request and makes the `ask` rules moot.
 
+## Ollama prices
+
+Ollama's API publishes no prices, so [composition-ollama-pricing](../composition-ollama-pricing/README.md)
+scrapes ollama.com once a day and serves the catalogue in opencode's model
+shape. `~/.config/opencode/plugins/ollama-cost.ts` reads
+`https://ollama-pricing.<domain>/v1/opencode` at startup and applies, through
+`ctx.model.transform`:
+
+- `cost`, USD per million tokens, so a session reports what it spent
+- the display name with ollama.com's `$` … `$$$$` usage tier
+
+Only those two fields are set, so the model list stays discovery-driven, and
+the transform is replayed on every catalog rebuild, so a discovery refresh
+cannot drop them. The plugin reloads once a day and does nothing when the
+service is unreachable. Set `system_opencode_ollama_pricing: false` to remove it.
+
 ## Quota display (opencode-quota)
 
 `system_opencode_plugins` loads `@slkiser/opencode-quota`, which shows Ollama

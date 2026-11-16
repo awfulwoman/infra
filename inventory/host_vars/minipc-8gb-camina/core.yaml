@@ -164,6 +164,9 @@ compositions:
   - wikijs
   # Persistent memory for coding agents; REST + viewer behind Traefik.
   - agentmemory
+  # Ollama Cloud prices in opencode's model shape; system-opencode's
+  # ollama-cost plugin reads it.
+  - ollama-pricing
   # Web SDR on the RTL-SDR dongle. Needs rtl_sdr_mode: openwebrx
   # (core.yaml, hardware-rtl-sdr).
   - openwebrx

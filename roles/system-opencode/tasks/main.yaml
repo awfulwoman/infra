@@ -91,6 +91,31 @@
     mode: "0644"
   when: system_opencode_plugins | length > 0
 
+- name: Wire the Ollama pricing plugin
+  when: system_opencode_ollama_pricing
+  block:
+    - name: Ensure the opencode plugin directory exists
+      ansible.builtin.file:
+        path: "{{ system_opencode_config_dir }}/plugins"
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: "{{ system_opencode_group }}"
+        mode: "0755"
+
+    - name: Write the Ollama pricing plugin
+      ansible.builtin.template:
+        src: ollama-cost.ts.j2
+        dest: "{{ system_opencode_config_dir }}/plugins/ollama-cost.ts"
+        owner: "{{ ansible_user }}"
+        group: "{{ system_opencode_group }}"
+        mode: "0644"
+
+- name: Remove the Ollama pricing plugin
+  ansible.builtin.file:
+    path: "{{ system_opencode_config_dir }}/plugins/ollama-cost.ts"
+    state: absent
+  when: not system_opencode_ollama_pricing
+
 - name: Wire opencode to agentmemory
   when: system_opencode_agentmemory
   block:

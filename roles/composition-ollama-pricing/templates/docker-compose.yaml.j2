@@ -1,0 +1,33 @@
+# code: language=ansible-jinja
+name: "{{ composition_name }}"
+services:
+  ollama-pricing:
+    container_name: ollama-pricing
+    image: "{{ composition_ollama_pricing_image }}"
+    restart: unless-stopped
+    # Nothing is written outside /data, so the root filesystem stays read-only.
+    read_only: true
+    tmpfs:
+      - /tmp
+    environment:
+      DATA_DIR: /data
+      REFRESH_SECONDS: "{{ composition_ollama_pricing_refresh_seconds }}"
+    volumes:
+      # The last good scrape, so a restart serves prices before the first one
+      # finishes.
+      - "{{ composition_config }}/data:/data"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ollama-pricing.rule=Host(`{{ composition_ollama_pricing_hostname }}`)"
+      - "traefik.http.routers.ollama-pricing.tls=true"
+{% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
+      - "traefik.http.routers.ollama-pricing.tls.certresolver=letsencrypt"
+{% endif %}
+      - "traefik.http.services.ollama-pricing.loadbalancer.server.port=8000"
+    networks:
+      - "{{ default_docker_network }}"
+    # The image defines its own HEALTHCHECK (GET /healthz), so none is repeated.
+
+networks:
+  "{{ default_docker_network }}":
+    external: true
