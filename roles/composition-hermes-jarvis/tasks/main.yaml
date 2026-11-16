@@ -310,13 +310,27 @@
   register: _hermes_jarvis_git_github_user
   when: state | default('present') == 'present' and (composition_hermes_jarvis_github_app or composition_hermes_jarvis_git_github_login | length > 0)
 
+# Two copies: /opt/data is HOME for the Hermes processes, but the agent's
+# terminal tool runs with HOME=/opt/data/home, which git reads instead.
+- name: Ensure the agent's terminal HOME exists
+  ansible.builtin.file:
+    path: "{{ composition_config }}/data/home"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0755"
+  when: state | default('present') == 'present' and (composition_hermes_jarvis_github_app or composition_hermes_jarvis_git_github_login | length > 0)
+
 - name: Deploy git config for the agent
   ansible.builtin.template:
     src: gitconfig.j2
-    dest: "{{ composition_config }}/data/.gitconfig"
+    dest: "{{ composition_config }}/data/{{ gitconfig_dir }}.gitconfig"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0644"
+  loop: ["", "home/"]
+  loop_control:
+    loop_var: gitconfig_dir
   when: state | default('present') == 'present' and (composition_hermes_jarvis_github_app or composition_hermes_jarvis_git_github_login | length > 0)
 
 # hermes_cli/env_loader.py loads /opt/data/.env with override=True, so that
