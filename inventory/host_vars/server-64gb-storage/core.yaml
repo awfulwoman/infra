@@ -129,10 +129,6 @@ zfs:
             policy: low
           podderton:
             policy: low
-          jarvis:
-            policy: low
-          nabu:
-            policy: low
           reverseproxy:
             policy: low
           # Generated voice packs and a downloaded Piper model; the service
@@ -384,12 +380,6 @@ zfs_nfs_exports:
 #     the single-label traefik-{host} default in #271, since a *.<domain>
 #     wildcard cert can't cover a multi-level name.)
 #   - mcp-openzim: its declared default was never registered here.
-#   - nabu, jarvis: composition_dns_subdomains: [] on their own roles -
-#     neither name resolves via any mechanism today despite both having
-#     their own Traefik routing already templated (confirmed empirically
-#     before splitting composition-chives into these two roles). Preserved
-#     exactly as-is; giving them real DNS is a separate, deliberate decision
-#     for later, not a side effect of this refactor.
 # jellyfin-vue has NO override: it's declared by the jellyfin composition but
 # was missing from the old hand-written list — the exact drift #262 exists
 # to fix, so it's allowed to appear now that derivation is authoritative.
@@ -441,8 +431,6 @@ compositions:
   - mcp-searxng
   - mcp-weather
   - kiwix
-  - nabu
-  - jarvis
   - wiki-compiler
   - wiki-site
   - guinea-pig-weights
