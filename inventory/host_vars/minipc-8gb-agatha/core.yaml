@@ -151,16 +151,14 @@ composition_hermes_nabu_api_server: true
 
 composition_hermes_nabu_mcp_servers:
   homeassistant:
-    # HA's MCP Server integration speaks SSE only; Hermes defaults to
-    # Streamable HTTP, so the transport must be named.
-    url: "https://homeassistant.{{ domainname_infra }}/mcp_server/sse"
-    transport: sse
+    # composition-ha-mcp on homebrain (same endpoint as opencode). Streamable
+    # HTTP, no auth header: the secret path is the credential, so the URL
+    # comes from the environment, not config.yaml.
+    url: "${HA_MCP_URL}"
     enabled: true
-    headers:
-      Authorization: "Bearer ${HOMEASSISTANT_MCP_TOKEN}"
 
 composition_hermes_nabu_mcp_env:
-  HOMEASSISTANT_MCP_TOKEN: "{{ vault_hermes_nabu_homeassistant_token }}"
+  HA_MCP_URL: "https://ha-mcp.{{ domainname_infra }}{{ vault_composition_ha_mcp_secret_path }}"
 # Hermes only disables whole toolsets, not individual tools. "browser"
 # covers the ones we want gone (browser_exec, browser_vault_*) along with
 # the rest of the browser_* tools.
