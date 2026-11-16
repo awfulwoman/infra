@@ -203,13 +203,11 @@ composition_hermes_jarvis_mcp_servers:
     url: "https://weathermcp.{{ domainname_infra }}/mcp"
     enabled: true
   homeassistant:
-    # HA's MCP Server integration speaks SSE only; Hermes defaults to
-    # Streamable HTTP, so the transport must be named.
-    url: "https://homeassistant.{{ domainname_infra }}/mcp_server/sse"
-    transport: sse
+    # composition-ha-mcp on homebrain (same endpoint as opencode and nabu).
+    # Streamable HTTP, no auth header: the secret path is the credential, so
+    # the URL comes from the environment, not config.yaml.
+    url: "${HA_MCP_URL}"
     enabled: true
-    headers:
-      Authorization: "Bearer ${HOMEASSISTANT_MCP_TOKEN}"
   github:
     # GitHub's own hosted remote server - no binary/npx/gh-cli needed inside
     # the container, unlike the archived @modelcontextprotocol/server-github
@@ -235,9 +233,8 @@ composition_hermes_jarvis_mcp_env:
   # (The "jarvis" label in composition_gateway_server_auth_clients belongs
   # to the separate composition-jarvis chives bot, not this container.)
   GATEWAY_MCP_TOKEN: "{{ vault_gateway_mcp_token_hermes }}"
-  # Long-lived HA token created for this bot alone, so it can be revoked
-  # independently of nabu's.
-  HOMEASSISTANT_MCP_TOKEN: "{{ vault_hermes_jarvis_homeassistant_token }}"
+  # ha-mcp endpoint; the secret path is the credential.
+  HA_MCP_URL: "https://ha-mcp.{{ domainname_infra }}{{ vault_composition_ha_mcp_secret_path }}"
   # Token on the dedicated helperbot account, not awfulwoman's. The helperbot
   # has no access to awfulwoman repos, so it can only fork, push to its own
   # forks, and open PRs/issues - see composition-hermes-jarvis README.md#github.
