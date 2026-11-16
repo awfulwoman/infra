@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# {{ ansible_managed }}
+#
+# Mints a 1-hour GitHub App installation token and writes it atomically to
+# {{ composition_hermes_jarvis_github_token_file }}. Runs on the host (systemd
+# timer), never in the container: the App private key is not mounted there.
+set -euo pipefail
+
+APP_ID={{ composition_hermes_jarvis_github_app_id | quote }}
+INSTALLATION_ID={{ composition_hermes_jarvis_github_app_installation_id | quote }}
+KEY_FILE={{ composition_hermes_jarvis_github_app_key_file | quote }}
+TOKEN_FILE={{ composition_hermes_jarvis_github_token_file | quote }}
+
+base64url() { openssl base64 | tr -d '\n=' | tr '+/' '-_'; }
+
+now=$(date +%s)
+header=$(printf '{"alg":"RS256","typ":"JWT"}' | base64url)
+payload=$(printf '{"iat":%d,"exp":%d,"iss":"%s"}' "$((now - 30))" "$((now + 60))" "$APP_ID" | base64url)
+signed=$(printf '%s.%s' "$header" "$payload" | openssl dgst -sha256 -sign "$KEY_FILE" -binary | base64url)
+
+token=$(curl -fsS \
+  -X POST \
+  -H "Authorization: Bearer $header.$payload.$signed" \
+  -H "Accept: application/vnd.github+json" \
+  -H "X-GitHub-Api-Version: 2022-11-28" \
+  "https://api.github.com/app/installations/$INSTALLATION_ID/access_tokens" \
+  | python3 -c 'import sys, json; print(json.load(sys.stdin)["token"])')
+
+# Temp file in the same dir, then rename, so a reader never sees a partial
+# token. A failed mint exits above and leaves the previous token in place.
+tmp=$(mktemp "$(dirname "$TOKEN_FILE")/.gh-token.XXXXXX")
+printf '%s\n' "$token" >"$tmp"
+chmod 0600 "$tmp"
+mv -f "$tmp" "$TOKEN_FILE"

@@ -71,6 +71,25 @@ composition_hermes_jarvis_mcp_env: {}
 # -------------------------------------------------------------------
 composition_hermes_jarvis_git_github_login: ""
 
+# GITHUB APP (the opencode method, see system-opencode)
+# Git pushes as a GitHub App installation instead of a static PAT. A host
+# systemd timer signs a JWT with the vaulted App key and exchanges it for a
+# 1-hour installation token, written to /opt/data/.gh-token. The credential
+# helper reads that file on every git call, so the token can rotate under a
+# running container (env vars cannot). The App key sits in composition_root,
+# which is not mounted into the container.
+# When on, git_github_login is ignored: the commit identity is
+# <app_slug>[bot]. Only reaches repos the App is installed on.
+composition_hermes_jarvis_github_app: false
+composition_hermes_jarvis_github_app_slug: ""
+composition_hermes_jarvis_github_app_id: "{{ vault_github_app_id | default('') }}"
+composition_hermes_jarvis_github_app_installation_id: "{{ vault_github_app_installation_id | default('') }}"
+composition_hermes_jarvis_github_app_key_file: "{{ composition_root }}/github-app.pem"
+composition_hermes_jarvis_github_mint_helper: "{{ composition_root }}/mint-github-token.sh"
+composition_hermes_jarvis_github_token_file: "{{ composition_config }}/data/.gh-token"
+# Tokens last 60 min; refresh at 45 to leave margin for a slow GitHub reply.
+composition_hermes_jarvis_github_token_refresh_minutes: 45
+
 # `hermes setup` writes these into config.yaml; declare them here so the
 # role's template does not drop them on the next play. Empty = omit the key
 # (Hermes uses its own default).

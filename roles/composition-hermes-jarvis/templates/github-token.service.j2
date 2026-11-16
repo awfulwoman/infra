@@ -1,0 +1,10 @@
+# {{ ansible_managed }}
+[Unit]
+Description=Mint GitHub App token for {{ composition_name }}
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User={{ ansible_user }}
+ExecStart={{ composition_hermes_jarvis_github_mint_helper }}

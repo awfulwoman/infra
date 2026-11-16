@@ -35,6 +35,26 @@
   loop:
     - docker-compose.yaml
     - .environment_vars
+    - github-app.pem
+    - mint-github-token.sh
+  when: state | default('present') == 'absent'
+
+- name: Remove GitHub token timer and units
+  become: true
+  block:
+    - name: Stop the timer
+      ansible.builtin.systemd:
+        name: "{{ composition_name }}-github-token.timer"
+        state: stopped
+        enabled: false
+      failed_when: false
+    - name: Remove the unit files
+      ansible.builtin.file:
+        path: "/etc/systemd/system/{{ composition_name }}-github-token.{{ unit }}"
+        state: absent
+      loop: [service, timer]
+      loop_control:
+        loop_var: unit
   when: state | default('present') == 'absent'
 
 # ----------------------------
@@ -80,6 +100,19 @@
       vault_hermes_jarvis_matrix_access_token in the vault.
     quiet: true
   when: state | default('present') == 'present' and composition_hermes_jarvis_matrix
+
+- name: Assert GitHub App details are set when the App is enabled
+  ansible.builtin.assert:
+    that:
+      - composition_hermes_jarvis_github_app_slug | length > 0
+      - composition_hermes_jarvis_github_app_id | length > 0
+      - composition_hermes_jarvis_github_app_installation_id | length > 0
+      - vault_github_app_private_key | default('') | length > 0
+    fail_msg: >-
+      composition_hermes_jarvis_github_app is true but the App slug, id,
+      installation id or vault_github_app_private_key is unset.
+    quiet: true
+  when: state | default('present') == 'present' and composition_hermes_jarvis_github_app
 
 # The image remaps its internal `hermes` user to HERMES_UID/HERMES_GID, so the
 # data directory has to be owned by whoever Ansible connects as.
@@ -151,14 +184,65 @@
   when: state | default('present') == 'present' and composition_hermes_jarvis_manage_config
   notify: Restart Hermes
 
+# GitHub App token: key and mint helper on the host (outside the container
+# mount), refreshed by a systemd timer into /opt/data/.gh-token.
+- name: Deploy the GitHub App private key
+  ansible.builtin.copy:
+    content: "{{ vault_github_app_private_key }}"
+    dest: "{{ composition_hermes_jarvis_github_app_key_file }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0600"
+  no_log: true
+  when: state | default('present') == 'present' and composition_hermes_jarvis_github_app
+
+- name: Deploy the GitHub App token mint helper
+  ansible.builtin.template:
+    src: mint-github-token.sh.j2
+    dest: "{{ composition_hermes_jarvis_github_mint_helper }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: "0700"
+  when: state | default('present') == 'present' and composition_hermes_jarvis_github_app
+
+- name: Deploy GitHub token systemd units
+  become: true
+  ansible.builtin.template:
+    src: "github-token.{{ unit }}.j2"
+    dest: "/etc/systemd/system/{{ composition_name }}-github-token.{{ unit }}"
+    owner: root
+    group: root
+    mode: "0644"
+  loop: [service, timer]
+  loop_control:
+    loop_var: unit
+  register: _hermes_jarvis_github_units
+  when: state | default('present') == 'present' and composition_hermes_jarvis_github_app
+
+- name: Mint the first GitHub token now
+  become: true
+  ansible.builtin.systemd:
+    name: "{{ composition_name }}-github-token.service"
+    state: started
+    daemon_reload: "{{ _hermes_jarvis_github_units is changed }}"
+  when: state | default('present') == 'present' and composition_hermes_jarvis_github_app
+
+- name: Enable the GitHub token refresh timer
+  become: true
+  ansible.builtin.systemd:
+    name: "{{ composition_name }}-github-token.timer"
+    state: started
+    enabled: true
+  when: state | default('present') == 'present' and composition_hermes_jarvis_github_app
+
 # The noreply email needs the account's numeric ID; the login alone only
 # works for accounts created before July 2017.
 - name: Look up the GitHub account the agent commits as
   ansible.builtin.uri:
-    url: "https://api.github.com/users/{{ composition_hermes_jarvis_git_github_login }}"
+    url: "https://api.github.com/users/{{ (composition_hermes_jarvis_github_app_slug ~ '%5Bbot%5D') if composition_hermes_jarvis_github_app else composition_hermes_jarvis_git_github_login }}"
     return_content: true
   register: _hermes_jarvis_git_github_user
-  when: state | default('present') == 'present' and composition_hermes_jarvis_git_github_login | length > 0
+  when: state | default('present') == 'present' and (composition_hermes_jarvis_github_app or composition_hermes_jarvis_git_github_login | length > 0)
 
 - name: Deploy git config for the agent
   ansible.builtin.template:
@@ -167,7 +251,7 @@
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0644"
-  when: state | default('present') == 'present' and composition_hermes_jarvis_git_github_login | length > 0
+  when: state | default('present') == 'present' and (composition_hermes_jarvis_github_app or composition_hermes_jarvis_git_github_login | length > 0)
 
 # hermes_cli/env_loader.py loads /opt/data/.env with override=True, so that
 # file beats the container environment for any key it defines - the reverse

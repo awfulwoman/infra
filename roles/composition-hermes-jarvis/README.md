@@ -165,13 +165,7 @@ GitHub does not let fine-grained PATs contribute to public repos where the
 account is not a member. No API can create tokens, so rotate it by hand in
 the helperbot's GitHub settings.
 
-**API side.** The `github` entry in `composition_hermes_jarvis_mcp_servers`
-(core.yaml) points at GitHub's hosted remote MCP server
-(`api.githubcopilot.com/mcp/`). Hermes' own MCP docs still show the
-archived `@modelcontextprotocol/server-github` package. Its replacement is
-[github/github-mcp-server](https://github.com/github/github-mcp-server),
-whose remote variant needs nothing inside this container. Forks, PRs and
-issues go through it.
+**API side.** No GitHub MCP server is configured (removed; nothing else used it). Jarvis reaches GitHub through git over HTTPS only. The image has no `gh` CLI, so forks, PRs and issues need a different route if wanted.
 
 **Local work.** When `composition_hermes_jarvis_git_github_login` is set,
 the role writes `/opt/data/.gitconfig`. `/opt/data` is `HOME` inside the
@@ -182,6 +176,23 @@ GitHub API at deploy time. It also sets a credential helper that reads
 written to disk. The terminal toolset can then `git clone` the helperbot's
 fork over HTTPS, edit and test it, and push. The image has `git` and
 `python3` but no `gh` CLI, and nothing installs a repo's own toolchain.
+
+**GitHub App (opencode method).** With `composition_hermes_jarvis_github_app: true`,
+git authenticates as a GitHub App installation, the same way `system-opencode`
+does, instead of the helperbot PAT.
+
+- `vault_github_app_private_key` is written to `<composition_root>/github-app.pem`
+  (0600). That directory is not mounted into the container, so Jarvis cannot
+  read the key.
+- A host systemd timer (`hermes-jarvis-github-token.timer`) runs
+  `mint-github-token.sh` every 45 minutes. It signs a JWT, trades it for a
+  1-hour installation token, and writes `/opt/data/.gh-token` atomically.
+- The git credential helper reads that file on each call, so the token rotates
+  under a running container. Container env vars cannot be refreshed, which is
+  why the file is used.
+- Commit identity is `<app_slug>[bot]`; set `composition_hermes_jarvis_github_app_slug`.
+- Limits: the App reaches only repos it is installed on, so no forks of third-party
+  repos. The helperbot PAT (`GH_TOKEN`) is only used when the App is off.
 
 ## Key variables
 
@@ -196,6 +207,7 @@ fork over HTTPS, edit and test it, and push. The image has `git` and
 | `composition_hermes_jarvis_disabled_toolsets` | `[]` | Toolset names to drop (`agent.disabled_toolsets`) |
 | `composition_hermes_jarvis_mcp_env` | `{}` | `ENVVAR: value` pairs → `.environment_vars` (for `${ENVVAR}` in `mcp_servers`) |
 | `composition_hermes_jarvis_git_github_login` | `""` | GitHub login to commit as; writes `/opt/data/.gitconfig` - see GitHub section above |
+| `composition_hermes_jarvis_github_app` | `false` | Git via GitHub App installation token (timer-refreshed file); needs `_github_app_slug` |
 | `composition_hermes_jarvis_dashboard` | `true` | Run the dashboard slot |
 | `composition_hermes_jarvis_api_server` | `false` | Expose the OpenAI-compatible API on 8642, and publish it through Traefik at `hermes-jarvis-api.<domain>` |
 | `composition_hermes_jarvis_manage_config` | `true` | Let Ansible own `config.yaml` |

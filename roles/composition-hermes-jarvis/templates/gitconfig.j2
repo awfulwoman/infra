@@ -1,7 +1,17 @@
 # {{ ansible_managed }}
+{% if composition_hermes_jarvis_github_app %}
+{% set _login = composition_hermes_jarvis_github_app_slug ~ '[bot]' %}
+{% else %}
+{% set _login = composition_hermes_jarvis_git_github_login %}
+{% endif %}
 [user]
-	name = {{ composition_hermes_jarvis_git_github_login }}
-	email = {{ _hermes_jarvis_git_github_user.json.id }}+{{ composition_hermes_jarvis_git_github_login }}@users.noreply.github.com
+	name = {{ _login }}
+	email = {{ _hermes_jarvis_git_github_user.json.id }}+{{ _login }}@users.noreply.github.com
 [credential "https://github.com"]
 	helper =
+{% if composition_hermes_jarvis_github_app %}
+	# Re-read per call: the timer rotates the file hourly under a running container.
+	helper = "!f() { test \"$1\" = get && echo username=x-access-token && echo \"password=$(cat /opt/data/.gh-token)\"; }; f"
+{% else %}
 	helper = "!f() { test \"$1\" = get && echo username={{ composition_hermes_jarvis_git_github_login }} && echo \"password=$GH_TOKEN\"; }; f"
+{% endif %}

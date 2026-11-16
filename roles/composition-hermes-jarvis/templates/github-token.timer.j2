@@ -1,0 +1,11 @@
+# {{ ansible_managed }}
+[Unit]
+Description=Refresh GitHub App token for {{ composition_name }}
+
+[Timer]
+OnBootSec=1min
+OnUnitActiveSec={{ composition_hermes_jarvis_github_token_refresh_minutes }}min
+AccuracySec=30s
+
+[Install]
+WantedBy=timers.target
