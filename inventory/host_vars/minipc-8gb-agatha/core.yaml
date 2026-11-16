@@ -190,6 +190,27 @@ composition_hermes_jarvis_dashboard_font: system-sans
 # network driving Jarvis, and the role asserts it is set.
 composition_hermes_jarvis_api_server: true
 
+# Per-task models on Ollama Cloud (via the same endpoint as the main model).
+# Vision is unset on purpose: it stays on the main model, gemma4. Prices and
+# reasoning are in composition-hermes-jarvis README.md#model-routing.
+composition_hermes_jarvis_auxiliary_models:
+  # Small, frequent, low-stakes calls.
+  title_generation: "gpt-oss:20b-cloud"
+  memory_query_rewrite: "gpt-oss:20b-cloud"
+  tts_audio_tags: "gpt-oss:20b-cloud"
+  monitor: "gpt-oss:20b-cloud"
+  mcp: "gpt-oss:20b-cloud"
+  # Mostly input tokens, large context.
+  compression: "mimo-v2.6-flash:cloud"
+  # Judgement: a wrong call costs more.
+  approval: "glm-5.3-flash:cloud"
+  goal_judge: "glm-5.3-flash:cloud"
+  curator: "glm-5.3-flash:cloud"
+  background_review: "glm-5.3-flash:cloud"
+  triage_specifier: "glm-5.3-flash:cloud"
+  kanban_decomposer: "glm-5.3-flash:cloud"
+composition_hermes_jarvis_delegation_model: "mimo-v2.6-flash:cloud"
+
 composition_hermes_jarvis_mcp_servers:
   gateway:
     url: "https://gateway.{{ domainname_infra }}/mcp"

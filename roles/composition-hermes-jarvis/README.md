@@ -202,6 +202,22 @@ Renovate-tracked) to `/opt/data/bin/gh-real` on the data volume. A shim
 token works, and keeps gh's config in `/opt/data/.config/gh`. `gh` can only do
 what the App's permissions and install scope allow; it cannot fork third-party repos.
 
+## Model routing
+
+`composition_hermes_jarvis_auxiliary_models` maps a Hermes auxiliary task to a
+model ID, and `composition_hermes_jarvis_delegation_model` sets the subagent
+model. Both use the main model's endpoint and key; only the model differs.
+Unlisted tasks (including `vision`) stay on the main model. No fallback model
+is configured. Prices (per 1M tokens, from `ollama-pricing`) behind the agatha
+choices:
+
+| Tasks | Model | In / out |
+|---|---|---|
+| title, memory query, tts tags, monitor, mcp | `gpt-oss:20b-cloud` | $0.07 / $0.30 |
+| compression | `mimo-v2.6-flash:cloud` | $0.14 / $0.28 |
+| approval, goal judge, curator, background review, triage, kanban | `glm-5.3-flash:cloud` | $0.15 / $0.50 |
+| subagents (delegation) | `mimo-v2.6-flash:cloud` | $0.14 / $0.28 |
+
 ## Key variables
 
 | Variable | Default | Description |
@@ -217,6 +233,8 @@ what the App's permissions and install scope allow; it cannot fork third-party r
 | `composition_hermes_jarvis_git_github_login` | `""` | GitHub login to commit as; writes `/opt/data/.gitconfig` - see GitHub section above |
 | `composition_hermes_jarvis_github_app` | `false` | Git via GitHub App installation token (timer-refreshed file); needs `_github_app_slug` |
 | `composition_hermes_jarvis_gh` | `false` | Install `gh` plus token shim; needs `_github_app` |
+| `composition_hermes_jarvis_auxiliary_models` | `{}` | Auxiliary task → model ID; see Model routing |
+| `composition_hermes_jarvis_delegation_model` | `""` | Subagent model; empty = inherit |
 | `composition_hermes_jarvis_dashboard` | `true` | Run the dashboard slot |
 | `composition_hermes_jarvis_api_server` | `false` | Expose the OpenAI-compatible API on 8642, and publish it through Traefik at `hermes-jarvis-api.<domain>` |
 | `composition_hermes_jarvis_manage_config` | `true` | Let Ansible own `config.yaml` |

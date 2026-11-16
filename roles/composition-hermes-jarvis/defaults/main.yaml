@@ -43,6 +43,20 @@ composition_hermes_jarvis_config_version: 42
 composition_hermes_jarvis_terminal_backend: local
 
 # -------------------------------------------------------------------
+# MODEL ROUTING
+# Per-task models on the same OpenAI-compatible endpoint as the main model.
+# auxiliary_models maps a Hermes auxiliary task name (vision, compression,
+# title_generation, approval, goal_judge, curator, monitor, mcp,
+# memory_query_rewrite, background_review, triage_specifier,
+# kanban_decomposer, tts_audio_tags, moa_reference, moa_aggregator) to a
+# model ID. A task not listed keeps Hermes' "auto" (the main model).
+# delegation_model sets the model for delegated subagents; empty = inherit.
+# There is no fallback_model: this role does not configure one.
+# -------------------------------------------------------------------
+composition_hermes_jarvis_auxiliary_models: {}
+composition_hermes_jarvis_delegation_model: ""
+
+# -------------------------------------------------------------------
 # TOOLS
 # This container has exactly one Hermes identity (the built-in "default"
 # profile) - see README for why this isn't a "profiles" role like

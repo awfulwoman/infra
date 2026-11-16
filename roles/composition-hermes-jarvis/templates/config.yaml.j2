@@ -26,6 +26,27 @@ model:
   api_key: "{{ composition_hermes_jarvis_api_key }}"
   context_length: {{ composition_hermes_jarvis_context_length }}
 
+{% if composition_hermes_jarvis_auxiliary_models | length > 0 %}
+
+# Per-task models. Same endpoint and key as `model`; only the model differs.
+auxiliary:
+{% for _task, _model in composition_hermes_jarvis_auxiliary_models.items() %}
+  {{ _task }}:
+    provider: custom
+    model: "{{ _model }}"
+    base_url: "{{ composition_hermes_jarvis_base_url }}"
+    api_key: "{{ composition_hermes_jarvis_api_key }}"
+{% endfor %}
+{% endif %}
+{% if composition_hermes_jarvis_delegation_model | length > 0 %}
+
+delegation:
+  provider: custom
+  model: "{{ composition_hermes_jarvis_delegation_model }}"
+  base_url: "{{ composition_hermes_jarvis_base_url }}"
+  api_key: "{{ composition_hermes_jarvis_api_key }}"
+{% endif %}
+
 terminal:
   backend: "{{ composition_hermes_jarvis_terminal_backend }}"
 
