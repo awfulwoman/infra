@@ -44,8 +44,8 @@ all:
         vps-hetzner-public01:
         server-64gb-storage:
         raspberry-pi4-2gb-deedee:
-        raspberry-pi4-4gb-randolph:
-        raspberry-pi4-8gb-norman:
+        # raspberry-pi4-4gb-randolph: # Powered off
+        # raspberry-pi4-8gb-norman: # Powered off
         # raspberry-pi5-4gb-belinda: # Drives died (infra#300), re-add when repurposed
 
     # -------------------------------------------------------------------
@@ -65,8 +65,8 @@ all:
         # raspberry-pi4-4gb-albion:
         raspberry-pi4-2gb-pikvm:
         raspberry-pi4-2gb-deedee:
-        raspberry-pi4-4gb-randolph:
-        raspberry-pi4-8gb-norman:
+        # raspberry-pi4-4gb-randolph: # Powered off
+        # raspberry-pi4-8gb-norman: # Powered off
         # raspberry-pi5-4gb-belinda: # Drives died (infra#300), re-add when repurposed
 
 
@@ -102,7 +102,7 @@ all:
         # raspberry-pi4-4gb-albion: # Has died
         vps-hetzner-public01:
         raspberry-pi4-2gb-deedee:
-        raspberry-pi4-4gb-randolph:
+        # raspberry-pi4-4gb-randolph: # Powered off
         # raspberry-pi4-8gb-norman:
 
     # -------------------------------------------------------------------
