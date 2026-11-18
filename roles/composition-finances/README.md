@@ -21,7 +21,7 @@ This role deploys [Firefly III](https://www.firefly-iii.org/), a self-hosted per
 | `firefly_app_url` | Public URL; password-reset links are built from it |
 | `firefly_mail_*` | SMTP relay (mailbox.org, port 465), shared with nullmailer |
 | `firefly_log_level` | `notice` normally; `debug` to recover a reset link if SMTP breaks |
-| `firefly_enablebanking_item_id` | 1Password item holding the Enable Banking credentials |
+| `firefly_enablebanking_item` | Title of the 1Password item holding the Enable Banking credentials |
 
 You must set the three vault variables (they default to `null`). Store them in
 Ansible Vault.
@@ -54,9 +54,8 @@ value (confirmed on Compose v5.5.0 running on storage), so the plain PEM needs
 no conversion.
 
 The item must live in the `Infra` vault, because that is the only vault the
-Connect read token can see. 1Password reassigns an item's UUID when it moves
-between vaults, so you must update `firefly_enablebanking_item_id` if the item
-is ever relocated. Confirm that it is visible and correctly shaped with:
+Connect read token can see. The role finds it by title (`firefly_enablebanking_item`),
+so a rename must be matched here. Confirm that it is visible and correctly shaped with:
 
 ```bash
 ansible-playbook playbooks/utility/check-enablebanking-credentials.yaml

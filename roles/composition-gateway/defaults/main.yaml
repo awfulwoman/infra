@@ -118,8 +118,8 @@ composition_gateway_usage_log_container_path: /var/log/gateway/usage.jsonl
 # GitHub token for the Issues tool. Fetched from 1Password Connect at playbook
 # runtime rather than vaulted in the repo — it is a live GitHub PAT, and the
 # same approach as composition-finances keeps it out of git entirely.
-# Reference: op://Infra/Github/gateway_issues_token
-composition_gateway_github_item_id: 5edooob5a7kzxkuv5ttu5vdexu
+# Reference: op://Infra/External - GitHub/gateway_issues_token
+composition_gateway_github_item: External - GitHub
 composition_gateway_github_token_field: gateway_issues_token
 
 # Repo the issues tools read and write. The app defaults to this same value, but
