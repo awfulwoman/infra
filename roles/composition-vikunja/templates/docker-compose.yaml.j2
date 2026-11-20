@@ -25,7 +25,7 @@ services:
 
   vikunja-db:
     container_name: vikunja_db
-    image: postgres:18
+    image: postgres:19
     restart: unless-stopped
     env_file: .environment_vars
     volumes:
