@@ -153,7 +153,6 @@ The response's `access_token` is `vault_hermes_nabu_matrix_access_token`.
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `composition_hermes_nabu_image` | `nousresearch/hermes-agent:latest` | Published image |
 | `composition_hermes_nabu_model` | `{{ llm_default_model }}` | Model ID passed to Ollama |
 | `composition_hermes_nabu_base_url` | `{{ llm_default_openai_uri }}` | Ollama's OpenAI-compatible endpoint (`https://ollama.<domain>/v1`, Traefik on camina in front of Malcolm) |
 | `composition_hermes_nabu_context_length` | `64000` | Hermes' floor for agent use |

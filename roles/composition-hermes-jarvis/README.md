@@ -222,7 +222,6 @@ choices:
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `composition_hermes_jarvis_image` | `nousresearch/hermes-agent:latest` | Published image |
 | `composition_hermes_jarvis_model` | `{{ llm_default_model }}` | Model ID passed to Ollama |
 | `composition_hermes_jarvis_base_url` | `{{ llm_default_openai_uri }}` | Ollama's OpenAI-compatible endpoint (`https://ollama.<domain>/v1`, Traefik on camina in front of Malcolm) |
 | `composition_hermes_jarvis_context_length` | `64000` | Hermes' floor for agent use |

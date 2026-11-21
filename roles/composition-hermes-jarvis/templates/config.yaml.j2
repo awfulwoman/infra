@@ -16,7 +16,7 @@
 #   docker exec hermes-jarvis /opt/hermes/.venv/bin/python -c \
 #     'from hermes_cli.config import DEFAULT_CONFIG; print(DEFAULT_CONFIG["_config_version"])'
 #
-# Re-check it after bumping composition_hermes_jarvis_image.
+# Re-check it after bumping the image tag in docker-compose.yaml.j2.
 _config_version: {{ composition_hermes_jarvis_config_version }}
 
 model:

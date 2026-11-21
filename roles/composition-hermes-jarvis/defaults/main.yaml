@@ -9,10 +9,6 @@ composition_dns_subdomains:
   - hermes-jarvis
   - hermes-jarvis-api
 
-# Upstream publishes a multi-arch image (amd64/arm64) to Docker Hub. The
-# docker-compose.yml in the repo builds from a source checkout instead;
-# no host here keeps a checkout, so pull the published image.
-composition_hermes_jarvis_image: "nousresearch/hermes-agent:latest"
 
 # -------------------------------------------------------------------
 # MODEL
@@ -33,9 +29,9 @@ composition_hermes_jarvis_context_length: 64000
 
 # Schema version config.yaml is written against, as declared by the image's
 # hermes_cli.config.DEFAULT_CONFIG. Verified against
-# nousresearch/hermes-agent:latest on 2026-09-10. Re-check when bumping the
+# nousresearch/hermes-agent:v0.23.3 on 2026-11-21. Re-check when bumping the
 # image - the migration warning names an older number than the real one.
-composition_hermes_jarvis_config_version: 42
+composition_hermes_jarvis_config_version: 54
 
 # Backend for the agent's shell tool. "local" runs commands inside this
 # container. "docker" would need the host Docker socket mounted, which hands

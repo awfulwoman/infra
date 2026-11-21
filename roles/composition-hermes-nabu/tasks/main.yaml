@@ -177,6 +177,7 @@
   community.docker.docker_compose_v2:
     project_src: "{{ composition_root }}"
     state: present
+    pull: always
     remove_orphans: true
   when: state | default('present') == 'present'
   notify: Restart Traefik
