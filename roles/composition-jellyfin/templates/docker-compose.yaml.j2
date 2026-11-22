@@ -5,7 +5,7 @@ services:
     container_name: jellyfin
     ports:
       - "8096:8096"
-    image: jellyfin/jellyfin:latest
+    image: jellyfin/jellyfin:12.4
     restart: unless-stopped
     env_file: .environment_vars
     labels:

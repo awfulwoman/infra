@@ -3,7 +3,7 @@ name: "{{ composition_name }}"
 services:
   vikunja:
     container_name: vikunja
-    image: vikunja/vikunja:latest
+    image: vikunja/vikunja:2.8.0
     restart: unless-stopped
     env_file: .environment_vars
     depends_on:

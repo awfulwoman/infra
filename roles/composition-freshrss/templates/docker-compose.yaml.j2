@@ -5,7 +5,7 @@ services:
     container_name: freshrss
     ports:
       - "127.0.0.1:8274:80"
-    image: lscr.io/linuxserver/freshrss:latest
+    image: lscr.io/linuxserver/freshrss:1.30.4-ls333
     restart: unless-stopped
     env_file: .environment_vars
     labels:

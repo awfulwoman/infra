@@ -5,7 +5,7 @@ services:
     container_name: prowlarr
     ports:
       - "9696:9696"
-    image: lscr.io/linuxserver/prowlarr:latest
+    image: lscr.io/linuxserver/prowlarr:3.0.2.5780-ls169
     restart: unless-stopped
     env_file: .environment_vars
     environment:
@@ -32,7 +32,7 @@ services:
       start_period: 30s
 
   bazarr:
-    image: lscr.io/linuxserver/bazarr:latest
+    image: lscr.io/linuxserver/bazarr:v1.6.2-ls373
     container_name: bazarr
     ports:
       - "127.0.0.1:6767:6767"
@@ -64,7 +64,7 @@ services:
     container_name: radarr
     ports:
       - "7878:7878"
-    image: lscr.io/linuxserver/radarr:latest
+    image: lscr.io/linuxserver/radarr:7.0.3.10918-ls328
     restart: unless-stopped
     env_file: .environment_vars
     environment:
@@ -324,7 +324,7 @@ services:
       start_period: 30s
 
   jellyseerr:
-    image: fallenbagel/jellyseerr:latest
+    image: fallenbagel/jellyseerr:2.7.3
     container_name: jellyseerr
     env_file: .environment_vars
     labels:
