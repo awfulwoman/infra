@@ -52,7 +52,7 @@ services:
 
   webserver:
     container_name: paperless_webserver
-    image: ghcr.io/paperless-ngx/paperless-ngx:latest
+    image: ghcr.io/paperless-ngx/paperless-ngx:3.5.1
     restart: unless-stopped
     env_file: .environment_vars
     depends_on:

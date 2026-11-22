@@ -80,7 +80,6 @@ role.
 
 | Variable | Default | Description |
 |----------|---------|--------------|
-| `composition_matrix_image` | `ghcr.io/continuwuity/continuwuity:latest` | Published image (mirrored from the canonical Forgejo registry) |
 | `composition_matrix_server_name` | `matrix.{{ domainname_infra }}` | Baked into every account/room ID - fixed for the life of the instance |
 | `composition_matrix_port` | `8008` | Internal port; also what Traefik load-balances to |
 | `composition_matrix_log` | `info` | `CONTINUWUITY_LOG` level |

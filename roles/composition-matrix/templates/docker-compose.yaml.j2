@@ -3,7 +3,11 @@ name: "{{ composition_name }}"
 services:
   matrix:
     container_name: matrix
-    image: "{{ composition_matrix_image }}"
+    # continuwuity (a maintained fork of Conduit/conduwuit) publishes its
+    # canonical image on a self-hosted Forgejo registry, mirrored to several
+    # others - ghcr.io is used here since it's the one renovate and the rest of
+    # this repo already assume.
+    image: ghcr.io/continuwuity/continuwuity:v26.9.4
     restart: unless-stopped
     env_file: .environment_vars
     # No command override needed - the image's own CMD is already
