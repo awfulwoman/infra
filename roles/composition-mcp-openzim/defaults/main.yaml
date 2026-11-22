@@ -1,7 +1,6 @@
 # code: language=ansible
 composition_name: openzim-mcp
 
-composition_openzim_mcp_version: "latest"
 composition_openzim_mcp_zim_path: "/slowpool/shared/zim"
 composition_openzim_mcp_zim_download_path: "{{ composition_openzim_mcp_zim_path }}/library"
 composition_openzim_mcp_container_zim_path: "/data/library"

@@ -3,7 +3,7 @@ name: "{{ composition_name }}"
 services:
   runner01:
     container_name: runner01
-    image: gitea/act_runner:latest
+    image: gitea/act_runner:0.6.1
     restart: unless-stopped
     privileged: true
     ports:
@@ -31,7 +31,7 @@ services:
 
   # runner02:
   #   container_name: runner02
-  #   image: gitea/act_runner:latest
+  #   image: gitea/act_runner:0.6.1
   #   restart: unless-stopped
   #   privileged: true
   #   ports:
