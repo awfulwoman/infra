@@ -3,7 +3,7 @@ name: "{{ composition_name }}"
 services:
   gatus:
     container_name: gatus
-    image: ghcr.io/twin/gatus:v5.36.0
+    image: ghcr.io/twin/gatus:v5.38.0
     restart: unless-stopped
     volumes:
       - "{{ composition_config }}/config.yaml:/config/config.yaml:ro"
