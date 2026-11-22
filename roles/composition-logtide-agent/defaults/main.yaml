@@ -10,7 +10,6 @@ composition_name: logtide-agent
 # moment this composition appears in a host's compositions: list.
 composition_dns_subdomains: []
 
-composition_logtide_agent_image: fluent/fluent-bit:4.2.2
 composition_logtide_agent_container_name: logtide-agent
 
 # Ingest endpoint. HTTPS via Traefik rather than the backend's container port,

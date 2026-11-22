@@ -120,7 +120,7 @@ services:
       - "{{ default_docker_network }}"
 
   fluent-bit:
-    image: {{ composition_logtide_fluent_bit_image }}
+    image: fluent/fluent-bit:4.2.2
     container_name: logtide-fluent-bit
     hostname: logtide-fluent-bit
     restart: unless-stopped

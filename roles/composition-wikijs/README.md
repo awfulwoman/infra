@@ -10,8 +10,6 @@
 
 | Variable | Purpose |
 |---|---|
-| `composition_wikijs_image` | Floating `2` tag, refreshed on every deploy (3.x is beta upstream) |
-| `composition_wikijs_db_image` | PostgreSQL image |
 | `vault_composition_wikijs_db_password` | DB password, shared by app and db |
 
 ## Data

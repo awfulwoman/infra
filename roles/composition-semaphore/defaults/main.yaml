@@ -4,8 +4,6 @@ composition_name: semaphore
 composition_dns_subdomains:
   - semaphore
 
-composition_semaphore_image_tag: v2.19.12
-
 # The image runs as this UID (group 0). Bind-mounted directories must be
 # owned by it, not ansible_user.
 composition_semaphore_uid: "1001"

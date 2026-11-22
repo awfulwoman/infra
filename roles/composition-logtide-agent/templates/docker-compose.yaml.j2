@@ -1,7 +1,7 @@
 name: "{{ composition_name }}"
 services:
   agent:
-    image: {{ composition_logtide_agent_image }}
+    image: fluent/fluent-bit:4.2.2
     container_name: {{ composition_logtide_agent_container_name }}
     hostname: {{ composition_logtide_agent_container_name }}
     restart: unless-stopped

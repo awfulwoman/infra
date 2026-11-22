@@ -5,7 +5,6 @@ composition_dns_subdomains:
 
 composition_logtide_backend_image: logtide/backend:latest
 composition_logtide_frontend_image: logtide/frontend:latest
-composition_logtide_fluent_bit_image: fluent/fluent-bit:4.2.2
 
 composition_logtide_db_name: logtide
 composition_logtide_db_user: logtide

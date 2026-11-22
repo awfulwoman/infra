@@ -350,7 +350,7 @@ services:
 
   # Book/audiobook requester. Libation (Audible) companion omitted: not used.
   shelfarr:
-    image: "{{ composition_downloads_shelfarr_image }}"
+    image: ghcr.io/pedro-revez-silva/shelfarr:2026.10.05.1
     container_name: shelfarr
     restart: unless-stopped
     environment:

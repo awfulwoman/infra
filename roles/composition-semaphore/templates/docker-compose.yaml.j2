@@ -3,7 +3,7 @@ name: "{{ composition_name }}"
 services:
   semaphore:
     container_name: semaphore
-    image: "semaphoreui/semaphore:{{ composition_semaphore_image_tag }}"
+    image: "semaphoreui/semaphore:v2.19.12"
     restart: unless-stopped
     env_file: .environment_vars
     volumes:

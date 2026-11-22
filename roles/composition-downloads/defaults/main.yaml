@@ -13,5 +13,3 @@ composition_dns_subdomains:
   - transmission
   - jellyseerr
   - shelfarr
-
-composition_downloads_shelfarr_image: ghcr.io/pedro-revez-silva/shelfarr:2026.10.05.1
