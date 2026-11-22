@@ -7,8 +7,9 @@ terraform {
   }
 }
 
-# Connect to libvirt on host-storage via SSH
-# Terraform runs on deedee (control plane), manages VMs on host-storage (hypervisor)
+# The provider's client is pure Go and speaks the libvirt remote protocol over
+# the unix socket, so it reaches the daemon on this host directly. No virsh,
+# no libvirt-clients, no SSH.
 provider "libvirt" {
-  uri = var.hypervisor_uri
+  uri = var.libvirt_uri
 }

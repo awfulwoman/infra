@@ -59,7 +59,7 @@ resource "libvirt_cloudinit_disk" "{{ vm.id }}_cloudinit" {
       net0:
         match:
           macaddress: "{{ vm.mac_address }}"
-        addresses: ["{{ vm.ip_address }}/24"]
+        addresses: ["{{ vm.ip_address }}/{{ vm.subnet | default(24) }}"]
         routes:
           - to: default
             via: {{ vm.gateway }}
@@ -139,7 +139,19 @@ resource "libvirt_domain" "{{ vm.id }}" {
     ]
 
     # Network interfaces
+    #
+    # "lan" puts the VM on the same wire as the hypervisor, with its own
+    # address on the home network. The VM then looks to the rest of the
+    # fleet exactly like a physical machine: same subnet, same DNS, same
+    # way in. The hypervisor cannot reach the VM itself (macvtap has no
+    # hairpin), which only matters for NFS-heavy guests.
+    #
+    # "nat" puts the VM on the hypervisor's private libvirt network
+    # instead. The VM reaches the hypervisor at line speed there, but
+    # nothing outside the hypervisor can reach the VM without a jump
+    # host.
     interfaces = [
+{% if (vm.network_mode | default('lan')) == 'nat' %}
       {
         type = "network"
         model = {
@@ -154,8 +166,25 @@ resource "libvirt_domain" "{{ vm.id }}" {
           address = "{{ vm.mac_address }}"
         }
         # NOTE: Static IP configured via cloud-init, not libvirt
-        # VMs use internal NAT network (192.168.122.x) for host communication
       }
+{% else %}
+      {
+        type = "direct"
+        model = {
+          type = "virtio"
+        }
+        source = {
+          direct = {
+            dev  = var.bridge_interface
+            mode = "bridge"
+          }
+        }
+        mac = {
+          address = "{{ vm.mac_address }}"
+        }
+        # NOTE: Static IP configured via cloud-init, not libvirt
+      }
+{% endif %}
     ]
 
     # Serial console
@@ -169,7 +198,21 @@ resource "libvirt_domain" "{{ vm.id }}" {
       }
     ]
 
-    {% if vm.graphics | default(false) %}
+    # The channel the guest agent talks over. Without it qemu-guest-agent
+    # starts but cannot reach QEMU, so it reports no IP and cannot ask the
+    # host to shut the guest down.
+{% if vm.guest_agent | default(true) %}
+    channels = [
+      {
+        target = {
+          virt_io = {
+            name = "org.qemu.guest_agent.0"
+          }
+        }
+      }
+    ]
+{% endif %}
+{% if vm.graphics | default(false) %}
     # Graphics (SPICE)
     graphics = [
       {
@@ -179,7 +222,7 @@ resource "libvirt_domain" "{{ vm.id }}" {
         }
       }
     ]
-    {% endif %}
+{% endif %}
   }
 
   # Start after creation
@@ -188,6 +231,9 @@ resource "libvirt_domain" "{{ vm.id }}" {
   # false — a VM silently autostarting on every reboot (competing for I/O with
   # everything else that comes up at the same time) should be a deliberate,
   # reviewable choice per VM, not a blanket default.
-  autostart = {{ vm.autostart | default(false) }}
+  #
+  # Rendered by hand: HCL's booleans are lower case, and Jinja would render
+  # Python's True.
+  autostart = {{ 'true' if vm.autostart | default(false) else 'false' }}
 }
 {% endfor %}

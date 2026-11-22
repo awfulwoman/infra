@@ -36,6 +36,68 @@
     dest: /usr/share/libvirt/networks/default.xml
     mode: "0644"
 
+# The default NAT network is what a VM with network_mode "nat" is attached to.
+# It ships with libvirt, but a host that was ever rebuilt, or one where the
+# network was stopped by hand, does not have it running - and a VM cannot
+# start without it.
+#
+# The network is only defined when it is missing. Redefining a network that
+# already exists changes the MAC of its bridge, which libvirt refuses to do
+# while the network is active, so the running one is left alone.
+- name: Read the default network's state
+  become: true
+  ansible.builtin.command:
+    cmd: virsh net-info default
+  register: virtual_qemu_host_default_network
+  changed_when: false
+  failed_when: false
+
+- name: Define the default network
+  become: true
+  ansible.builtin.command:
+    cmd: virsh net-define /usr/share/libvirt/networks/default.xml
+  when: virtual_qemu_host_default_network.rc != 0
+
+- name: Start the default network
+  become: true
+  ansible.builtin.command:
+    cmd: virsh net-start default
+  register: virtual_qemu_host_default_network_start
+  failed_when: false
+  changed_when: virtual_qemu_host_default_network_start.rc == 0
+
+- name: Read the default network's state again
+  become: true
+  ansible.builtin.command:
+    cmd: virsh net-info default
+  register: virtual_qemu_host_default_network_state
+  changed_when: false
+  failed_when: false
+
+- name: Assert the default network is active
+  ansible.builtin.assert:
+    that:
+      - virtual_qemu_host_default_network_state.stdout is search('Active:\s+yes')
+    fail_msg: >-
+      The default libvirt network is not active
+      ({{ virtual_qemu_host_default_network_start.stderr | default('', true) | trim }}).
+      A VM with network_mode "nat" cannot start without it. Check
+      `virsh net-list --all` and `journalctl -u libvirtd`.
+    quiet: true
+
+- name: Ensure the default network starts with the host
+  become: true
+  ansible.builtin.command:
+    cmd: virsh net-autostart default
+  when: virtual_qemu_host_default_network_state.stdout is search('Autostart:\s+no')
+
+- name: Ensure libvirtd is running and enabled
+  become: true
+  ansible.builtin.service:
+    name: libvirtd
+    state: started
+    enabled: true
+
 - name: Disable SELinux security driver for libvirt
   become: true
   ansible.builtin.lineinfile:

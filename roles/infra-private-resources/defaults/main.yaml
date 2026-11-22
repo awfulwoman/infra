@@ -1,29 +1,66 @@
 ---
+# The role runs on the hypervisor itself: Terraform talks to the local libvirt
+# daemon over its unix socket, so there is no SSH trust chain between a control
+# plane and the VMs it manages.
 infra_privateresources_terraform_working_dir: "{{ terraform_working_dir }}/private-resources"
 infra_privateresources_debug: false
-infra_privateresources_tf_apply: false
+infra_privateresources_tf_apply: true
+# Set to true to stop after the plan. With infra_privateresources_debug it
+# shows what an apply would do without doing it.
+infra_privateresources_tf_plan_only: false
 
-# Hypervisor connection (Terraform runs on dns, connects to server-64gb-storage via SSH)
-infra_privateresources_hypervisor_host: "server-64gb-storage"
-# Dedicated service account with restricted libvirt-only access (least privilege)
-infra_privateresources_hypervisor_user: "libvirt-remote"
-infra_privateresources_hypervisor_ssh_uri: "qemu+ssh://{{ infra_privateresources_hypervisor_user }}@{{ infra_privateresources_hypervisor_host }}/system?keyfile={{ infra_privateresources_ssh_key_path }}"
+# libvirt connection.
+#
+# The provider's client is pure Go and speaks the libvirt remote protocol over
+# the unix socket, so it needs neither virsh nor libvirt-clients on this host
+# - only permission to open /var/run/libvirt/libvirt-sock.
+infra_privateresources_libvirt_uri: "qemu:///system"
 
-# SSH key paths for service account on control plane (dns)
-infra_privateresources_ssh_key_path: "/home/{{ ansible_user }}/.ssh/libvirt-remote_ed25519"
-infra_privateresources_ssh_pubkey_path: "{{ infra_privateresources_ssh_key_path }}.pub"
+# The interface a VM on the home network is bridged onto. The hypervisor's own
+# primary interface is the right answer, unless it is a bond or a bridge
+# already.
+infra_privateresources_bridge_interface: "{{ host_primary_interface | default('enp3s0') }}"
 
-# Network configuration (on hypervisor)
-# VMs use libvirt default NAT network (192.168.122.0/24)
-infra_privateresources_network_mode: "nat"
-
-# Storage configuration (on hypervisor)
+# Storage configuration. Every VM gets its own libvirt storage pool as a
+# directory under this path, inside a ZFS dataset (see the hypervisor's
+# host_vars), so its disk is snapshotted with everything else on the pool.
 infra_privateresources_pool_path: "/fastpool/pools/vms"
 
 # VM definitions
 #
-# Empty since 2026-09-20. Every VM was shut off and unused: claude-dev and
-# downloads had not been written since 2026-08-01, media since 2026-02-08.
-# Their disks and datasets were removed at the same time. The libvirt network
-# and pool path stay, so a new VM only needs an entry here.
-infra_privateresources_vms: []
+# The libvirt domain name (name) is also the storage pool directory and the
+# hostname cloud-init sets.
+#
+# network_mode decides where the VM's network sits:
+#
+#   lan  the VM is on the same wire as the hypervisor, with its own address
+#        on the home network. It then looks to the rest of the fleet exactly
+#        like a physical machine: same subnet, same DNS, same way in. The
+#        hypervisor cannot reach the VM itself (macvtap has no hairpin),
+#        which only matters for guests that serve NFS to the hypervisor.
+#   nat  the VM is on the hypervisor's private libvirt network. It reaches the
+#        hypervisor at line speed there, but nothing outside the hypervisor
+#        can reach the VM without a jump host.
+#
+# A "lan" VM's address must sit outside the DHCP range of the home network.
+infra_privateresources_vms:
+  # A throwaway Ubuntu 26.04 (Resolute) host, used to find out whether our
+  # roles still work on the release the physical machines are heading for.
+  # 2026-11-22.
+  - id: resolute
+    name: "vm-resolute"
+    description: "Ubuntu 26.04 test VM"
+    source_image_url: "https://cloud-images.ubuntu.com/resolute/current/resolute-server-cloudimg-amd64.img"
+    memory: 4096  # MiB
+    vcpus: 2
+    disk_size_gb: 40
+    network_mode: lan
+    ip_address: "192.168.1.201"
+    subnet: 24
+    gateway: "192.168.1.1"
+    dns: "192.168.1.1"
+    mac_address: "52:54:00:00:03:01"
+    graphics: false
+    # Starts with the hypervisor. One VM is cheap; a fleet of them would
+    # fight the Docker containers for I/O at every boot.
+    autostart: true

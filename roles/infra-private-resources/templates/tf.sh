@@ -7,7 +7,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Variables configured by Ansible
-HYPERVISOR_URI="{{ infra_privateresources_hypervisor_ssh_uri }}"
+LIBVIRT_URI="{{ infra_privateresources_libvirt_uri }}"
 
 # Pass subcommand first, then variables, then any additional args
 # Usage: ./tf plan, ./tf apply, etc.
@@ -19,5 +19,5 @@ if [ $# -eq 0 ]; then
 fi
 
 exec terraform "$1" \
-  -var="hypervisor_uri=${HYPERVISOR_URI}" \
+  -var="libvirt_uri=${LIBVIRT_URI}" \
   "${@:2}"

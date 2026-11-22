@@ -17,8 +17,6 @@
     tags: [system, zfs, system-zfs]
   - role: infra-public-resources
     tags: [infra, infra-public-resources]
-  - role: infra-private-resources
-    tags: [infra, infra-private-resources]
   - role: infra-named
     tags: [infra, infra-named]
   - role: client-cert-distribution

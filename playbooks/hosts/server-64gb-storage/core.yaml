@@ -27,6 +27,9 @@
     tags: [server, server-nfs]
   - role: virtual-qemu-host
     tags: [virtual, virtual-qemu-host]
+  # Terraform for the VMs runs here, next to the hypervisor it manages.
+  - role: infra-private-resources
+    tags: [infra, infra-private-resources]
   - role: backups-zfs-client
     tags: [backups, zfs, backups-zfs-client]
   - role: system-nvm

@@ -1,0 +1,91 @@
+# -------------------------------------------------------------------
+# IDENTITY
+#
+# A throwaway Ubuntu 26.04 (Resolute) guest on server-64gb-storage,
+# declared by the infra-private-resources role. It exists to find out
+# whether our roles still work on the release the physical machines are
+# heading for, before those machines are wiped.
+#
+# It is a first-class fleet member while it lives: same subnet as the
+# hardware, its own name in the internal zone, its own tailnet address
+# and the internal wildcard certificate. That is the point - the test
+# only means something if Ansible reaches it the way it reaches a
+# physical machine.
+# -------------------------------------------------------------------
+host_type: virtual
+host_name: vm-8gb-resolute
+host_name_medium: vm-resolute
+host_name_short: resolute
+host_region: ber
+host_site: xberg
+host_pfqdn: "{{ host_name }}.{{ host_site }}.{{ host_region }}"
+host_fqdn: "{{ host_pfqdn }}.{{ domainname_infra }}"
+host_description: "Ubuntu 26.04 test VM"
+
+# -------------------------------------------------------------------
+# NETWORK
+#
+# The guest is bridged onto the home network (macvtap), so it has an
+# address on the same subnet as the hardware. 192.168.1.201 sits
+# outside bertha's DHCP range (192.168.1.100-199) and outside the
+# addresses the unmanaged devices hold.
+#
+# The interface is matched by MAC rather than by name: the kernel picks
+# the name of a virtio NIC (enp1s0 on one guest, enp0s3 on the next),
+# and netplan's match block does not care what it was called.
+# -------------------------------------------------------------------
+host_ipv4: 192.168.1.201
+host_ipv4_subnet: 24
+host_tailscale_ipv4: 100.80.1.201
+host_mac: "52:54:00:00:03:01"
+host_primary_interface: "vmnet0"
+network_netplan_config:
+  ethernets:
+    vmnet0:
+      match:
+        macaddress: "{{ host_mac }}"
+
+# -------------------------------------------------------------------
+# ANSIBLE
+#
+# No ansible_become_password: cloud-init creates the account with
+# passwordless sudo, and system-security keeps it that way
+# (security_sudoers_passwordless). The physical hosts have a passworded
+# account and a per-host vault_password instead.
+# -------------------------------------------------------------------
+ansible_host: "{{ host_ipv4 }}"
+ansible_user: "{{ vault_server_username }}"
+
+# -------------------------------------------------------------------
+# UBUNTUPRO
+#
+# Off: a Pro attachment is a fleet-wide entitlement, not a per-host
+# capability worth burning a seat on a throwaway box. The role still
+# runs, it just has nothing to attach.
+# -------------------------------------------------------------------
+ubuntupro_attach: false
+
+# -------------------------------------------------------------------
+# ZFS
+#
+# No pool. A guest has no block device of its own to pool, so
+# system-zfs here only installs zfsutils-linux - which is the part
+# that has to keep working when a physical machine is wiped and
+# reinstalled, because that is where the pools come from.
+# -------------------------------------------------------------------
+zfs: {}
+
+# -------------------------------------------------------------------
+# CERTIFICATES
+#
+# No healthchecks.io check for a host that will be deleted.
+# -------------------------------------------------------------------
+client_cert_distribution_healthcheck: false
+
+# -------------------------------------------------------------------
+# COMPOSITIONS
+#
+# None. This VM is here to exercise the base roles, not to run
+# services.
+# -------------------------------------------------------------------
+compositions: []
