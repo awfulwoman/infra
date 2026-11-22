@@ -80,8 +80,12 @@
             Port {{ backups_restic_offsite_sftp_port }}
             IdentityFile {{ backups_restic_offsite_ssh_key }}
             IdentitiesOnly yes
-            ServerAliveInterval 60
-            ServerAliveCountMax 240
+            # The router's upstream link reconnects about once a day (~04:13),
+            # which silently kills the session. A tight limit makes ssh notice
+            # in minutes. A loose one left restic hanging until the kernel
+            # gave up on the dead TCP connection about 15 minutes later.
+            ServerAliveInterval 30
+            ServerAliveCountMax 6
 
     - name: Read the Storage Box host key
       ansible.builtin.command:

@@ -1,13 +1,16 @@
 from datetime import datetime
+from unittest import mock
 
 from offsite_restic import (
     backup_command,
     build_status,
+    command_maintain,
     forget_command,
     latest_offsite_times,
     latest_snapshot,
     mount_point,
     needs_backup,
+    parse_args,
     replica_path,
     smallest_first,
     split_target,
@@ -205,3 +208,25 @@ def test_failure_is_reported_even_when_an_older_copy_is_still_fresh():
     )
     assert status['ok'] is False
     assert status['failures'] == {'s/a': 'restic exited 1'}
+
+
+# ---------------------------------------------------------------------------
+# prune and check share command_maintain. Only check takes --read-data-subset,
+# so building the command for prune must not touch that option.
+# ---------------------------------------------------------------------------
+
+
+def run_maintain(argv):
+    with mock.patch('offsite_restic.subprocess.run') as run:
+        run.return_value.returncode = 0
+        assert command_maintain(parse_args(argv)) == 0
+    return run.call_args.args[0]
+
+
+def test_prune_runs_restic_prune():
+    assert run_maintain(['prune']) == ['restic', 'prune']
+
+
+def test_check_reads_back_the_requested_subset():
+    cmd = run_maintain(['check', '--read-data-subset', '5%'])
+    assert cmd == ['restic', 'check', '--read-data-subset', '5%']

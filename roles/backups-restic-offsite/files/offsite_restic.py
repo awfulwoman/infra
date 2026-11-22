@@ -297,10 +297,12 @@ def command_backup(args):
 
 def command_maintain(args):
     """prune and check share one shape: run it, and say so if it fails."""
-    cmd = {
-        'prune': ['restic', 'prune'],
-        'check': ['restic', 'check', '--read-data-subset', args.read_data_subset],
-    }[args.command]
+    # Built per command: only `check` has --read-data-subset, so a dict of
+    # both would read an attribute `prune` does not have.
+    if args.command == 'check':
+        cmd = ['restic', 'check', '--read-data-subset', args.read_data_subset]
+    else:
+        cmd = ['restic', 'prune']
     result = subprocess.run(cmd, check=False)
     if result.returncode != 0:
         log(f'restic {args.command} exited {result.returncode}')
