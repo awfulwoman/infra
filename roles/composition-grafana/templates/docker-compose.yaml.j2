@@ -1,7 +1,7 @@
 name: "{{ composition_name }}"
 services:
   grafana:
-    image: grafana/grafana-oss:latest
+    image: grafana/grafana-oss:13.0.2
     container_name: {{ composition_grafana_container_name }}
     restart: unless-stopped
     user: "{{ ansible_user_uid }}:{{ ansible_user_gid }}"
