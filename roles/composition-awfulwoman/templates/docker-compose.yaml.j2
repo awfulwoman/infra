@@ -2,7 +2,7 @@
 name: "{{ composition_name }}"
 services:
   web:
-    image: nginx
+    image: nginx:1.31.9
     container_name: awfulwoman
     restart: unless-stopped
     env_file: .environment_vars

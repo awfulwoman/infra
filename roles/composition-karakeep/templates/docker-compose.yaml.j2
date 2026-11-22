@@ -22,7 +22,7 @@ services:
       - "{{ default_docker_network }}"
 
   chrome:
-    image: ghcr.io/karakeep-app/karakeep-chrome:release
+    image: ghcr.io/karakeep-app/karakeep-chrome:157.0.8103.78-r1
     restart: unless-stopped
     init: true
     command:
