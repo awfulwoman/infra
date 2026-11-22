@@ -24,3 +24,10 @@ _Avoid_: Remote backup, cloud backup
 
 **Offsite scope**:
 The data chosen to reach the Offsite copy: every dataset with the `critical` policy. Narrower than the data that is snapshotted, because offsite storage is paid for per byte and uploaded over a slow uplink.
+
+**Guest**:
+A virtual machine the infrastructure declares and owns: it lives on a hypervisor, has an entry in the inventory and a playbook of its own like any other host, and Terraform creates and removes it. `server-64gb-storage` is the hypervisor; `infra-private-resources` holds the role.
+_Avoid_: Server, box
+
+**Guest network mode**:
+Where a guest's network sits. `lan` puts it on the same wire as the hypervisor, on the home network, so it looks to the rest of the fleet like a physical machine. `nat` puts it on the hypervisor's private libvirt network, where only the hypervisor can reach it, but the hypervisor is at line speed.
