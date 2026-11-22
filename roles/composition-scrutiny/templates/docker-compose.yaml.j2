@@ -3,7 +3,7 @@ name: "{{ composition_name }}"
 services:
   scrutiny:
     container_name: scrutiny
-    image: ghcr.io/analogj/scrutiny:master-omnibus
+    image: ghcr.io/analogj/scrutiny:v0.10.0-omnibus
     restart: unless-stopped
     env_file: .environment_vars
     # SYS_RAWIO lets smartctl issue ATA pass-through commands. NVMe would
