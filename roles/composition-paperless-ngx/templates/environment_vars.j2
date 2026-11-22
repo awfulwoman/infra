@@ -13,6 +13,9 @@ PAPERLESS_DBUSER=paperless
 PAPERLESS_DBPASS={{ paperless_ngx_db_password }}
 PAPERLESS_SECRET_KEY={{ paperless_ngx_secret_key }}
 PAPERLESS_URL=https://paperless.{{ domainname_infra }}
+# Paperless 3.x answers 400 to any Host header not listed here. translation-server's
+# connector calls http://webserver:8000 over the Docker network, so that name must be allowed.
+PAPERLESS_ALLOWED_HOSTS=paperless.{{ domainname_infra }},webserver,localhost
 PAPERLESS_TIME_ZONE=Europe/Berlin
 PAPERLESS_OCR_LANGUAGE=eng
 PAPERLESS_TIKA_ENABLED=1

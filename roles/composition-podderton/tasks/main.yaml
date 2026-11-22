@@ -33,6 +33,20 @@
     group: "1000"
     mode: "0775"
 
+# The image's entrypoint only chowns /podcasts when the top directory is not
+# owned by its "podderton" user. That user is uid 1000, the same as the media
+# directory owner above, so the chown is skipped and a feeds/ directory made
+# earlier as root stays root-owned. The generator runs as uid 1000 and then
+# fails with "Permission denied" on feeds/feeds.xml, and restarts in a loop.
+- name: Make the generated feeds directory writable by the podderton user
+  become: true
+  ansible.builtin.file:
+    path: "{{ composition_podderton_media_path }}/feeds"
+    state: directory
+    owner: "1000"
+    group: "1000"
+    recurse: true
+
 # Seed a starter config only if the user has not created one. The config
 # directory is mounted read-only into the containers, so this file must
 # exist before first start or Podderton crashes trying to write its default.
