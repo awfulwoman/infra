@@ -3,7 +3,7 @@ name: "{{ composition_name }}"
 services:
   open-webui:
     container_name: open-webui
-    image: ghcr.io/open-webui/open-webui:main
+    image: ghcr.io/open-webui/open-webui:v0.11.3
     restart: unless-stopped
     env_file: .environment_vars
     labels:

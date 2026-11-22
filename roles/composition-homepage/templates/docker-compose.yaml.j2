@@ -5,7 +5,7 @@ services:
     container_name: homepage
     ports:
       - "127.0.0.1:3648:3000"
-    image: ghcr.io/gethomepage/homepage:latest
+    image: ghcr.io/gethomepage/homepage:v2.8.0
     restart: unless-stopped
     env_file: .environment_vars
     labels:

@@ -4,7 +4,7 @@ services:
   op-connect-api:
     cap_add:
       - NET_BROADCAST
-    image: 1password/connect-api:latest
+    image: 1password/connect-api:1.8.2
     restart: unless-stopped
     volumes:
       - "{{ composition_config }}/1password-credentials.json:/home/opuser/.op/1password-credentials.json:ro"
@@ -28,7 +28,7 @@ services:
   op-connect-sync:
     cap_add:
       - NET_BROADCAST
-    image: 1password/connect-sync:latest
+    image: 1password/connect-sync:1.8.2
     restart: unless-stopped
     env_file: .environment_vars
     networks:
