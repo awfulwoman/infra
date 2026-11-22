@@ -30,8 +30,6 @@ A self-hosted media ecosystem for photo management, video streaming, and automat
 | `composition-immich-ml`   | Machine learning sidecar for Immich photo recognition     |
 | `composition-downloads`   | The \*arr stack for media automation                      |
 | `composition-tubesync`    | Automated YouTube channel archival to local media library |
-| `composition-get-iplayer` | BBC iPlayer programme downloader                          |
-| `composition-iplayarr`    | Arr-style automation for BBC iPlayer content              |
 | `composition-podcasts`    | Podcast downloader and manager                            |
 | `composition-audio`       | Audio streaming and playback services                     |
 
