@@ -27,7 +27,6 @@ A self-hosted media ecosystem for photo management, video streaming, and automat
 | ------------------------- | --------------------------------------------------------- |
 | `composition-jellyfin`    | Media server for movies, TV shows, and music              |
 | `composition-immich`      | High performance self-hosted photo and video management   |
-| `composition-immich-ml`   | Machine learning sidecar for Immich photo recognition     |
 | `composition-downloads`   | The \*arr stack for media automation                      |
 | `composition-tubesync`    | Automated YouTube channel archival to local media library |
 | `composition-podcasts`    | Podcast downloader and manager                            |
@@ -57,7 +56,6 @@ Services that support the broader infrastructure: ingress routing, DNS, and visi
 | `composition-1password-connect`    | Self-hosted secrets server synced from 1Password      |
 | `composition-pihole`               | Network-wide DNS ad blocker and local DNS management  |
 | `composition-watchyourlan`         | Network device discovery and monitoring               |
-| `composition-ladder`               | Privacy-preserving web proxy for bypassing paywalls   |
 | `composition-container-management` | Tools for managing Docker containers                  |
 | `composition-homepage`             | Application dashboard and service monitoring          |
 
@@ -76,9 +74,6 @@ Camera feeds and motion detection for monitoring.
 
 | Role                     | Description                            |
 | ------------------------ | -------------------------------------- |
-| `composition-motioneye`  | Webcam management and motion detection |
-| `composition-guineacams` | Guinea pig cameras (pet monitoring)    |
-| `composition-testcam`    | Test camera configuration              |
 
 ### Static Sites
 
