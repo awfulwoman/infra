@@ -49,6 +49,21 @@ zfs:
           - /dev/disk/by-id/scsi-SATA_CT1000BX500SSD1_2216E629AC18
           - /dev/disk/by-id/scsi-SATA_SanDisk_SDSSDH3_22087N455301
     datasets:
+      # Terraform state for the private resources - the VMs the
+      # infra-private-resources role declares. Critical: without it there
+      # is no record of which guests exist, and libvirt and Terraform
+      # disagree about what should be running.
+      terraform:
+        policy: critical
+      # The guests' disks. Low: a disk is rebuildable from its cloud
+      # image, but a local snapshot lets a broken guest be rolled back
+      # without rebuilding it. Each VM gets its own libvirt storage pool
+      # as a directory in here.
+      pools:
+        policy: low
+        datasets:
+          vms:
+            policy: low
       compositions:
         # Every composition states its own policy; see ADR-0001. The parent
         # stays low so anything Docker creates and nobody declared is
@@ -250,10 +265,13 @@ zfs:
         # children were replicated around it.
         policy: critical
         datasets:
-          # An Apple Photos export: 48,665 files in folders 0-F. Under half
-          # are also in Immich (compared by checksum, 2026-10-11).
+          # An Apple Photos export: 48,665 files in folders 0-F. Imported into
+          # Immich on 2026-11-22 (checked by checksum; only 20 unsupported
+          # .aae sidecar files are not in Immich), so the offsite copy of
+          # charlie/photos covers it. Kept on `high`: still replicated to the
+          # backup server, but not sent offsite a second time.
           photos-2021:
-            policy: critical
+            policy: high
           email:
             policy: critical
           syncthing:
@@ -358,6 +376,17 @@ composition_wiki_site_vault_path: "{{ composition_syncthing_data_path }}/Obsidia
 shared_media_path: /slowpool/shared/media
 
 paperless_ngx_translate_media_path: "/slowpool/shared/documents/paperless-ngx"
+
+# -------------------------------------------------------------------
+# TERRAFORM
+#
+# Terraform for the private resources (the VMs) runs on this host, not
+# on a separate control plane: it talks to the local libvirt daemon
+# over its unix socket, so there is no SSH trust chain to maintain
+# between the machine that decides and the machine that runs the
+# guests. The state lives in the fastpool/terraform dataset.
+# -------------------------------------------------------------------
+terraform_working_dir: "/fastpool/terraform"
 
 # -------------------------------------------------------------------
 # NFS
