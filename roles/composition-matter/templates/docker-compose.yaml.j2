@@ -3,7 +3,7 @@ name: "{{ composition_name }}"
 services:
   matter:
     container_name: matter
-    image: ghcr.io/matter-js/python-matter-server:stable
+    image: ghcr.io/matter-js/python-matter-server:8.1.2
     restart: unless-stopped
     env_file: .environment_vars
     security_opt:

@@ -5,7 +5,7 @@ services:
     container_name: audiobookshelf
     ports:
       - "13378:80"
-    image: ghcr.io/advplyr/audiobookshelf:latest
+    image: ghcr.io/advplyr/audiobookshelf:2.38.0
     restart: unless-stopped
     env_file: .environment_vars
     labels:

@@ -5,7 +5,7 @@ services:
     container_name: mosquitto
     ports:
       - "0.0.0.0:1883:1883"
-    image: eclipse-mosquitto:latest
+    image: eclipse-mosquitto:2.1.4-alpine
     restart: unless-stopped
     env_file: .environment_vars
     labels:

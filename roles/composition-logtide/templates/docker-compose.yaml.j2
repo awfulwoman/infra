@@ -1,7 +1,7 @@
 name: "{{ composition_name }}"
 services:
   postgres:
-    image: timescale/timescaledb:latest-pg16
+    image: timescale/timescaledb:2.32.1-pg16
     container_name: logtide-postgres
     restart: unless-stopped
     env_file: .environment_vars
@@ -44,7 +44,7 @@ services:
       - "{{ default_docker_network }}"
 
   backend:
-    image: {{ composition_logtide_backend_image }}
+    image: logtide/backend:1.7.0
     container_name: logtide-backend
     hostname: logtide-backend
     restart: unless-stopped
@@ -75,7 +75,7 @@ services:
       - "{{ default_docker_network }}"
 
   worker:
-    image: {{ composition_logtide_backend_image }}
+    image: logtide/backend:1.7.0
     container_name: logtide-worker
     hostname: logtide-worker
     restart: unless-stopped
@@ -92,7 +92,7 @@ services:
       - "{{ default_docker_network }}"
 
   frontend:
-    image: {{ composition_logtide_frontend_image }}
+    image: logtide/frontend:1.7.0
     container_name: logtide-frontend
     hostname: logtide-frontend
     restart: unless-stopped

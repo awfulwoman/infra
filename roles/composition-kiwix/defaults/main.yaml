@@ -1,7 +1,6 @@
 # code: language=ansible
 composition_name: kiwix
 
-composition_kiwix_version: "latest"
 composition_kiwix_zim_path: "/slowpool/shared/zim/library"
 
 composition_dns_subdomains:

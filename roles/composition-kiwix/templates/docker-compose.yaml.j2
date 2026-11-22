@@ -3,7 +3,7 @@ name: "{{ composition_name }}"
 services:
   kiwix:
     container_name: kiwix
-    image: "ghcr.io/kiwix/kiwix-serve:{{ composition_kiwix_version }}"
+    image: ghcr.io/kiwix/kiwix-serve:3.8.2
     restart: unless-stopped
     command: "*.zim"
     env_file: .environment_vars

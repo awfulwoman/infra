@@ -3,7 +3,7 @@ name: "{{ composition_name }}"
 services:
   searxng:
     container_name: searxng
-    image: searxng/searxng:latest
+    image: searxng/searxng:2026.11.21-c6ee3e9fd
     restart: unless-stopped
     env_file: .environment_vars
     labels:
