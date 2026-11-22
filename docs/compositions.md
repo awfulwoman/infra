@@ -17,7 +17,6 @@ The home automation stack centres on Home Assistant, with supporting services fo
 | `composition-matter`            | Matter Server for controlling Matter devices over Wi-Fi or Thread |
 | `composition-mqtt`              | MQTT message broker                                               |
 | `composition-piper`             | Neural text-to-speech engine for Home Assistant voice             |
-| `composition-wyoming-satellite` | Voice assistant satellite for Home Assistant                      |
 | `composition-musicassistant`    | Music library management and streaming for Home Assistant         |
 
 ### Media & Entertainment
