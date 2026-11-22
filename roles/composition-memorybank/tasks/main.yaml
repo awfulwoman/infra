@@ -51,6 +51,7 @@
   community.docker.docker_compose_v2:
     project_src: "{{ composition_root }}"
     state: present
+    pull: always
     build: always
     remove_orphans: true
   notify: Restart Traefik
