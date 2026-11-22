@@ -5,7 +5,7 @@ services:
     container_name: watchyourlan
     # ports:
     #   - "127.0.0.1:OUTSIDE:INSIDE"
-    image: aceberg/watchyourlan
+    image: aceberg/watchyourlan:2.1.4
     restart: unless-stopped
     env_file: .environment_vars
     network_mode: host

@@ -5,7 +5,7 @@ services:
     container_name: whoami
     ports:
       - "127.0.0.1:8282:80"
-    image: traefik/whoami
+    image: traefik/whoami:v1.12.0
     restart: unless-stopped
     labels:
       - "traefik.enable=true"

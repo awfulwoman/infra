@@ -5,7 +5,7 @@ services:
     container_name: owntracks-recorder
     ports:
       - "127.0.0.1:8083:8083"
-    image: owntracks/recorder
+    image: owntracks/recorder:1.0.7
     restart: unless-stopped
     env_file: .environment_vars
     labels:
@@ -33,7 +33,7 @@ services:
     container_name: owntracks-frontend
     ports:
       - "127.0.0.1:9754:80"
-    image: owntracks/frontend
+    image: owntracks/frontend:2.15.3
     restart: unless-stopped
     env_file: .environment_vars
     environment:
