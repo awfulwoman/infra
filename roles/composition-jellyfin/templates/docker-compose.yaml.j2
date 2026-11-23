@@ -15,6 +15,12 @@ services:
 {% if reverseproxy_use_letsencrypt and not reverseproxy_wildcard_cert %}
       - "traefik.http.routers.jellyfin.tls.certresolver=letsencrypt"
 {% endif %}
+{% if composition_jellyfin_render_gid is defined %}
+    devices:
+      - /dev/dri:/dev/dri
+    group_add:
+      - "{{ composition_jellyfin_render_gid }}"
+{% endif %}
     volumes:
       - "{{ composition_config }}/config:/config"
       - "{{ composition_config }}/cache:/cache"
