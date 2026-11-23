@@ -1,35 +1,6 @@
 # code: language=ansible
 
 # ----------------------------
-# Hardware transcoding
-#
-# Jellyfin transcodes on the host's Intel QuickSync GPU. /dev/dri/renderD128 is
-# root:render 0660, and the container is not guaranteed to run as root, so the
-# render group's GID is passed in as well. The GID differs between systems, so
-# it is read from the host rather than hardcoded as 107.
-#
-# A host with no render device gets neither key: Docker refuses to create a
-# container that names a device the host does not have.
-# ----------------------------
-
-- name: Check for a render device
-  ansible.builtin.stat:
-    path: /dev/dri/renderD128
-  register: composition_jellyfin_render_device
-
-- name: Look up the render group
-  ansible.builtin.getent:
-    database: group
-    key: render
-  when: composition_jellyfin_render_device.stat.exists
-
-- name: Record the render group gid
-  ansible.builtin.set_fact:
-    composition_jellyfin_render_gid: >-
-      {{ ansible_facts.getent_group.render[2] }}
-  when: composition_jellyfin_render_device.stat.exists
-
-# ----------------------------
 # Core tasks
 # ----------------------------
 
