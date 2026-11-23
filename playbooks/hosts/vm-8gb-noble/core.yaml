@@ -317,3 +317,25 @@
     - name: Show that
       ansible.builtin.debug:
         var: vm_upgrade_conffile_log.stdout_lines
+    # What the new release actually wanted to change. Comments stripped,
+    # because the interesting question is whether any effective setting
+    # differs - sshd_config in particular is mostly comment lines.
+    - name: Compare each kept-aside config against the one in use
+      ansible.builtin.shell:
+        cmd: |
+          set -u
+          for new in $(find /etc -maxdepth 4 \
+              \( -name '*.dpkg-dist' -o -name '*.ucf-dist' \) -printf '%p\n'); do
+            old="${new%.*}"
+            echo "=== $old"
+            diff -u <(grep -vE '^[[:space:]]*(#|$)' "$old" 2>/dev/null) \
+                    <(grep -vE '^[[:space:]]*(#|$)' "$new" 2>/dev/null) || true
+          done
+        executable: /bin/bash
+      register: vm_upgrade_conffile_diff
+      changed_when: false
+      failed_when: false
+
+    - name: Show the effective difference
+      ansible.builtin.debug:
+        var: vm_upgrade_conffile_diff.stdout_lines
