@@ -116,7 +116,7 @@ See `defaults/main.yaml`.
 - `system_opencode_cli_config`: CLI settings (e.g. keybinds) applied via the wrapper
 - `system_opencode_permissions_default`, `_shell_allow`, `_extra`: permission rules, see above
 - `system_opencode_agentmemory*`: agentmemory URL, secret, version and fetched files
-- `system_opencode_model`: optional default model, `provider/model` (e.g. `ollama/kimi-k3:cloud`)
+- `system_opencode_model`: default model, `provider/model`. Set to `ollama/deepseek-v4.1-flash:cloud` in defaults; empty leaves the choice to opencode
 
 ## Platforms
 
