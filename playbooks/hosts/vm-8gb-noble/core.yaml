@@ -85,3 +85,203 @@
           {{ 'Created' if vm_snapshot_created.changed | default(false)
              else 'Already existed:' }}
           {{ vm_snapshot_dataset }}@{{ vm_snapshot_name }}
+
+# The in-place upgrade itself: the other half of what this guest exists to
+# answer. Tagged `never`, so a normal deploy never runs it:
+#
+#   --tags vm-upgrade             start it
+#   --tags vm-upgrade-status      read how far it got
+#
+# It refuses to start without the rollback snapshot from the play above, and
+# it refuses to upgrade a guest that is not on 24.04 - the point is one
+# release change, not whatever happens to be installed.
+#
+# The upgrader runs detached (`async`, `poll: 0`) and writes to
+# `vm_upgrade_log`, because it takes tens of minutes and reboots the guest at
+# the end, so there is no connection to wait on. Status is read back from the
+# guest afterwards.
+- name: Upgrade the guest in place to the next LTS
+  hosts: vm-8gb-noble
+  tags: [vm-upgrade, never]
+  vars:
+    vm_upgrade_log: "/var/log/release-upgrade.log"
+    vm_upgrade_hypervisor: server-64gb-storage
+    vm_upgrade_dataset: "fastpool/pools/vms"
+    vm_upgrade_snapshot: "before-upgrade-{{ host_name_short }}"
+  tasks:
+    - name: Refuse to upgrade a guest that is not on 24.04
+      ansible.builtin.assert:
+        that:
+          - ansible_facts['distribution'] == 'Ubuntu'
+          - ansible_facts['distribution_version'] is version('24.04', '>=')
+          - ansible_facts['distribution_version'] is version('24.10', '<')
+        fail_msg: >-
+          {{ inventory_hostname }} is {{ ansible_facts['distribution_version'] }}.
+          This play upgrades one release, from 24.04.
+        quiet: true
+
+    - name: Read the snapshots on the guest's disk dataset
+      become: true
+      ansible.builtin.command:
+        cmd: "zfs list -H -o name -t snapshot -d 1 {{ vm_upgrade_dataset }}"
+      register: vm_upgrade_snapshots
+      changed_when: false
+      failed_when: false
+      delegate_to: "{{ vm_upgrade_hypervisor }}"
+
+    - name: Refuse to start without a rollback point
+      ansible.builtin.assert:
+        that:
+          - (vm_upgrade_dataset ~ '@' ~ vm_upgrade_snapshot) in vm_upgrade_snapshots.stdout_lines
+        fail_msg: >-
+          No {{ vm_upgrade_dataset }}@{{ vm_upgrade_snapshot }}. Take one first
+          with --tags vm-snapshot -e vm_snapshot_label=before-upgrade.
+        quiet: true
+
+    # `do-release-upgrade -c` says a release is available, but the real run
+    # then refuses with "Please install all available updates for your release
+    # before upgrading." - two different preconditions. Patch the current
+    # release first or the upgrade aborts the moment it starts.
+    - name: Bring the current release fully up to date first
+      become: true
+      ansible.builtin.shell:
+        cmd: >-
+          DEBIAN_FRONTEND=noninteractive apt-get update -qq &&
+          DEBIAN_FRONTEND=noninteractive apt-get -y -qq
+          -o Dpkg::Options::=--force-confold
+          -o Dpkg::Options::=--force-confdef dist-upgrade
+      register: vm_upgrade_patch
+
+    - name: Say whether anything was patched
+      ansible.builtin.debug:
+        msg: >-
+          {{ 'Patched the current release'
+             if '0 upgraded, 0 newly installed' not in vm_upgrade_patch.stdout
+             else 'Already current' }}
+
+    # The upgrader also refuses to run until a package that asked for a reboot
+    # has had one - the patched kernel, typically.
+    - name: Check whether the patched system wants a reboot
+      ansible.builtin.stat:
+        path: /var/run/reboot-required
+      register: vm_upgrade_reboot_flag
+
+    - name: Reboot into the patched kernel and come back
+      when: vm_upgrade_reboot_flag.stat.exists
+      block:
+        - name: Reboot the guest
+          become: true
+          ansible.builtin.command:
+            cmd: shutdown -r now
+          async: 15
+          poll: 0
+          failed_when: false
+          changed_when: true
+
+        - name: Wait for the guest to come back
+          ansible.builtin.wait_for_connection:
+            delay: 20
+            timeout: 600
+            connect_timeout: 5
+
+        - name: Read the pending-reboot flag after the reboot
+          ansible.builtin.stat:
+            path: /var/run/reboot-required
+          register: vm_upgrade_reboot_after
+
+        - name: Refuse to start the upgrader while a package still wants a reboot
+          ansible.builtin.assert:
+            that: not vm_upgrade_reboot_after.stat.exists
+            fail_msg: >-
+              /var/run/reboot-required is still set after a reboot, so the
+              upgrader would refuse. Nothing was started.
+            quiet: true
+
+    - name: Ask the release upgrader what it offers
+      become: true
+      ansible.builtin.command:
+        cmd: do-release-upgrade -c
+      register: vm_upgrade_check
+      changed_when: false
+      failed_when: false
+
+    - name: Show what the release upgrader offers
+      ansible.builtin.debug:
+        var: vm_upgrade_check.stdout_lines
+
+    - name: Refuse unless it offers the next LTS
+      ansible.builtin.assert:
+        that: vm_upgrade_check.stdout is search('(?i)26\.04|resolute')
+        fail_msg: >-
+          do-release-upgrade does not offer 26.04. Nothing was started. Its
+          output is above.
+        quiet: true
+
+    - name: Start the upgrade detached
+      become: true
+      ansible.builtin.shell:
+        cmd: >-
+          DEBIAN_FRONTEND=noninteractive
+          do-release-upgrade -f DistUpgradeViewNonInteractive -m server
+          > {{ vm_upgrade_log }} 2>&1
+      async: 10800
+      poll: 0
+      register: vm_upgrade_job
+
+    # The upgrader aborts within seconds when a precondition is unmet, and a
+    # detached run would leave that failure sitting in a log until someone
+    # looked. Give it long enough to get past the checks, then read it back.
+    - name: Give the upgrader time to get past its preconditions
+      ansible.builtin.pause:
+        seconds: 45
+
+    - name: Read the start of the upgrade log back
+      ansible.builtin.command:
+        cmd: "cat {{ vm_upgrade_log }}"
+      register: vm_upgrade_started
+      changed_when: false
+      failed_when: false
+
+    - name: Refuse to leave a silently aborted upgrade behind
+      ansible.builtin.assert:
+        that: >-
+          vm_upgrade_started.stdout is not search('(?i)please install all available updates|please reboot|not rebooted|an error occurred|not supported')
+        fail_msg: >-
+          The upgrader aborted instead of starting. Its log says:
+          {{ vm_upgrade_started.stdout | trim }}
+        quiet: true
+
+    - name: Say it has started
+      ansible.builtin.debug:
+        msg: >-
+          Upgrading in the background. Read it back with
+          --tags vm-upgrade-status. Log: {{ vm_upgrade_log }}
+
+- name: Report how the in-place upgrade went
+  hosts: vm-8gb-noble
+  tags: [vm-upgrade-status, never]
+  gather_facts: false
+  vars:
+    vm_upgrade_log: "/var/log/release-upgrade.log"
+  tasks:
+    - name: Read the release
+      ansible.builtin.command:
+        cmd: cat /etc/os-release
+      register: vm_upgrade_release
+      changed_when: false
+      failed_when: false
+
+    - name: Show the release
+      ansible.builtin.debug:
+        var: vm_upgrade_release.stdout_lines
+
+    - name: Read the tail of the upgrade log
+      ansible.builtin.command:
+        cmd: "tail -40 {{ vm_upgrade_log }}"
+      register: vm_upgrade_tail
+      changed_when: false
+      failed_when: false
+
+    - name: Show the tail of the upgrade log
+      ansible.builtin.debug:
+        var: vm_upgrade_tail.stdout_lines

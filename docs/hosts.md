@@ -25,7 +25,7 @@ All physical and virtual machines managed by this infrastructure.
 |---------|--------------------------|-----------------|---------------|
 | `sites` | Public-facing services   | 188.245.37.81   | Hetzner Cloud |
 | `vm-8gb-resolute` | Ubuntu 26.04 test VM, parked | 192.168.1.201 | libvirt on `server-64gb-storage` |
-| `vm-8gb-noble`    | Ubuntu 24.04 baseline for the upgrade test | 192.168.1.202 | libvirt on `server-64gb-storage` |
+| `vm-8gb-noble`    | In-place upgrade test: 24.04 → 26.04 (now 26.04; the name is historical) | 192.168.1.202 | libvirt on `server-64gb-storage` |
 
 ## Devices (unmanaged)
 
