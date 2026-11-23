@@ -49,6 +49,23 @@ resource "libvirt_volume" "{{ vm.id }}_disk" {
   }
 }
 
+# Extra data disks, empty and unattached to any filesystem. A guest that wants
+# a ZFS pool of its own needs a block device: pooling a file inside the boot
+# disk would not exercise the path a physical machine takes.
+{% for disk in vm.data_disks | default([]) %}
+resource "libvirt_volume" "{{ vm.id }}_data{{ loop.index }}" {
+  name     = "{{ vm.name }}-data{{ loop.index }}.qcow2"
+  pool     = libvirt_pool.{{ vm.id }}_pool.name
+  capacity = {{ disk.size_gb }} * 1024 * 1024 * 1024
+
+  target = {
+    format = {
+      type = "qcow2"
+    }
+  }
+}
+{% endfor %}
+
 # Cloud-init configuration
 resource "libvirt_cloudinit_disk" "{{ vm.id }}_cloudinit" {
   name      = "{{ vm.name }}_cloudinit"
@@ -135,7 +152,29 @@ resource "libvirt_domain" "{{ vm.id }}" {
           bus = "sata"
           dev = "sda"
         }
-      }
+      },
+      # Data disks. Each carries a serial, so the guest sees it at a stable
+      # /dev/disk/by-id/virtio-<serial> path instead of a name that depends
+      # on probe order. A ZFS vdev belongs on the by-id path, like every
+      # physical host in the fleet.
+{% for disk in vm.data_disks | default([]) %}
+      {
+        source = {
+          volume = {
+            pool   = libvirt_pool.{{ vm.id }}_pool.name
+            volume = libvirt_volume.{{ vm.id }}_data{{ loop.index }}.name
+          }
+        }
+        target = {
+          bus = "virtio"
+          dev = "vd{{ 'bcdefgh'[loop.index0] }}"
+        }
+        driver = {
+          type = "qcow2"
+        }
+        serial = "{{ vm.name }}-data{{ loop.index }}"
+      },
+{% endfor %}
     ]
 
     # Network interfaces

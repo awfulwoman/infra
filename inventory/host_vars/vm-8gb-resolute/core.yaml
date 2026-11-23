@@ -68,12 +68,33 @@ ubuntupro_attach: false
 # -------------------------------------------------------------------
 # ZFS
 #
-# No pool. A guest has no block device of its own to pool, so
-# system-zfs here only installs zfsutils-linux - which is the part
-# that has to keep working when a physical machine is wiped and
-# reinstalled, because that is where the pools come from.
+# A pool of the guest's own, on the second disk the Terraform definition
+# attaches. The point is the mechanical path a wiped physical machine
+# takes: a bare block device referenced by its by-id path, `zpool
+# create`, and then the snapshot/prune/report tooling running against a
+# real pool rather than an empty one.
+#
+# A single-disk stripe, so no redundancy - the same trade agatha makes
+# with its USB stick. Nothing here is precious; a broken guest gets
+# rebuilt.
 # -------------------------------------------------------------------
-zfs: {}
+zfs_pools_create: true
+
+zfs:
+  fastpool:
+    vdevs:
+      - type: stripe
+        disks: /dev/disk/by-id/virtio-vm-resolute-data1
+    datasets:
+      compositions:
+        policy: low
+        snapshots_discover_children: true
+        datasets:
+          # The ZFS API, so the pool is exercised from inside a container
+          # too: it reads the pool through /dev/zfs and the report the
+          # snapshot tooling writes.
+          zfs-api:
+            policy: low
 
 # -------------------------------------------------------------------
 # CERTIFICATES
@@ -85,7 +106,10 @@ client_cert_distribution_healthcheck: false
 # -------------------------------------------------------------------
 # COMPOSITIONS
 #
-# None. This VM is here to exercise the base roles, not to run
-# services.
+# One small container, because the interesting question is not whether
+# the app runs but whether Docker still installs and runs on a new
+# release. zfs-api additionally proves the guest's own pool is usable
+# from a container.
 # -------------------------------------------------------------------
-compositions: []
+compositions:
+  - zfs-api

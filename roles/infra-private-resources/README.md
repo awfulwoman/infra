@@ -89,6 +89,10 @@ infra_privateresources_vms:
     dns: "192.168.1.1"
     mac_address: "52:54:00:00:03:01"
     graphics: false
+    # Extra empty disks. Each is attached with a serial, so the guest sees it
+    # at /dev/disk/by-id/virtio-<name>-data<N> for a ZFS vdev or a filesystem.
+    data_disks:
+      - size_gb: 20
     autostart: true
 ```
 

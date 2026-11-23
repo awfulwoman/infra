@@ -54,6 +54,13 @@ infra_privateresources_vms:
     memory: 4096  # MiB
     vcpus: 2
     disk_size_gb: 40
+    # A second, empty disk for the guest's own ZFS pool. Pooling a file inside
+    # the boot disk would not exercise the path a wiped physical machine takes
+    # - a real block device, by-id naming, and the pool the compositions and
+    # snapshots then live on.
+    data_disks:
+      - size_gb: 20
+        description: "fastpool vdev"
     network_mode: lan
     ip_address: "192.168.1.201"
     subnet: 24
