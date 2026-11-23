@@ -80,12 +80,13 @@
             Port {{ backups_restic_offsite_sftp_port }}
             IdentityFile {{ backups_restic_offsite_ssh_key }}
             IdentitiesOnly yes
-            # The router's upstream link reconnects about once a day (~04:13),
-            # which silently kills the session. A tight limit makes ssh notice
-            # in minutes. A loose one left restic hanging until the kernel
-            # gave up on the dead TCP connection about 15 minutes later.
+            # The router's WAN link drops now and then (seen: 34 s, and 3m10s
+            # on 2026-11-23). A 3-minute limit killed a 3-hour upload that a
+            # short outage would not have. 30 s x 20 rides out 10 minutes of
+            # outage, and still notices a dead session sooner than the
+            # kernel's ~15-minute TCP retry.
             ServerAliveInterval 30
-            ServerAliveCountMax 6
+            ServerAliveCountMax 20
 
     - name: Read the Storage Box host key
       ansible.builtin.command:
