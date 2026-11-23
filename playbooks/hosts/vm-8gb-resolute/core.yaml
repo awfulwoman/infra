@@ -9,9 +9,9 @@
     tags: [network, network-netplan]
   - role: system-sshkey
     tags: [system, system-sshkey]
-  # No pool: a guest has no block device to pool. The role still installs
-  # zfsutils-linux, which is what a wiped physical machine needs before it
-  # can create one.
+  # The guest's own pool lives on the second disk the Terraform definition
+  # attaches, so the pool and the snapshot tooling run against a real pool -
+  # which is what a wiped physical machine does.
   - role: system-zfs
     tags: [system, zfs, system-zfs]
   - role: system-zfs-policy
@@ -33,3 +33,4 @@
   - name: Reboot host
     become: true
     ansible.builtin.reboot:
+

@@ -1,0 +1,97 @@
+# -------------------------------------------------------------------
+# IDENTITY
+#
+# The 24.04 baseline for the in-place upgrade test: a guest on
+# server-64gb-storage, built by the infra-private-resources role and
+# configured by the same playbook as vm-8gb-resolute.
+#
+# The point of the pair is the upgrade. This guest is what a physical
+# machine looks like today; run the playbook to make it match, snapshot
+# its disk, upgrade it in place, then run the playbook again and see
+# what survived. vm-8gb-resolute is the clean-install answer to the same
+# question, and is parked so this one has somewhere to land.
+# -------------------------------------------------------------------
+host_type: virtual
+host_name: vm-8gb-noble
+host_name_medium: vm-noble
+host_name_short: noble
+host_region: ber
+host_site: xberg
+host_pfqdn: "{{ host_name }}.{{ host_site }}.{{ host_region }}"
+host_fqdn: "{{ host_pfqdn }}.{{ domainname_infra }}"
+host_description: "Ubuntu 24.04 baseline VM"
+
+# -------------------------------------------------------------------
+# NETWORK
+#
+# Bridged onto the home network (macvtap), on the same subnet as the
+# hardware, outside bertha's DHCP range (192.168.1.100-199) and outside
+# the addresses the unmanaged devices hold.
+#
+# The interface is matched by MAC: the kernel picks a virtio NIC's name,
+# and netplan does not care what it was called.
+# -------------------------------------------------------------------
+host_ipv4: 192.168.1.202
+host_ipv4_subnet: 24
+host_tailscale_ipv4: 100.80.1.202
+host_mac: "52:54:00:00:03:02"
+host_primary_interface: "vmnet0"
+network_netplan_config:
+  ethernets:
+    vmnet0:
+      match:
+        macaddress: "{{ host_mac }}"
+
+# -------------------------------------------------------------------
+# ANSIBLE
+#
+# No ansible_become_password: cloud-init creates the account with
+# passwordless sudo, and system-security keeps it that way
+# (security_sudoers_passwordless).
+# -------------------------------------------------------------------
+ansible_host: "{{ host_ipv4 }}"
+ansible_user: "{{ vault_server_username }}"
+
+# -------------------------------------------------------------------
+# UBUNTUPRO
+#
+# Off: a Pro attachment is a fleet-wide entitlement, not a per-host
+# capability worth burning a seat on a throwaway box.
+# -------------------------------------------------------------------
+ubuntupro_attach: false
+
+# -------------------------------------------------------------------
+# ZFS
+#
+# A pool of the guest's own, on the second disk the Terraform definition
+# attaches. Same arrangement as vm-8gb-resolute: a single-disk stripe, so
+# no redundancy, and nothing on it that cannot be rebuilt.
+# -------------------------------------------------------------------
+zfs_pools_create: true
+
+zfs:
+  fastpool:
+    vdevs:
+      - type: stripe
+        disks: /dev/disk/by-id/virtio-vm-noble-data1
+    datasets:
+      compositions:
+        policy: low
+        snapshots_discover_children: true
+        datasets:
+          zfs-api:
+            policy: low
+
+# -------------------------------------------------------------------
+# CERTIFICATES
+# -------------------------------------------------------------------
+client_cert_distribution_healthcheck: false
+
+# -------------------------------------------------------------------
+# COMPOSITIONS
+#
+# The same single container as the 26.04 guest, so the upgrade test also
+# exercises Docker and a running container across the release change.
+# -------------------------------------------------------------------
+compositions:
+  - zfs-api

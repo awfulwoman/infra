@@ -1,0 +1,87 @@
+- name: Noble - Ubuntu 24.04 baseline VM
+  hosts: vm-8gb-noble
+  roles:
+  - role: preflight-onepassword
+    tags: [always, preflight-onepassword]
+  - role: bootstrap-ubuntu-server
+    tags: [bootstrap, bootstrap-ubuntu-server]
+  - role: network-netplan
+    tags: [network, network-netplan]
+  - role: system-sshkey
+    tags: [system, system-sshkey]
+  - role: system-zfs
+    tags: [system, zfs, system-zfs]
+  - role: system-zfs-policy
+    tags: [system, zfs, system-zfs-policy]
+  - role: infothrill.nullmailer
+    become: true
+  - role: client-cert-distribution
+    tags: [infra, client-cert-distribution]
+  - role: system-compositions
+    tags: [composition]
+  - role: system-promtail
+    tags: [system, promtail, system-promtail]
+  - role: system-logtide-syslog
+    tags: [system, logtide, system-logtide-syslog]
+  - role: virtual-qemu-guest
+    tags: [virtual, virtual-qemu-guest]
+
+  handlers:
+  - name: Reboot host
+    become: true
+    ansible.builtin.reboot:
+
+# A rollback point for a destructive test (the in-place upgrade to 26.04).
+#
+# Tagged `never`, so a normal deploy of this host does not touch it. Run it
+# deliberately:
+#
+#   --tags vm-snapshot -e vm_snapshot_label=before-upgrade
+#
+# The guest's disks are qcow2 files in a directory pool on the hypervisor's
+# fastpool/pools/vms dataset, so a ZFS snapshot of that dataset captures the
+# whole guest - boot disk, data disk, and the pool on the data disk - without
+# stopping it first.
+#
+# Rolling back is not just `zfs rollback`: that hands the running domain a
+# disk that changed underneath it, and it discards every later snapshot of the
+# dataset. Stop the guest first (set `running: false` in its Terraform
+# definition and apply, or shut it down from the guest), roll the dataset back,
+# then start it again.
+- name: Snapshot the guest before a destructive test
+  hosts: vm-8gb-noble
+  tags: [vm-snapshot, never]
+  vars:
+    vm_snapshot_hypervisor: server-64gb-storage
+    # The dataset, not the guest's own disk path: the per-VM pool is a plain
+    # directory inside this dataset, so this is the smallest unit ZFS can
+    # snapshot.
+    vm_snapshot_dataset: "fastpool/pools/vms"
+    vm_snapshot_label: manual
+    vm_snapshot_name: "{{ vm_snapshot_label }}-{{ host_name_short }}"
+  tasks:
+    - name: Read the snapshots already on the guest's disk dataset
+      become: true
+      ansible.builtin.command:
+        cmd: "zfs list -H -o name -t snapshot -d 1 {{ vm_snapshot_dataset }}"
+      register: vm_snapshot_existing
+      changed_when: false
+      failed_when: false
+      delegate_to: "{{ vm_snapshot_hypervisor }}"
+
+    - name: Snapshot the dataset that holds this guest's disks
+      become: true
+      ansible.builtin.command:
+        cmd: "zfs snapshot {{ vm_snapshot_dataset }}@{{ vm_snapshot_name }}"
+      when: >-
+        (vm_snapshot_dataset ~ '@' ~ vm_snapshot_name)
+        not in vm_snapshot_existing.stdout_lines
+      delegate_to: "{{ vm_snapshot_hypervisor }}"
+      register: vm_snapshot_created
+
+    - name: Report the rollback point
+      ansible.builtin.debug:
+        msg: >-
+          {{ 'Created' if vm_snapshot_created.changed | default(false)
+             else 'Already existed:' }}
+          {{ vm_snapshot_dataset }}@{{ vm_snapshot_name }}

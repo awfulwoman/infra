@@ -44,9 +44,32 @@ infra_privateresources_pool_path: "/fastpool/pools/vms"
 #
 # A "lan" VM's address must sit outside the DHCP range of the home network.
 infra_privateresources_vms:
-  # A throwaway Ubuntu 26.04 (Resolute) host, used to find out whether our
-  # roles still work on the release the physical machines are heading for.
-  # 2026-11-22.
+  # Two guests that answer the same question from opposite directions: does
+  # our role set work on 26.04 if a physical machine is wiped and reinstalled,
+  # and does an in-place upgrade from 24.04 get there safely. They run the
+  # same playbook, so the pair is also the before/after of the upgrade.
+  #
+  # noble is the baseline. resolute is parked (running: false) so the upgrade
+  # has somewhere to land, and so it can be started again to compare.
+  - id: noble
+    name: "vm-noble"
+    description: "Ubuntu 24.04 baseline VM"
+    source_image_url: "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img"
+    memory: 4096  # MiB
+    vcpus: 2
+    disk_size_gb: 40
+    data_disks:
+      - size_gb: 20
+        description: "fastpool vdev"
+    network_mode: lan
+    ip_address: "192.168.1.202"
+    subnet: 24
+    gateway: "192.168.1.1"
+    dns: "192.168.1.1"
+    mac_address: "52:54:00:00:03:02"
+    graphics: false
+    autostart: true
+
   - id: resolute
     name: "vm-resolute"
     description: "Ubuntu 26.04 test VM"
@@ -68,6 +91,9 @@ infra_privateresources_vms:
     dns: "192.168.1.1"
     mac_address: "52:54:00:00:03:01"
     graphics: false
+    # Parked, not deleted: the disk and the pool on it stay put, and the
+    # guest can be started again to compare against the upgraded baseline.
+    running: false
     # Starts with the hypervisor. One VM is cheap; a fleet of them would
     # fight the Docker containers for I/O at every boot.
-    autostart: true
+    autostart: false

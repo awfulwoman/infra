@@ -93,6 +93,10 @@ infra_privateresources_vms:
     # at /dev/disk/by-id/virtio-<name>-data<N> for a ZFS vdev or a filesystem.
     data_disks:
       - size_gb: 20
+    # Whether the domain is running. False parks a guest without destroying it,
+    # keeping its disk and any pool on it; without it the next apply starts the
+    # guest again.
+    running: true
     autostart: true
 ```
 
