@@ -5,7 +5,7 @@ services:
     container_name: wikijs
     # Floating major tag: follows 2.x releases, never 3.x (still beta upstream).
     # Deploys use pull: always, so the nightly run picks up new releases.
-    image: ghcr.io/requarks/wiki:2
+    image: ghcr.io/requarks/wiki:3
     restart: unless-stopped
     env_file: .environment_vars
     depends_on:
