@@ -71,13 +71,10 @@ network_routing_firewall_v6: true
 # -------------------------------------------------------------------
 # SECURITY
 # -------------------------------------------------------------------
-# Passworded sudo, not passwordless: an SSH key alone must not give root on
-# the router. ansible_become_password below supplies the password for
-# Ansible, and system-security refuses this change if it doesn't match the
-# account password (#289).
-security_sudoers_passwordless: []
-security_sudoers_passworded:
-  - "{{ vault_server_username }}"
+# Passwordless sudo, inherited from group_vars/infra (security_sudoers_passwordless).
+# bertha used to override this with passworded sudo (#289). Reverted on
+# 2026-11-23 (meta#34), so that bertha's vault_password is no longer a live sudo
+# password and rotates like the other hosts.
 
 # -------------------------------------------------------------------
 # DHCP SERVER (infra-dhcpd) — bertha is the LAN's DHCP server
