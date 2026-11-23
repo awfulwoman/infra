@@ -2,6 +2,7 @@ from datetime import datetime
 from unittest import mock
 
 from offsite_restic import (
+    apply_retention,
     backup_command,
     build_status,
     command_maintain,
@@ -230,3 +231,16 @@ def test_prune_runs_restic_prune():
 def test_check_reads_back_the_requested_subset():
     cmd = run_maintain(['check', '--read-data-subset', '5%'])
     assert cmd == ['restic', 'check', '--read-data-subset', '5%']
+
+
+def test_retention_clears_stale_locks_before_forgetting():
+    # A backup that lost its connection cannot remove its own lock, and
+    # forget needs the repository to itself.
+    keep = {'daily': 7}
+    with mock.patch('offsite_restic.subprocess.run') as run:
+        run.return_value.returncode = 0
+        assert apply_retention(keep) == 0
+    assert [call.args[0][:2] for call in run.call_args_list] == [
+        ['restic', 'unlock'],
+        ['restic', 'forget'],
+    ]

@@ -29,10 +29,13 @@ backups_restic_offsite_lock: /run/offsite-restic.lock
 # for everything else in the house. 0 removes the limit.
 backups_restic_offsite_limit_upload: 1000
 
-# Daily, after the midnight pulls have settled. A run that is still uploading
-# when the next one is due is left alone; the next one is skipped.
-backups_restic_offsite_cron_hour: "2"
-backups_restic_offsite_cron_minute: "30"
+# Daily, in the evening, after the 16:00 pulls and before the 20:00 ones. Not
+# overnight: the router's upstream link reconnects around 04:12 and unattended
+# upgrades (with a possible reboot) run in the early hours, and either kills
+# an upload in progress. A run that is still uploading when the next one is
+# due is left alone; the next one is skipped.
+backups_restic_offsite_cron_hour: "18"
+backups_restic_offsite_cron_minute: "0"
 
 # Retention inside the repository.
 backups_restic_offsite_keep_daily: 7

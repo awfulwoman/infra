@@ -244,6 +244,16 @@ def publish(args, status):
             log(f'MQTT publish failed: {exc}')
 
 
+def apply_retention(keep):
+    """Forget old snapshots. Returns restic's exit code."""
+    # A backup that lost its connection cannot remove its own lock, and
+    # forget needs the repository to itself. This job holds the host-wide
+    # flock, so no live restic of ours is running. unlock only removes locks
+    # restic itself judges stale (over 30 minutes old).
+    subprocess.run(['restic', 'unlock'], check=False, stdout=subprocess.DEVNULL)
+    return subprocess.run(forget_command(keep), check=False, stdout=subprocess.DEVNULL).returncode
+
+
 def command_backup(args):
     clear_leftovers(args.replica_root, args.mount_root)
 
@@ -287,9 +297,9 @@ def command_backup(args):
         report(running=True)
 
     keep = {'daily': args.keep_daily, 'weekly': args.keep_weekly, 'monthly': args.keep_monthly}
-    forgot = subprocess.run(forget_command(keep), check=False, stdout=subprocess.DEVNULL)
-    if forgot.returncode != 0:
-        failures['forget'] = f'restic forget exited {forgot.returncode}'
+    forgot = apply_retention(keep)
+    if forgot != 0:
+        failures['forget'] = f'restic forget exited {forgot}'
 
     report(running=False)
     return 1 if failures else 0
