@@ -12,10 +12,18 @@ Unattended-Upgrade::Allowed-Origins {
     "{{ ansible_facts['distribution'] }}:{{ ansible_facts['distribution_release'] }}";
     "{{ ansible_facts['distribution'] }}:{{ ansible_facts['distribution_release'] }}-security";
     "{{ ansible_facts['distribution'] }}:{{ ansible_facts['distribution_release'] }}-updates";
+{# Only the two archives Ubuntu Pro actually publishes. The template used to
+   list three more - ESM:<release>, ESM:<release>-updates and
+   ESM:<release>-security - but no such archive exists: the ESM pockets are
+   <release>-infra-security (origin UbuntuESM, from esm.ubuntu.com/infra) and
+   <release>-apps-security (origin UbuntuESMApps, from esm.ubuntu.com/apps).
+   An allowed origin that matches nothing is inert, so this was harmless, but
+   it made the whitelist read as though more was covered than was. Ubuntu's own
+   50unattended-upgrades lists exactly these two.
+
+   Deliberately not adding ESM:<release>-infra-updates, which does exist:
+   Ubuntu's stock file leaves it out so ESM installs security fixes only. #}
 {% if _ubuntupro_initial_registration_status %}
-    "{{ ansible_facts['distribution'] }}ESM:{{ ansible_facts['distribution_release'] }}";
-    "{{ ansible_facts['distribution'] }}ESM:{{ ansible_facts['distribution_release'] }}-updates";
-    "{{ ansible_facts['distribution'] }}ESM:{{ ansible_facts['distribution_release'] }}-security";
     "{{ ansible_facts['distribution'] }}ESM:{{ ansible_facts['distribution_release'] }}-infra-security";
     "{{ ansible_facts['distribution'] }}ESMApps:{{ ansible_facts['distribution_release'] }}-apps-security";
 {% endif %}
