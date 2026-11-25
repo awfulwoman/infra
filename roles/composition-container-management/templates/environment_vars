@@ -1,4 +1,7 @@
 TZ="Europe/Berlin"
 WATCHTOWER_CLEANUP=true # Remove old images
 WATCHTOWER_SCHEDULE="0 30 * * * *" # 6 digit cron: seconds, minutes, hours
-WATCHTOWER_UPDATE_ON_START=true # Perform checks on startup
+# No WATCHTOWER_UPDATE_ON_START: on startup it swept and recreated every
+# container immediately, which on 2026-11-25 raced a core run and took the
+# Docker daemon down mid-deploy (homebrain #721, failed at composition-owntracks).
+# Let the schedule above do it.
