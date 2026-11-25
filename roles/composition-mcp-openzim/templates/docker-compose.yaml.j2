@@ -3,7 +3,7 @@ name: "{{ composition_name }}"
 services:
   openzim-mcp:
     container_name: openzim-mcp
-    image: ghcr.io/cameronrye/openzim-mcp:3.5.0
+    image: ghcr.io/cameronrye/openzim-mcp:3.5.2
     restart: unless-stopped
     command: ["{{ composition_openzim_mcp_container_zim_path }}"]
     env_file: .environment_vars
