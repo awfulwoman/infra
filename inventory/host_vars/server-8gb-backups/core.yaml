@@ -27,7 +27,7 @@ host_mac: "60:a4:4c:40:52:57"
 # -------------------------------------------------------------------
 ansible_host: "{{ host_ipv4 }}"
 ansible_user: "{{ vault_server_username }}"
-ansible_become_password: "{{ vault_password }}"
+ansible_become_password: "{{ lookup('onepassword_connect', 'Host - Backups', 'password') }}"
 
 # -------------------------------------------------------------------
 # ZFS
