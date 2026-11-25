@@ -63,6 +63,11 @@ tcp_monitors_additional:
   - name: pocket-tts
     host: "{{ host_ipv4 }}"
     port: 10222
+  # Conduit speech server (system-speech-to-speech). Port must match
+  # system_speech_to_speech_port.
+  - name: speech-to-speech
+    host: "{{ host_ipv4 }}"
+    port: 8765
 
 # -------------------------------------------------------------------
 # OLLAMA
@@ -172,3 +177,13 @@ system_homebrew_formulae:
 
 system_homebrew_casks:
   - obsidian
+
+# -------------------------------------------------------------------
+# SPEECH-TO-SPEECH
+# Conduit speech server. The LLM stage is Jarvis itself: the plugin's Local
+# Live model address, so Hermes answers each turn and the plugin echoes text
+# for read-back.
+# -------------------------------------------------------------------
+system_speech_to_speech_llm_base_url: "https://hermes-jarvis.{{ domainname_infra }}/api/plugins/conduit_push/local-live/v1"
+system_speech_to_speech_llm_model: conduit
+system_speech_to_speech_llm_api_key: "{{ vault_hermes_jarvis_local_live_key }}"

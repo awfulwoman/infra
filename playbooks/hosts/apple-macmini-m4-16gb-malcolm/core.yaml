@@ -28,6 +28,8 @@
     tags: [system, system-tts-chatterbox]
   - role: system-tts-pocket-tts
     tags: [system, system-tts-pocket-tts]
+  - role: system-speech-to-speech
+    tags: [system, system-speech-to-speech]
   - role: system-claude
     tags: [system, system-claude]
   - role: ansible-core

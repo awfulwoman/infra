@@ -106,3 +106,11 @@ plugins:
   enabled:
     - conduit_push
 {% endif %}
+{% if composition_hermes_jarvis_conduit_speech_server_url | length > 0 %}
+
+# Conduit's Classic voice and Local Live listen and speak through this server.
+voice:
+  speech_server:
+    url: "{{ composition_hermes_jarvis_conduit_speech_server_url }}"
+    drive_turns: false
+{% endif %}

@@ -188,3 +188,7 @@ composition_hermes_jarvis_matrix_free_response_rooms: []
 # -------------------------------------------------------------------
 composition_hermes_jarvis_conduit_push: false
 composition_hermes_jarvis_conduit_push_repo: kaishi00/hermes-conduit-notifier
+
+# Conduit speech server (an OpenAI Realtime WebSocket, e.g. malcolm's
+# system-speech-to-speech). Empty = unset. Has no auth of its own: LAN only.
+composition_hermes_jarvis_conduit_speech_server_url: ""

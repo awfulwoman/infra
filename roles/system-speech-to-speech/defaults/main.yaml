@@ -1,0 +1,32 @@
+---
+# https://github.com/huggingface/speech-to-speech - local STT + TTS behind an
+# OpenAI Realtime WebSocket, used as the Conduit "speech server" for
+# hermes-jarvis. Runs natively: MLX and Metal are not reachable from Docker.
+# renovate: datasource=pypi depName=speech-to-speech
+system_speech_to_speech_version: "1.1.0"
+system_speech_to_speech_base_dir: "{{ awfulwoman_opt_dir }}/speech-to-speech"
+
+# S2S has NO authentication. Bind to the LAN address only, never 0.0.0.0, and
+# do not forward the port.
+system_speech_to_speech_host: "{{ host_ipv4 }}"
+system_speech_to_speech_port: 8765
+
+# One pipeline per concurrent socket. Conduit opens a listen and a speak socket.
+system_speech_to_speech_num_pipelines: 2
+
+# STT is the S2S default (Parakeet TDT, MLX on Apple Silicon, 25 European
+# languages including German). TTS is local Phonon (English, Apache-2.0).
+system_speech_to_speech_tts: phonon
+system_speech_to_speech_phonon_voice: ""
+# v1.1.0 defaults to the gated 40M checkpoint (login needed, CC BY-NC); the
+# 31M one is public and Apache-2.0.
+system_speech_to_speech_phonon_model: gradium/phonon-31m-en
+
+# The LLM stage. For a first test it is Ollama on this host. For real use,
+# point it at the plugin's Local Live model address so Hermes answers:
+#   https://<dashboard>/api/plugins/conduit_push/local-live/v1
+# with the Local Live key as the api key.
+system_speech_to_speech_llm_backend: chat-completions
+system_speech_to_speech_llm_base_url: "{{ llm_default_openai_uri }}"
+system_speech_to_speech_llm_model: "{{ llm_default_model }}"
+system_speech_to_speech_llm_api_key: "ollama"

@@ -1,0 +1,79 @@
+---
+- name: Ensure uv is installed via Homebrew
+  community.general.homebrew:
+    name: uv
+    state: present
+
+- name: Ensure base and logs directories exist
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0755"
+  loop:
+    - "{{ system_speech_to_speech_base_dir }}"
+    - "{{ system_speech_to_speech_base_dir }}/logs"
+
+- name: Check the venv interpreter resolves
+  ansible.builtin.command:
+    cmd: "{{ system_speech_to_speech_base_dir }}/venv/bin/python --version"
+  register: _s2s_venv_python
+  changed_when: false
+  failed_when: false
+
+- name: Ensure Python venv exists
+  ansible.builtin.command:
+    cmd: /opt/homebrew/bin/uv venv --clear "{{ system_speech_to_speech_base_dir }}/venv" --python 3.12
+  changed_when: true
+  when: _s2s_venv_python.rc != 0
+
+- name: Check the installed speech-to-speech version
+  ansible.builtin.command:
+    cmd: "{{ system_speech_to_speech_base_dir }}/venv/bin/python -c 'import importlib.metadata as m; print(m.version(\"speech-to-speech\"))'"
+  register: _s2s_installed
+  changed_when: false
+  failed_when: false
+
+- name: Install speech-to-speech
+  ansible.builtin.command:
+    cmd: >
+      /opt/homebrew/bin/uv pip install
+      --python "{{ system_speech_to_speech_base_dir }}/venv/bin/python"
+      "speech-to-speech[phonon]=={{ system_speech_to_speech_version }}"
+  changed_when: true
+  register: _s2s_install
+  when: _s2s_installed.stdout | trim != system_speech_to_speech_version
+
+- name: Ensure LaunchAgents directory exists
+  ansible.builtin.file:
+    path: "{{ ansible_facts.user_dir }}/Library/LaunchAgents"
+    state: directory
+    mode: "0755"
+
+# 0600 and no_log: the plist carries the LLM api key (the Local Live key once
+# that is wired up).
+- name: Deploy launchd plist
+  ansible.builtin.template:
+    src: launchd.plist.j2
+    dest: "{{ ansible_facts.user_dir }}/Library/LaunchAgents/com.awfulwoman.speech-to-speech.plist"
+    mode: "0600"
+  no_log: true
+  register: _s2s_plist
+
+- name: Unload service before reload on change # noqa: no-handler
+  ansible.builtin.command: "launchctl unload {{ ansible_facts.user_dir }}/Library/LaunchAgents/com.awfulwoman.speech-to-speech.plist"
+  when: _s2s_plist.changed or _s2s_install.changed | default(false)
+  changed_when: false
+  failed_when: false
+
+- name: Load service # noqa: no-handler
+  ansible.builtin.command: "launchctl load {{ ansible_facts.user_dir }}/Library/LaunchAgents/com.awfulwoman.speech-to-speech.plist"
+  when: _s2s_plist.changed or _s2s_install.changed | default(false)
+  register: _s2s_load
+  changed_when: _s2s_load.rc == 0
+  failed_when: false
+
+- name: Ensure service is running
+  ansible.builtin.command: launchctl list com.awfulwoman.speech-to-speech
+  register: _s2s_status
+  changed_when: false
+  failed_when: _s2s_status.rc != 0

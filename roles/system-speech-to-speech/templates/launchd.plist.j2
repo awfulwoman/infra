@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.awfulwoman.speech-to-speech</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>{{ system_speech_to_speech_base_dir }}/venv/bin/speech-to-speech</string>
+        <string>serve</string>
+        <string>--host</string>
+        <string>{{ system_speech_to_speech_host }}</string>
+        <string>--port</string>
+        <string>{{ system_speech_to_speech_port }}</string>
+        <string>--num_pipelines</string>
+        <string>{{ system_speech_to_speech_num_pipelines }}</string>
+        <string>--tts</string>
+        <string>{{ system_speech_to_speech_tts }}</string>
+        <string>--phonon_tts_model_name</string>
+        <string>{{ system_speech_to_speech_phonon_model }}</string>
+{% if system_speech_to_speech_phonon_voice | length > 0 %}
+        <string>--phonon_tts_voice</string>
+        <string>{{ system_speech_to_speech_phonon_voice }}</string>
+{% endif %}
+        <string>--llm_backend</string>
+        <string>{{ system_speech_to_speech_llm_backend }}</string>
+        <string>--responses_api_base_url</string>
+        <string>{{ system_speech_to_speech_llm_base_url }}</string>
+        <string>--responses_api_api_key</string>
+        <string>{{ system_speech_to_speech_llm_api_key }}</string>
+        <string>--model_name</string>
+        <string>{{ system_speech_to_speech_llm_model }}</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>StandardOutPath</key>
+    <string>{{ system_speech_to_speech_base_dir }}/logs/speech-to-speech.log</string>
+    <key>StandardErrorPath</key>
+    <string>{{ system_speech_to_speech_base_dir }}/logs/speech-to-speech.err</string>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+        <key>HOME</key>
+        <string>{{ ansible_facts.user_dir }}</string>
+    </dict>
+</dict>
+</plist>
