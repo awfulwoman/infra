@@ -68,6 +68,11 @@ zfs:
 # Backups
 backups_zfs_server_local_dataset: slowpool/backups/raw
 backups_zfs_server_offsite_enabled: false
+# Publish per-client pull status to MQTT so Home Assistant can show it. Left
+# off when this host took over from belinda, so the retained payloads belinda
+# published on 2026-09-23 were never overwritten and those sensors still show
+# September's state (with a 26h expire_after that a restart resets).
+backups_zfs_server_mqtt_enabled: true
 
 # Offsite copy: restic to a Hetzner Storage Box. See ADR-0002.
 # Host and user are assigned by Hetzner; copy them from the Terraform outputs
