@@ -44,7 +44,7 @@ services:
       - "{{ default_docker_network }}"
 
   backend:
-    image: logtide/backend:1.7.1
+    image: logtide/backend:1.7.2
     container_name: logtide-backend
     hostname: logtide-backend
     restart: unless-stopped
@@ -75,7 +75,7 @@ services:
       - "{{ default_docker_network }}"
 
   worker:
-    image: logtide/backend:1.7.1
+    image: logtide/backend:1.7.2
     container_name: logtide-worker
     hostname: logtide-worker
     restart: unless-stopped
