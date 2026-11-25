@@ -29,7 +29,7 @@ host_mac: "a4:bb:6d:26:57:e9"
 # -------------------------------------------------------------------
 ansible_host: "{{ host_ipv4 }}"
 ansible_user: "{{ vault_server_username }}"
-ansible_become_password: "{{ vault_password }}"
+ansible_become_password: "{{ lookup('onepassword_connect', 'Host - Agatha', 'password') }}"
 
 # -------------------------------------------------------------------
 # UBUNTUPRO

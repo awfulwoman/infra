@@ -27,7 +27,7 @@ host_mac: "f0:d4:e2:f4:30:6f"
 # -------------------------------------------------------------------
 ansible_host: "{{ host_ipv4 }}"
 ansible_user: "{{ vault_server_username }}"
-ansible_become_password: "{{ vault_password }}"
+ansible_become_password: "{{ lookup('onepassword_connect', 'Host - Homebrain', 'password') }}"
 
 # -------------------------------------------------------------------
 # UBUNTUPRO

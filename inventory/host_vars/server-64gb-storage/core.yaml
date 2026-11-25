@@ -27,7 +27,7 @@ host_mac: "34:60:f9:bb:3d:16"
 # -------------------------------------------------------------------
 ansible_host: "{{ host_ipv4 }}" # How to access the host
 ansible_user: "{{ vault_server_username }}" # Account to connect as
-ansible_become_password: "{{ vault_password }}" # Account password (for sudo)
+ansible_become_password: "{{ lookup('onepassword_connect', 'Host - Storage', 'password') }}" # Account password (for sudo)
 
 # -------------------------------------------------------------------
 # UBUNTUPRO

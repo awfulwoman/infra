@@ -27,7 +27,7 @@ host_mac: "6c:2b:59:65:a8:53"
 # -------------------------------------------------------------------
 ansible_host: "{{ host_ipv4 }}"
 ansible_user: "{{ vault_server_username }}"
-ansible_become_password: "{{ vault_password }}"
+ansible_become_password: "{{ lookup('onepassword_connect', 'Host - Camina', 'password') }}"
 
 # -------------------------------------------------------------------
 # UBUNTUPRO
