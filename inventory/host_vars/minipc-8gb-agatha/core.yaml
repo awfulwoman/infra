@@ -265,6 +265,8 @@ composition_hermes_jarvis_gh: true
 # Commits and pushes (to the helperbot's own forks) as the helperbot.
 composition_hermes_jarvis_git_github_login: "{{ vault_github_helperbot_username }}"
 
+composition_hermes_jarvis_conduit_push: true
+
 composition_hermes_jarvis_matrix: true
 composition_hermes_jarvis_matrix_homeserver: "https://matrix.{{ domainname_infra }}"
 composition_hermes_jarvis_matrix_user_id: "@jarvis:matrix.{{ domainname_infra }}"

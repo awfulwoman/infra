@@ -177,3 +177,14 @@ composition_hermes_jarvis_matrix_require_mention: true
 # ergonomics; the template joins them.
 composition_hermes_jarvis_matrix_allowed_rooms: []
 composition_hermes_jarvis_matrix_free_response_rooms: []
+
+# -------------------------------------------------------------------
+# CONDUIT PUSH
+# https://github.com/kaishi00/hermes-conduit-notifier - third-party plugin
+# for the Hermes Conduit iPhone/iPad/Watch app: push notifications, calls
+# and voice. Pushes go through the project's relay, so keep chat text out of
+# them (see README). Installed into /opt/data/plugins on the data volume.
+# Pairing is a one-off manual step: `hermes conduit-push pair CODE`.
+# -------------------------------------------------------------------
+composition_hermes_jarvis_conduit_push: false
+composition_hermes_jarvis_conduit_push_repo: kaishi00/hermes-conduit-notifier

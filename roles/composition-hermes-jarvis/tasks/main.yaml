@@ -368,3 +368,23 @@
     remove_orphans: true
   when: state | default('present') == 'present'
   notify: Restart Traefik
+
+# Plugin lives on the data volume, so it survives container recreation. Skip
+# when present: updates come from `hermes plugins update` or the Conduit app.
+- name: Check for the Conduit push plugin
+  ansible.builtin.stat:
+    path: "{{ composition_config }}/data/plugins/conduit_push"
+  register: _hermes_jarvis_conduit_push
+  when: state | default('present') == 'present' and composition_hermes_jarvis_conduit_push
+
+- name: Install the Conduit push plugin
+  community.docker.docker_container_exec:
+    container: "{{ composition_name }}"
+    command: "hermes plugins install {{ composition_hermes_jarvis_conduit_push_repo }} --enable"
+  register: _hermes_jarvis_conduit_push_install
+  changed_when: true
+  when:
+    - state | default('present') == 'present'
+    - composition_hermes_jarvis_conduit_push
+    - not _hermes_jarvis_conduit_push.stat.exists
+  notify: Restart Hermes

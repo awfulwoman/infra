@@ -98,3 +98,11 @@ matrix:
   free_response_rooms: "{{ composition_hermes_jarvis_matrix_free_response_rooms | join(',') }}"
 {% endif %}
 {% endif %}
+{% if composition_hermes_jarvis_conduit_push %}
+
+# Hermes Conduit push plugin (iPhone/Watch app). Installed by tasks/main.yaml;
+# this enables it so a config.yaml rewrite does not switch it off.
+plugins:
+  enabled:
+    - conduit_push
+{% endif %}
