@@ -1,10 +1,11 @@
 # The Host items whose password a host's `ansible_become_password` reads with
 # the onepassword_connect lookup (infra#339). Tags only: the password field is
-# left exactly as it is. malcolm and pikvm join when they move (infra#403).
+# left exactly as it is. Homebrain and Storage also get `username`, copied from
+# vault_server_username (never printed). malcolm and pikvm join when they move (infra#403).
 provision_items:
   - { title: "Host - Agatha", category: server, tags: [host, ansible] }
   - { title: "Host - Backups", category: server, tags: [host, ansible] }
   - { title: "Host - Bertha", category: server, tags: [host, ansible] }
   - { title: "Host - Camina", category: server, tags: [host, ansible] }
-  - { title: "Host - Homebrain", category: server, tags: [host, ansible] }
-  - { title: "Host - Storage", category: server, tags: [host, ansible] }
+  - { title: "Host - Homebrain", category: server, tags: [host, ansible], fields: [{ label: username, value: "{{ vault_server_username }}" }] }
+  - { title: "Host - Storage", category: server, tags: [host, ansible], fields: [{ label: username, value: "{{ vault_server_username }}" }] }
