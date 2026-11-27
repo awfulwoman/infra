@@ -1,7 +1,7 @@
 name: "{{ composition_name }}"
 services:
   loki:
-    image: grafana/loki:2.9.17
+    image: grafana/loki:3.7.11
     container_name: {{ composition_loki_container_name }}
     restart: unless-stopped
     volumes:
