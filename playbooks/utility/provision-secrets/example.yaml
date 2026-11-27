@@ -1,0 +1,11 @@
+# Example spec for provision-secrets.yaml. Copy it, rename the items, and run
+# with -e subject=<name>. No secret belongs in this file: generate in 1Password,
+# or copy an existing value with "{{ vault_x }}" (templated at run time).
+provision_items:
+  - title: "External - Example"
+    category: secure_note
+    tags: [external, ansible]
+    fields:
+      - label: token
+        type: concealed
+        generate: on_create

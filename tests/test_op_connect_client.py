@@ -14,10 +14,16 @@ class FakeHttp:
     def __init__(self, routes):
         self.routes = routes
         self.calls = []
+        self.writes = []
 
-    def __call__(self, url, token):
+    def __call__(self, url, token, method="GET", body=None):
         self.calls.append(url)
-        reply = self.routes.get(url.removeprefix(HOST))
+        path = url.removeprefix(HOST)
+        if method != "GET":
+            self.writes.append((method, path, body))
+            reply = self.routes.get((method, path))
+        else:
+            reply = self.routes.get(path)
         if isinstance(reply, Exception):
             raise reply
         if reply is None:
@@ -147,3 +153,54 @@ def test_item_metadata_has_no_values():
         {"id": "i2", "title": "Host - Camina", "category": "SERVER", "tags": [], "fields": []},
     ]
     assert "s3cret" not in repr(meta)
+
+
+# --- writes ----------------------------------------------------------------
+
+
+def test_find_item_returns_none_when_absent():
+    client, _ = make([], {})
+    assert client.find_item("External - Github") is None
+
+
+def test_find_item_returns_the_full_item():
+    client, _ = make(["i1"], {"i1": [{"id": "x1", "label": "token", "value": "v"}]})
+    item = client.find_item("External - Github")
+    assert item["id"] == "i1" and item["fields"][0]["label"] == "token"
+
+
+def test_find_item_refuses_duplicates():
+    client, _ = make(["i1", "i2"], {})
+    with pytest.raises(OpConnectError, match="2 items share this title"):
+        client.find_item("External - Github")
+
+
+def test_create_item_posts_into_the_vault():
+    http = FakeHttp({("POST", f"/v1/vaults/{VAULT}/items"): {"id": "n1", "title": "T"}})
+    client = OpConnectClient(HOST, "tok", VAULT, http=http)
+    assert client.create_item({"title": "T", "category": "SECURE_NOTE"})["id"] == "n1"
+    method, path, body = http.writes[0]
+    assert method == "POST" and body["vault"] == {"id": VAULT} and body["title"] == "T"
+
+
+def test_replace_item_puts_by_id_and_drops_the_cache():
+    title = "External - Github"
+    routes = {
+        items_url(title): [{"id": "i1", "title": title}],
+        f"/v1/vaults/{VAULT}/items/i1": {"id": "i1", "title": title, "fields": [{"label": "token", "value": "old"}]},
+        ("PUT", f"/v1/vaults/{VAULT}/items/i1"): {"id": "i1", "title": title},
+    }
+    http = FakeHttp(routes)
+    client = OpConnectClient(HOST, "tok", VAULT, http=http)
+    assert client.get_field(title, "token") == "old"
+    client.replace_item({"id": "i1", "title": title, "fields": []})
+    assert http.writes[0][0] == "PUT"
+    routes[f"/v1/vaults/{VAULT}/items/i1"] = {"id": "i1", "title": title, "fields": [{"label": "token", "value": "new"}]}
+    assert client.get_field(title, "token") == "new"
+
+
+def test_write_failure_names_the_status_not_the_body():
+    http = FakeHttp({("POST", f"/v1/vaults/{VAULT}/items"): OpConnectError("HTTP 406 from Connect (POST /v1/vaults/x/items)")})
+    client = OpConnectClient(HOST, "tok", VAULT, http=http)
+    with pytest.raises(OpConnectError, match="406"):
+        client.create_item({"title": "T"})

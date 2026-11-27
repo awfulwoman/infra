@@ -95,6 +95,18 @@ Creating or changing items needs a separate **write** token, scoped to the Infra
 export OP_CONNECT_TOKEN_WRITE='<token>'
 ```
 
+## Creating and updating items
+
+`scripts/onepassword.py apply` (usually through `playbooks/utility/provision-secrets.yaml`) makes items in the Infra vault match a spec, without printing a value. A generated field (`generate: on_create`) is made by 1Password, so the value never reaches Ansible or a log, and a second run reports `ok`. A value can also be copied from an existing vault variable with `value: "{{ vault_x }}"`.
+
+```bash
+export OP_CONNECT_TOKEN_WRITE='<token>'
+ansible-playbook playbooks/utility/provision-secrets.yaml -e subject=<name> --check
+ansible-playbook playbooks/utility/provision-secrets.yaml -e subject=<name>
+```
+
+`<name>` picks `playbooks/utility/provision-secrets/<name>.yaml`; see `example.yaml` there and the docstring of `scripts/onepassword.py` for the format. Fields not in the spec (including Notes) are kept, tags and URLs are added to, and a category mismatch is an error, because a category cannot be changed after creation.
+
 ## Groups, titles, tags and categories
 
 Every item in the Infra vault belongs to one group. The group sets the title prefix, the tag and the 1Password category. A category cannot be changed after an item is created.

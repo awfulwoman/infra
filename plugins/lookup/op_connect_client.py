@@ -2,6 +2,8 @@
 
 Reads one field from one item, by item title. Never returns an empty value:
 every failure raises OpConnectError, naming the title and field, never a value.
+Also finds, creates and replaces whole items (scripts/onepassword.py). Errors
+name the HTTP status and Connect's own message, never a field value.
 """
 
 import json
@@ -17,17 +19,29 @@ class OpConnectError(Exception):
     pass
 
 
-def _urllib_get(url, token):
-    request = urllib.request.Request(
-        url, headers={"Authorization": f"Bearer {token}", "Accept": "application/json"}
-    )
+def _urllib_request(url, token, method="GET", body=None):
+    headers = {"Authorization": f"Bearer {token}", "Accept": "application/json"}
+    data = None
+    if body is not None:
+        data = json.dumps(body).encode()
+        headers["Content-Type"] = "application/json"
+    request = urllib.request.Request(url, data=data, headers=headers, method=method)
+    where = f"{method} {url.split('?')[0]}"
     try:
         with urllib.request.urlopen(request, timeout=15) as response:
             return json.load(response)
     except urllib.error.HTTPError as err:
-        raise OpConnectError(f"HTTP {err.code} from Connect ({url.split('?')[0]})") from None
+        detail = ""
+        try:
+            detail = ": " + str(json.load(err).get("message", ""))[:200]
+        except (ValueError, OSError, AttributeError):
+            pass
+        raise OpConnectError(f"HTTP {err.code} from Connect ({where}){detail}") from None
     except (urllib.error.URLError, OSError, ValueError) as err:
         raise OpConnectError(f"Connect unreachable or bad reply: {err}") from None
+
+
+_urllib_get = _urllib_request  # kept for callers that import the old name
 
 
 def _filter(attribute, value):
@@ -36,7 +50,7 @@ def _filter(attribute, value):
 
 
 class OpConnectClient:
-    def __init__(self, host, token, vault, http=_urllib_get):
+    def __init__(self, host, token, vault, http=_urllib_request):
         if not host or not token or not vault:
             raise OpConnectError("onepassword_connect host, token and vault must all be set")
         self.host = host.rstrip("/")
@@ -48,6 +62,9 @@ class OpConnectClient:
 
     def _get(self, path):
         return self._http(f"{self.host}{path}", self.token)
+
+    def _send(self, method, path, body):
+        return self._http(f"{self.host}{path}", self.token, method=method, body=body)
 
     def _resolve_vault(self):
         if self._vault_id is None:
@@ -70,6 +87,29 @@ class OpConnectClient:
                 raise OpConnectError(f"item '{title}': {len(matches)} items share this title")
             self._items[title] = self._get(f"/v1/vaults/{vault}/items/{matches[0]['id']}")
         return self._items[title]
+
+    def find_item(self, title):
+        """The whole item with this title, or None. Duplicates are an error."""
+        vault = self._resolve_vault()
+        matches = self._get(f"/v1/vaults/{vault}/items?{_filter('title', title)}")
+        if not matches:
+            return None
+        if len(matches) > 1:
+            raise OpConnectError(f"item '{title}': {len(matches)} items share this title")
+        return self._get(f"/v1/vaults/{vault}/items/{matches[0]['id']}")
+
+    def create_item(self, body):
+        vault = self._resolve_vault()
+        body = {**body, "vault": {"id": vault}}
+        reply = self._send("POST", f"/v1/vaults/{vault}/items", body)
+        self._items.pop(body.get("title"), None)
+        return reply
+
+    def replace_item(self, body):
+        vault = self._resolve_vault()
+        reply = self._send("PUT", f"/v1/vaults/{vault}/items/{body['id']}", body)
+        self._items.pop(body.get("title"), None)
+        return reply
 
     def get_field(self, title, field):
         fields = self._item(title).get("fields") or []

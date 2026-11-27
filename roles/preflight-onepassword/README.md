@@ -16,7 +16,7 @@ for hosts in the `infra` group (the ones that get the Connect variables).
 ## Write token
 
 Reading needs only the read token in Ansible Vault. Creating or changing
-items (`playbooks/utility/provision-secrets.yaml`, `scripts/op-infra-write.py`)
+items (`playbooks/utility/provision-secrets.yaml`, `scripts/onepassword.py`)
 needs a write token, which is **never** stored in Ansible Vault, Semaphore or
 any file in this repo.
 
