@@ -2,7 +2,7 @@ name: "{{ composition_name }}"
 services:
   n8n:
     container_name: n8n
-    image: docker.io/n8nio/n8n:2.50.2
+    image: docker.io/n8nio/n8n:2.50.3
     restart: unless-stopped
     env_file: .environment_vars
     labels:
