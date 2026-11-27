@@ -15,7 +15,7 @@ vault_firefly_access_token: null
 #
 # The item is found by title in the Infra vault, so it can move or be renamed
 # in place without a code change as long as the title matches.
-firefly_enablebanking_item: External - Enable Banking
+firefly_enablebanking_item: External - Enable Banking (old)
 
 # Firefly builds password-reset links from APP_URL, so it must match the
 # Traefik router host or the emailed link points at localhost.
