@@ -1,0 +1,10 @@
+# Throwaway Login item to test browser autofill (infra#333). Delete the item in
+# 1Password and this file afterwards.
+provision_items:
+  - title: "Infra - Autofill Test"
+    category: login
+    tags: [login]
+    urls: ["https://semaphore.{{ domainname_infra }}"]
+    fields:
+      - { label: username, value: autofill-test }
+      - { label: password, type: concealed, generate: on_create }
