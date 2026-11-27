@@ -4,7 +4,7 @@ services:
   ha-mcp:
     container_name: ha-mcp
     # Entrypoint ha-mcp-web is streamable HTTP on 8086; the image default is stdio.
-    image: ghcr.io/homeassistant-ai/ha-mcp:9.2.0
+    image: ghcr.io/homeassistant-ai/ha-mcp:9.3.0
     command: ["ha-mcp-web"]
     restart: unless-stopped
     env_file: .environment_vars
