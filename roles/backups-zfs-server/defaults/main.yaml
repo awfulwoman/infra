@@ -18,7 +18,7 @@ backups_zfs_server_offsite_bwlimit: "" # Bandwidth limit (e.g., "10m" for 10MB/s
 # Healthchecks.io integration
 # When enabled, creates one check per client host and pings after each successful pull.
 backups_zfs_server_healthchecksio_enabled: false
-backups_zfs_server_healthchecksio_api_key: "{{ vault_healthchecks_rw_apikey }}"
+backups_zfs_server_healthchecksio_api_key: "{{ healthchecks_api_key }}"
 
 # MQTT staleness alerting
 # When enabled, publishes pull status to MQTT after each successful pull.

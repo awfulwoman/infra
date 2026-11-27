@@ -13,7 +13,7 @@ The role creates the check, or confirms that it exists, through the Healthchecks
 | `monitoring_healthchecksio` | `true` | Enable the role |
 | `monitoring_healthchecksio_name` | `{{ inventory_hostname }} - Core Playbook` | Name of the check in Healthchecks.io |
 | `monitoring_healthchecksio_debug` | `false` | Print API response details |
-| `vault_healthchecks_rw_apikey` | _(required)_ | Read-write API key from Healthchecks.io, stored in Ansible Vault |
+| `healthchecks_api_key` | the `api key rw` field of `External - Healthchecks` in 1Password (group_vars/infra) | Read-write API key from Healthchecks.io |
 
 ## Design Notes
 

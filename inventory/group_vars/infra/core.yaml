@@ -5,6 +5,9 @@ tailscale_oauth_client_secret: "{{ vault_tailscale_authkey_rotation_app_client_s
 tailscale_node_tags:
   - tag:auto-generated
 
+# healthchecks.io read-write API key, read from 1Password when a task uses it (infra#335).
+healthchecks_api_key: "{{ lookup('onepassword_connect', 'External - Healthchecks', 'api key rw') }}"
+
 security_autoupdate_mail_on_error: true
 security_autoupdate_mail_to: "unattended@{{ domainname_personal }}"
 security_autoupdate_reboot: true

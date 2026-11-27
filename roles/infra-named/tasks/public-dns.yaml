@@ -78,7 +78,7 @@
     - name: Ensure that Healthchecks.io check is present
       community.healthchecksio.checks:
         state: present
-        api_key: "{{ vault_healthchecks_rw_apikey }}"
+        api_key: "{{ healthchecks_api_key }}"
         name: "Public DNS registration"
         unique: ["name"]
         tags:
@@ -92,7 +92,7 @@
     - name: Ping Healthchecks.io
       community.healthchecksio.ping:
         state: present
-        api_key: "{{ vault_healthchecks_rw_apikey }}"
+        api_key: "{{ healthchecks_api_key }}"
         signal: success
         uuid: "{{ public_dns_healthcheck.uuid }}"
       when: public_dns_healthcheck is defined and public_dns_healthcheck.uuid is defined and public_dns_healthcheck.uuid is not false

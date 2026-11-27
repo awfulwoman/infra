@@ -60,7 +60,7 @@ system_zfs_policy_timer_cache: "*:0/5"  # Every 5 minutes
 # When enabled, creates one dead-man's-switch check per snapshot type and pings
 # it after each successful run.
 system_zfs_policy_healthchecksio_enabled: false
-system_zfs_policy_healthchecksio_api_key: "{{ vault_healthchecks_rw_apikey }}"
+system_zfs_policy_healthchecksio_api_key: "{{ healthchecks_api_key }}"
 
 # MQTT staleness alerting
 # When enabled, publishes snapshot staleness status to MQTT after each cache update.
