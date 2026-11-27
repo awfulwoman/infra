@@ -113,4 +113,7 @@ voice:
   speech_server:
     url: "{{ composition_hermes_jarvis_conduit_speech_server_url }}"
     drive_turns: false
+{% if composition_hermes_jarvis_conduit_speech_voice | length > 0 %}
+    voice: "{{ composition_hermes_jarvis_conduit_speech_voice }}"
+{% endif %}
 {% endif %}

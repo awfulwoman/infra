@@ -192,3 +192,6 @@ composition_hermes_jarvis_conduit_push_repo: kaishi00/hermes-conduit-notifier
 # Conduit speech server (an OpenAI Realtime WebSocket, e.g. malcolm's
 # system-speech-to-speech). Empty = unset. Has no auth of its own: LAN only.
 composition_hermes_jarvis_conduit_speech_server_url: ""
+# Voice sent on every session.update (session.audio.output.voice). Empty = the
+# speech server's own default. Must be a voice the server knows.
+composition_hermes_jarvis_conduit_speech_voice: ""
