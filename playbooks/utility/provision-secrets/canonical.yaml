@@ -1,0 +1,8 @@
+# Migration scaffolding (infra#335): copies vault_ubuntupro_token into 1Password.
+# The vault variable is gone, so this spec can no longer run. Delete with the other provision-secrets specs once infra#285 closes.
+provision_items:
+  - title: "External - Canonical"
+    category: secure_note
+    tags: [external, ansible]
+    fields:
+      - { label: ubuntu pro token, type: concealed, value: "{{ vault_ubuntupro_token }}" }

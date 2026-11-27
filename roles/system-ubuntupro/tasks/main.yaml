@@ -13,8 +13,8 @@
   when: ubuntupro_debug and _ubuntupro_initial_registration_status is defined
 
 - name: Ensure machine is attached to Ubuntu Pro
-  when: vault_ubuntupro_token is defined and ubuntupro_attach is true and _ubuntupro_initial_registration_status is false
-  ansible.builtin.command: "pro attach {{ vault_ubuntupro_token }}"
+  when: ubuntupro_attach is true and _ubuntupro_initial_registration_status is false
+  ansible.builtin.command: "pro attach {{ ubuntupro_token }}"
   become: true
   # The token is in the command line, which Ansible prints on failure.
   no_log: true
@@ -23,7 +23,7 @@
   failed_when: (ubuntupro_output_attachment.rc != 0) and _ubuntupro_initial_registration_status is false
 
 - name: Ensure machine is detached from Ubuntu Pro
-  when: vault_ubuntupro_token is defined and ubuntupro_attach is false and _ubuntupro_initial_registration_status is true
+  when: ubuntupro_attach is false and _ubuntupro_initial_registration_status is true
   ansible.builtin.command: "pro detach --assume-yes"
   become: true
   register: ubuntupro_output_detachment

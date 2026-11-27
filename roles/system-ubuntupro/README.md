@@ -10,12 +10,12 @@ Ubuntu Pro provides access to extended security maintenance (ESM), kernel livepa
 |---|---|---|
 | `ubuntupro_attach` | `false` | Set to `true` to attach, `false` to detach |
 | `ubuntupro_debug` | `false` | Print `pro attach/detach` output for debugging |
-| `vault_ubuntupro_token` | _(required)_ | Ubuntu Pro token from `ubuntu.com/pro` — stored in Ansible Vault |
+| `ubuntupro_token` | the `ubuntu pro token` field of `External - Canonical` in 1Password | Ubuntu Pro token from `ubuntu.com/pro`. Read only when the role attaches a host |
 
 ## Design Notes
 
 - `ubuntupro_attach: false` is the safe default. It avoids the accidental attachment of hosts that you do not want to enroll.
-- The role expects the token in `vault_ubuntupro_token` (encrypted in Ansible Vault). If this variable is undefined, the role takes no action.
+- The token comes from 1Password through the `onepassword_connect` lookup, and only when the role attaches a host. If it cannot be read, the run stops.
 - The role reads the attachment status with `pro status --format json` at the start of every run. This keeps the role fully idempotent.
 - The `system-security` role reads the attachment status that this role sets, to decide whether to include ESM origins in the unattended-upgrades configuration. If you want ESM updates, run this role before `system-security`.
 - This role requires Linux (enforced by the `ansible-assert-platform` dependency in `meta/main.yaml`).

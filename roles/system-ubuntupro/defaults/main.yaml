@@ -1,2 +1,4 @@
 ubuntupro_attach: false
 ubuntupro_debug: false
+# Read only when a host attaches, so a detach run never needs it.
+ubuntupro_token: "{{ lookup('onepassword_connect', 'External - Canonical', 'ubuntu pro token') }}"
