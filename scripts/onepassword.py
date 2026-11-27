@@ -53,8 +53,11 @@ CATEGORIES = {
 }
 TYPES = {"string", "concealed", "email", "url", "otp", "date", "month_year"}
 GENERATE = {None, "never", "on_create", "always"}
-# Categories whose username/password fields are built in: they are matched by id.
-BUILTIN_IDS = {"login": {"username", "password"}, "password": {"password"}, "server": {"username", "password"}}
+# Each category's built-in fields, found by probing Connect: Login and Password
+# items need `purpose` (without it Connect adds duplicate, empty built-ins);
+# Server items reject `purpose` and take the field id instead.
+BUILTIN_PURPOSE = {"login": {"username": "USERNAME", "password": "PASSWORD"}, "password": {"password": "PASSWORD"}}
+BUILTIN_ID = {"server": {"username", "password"}}
 DEFAULT_LENGTH = 32
 
 
@@ -101,7 +104,8 @@ def validate_item(raw):
         seen.add(key)
         fields.append({"label": label, "type": ftype.upper(), "generate": gen, "value": value,
                        "section": f.get("section"), "recipe": _recipe(f.get("recipe"))})
-    return {"title": title, "category": category.upper(), "builtin": BUILTIN_IDS.get(category, set()),
+    return {"title": title, "category": category.upper(),
+            "purposes": BUILTIN_PURPOSE.get(category, {}), "ids": BUILTIN_ID.get(category, set()),
             "tags": list(raw.get("tags") or []), "urls": list(raw.get("urls") or []), "fields": fields}
 
 
@@ -120,10 +124,13 @@ def _section_id(item, label, create=True):
     return sid
 
 
-def _new_field(spec_field, item, builtin):
+def _new_field(spec_field, item, spec):
     field = {"label": spec_field["label"], "type": spec_field["type"]}
-    if spec_field["label"].lower() in builtin:
-        field["id"] = spec_field["label"].lower()
+    label = spec_field["label"].lower()
+    if label in spec["purposes"]:
+        field["purpose"] = spec["purposes"][label]
+    elif label in spec["ids"]:
+        field["id"] = label
     if spec_field["section"]:
         field["section"] = {"id": _section_id(item, spec_field["section"])}
     if spec_field["generate"]:
@@ -144,7 +151,7 @@ def build_plan(existing, raw_spec):
         if spec["urls"]:
             item["urls"] = [{"href": u, "primary": i == 0} for i, u in enumerate(spec["urls"])]
         for sf in spec["fields"]:
-            item["fields"].append(_new_field(sf, item, spec["builtin"]))
+            item["fields"].append(_new_field(sf, item, spec))
             changes.append({"label": sf["label"], "change": "generated" if sf["generate"] else "added"})
         return "created", item, changes
 
@@ -166,7 +173,7 @@ def build_plan(existing, raw_spec):
             None,
         )
         if match is None:
-            item["fields"].append(_new_field(sf, item, spec["builtin"]))
+            item["fields"].append(_new_field(sf, item, spec))
             changes.append({"label": sf["label"], "change": "generated" if sf["generate"] else "added"})
         elif sf["generate"] == "always":
             match.pop("value", None)

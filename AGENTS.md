@@ -126,7 +126,7 @@ Project documentation including architecture guides, runbooks, and reference mat
 
 ## Key Patterns
 
-- **Credentials**: Stored encrypted in repo using Ansible Vault
+- **Credentials**: New secrets live in 1Password (Infra vault), created with `playbooks/utility/provision-secrets.yaml` and read with the `onepassword_connect` lookup. Existing secrets are still encrypted in the repo with Ansible Vault until they migrate (infra#285)
 - **Networking**: Everything accessed via Tailscale
 - **Docker Compose apps**: Templated with Jinja2 (`.yaml.j2` files), deployed via `composition-*` roles
 

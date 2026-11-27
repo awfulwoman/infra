@@ -99,14 +99,42 @@ def test_urls_are_sent_as_primary_first():
     assert body["urls"] == [{"href": "https://x.example", "primary": True}]
 
 
-def test_builtin_fields_on_login_get_their_id():
+def test_login_builtin_fields_are_marked_by_purpose_not_id():
     s = spec(category="login", fields=[
         {"label": "username", "type": "string", "value": "admin"},
         {"label": "password", "type": "concealed", "generate": "on_create"},
+        {"label": "note", "value": "x"},
     ])
     _, body, _ = op.build_plan(None, s)
-    assert [f.get("id") for f in body["fields"]] == ["username", "password"]
-    assert all("purpose" not in f for f in body["fields"])
+    username, password, note = body["fields"]
+    assert username["purpose"] == "USERNAME" and password["purpose"] == "PASSWORD"
+    assert "id" not in username and "id" not in password
+    assert "purpose" not in note
+
+
+def test_password_category_marks_its_password_by_purpose():
+    s = spec(category="password", fields=[{"label": "password", "type": "concealed", "generate": "on_create"}])
+    _, body, _ = op.build_plan(None, s)
+    assert body["fields"][0]["purpose"] == "PASSWORD"
+
+
+def test_server_builtin_fields_use_id_and_never_purpose():
+    s = spec(category="server", fields=[{"label": "password", "type": "concealed", "generate": "on_create"}])
+    _, body, _ = op.build_plan(None, s)
+    assert body["fields"][0]["id"] == "password" and "purpose" not in body["fields"][0]
+
+
+def test_second_run_on_a_login_is_ok():
+    client = FakeClient()
+    s = spec(category="login", fields=[
+        {"label": "username", "value": "admin"},
+        {"label": "password", "type": "concealed", "generate": "on_create"},
+    ])
+    op.apply_spec(client, {"items": [s]})
+    # Connect names the built-ins by id and purpose; matching is by label.
+    for f in client.items["External - Test"]["fields"]:
+        f.setdefault("id", f["label"])
+    assert op.apply_spec(client, {"items": [s]})["changed"] is False
 
 
 # --- plan: idempotency and update -----------------------------------------

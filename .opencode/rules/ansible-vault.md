@@ -23,10 +23,17 @@ and `playbooks/`. It matches variable *names* (`vault_*`, and names ending
 `_password`, `_token`, `_secret`, `_key`), so a badly named variable hides a
 leak — name secrets accordingly.
 
-## Generating a secret
+## New secrets go to 1Password
 
-When instructing the user to encrypt a secret with `ansible-vault encrypt_string`, always embed a secret-generation command inline rather than using a placeholder. Use `openssl rand -hex 32` for passwords and encryption keys:
+Do not add new `vault_*` variables. Create the secret in 1Password and read it with the
+`onepassword_connect` lookup (see `docs/1password-connect.md`):
 
-```bash
-ansible-vault encrypt_string "$(openssl rand -hex 32)" --name 'vault_example_key'
-```
+1. Declare the item in `playbooks/utility/provision-secrets/<subject>.yaml`. A generated
+   field (`generate: on_create`) is made inside 1Password, so no one sees the value. To copy
+   an existing vault secret instead, give the field `value: "{{ vault_x }}"`.
+2. The user runs `OP_CONNECT_TOKEN_WRITE=… ansible-playbook playbooks/utility/provision-secrets.yaml -e subject=<subject>`
+   (`--check` first). Never store the write token or ask for it to be put in a file.
+3. Read it in the role: `lookup('onepassword_connect', 'App - <App>', '<field>')`, inside a task with `no_log: true`.
+
+Existing `vault_*` secrets stay in Ansible Vault until their migration (infra#285); the rule
+above about never printing them still applies.
