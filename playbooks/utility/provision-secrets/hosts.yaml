@@ -1,3 +1,4 @@
+# Migration scaffolding: delete with the other provision-secrets specs once infra#285 closes.
 # The Host items whose password a host's `ansible_become_password` reads with
 # the onepassword_connect lookup (infra#339). Tags only: the password field is
 # left exactly as it is. Homebrain and Storage also get `username`, copied from
