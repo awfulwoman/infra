@@ -1,7 +1,7 @@
 name: "{{ composition_name }}"
 services:
   victoriametrics:
-    image: victoriametrics/victoria-metrics:v1.156.0
+    image: victoriametrics/victoria-metrics:v1.157.0
     container_name: {{ composition_victoriametrics_container_name }}
     restart: unless-stopped
     ports:
