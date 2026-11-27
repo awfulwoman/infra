@@ -68,8 +68,9 @@
     that: "become_password_check.results | map(attribute='stdout') | select('equalto', 'MATCH') | list | length == security_sudoers_passworded | length"
     fail_msg: >-
       ansible_become_password does not match the account password on this host.
-      Passworded sudo removes the last remote path to root. Correct
-      vault_password before you run this role again.
+      Passworded sudo removes the last remote path to root. Correct the
+      password behind ansible_become_password (its 1Password Host item) before
+      you run this role again.
   when: security_sudoers_passworded | length > 0
 
 - name: Add configured user accounts to passwordless sudoers
