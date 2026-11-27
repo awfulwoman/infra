@@ -38,7 +38,7 @@ See `defaults/main.yaml`:
 - `system_pocket_tts_voice`: default voice, must be one of the 8 built-ins above. Defaults to `alba`.
 - `system_pocket_tts_log_level`: defaults to `info`.
 - `system_pocket_tts_hf_token`: Hugging Face token for gated model downloads (voice cloning).
-  Defaults to `vault_huggingface_token` — the same secret [[system-tts-chatterbox]] already uses.
+  Defaults to the `token` field of `External - HuggingFace` in 1Password, the same secret [[system-tts-chatterbox]] uses.
 
 ## Integration
 

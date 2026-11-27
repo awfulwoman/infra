@@ -1,0 +1,8 @@
+# Migration scaffolding (infra#335): copies vault_huggingface_token into 1Password.
+# Delete with the other provision-secrets specs once infra#285 closes.
+provision_items:
+  - title: "External - HuggingFace"
+    category: secure_note
+    tags: [external, ansible]
+    fields:
+      - { label: token, type: concealed, value: "{{ vault_huggingface_token }}" }

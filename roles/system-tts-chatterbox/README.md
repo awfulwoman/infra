@@ -37,7 +37,7 @@ See `defaults/main.yaml`:
 
 ## Requirements
 
-- `vault_huggingface_token`: Hugging Face token, injected into the LaunchAgent environment (`HF_TOKEN`) for model downloads.
+- `system_chatterbox_hf_token`: Hugging Face token (the `token` field of `External - HuggingFace` in 1Password), injected into the LaunchAgent environment (`HF_TOKEN`) for model downloads.
 - `ffmpeg` available at `/opt/homebrew/bin/ffmpeg` (used to convert non-WAV voice references).
 
 ## Platforms
