@@ -3,7 +3,7 @@ name: "{{ composition_name }}"
 services:
   hermes:
     container_name: "{{ composition_name }}"
-    image: nousresearch/hermes-agent:v0.23.4
+    image: nousresearch/hermes-agent:v0.23.5
     restart: unless-stopped
     env_file: .environment_vars
     # Without this the image's default entrypoint starts the interactive TUI,
