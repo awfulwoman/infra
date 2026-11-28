@@ -239,8 +239,8 @@ services:
     environment:
       - VPN_SERVICE_PROVIDER=ivpn
       - VPN_TYPE=wireguard
-      - WIREGUARD_PRIVATE_KEY="{{ vault_external_ivpn_wireguard_private_key }}"
-      - WIREGUARD_ADDRESSES="{{ vault_external_ivpn_ipv4 }}/32" # IPv4 only!
+      - WIREGUARD_PRIVATE_KEY="{{ lookup('onepassword_connect', 'External - iVPN', 'wireguard private key') }}"
+      - WIREGUARD_ADDRESSES="{{ lookup('onepassword_connect', 'External - iVPN', 'ipv4') }}/32" # IPv4 only!
       - SERVER_CITIES=zurich
       - SERVER_COUNTRIES=switzerland
       - LOG_LEVEL=info
@@ -293,8 +293,8 @@ services:
     restart: unless-stopped
     env_file: .environment_vars
     environment:
-      - LIBRO_FM_USERNAME={{ vault_librofm_username }}
-      - LIBRO_FM_PASSWORD={{ vault_librofm_password }}
+      - LIBRO_FM_USERNAME={{ lookup('onepassword_connect', 'External - Libro.fm', 'username') }}
+      - LIBRO_FM_PASSWORD={{ lookup('onepassword_connect', 'External - Libro.fm', 'password') }}
       # extra optional: setting these enables them, dont add them if you dont want them.
       - LOG_LEVEL=INFO
       # Hourly, not daily: fetchLibrary() writes libro_library.json asynchronously

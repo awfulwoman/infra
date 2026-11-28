@@ -162,7 +162,7 @@ minted on demand; git and gh use it, and the App's private key is denied to the
 sandbox.
 
 - `~/.config/opencode-secrets/github-app.pem` holds the App private key (mode
-  0600, from `vault_github_app_private_key`). It lives *outside* every sandbox
+  0600, from 1Password `External - GitHub` › `app private key`). It lives *outside* every sandbox
   allow path (a sibling of `~/.config/opencode`), so the agent cannot read it
   by default — nono cannot deny a file inside an allowed directory.
 - `mint-github-token.sh` signs a JWT with that key and POSTs to
@@ -201,8 +201,8 @@ To enable (once the App exists):
 1. Create a GitHub App owned by the account, install it on the repos, note its
    App ID and installation ID.
 2. `ansible-vault`-encrypt the App's private key as
-   `vault_github_app_private_key`, and the IDs as `vault_github_app_id` and
-   `vault_github_app_installation_id` (all in `vault_external_github.yaml`).
+   1Password `External - GitHub` › `app private key`, and the IDs as 1Password `External - GitHub` › `app id` and
+   1Password `External - GitHub` › `app installation id` (all in `vault_external_github.yaml`).
 3. Set `system_opencode_github: true`.
 
 Variables: `system_opencode_github` (on/off, default off), `_app_id`,

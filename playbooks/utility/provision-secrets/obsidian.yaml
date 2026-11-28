@@ -1,0 +1,8 @@
+# Migration scaffolding (infra#335): copies vault values into 1Password.
+# The vault variables are removed afterwards, so this spec can no longer run. Delete with the other provision-secrets specs once infra#285 closes.
+provision_items:
+  - title: "External - Obsidian"
+    category: secure_note
+    tags: [external, ansible]
+    fields:
+      - { label: sync vault key, type: concealed, value: "{{ vault_obsidian_vault_key }}" }

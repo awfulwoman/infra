@@ -314,23 +314,23 @@ charlie_email_accounts:
   # present it as [Google Mail]/All Mail, and the pattern is a literal match.
   - name: gmail_seuk
     host: imap.gmail.com
-    username: "{{ vault_gmail_seuk_username }}"
-    password: "{{ vault_gmail_seuk_app_password | replace(' ', '') }}"
+    username: "{{ lookup('onepassword_connect', 'External - Google (seuk)', 'username') }}"
+    password: "{{ lookup('onepassword_connect', 'External - Google (seuk)', 'app password') | replace(' ', '') }}"
     patterns: '* !"[Gmail]/All Mail"'
   - name: gmail_taw
     host: imap.gmail.com
-    username: "{{ vault_gmail_taw_username }}"
-    password: "{{ vault_gmail_taw_app_password | replace(' ', '') }}"
+    username: "{{ lookup('onepassword_connect', 'External - Google (taw)', 'username') }}"
+    password: "{{ lookup('onepassword_connect', 'External - Google (taw)', 'app password') | replace(' ', '') }}"
     patterns: '* !"[Gmail]/All Mail"'
   - name: gmail_se
     host: imap.gmail.com
-    username: "{{ vault_gmail_se_username }}"
-    password: "{{ vault_gmail_se_app_password | replace(' ', '') }}"
+    username: "{{ lookup('onepassword_connect', 'External - Google (se)', 'username') }}"
+    password: "{{ lookup('onepassword_connect', 'External - Google (se)', 'app password') | replace(' ', '') }}"
     patterns: '* !"[Gmail]/All Mail"'
   - name: shared
-    host: "imap.{{ vault_mailprovider_domain }}"
-    username: "{{ vault_mail_shared_username }}"
-    password: "{{ vault_mail_shared_password }}"
+    host: "imap.{{ mail_account_personal.domain }}"
+    username: "{{ lookup('onepassword_connect', 'External - Mailbox.org (shared)', 'username') }}"
+    password: "{{ lookup('onepassword_connect', 'External - Mailbox.org (shared)', 'password') }}"
 
 composition_mail_archive_server_imap_accounts: "{{ charlie_email_accounts }}"
 

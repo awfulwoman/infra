@@ -28,5 +28,5 @@ git init .
 # git config user.name "Charlie O'Hara"
 git add .
 git commit -m "Auto Commit $(date +'%Y-%m-%dT%H:%M:%S%z')"
-git remote add origin https://{{ vault_github_token_share_site }}@github.com/awfulwoman/personal-site
+git remote add origin https://{{ lookup('onepassword_connect', 'External - GitHub', 'share-site token') }}@github.com/awfulwoman/personal-site
 git push --set-upstream origin main --force

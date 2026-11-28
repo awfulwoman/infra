@@ -92,8 +92,8 @@ composition_hermes_jarvis_git_github_login: ""
 # <app_slug>[bot]. Only reaches repos the App is installed on.
 composition_hermes_jarvis_github_app: false
 composition_hermes_jarvis_github_app_slug: ""
-composition_hermes_jarvis_github_app_id: "{{ vault_github_app_id | default('') }}"
-composition_hermes_jarvis_github_app_installation_id: "{{ vault_github_app_installation_id | default('') }}"
+composition_hermes_jarvis_github_app_id: "{{ lookup('onepassword_connect', 'External - GitHub', 'app id') }}"
+composition_hermes_jarvis_github_app_installation_id: "{{ lookup('onepassword_connect', 'External - GitHub', 'app installation id') }}"
 composition_hermes_jarvis_github_app_key_file: "{{ composition_root }}/github-app.pem"
 composition_hermes_jarvis_github_mint_helper: "{{ composition_root }}/mint-github-token.sh"
 composition_hermes_jarvis_github_token_file: "{{ composition_config }}/data/.gh-token"

@@ -255,10 +255,10 @@ system_opencode_ha_mcp_env_file: "{{ system_opencode_secrets_dir }}/ha-mcp.env"
 # The App key lives OUTSIDE every sandbox allow path (a sibling directory,
 # not ~/.config/opencode), so the agent cannot read it by default — nono
 # cannot deny a file inside an allowed directory. Disabled until the App
-# exists and vault_github_app_private_key is set.
+# exists and 1Password `External - GitHub` › `app private key` is set.
 system_opencode_github: false
-system_opencode_github_app_id: "{{ vault_github_app_id }}"
-system_opencode_github_installation_id: "{{ vault_github_app_installation_id }}"
+system_opencode_github_app_id: "{{ lookup('onepassword_connect', 'External - GitHub', 'app id') }}"
+system_opencode_github_installation_id: "{{ lookup('onepassword_connect', 'External - GitHub', 'app installation id') }}"
 system_opencode_github_app_key_file: "{{ system_opencode_secrets_dir }}/github-app.pem"
 system_opencode_github_mint_helper: "{{ system_opencode_config_dir }}/mint-github-token.sh"
 system_opencode_github_credential_helper: "{{ system_opencode_config_dir }}/git-credential-github.sh"

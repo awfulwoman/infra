@@ -21,7 +21,7 @@ the daemon config file.
 |---|---|---|
 | `docker_port_open` | `false` | When true, installs a UFW application profile to open TCP 2375 in the firewall |
 | `docker_ghcr_username` | `awfulwoman` | GitHub account used to log in to `ghcr.io` |
-| `vault_github_ghcr_read_token` | *(vault)* | Classic PAT with `read:packages`. When set, the role logs in to GHCR so private images can be pulled |
+| 1Password `External - GitHub` › `ghcr read token` | *(1Password)* | Classic PAT with `read:packages`. When set, the role logs in to GHCR so private images can be pulled |
 
 ## Design Notes
 

@@ -1,0 +1,9 @@
+# Migration scaffolding (infra#335): copies vault values into 1Password.
+# The vault variables are removed afterwards, so this spec can no longer run. Delete with the other provision-secrets specs once infra#285 closes.
+provision_items:
+  - title: "External - iVPN"
+    category: secure_note
+    tags: [external, ansible]
+    fields:
+      - { label: wireguard private key, type: concealed, value: "{{ vault_external_ivpn_wireguard_private_key }}" }
+      - { label: ipv4, type: string, value: "{{ vault_external_ivpn_ipv4 }}" }

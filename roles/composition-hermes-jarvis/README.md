@@ -158,7 +158,7 @@ fork, and opens a PR (or an issue) against the awfulwoman repo. No
 collaborator invites or branch-protection rulesets are needed. This only
 works for public repos.
 
-**Token.** `GH_TOKEN` is `vault_github_helperbot_hermes_token`
+**Token.** `GH_TOKEN` is 1Password `External - GitHub` › `helperbot token`
 (`group_vars/infra/vault_external_github.yaml`), a **classic** PAT on the
 helperbot with only the `public_repo` scope. It must be a classic PAT:
 GitHub does not let fine-grained PATs contribute to public repos where the
@@ -181,7 +181,7 @@ fork over HTTPS, edit and test it, and push. The image has `git` and
 git authenticates as a GitHub App installation, the same way `system-opencode`
 does, instead of the helperbot PAT.
 
-- `vault_github_app_private_key` is written to `<composition_root>/github-app.pem`
+- 1Password `External - GitHub` › `app private key` is written to `<composition_root>/github-app.pem`
   (0600). That directory is not mounted into the container, so Jarvis cannot
   read the key.
 - A host systemd timer (`hermes-jarvis-github-token.timer`) runs

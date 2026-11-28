@@ -108,11 +108,11 @@
       - composition_hermes_jarvis_github_app_slug | length > 0
       - composition_hermes_jarvis_github_app_id | length > 0
       - composition_hermes_jarvis_github_app_installation_id | length > 0
-      - vault_github_app_private_key | default('') | length > 0
+      - lookup('onepassword_connect', 'External - GitHub', 'app private key') | length > 0
       - composition_hermes_jarvis_github_app or not composition_hermes_jarvis_gh
     fail_msg: >-
       composition_hermes_jarvis_github_app is true but the App slug, id,
-      installation id or vault_github_app_private_key is unset.
+      installation id or the GitHub App private key in 1Password is unset.
     quiet: true
   when: state | default('present') == 'present' and composition_hermes_jarvis_github_app
 
@@ -190,7 +190,7 @@
 # mount), refreshed by a systemd timer into /opt/data/.gh-token.
 - name: Deploy the GitHub App private key
   ansible.builtin.copy:
-    content: "{{ vault_github_app_private_key }}"
+    content: "{{ lookup('onepassword_connect', 'External - GitHub', 'app private key') }}"
     dest: "{{ composition_hermes_jarvis_github_app_key_file }}"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"

@@ -26,8 +26,8 @@ VPN credentials are vault-encrypted in `inventory/group_vars/infra/vault_externa
 
 | Variable | Purpose |
 |----------|---------|
-| `vault_external_ivpn_wireguard_private_key` | WireGuard private key (generated on the iVPN account WireGuard page) |
-| `vault_external_ivpn_ipv4` | IPv4 address iVPN assigns to that key, without a prefix (the role appends `/32`) |
+| 1Password `External - iVPN` › `wireguard private key` | WireGuard private key (generated on the iVPN account WireGuard page) |
+| 1Password `External - iVPN` › `ipv4` | IPv4 address iVPN assigns to that key, without a prefix (the role appends `/32`) |
 
 The server is pinned to `SERVER_CITIES=zurich, SERVER_COUNTRIES=switzerland`.
 

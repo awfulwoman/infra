@@ -21,7 +21,7 @@ of MFA and a GUI-only flow.
 2. For each vault (**Charlie**, **AgentMemory**, **PersonalWiki**):
    1. Open folder as vault: `~/Syncthing/Obsidian/<vault>`.
    2. Settings → Sync → connect it to the remote vault of the same name. The
-      E2E password is `vault_obsidian_vault_key`.
+      E2E password is 1Password `External - Obsidian` › `sync vault key`.
    3. Keep every file type selected. Leave workspace files out of sync.
 
 If a Syncthing folder is still empty when you connect it, Obsidian Sync

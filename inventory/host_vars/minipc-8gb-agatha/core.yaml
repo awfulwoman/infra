@@ -248,7 +248,7 @@ composition_hermes_jarvis_mcp_env:
   # Token on the dedicated helperbot account, not awfulwoman's. The helperbot
   # has no access to awfulwoman repos, so it can only fork, push to its own
   # forks, and open PRs/issues - see composition-hermes-jarvis README.md#github.
-  GH_TOKEN: "{{ vault_github_helperbot_hermes_token }}"
+  GH_TOKEN: "{{ lookup('onepassword_connect', 'External - GitHub', 'helperbot token') }}"
   # n8n MCP key: a non-expiring JWT minted in the n8n UI (Settings >
   # Instance-level MCP > API key) for the owner account. Signed with a secret
   # derived from N8N_ENCRYPTION_KEY, so it survives n8n redeploys; rotating
@@ -263,7 +263,7 @@ composition_hermes_jarvis_github_app_slug: robot-butler
 # gh CLI on the same App token (shim on PATH); see the role README.
 composition_hermes_jarvis_gh: true
 # Commits and pushes (to the helperbot's own forks) as the helperbot.
-composition_hermes_jarvis_git_github_login: "{{ vault_github_helperbot_username }}"
+composition_hermes_jarvis_git_github_login: "{{ lookup('onepassword_connect', 'External - GitHub', 'helperbot username') }}"
 
 composition_hermes_jarvis_conduit_push: true
 composition_hermes_jarvis_conduit_speech_server_url: "ws://{{ hostvars['apple-macmini-m4-16gb-malcolm'].host_ipv4 }}:8765/v1/realtime"

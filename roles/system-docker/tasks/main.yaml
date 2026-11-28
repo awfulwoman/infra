@@ -135,8 +135,8 @@
   community.docker.docker_login:
     registry_url: ghcr.io
     username: "{{ docker_ghcr_username }}"
-    password: "{{ vault_github_ghcr_read_token }}"
-  when: vault_github_ghcr_read_token is defined
+    password: "{{ lookup('onepassword_connect', 'External - GitHub', 'ghcr read token') }}"
+  no_log: true
 
 - name: Prune unused Docker images on a timer
   ansible.builtin.include_tasks: prune.yaml

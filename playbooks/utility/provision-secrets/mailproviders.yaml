@@ -1,0 +1,34 @@
+# Migration scaffolding (infra#335): copies vault values into 1Password.
+# The vault variables are removed afterwards, so this spec can no longer run. Delete with the other provision-secrets specs once infra#285 closes.
+provision_items:
+  - title: "External - Mailbox.org (personal)"
+    category: secure_note
+    tags: [external, ansible]
+    fields:
+      - { label: domain, type: string, value: "{{ vault_mailprovider_domain }}" }
+      - { label: username, type: string, value: "{{ vault_mailprovider_user }}" }
+      - { label: password, type: concealed, value: "{{ vault_mailprovider_password }}" }
+  - title: "External - Mailbox.org (shared)"
+    category: secure_note
+    tags: [external, ansible]
+    fields:
+      - { label: username, type: string, value: "{{ vault_mail_shared_username }}" }
+      - { label: password, type: concealed, value: "{{ vault_mail_shared_password }}" }
+  - title: "External - Google (se)"
+    category: secure_note
+    tags: [external, ansible]
+    fields:
+      - { label: username, type: string, value: "{{ vault_gmail_se_username }}" }
+      - { label: app password, type: concealed, value: "{{ vault_gmail_se_app_password }}" }
+  - title: "External - Google (seuk)"
+    category: secure_note
+    tags: [external, ansible]
+    fields:
+      - { label: username, type: string, value: "{{ vault_gmail_seuk_username }}" }
+      - { label: app password, type: concealed, value: "{{ vault_gmail_seuk_app_password }}" }
+  - title: "External - Google (taw)"
+    category: secure_note
+    tags: [external, ansible]
+    fields:
+      - { label: username, type: string, value: "{{ vault_gmail_taw_username }}" }
+      - { label: app password, type: concealed, value: "{{ vault_gmail_taw_app_password }}" }

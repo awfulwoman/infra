@@ -1,7 +1,7 @@
 # code: language=ansible
 
-tailscale_oauth_client_id: "{{ vault_tailscale_authkey_rotation_app_client_id }}"
-tailscale_oauth_client_secret: "{{ vault_tailscale_authkey_rotation_app_client_secret }}"
+tailscale_oauth_client_id: "{{ lookup('onepassword_connect', 'External - Tailscale', 'rotation client id') }}"
+tailscale_oauth_client_secret: "{{ lookup('onepassword_connect', 'External - Tailscale', 'rotation client secret') }}"
 tailscale_node_tags:
   - tag:auto-generated
 
@@ -103,9 +103,9 @@ hetzner_floating_ip: 78.47.163.140
 # The archive (storage's charlie_email_accounts) uses imap.<domain>; every
 # sender uses smtp.<domain> with the same login.
 mail_account_personal:
-  domain: "{{ vault_mailprovider_domain }}"
-  username: "{{ vault_mailprovider_user }}"
-  password: "{{ vault_mailprovider_password }}"
+  domain: "{{ lookup('onepassword_connect', 'External - Mailbox.org (personal)', 'domain') }}"
+  username: "{{ lookup('onepassword_connect', 'External - Mailbox.org (personal)', 'username') }}"
+  password: "{{ lookup('onepassword_connect', 'External - Mailbox.org (personal)', 'password') }}"
 
 nullmailer_mail_recipient: "hardcoded@{{ domainname_personal }}"
 nullmailer_relay_host: "smtp.{{ mail_account_personal.domain }}"

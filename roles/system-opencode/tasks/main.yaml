@@ -223,7 +223,7 @@
 
 - name: Write the GitHub App private key
   ansible.builtin.copy:
-    content: "{{ vault_github_app_private_key }}"
+    content: "{{ lookup('onepassword_connect', 'External - GitHub', 'app private key') }}"
     dest: "{{ system_opencode_github_app_key_file }}"
     owner: "{{ ansible_user }}"
     group: "{{ system_opencode_group }}"

@@ -1,0 +1,18 @@
+# Migration scaffolding (infra#335): copies vault values into 1Password.
+# The vault variables are removed afterwards, so this spec can no longer run. Delete with the other provision-secrets specs once infra#285 closes.
+provision_items:
+  - title: "External - GitHub"
+    category: secure_note
+    tags: [external, ansible]
+    fields:
+      - { label: app id, type: string, value: "{{ vault_github_app_id }}" }
+      - { label: app installation id, type: string, value: "{{ vault_github_app_installation_id }}" }
+      - { label: app private key, type: concealed, value: "{{ vault_github_app_private_key }}" }
+      - { label: ghcr read token, type: concealed, value: "{{ vault_github_ghcr_read_token }}" }
+      - { label: helperbot token, type: concealed, value: "{{ vault_github_helperbot_hermes_token }}" }
+      - { label: helperbot username, type: string, value: "{{ vault_github_helperbot_username }}" }
+      - { label: micropub-server gateway token, type: concealed, value: "{{ vault_github_micropub_server_gateway_token }}" }
+      - { label: micropub-server token, type: concealed, value: "{{ vault_github_micropub_server_token }}" }
+      - { label: micropub-server webhook secret, type: concealed, value: "{{ vault_github_webhook_micropub_server_secret }}" }
+      - { label: share-site token, type: concealed, value: "{{ vault_github_token_share_site }}" }
+      - { label: stars token, type: concealed, value: "{{ vault_github_stars_token }}" }

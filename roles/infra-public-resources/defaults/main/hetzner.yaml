@@ -171,10 +171,10 @@ infra_publicresources_hetzner_domain:
         id: aw_a_px
       - type: TXT
         hostname: _dmarc
-        value: "v=DMARC1;p=none;rua=mailto:postmaster@{{ vault_mailprovider_domain }}"
+        value: "v=DMARC1;p=none;rua=mailto:postmaster@{{ mail_account_personal.domain }}"
         id: aw_txt_dmarc
       - type: TXT
-        value: "v=spf1 include:{{ vault_mailprovider_domain }} ~all"
+        value: "v=spf1 include:{{ mail_account_personal.domain }} ~all"
         id: aw_txt_spf
       - type: TXT
         hostname: db4fb4d222c289b319600fb0f87e82491cf603ce
@@ -182,32 +182,32 @@ infra_publicresources_hetzner_domain:
         id: aw_txt_mailprovider
       - type: CNAME
         hostname: mbo0004._domainkey
-        value: "mbo0004._domainkey.{{ vault_mailprovider_domain }}."
+        value: "mbo0004._domainkey.{{ mail_account_personal.domain }}."
         id: aw_txt_dk4
       - type: CNAME
         hostname: mbo0003._domainkey
-        value: "mbo0003._domainkey.{{ vault_mailprovider_domain }}."
+        value: "mbo0003._domainkey.{{ mail_account_personal.domain }}."
         id: aw_txt_dk3
       - type: CNAME
         hostname: mbo0002._domainkey
-        value: "mbo0002._domainkey.{{ vault_mailprovider_domain }}."
+        value: "mbo0002._domainkey.{{ mail_account_personal.domain }}."
         id: aw_txt_dk2
       - type: CNAME
         hostname: mbo0001._domainkey
-        value: "mbo0001._domainkey.{{ vault_mailprovider_domain }}."
+        value: "mbo0001._domainkey.{{ mail_account_personal.domain }}."
         id: aw_txt_dk1
       - type: MX
-        value: "mxext3.{{ vault_mailprovider_domain }}."
+        value: "mxext3.{{ mail_account_personal.domain }}."
         priority: 20
         ttl: 14400
         id: aw_mx_mb3
       - type: MX
-        value: "mxext2.{{ vault_mailprovider_domain }}."
+        value: "mxext2.{{ mail_account_personal.domain }}."
         priority: 10
         ttl: 14400
         id: aw_mx_mb2
       - type: MX
-        value: "mxext1.{{ vault_mailprovider_domain }}."
+        value: "mxext1.{{ mail_account_personal.domain }}."
         priority: 10
         ttl: 14400
         id: aw_mx_mb1
@@ -275,36 +275,36 @@ infra_publicresources_hetzner_domain:
         value: "v=DMARC1;p=none;rua=mailto:postmaster@{{ vault_domainname_wc }}"
         id: wc_txt_dmarc
       - type: TXT
-        value: "v=spf1 include:{{ vault_mailprovider_domain }} ~all"
+        value: "v=spf1 include:{{ mail_account_personal.domain }} ~all"
         id: wc_txt_spf
       - type: CNAME
         hostname: mbo0004._domainkey
-        value: "mbo0004._domainkey.{{ vault_mailprovider_domain }}."
+        value: "mbo0004._domainkey.{{ mail_account_personal.domain }}."
         id: wc_txt_dk4
       - type: CNAME
         hostname: mbo0003._domainkey
-        value: "mbo0003._domainkey.{{ vault_mailprovider_domain }}."
+        value: "mbo0003._domainkey.{{ mail_account_personal.domain }}."
         id: wc_txt_dk3
       - type: CNAME
         hostname: mbo0002._domainkey
-        value: 'mbo0002._domainkey.{{ vault_mailprovider_domain }}.'
+        value: 'mbo0002._domainkey.{{ mail_account_personal.domain }}.'
         id: wc_txt_dk2
       - type: CNAME
         hostname: mbo0001._domainkey
-        value: "mbo0001._domainkey.{{ vault_mailprovider_domain }}."
+        value: "mbo0001._domainkey.{{ mail_account_personal.domain }}."
         id: wc_txt_dk1
       - type: MX
-        value: "mxext3.{{ vault_mailprovider_domain }}."
+        value: "mxext3.{{ mail_account_personal.domain }}."
         priority: 20
         ttl: 14400
         id: wc_mx_mb3
       - type: MX
-        value: "mxext2.{{ vault_mailprovider_domain }}."
+        value: "mxext2.{{ mail_account_personal.domain }}."
         priority: 10
         ttl: 14400
         id: wc_mx_mb2
       - type: MX
-        value: "mxext1.{{ vault_mailprovider_domain }}."
+        value: "mxext1.{{ mail_account_personal.domain }}."
         priority: 10
         ttl: 14400
         id: wc_mx_mb1

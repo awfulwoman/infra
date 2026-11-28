@@ -45,7 +45,7 @@ composition_gateway_karakeep_api_key: "{{ vault_karakeep_api }}"
 # scopes and not `delete`, so the gateway can only create and edit drafts.
 # Empty until the token is made and vaulted; the tools then report "not configured".
 composition_gateway_micropub_base_url: "https://indie.{{ domainname_personal }}"
-composition_gateway_micropub_token: "{{ vault_github_micropub_server_gateway_token | default('') }}"
+composition_gateway_micropub_token: "{{ lookup('onepassword_connect', 'External - GitHub', 'micropub-server gateway token') }}"
 
 # webmention-server: the tools to review Webmentions and send them by hand. The token is its
 # admin API token; the tools only list, approve, reject and send, never trust, block or delete.
@@ -55,8 +55,8 @@ composition_gateway_webmentions_token: "{{ vault_composition_webmention_server_a
 # eBay Browse API (read-only listings and search). Application keyset from
 # developer.ebay.com — an app token only, no eBay user login. The marketplace
 # is the fallback when a bare item ID or a search gives no domain to infer one.
-composition_gateway_ebay_client_id: "{{ vault_external_ebay_client_id }}"
-composition_gateway_ebay_client_secret: "{{ vault_external_ebay_cert_id }}"
+composition_gateway_ebay_client_id: "{{ lookup('onepassword_connect', 'External - eBay', 'client id') }}"
+composition_gateway_ebay_client_secret: "{{ lookup('onepassword_connect', 'External - eBay', 'cert id') }}"
 composition_gateway_ebay_marketplace: EBAY_DE
 
 composition_gateway_owntracks_base_url: "https://owntracks-recorder.{{ domainname_infra }}"
