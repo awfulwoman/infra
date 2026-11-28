@@ -14,7 +14,7 @@ from camina, through this instance's Traefik route and the shared API key.
 | Variable | Default | Description |
 |---|---|---|
 | `composition_syncthing_data_path` | `{{ composition_root }}/data` | Host path mounted at `/var/syncthing` (config + folders). storage overrides it to `/slowpool/charlie/syncthing` |
-| `composition_syncthing_api_key` | `vault_syncthing_api_key` | Passed as `STGUIAPIKEY`; shared with `system-syncthing-config` |
+| `composition_syncthing_api_key` | 1Password `App - Syncthing` › `api key` | Passed as `STGUIAPIKEY`; shared with `system-syncthing-config` |
 
 ## Ports
 

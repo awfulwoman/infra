@@ -68,7 +68,7 @@ recur after `uv sync` or Python upgrades.
 |---|---|---|
 | `system_apple_calendar_server_repo_dir` | `~/Code/awfulwoman/apple-calendar-server` | Repo checkout to run from (cloned by this role) |
 | `system_apple_calendar_server_port` | `4101` | Local port the service listens on |
-| `system_apple_calendar_server_bearer_tokens` | `vault_gateway_calendar_server_token` | Shared secret. Add this vault key before you run the role |
+| `system_apple_calendar_server_bearer_tokens` | 1Password `App - Apple Calendar Server` › `gateway token` | Shared secret. Add this vault key before you run the role |
 | `system_apple_calendar_server_default_calendar` | `Calendar` | Calendar (EKCalendar) used when an event names none |
 | `system_apple_calendar_server_window_past_days` / `_future_days` | `30` / `365` | Default `GET /events` window when the client sends no `start`/`end` |
 | `system_apple_calendar_server_db_path` | `~/.local/state/apple-calendar-server/meta.db` | Sidecar SQLite database: id mapping, LWW timestamps, tombstones |

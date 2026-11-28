@@ -29,8 +29,8 @@ Registers subdomain: `paperless`
 
 | Variable | Purpose |
 |----------|---------|
-| `vault_paperless_ngx_db_password` | Postgres password |
-| `vault_paperless_ngx_secret_key` | Django secret key |
-| `vault_paperless_ngx_admin_password` | Initial admin password |
+| 1Password `App - Paperless-ngx` › `db password` | Postgres password |
+| 1Password `App - Paperless-ngx` › `secret key` | Django secret key |
+| 1Password `Infra - Paperless-ngx` › `password` | Initial admin password |
 | `vault_paperless_ngx_admin_mail` | Initial admin email |
-| `vault_paperless_ngx_api_token` | Paperless REST API token (admin); also used by composition-translation-server |
+| 1Password `App - Paperless-ngx` › `api token` | Paperless REST API token (admin); also used by composition-translation-server |

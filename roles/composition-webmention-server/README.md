@@ -10,11 +10,11 @@ The site advertises it with `<link rel="webmention">` in `baseof.html`.
 | --- | --- |
 | `composition_webmention_server_image` | GHCR image. Tracks `latest`; pin a `sha-` tag to roll back. |
 | `composition_webmention_server_site_url` / `_site_hosts` | The site that receives mentions. |
-| `vault_composition_webmention_server_ip_hash_salt` | Salt for the rate-limit hashes. |
-| `vault_composition_webmention_server_github_webhook_secret` | Optional; enables `/webhooks/github`. Same secret as the webhook on the site repo. |
-| `vault_composition_webmention_server_session_secret` | Signs the `/admin` session cookie. |
-| `vault_composition_webmention_server_admin_api_token` | Bearer token for `/admin/api`. |
-| `vault_composition_webmention_server_ha_webhook_url` | Optional; a Home Assistant webhook URL for notices. |
+| 1Password `App - Webmention Server` › `ip hash salt` | Salt for the rate-limit hashes. |
+| 1Password `App - Webmention Server` › `github webhook secret` | Optional; enables `/webhooks/github`. Same secret as the webhook on the site repo. |
+| 1Password `App - Webmention Server` › `session secret` | Signs the `/admin` session cookie. |
+| 1Password `App - Webmention Server` › `admin api token` | Bearer token for `/admin/api`. |
+| 1Password `App - Home Assistant` › `webmention webhook url` | Optional; a Home Assistant webhook URL for notices. |
 | `composition_webmention_server_send_enabled` | Sending is off (`false`) until `seed` has run. |
 
 Data: `config/data` (SQLite: mentions, moderation rules, queue), ZFS policy `high`. Received

@@ -1,6 +1,6 @@
 TZ="Europe/Berlin"
-NEXTAUTH_SECRET="{{ vault_karakeep_nextauth }}"
-MEILI_MASTER_KEY="{{ vault_karakeep_meili }}"
+NEXTAUTH_SECRET="{{ lookup('onepassword_connect', 'App - Karakeep', 'nextauth secret') }}"
+MEILI_MASTER_KEY="{{ lookup('onepassword_connect', 'App - Karakeep', 'meili master key') }}"
 NEXTAUTH_URL="https://karakeep.{{ domainname_infra }}"
 OPENAI_API_KEY=ollama
 OPENAI_BASE_URL={{ llm_default_openai_uri }}

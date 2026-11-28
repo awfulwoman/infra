@@ -59,7 +59,7 @@ VANITY_URL=
 #
 # This variable can be set from a file if you append it with _FILE
 #
-FIREFLY_III_ACCESS_TOKEN={{ vault_firefly_access_token }}
+FIREFLY_III_ACCESS_TOKEN={{ lookup('onepassword_connect', 'App - Firefly III', 'access token') }}
 
 #
 # You can also use a public client ID. This is available in Firefly III 5.4.0-alpha.3 and higher.

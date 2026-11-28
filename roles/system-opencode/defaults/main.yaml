@@ -192,7 +192,7 @@ system_opencode_quota_settings:
 # binary have no memory.
 system_opencode_agentmemory: true
 system_opencode_agentmemory_url: "https://agentmemory.{{ domainname_infra }}"
-system_opencode_agentmemory_secret: "{{ vault_composition_agentmemory_secret }}"
+system_opencode_agentmemory_secret: "{{ lookup('onepassword_connect', 'App - AgentMemory', 'secret') }}"
 # Keep in step with the image tag in composition-agentmemory.
 system_opencode_agentmemory_version: "0.9.33"
 # Print stored memory into the session at start and before compaction (off by
@@ -220,7 +220,7 @@ system_opencode_agentmemory_files:
 # can be revoked on its own. The wrapper exports it from a 0600 file.
 system_opencode_gateway: true
 system_opencode_gateway_url: "https://gateway.{{ domainname_infra }}/mcp"
-system_opencode_gateway_token: "{{ vault_gateway_mcp_token_opencode }}"
+system_opencode_gateway_token: "{{ lookup('onepassword_connect', 'App - Gateway', 'mcp token opencode') }}"
 system_opencode_gateway_env_file: "{{ system_opencode_secrets_dir }}/gateway.env"
 
 # --- searxng --------------------------------------------------------------
@@ -228,7 +228,7 @@ system_opencode_gateway_env_file: "{{ system_opencode_secrets_dir }}/gateway.env
 # The service has one shared bearer token, not per-client ones.
 system_opencode_searxng: true
 system_opencode_searxng_url: "https://searchmcp.{{ domainname_infra }}/mcp"
-system_opencode_searxng_token: "{{ vault_mcp_searxng_auth_token }}"
+system_opencode_searxng_token: "{{ lookup('onepassword_connect', 'App - MCP SearXNG', 'auth token') }}"
 system_opencode_searxng_env_file: "{{ system_opencode_secrets_dir }}/searxng.env"
 
 # --- web search ------------------------------------------------------------

@@ -10,7 +10,7 @@
 
 | Variable | Purpose |
 |---|---|
-| `vault_composition_wikijs_db_password` | DB password, shared by app and db |
+| 1Password `App - Wiki.js` › `db password` | DB password, shared by app and db |
 
 ## Data
 

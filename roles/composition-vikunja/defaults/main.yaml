@@ -4,5 +4,5 @@ composition_name: vikunja
 composition_dns_subdomains:
   - vikunja
 
-vikunja_db_password: "{{ vault_vikunja_db_password }}"
-vikunja_secret_key: "{{ vault_vikunja_secret_key }}"
+vikunja_db_password: "{{ lookup('onepassword_connect', 'App - Vikunja', 'db password') }}"
+vikunja_secret_key: "{{ lookup('onepassword_connect', 'App - Vikunja', 'secret key') }}"

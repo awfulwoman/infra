@@ -1,4 +1,4 @@
-DJANGO_SECRET_KEY="{{ vault_memorybank_django_secret_key }}"
+DJANGO_SECRET_KEY="{{ lookup('onepassword_connect', 'App - Memorybank', 'django secret key') }}"
 DJANGO_DEBUG="false"
 DJANGO_ALLOWED_HOSTS="memorybank.{{ domainname_infra }}"
 CSRF_TRUSTED_ORIGINS="https://memorybank.{{ domainname_infra }}"

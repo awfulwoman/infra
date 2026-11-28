@@ -32,7 +32,7 @@ composition_grafana_loki_name: "Loki"
 
 # Admin credentials (should be vault-encrypted)
 composition_grafana_admin_user: "{{ vault_grafana_admin_user | default('admin') }}"
-composition_grafana_admin_password: "{{ vault_grafana_admin_password }}"
+composition_grafana_admin_password: "{{ lookup('onepassword_connect', 'Infra - Grafana', 'password') }}"
 
 # Dashboard settings
 composition_grafana_dashboards_enabled: true

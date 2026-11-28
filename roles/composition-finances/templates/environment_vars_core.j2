@@ -2,8 +2,8 @@ TZ="Europe/Berlin"
 
 # Core
 # See https://raw.githubusercontent.com/firefly-iii/firefly-iii/main/.env.example
-STATIC_CRON_TOKEN="{{ vault_firefly_cron_token }}" # MUST be 32 characters long
-APP_KEY="{{ vault_firefly_app_key }}"
+STATIC_CRON_TOKEN="{{ lookup('onepassword_connect', 'App - Firefly III', 'cron token') }}" # MUST be 32 characters long
+APP_KEY="{{ lookup('onepassword_connect', 'App - Firefly III', 'app key') }}"
 APP_URL="{{ firefly_app_url }}"
 APP_LOG_LEVEL={{ firefly_log_level }}
 DB_HOST="firefly_iii_db"
@@ -11,7 +11,7 @@ DB_CONNECTION=mysql
 DB_PORT=3306
 DB_DATABASE=firefly
 DB_USERNAME=firefly
-DB_PASSWORD="{{ vault_firefly_db_password }}"
+DB_PASSWORD="{{ lookup('onepassword_connect', 'App - Firefly III', 'db password') }}"
 TRUSTED_PROXIES=**
 
 # Mail

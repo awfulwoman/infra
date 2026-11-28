@@ -18,7 +18,7 @@ system_apple_reminders_server_state_dir: "{{ ansible_facts.user_dir }}/.local/st
 system_apple_reminders_server_db_path: "{{ system_apple_reminders_server_state_dir }}/meta.db"
 
 # Shared with composition-gateway, which authenticates to this same service.
-system_apple_reminders_server_bearer_tokens: "{{ vault_gateway_reminders_server_token }}"
+system_apple_reminders_server_bearer_tokens: "{{ lookup('onepassword_connect', 'App - Apple Reminders Server', 'gateway token') }}"
 
 # --- Sidecar meta.db protection -------------------------------------------------
 # meta.db (at system_apple_reminders_server_db_path) is authoritative sidecar

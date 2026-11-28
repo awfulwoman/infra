@@ -12,7 +12,7 @@ composition_dns_subdomains:
 # is the archive's own "gateway"-labelled token (vault_composition_gateway.yaml),
 # not a new one.
 composition_gateway_mail_archive_server_base_url: "http://mail-archive-server:4103"
-composition_gateway_mail_archive_server_bearer_token: "{{ vault_gateway_mail_archive_server_token }}"
+composition_gateway_mail_archive_server_bearer_token: "{{ lookup('onepassword_connect', 'App - Mail Archive Server', 'gateway token') }}"
 
 # Absolute path on the host to a synced Obsidian vault (a Syncthing folder).
 # Must be set per-host; there is no sane default.
@@ -36,10 +36,10 @@ composition_gateway_malcolm_host: "{{ hostvars['apple-macmini-m4-16gb-malcolm'].
 # not the shared Docker network. Token is shared with system-apple-calendar-server,
 # which provisions this same service. Replaces the old Google Calendar OAuth backend.
 composition_gateway_calendar_server_base_url: "http://{{ composition_gateway_malcolm_host }}:4101"
-composition_gateway_calendar_server_bearer_token: "{{ vault_gateway_calendar_server_token }}"
+composition_gateway_calendar_server_bearer_token: "{{ lookup('onepassword_connect', 'App - Apple Calendar Server', 'gateway token') }}"
 
 composition_gateway_karakeep_base_url: "https://karakeep.{{ domainname_infra }}"
-composition_gateway_karakeep_api_key: "{{ vault_karakeep_api }}"
+composition_gateway_karakeep_api_key: "{{ lookup('onepassword_connect', 'App - Karakeep', 'api token') }}"
 
 # micropub-server: the draft-post tools. The token has the `draft update media`
 # scopes and not `delete`, so the gateway can only create and edit drafts.
@@ -50,7 +50,7 @@ composition_gateway_micropub_token: "{{ lookup('onepassword_connect', 'External 
 # webmention-server: the tools to review Webmentions and send them by hand. The token is its
 # admin API token; the tools only list, approve, reject and send, never trust, block or delete.
 composition_gateway_webmentions_base_url: "https://webmention.{{ domainname_personal }}"
-composition_gateway_webmentions_token: "{{ vault_composition_webmention_server_admin_api_token | default('') }}"
+composition_gateway_webmentions_token: "{{ lookup('onepassword_connect', 'App - Webmention Server', 'admin api token') }}"
 
 # eBay Browse API (read-only listings and search). Application keyset from
 # developer.ebay.com — an app token only, no eBay user login. The marketplace
@@ -65,7 +65,7 @@ composition_gateway_owntracks_password: ""
 composition_gateway_owntracks_user: charlie
 composition_gateway_owntracks_device: iphone
 
-composition_gateway_reminders_api_tokens: "{{ vault_gateway_reminders_api_token_iphone }}"
+composition_gateway_reminders_api_tokens: "{{ lookup('onepassword_connect', 'App - Gateway', 'reminders api token iphone') }}"
 # Hosted public API (the local composition never worked, see #299).
 # nominatim.org is docs-only; the API lives at nominatim.openstreetmap.org.
 composition_gateway_reminders_nominatim_url: "https://nominatim.openstreetmap.org"
@@ -76,7 +76,7 @@ composition_gateway_reminders_nominatim_url: "https://nominatim.openstreetmap.or
 # Reached over the infra zone, not the shared Docker network. Token is shared
 # with system-apple-contacts-server, which provisions this same service.
 composition_gateway_contacts_server_base_url: "http://{{ composition_gateway_malcolm_host }}:4102"
-composition_gateway_contacts_server_bearer_token: "{{ vault_gateway_contacts_server_token }}"
+composition_gateway_contacts_server_bearer_token: "{{ lookup('onepassword_connect', 'App - Apple Contacts Server', 'gateway token') }}"
 
 # apple-reminders-server (real Apple Reminders via EventKit) — storage backend for
 # Reminders, running natively on Malcolm (a different host — EventKit needs a macOS
@@ -84,7 +84,7 @@ composition_gateway_contacts_server_bearer_token: "{{ vault_gateway_contacts_ser
 # not the shared Docker network. Token is shared with system-apple-reminders-server,
 # which provisions this same service.
 composition_gateway_reminders_server_base_url: "http://{{ composition_gateway_malcolm_host }}:4100"
-composition_gateway_reminders_server_bearer_token: "{{ vault_gateway_reminders_server_token }}"
+composition_gateway_reminders_server_bearer_token: "{{ lookup('onepassword_connect', 'App - Apple Reminders Server', 'gateway token') }}"
 
 # Ansible Semaphore UI on camina — the tools inspect projects, task templates,
 # task runs and their logs, and start or stop runs. The token is a Semaphore API
@@ -97,17 +97,17 @@ composition_gateway_semaphore_token: "{{ vault_composition_gateway_semaphore_api
 # Bearer tokens the server enforces on /mcp, one per calling client. Rendered into
 # GATEWAY_SERVER__AUTH_TOKENS as `label:secret` pairs — the label names the caller
 # in gateway's per-request usage log. jarvis keeps the original shared secret
-# (vault_gateway_mcp_token), so composition-jarvis needs no change; laptop and
+# (1Password `App - Gateway` › `mcp token`), so composition-jarvis needs no change; laptop and
 # gw-cli get their own vaulted secrets. Entries with an empty/undefined value are
 # skipped by the template, so a not-yet-vaulted client just drops out.
 composition_gateway_server_auth_clients:
-  jarvis: "{{ vault_gateway_mcp_token }}"
-  laptop: "{{ vault_gateway_mcp_token_laptop | default('') }}"
-  gw-cli: "{{ vault_gateway_mcp_token_gw_cli | default('') }}"
-  hermes: "{{ vault_gateway_mcp_token_hermes | default('') }}"
-  claude: "{{ vault_gateway_mcp_token_claude | default('') }}"
-  wiki: "{{ vault_gateway_mcp_token_wiki | default('') }}"
-  opencode: "{{ vault_gateway_mcp_token_opencode | default('') }}"
+  jarvis: "{{ lookup('onepassword_connect', 'App - Gateway', 'mcp token') }}"
+  laptop: "{{ lookup('onepassword_connect', 'App - Gateway', 'mcp token laptop') }}"
+  gw-cli: "{{ lookup('onepassword_connect', 'App - Gateway', 'mcp token gw-cli') }}"
+  hermes: "{{ lookup('onepassword_connect', 'App - Gateway', 'mcp token hermes') }}"
+  claude: "{{ lookup('onepassword_connect', 'App - Gateway', 'mcp token claude') }}"
+  wiki: "{{ lookup('onepassword_connect', 'App - Gateway', 'mcp token wiki') }}"
+  opencode: "{{ lookup('onepassword_connect', 'App - Gateway', 'mcp token opencode') }}"
 
 # Where gateway writes its per-request /mcp usage log inside the container. The
 # role bind-mounts {{ composition_root }}/logs here, so it lands on the host at

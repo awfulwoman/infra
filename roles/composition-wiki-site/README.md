@@ -36,7 +36,7 @@ it by container name on port 8080.
 ## Endpoint
 
 `https://wiki.{{ domainname_infra }}`, Traefik basic auth: user `wiki`,
-password `vault_wiki_password`.
+password 1Password `Infra - Wiki Site` › `password`.
 
 ## Key variables
 
@@ -44,16 +44,13 @@ password `vault_wiki_password`.
 |---|---|
 | `composition_wiki_site_vault_path` | Host path of the PersonalWiki Syncthing folder — set per host |
 | `composition_wiki_site_quartz_ref` | Pinned upstream git tag |
-| `vault_wiki_password` / `vault_wiki_htpasswd` | Plaintext / bcrypt pair for Traefik basic auth — regenerate together |
+| 1Password `Infra - Wiki Site` › `password` / 1Password `Infra - Wiki Site` › `htpasswd` | Plaintext / bcrypt pair for Traefik basic auth — regenerate together |
 
 Generate the auth secrets:
 
-```bash
-PASS="$(openssl rand -hex 16)"
-htpasswd -nbB wiki "$PASS"   # -> vault_wiki_htpasswd
-ansible-vault encrypt_string "$PASS" --name 'vault_wiki_password'
-ansible-vault encrypt_string "$(htpasswd -nbB wiki "$PASS")" --name 'vault_wiki_htpasswd'
-```
+Make a password with `openssl rand -hex 16`, then a bcrypt hash of it with
+`htpasswd -nbB wiki "$PASS"`. Put the password in the `Infra - Wiki Site` item (field `password`)
+and the hash in the field `htpasswd`.
 
 ## ZFS
 

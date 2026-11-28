@@ -19,8 +19,8 @@
 
 | Vault variable | Purpose |
 |---|---|
-| `vault_vikunja_db_password` | PostgreSQL password (shared by app and db) |
-| `vault_vikunja_secret_key` | Session signing secret |
+| 1Password `App - Vikunja` › `db password` | PostgreSQL password (shared by app and db) |
+| 1Password `App - Vikunja` › `secret key` | Session signing secret |
 
 ## Integrations
 

@@ -4,10 +4,10 @@ composition_name: paperless-ngx
 composition_dns_subdomains:
   - paperless
 
-paperless_ngx_db_password: "{{ vault_paperless_ngx_db_password }}"
-paperless_ngx_secret_key: "{{ vault_paperless_ngx_secret_key }}"
+paperless_ngx_db_password: "{{ lookup('onepassword_connect', 'App - Paperless-ngx', 'db password') }}"
+paperless_ngx_secret_key: "{{ lookup('onepassword_connect', 'App - Paperless-ngx', 'secret key') }}"
 paperless_ngx_admin_user: admin
-paperless_ngx_admin_password: "{{ vault_paperless_ngx_admin_password }}"
+paperless_ngx_admin_password: "{{ lookup('onepassword_connect', 'Infra - Paperless-ngx', 'password') }}"
 paperless_ngx_admin_mail: "{{ vault_paperless_ngx_admin_mail }}"
 
 # ----------------------------
@@ -21,4 +21,4 @@ paperless_ngx_translate_media_path: "{{ composition_config }}/media"
 # ----------------------------
 
 # Paperless REST API token (admin). Used by composition-translation-server's connector.
-paperless_ngx_api_token: "{{ vault_paperless_ngx_api_token }}"
+paperless_ngx_api_token: "{{ lookup('onepassword_connect', 'App - Paperless-ngx', 'api token') }}"

@@ -20,10 +20,10 @@ logger:
 # Enable Home Assistant API
 api:
   encryption:
-    key: "{{ vault_esphome_projector_api_key }}"
+    key: "{{ lookup('onepassword_connect', 'App - ESPHome', 'projector api key') }}"
 
 ota:
-  password: "{{ vault_esphome_projector_ota_password }}"
+  password: "{{ lookup('onepassword_connect', 'App - ESPHome', 'projector ota password') }}"
 
 wifi:
   ssid: !secret wifi_ssid

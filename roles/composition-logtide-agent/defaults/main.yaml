@@ -17,7 +17,7 @@ composition_logtide_agent_container_name: logtide-agent
 # included - it just loops back through its own proxy.
 composition_logtide_agent_api_host: "logtide.{{ domainname_infra }}"
 composition_logtide_agent_api_port: 443
-composition_logtide_agent_api_key: "{{ vault_logtide_fluent_bit_api_key }}"
+composition_logtide_agent_api_key: "{{ lookup('onepassword_connect', 'App - Logtide', 'fluent bit api key') }}"
 
 composition_logtide_agent_docker_log_path: /var/lib/docker/containers
 

@@ -29,7 +29,7 @@ composition_translation_server_backends:
 
 # API keys, name → key. The connector uses `paperless`.
 composition_translation_server_api_keys:
-  paperless: "{{ vault_composition_translation_server_paperless_key }}"
+  paperless: "{{ lookup('onepassword_connect', 'App - Paperless-ngx', 'translation-server key') }}"
 
 # ----------------------------
 # Paperless connector
@@ -42,8 +42,8 @@ composition_translation_server_paperless_container_url: http://webserver:8000
 composition_translation_server_paperless_url: "https://paperless.{{ domainname_infra }}"
 # Paperless permissions are per object, so a non-admin user cannot see other owners'
 # documents. The connector uses the existing admin API token.
-composition_translation_server_paperless_token: "{{ vault_paperless_ngx_api_token }}"
-composition_translation_server_webhook_secret: "{{ vault_composition_translation_server_webhook_secret }}"
+composition_translation_server_paperless_token: "{{ lookup('onepassword_connect', 'App - Paperless-ngx', 'api token') }}"
+composition_translation_server_webhook_secret: "{{ lookup('onepassword_connect', 'App - Translation Server', 'webhook secret') }}"
 composition_translation_server_source_langs: [DE]
 composition_translation_server_target_lang: EN-GB
 composition_translation_server_add_note: false

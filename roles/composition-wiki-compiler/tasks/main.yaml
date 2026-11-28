@@ -17,8 +17,8 @@
       - composition_wiki_compiler_gateway_token | length > 0
       - composition_wiki_compiler_api_token | length > 0
     fail_msg: >-
-      composition_wiki_compiler_gateway_token (vault_gateway_mcp_token_wiki)
-      and composition_wiki_compiler_api_token (vault_wiki_compiler_api_token)
+      composition_wiki_compiler_gateway_token (lookup('onepassword_connect', 'App - Gateway', 'mcp token wiki'))
+      and composition_wiki_compiler_api_token (lookup('onepassword_connect', 'App - Wiki Compiler', 'api token'))
       must both be set — see this role's README.
     quiet: true
 

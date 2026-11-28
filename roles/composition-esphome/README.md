@@ -20,7 +20,7 @@ These packages live in `templates/esphome/packages/` and deploy alongside the de
 
 `packages/buzzer.yaml`, the RTTTL tunes, is specific to the device fleet, not shared ESPHome boilerplate, but it deploys the same way.
 
-`device-controller-projector.yaml` is fully self-contained, with no shared packages. It was written directly in the ESPHome dashboard and carries its own inline `api`/`ota` credentials, still vaulted here (`vault_esphome_projector_api_key`, `vault_esphome_projector_ota_password`). Its RS-232 protocol is documented in [`VIEWSONIC-PROJECTOR-COMMANDS.md`](VIEWSONIC-PROJECTOR-COMMANDS.md).
+`device-controller-projector.yaml` is fully self-contained, with no shared packages. It was written directly in the ESPHome dashboard and carries its own inline `api`/`ota` credentials, still vaulted here (1Password `App - ESPHome` › `projector api key`, 1Password `App - ESPHome` › `projector ota password`). Its RS-232 protocol is documented in [`VIEWSONIC-PROJECTOR-COMMANDS.md`](VIEWSONIC-PROJECTOR-COMMANDS.md).
 
 ### Authoring a new device
 
@@ -57,9 +57,9 @@ Packages cannot see Ansible substitutions directly. They can see only `!secret`,
 |---|---|
 | `wifi_ssid` | `vault_homenetwork_ssid_24ghz` (`group_vars/infra/vault_home_wifi.yaml`) — the 2.4GHz-only SSID, since these are all ESP32/ESP8266 boards |
 | `wifi_password` | `vault_homenetwork_password` (same file, shared with the main home network) |
-| `api_key` | `vault_esphome_api_key` |
-| `ota_password` | `vault_esphome_ota_password` |
-| `ap_password` | `vault_esphome_ap_password` |
+| `api_key` | 1Password `App - ESPHome` › `api key` |
+| `ota_password` | 1Password `App - ESPHome` › `ota password` |
+| `ap_password` | 1Password `App - ESPHome` › `ap password` |
 | `wifi_domain` | `composition_esphome_wifi_domain` default. Not a secret, a legacy internal search domain, also referenced in `host_vars/router-4gb-bertha/core.yaml`. |
 
 ## Static assets

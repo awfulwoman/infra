@@ -8,7 +8,7 @@ One runner (`runner01`) is active now. A second (`runner02`) is defined but comm
 
 | Variable | Purpose |
 |----------|---------|
-| `gitea_runner_registration` | Registration token from the Gitea instance (`vault_gitea_runner_registration`) |
+| `gitea_runner_registration` | Registration token from the Gitea instance (1Password `App - Gitea` › `runner registration token`) |
 | `gitea_runner_port` | Cache server port (default: `8999`) |
 
 ## Runner Configuration (`templates/config.yaml`)

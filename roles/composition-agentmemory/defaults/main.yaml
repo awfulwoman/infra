@@ -8,7 +8,7 @@ composition_dns_subdomains:
   - agentmemory-viewer
 
 # Bearer token for the REST API and the viewer's API proxy.
-composition_agentmemory_secret: "{{ vault_composition_agentmemory_secret }}"
+composition_agentmemory_secret: "{{ lookup('onepassword_connect', 'App - AgentMemory', 'secret') }}"
 
 # -------------------------------------------------------------------
 # LLM

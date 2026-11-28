@@ -6,4 +6,4 @@ composition_name: wikijs
 composition_dns_subdomains:
   - wikijs
 
-composition_wikijs_db_password: "{{ vault_composition_wikijs_db_password }}"
+composition_wikijs_db_password: "{{ lookup('onepassword_connect', 'App - Wiki.js', 'db password') }}"

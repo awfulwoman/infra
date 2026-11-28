@@ -5,4 +5,4 @@ composition_dns_subdomains:
   - searxng
   - search
 
-composition_searxng_secret_key: "{{ vault_searxng_secret_key }}"
+composition_searxng_secret_key: "{{ lookup('onepassword_connect', 'App - SearXNG', 'secret key') }}"

@@ -22,8 +22,8 @@ system_apple_calendar_server_window_past_days: 30
 system_apple_calendar_server_window_future_days: 365
 
 # Shared with composition-gateway, which authenticates to this same service.
-# NOTE: add vault_gateway_calendar_server_token to the vault before running.
-system_apple_calendar_server_bearer_tokens: "{{ vault_gateway_calendar_server_token }}"
+# NOTE: add 1Password `App - Apple Calendar Server` › `gateway token` to the vault before running.
+system_apple_calendar_server_bearer_tokens: "{{ lookup('onepassword_connect', 'App - Apple Calendar Server', 'gateway token') }}"
 
 # Login-keychain password. Needed on every deploy so sign_runtime.sh can unlock
 # the login keychain over SSH and reach the SHARED signing key headlessly (the

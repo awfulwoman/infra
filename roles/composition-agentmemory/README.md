@@ -10,7 +10,7 @@
 
 | Variable | Purpose |
 |---|---|
-| `vault_composition_agentmemory_secret` | `AGENTMEMORY_SECRET`, the bearer token |
+| 1Password `App - AgentMemory` › `secret` | `AGENTMEMORY_SECRET`, the bearer token |
 
 ## Decisions
 

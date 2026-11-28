@@ -37,5 +37,5 @@ composition_mail_archive_server_exclude_folders: "Trash,Junk"
 # README "Token scoping".
 composition_mail_archive_server_tokens:
   - label: gateway
-    secret: "{{ vault_gateway_mail_archive_server_token }}"
+    secret: "{{ lookup('onepassword_connect', 'App - Mail Archive Server', 'gateway token') }}"
     accounts: "*"

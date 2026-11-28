@@ -33,15 +33,10 @@ In `inventory/group_vars/infra/vault_composition_semaphore.yaml`:
 
 | Variable | Purpose |
 |----------|---------|
-| `vault_composition_semaphore_admin_password` | Initial `admin` password |
-| `vault_composition_semaphore_access_key_encryption` | Encrypts stored access keys. Base64 of 32 random bytes. **Do not rotate**: changing it makes every stored key unreadable |
+| 1Password `Infra - Semaphore` › `password` | Initial `admin` password |
+| 1Password `App - Semaphore` › `access key encryption key` | Encrypts stored access keys. Base64 of 32 random bytes. **Do not rotate**: changing it makes every stored key unreadable |
 
-Read the admin password without printing it to a shared log:
-
-```bash
-ansible localhost -m debug -a "var=vault_composition_semaphore_admin_password" \
-  -e @inventory/group_vars/infra/vault_composition_semaphore.yaml
-```
+Read the admin password in 1Password, item `Infra - Semaphore`, field `password`.
 
 The admin account is created on first start only.
 

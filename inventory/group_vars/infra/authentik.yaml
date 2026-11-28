@@ -13,4 +13,4 @@ authentik_oidc_apps:
       - "https://immich.{{ domainname_infra }}/user-settings"
       - "app.immich:///oauth-callback"
       - "https://immich.{{ domainname_infra }}/api/oauth/mobile-redirect"
-    client_secret: "{{ vault_composition_authentik_immich_client_secret }}"
+    client_secret: "{{ lookup('onepassword_connect', 'App - Authentik', 'immich client secret') }}"

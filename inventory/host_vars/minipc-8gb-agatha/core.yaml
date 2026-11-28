@@ -242,7 +242,7 @@ composition_hermes_jarvis_mcp_env:
   # is shared with composition-gateway (group_vars/infra/vault_gateway.yaml).
   # (The "jarvis" label in composition_gateway_server_auth_clients belongs
   # to the separate composition-jarvis chives bot, not this container.)
-  GATEWAY_MCP_TOKEN: "{{ vault_gateway_mcp_token_hermes }}"
+  GATEWAY_MCP_TOKEN: "{{ lookup('onepassword_connect', 'App - Gateway', 'mcp token hermes') }}"
   # ha-mcp endpoint; the secret path is the credential.
   HA_MCP_URL: "https://ha-mcp.{{ domainname_infra }}{{ vault_composition_ha_mcp_secret_path }}"
   # Token on the dedicated helperbot account, not awfulwoman's. The helperbot
@@ -253,7 +253,7 @@ composition_hermes_jarvis_mcp_env:
   # Instance-level MCP > API key) for the owner account. Signed with a secret
   # derived from N8N_ENCRYPTION_KEY, so it survives n8n redeploys; rotating
   # it in the UI invalidates this copy.
-  N8N_MCP_TOKEN: "{{ vault_n8n_mcp_key }}"
+  N8N_MCP_TOKEN: "{{ lookup('onepassword_connect', 'App - n8n', 'mcp key') }}"
 
 # Git as the robot-butler GitHub App (installation token, timer-refreshed; see
 # composition-hermes-jarvis README.md#github). Reaches only repos the App is

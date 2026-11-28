@@ -93,7 +93,7 @@
       widget:
         type: prowlarr
         url: https://prowlarr.{{ domainname_infra }}
-        key: {{ vault_prowlarr_api_key }}
+        key: {{ lookup('onepassword_connect', 'App - Prowlarr', 'api key') }}
 
   - Lidarr:
       icon: sh-lidarr.png
@@ -118,7 +118,7 @@
       widget:
         type: sonarr
         url: https://sonarr.{{ domainname_infra }}
-        key: {{ vault_sonarr_api_key }}
+        key: {{ lookup('onepassword_connect', 'App - Sonarr', 'api key') }}
         enableQueue: true
 
   - Radarr:
@@ -130,7 +130,7 @@
       widget:
         type: radarr
         url: https://radarr.{{ domainname_infra }}
-        key: {{ vault_radarr_api_key }}
+        key: {{ lookup('onepassword_connect', 'App - Radarr', 'api key') }}
         enableQueue: true
 
   - Qbittorrent:
@@ -142,8 +142,8 @@
       widget:
         type: qbittorrent
         url: "https://qbittorrent.{{ domainname_infra }}"
-        username: {{ vault_qbittorrent_username }}
-        password: {{ vault_qbittorrent_password }}
+        username: {{ lookup('onepassword_connect', 'Infra - qBittorrent', 'username') }}
+        password: {{ lookup('onepassword_connect', 'Infra - qBittorrent', 'password') }}
 
   - TubeSync:
       icon: sh-tubesync.png

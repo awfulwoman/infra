@@ -15,7 +15,7 @@ DATABASE_HOST=logtide-postgres
 REDIS_PASSWORD={{ composition_logtide_redis_password }}
 REDIS_URL=redis://:{{ composition_logtide_redis_password }}@logtide-redis:6379
 
-API_KEY_SECRET={{ vault_logtide_api_key_secret }}
+API_KEY_SECRET={{ lookup('onepassword_connect', 'App - Logtide', 'api key secret') }}
 PORT={{ composition_logtide_backend_port }}
 HOST=0.0.0.0
 
@@ -28,6 +28,6 @@ SMTP_PASS={{ smtp_pass | default('') }}
 SMTP_FROM={{ smtp_from | default('noreply@' + domainname_infra) }}
 
 # Set after first login: Project > Settings > API Keys > create a write key
-FLUENT_BIT_API_KEY={{ vault_logtide_fluent_bit_api_key | default('') }}
+FLUENT_BIT_API_KEY={{ lookup('onepassword_connect', 'App - Logtide', 'fluent bit api key') }}
 LOGTIDE_API_HOST=logtide-backend
 SYSLOG_TZ_OFFSET={{ composition_logtide_syslog_tz_offset }}

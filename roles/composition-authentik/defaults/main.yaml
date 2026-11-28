@@ -6,5 +6,5 @@ composition_name: authentik
 composition_dns_subdomains:
   - authentik
 
-composition_authentik_secret_key: "{{ vault_composition_authentik_secret_key }}"
-composition_authentik_db_password: "{{ vault_composition_authentik_db_password }}"
+composition_authentik_secret_key: "{{ lookup('onepassword_connect', 'App - Authentik', 'secret key') }}"
+composition_authentik_db_password: "{{ lookup('onepassword_connect', 'App - Authentik', 'db password') }}"

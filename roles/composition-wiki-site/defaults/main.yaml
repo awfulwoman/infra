@@ -32,5 +32,5 @@ composition_wiki_site_vault_path: ""
 composition_wiki_site_base_url: "wiki.{{ domainname_infra }}"
 
 # Traefik basic auth: Quartz has no auth of its own. htpasswd line (bcrypt)
-# for Traefik; the user holds the plaintext vault_wiki_password.
-composition_wiki_site_htpasswd: "{{ vault_wiki_htpasswd }}"
+# for Traefik; the user holds the plaintext 1Password `Infra - Wiki Site` › `password`.
+composition_wiki_site_htpasswd: "{{ lookup('onepassword_connect', 'Infra - Wiki Site', 'htpasswd') }}"

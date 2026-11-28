@@ -1,6 +1,6 @@
 system_logtide_fluent_bit_macos_api_host: "logtide.{{ domainname_infra }}"
 system_logtide_fluent_bit_macos_api_port: 443
-system_logtide_fluent_bit_macos_api_key: "{{ vault_logtide_fluent_bit_api_key }}"
+system_logtide_fluent_bit_macos_api_key: "{{ lookup('onepassword_connect', 'App - Logtide', 'fluent bit api key') }}"
 
 system_logtide_fluent_bit_macos_config_dir: "{{ awfulwoman_opt_dir }}/fluent-bit-logtide"
 system_logtide_fluent_bit_macos_log_dir: "{{ ansible_facts['user_dir'] }}/Library/Logs/fluent-bit-logtide"

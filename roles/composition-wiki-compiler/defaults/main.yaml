@@ -22,11 +22,11 @@ composition_wiki_compiler_output_path: ""
 # gateway shares this host's default_docker_network and default port
 # (composition-gateway's GATEWAY_SERVER__PORT), reached by container name.
 # The token is this compiler's own labelled entry in
-# composition_gateway_server_auth_clients (vault_gateway_mcp_token_wiki) —
+# composition_gateway_server_auth_clients (1Password `App - Gateway` › `mcp token wiki`) —
 # kept in sync by hand across the two roles, same as every other gateway
 # client.
 composition_wiki_compiler_gateway_url: "http://gateway:4000/mcp"
-composition_wiki_compiler_gateway_token: "{{ vault_gateway_mcp_token_wiki }}"
+composition_wiki_compiler_gateway_token: "{{ lookup('onepassword_connect', 'App - Gateway', 'mcp token wiki') }}"
 
 # Malcolm's Ollama, over its native API (not the OpenAI-compatible /v1 one
 # hermes-jarvis uses). The model is already an Ollama Cloud model proxied
@@ -97,7 +97,7 @@ composition_wiki_compiler_repos_include:
 # Authenticates the compiler's own /run, /usage, /lint, /filter-report HTTP
 # API (not the gateway call) — nothing calls these yet but the server
 # refuses to start without a token.
-composition_wiki_compiler_api_token: "{{ vault_wiki_compiler_api_token }}"
+composition_wiki_compiler_api_token: "{{ lookup('onepassword_connect', 'App - Wiki Compiler', 'api token') }}"
 
 # Reverse-geocodes location pings for the home-radius drop rule. Empty by
 # default: the rule is a no-op until HOME_LAT/HOME_LON are set, and nothing

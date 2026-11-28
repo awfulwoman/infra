@@ -1,0 +1,229 @@
+# Migration scaffolding (infra#336): copies vault values into 1Password.
+# The vault variables are removed afterwards, so this spec can no longer run. Delete with the other provision-secrets specs once infra#285 closes.
+provision_items:
+  - title: "App - AgentMemory"
+    category: secure_note
+    tags: [app, ansible]
+    fields:
+      - { label: secret, type: concealed, value: "{{ vault_composition_agentmemory_secret }}" }
+  - title: "App - Apple Calendar Server"
+    category: secure_note
+    tags: [app, ansible]
+    fields:
+      - { label: gateway token, type: concealed, value: "{{ vault_gateway_calendar_server_token }}" }
+  - title: "App - Apple Contacts Server"
+    category: secure_note
+    tags: [app, ansible]
+    fields:
+      - { label: gateway token, type: concealed, value: "{{ vault_gateway_contacts_server_token }}" }
+  - title: "App - Apple Reminders Server"
+    category: secure_note
+    tags: [app, ansible]
+    fields:
+      - { label: gateway token, type: concealed, value: "{{ vault_gateway_reminders_server_token }}" }
+  - title: "App - Authentik"
+    category: secure_note
+    tags: [app, ansible]
+    fields:
+      - { label: db password, type: concealed, value: "{{ vault_composition_authentik_db_password }}" }
+      - { label: immich client secret, type: concealed, value: "{{ vault_composition_authentik_immich_client_secret }}" }
+      - { label: secret key, type: concealed, value: "{{ vault_composition_authentik_secret_key }}" }
+  - title: "App - ESPHome"
+    category: secure_note
+    tags: [app, ansible]
+    fields:
+      - { label: ap password, type: concealed, value: "{{ vault_esphome_ap_password }}" }
+      - { label: api key, type: concealed, value: "{{ vault_esphome_api_key }}" }
+      - { label: ota password, type: concealed, value: "{{ vault_esphome_ota_password }}" }
+      - { label: projector api key, type: concealed, value: "{{ vault_esphome_projector_api_key }}" }
+      - { label: projector ota password, type: concealed, value: "{{ vault_esphome_projector_ota_password }}" }
+  - title: "App - Firefly III"
+    category: secure_note
+    tags: [app, ansible]
+    fields:
+      - { label: access token, type: concealed, value: "{{ vault_firefly_access_token }}" }
+      - { label: app key, type: concealed, value: "{{ vault_firefly_app_key }}" }
+      - { label: cron token, type: concealed, value: "{{ vault_firefly_cron_token }}" }
+      - { label: db password, type: concealed, value: "{{ vault_firefly_db_password }}" }
+  - title: "App - Gateway"
+    category: secure_note
+    tags: [app, ansible]
+    fields:
+      - { label: mcp token, type: concealed, value: "{{ vault_gateway_mcp_token }}" }
+      - { label: mcp token claude, type: concealed, value: "{{ vault_gateway_mcp_token_claude }}" }
+      - { label: mcp token gw-cli, type: concealed, value: "{{ vault_gateway_mcp_token_gw_cli }}" }
+      - { label: mcp token hermes, type: concealed, value: "{{ vault_gateway_mcp_token_hermes }}" }
+      - { label: mcp token laptop, type: concealed, value: "{{ vault_gateway_mcp_token_laptop }}" }
+      - { label: mcp token opencode, type: concealed, value: "{{ vault_gateway_mcp_token_opencode }}" }
+      - { label: mcp token wiki, type: concealed, value: "{{ vault_gateway_mcp_token_wiki }}" }
+      - { label: reminders api token iphone, type: concealed, value: "{{ vault_gateway_reminders_api_token_iphone }}" }
+  - title: "App - Gitea"
+    category: secure_note
+    tags: [app, ansible]
+    fields:
+      - { label: runner registration token, type: concealed, value: "{{ vault_gitea_runner_registration }}" }
+  - title: "App - GoToSocial"
+    category: secure_note
+    tags: [app, ansible]
+    fields:
+      - { label: micropub-server token, type: concealed, value: "{{ vault_composition_micropub_server_mastodon_token }}" }
+      - { label: webmention-server token, type: concealed, value: "{{ vault_composition_webmention_server_gts_access_token }}" }
+  - title: "App - Home Assistant"
+    category: secure_note
+    tags: [app, ansible]
+    fields:
+      - { label: webmention webhook id, type: concealed, value: "{{ vault_composition_homeassistant_webmention_webhook_id }}" }
+      - { label: webmention webhook url, type: concealed, value: "{{ vault_composition_webmention_server_ha_webhook_url }}" }
+  - title: "App - Karakeep"
+    category: secure_note
+    tags: [app, ansible]
+    fields:
+      - { label: api token, type: concealed, value: "{{ vault_karakeep_api }}" }
+      - { label: meili master key, type: concealed, value: "{{ vault_karakeep_meili }}" }
+      - { label: nextauth secret, type: concealed, value: "{{ vault_karakeep_nextauth }}" }
+  - title: "App - Logtide"
+    category: secure_note
+    tags: [app, ansible]
+    fields:
+      - { label: agent key, type: concealed, value: "{{ vault_logtide_agent_key }}" }
+      - { label: api key secret, type: concealed, value: "{{ vault_logtide_api_key_secret }}" }
+      - { label: db password, type: concealed, value: "{{ vault_logtide_db_password }}" }
+      - { label: fluent bit api key, type: concealed, value: "{{ vault_logtide_fluent_bit_api_key }}" }
+      - { label: redis password, type: concealed, value: "{{ vault_logtide_redis_password }}" }
+  - title: "App - Mail Archive Server"
+    category: secure_note
+    tags: [app, ansible]
+    fields:
+      - { label: gateway token, type: concealed, value: "{{ vault_gateway_mail_archive_server_token }}" }
+  - title: "App - MCP SearXNG"
+    category: secure_note
+    tags: [app, ansible]
+    fields:
+      - { label: auth token, type: concealed, value: "{{ vault_mcp_searxng_auth_token }}" }
+  - title: "App - Memorybank"
+    category: secure_note
+    tags: [app, ansible]
+    fields:
+      - { label: django secret key, type: concealed, value: "{{ vault_memorybank_django_secret_key }}" }
+  - title: "App - Micropub Server"
+    category: secure_note
+    tags: [app, ansible]
+    fields:
+      - { label: login password hash, type: concealed, value: "{{ vault_composition_micropub_server_password_secret }}" }
+      - { label: session secret, type: concealed, value: "{{ vault_composition_micropub_server_secret }}" }
+  - title: "App - n8n"
+    category: secure_note
+    tags: [app, ansible]
+    fields:
+      - { label: db password, type: concealed, value: "{{ vault_n8n_db_password }}" }
+      - { label: encryption key, type: concealed, value: "{{ vault_n8n_encryption_key }}" }
+      - { label: mcp key, type: concealed, value: "{{ vault_n8n_mcp_key }}" }
+  - title: "App - Paperless-ngx"
+    category: secure_note
+    tags: [app, ansible]
+    fields:
+      - { label: api token, type: concealed, value: "{{ vault_paperless_ngx_api_token }}" }
+      - { label: db password, type: concealed, value: "{{ vault_paperless_ngx_db_password }}" }
+      - { label: secret key, type: concealed, value: "{{ vault_paperless_ngx_secret_key }}" }
+      - { label: translation-server key, type: concealed, value: "{{ vault_composition_translation_server_paperless_key }}" }
+  - title: "App - Prowlarr"
+    category: secure_note
+    tags: [app, ansible]
+    fields:
+      - { label: api key, type: concealed, value: "{{ vault_prowlarr_api_key }}" }
+  - title: "App - Radarr"
+    category: secure_note
+    tags: [app, ansible]
+    fields:
+      - { label: api key, type: concealed, value: "{{ vault_radarr_api_key }}" }
+  - title: "App - SearXNG"
+    category: secure_note
+    tags: [app, ansible]
+    fields:
+      - { label: secret key, type: concealed, value: "{{ vault_searxng_secret_key }}" }
+  - title: "App - Semaphore"
+    category: secure_note
+    tags: [app, ansible]
+    fields:
+      - { label: access key encryption key, type: concealed, value: "{{ vault_composition_semaphore_access_key_encryption }}" }
+  - title: "App - Sonarr"
+    category: secure_note
+    tags: [app, ansible]
+    fields:
+      - { label: api key, type: concealed, value: "{{ vault_sonarr_api_key }}" }
+  - title: "App - Syncthing"
+    category: secure_note
+    tags: [app, ansible]
+    fields:
+      - { label: api key, type: concealed, value: "{{ vault_syncthing_api_key }}" }
+  - title: "App - Translation Server"
+    category: secure_note
+    tags: [app, ansible]
+    fields:
+      - { label: webhook secret, type: concealed, value: "{{ vault_composition_translation_server_webhook_secret }}" }
+  - title: "App - Vikunja"
+    category: secure_note
+    tags: [app, ansible]
+    fields:
+      - { label: db password, type: concealed, value: "{{ vault_vikunja_db_password }}" }
+      - { label: secret key, type: concealed, value: "{{ vault_vikunja_secret_key }}" }
+  - title: "App - Voicepacks"
+    category: secure_note
+    tags: [app, ansible]
+    fields:
+      - { label: api token, type: concealed, value: "{{ vault_composition_voicepacks_api_token }}" }
+  - title: "App - Webmention Server"
+    category: secure_note
+    tags: [app, ansible]
+    fields:
+      - { label: admin api token, type: concealed, value: "{{ vault_composition_webmention_server_admin_api_token }}" }
+      - { label: github webhook secret, type: concealed, value: "{{ vault_composition_webmention_server_github_webhook_secret }}" }
+      - { label: ip hash salt, type: concealed, value: "{{ vault_composition_webmention_server_ip_hash_salt }}" }
+      - { label: session secret, type: concealed, value: "{{ vault_composition_webmention_server_session_secret }}" }
+  - title: "App - Wiki Compiler"
+    category: secure_note
+    tags: [app, ansible]
+    fields:
+      - { label: api token, type: concealed, value: "{{ vault_wiki_compiler_api_token }}" }
+  - title: "App - Wiki.js"
+    category: secure_note
+    tags: [app, ansible]
+    fields:
+      - { label: db password, type: concealed, value: "{{ vault_composition_wikijs_db_password }}" }
+  - title: "Infra - Grafana"
+    category: login
+    tags: [login, ansible]
+    fields:
+      - { label: password, type: concealed, value: "{{ vault_grafana_admin_password }}" }
+  - title: "Infra - OpenWebRX"
+    category: login
+    tags: [login, ansible]
+    fields:
+      - { label: password, type: concealed, value: "{{ vault_composition_openwebrx_admin_password }}" }
+  - title: "Infra - Paperless-ngx"
+    category: login
+    tags: [login, ansible]
+    fields:
+      - { label: password, type: concealed, value: "{{ vault_paperless_ngx_admin_password }}" }
+  - title: "Infra - qBittorrent"
+    category: login
+    tags: [login, ansible]
+    fields:
+      - { label: password, type: concealed, value: "{{ vault_qbittorrent_password }}" }
+      - { label: username, type: string, value: "{{ vault_qbittorrent_username }}" }
+  - title: "Infra - Semaphore"
+    category: login
+    tags: [login, ansible]
+    fields:
+      - { label: password, type: concealed, value: "{{ vault_composition_semaphore_admin_password }}" }
+  - title: "Infra - Syncthing"
+    category: login
+    tags: [login, ansible]
+    fields:
+      - { label: password, type: concealed, value: "{{ vault_syncthing_gui_password }}" }
+  - title: "Infra - Wiki Site"
+    category: login
+    tags: [login, ansible]
+    fields:
+      - { label: htpasswd, type: concealed, value: "{{ vault_wiki_htpasswd }}" }
+      - { label: password, type: concealed, value: "{{ vault_wiki_password }}" }

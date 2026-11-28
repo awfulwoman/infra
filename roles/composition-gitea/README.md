@@ -19,12 +19,12 @@
 
 | Variable | Purpose |
 |----------|---------|
-| `gitea_runner_registration` | Runner registration token (`vault_gitea_runner_registration`) — not used by this role directly, but set here for the runners role |
+| `gitea_runner_registration` | Runner registration token (1Password `App - Gitea` › `runner registration token`) — not used by this role directly, but set here for the runners role |
 
 ## Integrations
 
 - **Traefik**: Exposed at `gitea.{{ domainname_infra }}` with Let's Encrypt TLS.
-- **composition-gitea-runners**: Act runners register against this instance using the shared `vault_gitea_runner_registration` token. Runners deploy separately and can run on different hosts.
+- **composition-gitea-runners**: Act runners register against this instance using the shared 1Password `App - Gitea` › `runner registration token` token. Runners deploy separately and can run on different hosts.
 
 ## Notes
 

@@ -7,7 +7,7 @@ composition_dns_subdomains:
 # Notices from webmention-server (new mentions to review, alerts). The id is the secret part of the
 # webhook URL. Make the cloud webhook in HA: Settings > Home Assistant Cloud > Webhooks, then
 # vault its https://hooks.nabu.casa/... URL for the webmention-server composition.
-composition_homeassistant_webmention_webhook_id: "{{ vault_composition_homeassistant_webmention_webhook_id }}"
+composition_homeassistant_webmention_webhook_id: "{{ lookup('onepassword_connect', 'App - Home Assistant', 'webmention webhook id') }}"
 # Which notify entities get them (Settings > Devices > the phone > Notify, or Developer tools >
 # States, search "notify."). Empty: a persistent notification inside HA only.
 composition_homeassistant_webmention_notify:

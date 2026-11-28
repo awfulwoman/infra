@@ -53,7 +53,7 @@ services:
     container_name: firefly_iii_cron
     image: alpine:3.24.4
     restart: unless-stopped
-    command: sh -c "echo \"0 3 * * * wget -qO- http://app:8983/api/v1/cron/{{ vault_firefly_cron_token }}\" | crontab - && crond -f -L /dev/stdout"
+    command: sh -c "echo \"0 3 * * * wget -qO- http://app:8983/api/v1/cron/{{ lookup('onepassword_connect', 'App - Firefly III', 'cron token') }}\" | crontab - && crond -f -L /dev/stdout"
     networks:
       - "{{ default_docker_network }}"
     healthcheck:

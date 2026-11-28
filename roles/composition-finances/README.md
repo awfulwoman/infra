@@ -15,9 +15,9 @@ This role deploys [Firefly III](https://www.firefly-iii.org/), a self-hosted per
 
 | Variable | Purpose |
 |----------|---------|
-| `vault_firefly_cron_token` | Token for the Firefly III cron endpoint |
-| `vault_firefly_db_password` | MariaDB password |
-| `vault_firefly_app_key` | Laravel application encryption key (32 chars) |
+| 1Password `App - Firefly III` › `cron token` | Token for the Firefly III cron endpoint |
+| 1Password `App - Firefly III` › `db password` | MariaDB password |
+| 1Password `App - Firefly III` › `app key` | Laravel application encryption key (32 chars) |
 | `firefly_app_url` | Public URL; password-reset links are built from it |
 | `firefly_mail_*` | SMTP relay (mailbox.org, port 465), shared with nullmailer |
 | `firefly_log_level` | `notice` normally; `debug` to recover a reset link if SMTP breaks |

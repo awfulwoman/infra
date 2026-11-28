@@ -17,7 +17,7 @@ composition_webmention_server_site_hosts:
   - "www.{{ domainname_personal }}"
 
 # Salts the hashes that rate limiting keys on.
-composition_webmention_server_ip_hash_salt: "{{ vault_composition_webmention_server_ip_hash_salt }}"
+composition_webmention_server_ip_hash_salt: "{{ lookup('onepassword_connect', 'App - Webmention Server', 'ip hash salt') }}"
 
 # Needs `seed` to have run in the container first (see README); without it passes refuse to run.
 composition_webmention_server_send_enabled: true
@@ -37,21 +37,21 @@ composition_webmention_server_send_skip_hosts:
   - www.openstreetmap.org
 
 # Shared with the GitHub webhook on the site repo (Workflow runs). Empty: the endpoint is off.
-composition_webmention_server_github_webhook_secret: "{{ vault_composition_webmention_server_github_webhook_secret | default('') }}"
+composition_webmention_server_github_webhook_secret: "{{ lookup('onepassword_connect', 'App - Webmention Server', 'github webhook secret') }}"
 
 # Who may sign in to /admin, and where they sign in: micropub-server is the IndieAuth server.
 composition_webmention_server_admin_me: "{{ composition_webmention_server_site_url }}"
 composition_webmention_server_authorization_endpoint: "https://indie.{{ domainname_personal }}/auth"
 # Sign the admin session cookie. Empty: /admin is off.
-composition_webmention_server_session_secret: "{{ vault_composition_webmention_server_session_secret | default('') }}"
+composition_webmention_server_session_secret: "{{ lookup('onepassword_connect', 'App - Webmention Server', 'session secret') }}"
 # Bearer token for /admin/api (the gateway, scripts). Empty: the API is off.
-composition_webmention_server_admin_api_token: "{{ vault_composition_webmention_server_admin_api_token | default('') }}"
+composition_webmention_server_admin_api_token: "{{ lookup('onepassword_connect', 'App - Webmention Server', 'admin api token') }}"
 # A Home Assistant webhook, for "new mentions to review" and alerts. Empty: no notices.
-composition_webmention_server_ha_webhook_url: "{{ vault_composition_webmention_server_ha_webhook_url | default('') }}"
+composition_webmention_server_ha_webhook_url: "{{ lookup('onepassword_connect', 'App - Home Assistant', 'webmention webhook url') }}"
 
 # Backfeed: likes, boosts and replies on our GoToSocial copies come back as mentions.
 # The token is a GoToSocial application with read:notifications, read:statuses and
 # read:accounts only. Empty: backfeed is off.
 composition_webmention_server_backfeed_host: "gts.{{ domainname_personal }}"
 composition_webmention_server_backfeed_account: charlie
-composition_webmention_server_gts_access_token: "{{ vault_composition_webmention_server_gts_access_token | default('') }}"
+composition_webmention_server_gts_access_token: "{{ lookup('onepassword_connect', 'App - GoToSocial', 'webmention-server token') }}"

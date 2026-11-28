@@ -20,7 +20,7 @@
 | Variable | Purpose |
 |----------|---------|
 | `composition_grafana_admin_user` | Admin username (`vault_grafana_admin_user`, default: `admin`) |
-| `composition_grafana_admin_password` | Admin password (`vault_grafana_admin_password`) |
+| `composition_grafana_admin_password` | Admin password (1Password `Infra - Grafana` › `password`) |
 | `composition_grafana_victoriametrics_url` | VictoriaMetrics URL (default: `https://zfs.metrics.{{ domainname_infra }}`) |
 | `composition_grafana_loki_url` | Loki URL (default: `https://loki.{{ domainname_infra }}`) |
 | `composition_grafana_traefik_enabled` | Toggle Traefik labels (default: `true`) |

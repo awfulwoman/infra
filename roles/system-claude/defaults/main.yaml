@@ -60,7 +60,7 @@ system_claude_settings_group: "{{ ansible_user }}"
 # agentmemory plugin's hooks) inherit it.
 system_claude_agentmemory: false
 system_claude_agentmemory_url: "https://agentmemory.{{ domainname_infra }}"
-system_claude_agentmemory_secret: "{{ vault_composition_agentmemory_secret }}"
+system_claude_agentmemory_secret: "{{ lookup('onepassword_connect', 'App - AgentMemory', 'secret') }}"
 # Keep in step with the image tag in composition-agentmemory.
 system_claude_agentmemory_version: "0.9.33"
 system_claude_agentmemory_env_file: "{{ system_claude_settings_path }}/agentmemory.env"

@@ -133,7 +133,7 @@ Alerting is done by Gatus (`composition-gatus`, endpoint `apple-reminders-server
 |---|---|---|
 | `system_apple_reminders_server_repo_dir` | `~/Code/awfulwoman/apple-reminders-server` | Repo checkout to run from |
 | `system_apple_reminders_server_port` | `4100` | Local port the service listens on |
-| `system_apple_reminders_server_bearer_tokens` | `vault_gateway_reminders_server_token` | Shared secret. Also set as `composition_gateway_reminders_server_bearer_token` |
+| `system_apple_reminders_server_bearer_tokens` | 1Password `App - Apple Reminders Server` › `gateway token` | Shared secret. Also set as `composition_gateway_reminders_server_bearer_token` |
 | `system_apple_reminders_server_default_list` | `Reminders` | List (EKCalendar) used when a reminder names none |
 | `system_apple_reminders_server_state_dir` | `~/.local/state/apple-reminders-server` | Role-managed runtime state: `meta.db`, signing cert, watchdog script, marker |
 | `system_apple_reminders_server_db_path` | `<state_dir>/meta.db` | Sidecar SQLite database: id mapping, LWW timestamps, tombstones (see above) |

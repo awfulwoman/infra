@@ -25,16 +25,12 @@ See `defaults/main.yaml` for the full list. The ones with no sane default:
 |---|---|
 | `composition_wiki_compiler_notes_path` | Host path of the Charlie Syncthing folder — set per host |
 | `composition_wiki_compiler_output_path` | Host path of the PersonalWiki Syncthing folder — set per host |
-| `vault_gateway_mcp_token_wiki` | This compiler's labelled gateway client token (also added to `composition_gateway_server_auth_clients`) |
-| `vault_wiki_compiler_api_token` | Bearer token for the compiler's own `/run`, `/usage`, `/lint`, `/filter-report` HTTP API |
+| 1Password `App - Gateway` › `mcp token wiki` | This compiler's labelled gateway client token (also added to `composition_gateway_server_auth_clients`) |
+| 1Password `App - Wiki Compiler` › `api token` | Bearer token for the compiler's own `/run`, `/usage`, `/lint`, `/filter-report` HTTP API |
 | `vault_wiki_compiler_home_lat` / `_home_lon` / `_home_radius_m` | Optional: enables the home-radius location drop rule. Omit to leave it off |
 
-Generate the required secrets:
-
-```bash
-ansible-vault encrypt_string "$(openssl rand -hex 32)" --name 'vault_gateway_mcp_token_wiki'
-ansible-vault encrypt_string "$(openssl rand -hex 32)" --name 'vault_wiki_compiler_api_token'
-```
+Make the required secrets with `openssl rand -hex 32`, and put them in 1Password: `App - Gateway` › `mcp token wiki` and
+`App - Wiki Compiler` › `api token`.
 
 ## Sources and budgets
 

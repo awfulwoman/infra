@@ -15,7 +15,7 @@ The container sees the dongle through a `/dev/bus/usb` bind mount and a `device_
 | Variable | Default | Purpose |
 |---|---|---|
 | `composition_openwebrx_admin_user` | `admin` | Admin user, created on first start only. |
-| `composition_openwebrx_admin_password` | `vault_composition_openwebrx_admin_password` | Admin password, created on first start only. Changing it later does not reset an existing user. |
+| `composition_openwebrx_admin_password` | 1Password `Infra - OpenWebRX` › `password` | Admin password, created on first start only. Changing it later does not reset an existing user. |
 
 ## Data
 

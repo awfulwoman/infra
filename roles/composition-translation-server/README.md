@@ -28,7 +28,7 @@ The role creates, through the Paperless API:
 The workflow is created once. To change it, edit or delete it in Paperless and
 re-run the role.
 
-The connector uses the Paperless admin token (`vault_paperless_ngx_api_token`):
+The connector uses the Paperless admin token (1Password `App - Paperless-ngx` › `api token`):
 Paperless permissions are per object, so a limited user could not see every
 owner's documents. Companions copy the original's owner and permissions.
 
@@ -50,8 +50,8 @@ ssh storage 'docker exec translation-connector translation-server connector back
 | `composition_translation_server_add_note` | `false` | Also add the English text as a note on the original |
 | `composition_translation_server_connector_enabled` | `true` | |
 
-Vault: `vault_composition_translation_server_paperless_key` (the connector's API
-key), `vault_composition_translation_server_webhook_secret` (Paperless → connector).
+Vault: 1Password `App - Paperless-ngx` › `translation-server key` (the connector's API
+key), 1Password `App - Translation Server` › `webhook secret` (Paperless → connector).
 
 ## Data
 

@@ -16,7 +16,7 @@ system_apple_contacts_server_port: 4102
 system_apple_contacts_server_db_path: "{{ ansible_facts.user_dir }}/.local/state/apple-contacts-server/meta.db"
 
 # Shared with composition-gateway, which authenticates to this same service.
-system_apple_contacts_server_bearer_tokens: "{{ vault_gateway_contacts_server_token }}"
+system_apple_contacts_server_bearer_tokens: "{{ lookup('onepassword_connect', 'App - Apple Contacts Server', 'gateway token') }}"
 
 # Login-keychain password. Needed on every deploy so sign_runtime.sh can unlock
 # the login keychain over SSH and reach the SHARED signing key headlessly (the

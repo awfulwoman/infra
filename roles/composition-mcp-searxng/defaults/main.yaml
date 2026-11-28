@@ -4,4 +4,4 @@ composition_name: mcp-searxng
 composition_dns_subdomains:
   - searchmcp
 
-composition_mcp_searxng_auth_token: "{{ vault_mcp_searxng_auth_token }}"
+composition_mcp_searxng_auth_token: "{{ lookup('onepassword_connect', 'App - MCP SearXNG', 'auth token') }}"

@@ -63,7 +63,7 @@ def resolve_config():
     # One ad-hoc call resolves both values. The json callback gives parseable
     # output; the minimal default callback does not.
     env = dict(os.environ, ANSIBLE_STDOUT_CALLBACK="json", ANSIBLE_LOAD_CALLBACK_PLUGINS="1")
-    template = "{{ vault_logtide_agent_key }}\t{{ domainname_infra }}"
+    template = "{{ lookup('onepassword_connect', 'App - Logtide', 'agent key') }}\t{{ domainname_infra }}"
     proc = subprocess.run(
         ["ansible", VAULT_HOST, "-c", "local", "-m", "debug", "-a", f"msg={template}"],
         capture_output=True,

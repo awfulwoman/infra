@@ -65,7 +65,7 @@ once. It does not recur after `uv sync` or Python upgrades.
 |---|---|---|
 | `system_apple_contacts_server_repo_dir` | `~/Code/awfulwoman/apple-contacts-server` | Repo checkout to run from |
 | `system_apple_contacts_server_port` | `4102` | Local port the service listens on |
-| `system_apple_contacts_server_bearer_tokens` | `vault_gateway_contacts_server_token` | Shared secret. Also set as `composition_gateway_contacts_server_bearer_token` |
+| `system_apple_contacts_server_bearer_tokens` | 1Password `App - Apple Contacts Server` › `gateway token` | Shared secret. Also set as `composition_gateway_contacts_server_bearer_token` |
 | `system_apple_contacts_server_db_path` | `~/.local/state/apple-contacts-server/meta.db` | Sidecar SQLite database: id mapping only, no LWW or tombstones (see the service's own README) |
 | `system_apple_contacts_server_keychain_password` | `""` | Login-keychain password, from vault. Needed only to provision the signing cert headlessly on the first run (see Permission stability) |
 

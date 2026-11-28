@@ -10,11 +10,11 @@ Cut-over steps: `docs/deploy/README.md` in the micropub-server repo.
 | Variable | Purpose |
 | --- | --- |
 | `composition_micropub_server_image` | Pinned `sha-` tag of the GHCR image. |
-| `vault_composition_micropub_server_secret` | Signs sessions and tokens. |
-| `vault_composition_micropub_server_password_secret` | bcrypt login hash. |
+| 1Password `App - Micropub Server` › `session secret` | Signs sessions and tokens. |
+| 1Password `App - Micropub Server` › `login password hash` | bcrypt login hash. |
 | 1Password `External - GitHub` › `micropub-server token` | PAT, Contents read/write on the site repo. |
 | 1Password `External - GitHub` › `micropub-server webhook secret` | Optional; enables `/webhooks/github` for build tracking. Same secret as the GitHub webhook. |
-| `vault_composition_micropub_server_mastodon_token` | Optional; enables Mastodon sharing. |
+| 1Password `App - GoToSocial` › `micropub-server token` | Optional; enables Mastodon sharing. |
 
 `files/site-micropub.yaml` is a fallback copy of the site's post types; the site's own
 `data/micropub.yaml` takes over once committed there.

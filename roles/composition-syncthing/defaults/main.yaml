@@ -10,4 +10,4 @@ composition_dns_subdomains:
 # (system-syncthing-config places declared folders under it).
 composition_syncthing_data_path: "{{ composition_root }}/data"
 
-composition_syncthing_api_key: "{{ vault_syncthing_api_key }}"
+composition_syncthing_api_key: "{{ lookup('onepassword_connect', 'App - Syncthing', 'api key') }}"

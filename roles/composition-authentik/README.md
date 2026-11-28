@@ -8,8 +8,8 @@ Endpoint: `https://authentik.<domainname_infra>/`
 
 | Variable | Purpose |
 | --- | --- |
-| `vault_composition_authentik_secret_key` | `AUTHENTIK_SECRET_KEY`. Do not rotate: it breaks stored data |
-| `vault_composition_authentik_db_password` | Postgres password |
+| 1Password `App - Authentik` › `secret key` | `AUTHENTIK_SECRET_KEY`. Do not rotate: it breaks stored data |
+| 1Password `App - Authentik` › `db password` | Postgres password |
 
 Image tags are pinned in `templates/docker-compose.yaml.j2` (not in variables) so Renovate can update them. Server and worker share a tag: bump both together. Postgres stays on 16 until a planned major upgrade.
 

@@ -36,20 +36,20 @@ point `composition_gateway_obsidian_vault_path` at its path on this host.
 | `composition_gateway_obsidian_vault_path` | *(none — required)* | Host path to a synced Obsidian vault, bind-mounted at `/vault` |
 | `composition_gateway_imap_host/username/password` | mailbox.org + vault creds | IMAP account for the Email tool |
 | `composition_gateway_calendar_server_base_url` | Malcolm's infra-zone FQDN, port 4101 | apple-calendar-server backend for Calendar (see `system-apple-calendar-server`) |
-| `composition_gateway_calendar_server_bearer_token` | `vault_gateway_calendar_server_token` | Shared secret with `system-apple-calendar-server` |
+| `composition_gateway_calendar_server_bearer_token` | 1Password `App - Apple Calendar Server` › `gateway token` | Shared secret with `system-apple-calendar-server` |
 | `composition_gateway_github_repo` | `awfulwoman/meta` | Repo backing the issues tools (`GATEWAY_GITHUB__REPO`) |
 | `composition_gateway_github_item` | `External - GitHub (old)` | Title of the 1Password item holding the GitHub PAT |
 | `composition_gateway_github_token_field` | `gateway_issues_token` | Field on that item read into `GATEWAY_GITHUB__TOKEN` |
 | `composition_gateway_karakeep_base_url/api_key` | karakeep subdomain + vault key | Karakeep bookmarking service |
 | `composition_gateway_owntracks_*` | owntracks-recorder subdomain | Location tool |
-| `composition_gateway_reminders_api_tokens` | `vault_gateway_reminders_api_token_iphone` | Bearer tokens for `/v1/*` (device clients) |
+| `composition_gateway_reminders_api_tokens` | 1Password `App - Gateway` › `reminders api token iphone` | Bearer tokens for `/v1/*` (device clients) |
 | `composition_gateway_reminders_server_base_url` | Malcolm's infra-zone FQDN, port 4100 | apple-reminders-server backend for Reminders (see `system-apple-reminders-server`) |
-| `composition_gateway_reminders_server_bearer_token` | `vault_gateway_reminders_server_token` | Shared secret with `system-apple-reminders-server` |
+| `composition_gateway_reminders_server_bearer_token` | 1Password `App - Apple Reminders Server` › `gateway token` | Shared secret with `system-apple-reminders-server` |
 | `composition_gateway_contacts_server_base_url` | Malcolm's infra-zone FQDN, port 4102 | apple-contacts-server backend for Contacts (see `system-apple-contacts-server`) |
-| `composition_gateway_contacts_server_bearer_token` | `vault_gateway_contacts_server_token` | Shared secret with `system-apple-contacts-server` |
+| `composition_gateway_contacts_server_bearer_token` | 1Password `App - Apple Contacts Server` › `gateway token` | Shared secret with `system-apple-contacts-server` |
 | `composition_gateway_semaphore_base_url` | `https://semaphore.{{ domainname_infra }}` | Ansible Semaphore UI (see `composition-semaphore`) |
 | `composition_gateway_semaphore_token` | `vault_composition_gateway_semaphore_api_token` | Semaphore API token (Admin → API Tokens), not the admin password. Empty drops the tools |
-| `composition_gateway_server_auth_clients` | `{jarvis: vault_gateway_mcp_token, laptop: …, gw-cli: …, hermes: …}` | Labelled bearer tokens for `/mcp`; the label is the caller name in the usage log. Empty-valued entries are dropped. |
+| `composition_gateway_server_auth_clients` | `{jarvis: 1Password `App - Gateway` › `mcp token`, laptop: …, gw-cli: …, hermes: …}` | Labelled bearer tokens for `/mcp`; the label is the caller name in the usage log. Empty-valued entries are dropped. |
 | `composition_gateway_usage_log_container_path` | `/var/log/gateway/usage.jsonl` | In-container path for the JSONL usage log; bind-mounted from `{{ composition_root }}/logs` |
 
 ## Secrets
@@ -61,20 +61,14 @@ approach as [`composition-finances`](../composition-finances). To rotate it, cha
 in 1Password and run the role again.
 
 `composition_gateway_server_auth_clients` needs one vault secret per `/mcp` caller.
-`jarvis` reuses the existing `vault_gateway_mcp_token` (so
+`jarvis` reuses the existing 1Password `App - Gateway` › `mcp token` (so
 [`composition-jarvis`](../composition-jarvis) is unchanged); the others get their
-own secrets in `inventory/group_vars/infra/vault_gateway.yaml`:
-
-```bash
-ansible-vault encrypt_string "$(openssl rand -hex 32)" --name 'vault_gateway_mcp_token_laptop'
-ansible-vault encrypt_string "$(openssl rand -hex 32)" --name 'vault_gateway_mcp_token_gw_cli'
-ansible-vault encrypt_string "$(openssl rand -hex 32)" --name 'vault_gateway_mcp_token_hermes'
-ansible-vault encrypt_string "$(openssl rand -hex 32)" --name 'vault_gateway_mcp_token_wiki'
-```
+own fields on the `App - Gateway` item in 1Password: `mcp token laptop`, `mcp token gw-cli`,
+`mcp token hermes` and `mcp token wiki`. Make each with `openssl rand -hex 32`.
 
 Each new secret must also be set on the client: `Authorization: Bearer <laptop secret>`
 in the laptop's `mcpServers.gateway` config, `GATEWAY_TOKEN=<gw-cli secret>` where the
-`gw` CLI runs, and `vault_gateway_mcp_token_hermes` is consumed by
+`gw` CLI runs, and 1Password `App - Gateway` › `mcp token hermes` is consumed by
 [`composition-hermes-agent`](../composition-hermes-agent) (rendered into its
 `.environment_vars` as `GATEWAY_MCP_TOKEN`).
 

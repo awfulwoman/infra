@@ -9,4 +9,4 @@ composition_dns_subdomains:
 # Admin login for OpenWebRX+ settings. The image creates this user on first
 # start only; changing it later does not reset an existing user's password.
 composition_openwebrx_admin_user: admin
-composition_openwebrx_admin_password: "{{ vault_composition_openwebrx_admin_password }}"
+composition_openwebrx_admin_password: "{{ lookup('onepassword_connect', 'Infra - OpenWebRX', 'password') }}"
